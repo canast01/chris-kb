@@ -4,6 +4,45 @@ PowerShell is Microsoft's cross-platform command shell and scripting language. U
 
 > Works on Windows, macOS, and Linux (PowerShell 7+). VMware PowerCLI requires `Install-Module VMware.PowerCLI`.
 
+## Script Execution Pipeline
+
+```mermaid
+graph LR
+    readHost["Read-Host / param()\n(user input / args)"]
+    processLogic["Process Logic\n(filter / transform / query)"]
+    exportCsv["Export-Csv\n(or ConvertTo-Json)"]
+    sendEmail["Send-MailMessage\n(email report)"]
+    logResult["Out-File / Add-Content\n(log file)"]
+
+    readHost --> processLogic
+    processLogic --> exportCsv
+    exportCsv --> sendEmail
+    processLogic --> logResult
+```
+
+## PowerShell Remoting Topology
+
+```mermaid
+graph TD
+    controlHost["Control Host\n(Invoke-Command)"]
+    winrm["WinRM\n(port 5985 HTTP\n/ 5986 HTTPS)"]
+    remoteHost1["Remote Host 1\n(srv1)"]
+    remoteHost2["Remote Host 2\n(srv2)"]
+    remoteHost3["Remote Host 3\n(srv3)"]
+    psSession["PSSession\n(persistent)"]
+    scriptBlock["ScriptBlock\n(runs remotely)"]
+
+    controlHost -->|Invoke-Command -ComputerName| winrm
+    controlHost -->|New-PSSession| psSession
+    psSession --> winrm
+    winrm --> remoteHost1
+    winrm --> remoteHost2
+    winrm --> remoteHost3
+    scriptBlock -->|executes on| remoteHost1
+    scriptBlock -->|executes on| remoteHost2
+    scriptBlock -->|executes on| remoteHost3
+```
+
 ---
 
 ## Core

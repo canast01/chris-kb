@@ -2,6 +2,33 @@
 
 The primary review surface is the **Home** view in the VBR console, which shows job counts grouped by status (Running, Success, Warning, Failed). Work through this list top-to-bottom every morning.
 
+## SureBackup Verification Sequence
+
+SureBackup starts VMs in an isolated virtual lab and runs application-level tests — it is the only way to confirm a backup is truly restorable.
+
+```mermaid
+sequenceDiagram
+    participant VBR as VBR Server
+    participant VLab as Virtual Lab
+    participant IsolatedProxy as Isolated Proxy VM
+    participant RecoveredVM as Recovered VM (from backup)
+    participant TestScript as Test Script / Heartbeat
+
+    VBR->>VLab: Start SureBackup job
+    VLab->>VLab: Publish isolated network (bubble)
+    VBR->>IsolatedProxy: Mount backup restore point as NFS
+    IsolatedProxy->>RecoveredVM: Power on VM in isolated lab
+    RecoveredVM-->>IsolatedProxy: VM heartbeat received
+    IsolatedProxy->>RecoveredVM: Run ping test
+    IsolatedProxy->>RecoveredVM: Run application test script\n(SQL port check / Exchange health)
+    RecoveredVM-->>IsolatedProxy: Test results returned
+    IsolatedProxy-->>VBR: Report: Pass / Fail per VM
+    VBR->>RecoveredVM: Power off test VM
+    VBR->>VLab: Tear down virtual lab
+    VBR-->>VBR: Record verification result in job session
+    note over VBR: Failure = backup not confirmed restorable\nEscalate immediately
+```
+
 ---
 
 ## Daily Check Routine

@@ -1,5 +1,46 @@
 # Terraform — Components
 
+## IaC Workflow
+
+```mermaid
+graph LR
+    writeHCL["Write HCL\n(.tf files)"]
+    tfInit["terraform init\n(download providers\n& modules)"]
+    tfPlan["terraform plan\n(preview changes)"]
+    reviewPlan["Review Plan\n(human approval)"]
+    tfApply["terraform apply\n(create / update\n/ destroy)"]
+    stateFile["State File\n(terraform.tfstate)"]
+    validate["terraform validate\n& fmt -check"]
+
+    writeHCL --> validate
+    validate --> tfInit
+    tfInit --> tfPlan
+    tfPlan --> reviewPlan
+    reviewPlan -->|Approved| tfApply
+    reviewPlan -->|Rejected| writeHCL
+    tfApply --> stateFile
+    stateFile -->|Next change| tfPlan
+```
+
+## Module Dependency Graph
+
+```mermaid
+graph TD
+    root["Root Module\n(main.tf)"]
+    modNetwork["module: network\n(VPC, subnets, SGs)"]
+    modCompute["module: compute\n(EC2 / VMs)"]
+    modDatabase["module: database\n(RDS / PostgreSQL)"]
+    modDns["module: dns\n(Route53 / Azure DNS)"]
+
+    root --> modNetwork
+    root --> modCompute
+    root --> modDatabase
+    root --> modDns
+    modCompute -->|subnet_id\nvpc_id| modNetwork
+    modDatabase -->|db_subnet_group\nsg_id| modNetwork
+    modDns -->|lb_dns_name| modCompute
+```
+
 ## Modules
 
 ### Module Directory Structure

@@ -47,6 +47,31 @@ Run these checks after any change to confirm the ECS cluster is healthy and obje
 - [ ] ECS Portal → Hardware → Disks — no new `FAILED` or `SUSPECT` disks after the change
 - [ ] Application teams confirm S3 workloads are running normally with no authentication or connectivity errors
 
+## Provisioning Flow: Namespace → Bucket → IAM User
+
+```mermaid
+graph TD
+  START([New application storage request]) --> NS["Create Namespace\necscli namespace create\n+ replication group + hard quota"]
+  NS --> BKT["Create Bucket\nS3 name rules · versioning off by default"]
+  BKT --> LOCK{Compliance\nor WORM?}
+  LOCK -->|Yes| OBJ["Enable Object Lock at\nbucket creation (cannot add later)"]
+  LOCK -->|No| USR
+  OBJ --> USR["Create Object User\necscli user create\n--namespace --name svc-<app>-<env>"]
+  USR --> KEY["Generate Access Key + Secret Key\n(shown once — store in vault immediately)"]
+  KEY --> POL["Apply Bucket Policy\nleast-privilege s3 actions only"]
+  POL --> LC{Versioning\nenabled?}
+  LC -->|Yes| LCP["Add lifecycle policy\nNoncurrentVersionExpiration + MPU abort"]
+  LC -->|No| TEST
+  LCP --> TEST["Functional test:\naws s3 ls s3://bucket --endpoint-url ..."]
+  TEST --> DONE([Bucket ready for application])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class LOCK,LC decision
+  class NS,BKT,OBJ,USR,KEY,POL,LCP,TEST action
+  class START,DONE term
+```
+
 ## Creating a Namespace
 
 Namespaces are the top-level multi-tenancy boundary in ECS. Create a separate namespace per team or application workload.
@@ -154,6 +179,22 @@ ecscli bucket get --namespace analytics-prod --name analytics-prod-raw
 ## Creating IAM Object Users and Access Keys
 
 Object users are per-namespace IAM identities. Each application or service should have a dedicated object user.
+
+```mermaid
+graph LR
+  subgraph "Key Rotation (zero downtime)"
+    NEWKEY["1. Create new key\necscli user secret-key create"]
+    DEPLOY["2. Deploy new key\nto app / secrets manager"]
+    VERIFY["3. Verify app is using\nnew key (access logs)"]
+    DELOLD["4. Delete old key\necscli user secret-key delete"]
+    NEWKEY --> DEPLOY --> VERIFY --> DELOLD
+  end
+  note1(["ECS allows up to 2 active keys per user\nenabling zero-downtime rotation"])
+  classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef note fill:#b45309,stroke:#92400e,color:#fff
+  class NEWKEY,DEPLOY,VERIFY,DELOLD step
+  class note1 note
+```
 
 ```bash
 # Create an object user in a namespace

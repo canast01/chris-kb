@@ -2,6 +2,33 @@
 
 Most Veeam job failures fall into a small set of categories: VMware snapshot issues, repository space problems, proxy connectivity timeouts, and Veeam service instability. The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files.
 
+## Triage Decision Tree
+
+```mermaid
+flowchart TD
+    fail(["Job failure or warning\ndetected"])
+    fail --> openStats["Open Job Statistics\nExpand failed task\nRead Reason field"]
+    openStats --> q1{Error category}
+
+    q1 -->|"Snapshot / VSS\nerror"| snapQ{"Creating or\ncommitting?"}
+    q1 -->|"Network /\nconnection\nerror"| netQ["Proxy Timeout\n/ Network Error"]
+    q1 -->|"No space /\nquota"| spaceQ["Repository\nOut of Space"]
+    q1 -->|"IVR VM\nnot booting"| ivrQ["Instant VM Recovery\nVM Not Starting"]
+    q1 -->|"VBR service\ncrash"| svcQ["VBR Service\nCrash / Instability"]
+    q1 -->|"Copy job\nnever finishes"| copyQ["Backup Copy Job\nNever Completes"]
+    q1 -->|"SureBackup\nfailed"| sbQ["SureBackup Fails"]
+
+    snapQ -->|"Creating"| snapCreate["Check VMware Tools\nDisable app-aware\nto isolate quiesce issue"]
+    snapQ -->|"Committing"| snapCommit["Check vCenter for\nstuck snapshot\nVerify datastore space"]
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class openStats,netQ,spaceQ,ivrQ,svcQ,copyQ,sbQ,snapCreate,snapCommit action
+    class q1,snapQ decision
+    class fail terminal
+```
+
 ---
 
 ## Snapshot Failure (VMware)

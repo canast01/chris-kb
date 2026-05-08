@@ -1,5 +1,31 @@
 # Python Automation — Diagnostics
 
+## Python Diagnostics Workflow
+
+```mermaid
+graph LR
+    symptom["Symptom or\nUnexpected Output"]
+    enableDebug["Enable DEBUG logging\n(logging.basicConfig)"]
+    checkLogs["Inspect log file\nfor traceback"]
+    pdbBreak["Add breakpoint()\nor python3 -m pdb"]
+    inspectVars["Inspect variables\n(p var in pdb)"]
+    verboseImport["python3 -v script.py\n(trace imports)"]
+    checkSysPath["python3 -c \"import sys;\nprint(sys.path)\""]
+    devMode["python3 -X dev\n(extra warnings)"]
+    resolved["Root cause\nidentified"]
+
+    symptom --> enableDebug
+    enableDebug --> checkLogs
+    checkLogs -->|Traceback found| pdbBreak
+    pdbBreak --> inspectVars
+    inspectVars --> resolved
+    checkLogs -->|Import error| verboseImport
+    verboseImport --> checkSysPath
+    checkSysPath --> resolved
+    checkLogs -->|Warnings| devMode
+    devMode --> resolved
+```
+
 ## Debugging with pdb
 
 ```python

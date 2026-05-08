@@ -4,6 +4,24 @@
 
 Domain Controllers host the AD DS database (ntds.dit), authenticate users, and hold FSMO roles. Understanding DC roles and how to manage them is essential for AD operations.
 
+## FSMO Role Placement
+
+```mermaid
+graph TD
+    forest["AD Forest\ncorp.example.com"]
+    forest -->|"forest-wide"| schemaMaster["Schema Master\n(DC-01 — forest root)"]
+    forest -->|"forest-wide"| domainNaming["Domain Naming Master\n(DC-01 — forest root)"]
+    domain["Domain\ncorp.example.com"]
+    domain -->|"per-domain"| pdcEmulator["PDC Emulator\n(DC-01 — time source, password sync)"]
+    domain -->|"per-domain"| ridMaster["RID Master\n(DC-01 — SID pool allocation)"]
+    domain -->|"per-domain"| infraMaster["Infrastructure Master\n(DC-02 — cross-domain refs)"]
+    dc01["DC-01\n(Schema / Naming / PDC / RID)"] -.-> schemaMaster
+    dc01 -.-> domainNaming
+    dc01 -.-> pdcEmulator
+    dc01 -.-> ridMaster
+    dc02["DC-02\n(Infrastructure Master)"] -.-> infraMaster
+```
+
 ### FSMO Roles
 
 Five Flexible Single Master Operations roles exist across forest and domain levels. Only one DC holds each role at a time.
@@ -221,6 +239,18 @@ Get-DnsServerZoneAging -Name "corp.example.com"
 ## Groups
 
 AD groups control access to resources and distribution of email. Choosing the correct type and scope prevents replication overhead and simplifies permission management.
+
+## AGDLP Group Model
+
+```mermaid
+graph TD
+    userAcct["User Account\n(jsmith)"]
+    userAcct -->|"member of"| globalGrp["Global Group\nGG_Server_Admins\n(role-based — same domain)"]
+    globalGrp -->|"nested in"| domLocalGrp["Domain Local Group\nDL_FileShare_Finance_RW\n(resource access — any domain)"]
+    domLocalGrp -->|"permission assigned"| resource["File Share / Resource\n(NTFS ACL permission)"]
+
+    note1["A — Accounts\nin G — Global groups\nin DL — Domain Local groups\nassigned P — Permissions"]
+```
 
 ### Group Types and Scopes
 

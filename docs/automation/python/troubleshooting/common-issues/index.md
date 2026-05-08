@@ -1,5 +1,24 @@
 # Python Automation — Common Issues
 
+## Python Error Triage Flow
+
+```mermaid
+flowchart TD
+    error["Script Error / Failure"]
+    error --> errType{"Error type?"}
+    errType -->|ModuleNotFoundError| checkVenv["Is correct venv\nactivated?"]
+    checkVenv -->|No| activateVenv["source venv/bin/activate\nthen pip install"]
+    checkVenv -->|Yes| reinstall["pip install <package>\nin active venv"]
+    errType -->|401 Unauthorized| checkToken["API token\nexpired or revoked?"]
+    checkToken -->|Yes| rotateToken["Regenerate token\nin target system"]
+    errType -->|ConnectionError\nTimeout| checkNetwork["curl -v <api_url>\nfrom automation host"]
+    checkNetwork -->|Blocked| fixFW["Fix firewall /\nproxy settings"]
+    errType -->|JSONDecodeError| checkResp["print(resp.text)\ncheck content-type"]
+    checkResp --> updateParsing["Update parsing logic\nto match new schema"]
+    errType -->|PermissionError| checkPath["ls -la on output\ndirectory"]
+    checkPath --> fixPerms["chmod / chown\noutput directory"]
+```
+
 ## Virtualenv and Environment Issues
 
 ```bash

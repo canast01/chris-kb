@@ -4,6 +4,59 @@
 
 Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect `symrdf query -g <group> -v` and array event logs before engaging Dell support. Correlate with network monitoring timestamps to distinguish storage-side from WAN-side causes.
 
+## Lag Alert Triage Decision Tree
+
+```mermaid
+flowchart TD
+    lagAlert["Lag Alert Fires\n(RPO threshold breached)"]
+    checkPairState["Check Pair State\nsymrdf -g grp -sid sid query"]
+    pairState{"Pair State?"}
+    transmitIdle["Transmit Idle\n→ Link saturation"]
+    suspended["Suspended\n→ Manual or auto-suspend"]
+    inconsistent["Inconsistent\n→ Data consistency issue"]
+    transmitting["Transmitting / Awaiting Cycle\n→ Transient or write burst"]
+
+    checkDSE["Check DSE Utilization\nsymrdf -g 20 -type A query -detail | grep DSE"]
+    dseHigh{"DSE > 70%?"}
+    checkLinkBW["Check Link Bandwidth\nsymstat -rdf -dir RF-2F -i 5 -c 3"]
+    linkSaturated{"Link > 80%\nUtilization?"}
+    checkNetOps["Check Network with Network Team\nFCIP tunnel state, WAN QoS"]
+    throttleIO["Throttle R1 Write I/O\nIdentify high-write workload"]
+    checkSuspendReason["Check Suspend Reason\nsymevent -sid sid list -last 30 | grep SRDF"]
+    resumeReplication["Resume Replication\nsymrdf -g grp -sid sid resume -noprompt"]
+    doNotActivateR2["Do NOT Activate R2\nEngage Dell Support"]
+    monitorRecovery["Monitor Lag Recovery\nevery 5 minutes"]
+
+    lagAlert --> checkPairState
+    checkPairState --> pairState
+    pairState -->|"Transmit Idle"| transmitIdle
+    pairState -->|"Suspended"| suspended
+    pairState -->|"Inconsistent"| inconsistent
+    pairState -->|"Transmitting"| transmitting
+
+    transmitIdle --> checkDSE
+    checkDSE --> dseHigh
+    dseHigh -->|"Yes"| throttleIO
+    dseHigh -->|"No"| checkLinkBW
+    checkLinkBW --> linkSaturated
+    linkSaturated -->|"Yes"| checkNetOps
+    linkSaturated -->|"No"| monitorRecovery
+
+    suspended --> checkSuspendReason
+    checkSuspendReason --> resumeReplication
+    resumeReplication --> monitorRecovery
+
+    inconsistent --> doNotActivateR2
+
+    transmitting --> monitorRecovery
+
+    style lagAlert fill:#be123c,color:#fff
+    style doNotActivateR2 fill:#be123c,color:#fff
+    style monitorRecovery fill:#15803d,color:#fff
+    style throttleIO fill:#b45309,color:#fff
+    style checkNetOps fill:#b45309,color:#fff
+```
+
 ---
 ## SRDF/A Link Down
 
@@ -53,12 +106,12 @@ symcfg -sid <r1_sid> list -rdfg <group_num> -v | grep -E "Delta|Cycle|Transmit"
 
 **Root causes:**
 
-| Cause | Indicator | Remediation |
-|---|---|---|
-| WAN bandwidth saturation | Delta set queue growing; utilisation at 100% | Contact network team to increase WAN bandwidth or implement QoS |
-| Write I/O spike | Delta set size abnormally large | Identify the high-write workload; schedule heavy batch jobs for off-peak |
-| Array backend congestion | R1 or R2 performance counters showing latency | Check array Unisphere performance; review storage pool or disk group health |
-| FCIP GRE overhead miscalculation | MTU issues causing fragmentation | Verify FCIP MTU settings on switches; test with `ping -M do -s 1400` |
+| Cause | Indicator | Why it happens | Remediation |
+|---|---|---|---|
+| WAN bandwidth saturation | Delta set queue growing; utilisation at 100% | Write rate exceeds provisioned FCIP bandwidth | Contact network team to increase WAN bandwidth or implement QoS |
+| Write I/O spike | Delta set size abnormally large | Batch jobs or backups generating burst writes | Identify the high-write workload; schedule heavy batch jobs for off-peak |
+| Array backend congestion | R1 or R2 performance counters showing latency | Backend storage pool or disk group under pressure | Check array Unisphere performance; review storage pool or disk group health |
+| FCIP GRE overhead miscalculation | MTU issues causing fragmentation | FCIP MTU not accounting for GRE/IPsec encapsulation overhead | Verify FCIP MTU settings on switches; test with `ping -M do -s 1400` |
 
 ---
 

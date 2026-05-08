@@ -102,3 +102,23 @@ Include all of the following in the initial SR submission:
 2. For Sev 1: call support hotline (number in portal after authentication).
 3. If no response within SLA: request escalation to Senior Support Engineer via portal.
 4. If business-critical escalation needed beyond support: contact your Venafi Technical Account Manager (TAM) or Customer Success Manager (CSM).
+
+## Escalation Decision Flow
+
+```mermaid
+flowchart TD
+    issue["Venafi issue detected"]
+    issue --> severity{"Severity\nassessment"}
+    severity -->|"production TPP down\nno certs can issue"| sev1["Sev 1 — Critical"]
+    severity -->|"major feature degraded\nworkaround available"| sev2["Sev 2 — High"]
+    severity -->|"non-critical feature\nimpaired"| sev3["Sev 3 — Medium"]
+    sev1 --> preCollect["Run pre-collection\nchecklist (TPP version, logs, CA diag)"]
+    sev2 --> preCollect
+    sev3 --> openPortal["Open portal ticket\nsupport.venafi.com"]
+    preCollect --> openPortal
+    openPortal -->|"Sev 1"| callHotline["Call Venafi support hotline\nsimultaneously"]
+    callHotline --> slaCheck{"Response within SLA?"}
+    slaCheck -->|"no"| escalateSSE["Request escalation to\nSenior Support Engineer"]
+    escalateSSE --> tamEscalate["Contact TAM / CSM\nfor business-critical escalation"]
+    slaCheck -->|"yes"| workWithSupport["Work with support engineer\nto resolution"]
+```

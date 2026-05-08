@@ -4,6 +4,27 @@
 
 ---
 
+## Authentication Flow
+
+```mermaid
+flowchart TD
+    loginAttempt["SSH / HTTPS login attempt"] --> ipCheck{"IPfilter\nsource IP permitted?"}
+    ipCheck -->|Denied| reject["Connection refused"]
+    ipCheck -->|Permitted| authOrder{"Auth order\nRADIUS first?"}
+    authOrder -->|Yes| radiusReach{"RADIUS server\nreachable?"}
+    radiusReach -->|No| localFallback["Fallback to LOCAL\naccounts on switch"]
+    radiusReach -->|Yes| radiusAuth{"RADIUS\nauthentication?"}
+    radiusAuth -->|Fail| reject2["Login denied\n(no local fallback if\nLOCAL not in authorder)"]
+    radiusAuth -->|Success| vsaRole["Map VSA attribute\nto FabricOS role"]
+    authOrder -->|"TACACS+"| tacacsAuth{"TACACS+\nauthentication?"}
+    tacacsAuth -->|Success| tacacsRole["Role from TACACS+\nper-command authz available"]
+    tacacsAuth -->|Fail| localFallback
+    localFallback --> localAuth{"Local account\nvalid credentials?"}
+    localAuth -->|Yes| localRole["Assign local role"]
+    localAuth -->|No| reject3["Login denied"]
+    vsaRole & tacacsRole & localRole --> session["CLI / Web session\nopened with assigned role"]
+```
+
 ## Overview
 
 Brocade FabricOS supports three authentication methods for management access:

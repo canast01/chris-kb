@@ -2,6 +2,36 @@
 
 Integration with back-end storage arrays, hypervisors, replication systems, and monitoring platforms.
 
+```mermaid
+flowchart TB
+    subgraph "Site A"
+        hostA["ESXi / Linux Hosts\nSite A"]
+        dirA["VPLEX Cluster-1\nDirectors"]
+        arrA["PowerMax / Unity\nArray A"]
+    end
+    subgraph "Site B"
+        hostB["ESXi / Linux Hosts\nSite B"]
+        dirB["VPLEX Cluster-2\nDirectors"]
+        arrB["PowerMax / Unity\nArray B"]
+    end
+    witness["Witness VM\n(3rd failure domain)"]
+    vms["VMS\nUnisphere + vplexcli"]
+    cloudiq["Dell CloudIQ\nAIOps / health telemetry"]
+    siem["SIEM\nSyslog / SNMP traps"]
+
+    hostA -->|"FC front-end\nSAN fabric A"| dirA
+    dirA -->|"FC back-end\nzoning + masking"| arrA
+    hostB -->|"FC front-end\nSAN fabric B"| dirB
+    dirB -->|"FC back-end\nzoning + masking"| arrB
+    dirA <-->|"ICL — 10/25GbE\nsynchronous Metro"| dirB
+    witness -. "quorum" .- dirA
+    witness -. "quorum" .- dirB
+    vms -->|"management"| dirA
+    vms -->|"management"| dirB
+    vms -->|"telemetry"| cloudiq
+    vms -->|"syslog"| siem
+```
+
 ## Back-End Storage Arrays
 
 VPLEX presents a virtualisation layer over heterogeneous back-end arrays. The back-end ports on each VPLEX director zone to the target ports on the back-end array, then VPLEX discovers and claims the LUNs exposed to those ports.
@@ -123,6 +153,28 @@ The RecoverPoint splitter is embedded within VPLEX and intercepts writes to copy
 - Failover is an orchestrated process through RecoverPoint (not automatic via Witness).
 - RecoverPoint bookmarks enable point-in-time consistency for crash-consistent or application-consistent recovery.
 - VPLEX Geo is typically used when Site A and Site B are separated by >5ms RTT (city-to-city, region-to-region).
+
+```mermaid
+flowchart LR
+    subgraph "Site A — Active"
+        hostA["Hosts — Active I/O"]
+        dirA["VPLEX Cluster-1"]
+        rpSplitter["RecoverPoint Splitter\nembedded in VPLEX"]
+        rpA["RecoverPoint\nCluster A"]
+    end
+    subgraph "Site B — DR Standby"
+        rpB["RecoverPoint\nCluster B"]
+        dirB["VPLEX Cluster-2"]
+        hostB["Hosts\nInactive until failover"]
+    end
+
+    hostA -->|"FC I/O"| dirA
+    dirA --> rpSplitter
+    rpSplitter -->|"async journal\nWAN — any distance"| rpA
+    rpA -->|"journal replication"| rpB
+    rpB --> dirB
+    dirB -.->|"volumes activated\nafter RP failover"| hostB
+```
 
 ### Failover Procedure (Geo)
 

@@ -4,6 +4,23 @@
 
 > **Access**: `ssh service@<VMS_IP>` → `vplexcli` — or run one-shot commands with `vplexcli -q -e "<command>"`.
 
+```mermaid
+flowchart LR
+    operator(["Operator /\nAutomation script"])
+    vms["VMS\nvplexcli shell\nssh service@VMS_IP"]
+    unisphere["Unisphere for VPLEX\nhttps://VMS_IP"]
+    directors["VPLEX Directors\nData path components"]
+    arrays["Back-end Arrays\nPowerMax / Unity"]
+    hosts["Hosts\nESXi / Linux / Windows"]
+
+    operator -->|"SSH"| vms
+    operator -->|"HTTPS"| unisphere
+    vms -->|"management commands\nconfig changes"| directors
+    unisphere -->|"REST API"| directors
+    directors -->|"FC back-end\nzoning + masking"| arrays
+    directors -->|"FC front-end\nstorage views"| hosts
+```
+
 ---
 
 ## Quick-Reference Command Table
@@ -70,6 +87,19 @@ vplexcli -q -e "ll /clusters/cluster-1/communication/inter-cluster-links/"
 ## Virtual Volume Management
 
 Virtual volumes are the objects presented to hosts. They are built on top of extents → local devices → virtual volumes.
+
+```mermaid
+flowchart TD
+    step1["Step 1: Claim storage volume\nstorage-volume claim --storage-volume ..."]
+    step2["Step 2: Create extent\nextent create --name ext_app_001 ..."]
+    step3["Step 3: Create local device\nlocal-device create --geometry raid-0 ..."]
+    step4["Step 4: Create distributed device\ndistributed-device create --geometry raid-1 ..."]
+    step5["Step 5: Create virtual volume\nvirtual-volume create --distributed-device ..."]
+    step6["Step 6: Add to storage view\nstorage-view add-virtual-volumes ..."]
+    step7["Step 7: Host sees volume\nRescan HBAs on host"]
+
+    step1 --> step2 --> step3 --> step4 --> step5 --> step6 --> step7
+```
 
 ```bash
 # --- List all virtual volumes (one-shot) ---

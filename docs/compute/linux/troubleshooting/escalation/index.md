@@ -2,6 +2,28 @@
 
 Vendor escalation procedures and support contacts.
 
+## Escalation Decision Flow
+
+```mermaid
+flowchart TD
+    issue["Issue identified\ncannot resolve internally"]
+    severity{"Severity?"}
+    sev1["Sev 1\nKernel panic / data loss"]
+    sev2["Sev 2\nService outage"]
+    sev3["Sev 3\nDegraded / non-urgent"]
+    collectSos["Collect sosreport\nkdump if crash"]
+    openSR["Open Support Request\naccess.redhat.com\nubuntu.com/advantage"]
+    monitor["Monitor SR\nrespond within SLA"]
+    escalateAccount["Escalate to\nAccount Team"]
+
+    issue --> severity
+    severity -- Critical --> sev1 --> collectSos --> openSR
+    severity -- Major --> sev2 --> collectSos --> openSR
+    severity -- Minor --> sev3 --> openSR
+    openSR --> monitor
+    monitor -->|"No progress 24h"| escalateAccount
+```
+
 ## Red Hat (RHEL)
 
 ### Opening a Support Case

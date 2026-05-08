@@ -21,6 +21,25 @@
 
 Configure via SLA Plans in Command Center (preferred for FR32+) or directly in Storage Policy (legacy).
 
+### Capacity Planning Flow
+
+```mermaid
+flowchart TD
+    input(["Input: source data size\n+ daily change rate"])
+    input --> calcFull["Calculate full backup size\n= source × (1 / dedup ratio)"]
+    calcFull --> calcDaily["Calculate daily incremental\n= source × change rate\n× (1 / dedup ratio)"]
+    calcDaily --> calcRetention["Apply retention window\nFull: 1 × weekly size\nIncremental: N days × daily size"]
+    calcRetention --> calcPrimary["Primary storage need\n= full + (retention days × daily)\n+ 20% headroom"]
+    calcPrimary --> calcSecondary["Secondary storage need\n= monthly + yearly copy\non separate media / cloud"]
+    calcSecondary --> ddbSize["DDB sizing\n≈ 1% of total deduped data\non dedicated SSD LUN"]
+    ddbSize --> alert["Alert thresholds\nDDB: alert at 30% free\nLibrary: alert at 80% full"]
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class calcFull,calcDaily,calcRetention,calcPrimary,calcSecondary,ddbSize,alert action
+    class input terminal
+```
+
 ## Backup Job Design
 
 - Each Storage Policy must have:

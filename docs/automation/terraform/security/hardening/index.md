@@ -1,5 +1,31 @@
 # Terraform — Hardening
 
+## Security Scanning Pipeline
+
+```mermaid
+graph LR
+    prOpen["Pull Request\nopened"]
+    tfFmt["terraform fmt -check\n(formatting)"]
+    tfValidate["terraform validate\n(syntax)"]
+    tfsec["tfsec .\n(misconfig scan)"]
+    checkov["checkov -d .\n(policy-as-code)"]
+    tfPlan["terraform plan\n-out=tfplan"]
+    sentinel["Sentinel / OPA\npolicy evaluation"]
+    reviewGate["Human Review\n(plan output in PR)"]
+    tfApply["terraform apply\n(main branch only)"]
+
+    prOpen --> tfFmt
+    tfFmt --> tfValidate
+    tfValidate --> tfsec
+    tfsec --> checkov
+    checkov --> tfPlan
+    tfPlan --> sentinel
+    sentinel -->|Pass| reviewGate
+    sentinel -->|Fail| prOpen
+    reviewGate -->|Approved| tfApply
+    reviewGate -->|Changes| prOpen
+```
+
 ## Security Scanning
 
 Scan Terraform configuration before applying to catch misconfigurations early.

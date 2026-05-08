@@ -4,6 +4,29 @@
 
 When hosts report I/O suspension, a distributed device is out-of-sync, or a director is unreachable, work through this sequence first.
 
+```mermaid
+flowchart TD
+    alert(["Host I/O issue /\nAlert received"])
+    clHealth["ll /clusters/*/health-indications/\nCluster non-ok?"]
+    ddHealth["ll /distributed-storage/distributed-devices/*/health-indications/\nDevice out-of-sync?"]
+    witnessHlth["ll /clusters/*/cluster-witness/\nWitness unreachable?"]
+    iclHlth["Check ICL\nll /clusters/*/communication/inter-cluster-links/"]
+    dirHealth["ll /engines/*/directors/*/hardware/\nDirector faulted?"]
+    svCheck["ll /clusters/*/exports/storage-views/\nStorage view intact?"]
+    hcFull["health-check --full\nCapture full output"]
+
+    alert --> clHealth --> ddHealth --> witnessHlth --> iclHlth --> dirHealth --> svCheck --> hcFull
+
+    iclDown["Restore ICL\nNetwork team"]
+    iclHlth -->|"ICL down"| iclDown
+
+    dirFault["Open Dell Sev-2 case\nDo not reseat without guidance"]
+    dirHealth -->|"Director faulted"| dirFault
+
+    svFix["Add initiator / volume\nback to storage view"]
+    svCheck -->|"View missing objects"| svFix
+```
+
 - [ ] Run `ll /clusters/*/health-indications/` immediately — identify which cluster has entered a non-ok health state and note when the state change occurred
 - [ ] Check distributed device sync state: `ll /distributed-storage/distributed-devices/*/health-indications/` — an `out-of-sync` device means one leg of the distributed device is not being written to; identify which cluster leg is affected
 - [ ] Check Witness status for Metro deployments: `ll /clusters/*/cluster-witness/` — if Witness is unreachable from one cluster and the ICL is also interrupted, VPLEX suspends I/O on consistency groups to preserve write-order consistency

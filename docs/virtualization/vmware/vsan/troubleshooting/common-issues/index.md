@@ -39,6 +39,47 @@ Get-VsanClusterHealthSummary -Cluster (Get-Cluster "VSAN-LON-01") -FetchFromCach
 
 ---
 
+## Degraded Object Recovery Flow
+
+```mermaid
+graph TD
+    alert(["Object degraded or absent\n(vSAN health alarm)"])
+    checkHost{"Is a host\noffline?"}
+    restoreHost["Restore host connectivity\nor power on host"]
+    checkDisk{"Is a disk group\noffline / failed?"}
+    checkNet{"Does network test\nshow packet loss?"}
+    fixNet["Fix network:\nMTU, VLAN, NIC, switch port"]
+    diskReplace["Proceed to disk replacement\n(Procedures → Disk Groups)"]
+    waitResync["Wait for vSAN resync\n(clomRepairDelay = 60 min default)"]
+    monResync["Monitor:\nesxcli vsan debug resync summary get"]
+    checkResync{"Resync completing\nwithin 24 hours?"}
+    checkCap{"Cluster capacity\n> 70%?"}
+    freeCap["Free capacity:\nremove snapshots,\nlower FTT temporarily"]
+    escalate["Escalate to VMware Support\nwith state capture bundle"]
+    resolved(["Objects healthy"])
+
+    alert --> checkHost
+    checkHost -->|"Yes"| restoreHost --> waitResync
+    checkHost -->|"No"| checkDisk
+    checkDisk -->|"Yes"| diskReplace --> waitResync
+    checkDisk -->|"No"| checkNet
+    checkNet -->|"Yes"| fixNet --> waitResync
+    checkNet -->|"No"| waitResync
+    waitResync --> monResync --> checkResync
+    checkResync -->|"Yes"| resolved
+    checkResync -->|"Stalled"| checkCap
+    checkCap -->|"Yes"| freeCap --> monResync
+    checkCap -->|"No"| escalate
+
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+
+    class checkHost,checkDisk,checkNet,checkResync,checkCap decision
+    class restoreHost,fixNet,diskReplace,waitResync,monResync,freeCap,escalate action
+    class alert,resolved terminal
+```
+
 ## Object Degraded or Absent
 
 **Symptoms:**
@@ -204,6 +245,43 @@ grep -i "scsi\|disk\|naa" /var/log/vmkernel.log | grep -i "error\|fail" | tail -
 - VM I/O latency above normal baseline
 - Application timeouts or slowness
 - vCenter performance charts show high vSAN read or write latency
+
+```mermaid
+graph TD
+    highLat(["High vSAN latency detected\n(> 10 ms read / > 20 ms write)"])
+    checkNet{"vmkping -d -s 8972\npeer succeeds?"}
+    fixMTU["Fix MTU end-to-end\n(switch, vDS, vmk adapter = 9000)"]
+    checkResync{"Active resync\nin progress?"}
+    throttle["Throttle resync during\nbusiness hours:\nesxcli vsan debug resync\nthrottle set --throttle 500"]
+    checkCap{"Cluster capacity\n> 80%?"}
+    freeCap["Free capacity:\ndelete snapshots,\nexpand cluster"]
+    checkDisk{"Disk group\nhealthy?"}
+    replaceDisk["Replace failed\nhardware"]
+    checkCPU{"Host CPU\ncongestion?"}
+    vMotion["vMotion high-IOPS\nVMs to less-loaded hosts"]
+    openCase["Escalate to VMware\nSupport"]
+    resolved(["Latency normal"])
+
+    highLat --> checkNet
+    checkNet -->|"No / packet loss"| fixMTU --> resolved
+    checkNet -->|"Yes"| checkResync
+    checkResync -->|"Yes"| throttle --> resolved
+    checkResync -->|"No"| checkCap
+    checkCap -->|"Yes"| freeCap --> resolved
+    checkCap -->|"No"| checkDisk
+    checkDisk -->|"Degraded"| replaceDisk --> resolved
+    checkDisk -->|"Healthy"| checkCPU
+    checkCPU -->|"Yes"| vMotion --> resolved
+    checkCPU -->|"No"| openCase
+
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+
+    class checkNet,checkResync,checkCap,checkDisk,checkCPU decision
+    class fixMTU,throttle,freeCap,replaceDisk,vMotion,openCase action
+    class highLat,resolved terminal
+```
 
 **Diagnosis:**
 

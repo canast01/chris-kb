@@ -2,6 +2,24 @@
 
 ## Daily Checks
 
+```mermaid
+flowchart TD
+    A([Daily Health Check]) --> B["alerts show current\nAny active alerts?"]
+    B --> C{"Critical or\nhardware alert?"}
+    C -->|Yes| D["disk show state\nenclosure show hardware\nOpen Dell support case"]
+    C -->|No| E["filesys show space\nPost-comp < 80%?"]
+    E --> F{"Capacity\n> 80%?"}
+    F -->|Yes| G["filesys clean start\nPlan capacity expansion"]
+    F -->|No| H["replication show\nAll contexts Normal?"]
+    H --> I{"Context in Error\nor high lag?"}
+    I -->|Yes| J["replication show errors\nCheck network\nreplication disable + enable"]
+    I -->|No| K["ddboost show clients\nAll backup servers connected?"]
+    K --> L{"Client\ndisconnected?"}
+    L -->|Yes| M["ddboost status\nReset credentials if needed"]
+    L -->|No| N([All checks passed])
+    D & G & J & M --> N
+```
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Run `filesys show space` | `filesys show space` | check pre- and post-compression capacity; alert if post-compression used exceeds 80% of usable capacity |

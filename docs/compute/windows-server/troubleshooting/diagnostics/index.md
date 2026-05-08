@@ -2,6 +2,34 @@
 
 Diagnostic procedures and log analysis.
 
+## Windows Event Log Pipeline
+
+```mermaid
+flowchart LR
+    kernel["Kernel / Drivers"]
+    apps["Applications\n.NET · SQL · IIS"]
+    svcEvents["Services\nstart · stop · crash"]
+    security["Security Subsystem\nauth · privilege · object access"]
+
+    sysLog["System Event Log"]
+    appLog["Application Event Log"]
+    secLog["Security Event Log"]
+    psLog["PowerShell Log"]
+
+    siem["SIEM\nEvent Hub · Splunk"]
+    wef["WEF Collector\nWindows Event Forwarding"]
+
+    kernel --> sysLog
+    svcEvents --> sysLog
+    apps --> appLog
+    security --> secLog
+    sysLog --> wef
+    appLog --> wef
+    secLog --> wef
+    psLog --> wef
+    wef --> siem
+```
+
 ## Key Event Logs
 
 | Log | Path | Content |

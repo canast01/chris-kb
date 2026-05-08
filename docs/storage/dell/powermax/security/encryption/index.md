@@ -4,6 +4,41 @@
 
 PowerMax provides encryption at three layers: data at rest on NVMe drives, data in flight over SRDF replication links, and management traffic over TLS. All three layers are independently configurable. Data at Rest Encryption (D@RE) is enabled by factory default on PowerMax 2000 and 8000 systems; replication encryption and management TLS require explicit configuration to enforce strong settings.
 
+```mermaid
+graph TD
+    subgraph "Layer 3 — Management Traffic"
+        TLS_UNI["Unisphere HTTPS :8443\nTLS 1.2 / 1.3\nCA-signed certificate"]
+        TLS_SE["SYMAPI Daemon :2707\nTLS (SECURE flag in netcnfg)"]
+    end
+    subgraph "Layer 2 — Data in Flight (SRDF)"
+        SRDF_ENC["SRDF Encryption\nAES-256 at RDF director\nRequired for WAN/IP links\nBoth R1 + R2 must enable"]
+        SRDF_LINK["SRDF Link\n(dark fibre / DWDM / IP)"]
+        SRDF_ENC --> SRDF_LINK
+    end
+    subgraph "Layer 1 — Data at Rest (D@RE)"
+        KEK["Key Encryption Key (KEK)\nEmbedded EKMS or\nexternal KMIP server"]
+        DEK["Data Encryption Key (DEK)\nper NVMe drive\nwrapped by KEK"]
+        NVME["NVMe Drive Media\nAES-256 hardware encryption\nenabled at factory"]
+        KEK --> DEK --> NVME
+    end
+    subgraph "KMIP External Key Manager (optional)"
+        KMIP["KMIP Server\n(Thales CipherTrust /\nEntrust KeyControl)\nTLS mTLS :5696"]
+        KMIP -->|"KMIP Discover\n+ key delivery"| KEK
+    end
+
+    TLS_UNI --> TLS_SE
+    SRDF_ENC --> NVME
+
+    classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef inflight fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef atrest fill:#0f766e,stroke:#0d9488,color:#fff
+    classDef kmip fill:#92400e,stroke:#78350f,color:#fff
+    class TLS_UNI,TLS_SE mgmt
+    class SRDF_ENC,SRDF_LINK inflight
+    class KEK,DEK,NVME atrest
+    class KMIP kmip
+```
+
 ## Data at Rest Encryption (D@RE)
 
 PowerMax implements D@RE using AES-256 hardware encryption on every NVMe drive. Encryption is transparent to hosts and applications — no performance impact, no configuration required on the host side.

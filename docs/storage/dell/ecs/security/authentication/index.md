@@ -4,6 +4,27 @@
 
 ECS has two distinct authentication contexts: **management plane** (portal/API administration) and **data plane** (S3/Swift/CAS object access). These use different identity sources and credential types.
 
+```mermaid
+graph LR
+  subgraph "Management Plane"
+    PORTAL["ECS Portal\nREST API :4443"]
+    PORTAL --> MAUTH{Auth}
+    MAUTH -->|Local| MLOCAL["Local ECS account\n(sysadmin / svc-ecs-mgmt)"]
+    MAUTH -->|LDAP| LDAPGRP["AD Group\n→ ECS role mapping\n(per namespace)"]
+  end
+  subgraph "Data Plane"
+    S3["S3 / Swift\nAPI :443 / :9021"]
+    S3 -->|"Access Key + Secret Key\n(SigV4)"| OBJUSR["Object User\n(namespace-scoped)"]
+    OBJUSR --> BPOL["Bucket Policy\n(least-privilege actions)"]
+  end
+  classDef mplane fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dplane fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef cred fill:#15803d,stroke:#166534,color:#fff
+  class PORTAL,MAUTH mplane
+  class S3,OBJUSR,BPOL dplane
+  class MLOCAL,LDAPGRP cred
+```
+
 | Context | User Type | Credential Type | Identity Source |
 |---|---|---|---|
 | Management plane | System Admin, System Monitor | Username + password | Local ECS accounts or LDAP/AD |

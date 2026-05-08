@@ -8,6 +8,42 @@ PowerMax backup strategy centres on SnapVX (formerly TimeFinder/SnapVX) for loca
 
 SnapVX is the native snapshot engine on PowerMax. A snapshot captures a point-in-time view of all devices in a storage group simultaneously. Snapshots are crash-consistent by default; application-consistent snapshots require host-side quiesce (VSS on Windows, Oracle RMAN freeze, or FSFreeze on Linux) before the `establish` call.
 
+```mermaid
+flowchart TD
+    subgraph "Production"
+        PROD_HOST["Production Host\n(Oracle / SQL / SAP)"]
+        PROD_SG["PROD_SG\n(NVMe TDEVs)"]
+        PROD_HOST -->|"FC / NVMe-oF"| PROD_SG
+    end
+    subgraph "Snapshot Engine"
+        SNAP["SnapVX Snapshot\nPOINT-IN-TIME\n(changed blocks only)"]
+        PROD_SG -->|"establish"| SNAP
+    end
+    subgraph "Backup Path"
+        TARGET_SG["TARGET_SG\n(linked clone — space-efficient)"]
+        PROXY["Backup Proxy Host\n(Veeam / NetBackup)"]
+        MEDIA["Backup Media\n(tape / object store / DataDomain)"]
+        SNAP -->|"link"| TARGET_SG
+        TARGET_SG -->|"masking view"| PROXY
+        PROXY -->|"stream to media"| MEDIA
+    end
+    subgraph "Cleanup"
+        UNLINK["symsnapvx unlink\n(after backup completes)"]
+        TERM["symsnapvx terminate\n(after retention expires)"]
+        PROXY --> UNLINK --> TARGET_SG
+        UNLINK --> TERM --> SNAP
+    end
+
+    classDef prod fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef snap fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef bkp fill:#0f766e,stroke:#0d9488,color:#fff
+    classDef clean fill:#92400e,stroke:#78350f,color:#fff
+    class PROD_HOST,PROD_SG prod
+    class SNAP snap
+    class TARGET_SG,PROXY,MEDIA bkp
+    class UNLINK,TERM clean
+```
+
 | Parameter | Value | Description |
 |---|---|---|
 | Maximum snapshots per device | 256 | Hard limit enforced by PowerMaxOS |
@@ -283,6 +319,41 @@ done | sort -t: -k2 -rn | head -20
 ## Snapshot-Based DR with SRDF + SnapVX
 
 An advanced pattern for combined DR and backup is to use SRDF/A to replicate to a remote PowerMax, then take SnapVX snapshots on the R2 side (DR site). This provides:
+
+```mermaid
+flowchart LR
+    subgraph "Production Site (R1)"
+        PROD["Production Hosts\n(active I/O)"]
+        R1_SG["R1 Storage Group\n(PROD_SG)"]
+        R1_PMX["PowerMax R1"]
+        PROD --> R1_SG --> R1_PMX
+    end
+    subgraph "SRDF/A Replication"
+        SRDF_LINK["SRDF/A Link\n(WAN / dark fibre)\nRPO: 10–30 sec\nEncrypted AES-256"]
+    end
+    subgraph "DR Site (R2)"
+        R2_PMX["PowerMax R2"]
+        R2_SG["R2 Storage Group\n(replica)"]
+        SPLIT_OP["2. Split R2 briefly\n(2–5 sec window)"]
+        SNAP_R2["3. SnapVX Snapshot\nDR_SNAP_YYYYMMDD\n(space-efficient)"]
+        RESUME_OP["4. Resume SRDF/A\n(resync delta tracks)"]
+        DR_PROXY["DR Backup Proxy\nor Test Mount Host"]
+        R2_PMX --> R2_SG --> SPLIT_OP --> SNAP_R2
+        SNAP_R2 --> RESUME_OP
+        SNAP_R2 -->|"link"| DR_PROXY
+    end
+
+    R1_PMX -->|"1. SRDF/A\ncontinuous replication"| SRDF_LINK --> R2_PMX
+
+    classDef prod fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef srdf fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+    classDef snap fill:#0f766e,stroke:#0d9488,color:#fff
+    class PROD,R1_SG,R1_PMX prod
+    class SRDF_LINK srdf
+    class R2_PMX,R2_SG,SPLIT_OP,RESUME_OP dr
+    class SNAP_R2,DR_PROXY snap
+```
 
 - Zero production I/O impact (snapshots taken at DR site)
 - RPO = SRDF/A cycle time (typically 10–30 seconds)

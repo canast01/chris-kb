@@ -13,6 +13,25 @@
 
 SRDF director ports on both arrays handle the inter-site replication traffic over FC or FCIP links.
 
+## Synchronous Write Commit Sequence
+
+```mermaid
+sequenceDiagram
+    participant host as Production Host
+    participant r1 as PowerMax R1<br/>(Site A)
+    participant link as SRDF Link<br/>(FCIP / FC)
+    participant r2 as PowerMax R2<br/>(Site B)
+
+    host->>r1: Write I/O request
+    r1->>link: Forward write to R2 (synchronous)
+    link->>r2: Deliver write
+    r2-->>r1: Acknowledge write committed
+    r1-->>host: Acknowledge I/O complete
+
+    Note over r1,r2: Both arrays commit before host ACK
+    Note over link: WAN RTT directly adds to host write latency
+```
+
 ---
 
 ## Key Components
@@ -106,6 +125,39 @@ Dev      R1 State     R2 State     Pair State     Tracks
 ----     --------     --------     ----------     ------
 0A1      RW           WD           Synchronized   0
 0A2      RW           WD           Synchronized   0
+```
+
+### Pair State Transition Diagram
+
+```mermaid
+flowchart TD
+    synced["Synchronized\n(RPO = 0, full protection)"]
+    syncInProg["SyncInProg\n(initial or resync copy in progress)"]
+    suspended["Suspended\n(R1 accepts writes, R2 stale)"]
+    failedOver["Failed Over\n(R2 is production)"]
+    splitState["Split\n(both R1 and R2 are R/W)"]
+    partitioned["Partitioned\n(link interrupted)"]
+    transmitIdle["Transmit Idle\n(link up, no tracks to send)"]
+
+    synced -->|"suspend"| suspended
+    synced -->|"split"| splitState
+    synced -->|"link drops"| partitioned
+    synced -->|"no pending writes"| transmitIdle
+    transmitIdle -->|"new write arrives"| synced
+    suspended -->|"resume"| syncInProg
+    splitState -->|"establish"| syncInProg
+    syncInProg -->|"copy complete"| synced
+    partitioned -->|"link restored"| syncInProg
+    synced -->|"failover"| failedOver
+    failedOver -->|"restore"| syncInProg
+
+    style synced fill:#15803d,color:#fff
+    style failedOver fill:#be123c,color:#fff
+    style splitState fill:#be123c,color:#fff
+    style partitioned fill:#b45309,color:#fff
+    style suspended fill:#6b7280,color:#fff
+    style syncInProg fill:#2563eb,color:#fff
+    style transmitIdle fill:#7c3aed,color:#fff
 ```
 
 ### Known Issues and Field Notes

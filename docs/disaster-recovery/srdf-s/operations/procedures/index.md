@@ -37,6 +37,37 @@ echo "Baseline captured at $(date)"
 
 SRDF/S failover transfers I/O ownership from the R1 (source) volume to the R2 (target) volume on the remote PowerMax array. Because SRDF/S is synchronous, every write acknowledged to the host has already been committed on both sides, so RPO at the moment of failover is zero. Failover is invoked when the primary site is unavailable or during a planned DR test.
 
+### Planned Failover Flowchart
+
+```mermaid
+flowchart TD
+    start["Planned Failover Initiated\n(maintenance, DR test, or migration)"]
+    quiesceApps["Quiesce Applications at Primary Site\n(application owner confirms)"]
+    verifySynced["Verify All Pairs Synchronized\nsymrdf -sid r1sid -rdfg rdfg verify -synchronized"]
+    captureBaseline["Capture Pre-Failover Baseline\nsymrdf query -g dgname > /tmp/prestate.txt"]
+    initiateFailover["Initiate Failover\nsymrdf -sid r1sid -rdfg rdfg -g dgname failover"]
+    confirmFailedOver["Confirm Failed Over State\nsymrdf query -g dgname"]
+    presentR2["Present R2 LUNs to DR Hosts\n(storage masking / zoning)"]
+    startApps["Start Applications at DR Site\n(DR application team)"]
+    validate["Validate Application Connectivity\nand Data Integrity"]
+    complete["Failover Complete\nDocument RTO in change ticket"]
+
+    start --> quiesceApps
+    quiesceApps --> verifySynced
+    verifySynced --> captureBaseline
+    captureBaseline --> initiateFailover
+    initiateFailover --> confirmFailedOver
+    confirmFailedOver --> presentR2
+    presentR2 --> startApps
+    startApps --> validate
+    validate --> complete
+
+    style start fill:#2563eb,color:#fff
+    style complete fill:#15803d,color:#fff
+    style initiateFailover fill:#b45309,color:#fff
+    style verifySynced fill:#7c3aed,color:#fff
+```
+
 Two modes exist: **failover** (splits the pair and makes R2 read/write) and **failover -establish** (for a planned switch where the primary site remains available and replication is immediately reversed).
 
 ### Pre-Failover Checklist
@@ -161,6 +192,29 @@ dd if=/dev/sdX of=/dev/null bs=1M count=100 iflag=direct
 - **Split-brain risk**: Never fail over while R1 is still accessible to production hosts without first quiescing I/O and confirming the R1 host is offline.
 
 ---
+
+## Suspend and Resume Sequence
+
+```mermaid
+sequenceDiagram
+    participant ops as Operations Team
+    participant r1 as PowerMax R1
+    participant r2 as PowerMax R2
+    participant app as Application
+
+    ops->>r1: verify -synchronized (confirm zero tracks)
+    r1-->>ops: All pairs Synchronized
+    ops->>r1: symrdf suspend (pause replication)
+    r1-->>r2: Replication suspended
+    r2-->>ops: State: Suspended
+    Note over r1,r2: Maintenance window — R1 accepts writes, R2 is stale
+    ops->>r1: symrdf resume (restart replication)
+    r1->>r2: Send dirty tracks (incremental resync)
+    Note over r1,r2: SyncInProg — tracks flushing to R2
+    r2-->>r1: All tracks applied
+    r1-->>ops: State: Synchronized
+    ops->>app: Maintenance window closed
+```
 
 ## Resync
 
@@ -452,11 +506,11 @@ symrdf -sid <r1_sid> -rdfg <rdf_group_number> -g <dgname> failover
 
 **SRM test failover vs live failover:**
 
-| Mode | SRDF/S Impact | R1 Data Impact |
-|---|---|---|
-| SRM test failover | R2 snapshot presented; no SRDF/S pair state change | None — production continues unaffected |
-| SRM planned migration | Clean failover; pairs transition to `Failed Over` | R1 suspended; R2 becomes active |
-| SRM disaster recovery | Force failover; pairs transition from `Invalid` to `Failed Over` | R1 offline; R2 becomes active |
+| Mode | SRDF/S Impact | R1 Data Impact | When to use |
+|---|---|---|---|
+| SRM test failover | R2 snapshot presented; no SRDF/S pair state change | None — production continues unaffected | Quarterly DR testing; non-disruptive validation |
+| SRM planned migration | Clean failover; pairs transition to `Failed Over` | R1 suspended; R2 becomes active | Planned site maintenance, site power work |
+| SRM disaster recovery | Force failover; pairs transition from `Invalid` to `Failed Over` | R1 offline; R2 becomes active | Declared DR event; primary site unreachable |
 
 ---
 

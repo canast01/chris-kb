@@ -29,6 +29,23 @@ Always upgrade in this sequence to maintain interoperability support:
 
 **Never upgrade ESXi before vCenter.** A newer ESXi host is not supported by an older vCenter.
 
+```mermaid
+graph TD
+    backup["1. File-based backup of vCenter\n(VAMI → Backup)"]
+    interop["2. Check interop matrix\n(vCenter × ESXi × NSX × vSAN)"]
+    vcUpgrade["3. Upgrade vCenter Server\n(Stage 1: deploy / Stage 2: migrate)"]
+    vsanUpgrade["4. Upgrade vSAN\n(vSAN upgrade wizard in vCenter)"]
+    nsxUpgrade["5. Upgrade NSX Manager\n(if deployed)"]
+    esxiUpgrade["6. Upgrade ESXi hosts\n(vLCM — one cluster at a time)"]
+    vmhw["7. Update VM hardware version\n(optional — check guest OS compat)"]
+    tools["8. Update VMware Tools\n(all powered-on VMs)"]
+
+    backup --> interop --> vcUpgrade --> vsanUpgrade --> nsxUpgrade --> esxiUpgrade --> vmhw --> tools
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    class backup,interop,vcUpgrade,vsanUpgrade,nsxUpgrade,esxiUpgrade,vmhw,tools step
+```
+
 ## vCenter Upgrade Procedure (VCSA)
 
 1. Take a **file-based backup** of vCenter (VAMI → Backup)

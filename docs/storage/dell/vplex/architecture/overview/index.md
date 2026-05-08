@@ -22,6 +22,19 @@ Back-end Array LUN (storage volume)
                 └── Virtual Volume (the object presented to hosts)
 ```
 
+```mermaid
+flowchart TD
+    arrayLUN["Back-end Array LUN\n(PowerMax / Unity)"]
+    storageVol["Storage Volume\nVPLEX discovers and claims LUN"]
+    extent["Extent\nVPLEX claim on storage volume"]
+    localDev["Local Device\nRAID-0 or RAID-1 within cluster"]
+    distDev["Distributed Device\nRAID-1 across two clusters — Metro only"]
+    virtVol["Virtual Volume\nPresented to hosts via storage views"]
+    storageView["Storage View\nHost HBA → FE port → virtual volume"]
+
+    arrayLUN --> storageVol --> extent --> localDev --> distDev --> virtVol --> storageView
+```
+
 Each layer maps to a vplexcli path:
 
 | Object | vplexcli Path |
@@ -183,6 +196,25 @@ Understanding the write path is critical for latency troubleshooting:
 6. Both clusters destage the write to their local back-end arrays independently
 
 Host write latency = local VPLEX cache latency + ICL round-trip latency + any back-pressure from cache destage.
+
+```mermaid
+sequenceDiagram
+    participant Host as Host
+    participant Dir1 as VPLEX Director\nCluster-1 (Site A)
+    participant Dir2 as VPLEX Director\nCluster-2 (Site B)
+    participant Arr1 as Array A\n(Site A)
+    participant Arr2 as Array B\n(Site B)
+
+    Host->>Dir1: Write I/O via FC front-end port
+    Dir1->>Dir1: Write to local NVRAM write cache
+    Dir1->>Dir2: Synchronous replication over ICL
+    Dir2->>Dir2: Write to Cluster-2 NVRAM write cache
+    Dir2-->>Dir1: Acknowledge write received
+    Dir1-->>Host: Write complete (acknowledged to host)
+    Note over Dir1,Dir2: Both directors now destage independently
+    Dir1-)Arr1: Destage write to Array A
+    Dir2-)Arr2: Destage write to Array B
+```
 
 ## VPLEX Local vs. Metro — Feature Comparison
 

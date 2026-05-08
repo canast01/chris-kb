@@ -4,6 +4,24 @@
 
 ---
 
+## Zoning Workflow
+
+```mermaid
+flowchart TD
+    start([New host to zone]) --> getWWPN["Collect host HBA WWPNs\nnsshow after FLOGI\nor esxcli storage san fc list"]
+    getWWPN --> createAlias["alicreate host alias\nalicreate array alias"]
+    createAlias --> createZone["zonecreate\n(one zone per HBA port)"]
+    createZone --> addCfg["cfgadd to active zone set"]
+    addCfg --> preview["zoneshow — review before activate"]
+    preview --> cfgEnable["cfgenable zoneset-name\n(live immediately in fabric)"]
+    cfgEnable --> cfgSave["cfgsave\n(persist to flash)"]
+    cfgSave --> verify["Verify host sees storage\nnszonemember · host-side rescan"]
+    verify --> done([Zoning complete])
+
+    style done fill:#15803d,color:#fff
+    style start fill:#2563eb,color:#fff
+```
+
 ## Change Readiness
 
 - [ ] Zone configuration backup taken: run `cfgsave` and export offline copy via `configupload`

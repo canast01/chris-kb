@@ -32,6 +32,29 @@ symuserdb list -sid <SID>
 
 Unisphere for PowerMax supports LDAP (including Active Directory via LDAP) for centrally-managed authentication. Users authenticate with their AD credentials; Unisphere maps AD group membership to internal roles.
 
+```mermaid
+sequenceDiagram
+    participant User as Admin Browser
+    participant UNI as Unisphere :8443
+    participant AD as Active Directory\n(LDAPS :636)
+    participant ARRAY as PowerMax Array
+
+    User->>UNI: HTTPS login (username + password)
+    UNI->>AD: LDAP bind (svc-powermax + bind_pw)
+    AD-->>UNI: bind success
+    UNI->>AD: search user (sAMAccountName=username)
+    AD-->>UNI: user DN + group memberships
+    UNI->>AD: verify password (bind as user DN)
+    AD-->>UNI: authentication OK
+    UNI->>UNI: map AD group → Unisphere role\n(StorageAdmin / SecurityAdmin / etc.)
+    UNI-->>User: session cookie + dashboard
+    User->>UNI: API call (GET /storagegroup)
+    UNI->>UNI: RBAC check — role has permission?
+    UNI->>ARRAY: SYMAPI / internal query
+    ARRAY-->>UNI: data
+    UNI-->>User: 200 OK + storage group list
+```
+
 ### Configuration Steps
 
 1. Navigate to **Unisphere → Settings → Security → LDAP Configuration**.

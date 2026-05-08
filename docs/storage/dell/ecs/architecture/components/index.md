@@ -17,6 +17,36 @@
 
 ECS runs a purpose-built distributed software stack on each node. Key internal components include:
 
+```mermaid
+graph TD
+  subgraph "ECS Node (per node)"
+    CASPIAN["Fabric Agent (caspian)\nNode lifecycle and upgrade management"]
+    STOR["Data Service (storageos)\nS3/Swift/CAS protocol · EC · geo-replication"]
+    CASS["Metadata Store (Cassandra)\nObject metadata · IAM · namespace config"]
+    ZK["Coordination (ZooKeeper)\nLeader election · distributed locks"]
+    MGMT["Management Plane\nECS Portal · REST API (port 4443)"]
+    ES["Metadata Search (Elasticsearch)\nOptional — query API index"]
+    CASPIAN --> STOR
+    STOR --> CASS & ZK
+    MGMT --> STOR & CASS
+    STOR -.->|optional| ES
+  end
+  subgraph "External"
+    CLIENTS(["S3 / Swift Clients"])
+    ADMINS(["Administrators\nECS Portal / REST API"])
+    KMS["External KMIP KMS\n(optional)"]
+  end
+  CLIENTS --> STOR
+  ADMINS --> MGMT
+  STOR <-->|"key ops"| KMS
+  classDef svc fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef ext fill:#15803d,stroke:#166534,color:#fff
+  classDef opt fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class CASPIAN,STOR,CASS,ZK,MGMT svc
+  class CLIENTS,ADMINS,KMS ext
+  class ES opt
+```
+
 | Component | Technology | Role |
 |---|---|---|
 | Data Service | Custom C++/Java service (`storageos`) | Handles object I/O, erasure coding, chunk placement, and geo-replication |
@@ -163,6 +193,31 @@ Replication throttling prevents geo-replication from saturating WAN links during
 ## IAM and User Model
 
 ECS uses two distinct user types: management users (portal/API) and object users (S3/Swift data access).
+
+```mermaid
+graph TD
+  subgraph "Management Plane Users"
+    SYSADMIN["System Admin\n(global)"]
+    SYSMON["System Monitor\n(global, read-only)"]
+    NSADMIN["Namespace Admin\n(per namespace)"]
+    NSUSER["Namespace User\n(per namespace, read-only)"]
+    LDAP["AD / LDAP Groups"] --> SYSADMIN & SYSMON & NSADMIN & NSUSER
+  end
+  subgraph "Data Plane Users (per namespace)"
+    OBJUSER["Object User\n(IAM identity)"]
+    KEY1["Access Key 1"]
+    KEY2["Access Key 2\n(for zero-downtime rotation)"]
+    OBJUSER --> KEY1 & KEY2
+    BPOL["Bucket Policy\n(s3:GetObject etc)"] --> OBJUSER
+  end
+  NSADMIN -->|"creates"| OBJUSER
+  classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef data fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef src fill:#15803d,stroke:#166534,color:#fff
+  class SYSADMIN,SYSMON,NSADMIN,NSUSER mgmt
+  class OBJUSER,KEY1,KEY2,BPOL data
+  class LDAP src
+```
 
 | User Type | Scope | Authentication | Purpose |
 |---|---|---|---|

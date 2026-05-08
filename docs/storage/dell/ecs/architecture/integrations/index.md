@@ -4,6 +4,28 @@
 
 ECS exposes a native S3-compatible API on HTTPS port 443 (or 9021 for the non-standard S3 port; 9020 for plain HTTP in lab environments). Any S3-compatible client can connect using path-style or virtual-hosted-style addressing.
 
+```mermaid
+graph LR
+  subgraph "Client Layer"
+    AWSCLI["aws CLI\n(SigV4)"]
+    S3CMD["s3cmd"]
+    JAVA["S3 SDK\n(Java / Python / Go)"]
+    VBR["Veeam B&R\n(S3 compatible)"]
+  end
+  subgraph "ECS Endpoint"
+    LB["Load Balancer VIP\nHTTPS 443 / 9021"]
+    NODE1["ECS Node 1"]
+    NODE2["ECS Node 2"]
+    NODEN["ECS Node N"]
+    LB --> NODE1 & NODE2 & NODEN
+  end
+  AWSCLI & S3CMD & JAVA & VBR -->|"HTTPS + SigV4"| LB
+  classDef client fill:#15803d,stroke:#166534,color:#fff
+  classDef ecs fill:#2563eb,stroke:#1d4ed8,color:#fff
+  class AWSCLI,S3CMD,JAVA,VBR client
+  class LB,NODE1,NODE2,NODEN ecs
+```
+
 **Connection parameters:**
 
 | Parameter | Value |
@@ -68,6 +90,28 @@ s3cmd sync /local/path/ s3://<bucket>/
 ## Veeam Object Repository
 
 ECS is a certified S3-compatible target for Veeam Backup & Replication object repositories (Scale-out Backup Repository offload and Capacity Tier).
+
+```mermaid
+graph LR
+  subgraph "Veeam Infrastructure"
+    VBR["Veeam B&R Server"]
+    SOBR["Scale-out Backup Repo\n(Performance Tier)"]
+    VBR --> SOBR
+  end
+  subgraph "ECS"
+    S3EP["ECS S3 Endpoint\nHTTPS 9021"]
+    NS["Namespace: veeam-prod"]
+    BKT["Bucket: veeam-prod-offload\n(Object Lock optional)"]
+    USR["Object User: svc-veeam-prod"]
+    S3EP --> NS --> BKT
+    USR --> BKT
+  end
+  SOBR -->|"offload — Capacity Tier\nHTTPS + SigV4"| S3EP
+  classDef veeam fill:#15803d,stroke:#166534,color:#fff
+  classDef ecs fill:#2563eb,stroke:#1d4ed8,color:#fff
+  class VBR,SOBR veeam
+  class S3EP,NS,BKT,USR ecs
+```
 
 **Integration steps:**
 

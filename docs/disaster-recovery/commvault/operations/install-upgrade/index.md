@@ -14,6 +14,30 @@ Check current version EOL: [documentation.commvault.com](https://documentation.c
 
 ## Upgrade Order
 
+### CommVault Upgrade Dependency Chain
+
+```mermaid
+flowchart TD
+    start(["Start upgrade window"])
+    start --> backup["Back up CommServe SQL DB\nverify backup completes"]
+    backup --> dbCheck{"DB backup\ncomplete?"}
+    dbCheck -->|No| halt["STOP — do not proceed\nuntil backup confirmed"]
+    dbCheck -->|Yes| csUpgrade["Upgrade CommServe\nSQL DB upgraded automatically"]
+    csUpgrade --> maUpgrade["Upgrade MediaAgents\nrolling — one pool at a time"]
+    maUpgrade --> clientUpgrade["Upgrade Clients\npush via client group or individual"]
+    clientUpgrade --> validate["Validate:\n- All services running\n- No jobs queued/failed\n- Test backup on non-critical client"]
+    validate --> done(["Upgrade complete"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    classDef warn fill:#be123c,stroke:#9f1239,color:#fff
+    class backup,csUpgrade,maUpgrade,clientUpgrade,validate action
+    class dbCheck decision
+    class start,done terminal
+    class halt warn
+```
+
 **Critical: always upgrade CommServe first.**
 
 1. **Pre-upgrade**: Back up CommServe SQL database manually

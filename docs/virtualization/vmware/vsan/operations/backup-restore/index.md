@@ -10,6 +10,29 @@ vSAN provides resiliency (FTT policy, RAID-1/5/6) but resiliency is not backup. 
 
 **Required protection layers:**
 
+```mermaid
+graph TD
+    workload["VM Workloads\non vSAN"]
+
+    ftt["vSAN FTT Policy\n(RAID-1/5/6)\nProtects: hardware failure"]
+    backup["External Backup\n(Veeam / Commvault / VADP)\nProtects: deletion, corruption,\nransomware"]
+    dr["DR / Stretched Cluster\nor vSAN HCI Mesh\nProtects: site-level failure"]
+    snap["vSphere Snapshot\n(short-term only)\nNOT a substitute for backup"]
+
+    workload --> ftt
+    workload --> backup
+    workload --> dr
+    workload -.->|"limited scope"| snap
+
+    classDef good fill:#15803d,stroke:#166534,color:#fff
+    classDef limited fill:#b45309,stroke:#92400e,color:#fff
+    classDef vm fill:#2563eb,stroke:#1d4ed8,color:#fff
+
+    class ftt,backup,dr good
+    class snap limited
+    class workload vm
+```
+
 | Layer | Provided by | Purpose |
 |---|---|---|
 | Storage resiliency | vSAN FTT policy | Survive hardware failure without data loss |

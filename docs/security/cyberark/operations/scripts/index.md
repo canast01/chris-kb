@@ -2,7 +2,25 @@
 
 PowerShell automation using the `psPAS` module and the PVWA REST API. All automation uses a dedicated PVWA service account with the minimum required safe-level and administrative permissions. Never use a personal admin account for scheduled automation.
 
+## Automation Workflow
+
+```mermaid
+flowchart TD
+    schedTask["Scheduled Task / CI-CD pipeline"] --> authPVWA["New-PASSession\n(svc-cyberark-api)"]
+    authPVWA --> doWork{"Task type"}
+    doWork -->|"onboarding"| onboard["Add-PASAccount\n(from CSV or IaC)"]
+    doWork -->|"rotation report"| rotReport["Get-PASAccount\nfilter failed CPM status"]
+    doWork -->|"safe audit"| safeAudit["Get-PASSafe + Get-PASSafeMember\nexport to CSV"]
+    doWork -->|"session inventory"| sessionInv["Get-PASRecording\ndate-range export"]
+    onboard --> closeSess["Close-PASSession"]
+    rotReport --> alertEmail["Send-MailMessage\n(failure alert)"]
+    alertEmail --> closeSess
+    safeAudit --> closeSess
+    sessionInv --> closeSess
+```
+
 ---
+
 ## Prerequisites
 
 ```powershell

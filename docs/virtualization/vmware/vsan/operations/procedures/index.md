@@ -6,6 +6,42 @@ Operational how-to guides for day-to-day vSAN management. Each section covers a 
 
 ## Disk Groups
 
+### Disk Replacement Decision Flow
+
+```mermaid
+graph TD
+    alert(["vSAN disk failure alert"])
+    checkType{"Which disk\nfailed?"}
+    capDisk["Capacity disk failure\n(objects degraded)"]
+    cacheDisk["Cache SSD failure\n(entire disk group offline)"]
+
+    capFlow1["Remove failed capacity disk:\nesxcli vsan storage remove -d <naa>"]
+    capFlow2["Replace physical disk\n(hardware procedure)"]
+    capFlow3["Add new disk to existing\ndisk group: esxcli vsan storage add\n-s <cache_naa> -d <new_naa>"]
+
+    cacheFlow1["Remove entire disk group:\nesxcli vsan storage remove -s <naa>"]
+    cacheFlow2["Replace cache SSD\n(hardware procedure)"]
+    cacheFlow3["Recreate disk group:\nesxcli vsan storage add\n-s <new_ssd> -d <cap1> -d <cap2>"]
+
+    monitor["Monitor resync:\nesxcli vsan debug resync summary get"]
+    done(["Disk group healthy\nresync complete"])
+
+    alert --> checkType
+    checkType -->|"Capacity disk"| capDisk
+    checkType -->|"Cache SSD"| cacheDisk
+    capDisk --> capFlow1 --> capFlow2 --> capFlow3 --> monitor
+    cacheDisk --> cacheFlow1 --> cacheFlow2 --> cacheFlow3 --> monitor
+    monitor --> done
+
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+
+    class checkType decision
+    class capDisk,cacheDisk,capFlow1,capFlow2,capFlow3,cacheFlow1,cacheFlow2,cacheFlow3,monitor action
+    class alert,done terminal
+```
+
 ### Add a Disk Group to an Existing Host
 
 Adding a disk group increases per-host storage capacity and I/O parallelism.

@@ -147,6 +147,30 @@ If two or more drives are in `failed` state simultaneously, the array may be at 
 
 ---
 
+## Path Failover Decision Tree
+
+```mermaid
+flowchart TD
+  A["Host reports missing\nor degraded paths"] --> B["purehost list --connection\n(check path count per host)"]
+  B --> C{"Path count\nas expected?"}
+  C -->|"Zero paths"| D["Check FC zoning on switches\nor iSCSI network reachability"]
+  C -->|"One path missing"| E["pureport list --type fc\n(identify which port is down)"]
+  E --> F{"Array port\nstate?"}
+  F -->|"down"| G["Check SFP and cable\non array port\nOpen support case if port stays down"]
+  F -->|"up"| H["pureport list --initiator\n(is host initiator WWN visible?)"]
+  H --> I{"Initiator\nvisible?"}
+  I -->|"No"| J["FC zone issue — initiator\nnot presented to target port\nFix zone on FC switch"]
+  I -->|"Yes"| K["Check host HBA state\nand driver on host side"]
+  C -->|"All paths present"| L["Issue is host-side\nCheck MPIO driver config\nand ALUA settings"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef good fill:#15803d,stroke:#166534,color:#fff
+  class C,F,I decision
+  class D,G,J,K fix
+  class L good
+```
+
 ## Port and Connectivity Diagnostics
 
 ```bash

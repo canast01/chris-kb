@@ -6,6 +6,44 @@ Regular health checks on SRDF/S replication confirm that all device pairs are sy
 
 Health checks cover four layers: pair state, link/director status, performance metrics, and array-level configuration consistency.
 
+```mermaid
+flowchart TD
+    dailyStart["Daily Health Check"]
+    pairState["Check Pair State\nsymrdf query -g dgname"]
+    allSynced{"All Pairs\nSynchronized?"}
+    checkRTT["Check WAN RTT\nping -c 20 dr-site-ip"]
+    rttOk{"RTT ≤ 5ms?"}
+    checkDirector["Check RDF Director\nsymcfg list -dir all -rdf"]
+    dirOnline{"Directors\nOnline?"}
+    checkLink["Check Link Utilization\nsymstat -rdf -dir RF-1F -i 5 -c 3"]
+    linkOk{"Utilization\n< 80%?"}
+    healthy["Health Check PASSED\nDocument results"]
+    investigatePairs["Investigate Pair State\nCheck invalid tracks"]
+    investigateRTT["Report to Network Team\nRTT exceeds SRDF/S budget"]
+    investigateDir["Check Director Port\nPhysical link and configuration"]
+    investigateLink["Investigate Link Saturation\nEngage network team"]
+
+    dailyStart --> pairState
+    pairState --> allSynced
+    allSynced -->|"Yes"| checkRTT
+    allSynced -->|"No"| investigatePairs
+    checkRTT --> rttOk
+    rttOk -->|"Yes"| checkDirector
+    rttOk -->|"No"| investigateRTT
+    checkDirector --> dirOnline
+    dirOnline -->|"Yes"| checkLink
+    dirOnline -->|"No"| investigateDir
+    checkLink --> linkOk
+    linkOk -->|"Yes"| healthy
+    linkOk -->|"No"| investigateLink
+
+    style healthy fill:#15803d,color:#fff
+    style investigatePairs fill:#be123c,color:#fff
+    style investigateRTT fill:#be123c,color:#fff
+    style investigateDir fill:#be123c,color:#fff
+    style investigateLink fill:#b45309,color:#fff
+```
+
 ---
 
 ## Daily Pair State Check
@@ -124,11 +162,11 @@ watch -n 60 'symrdf -sid 000123456789 -rdfg 10 list -v | grep -E "Latency|WriteR
 
 **Thresholds:**
 
-| Metric | Normal | Investigate | Escalate |
-|---|---|---|---|
-| WAN RTT (ping) | ≤5 ms | 5–10 ms | >10 ms |
-| Write response time vs baseline | ±10% | +10–25% | >25% or application SLA breach |
-| SRDF link utilisation | <70% | 70–85% | >85% |
+| Metric | Normal | Investigate | Escalate | Why |
+|---|---|---|---|---|
+| WAN RTT (ping) | ≤5 ms | 5–10 ms | >10 ms | Every 1ms of RTT adds ~2ms to host write latency |
+| Write response time vs baseline | ±10% | +10–25% | >25% or application SLA breach | SRDF/S latency penalty is directly visible to application users |
+| SRDF link utilisation | <70% | 70–85% | >85% | Saturation causes write pending buildup and possible Write Disabled state |
 
 A sustained WAN RTT increase of more than 2 ms above baseline should be reported to the network team before it impacts application SLAs.
 

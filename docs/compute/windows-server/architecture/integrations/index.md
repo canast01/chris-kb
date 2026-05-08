@@ -2,6 +2,26 @@
 
 Integration with other platforms and external systems.
 
+## AD / DNS Dependency Diagram
+
+```mermaid
+flowchart TD
+    client["Windows Client / Server"]
+    dns["DNS Server\n(DC-hosted)"]
+    dc["Domain Controller\nAD DS · Kerberos KDC · LDAP"]
+    gc["Global Catalog\nforest-wide object search"]
+    netlogon["Netlogon Service\nDC locator · secure channel"]
+    sysvol["SYSVOL Share\nGPO files · scripts"]
+
+    client -->|"DNS query for DC SRV"| dns
+    dns -->|"returns DC address"| client
+    client -->|"Kerberos / LDAP"| dc
+    dc --- gc
+    dc --- netlogon
+    dc --- sysvol
+    client -->|"GPO download"| sysvol
+```
+
 ## Active Directory Domain Join
 
 All Windows Server systems are domain-joined during provisioning:
@@ -69,6 +89,25 @@ Get-Service VeeamAgentSvc | Select-Object Status
 # Verify NBU client is installed and connected to master
 Get-Service "NetBackup Client Service" | Select-Object Status
 & "C:\Program Files\Veritas\NetBackup\bin\bpclntcmd.exe" -self   # Show NBU version
+```
+
+## RDP / WinRM Session Flow
+
+```mermaid
+sequenceDiagram
+    participant admin as Admin Workstation
+    participant jump as Jump Server
+    participant target as Target Server
+    participant ad as Active Directory
+
+    admin->>jump: RDP to jump server (port 3389)
+    jump->>ad: Kerberos authentication
+    ad-->>jump: TGT issued
+    jump->>target: RDP session (port 3389)
+    target->>ad: Validate Kerberos ticket
+    ad-->>target: Ticket valid
+    target-->>jump: Desktop session granted
+    jump-->>admin: Proxied session
 ```
 
 ## iSCSI / MPIO Configuration

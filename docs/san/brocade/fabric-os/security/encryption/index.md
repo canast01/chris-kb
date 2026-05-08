@@ -4,6 +4,32 @@
 
 ---
 
+## Management Plane Encryption Stack
+
+```mermaid
+graph TB
+    subgraph "Management Access"
+        ssh["SSH\nECDSA / RSA host key\nAES-256 transport"]
+        https["HTTPS — Web Tools / REST API\nTLS 1.2+\nCA-signed certificate"]
+        snmp3["SNMP v3\nSHA authentication\nAES-128 privacy"]
+    end
+
+    subgraph "Config Transfer"
+        scp["SCP (configupload)\nencrypted file transfer"]
+    end
+
+    subgraph "Disabled (Plaintext Protocols)"
+        telnet["Telnet — DISABLED"]
+        http["HTTP — DISABLED"]
+        snmp12["SNMPv1/v2c — DISABLED\n(no community strings)"]
+        ftp["FTP — DISABLED\n(use SCP only)"]
+    end
+
+    adminUser["Administrators"] --> ssh & https & snmp3
+    backupServer["Backup Server"] --> scp
+    monSystem["Monitoring Platform"] --> snmp3
+```
+
 ## Overview
 
 Encryption in Brocade FabricOS applies to the management plane — protecting switch management traffic (SSH, HTTPS, SNMP v3) and ensuring data confidentiality for audit logs in transit to a SIEM. FC data frames in the SAN fabric itself are not encrypted at the switch level (fabric-layer FC encryption is handled by inline encryption appliances or host-based encryption).

@@ -1,5 +1,23 @@
 # ONTAP — Access Control
 
+## RBAC Scope Model
+
+```mermaid
+graph TD
+    cluster["Cluster\n(admin SVM)"] -->|"role: admin"| clusterAdmin["Full cluster\nadministration"]
+    cluster -->|"role: readonly"| clusterRO["Read-only\ncluster view"]
+
+    svm1["SVM: prod-nas"] -->|"role: vsadmin"| svmFull["Full SVM admin\n(protocols, volumes, LIFs)"]
+    svm1 -->|"role: vsadmin-backup"| svmBackup["Snapshot + SnapMirror\nonly"]
+    svm1 -->|"role: vsadmin-readonly"| svmRO["Read-only\nSVM view"]
+
+    svm2["SVM: prod-san"] -->|"custom role"| customRole["Minimum privilege\nservice account\n(monitoring, backup)"]
+
+    user1["admin account"] --> cluster
+    user2["vsadmin / svc account"] --> svm1 & svm2
+    note["Custom roles override built-in roles\nAlways apply least-privilege principle"]
+```
+
 ## RBAC
 
 ONTAP has two RBAC scopes: **cluster-level** (managed by the `admin` account) and **SVM-level** (managed by `vsadmin` accounts within a specific SVM). Built-in roles:

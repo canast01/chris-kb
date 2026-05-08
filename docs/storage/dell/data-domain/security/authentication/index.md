@@ -2,6 +2,34 @@
 
 ## Overview
 
+```mermaid
+graph TD
+    adminUser(["Admin or Service Account"])
+
+    subgraph "Management Plane"
+        ldap["LDAP / Active Directory\n(primary — group → role mapping)"]
+        localFallback["Local Accounts\n(break-glass fallback)"]
+        ldap -->|"role: admin"| ddCLI["DDOS CLI / System Manager"]
+        localFallback -->|"break-glass only"| ddCLI
+    end
+
+    subgraph "DD Boost Plane"
+        ddboostUser["DD Boost User\nddboost-veeam / ddboost-netbackup"]
+        storageUnit["Storage Unit\n(su-veeam-prod)"]
+        ddboostUser --> storageUnit
+    end
+
+    subgraph "Audit"
+        auditLog["log view audit\n(all CLI actions logged)"]
+        syslog["Syslog → SIEM\n(12-month retention)"]
+        auditLog --> syslog
+    end
+
+    adminUser --> ldap & localFallback
+    adminUser --> ddboostUser
+    ddCLI --> auditLog
+```
+
 DDOS 7.x supports local user accounts, LDAP directory integration, and Active Directory for management plane authentication. Service accounts for DD Boost use a separate credential mechanism (DD Boost users) that does not participate in AD/LDAP. This page covers all authentication configuration, session management, SSH key setup, and password policy.
 
 ---

@@ -1,5 +1,31 @@
 # PowerShell — Components
 
+## PowerShell Module Structure
+
+```mermaid
+graph TD
+    psGallery["PowerShell Gallery\n(PSGallery)"]
+    privateRepo["Private Repository\n(Nexus / Artifactory)"]
+    installModule["Install-Module\n(Install-Module -Scope CurrentUser)"]
+    moduleDir["$PSModulePath\n(module search paths)"]
+    manifest["MyModule.psd1\n(manifest / metadata)"]
+    rootModule["MyModule.psm1\n(root script)"]
+    publicFuncs["Public/\n(exported functions)"]
+    privateFuncs["Private/\n(internal helpers)"]
+    importSession["Import-Module\n(current session)"]
+    cmdlets["Exported Cmdlets\n(Get-Something, Set-Something)"]
+
+    psGallery --> installModule
+    privateRepo --> installModule
+    installModule --> moduleDir
+    moduleDir --> manifest
+    manifest --> rootModule
+    rootModule --> publicFuncs
+    rootModule --> privateFuncs
+    publicFuncs --> importSession
+    importSession --> cmdlets
+```
+
 ## Modules
 
 PowerShell Gallery is the central repository for PowerShell modules.

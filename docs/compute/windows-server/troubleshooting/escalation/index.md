@@ -2,6 +2,26 @@
 
 What to collect before opening a support case and how to engage vendor support.
 
+## Escalation Flow
+
+```mermaid
+flowchart TD
+    issue["Issue cannot be\nresolved internally"]
+    sevA{"Production\ndown (Sev A)?"}
+    collectDiag["Collect diagnostics\nmsinfo32 · Event logs · ProcDump"]
+    phone["Call Microsoft\nUnified Support hotline"]
+    portal["Open case via portal\nsupport.microsoft.com"]
+    submit["Attach diagnostic data\nand submit"]
+    monitor["Monitor case\nrespond within SLA"]
+    escalateTAM["Escalate to TAM\nif no response"]
+
+    issue --> sevA
+    sevA -- Yes --> collectDiag --> phone --> submit
+    sevA -- No --> collectDiag --> portal --> submit
+    submit --> monitor
+    monitor -->|"SLA breach"| escalateTAM
+```
+
 ## Opening a Support Case
 
 Microsoft support portal: [support.microsoft.com](https://support.microsoft.com)

@@ -12,6 +12,28 @@ ECS does not have a traditional backup agent. Configuration backup covers the ma
 
 ## Data Durability Model
 
+```mermaid
+graph TD
+  subgraph "VDC-Level Protection"
+    VDC1[("VDC 1 — Site A\n(primary)")]
+    VDC2[("VDC 2 — Site B\n(replica)")]
+    VDC1 -->|"geo-replication\nasync or sync"| VDC2
+  end
+  subgraph "Within-VDC Protection"
+    FRAG["Object split into\nEC fragments"]
+    N1["Node 1"] & N2["Node 2"] & N3["Node 3"] & N4["Node 4+"]
+    FRAG --> N1 & N2 & N3 & N4
+  end
+  WORM["Object Lock (WORM)\nper-object retention"]
+  VER["Bucket Versioning\npoint-in-time recovery"]
+  classDef vdc fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef node fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef protect fill:#15803d,stroke:#166534,color:#fff
+  class VDC1,VDC2 vdc
+  class N1,N2,N3,N4,FRAG node
+  class WORM,VER protect
+```
+
 | Protection Layer | Scope | Failure Domain Covered |
 |---|---|---|
 | Erasure coding (12+4) | Within a single VDC | Protects against up to 4 simultaneous disk/node failures within a VDC |
@@ -83,6 +105,25 @@ Object data restore depends on the failure scenario.
 ### Node Failure (Within a VDC)
 
 ECS automatically rebuilds erasure coding stripes to surviving nodes when a node or disk fails.
+
+```mermaid
+graph TD
+  FAIL(["Node or disk marked FAILED"]) --> AUTO["ECS auto-rebuild begins\nEC fragments reconstructed\nfrom surviving nodes"]
+  AUTO --> MON["Monitor: ECS Portal →\nHardware → Disks\nStatus: REBUILDING → GOOD"]
+  MON --> DONE{Rebuild\ncomplete?}
+  DONE -->|No| WAIT["Wait — rebuild time:\n8–24 h for dense node\nDo NOT run upgrades or\nnode additions during rebuild"]
+  WAIT --> MON
+  DONE -->|Yes| CHK["Confirm node/disk shows GOOD\nCheck cluster capacity headroom"]
+  CHK --> CLEAR(["Cluster redundancy restored"])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class DONE decision
+  class AUTO,MON,CHK action
+  class WAIT warn
+  class FAIL,CLEAR term
+```
 
 - No manual restore required
 - Monitor rebuild progress: ECS Portal → Hardware → Disks — `REBUILDING` state progresses to `GOOD` when complete

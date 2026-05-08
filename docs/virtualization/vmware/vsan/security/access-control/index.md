@@ -6,6 +6,34 @@ vSAN access control is implemented through vCenter's Role-Based Access Control (
 
 ## vCenter RBAC Model
 
+### Separation of Duties — vSAN Roles
+
+```mermaid
+graph LR
+    subgraph "Identity (who)"
+        adGroup["AD Group\n(e.g. vSAN-Operators)"]
+        svcAcct["Service Account\n(e.g. svc-aria-vcenter)"]
+    end
+
+    subgraph "Role (what)"
+        adminRole["Administrator\n(full access)"]
+        opRole["vSAN-StorageOperator\n(disk groups, health, policies)"]
+        roRole["vSAN-Monitor-RO\n(read-only health / perf)"]
+        policyRole["vSAN-PolicyAdmin\n(storage policies only)"]
+    end
+
+    subgraph "Scope (where)"
+        rootVC["vCenter Root\n(KMS config)"]
+        cluster["Cluster\n(vSAN operations)"]
+        datastore["vSAN Datastore\n(VM placement)"]
+    end
+
+    adGroup --> opRole --> cluster
+    svcAcct --> roRole --> cluster
+    adGroup --> policyRole --> rootVC
+    cluster -->|"propagates to"| datastore
+```
+
 ### Objects and Permission Propagation
 
 vCenter permissions are assigned to inventory objects (datacenter, cluster, host, VM, datastore) and optionally propagated to child objects.

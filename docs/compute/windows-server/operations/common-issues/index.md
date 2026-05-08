@@ -12,6 +12,28 @@ Structured approach to diagnosing common Windows Server issues.
 4. **What is the resource state?** — CPU, memory, disk, network
 5. **Which service or application is affected?** — Event logs, Get-Service
 
+```mermaid
+flowchart TD
+    incident["Incident / Alert"]
+    reachable{"Ping / RDP\nreachable?"}
+    rebooted{"Event 6008 or 41?\nUnexpected reboot?"}
+    changed{"Recent Windows Update\nor GPO change?"}
+    resourceOk{"CPU · Memory · Disk\nwithin thresholds?"}
+    svcOk{"Get-Service shows\nno stopped auto svcs?"}
+    escalate["Escalate\nL3 / Microsoft Support"]
+    resolve["Root cause found\nResolve and document"]
+
+    incident --> reachable
+    reachable -- No --> escalate
+    reachable -- Yes --> rebooted
+    rebooted -- Yes --> changed
+    rebooted -- No --> resourceOk
+    changed --> resolve
+    resourceOk -- No --> resolve
+    resourceOk -- Yes --> svcOk
+    svcOk --> resolve
+```
+
 ## Unexpected Reboots
 
 ```powershell

@@ -91,6 +91,19 @@ To enable or verify remote support capability:
 
 ## Escalation Path
 
+```mermaid
+flowchart TD
+    incident(["Incident Detected"]) --> selfDiag["Self-diagnose:\nsupport bundle generate\nalerts show current"]
+    selfDiag --> openCase["Open Online Case\ndell.com/support\nAttach support bundle"]
+    openCase --> p1{"P1 — Production\ncompletely down?"}
+    p1 -->|Yes| callPhone["Call Dell Support\nrequest Senior Engineer\nreference case number"]
+    p1 -->|No| wait["Monitor case for\nresponse per SLA tier"]
+    callPhone --> tam["Contact TAM\n(Technical Account Manager)\nfor persistent P1/P2"]
+    tam --> remote["Remote Support via SCG\n(Dell engineer accesses DD\nthrough SCG tunnel)"]
+    remote --> resolved(["Resolved"])
+    wait --> resolved
+```
+
 1. **Online case** — open via [https://www.dell.com/support](https://www.dell.com/support) for non-urgent issues
 2. **Phone (P1/P2)** — call Dell support directly; reference the case number opened online
 3. **Account team escalation** — contact your Dell account manager or technical account manager for SLA breaches or cases not progressing

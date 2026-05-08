@@ -1,6 +1,22 @@
 # Venafi CLI Reference
 
 Venafi is managed via the `vcert` CLI (Trust Protection Platform and Venafi as a Service), the TPP REST API, and PowerShell cmdlets. The `vcert` CLI is the primary tool for certificate request, renewal, and retrieval automation.
+
+## vcert CLI Workflow
+
+```mermaid
+flowchart TD
+    auth["vcert getcred\n(authenticate to TPP or VaaS)"]
+    auth --> action{"Operation"}
+    action -->|"new cert"| enroll["vcert enroll\n--zone policy-folder --cn hostname"]
+    action -->|"renew"| renew["vcert renew\n--thumbprint or --id cert-DN"]
+    action -->|"retrieve"| retrieve["vcert retrieve\n--id cert-DN --format pkcs12"]
+    enroll --> certFiles["cert.pem + key.pem\n+ chain.pem on disk"]
+    renew --> certFiles
+    retrieve --> certFiles
+    certFiles --> deploy["Deploy to target service\n(nginx / IIS / F5 / etc.)"]
+```
+
 ---
 
 ## vcert CLI — Authentication

@@ -170,6 +170,37 @@ If progress stalls:
 
 Define your internal escalation path before an incident occurs:
 
+```mermaid
+graph TD
+    incident(["vSAN incident detected"])
+    l1["L1 — On-call storage engineer\nInitial investigation\n(first 30 minutes)"]
+    l1check{"Resolved\nwithin 1 hour?"}
+    l2["L2 — Storage team lead\nSenior engineer\nDeeper diagnosis"]
+    l2check{"Inaccessible objects\nor P1 confirmed?"}
+    l3["L3 — Platform / Infra Manager\nBusiness impact confirmed\nStakeholders notified"]
+    vendor["VMware Support\n(Broadcom)\nP1: < 4 hours\nP2: < 24 hours"]
+    resolved(["Incident resolved"])
+
+    incident --> l1
+    l1 --> l1check
+    l1check -->|"Yes"| resolved
+    l1check -->|"No"| l2
+    l2 --> l2check
+    l2check -->|"Yes"| l3 --> vendor
+    l2check -->|"No — P2/P3"| vendor
+    vendor --> resolved
+
+    classDef level fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    classDef vendor fill:#dc2626,stroke:#b91c1c,color:#fff
+
+    class l1,l2,l3 level
+    class l1check,l2check decision
+    class incident,resolved terminal
+    class vendor vendor
+```
+
 | Level | Role | When |
 |---|---|---|
 | L1 | On-call storage engineer | Initial investigation — first 30 minutes |

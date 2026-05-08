@@ -97,6 +97,37 @@ Get-ADForest | Select-Object SchemaMaster, DomainNamingMaster
 | SMB (SYSVOL) | 445 | TCP | SYSVOL/DFSR replication |
 | WinRM | 5985/5986 | TCP | Remote management |
 
+## Replication Topology (KCC-Generated)
+
+```mermaid
+graph TD
+    siteA["Site A — London"]
+    siteB["Site B — New York"]
+    siteC["Site C — Singapore"]
+
+    dc01["DC-01\nPDC Emulator\nRID Master"]
+    dc02["DC-02\nGlobal Catalog"]
+    dc03["DC-03\nSite A replica"]
+    dc04["DC-04\nGlobal Catalog"]
+    dc05["DC-05\nSite B replica"]
+    dc06["DC-06\nSite C GC"]
+
+    siteA --> dc01
+    siteA --> dc02
+    siteA --> dc03
+    siteB --> dc04
+    siteB --> dc05
+    siteC --> dc06
+
+    dc01 <-->|"intra-site\nRPC — frequent"| dc02
+    dc01 <-->|"intra-site\nRPC — frequent"| dc03
+    dc04 <-->|"intra-site"| dc05
+
+    dc01 <-->|"inter-site link\nscheduled interval"| dc04
+    dc01 <-->|"inter-site link\nscheduled interval"| dc06
+    dc04 <-->|"inter-site link"| dc06
+```
+
 ## Sites and Replication
 
 Sites define physical network boundaries for efficient replication and logon:
@@ -138,6 +169,24 @@ Back up via Windows Server Backup (System State backup) or bare-metal backup:
 ```powershell
 # System State backup includes NTDS.DIT
 wbadmin start systemstatebackup -backupTarget:D:
+```
+
+## Kerberos Authentication Sequence
+
+```mermaid
+sequenceDiagram
+    participant client as Client
+    participant kdc as KDC (Domain Controller)
+    participant svc as Application Server
+
+    client->>kdc: AS-REQ (username + encrypted timestamp)
+    kdc-->>client: AS-REP — TGT (encrypted with krbtgt key)
+    note over client: Client caches TGT (valid 10 hours)
+    client->>kdc: TGS-REQ (TGT + service SPN)
+    kdc-->>client: TGS-REP — Service Ticket (encrypted with service key)
+    client->>svc: AP-REQ (Service Ticket + authenticator)
+    svc-->>client: AP-REP (mutual auth confirmation)
+    note over client,svc: Secure session established
 ```
 
 ## Kerberos Authentication Flow

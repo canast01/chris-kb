@@ -2,6 +2,29 @@
 
 ## Overview
 
+```mermaid
+graph TD
+    subgraph "Data at Rest — D@RE"
+        dare["AES-256 CBC\n(FIPS 140-2 validated)"]
+        km{{"Key Manager"}}
+        internal["Internal\n(embedded key store)"]
+        kmip["KMIP External\nThales / Vault / RSA DPM"]
+        dare --> km
+        km --> internal
+        km --> kmip
+    end
+
+    subgraph "Data in Transit"
+        mgmtTLS["Management HTTPS\nTLS 1.2+ (port 3009/443)"]
+        replEnc["Replication TLS\n(encryption aes128 per context)"]
+        boostEnc["DD Boost Transport\nEncryption (optional)"]
+    end
+
+    subgraph "Cloud Tier"
+        cloudEnc["D@RE before cloud offload\nCloud provider does NOT hold keys"]
+    end
+```
+
 Dell Data Domain supports two layers of cryptographic protection: Data at Rest Encryption (D@RE) for on-disk data, and TLS for data in transit. Both are required in any security-conscious deployment. D@RE must be enabled at initial commissioning — it cannot be retroactively applied without a full filesystem rebuild.
 
 ---

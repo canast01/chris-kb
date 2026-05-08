@@ -93,6 +93,24 @@ Wildcard approval process (external):
 
 ## Certificate Request Workflow
 
+### Certificate Request Decision Flow
+
+```mermaid
+flowchart TD
+    csrSubmit["Requestor submits CSR\n(UI / vcert / REST API)"]
+    csrSubmit --> folderPolicy{"Venafi policy\nvalidation"}
+    folderPolicy -->|"key size below minimum\nSHA-1 / no SAN"| policyFail["Reject — policy violation\nMessage returned to requestor"]
+    folderPolicy -->|"internal production folder"| autoIssue{"Auto-issue\nenabled?"}
+    folderPolicy -->|"external public folder"| manualApproval["Enter Approval Queue"]
+    autoIssue -->|"yes"| caConnector["Submit to CA connector\n(ADCS / DigiCert)"]
+    autoIssue -->|"no"| manualApproval
+    manualApproval --> secReview{"Security team\nreview"}
+    secReview -->|"approve"| caConnector
+    secReview -->|"reject"| policyFail
+    caConnector --> caIssues["CA issues certificate"]
+    caIssues --> tppStores["Venafi stores + notifies requestor"]
+```
+
 ### Internal Production (Auto-Issue)
 
 ```

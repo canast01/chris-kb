@@ -10,6 +10,30 @@ Detailed resolution procedures for the most frequently encountered FlashArray is
 - `purealert list` shows a drive failure alert with severity `error`
 - `puredrive list` shows a drive in `failed`, `recovering`, or `unhealthy` state
 
+```mermaid
+flowchart TD
+  A["purealert list shows\ndrive error alert"] --> B["puredrive list\n(identify bay and state)"]
+  B --> C{"Drive state?"}
+  C -->|"recovering"| D["Automatic rebuild in progress\nDo NOT pull the drive\nMonitor: puredrive list --progress"]
+  C -->|"failed"| E{"Second drive\nalso failed?"}
+  E -->|"Yes"| F["P1 case immediately\nDo NOT pull any drive\nAwait Pure Support guidance"]
+  E -->|"No"| G["Open P2 case\nSchedule drive replacement\nArray degraded but protected"]
+  C -->|"unhealthy"| H["Open P2 case — drive may fail soon\nMonitor closely\nPurity may proactively evict"]
+  C -->|"missing"| I["Check physical seating\nOpen support case if drive present\nbut not detected"]
+  D --> J{"Rebuild complete\n(state = healthy)?"}
+  J -->|"Yes"| K["Array back to full redundancy\nOpen case to schedule physical replacement"]
+  J -->|"Stalled > 1 hour"| L["Open support case\nDo not manually intervene"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
+  classDef good fill:#15803d,stroke:#166534,color:#fff
+  classDef info fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  class C,E,J decision
+  class F,L warn
+  class K good
+  class D,G,H,I info
+```
+
 ### Diagnosis
 
 ```bash
@@ -185,6 +209,28 @@ purepod list --mediator oracle-pod
 - `purepod list` shows pod status as `paused` or `unhealthy`
 - `purealert list` shows replication error alert
 - Hosts at one site may be serving I/O on stale data
+
+```mermaid
+flowchart TD
+  A["purepod list shows\npod paused / unhealthy"] --> B["Check inter-array\nreplication link\npurenetwork list"]
+  B --> C{"Replication\nlink up?"}
+  C -->|"No"| D["Restore network path\n(routing / VLAN / firewall)\nPod resyncs automatically"]
+  C -->|"Yes"| E["Check mediator\npurepod list --mediator"]
+  E --> F{"Mediator\nreachable?"}
+  F -->|"No"| G["Verify HTTPS outbound port 443\nto mediator IP from both arrays\nCheck proxy: purearray list --proxy"]
+  G --> H["Note: replication continues\nwithout mediator if inter-array\nlink is healthy"]
+  F -->|"Yes"| I{"Pod paused\non both arrays?"}
+  I -->|"Yes — split-brain"| J["Do NOT force-promote\nwithout Pure Support\nContact Pure Support P1"]
+  I -->|"No"| K["Check replica-link state\npurepod replica-link list"]
+  K --> L["Resume if manually paused\npurepod replica-link resume\n--remote array --remote-pod pod"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
+  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  class C,F,I decision
+  class J warn
+  class D,G,H,K,L fix
+```
 
 ### Diagnosis
 

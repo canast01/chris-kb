@@ -2,6 +2,35 @@
 
 Operational procedures covering backup job creation, copy job setup, SOBR management, and restore testing.
 
+## Instant VM Recovery Flow
+
+The Instant VM Recovery (IVR) sequence mounts the backup file directly as an NFS datastore — the VM starts from the backup without waiting for a full restore.
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant VBR as VBR Server
+    participant Proxy as Backup Proxy
+    participant Repo as Backup Repository
+    participant ESXi as Recovery ESXi Host
+    participant vCenter as vCenter
+
+    Admin->>VBR: Start Instant VM Recovery
+    VBR->>Proxy: Mount backup file as vPower NFS datastore
+    Proxy->>Repo: Access latest restore point (.vbk / .vib)
+    Repo-->>Proxy: Backup file accessible
+    Proxy->>ESXi: Publish NFS datastore (vPower NFS service)
+    ESXi-->>Proxy: NFS datastore mounted
+    VBR->>vCenter: Register VM from NFS datastore
+    vCenter-->>VBR: VM registered
+    VBR->>ESXi: Power on VM (isolated network)
+    ESXi-->>Admin: VM online — validate services
+    note over Admin,ESXi: Test OK — choose: Undo IVR (discard)\nor Migrate to production storage (commit)
+    Admin->>VBR: Undo Instant Recovery
+    VBR->>vCenter: Unregister IVR VM
+    VBR->>Proxy: Unmount vPower NFS datastore
+```
+
 ---
 
 ## Verifying a Backup is Restorable

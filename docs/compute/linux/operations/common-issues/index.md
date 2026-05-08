@@ -12,6 +12,25 @@ Structured approach to diagnosing common Linux server issues.
 4. **What is the resource state?** — CPU, memory, disk, network
 5. **Which services/processes are involved?** — systemctl, ps, journalctl
 
+```mermaid
+flowchart TD
+    alert["Alert / Issue Reported"]
+    reachable{"Host\nreachable?\npingSSH"}
+    hardware{"dmesg errors?\nIPMI SEL?"}
+    changed{"Recent\nchanges?\ndnf history"}
+    resources{"CPU · Memory\nDisk > 80%?"}
+    services{"Failed services?\nsystemctl --failed"}
+    escalate["Escalate to\nvendor / L3"]
+    resolve["Identify root cause\nand resolve"]
+
+    alert --> reachable
+    reachable -- No --> escalate
+    reachable -- Yes --> hardware
+    hardware -- Yes --> escalate
+    hardware -- No --> changed
+    changed --> resources --> services --> resolve
+```
+
 ## High CPU
 
 ```bash

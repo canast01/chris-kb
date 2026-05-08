@@ -21,6 +21,23 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
                 └── OpenLDAP
 ```
 
+```mermaid
+sequenceDiagram
+    participant client as User / Automation
+    participant vc as vCenter (HTTPS/443)
+    participant sso as vSphere SSO
+    participant ad as Active Directory (LDAP/636)
+
+    client->>vc: Login request
+    vc->>sso: Authenticate user
+    sso->>ad: LDAP bind + user lookup
+    ad-->>sso: User attributes & groups
+    sso-->>vc: SAML token (signed)
+    vc-->>client: Session established
+
+    Note over client,ad: vSAN operations then checked\nagainst vCenter RBAC at cluster scope
+```
+
 vSAN-specific operations — creating disk groups, modifying storage policies, enabling encryption — all require authentication to vCenter. No separate vSAN credentials exist.
 
 ---

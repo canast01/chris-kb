@@ -4,6 +4,30 @@
 
 ---
 
+## Access Control Architecture
+
+```mermaid
+graph TB
+    subgraph "Management Plane"
+        ipfilter["IPfilter Policy\nsource IP restriction\nSSH · HTTPS · SNMP"]
+        rbac["RBAC Roles\nadmin · switchadmin\nzoneadmin · operator"]
+        aaa["AAA\nRADIUS / TACACS+\nlocal fallback"]
+        ipfilter --> aaa --> rbac
+    end
+
+    subgraph "Fabric Plane"
+        scc["SCC Policy\nSwitch Connection Control\npermitted switch WWNs"]
+        dcc["DCC Policy\nDevice Connection Control\npermitted device WWPNs per port"]
+        binding["Fabric Binding\nISL admission control"]
+        zoning["Zoning\ninitiator-to-target\nframe filtering"]
+        scc --> binding --> dcc --> zoning
+    end
+
+    mgmtUsers["Management Users\n(ops, NOC, security)"] --> ipfilter
+    switches["Switches / ISLs"] --> scc
+    devices["Host HBAs\nStorage Targets"] --> dcc
+```
+
 ## Overview
 
 Access control on Brocade FabricOS operates at two levels:

@@ -8,12 +8,35 @@
 
 SRDF/S commits every host write synchronously across the replication link. The host write RTT equals local storage latency + 2× WAN latency. Document and enforce maximum RTT before production enablement.
 
-| Site Distance | Typical RTT | Max Acceptable | Notes |
-|---|---|---|---|
-| Campus / same campus | < 1ms | 2ms | Ideal for SRDF/S |
-| Metro (≤ 100km dark fibre) | 1–5ms | 5ms | Within spec |
-| Metro (> 100km) | 5–10ms | ≤ 10ms | Borderline — test under peak load |
-| WAN (> 200km) | > 10ms | Not recommended | Use SRDF/A instead |
+| Site Distance | Typical RTT | Max Acceptable | Why | Notes |
+|---|---|---|---|---|
+| Campus / same campus | < 1ms | 2ms | Negligible WAN penalty on host write latency | Ideal for SRDF/S |
+| Metro (≤ 100km dark fibre) | 1–5ms | 5ms | RTT within application tolerance for most workloads | Within spec |
+| Metro (> 100km) | 5–10ms | ≤ 10ms | Latency penalty becomes noticeable on high-IOPS workloads | Borderline — test under peak load |
+| WAN (> 200km) | > 10ms | Not recommended | Synchronous commit would add > 20ms to every write — use SRDF/A | Use SRDF/A instead |
+
+```mermaid
+graph LR
+    subgraph siteA ["Site A — Production"]
+        hostA["Production Hosts"]
+        r1["PowerMax R1"]
+        hostA -->|"write I/O"| r1
+    end
+
+    subgraph fabric ["Dark Fibre / FCIP — Metro"]
+        linkLabel["RTT ≤ 10ms\nSynchronous"]
+    end
+
+    subgraph siteB ["Site B — Metro DR"]
+        r2["PowerMax R2"]
+        hostB["Standby Hosts\n(inactive)"]
+        r2 -.->|"at failover only"| hostB
+    end
+
+    r1 -->|"sync write commit"| linkLabel
+    linkLabel -->|"ack to R1"| r1
+    linkLabel --> r2
+```
 
 Validate RTT from each PowerMax director port:
 ```bash
@@ -74,12 +97,12 @@ symdev show -sid <target_SID> <dev_id> | grep -E "Size|Emulation|Track"
 
 ## Test Frequency
 
-| Test Type | Minimum Frequency |
-|---|---|
-| Non-disruptive pair state verification | Monthly |
-| SRM recovery plan test (non-production) | Quarterly |
-| Full failover test (maintenance window) | Annually |
-| RTT re-validation after WAN changes | After every network change affecting SRDF links |
+| Test Type | Minimum Frequency | Why |
+|---|---|---|
+| Non-disruptive pair state verification | Monthly | Confirms Synchronized state and zero invalid tracks without impacting production |
+| SRM recovery plan test (non-production) | Quarterly | Validates SRA discovery, protection group integrity, and recovery plan steps |
+| Full failover test (maintenance window) | Annually | Confirms end-to-end RTO including host masking, VM startup, and application validation |
+| RTT re-validation after WAN changes | After every network change affecting SRDF links | WAN routing changes can silently increase RTT beyond the SRDF/S tolerance |
 
 ---
 

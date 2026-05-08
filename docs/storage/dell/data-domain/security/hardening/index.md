@@ -2,6 +2,32 @@
 
 ## Overview
 
+```mermaid
+graph TD
+    dd["Data Domain Appliance"]
+
+    subgraph "Account Security"
+        acct["sysadmin → break-glass only\nNamed admins via LDAP/AD\nPassword policy: 12+ chars, 90-day max"]
+    end
+
+    subgraph "Network Access"
+        net["Management VLAN isolated\nSSH restricted to jump host IPs\nHTTPS-only (HTTP disabled)\nIdle timeout 15 min"]
+    end
+
+    subgraph "Protocol Controls"
+        proto["Unused protocols disabled\n(CIFS / NFS / VTL)\nSNMPv3 only\nSyslog → SIEM"]
+    end
+
+    subgraph "Data Protection"
+        enc["D@RE AES-256 enabled\nFIPS mode active\nCA-signed management cert\nKey backup in secure vault"]
+    end
+
+    dd --> acct
+    dd --> net
+    dd --> proto
+    dd --> enc
+```
+
 This page documents the security hardening baseline for Dell Data Domain appliances running DDOS 7.x. These settings should be applied at initial commissioning and validated periodically. The goal is to reduce the attack surface, enforce least-privilege access, and ensure all administrative actions are auditable.
 
 ---

@@ -1,5 +1,27 @@
 # Python Automation — Authentication
 
+## Credential Flow — API Authentication
+
+```mermaid
+graph TD
+    script["Python Script"]
+    envVar["Environment Variable\n(os.environ)"]
+    dotenv[".env File\n(python-dotenv)"]
+    secretsMgr["Secrets Manager\n(AWS / HashiCorp Vault)"]
+    apiKey["API Key / Token"]
+    bearerHeader["Authorization: Bearer\nheader"]
+    apiEndpoint["API Endpoint\n(requests.get/post)"]
+
+    script --> envVar
+    script --> dotenv
+    script --> secretsMgr
+    envVar --> apiKey
+    dotenv --> apiKey
+    secretsMgr --> apiKey
+    apiKey --> bearerHeader
+    bearerHeader --> apiEndpoint
+```
+
 ## API Keys
 
 Store API keys in environment variables or a secrets manager — never hardcode them in scripts.

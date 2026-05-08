@@ -3,6 +3,28 @@
 Organisational standards for OU structure, naming conventions, group policy design, and privileged access. Consistent standards reduce delegation complexity, enable scoped GPO application, and simplify access reviews.
 
 ---
+## OU and GPO Hierarchy
+
+```mermaid
+graph TD
+    domain["DC=corp,DC=example,DC=com\n(domain root)"]
+    domain -->|"linked: ALL-USERS-PasswordPolicy"| ouServers["OU=Servers"]
+    domain --> ouWorkstations["OU=Workstations"]
+    domain --> ouUsers["OU=Users"]
+    domain --> ouGroups["OU=Groups"]
+    domain --> ouSvcAccts["OU=Service Accounts"]
+    domain --> ouAdmin["OU=Admin"]
+
+    ouServers -->|"linked: PROD-SERVERS-SecBaseline"| ouEMEA["OU=EMEA"]
+    ouServers --> ouAPAC["OU=APAC"]
+    ouServers --> ouAMER["OU=AMER"]
+    ouUsers --> ouStaff["OU=Staff"]
+    ouUsers --> ouContractors["OU=Contractors"]
+    ouAdmin -->|"Tier 0 only — PAW access"| ouTier0["OU=Tier0"]
+    ouAdmin --> ouTier1["OU=Tier1"]
+    ouAdmin --> ouPAW["OU=PAW"]
+```
+
 ## OU Structure
 
 Top-level OUs are functional (Servers, Workstations, Users, Groups, Service Accounts). Geographic sub-OUs are used where region-specific GPO or delegation is required.
@@ -131,6 +153,25 @@ Add-ADFineGrainedPasswordPolicySubject -Identity "PSO_ServiceAccounts" -Subjects
 Disable RC4 via GPO: **Computer Config > Windows Settings > Security Settings > Local Policies > Security Options > Network security: Configure encryption types allowed for Kerberos**.
 
 ---
+
+## Tiered Administration Model
+
+```mermaid
+graph TD
+    tier0["Tier 0 — Identity Infrastructure\nDCs · ADCS · AAD Connect · CyberArk Vault · DNS"]
+    tier1["Tier 1 — Servers and Services\nApp servers · SQL · ESXi hypervisors · Storage"]
+    tier2["Tier 2 — Workstations and End-user Devices\nDesktops · Laptops · VDI"]
+
+    admTier0["adm0-* accounts\n(Tier 0 admin)"] -->|"access only from\nTier 0 PAW"| tier0
+    admTier1["adm1-* accounts\n(Tier 1 admin)"] -->|"access from\njump server / Tier 1 PAW"| tier1
+    admTier2["Helpdesk accounts"] -->|"standard workstation"| tier2
+
+    paw0["Tier 0 PAW\n(air-gapped, hardened)"] --> tier0
+    paw1["Jump Server / Tier 1 PAW"] --> tier1
+
+    tier0 -. "Tier 0 accounts must NOT\nlog on to Tier 1 or 2" .-> tier1
+    tier1 -. "Tier 1 accounts must NOT\nlog on to Tier 2" .-> tier2
+```
 
 ## Privileged Access Model (Tiering)
 

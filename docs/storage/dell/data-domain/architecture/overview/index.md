@@ -65,22 +65,22 @@ Available on high-end DD9000/DD9900 series. Two DD heads share the same disk she
 
 ## Data Path
 
-```
-Backup Client
-    │
-    │  (DDBoost: client-side dedup filter)
-    ▼
-DD Boost Receiver / NFS / CIFS handler
-    │
-    ▼
-SISL Engine (segment fingerprinting + locality filter)
-    │  unique segments only
-    ▼
-NVRAM write cache
-    │
-    ▼
-DDFS Container Store (on disk)
-    │
-    ▼ (async)
-Replication engine → Remote DD
+```mermaid
+graph TD
+    client(["Backup Client\n(Veeam / NetBackup / CommVault)"])
+    dsp["DDBoost Client Library\n(DSP: source-side dedup filter)\n~50% traffic reduction"]
+    recv["DD Boost Receiver\n(NFS / CIFS handler)"]
+    sisl["SISL Engine\n(segment fingerprinting\n+ locality filter)"]
+    nvram["NVRAM Write Cache\n(power-safe)"]
+    ddfsStore["[(DDFS Container Store)]\n(deduplicated + compressed)"]
+    replEngine["Replication Engine\n(async delta sync)"]
+    remoteDd["Remote Data Domain\n(DR site)"]
+
+    client -->|"DDBoost over IP"| dsp
+    dsp -->|"unique segments only"| recv
+    recv --> sisl
+    sisl -->|"new unique segments"| nvram
+    nvram --> ddfsStore
+    ddfsStore -->|"async replication\nTCP 2051"| replEngine
+    replEngine --> remoteDd
 ```

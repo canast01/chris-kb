@@ -3,6 +3,34 @@
 > Part of the [SRDF/A](../../) reference.
 
 ---
+## SRM Integration Topology
+
+```mermaid
+graph TD
+    subgraph prodSite ["Production Site"]
+        srmProd["SRM Server\n(Protected Site)"]
+        sra1["Dell SRA\n(SRM Plugin)"]
+        unisphere1["Unisphere for PowerMax"]
+        r1array["PowerMax R1"]
+        srmProd --- sra1
+        sra1 --> unisphere1
+        unisphere1 --> r1array
+    end
+
+    subgraph drSite ["DR Site"]
+        srmDr["SRM Server\n(Recovery Site)"]
+        sra2["Dell SRA\n(SRM Plugin)"]
+        unisphere2["Unisphere for PowerMax"]
+        r2array["PowerMax R2"]
+        srmDr --- sra2
+        sra2 --> unisphere2
+        unisphere2 --> r2array
+    end
+
+    r1array -->|"SRDF/A async replication"| r2array
+    srmProd <-->|"SRM pairing channel"| srmDr
+```
+
 ## VMware Site Recovery Manager (SRM)
 
 SRDF/A integrates with VMware SRM via the **Dell EMC Storage Replication Adapter (SRA)**, enabling automated orchestration of SRDF failover as part of SRM Recovery Plans.

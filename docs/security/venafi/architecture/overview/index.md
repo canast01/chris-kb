@@ -68,6 +68,26 @@ Policy folder settings (configured per folder):
 
 ---
 
+## CA Integration Hierarchy
+
+```mermaid
+graph TD
+    tpp["Venafi Trust Protection Platform"]
+    tpp --> adcs["CA Connector: ADCS\n(Microsoft Active Directory CS)"]
+    tpp --> digicert["CA Connector: DigiCert\n(public OV / EV / DV)"]
+    tpp --> entrust["CA Connector: Entrust\n(public / OV)"]
+    tpp --> acme["ACME Connector\n(Let's Encrypt)"]
+    tpp --> vault["HashiCorp Vault PKI\n(short-lived / service mesh)"]
+
+    adcs -->|"DCOM / CES"| adcsServer["ADCS Issuing CA Server"]
+    digicert -->|"REST API"| digicertCloud["DigiCert API Cloud"]
+    entrust -->|"REST API"| entrustCloud["Entrust API Cloud"]
+    acme -->|"ACME RFC 8555"| leCloud["Let's Encrypt"]
+    vault -->|"Vault REST API"| vaultPKI["Vault PKI Engine"]
+```
+
+---
+
 ## CA Connectors
 
 Venafi integrates with multiple CA backends. Each connector is configured once at the Policy Server level and referenced by policy folders.
@@ -86,6 +106,27 @@ $headers = @{ "X-Venafi-API-Key" = $apiKey }
 Invoke-RestMethod -Uri "https://venafi.corp.example.com/vedsdk/Certificates/CheckPolicy" `
   -Headers $headers -Method Post -ContentType "application/json" `
   -Body '{"PolicyDN":"\\VED\\Policy\\Internal\\Production"}'
+```
+
+---
+
+## Certificate Lifecycle Flow
+
+```mermaid
+flowchart TD
+    request["Certificate Request\n(UI / API / vcert CLI / CI-CD)"]
+    request --> policyCheck{"Policy engine\nvalidation"}
+    policyCheck -->|"SAN missing / key too small\npolicy violation"| reject["Reject with\nviolation message"]
+    policyCheck -->|"internal auto-issue"| submitCA["Submit CSR to\nconfigured CA connector"]
+    policyCheck -->|"external / approval required"| approvalQ["Enter Approval Queue\n(Security team review)"]
+    approvalQ -->|"approved"| submitCA
+    approvalQ -->|"rejected"| reject
+    submitCA --> caIssue["CA issues certificate"]
+    caIssue --> tppStore["Venafi stores certificate\n+ notifies owner"]
+    tppStore --> monitor["Expiry monitoring begins\n(30-day alert window)"]
+    monitor -->|"within renewal window"| autoRenew["Auto-renew triggered\n(new CSR generated)"]
+    autoRenew --> submitCA
+    monitor -->|"key compromise / decommission"| revoke["Revoke via CA connector\n+ update CRL / OCSP"]
 ```
 
 ---

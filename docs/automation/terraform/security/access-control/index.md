@@ -1,5 +1,26 @@
 # Terraform — Access Control
 
+## Terraform RBAC and Backend Access Model
+
+```mermaid
+graph TD
+    ciRunner["CI/CD Runner\n(GitHub Actions / GitLab)"]
+    tfRole["IAM Role:\nterraform-automation\n(least privilege)"]
+    s3State["S3 State Bucket\n(private + encrypted)"]
+    dynamoLock["DynamoDB Lock Table"]
+    targetResources["Target Resources\n(EC2, RDS, VPC...)"]
+    humanReview["Human Reviewer\n(read-only credentials)"]
+    auditLog["CloudTrail / Audit Log"]
+
+    ciRunner -->|OIDC assume role| tfRole
+    tfRole -->|GetObject PutObject| s3State
+    tfRole -->|PutItem GetItem| dynamoLock
+    tfRole -->|provision| targetResources
+    humanReview -->|read-only| s3State
+    tfRole --> auditLog
+    humanReview --> auditLog
+```
+
 ## State Backend Access Control
 
 The Terraform state file contains sensitive resource attributes including passwords, private keys, and connection strings. Restrict access strictly.

@@ -2,6 +2,24 @@
 
 ## Daily Checks
 
+```mermaid
+flowchart TD
+    A([Daily Health Check]) --> B["isi status\nAll nodes ONLINE?"]
+    B --> C{"SMARTFAIL\nor DOWN node?"}
+    C -->|Yes| D["Do NOT remove manually\nMonitor Restripe job\nOpen Dell support case"]
+    C -->|No| E["isi storagepool list\nCapacity < 80%?"]
+    E --> F{"Pool > 80%?"}
+    F -->|Yes| G["Identify top consumers\nisi quota quotas list\nPlan expansion or cleanup"]
+    F -->|No| H["isi sync policies list\nSyncIQ all SUCCESS?"]
+    H --> I{"Policy FAILED\nor OVERDUE?"}
+    I -->|Yes| J["isi sync reports list\nInvestigate error\nRestart if needed"]
+    I -->|No| K["isi event list --limit 20\nCRITICAL events?"]
+    K --> L{"Unack'd CRITICAL\nevents?"}
+    L -->|Yes| M["Triage event code\nEscalate if hardware"]
+    L -->|No| N([Checks passed])
+    D & G & J & M --> N
+```
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Run `isi status` | `isi status` | confirm all nodes show `ONLINE` and no node is in `SMARTFAIL` or `DOWN` state; note any drive alerts |

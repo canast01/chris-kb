@@ -18,6 +18,22 @@ Active Directory serves as the central identity provider for the enterprise. Int
 | Venafi TPP | LDAP / AD group membership | AD groups mapped to Venafi RBAC roles |
 | Splunk (SIEM) | Windows Event Log forwarding | UF on DCs ships Security log; audit events 4624/4625/4740 indexed |
 
+## AD Integration Hub
+
+```mermaid
+graph TD
+    ad["Active Directory\nDomain Services"]
+
+    ad -->|"LDAP sync / writeback"| azureAD["Azure AD Connect\n(Entra ID / hybrid identity)"]
+    ad -->|"SSSD ad provider\nrealm join"| linux["Linux Systems\n(RHEL / Ubuntu)"]
+    ad -->|"RADIUS / TACACS+ via NPS"| network["Cisco Switches / MDS\nNetwork Devices"]
+    ad -->|"AD SSO identity source"| vcenter["VMware vCenter\n(and VxRail / HCI)"]
+    ad -->|"LDAPS group membership"| nsx["VMware NSX-T\n(role assignment)"]
+    ad -->|"LDAP bind"| cyberark["CyberArk PVWA\n(user auth + safe entitlements)"]
+    ad -->|"LDAP group membership"| venafi["Venafi TPP\n(RBAC roles)"]
+    ad -->|"UF Security log 4624/4625/4740"| splunk["Splunk SIEM\n(DC event forwarding)"]
+```
+
 ---
 
 ## Service Account Standards

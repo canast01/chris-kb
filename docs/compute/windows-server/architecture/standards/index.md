@@ -2,6 +2,20 @@
 
 Sizing guidelines, design standards, and best practices.
 
+## Group Policy Processing Order
+
+```mermaid
+flowchart LR
+    localGPO["Local GPO\n(computer-level)"]
+    siteGPO["Site GPO\n(AD site-linked)"]
+    domainGPO["Domain GPO\n(domain-wide)"]
+    ouParentGPO["Parent OU GPO\nServers OU"]
+    ouChildGPO["Child OU GPO\nProduction\\SQL OU"]
+    applied["Final Applied\nEffective Policy\n(last writer wins)"]
+
+    localGPO --> siteGPO --> domainGPO --> ouParentGPO --> ouChildGPO --> applied
+```
+
 ## Hostname Convention
 
 Format: `<env>-<function>-<nn>`
@@ -107,6 +121,21 @@ New-WSManInstance -ResourceURI winrm/config/Listener `
 - [ ] Event log sizes configured (System: 64 MB, Application: 64 MB, Security: 256 MB)
 - [ ] Page file: system-managed or fixed on dedicated volume
 - [ ] Server documented in CMDB
+
+## Windows Storage Stack
+
+```mermaid
+flowchart LR
+    appLayer["Application\nWin32 / .NET"]
+    win32api["Win32 API\nCreateFile · ReadFile"]
+    ntfs["NTFS\nfile system driver"]
+    partMgr["Partition Manager\ndisk.sys"]
+    storport["Storport\nstorage driver model"]
+    hba["HBA Driver\nFC / iSCSI / NVMe"]
+    storage["Storage\nSAN / Local Disk"]
+
+    appLayer --> win32api --> ntfs --> partMgr --> storport --> hba --> storage
+```
 
 ## Group Policy Baseline
 

@@ -2,6 +2,20 @@
 
 Automation scripts and reusable code.
 
+## Script Deployment and Scheduling
+
+```mermaid
+flowchart LR
+    gitRepo["Git Repository\nscripts/windows/"]
+    sccm["SCCM / Ansible\nscript deployment"]
+    servers["Target Servers\nC:\\Scripts\\ops\\"]
+    schedTask["Scheduled Task\nTask Scheduler"]
+    output["Output\nC:\\Logs\\ · Event Log"]
+    monitoring["Monitoring Platform\nZabbix · SCOM"]
+
+    gitRepo --> sccm --> servers --> schedTask --> output --> monitoring
+```
+
 ## Daily Health Check
 
 Generates a summary report of disk space, services, and recent errors. Run via scheduled task or manually.

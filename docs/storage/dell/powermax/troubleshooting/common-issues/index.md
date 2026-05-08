@@ -17,6 +17,35 @@
 
 When a host reports I/O errors, latency, or a LUN is inaccessible, work through this sequence before escalating.
 
+```mermaid
+flowchart TD
+    SYMPTOM([Host reports I/O error\nor LUN inaccessible]) --> UNI_ALERT{"Unisphere alerts\nin last 30 min?"}
+    UNI_ALERT -->|"Critical alert"| TRIAGE_ALERT["Note component and severity\nProceed to relevant check below"]
+    UNI_ALERT -->|"No alert"| DIR_CHK{"symcfg show\nAll directors healthy?"}
+    TRIAGE_ALERT --> DIR_CHK
+    DIR_CHK -->|"Director faulted"| RAISE_P1["Raise P1 Dell case\nCapture symcfg show\nCheck hardware LEDs"]
+    DIR_CHK -->|"OK"| SRDF_CHK{"symrdf list\nSRDF state normal?"}
+    SRDF_CHK -->|"Suspended / R1 Updated"| SRDF_FIX["Check WAN link\nResume SRDF if safe\nMonitor resync"]
+    SRDF_CHK -->|"OK"| DRIVE_CHK{"sympd list -failed\nFailed drive?"}
+    DRIVE_CHK -->|"Drive failed"| DRIVE_FIX["Check RAID parity\nCapture drive state\nRaise Dell hardware case"]
+    DRIVE_CHK -->|"OK"| PATH_CHK{"powermt display dev=all\nDead paths on host?"}
+    PATH_CHK -->|"Dead paths"| PATH_FIX["Check SAN fabric port\nCheck HBA / cable\nCheck port group config"]
+    PATH_CHK -->|"OK"| PERF_CHK{"symstat -type r2\nLatency spike?"}
+    PERF_CHK -->|"High latency"| PERF_FIX["Check cache WP%\nIdentify hot SGs\nReview FAST VP tier"]
+    PERF_CHK -->|"OK"| MASK_CHK{"symmask list logins\nHost sees LUN in MV?"}
+    MASK_CHK -->|"LUN not visible"| MASK_FIX["Verify masking view\nCheck initiator WWN\nCheck fabric zone active"]
+    MASK_CHK -->|"Yes"| ESCALATE["Collect diagnostics bundle\nOpen Dell TAC case\nP1 if production impacted"]
+
+    classDef start fill:#15803d,stroke:#166534,color:#fff
+    classDef decision fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef action fill:#b45309,stroke:#92400e,color:#fff
+    classDef critical fill:#be123c,stroke:#9f1239,color:#fff
+    class SYMPTOM start
+    class UNI_ALERT,DIR_CHK,SRDF_CHK,DRIVE_CHK,PATH_CHK,PERF_CHK,MASK_CHK decision
+    class SRDF_FIX,DRIVE_FIX,PATH_FIX,PERF_FIX,MASK_FIX action
+    class RAISE_P1,TRIAGE_ALERT,ESCALATE critical
+```
+
 - [ ] Check Unisphere Dashboard immediately for any active alerts flagged in the last 30 minutes — note alert severity and affected component
 - [ ] Run `symcfg -sid XXXX show` to confirm array directors and ports are all healthy; look for any director in a degraded or faulted state
 - [ ] Check SRDF state: `symrdf list -sid XXXX` — an unexpected `Suspended` or `R1 Updated` state may indicate the cause of host impact

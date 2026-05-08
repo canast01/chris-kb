@@ -1,5 +1,28 @@
 # Terraform — Procedures
 
+## Standard Apply Workflow
+
+```mermaid
+graph LR
+    writeCode["Write / Edit\nHCL code"]
+    fmt["terraform fmt\n-recursive"]
+    validate["terraform validate"]
+    plan["terraform plan\n-out=tfplan"]
+    reviewPlan["Review Plan\n(human / PR approval)"]
+    apply["terraform apply tfplan"]
+    postPlan["Post-apply plan\n(zero changes expected)"]
+    stateBackup["State backed up\nin remote backend"]
+
+    writeCode --> fmt
+    fmt --> validate
+    validate --> plan
+    plan --> reviewPlan
+    reviewPlan -->|Approved| apply
+    reviewPlan -->|Changes needed| writeCode
+    apply --> postPlan
+    apply --> stateBackup
+```
+
 ## Apply Operations
 
 ### Standard Apply Workflow

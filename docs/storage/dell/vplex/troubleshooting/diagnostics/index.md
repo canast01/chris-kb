@@ -2,6 +2,35 @@
 
 Systematic diagnostic procedures for VPLEX faults. Work through the relevant section based on the reported symptom. Collect all outputs before calling Dell Support — they will ask for this data.
 
+```mermaid
+flowchart TD
+    symptom(["Reported symptom\nor alert"]) --> hcFull
+
+    hcFull["health-check --full\nIdentify faulted components"]
+    hcFull --> clusterHI
+
+    clusterHI["ll /clusters/*/health-indications/\nWhich cluster is non-ok?"]
+    clusterHI --> distDevHI
+
+    distDevHI["ll /distributed-storage/distributed-devices/*/health-indications/\nAny device out-of-sync?"]
+    distDevHI --> dirHW
+
+    dirHW["ll /engines/*/directors/*/hardware/\nDirector hardware fault?"]
+    dirHW --> witnessChk
+
+    witnessChk["ll /clusters/*/cluster-witness/\nWitness connected?"]
+    witnessChk --> cgChk
+
+    cgChk["ll /distributed-storage/consistency-groups/\nAny CG suspended?"]
+    cgChk --> svChk
+
+    svChk["ll /clusters/*/exports/storage-views/\nStorage views intact?"]
+    svChk --> collect
+
+    collect["Collect support bundle\ncollect-support-log"]
+    collect --> dellSupport(["Open Dell Support case\nwith all data"])
+```
+
 ## Initial Triage Sequence
 
 Run these commands in order at the start of any VPLEX investigation:
@@ -58,6 +87,24 @@ vplexcli -q -e "ll /distributed-storage/distributed-devices/<device_name>/" \
 
 1. Confirm the ICL is healthy (see ICL Diagnostics below).
 2. Once the ICL is restored, VPLEX begins automatic resync — monitor with:
+
+```mermaid
+flowchart TD
+    outOfSync["Distributed device\nout-of-sync detected"]
+    checkICL["Check ICL status\nll /clusters/*/communication/inter-cluster-links/"]
+    iclUp{ICL healthy?}
+    fixICL["Engage network team\nRestore WAN / dark fibre circuit"]
+    waitResync["Monitor auto-resync\nll /distributed-storage/distributed-devices/name/\nrebuild-progress: 0% → 100%"]
+    resyncOk{Resync started\nautomatically?}
+    manualRebuild["device rebuild\n--device /distributed-storage/..."]
+    inSync(["Device in-sync\nFull Metro redundancy restored"])
+
+    outOfSync --> checkICL --> iclUp
+    iclUp -->|No| fixICL --> checkICL
+    iclUp -->|Yes| waitResync --> resyncOk
+    resyncOk -->|Yes| inSync
+    resyncOk -->|"No (after 10 min)"| manualRebuild --> inSync
+```
 
 ```bash
 # Monitor resync progress (repeat until rebuild-progress: 100%)

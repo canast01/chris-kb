@@ -4,11 +4,62 @@
 
 ---
 
+## MAPS Policy → Alert → Action Flow
+
+```mermaid
+flowchart LR
+    subgraph "MAPS Policy"
+        policy["dflt_conservative_policy\nor custom policy"]
+        rules["Rules:\nCRC threshold\nITW threshold\nBB credit zero\nISL util %\nTemp / Fan / PSU"]
+        policy --> rules
+    end
+
+    subgraph "Monitoring"
+        counters["Port error counters\nSFP optical levels\nEnvironmental sensors\nISL throughput"]
+        rules -->|"compare"| counters
+    end
+
+    subgraph "Alert Actions"
+        alert["MAPS Alert triggered"]
+        snmpTrap["SNMP Trap → SANnav\n/ Monitoring platform"]
+        syslog["Syslog event → SIEM"]
+        raslog["RAS log entry\nerrshow output"]
+        email["Email notification\n(if configured)"]
+        alert --> snmpTrap & syslog & raslog & email
+    end
+
+    counters -->|"threshold exceeded"| alert
+```
+
 ## Overview
 
 Diagnostic data collection is the first priority when a switch or fabric problem is reported. Capture state before making changes — the evidence may be transient. Use `supportshow` or `supportsave` for TAC case submissions. Individual commands (`errshow`, `portlogshow`, `sfpshow`) provide targeted diagnostic information for specific port or fabric issues.
 
 ---
+
+## Diagnostic Scope: Port → Fabric → Performance
+
+```mermaid
+flowchart TD
+    symptom(["Symptom reported"]) --> scope{"Scope?"}
+
+    scope -->|"Port / Device"| portDiag["portshow slot/port\nsfpshow slot/port\nportstatsshow slot/port\nportlogshow slot/port"]
+    portDiag --> portTest{"porttest PASS?"}
+    portTest -->|No| tacEsc["Escalate to Broadcom TAC\nblade / ASIC fault"]
+    portTest -->|Yes| sfpReplace["Replace SFP / cable\nRe-enable port"]
+
+    scope -->|"Fabric"| fabricDiag["fabricshow\ntopologyshow\nislshow · trunkshow\nnslookup WWPN"]
+    fabricDiag --> segmented{"Segmented?"}
+    segmented -->|Yes| domainId["Check domain ID conflict\nCheck SCC policy\nportlogshow E_Port"]
+    segmented -->|No| zoneDiag["cfgshow · zoneshow\nalishow · nsallshow"]
+
+    scope -->|"Performance"| perfDiag["portperfshow\nbottleneckmon --show\nportbufshow slot/port\nporterrshow disc_c3"]
+    perfDiag --> slowDrain{"BB credits\nzero?"}
+    slowDrain -->|Yes| isolate["portdisable slow drain port\nmapsdb check credit alerts"]
+    slowDrain -->|No| ispUtil["islshow — ISL utilization\nAdd ISL capacity if > 70%"]
+
+    scope -->|"TAC Case"| supportsave["supportsave -h server\nUpload to TAC SR immediately"]
+```
 
 ## Switch-Level Diagnostics
 

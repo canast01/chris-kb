@@ -4,6 +4,20 @@ Automation scripts and reusable code.
 
 Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to `/var/log/ops/` and forwarded to the central logging platform.
 
+## Script Deployment Flow
+
+```mermaid
+flowchart LR
+    gitRepo["Git Repository\nscripts/linux/"]
+    ansible["Ansible Playbook\ndeploy-scripts.yml"]
+    copy["Copy to servers\n/usr/local/bin/"]
+    cron["Cron Schedule\ncrontab · systemd timer"]
+    output["Output\n/var/log/ops/ · logger"]
+    siem["SIEM / Log Platform\ncentralised logging"]
+
+    gitRepo --> ansible --> copy --> cron --> output --> siem
+```
+
 ## system-health-check.sh
 
 Checks disk, memory, load, failed services, and recent auth failures:

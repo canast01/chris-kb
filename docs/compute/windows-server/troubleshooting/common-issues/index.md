@@ -4,6 +4,30 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Windows Server issues.
 
+## RDP Connectivity Triage
+
+```mermaid
+flowchart TD
+    rdpFail["RDP Connection Fails"]
+    pingOk{"Ping\nsucceeds?"}
+    termSvc{"TermService\nRunning?"}
+    fwAllow{"Firewall rule\n3389 allowed?"}
+    authOk{"Account\nnot locked?"}
+    sessionLimit{"Session limit\nreached?"}
+    resolved["Connected\nsuccessfully"]
+
+    rdpFail --> pingOk
+    pingOk -- No --> resolved
+    pingOk -- Yes --> termSvc
+    termSvc -- No --> resolved
+    termSvc -- Yes --> fwAllow
+    fwAllow -- No --> resolved
+    fwAllow -- Yes --> authOk
+    authOk -- No --> resolved
+    authOk -- Yes --> sessionLimit
+    sessionLimit --> resolved
+```
+
 ## Triage Order
 
 1. **Is the host reachable?** — ping, RDP, WinRM, iDRAC/iLO console

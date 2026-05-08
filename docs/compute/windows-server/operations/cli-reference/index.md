@@ -4,6 +4,31 @@ Commands, syntax, and quick reference.
 
 All commands are PowerShell unless noted as `cmd`.
 
+## PowerShell Command Categories
+
+```mermaid
+flowchart LR
+    subgraph compute["Compute"]
+        svcCmds["Get-Service\nStart/Stop/Restart-Service"]
+        procCmds["Get-Process\nGet-Counter"]
+    end
+    subgraph storage["Storage"]
+        diskCmds["Get-PSDrive\nGet-Disk · Get-Volume"]
+        lvmCmds["Get-Partition\nNew-Volume"]
+    end
+    subgraph network["Network"]
+        netCmds["Get-NetAdapter\nGet-NetIPAddress"]
+        diagCmds["Test-NetConnection\nResolve-DnsName"]
+    end
+    subgraph events["Events & Logs"]
+        evtCmds["Get-WinEvent\nGet-EventLog"]
+    end
+    subgraph ad["Active Directory"]
+        adCmds["Get-ADComputer\nGet-ADUser"]
+        gpoCmds["gpresult\ngpupdate"]
+    end
+```
+
 ## Services
 
 ```powershell

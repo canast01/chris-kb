@@ -24,6 +24,27 @@ Verify these items before performing any change on the Data Domain — DDOS upgr
 
 ## Maintenance Window
 
+```mermaid
+flowchart TD
+    A([Start Maintenance]) --> B["Confirm window does not\noverlap backup schedule"]
+    B --> C["replication show\nNote context states"]
+    C --> D{"Any context\nin Error?"}
+    D -->|Yes| E["Resolve replication issue\nbefore proceeding"]
+    E --> D
+    D -->|No| F["Confirm no active backup sessions\nin backup software"]
+    F --> G{"DDOS upgrade?"}
+    G -->|Yes| H["filesys clean start\nWait for completion"]
+    G -->|No| I["Export config backup\nvia System Manager"]
+    H --> I
+    I --> J["Perform change\nper approved runbook"]
+    J --> K["filesys status\nreplication show\nalerts show current"]
+    K --> L{"All healthy?"}
+    L -->|No| M["Investigate and resolve"]
+    M --> K
+    L -->|Yes| N["Run test DDBoost backup\nConfirm job success"]
+    N --> O([Close Window])
+```
+
 Steps for planned maintenance on a Data Domain — schedule outside the backup window whenever possible.
 
 1. Confirm the maintenance window does not overlap with the backup window — check backup software schedules and confirm no jobs will run during the change

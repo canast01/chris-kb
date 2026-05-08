@@ -2,6 +2,25 @@
 
 Day-to-day operational tasks and how-to guides.
 
+## Key Infrastructure Service Dependencies
+
+```mermaid
+flowchart TD
+    bfe["BFE\nBase Filtering Engine"]
+    mpssvc["mpssvc\nWindows Firewall"]
+    netlogon["Netlogon\nAD secure channel"]
+    w32time["W32Time\nNTP sync"]
+    winrm["WinRM\nPS Remoting"]
+    ntds["NTDS\nAD Database (DC only)"]
+    dns["DNS Server\n(DC only)"]
+
+    bfe --> mpssvc
+    netlogon --> ntds
+    ntds --> dns
+    w32time --> netlogon
+    bfe --> winrm
+```
+
 ## Change Readiness Checks
 
 ```powershell
@@ -183,6 +202,22 @@ Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7034 } -MaxEvents 10 |
 ## Patching
 
 Patch management for Windows Server using Windows Update, WSUS, and SCCM/Intune.
+
+### Patch Management Flow
+
+```mermaid
+flowchart LR
+    wsus["WSUS Server\nPatch approval"]
+    gpo["GPO / WU Policy\nWUServer registry"]
+    clientWU["Client Windows Update\nwuauclt · UsoClient"]
+    download["Download\npatches"]
+    install["Install\npatches"]
+    reboot["Reboot\n(maintenance window)"]
+    report["Report\ncompliance status"]
+
+    wsus -->|"approves updates"| gpo --> clientWU --> download --> install --> reboot --> report
+    report -->|"compliance data"| wsus
+```
 
 ### Pre-Patch Checklist
 

@@ -21,6 +21,40 @@
 
 SOBR capacity tier offload: configure automatic offload after 14 days → moves monthly/yearly points to object storage.
 
+### Backup Job Types Comparison
+
+```mermaid
+flowchart TD
+    subgraph fullBackup [Full Backup]
+        direction TB
+        afull["Active Full\n(reads all blocks\nfrom source)"]
+        sfull["Synthetic Full\n(reads from existing\nbackup chain —\nno source reads)"]
+    end
+
+    subgraph incrementalBackup [Incremental Backup]
+        direction TB
+        fwdIncr["Forward Incremental\n(CBT — changed blocks only\nneeds full chain to restore)"]
+        revIncr["Reverse Incremental\n(CBT — transforms oldest\nincremental into new full\nrolling restore point)"]
+    end
+
+    decide{Choose\nbackup type} --> afull
+    decide --> sfull
+    decide --> fwdIncr
+    decide --> revIncr
+
+    afull --> pros1["Pros: self-contained\nCons: source I/O\nevery run"]
+    sfull --> pros2["Pros: no source I/O\nCons: needs working\nbackup chain"]
+    fwdIncr --> pros3["Pros: minimal daily\nI/O and storage\nCons: longer restore\nchain dependency"]
+    revIncr --> pros4["Pros: always one full\n+ recent changes\nCons: more repo I/O\nduring transform"]
+
+    classDef backupType fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef pros fill:#15803d,stroke:#166534,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    class afull,sfull,fwdIncr,revIncr backupType
+    class pros1,pros2,pros3,pros4 pros
+    class decide decision
+```
+
 ## Backup Job Configuration Standards
 
 - **Backup window**: 22:00–06:00 (default); set hard stop to prevent daytime impact

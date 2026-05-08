@@ -1,5 +1,44 @@
 # PowerMax — Health Checks
 
+## Monitoring Hierarchy
+
+```mermaid
+graph TD
+    subgraph "Real-Time Monitoring"
+        UNI_DASH["Unisphere Dashboard\n(Alerts + Directors + Ports)"]
+        SYMSTAT["symstat -type sg/dev/cache\n(IOPS, MB/s, latency, WP%)"]
+    end
+    subgraph "Near-Real-Time Checks"
+        SRDF_CHK["symrdf query -rdfg all\n(Synchronized / Consistent?)"]
+        DRIVE_CHK["sympd list -failed\n(Zero failed drives?)"]
+        POOL_CHK["symcfg list -srp\n(SRP < 80% subscribed?)"]
+        SNAP_CHK["symsnapvx list\n(Count < 200 per SG?)"]
+    end
+    subgraph "SaaS Monitoring"
+        CIQ["CloudIQ\n(30-day trending + anomaly detection)"]
+        SUPP_ASSIST["SupportAssist\n(auto SR on hardware fault)"]
+    end
+    subgraph "Alert Forwarding"
+        SIEM["SIEM / Syslog\n(Splunk, QRadar, Sentinel)"]
+        SNMP["SNMP Traps\n(Unisphere → NMS)"]
+    end
+
+    UNI_DASH --> SRDF_CHK & DRIVE_CHK & POOL_CHK & SNAP_CHK
+    SYMSTAT --> UNI_DASH
+    UNI_DASH --> CIQ
+    CIQ --> SUPP_ASSIST
+    UNI_DASH --> SIEM & SNMP
+
+    classDef rt fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef nrt fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef saas fill:#0f766e,stroke:#0d9488,color:#fff
+    classDef fwd fill:#92400e,stroke:#78350f,color:#fff
+    class UNI_DASH,SYMSTAT rt
+    class SRDF_CHK,DRIVE_CHK,POOL_CHK,SNAP_CHK nrt
+    class CIQ,SUPP_ASSIST saas
+    class SIEM,SNMP fwd
+```
+
 ## Daily Checks
 
 | Check | Command | Notes |

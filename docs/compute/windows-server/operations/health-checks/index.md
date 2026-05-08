@@ -2,6 +2,32 @@
 
 Routine checks, service validation, and status verification.
 
+## Daily Health Check Flow
+
+```mermaid
+flowchart TD
+    start["Start Daily Checks"]
+    svcCheck{"Auto-start services\nall Running?"}
+    diskCheck{"Disk free\n> 20%?"}
+    evtCheck{"System event log\n0 errors (24h)?"}
+    defCheck{"Defender\nup to date?"}
+    rebootCheck{"Pending\nreboot?"}
+    allGood["All checks passed\nLog result"]
+    investigate["Investigate\nand action"]
+
+    start --> svcCheck
+    svcCheck -- Yes --> diskCheck
+    svcCheck -- No --> investigate
+    diskCheck -- Yes --> evtCheck
+    diskCheck -- No --> investigate
+    evtCheck -- Yes --> defCheck
+    evtCheck -- No --> investigate
+    defCheck -- Yes --> rebootCheck
+    defCheck -- No --> investigate
+    rebootCheck -- No --> allGood
+    rebootCheck -- Yes --> investigate
+```
+
 ## Daily Health Checks
 
 Run the following checks at the start of each operational shift or as part of an automated morning report.
@@ -199,6 +225,37 @@ $rebootPending = $false
 if (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -EA SilentlyContinue) { $rebootPending = $true }
 if (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name PendingFileRenameOperations -EA SilentlyContinue) { $rebootPending = $true }
 "Reboot Pending: $rebootPending"
+```
+
+## Performance Counter Hierarchy
+
+```mermaid
+flowchart LR
+    subgraph cpu["CPU"]
+        cpuTotal["Processor Total %"]
+        cpuPerCore["Per-core %"]
+        ctxSwitch["Context Switches/sec"]
+    end
+    subgraph mem["Memory"]
+        memAvail["Available MBytes"]
+        pagesSec["Pages/sec"]
+        nonPagePool["NonPaged Pool"]
+    end
+    subgraph disk["Disk"]
+        diskTime["% Disk Time"]
+        diskLatency["Avg Disk sec/Transfer"]
+        diskIops["Disk Transfers/sec"]
+    end
+    subgraph net["Network"]
+        bytesTotal["Bytes Total/sec"]
+        pktErrors["Packets Errors/sec"]
+    end
+    perfMon["PerfMon\nData Collector Set"]
+
+    cpu --> perfMon
+    mem --> perfMon
+    disk --> perfMon
+    net --> perfMon
 ```
 
 ## Health Check Summary

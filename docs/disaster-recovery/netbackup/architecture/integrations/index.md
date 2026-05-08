@@ -1,5 +1,47 @@
 # NetBackup Integration
 
+## Integration Architecture
+
+```mermaid
+flowchart TD
+    master["NetBackup\nPrimary Server"]
+
+    subgraph storageIntegrations [Storage Integrations]
+        ostDD["Dell Data Domain\nOST / DD Boost\n(inline dedup)"]
+        msdpPool["MSDP Pool\nMedia Server Dedup\n(native dedup)"]
+        pureSnap["Pure FlashArray\nSnapshot Client\n(near-zero RPO)"]
+        s3Cloud["AWS S3\nCloud Storage Unit\n(Glacier archival)"]
+    end
+
+    subgraph sourceIntegrations [Source / Client Integrations]
+        vadp["VMware VADP\nbpvmutil — agentless VM backup"]
+        cyberark["CyberArk AAM\nruntime credential retrieval"]
+    end
+
+    subgraph operationsIntegrations [Operations Integrations]
+        opscenter["OpsCenter\ncentralised reporting + alerts"]
+        siem["SIEM\nsyslog audit log forwarding"]
+    end
+
+    master --> ostDD
+    master --> msdpPool
+    master --> pureSnap
+    master --> s3Cloud
+    master --> vadp
+    master --> cyberark
+    master --> opscenter
+    master --> siem
+
+    classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef source fill:#15803d,stroke:#166534,color:#fff
+    classDef ops fill:#b45309,stroke:#92400e,color:#fff
+    class master master
+    class ostDD,msdpPool,pureSnap,s3Cloud storage
+    class vadp,cyberark source
+    class opscenter,siem ops
+```
+
 ## Dell Data Domain (OST)
 
 The OpenStorage Technology (OST) plugin enables inline deduplication and DD Boost protocol between NetBackup media servers and Data Domain appliances:

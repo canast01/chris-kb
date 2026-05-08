@@ -4,6 +4,29 @@
 
 ---
 
+## Hardening Sequence — New Switch
+
+```mermaid
+flowchart TD
+    start([New switch deployed]) --> proto["Disable Telnet + HTTP\nEnable HTTPS only"]
+    proto --> snmpHarden["Remove SNMPv1/v2c\nConfigure SNMPv3 SHA+AES"]
+    snmpHarden --> aaa["Configure RADIUS / TACACS+\nauthorder RADIUS;LOCAL"]
+    aaa --> rbac["Assign RBAC roles\nswitchadmin · zoneadmin · operator"]
+    rbac --> ipf["Apply IPfilter policy\nmanagement subnet only"]
+    ipf --> ntp["Configure NTP\n2 internal servers"]
+    ntp --> syslog["Forward syslog to SIEM\nsyslogadmin --add"]
+    syslog --> audit["Enable audit logging\nauditcfg --class 1,2,3,4"]
+    audit --> domainId["Set static domain ID\ninsistDomainId=1"]
+    domainId --> fabricBinding["Enable fabric binding\nfabricbinding --enable"]
+    fabricBinding --> defZone["Disable default zone\ndefzone --noaccess"]
+    defZone --> backup["configupload post-hardening\nto backup server"]
+    backup --> cmdb["Update CMDB\nhostname · serial · domain ID"]
+    cmdb --> done([Switch production-ready])
+
+    style done fill:#15803d,color:#fff
+    style start fill:#2563eb,color:#fff
+```
+
 ## Overview
 
 Hardening a Brocade FabricOS switch closes the attack surface on both the management plane (who can connect and how) and the fabric plane (which devices can join and communicate). Apply hardening immediately after initial switch configuration, before connecting to the production network.

@@ -2,6 +2,30 @@
 
 ## Overview
 
+```mermaid
+graph TD
+    backupApp(["Backup App\nVeeam / NetBackup / CommVault"])
+
+    subgraph "Restore Paths"
+        ddboostRestore["DDBoost Restore\n(fastest — app-aware)"]
+        nfsRestore["NFS Direct Mount\n/data/col1/mtree-name"]
+        cifsRestore["CIFS Share\n\\\\dd-host\\share-name"]
+        vtlRestore["VTL (FC)\nemulated tape restore"]
+    end
+
+    subgraph "Data Domain"
+        ddfs["[(DDFS)]\n(deduplicated store)"]
+    end
+
+    backupApp -->|"initiate restore"| ddboostRestore
+    backupApp -->|"granular file"| nfsRestore
+    backupApp -->|"Windows file"| cifsRestore
+    backupApp -->|"tape emulation"| vtlRestore
+
+    ddboostRestore & nfsRestore & cifsRestore & vtlRestore --> ddfs
+    ddfs -->|"rehydrate on the fly"| restoreTarget(["Restore Target\nVM / file / database"])
+```
+
 The Data Domain plays a passive role in backup and restore operations — it is the target that backup software writes to and reads from. Restore operations are always initiated from the backup application (Veeam, NetBackup, CommVault, etc.) or directly from an NFS/CIFS mount. This page covers: restore readiness validation, per-protocol restore procedures, performance expectations, configuration backup and recovery, and disaster recovery failover for backup data.
 
 ---

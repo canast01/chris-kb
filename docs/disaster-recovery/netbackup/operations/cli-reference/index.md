@@ -1,5 +1,57 @@
 # NetBackup CLI Reference
 
+## Master → Media → Client Topology
+
+Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.
+
+```mermaid
+flowchart TD
+    subgraph masterTier [Primary / Master Server]
+        master["Primary Server\n(catalog, policy DB,\njob scheduler, EMM)"]
+        catalog[("NetBackup Catalog\nbpdbm — image metadata")]
+        master --> catalog
+    end
+
+    subgraph mediaTier [Media Servers]
+        ms1["Media Server 1\nSite A — OST/Data Domain"]
+        ms2["Media Server 2\nSite B / DR — MSDP pool"]
+        ms3["Media Server 3\nCloud gateway — S3"]
+    end
+
+    subgraph clientTier [Clients]
+        vmHost(["VMware backup host\nVADP proxy"])
+        dbHost(["Oracle / MSSQL host\nbpcd agent"])
+        nasHost(["NAS — NDMP\ndirect connect"])
+    end
+
+    subgraph storageTier [Storage Units]
+        dd[("Data Domain\nOST dedup pool")]
+        msdp[("MSDP\nMedia Server\nDedup Pool")]
+        s3[("AWS S3 / Cloud\nlong-term archive")]
+    end
+
+    master -->|"policy / job control\nTCP 1556"| ms1
+    master -->|"policy / job control"| ms2
+    master -->|"policy / job control"| ms3
+
+    ms1 --> dd
+    ms2 --> msdp
+    ms3 --> s3
+
+    vmHost -->|"TCP 13724 bpcd"| ms1
+    dbHost -->|"TCP 13724 bpcd"| ms1
+    nasHost -->|"NDMP port 10000"| ms1
+
+    classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef media fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef client fill:#15803d,stroke:#166534,color:#fff
+    classDef storage fill:#b45309,stroke:#92400e,color:#fff
+    class master,catalog master
+    class ms1,ms2,ms3 media
+    class vmHost,dbHost,nasHost client
+    class dd,msdp,s3 storage
+```
+
 NetBackup CLI commands run on the Primary Server as root (Linux) or Administrator (Windows). The `bp*` family covers backup and restore operations; `nb*` and `tp*` commands cover EMM, media, and device management. Commands are in `/usr/openv/netbackup/bin/admincmd/` on Linux or `C:\Program Files\Veritas\NetBackup\bin\admincmd\` on Windows.
 ---
 
@@ -53,6 +105,29 @@ bpplclients <policy>
 ---
 
 ## Restore Operations
+
+### Catalog Restore Sequence
+
+When the catalog is lost, recovery must happen before any other restore is possible.
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant Master as Primary Server
+    participant Catalog as Catalog Backup (offline copy)
+    participant Media as Media Server
+
+    Admin->>Master: Install / reinstall NetBackup\n(matching version)
+    Admin->>Master: Run bprecover or\nbpcatarc -r (recover from catalog backup)
+    Master->>Catalog: Locate catalog backup\n(separate STU or cold copy)
+    Catalog-->>Master: Catalog images transferred
+    Master->>Master: Rebuild EMM database\nnbemmcmd -machinealias
+    Master->>Media: Reconnect media servers\nbpclntcmd -hn <media> -chk
+    Media-->>Master: Media servers re-registered
+    Admin->>Master: Run bpdbjobs -summary\nverify catalog integrity
+    Admin->>Master: Resume backup policies\nbpbackup -p <policy>
+    note over Admin,Media: Catalog recovery enables\nall image restores to resume
+```
 
 Run restores from the CLI. Always verify client name, backup time, and policy before executing.
 

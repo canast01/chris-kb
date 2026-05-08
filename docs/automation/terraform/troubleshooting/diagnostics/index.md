@@ -1,5 +1,34 @@
 # Terraform — Diagnostics
 
+## Terraform Diagnostics Workflow
+
+```mermaid
+graph LR
+    symptom["Symptom /\nUnexpected Output"]
+    validate["terraform validate\n(syntax check)"]
+    fmtCheck["terraform fmt -check\n(formatting)"]
+    planJSON["terraform plan -out=tfplan\nterraform show -json tfplan"]
+    jqFilter["jq filter:\nresource_changes"]
+    graph["terraform graph\n| dot -Tsvg"]
+    stateList["terraform state list"]
+    stateShow["terraform state show\n<resource>"]
+    debugLog["TF_LOG=TRACE\nTF_LOG_PATH=debug.log"]
+    resolved["Root cause\nidentified"]
+
+    symptom --> validate
+    validate --> fmtCheck
+    fmtCheck --> planJSON
+    planJSON --> jqFilter
+    jqFilter --> resolved
+    symptom --> stateList
+    stateList --> stateShow
+    stateShow --> resolved
+    symptom --> graph
+    graph --> resolved
+    symptom --> debugLog
+    debugLog --> resolved
+```
+
 ## Debug Logging
 
 ```bash

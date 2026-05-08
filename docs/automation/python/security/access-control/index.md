@@ -1,5 +1,24 @@
 # Python Automation — Access Control
 
+## Least Privilege Access Model
+
+```mermaid
+graph TD
+    script["Python Script\n(automation job)"]
+    svcAccount["Dedicated Service Account\n(linux: automation user)"]
+    iamRole["IAM Role / API Token\n(scoped to task)"]
+    readOnly["Read-Only Permissions\n(for reporting scripts)"]
+    writePerms["Write Permissions\n(only for change scripts)"]
+    auditLog["Audit Log\n(quarterly review)"]
+
+    script --> svcAccount
+    svcAccount --> iamRole
+    iamRole --> readOnly
+    iamRole --> writePerms
+    svcAccount --> auditLog
+    iamRole --> auditLog
+```
+
 ## Least Privilege
 
 Automation scripts should run with the minimum permissions required to complete their task.

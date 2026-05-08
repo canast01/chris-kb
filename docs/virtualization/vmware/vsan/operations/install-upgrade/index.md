@@ -17,6 +17,30 @@ Check the current Broadcom Product Lifecycle page at https://support.broadcom.co
 
 vSAN upgrades are performed through the vSphere Lifecycle Manager (vLCM) cluster image workflow. Never upgrade ESXi hosts manually on a vSAN cluster — always use vLCM to ensure vSAN health is validated at each step.
 
+```mermaid
+graph TD
+    pre["Pre-upgrade checks:\nHealth green, no degraded objects,\nresync queue empty, backup current"]
+    vcUpgrade["1. Upgrade vCenter Server\n(always first)"]
+    vLCMImage["2. Update vLCM cluster image\nto target ESXi version"]
+    hostLoop["3. Remediate one host at a time\n(vLCM puts host in maintenance mode)"]
+    healthCheck["4. Verify vSAN health\nafter each host"]
+    allDone{"All hosts\nremediated?"}
+    postCheck["5. Post-upgrade validation:\nbuild numbers, health, object compliance"]
+    done(["Upgrade complete"])
+
+    pre --> vcUpgrade --> vLCMImage --> hostLoop --> healthCheck --> allDone
+    allDone -->|"No — next host"| hostLoop
+    allDone -->|"Yes"| postCheck --> done
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+
+    class pre,vcUpgrade,vLCMImage,hostLoop,healthCheck,postCheck step
+    class allDone decision
+    class done terminal
+```
+
 **Pre-upgrade checks:**
 
 ```bash

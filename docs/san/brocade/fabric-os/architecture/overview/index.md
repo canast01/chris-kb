@@ -59,6 +59,30 @@ Each fabric is independent. ISLs form trunk groups between switches within a fab
 
 ---
 
+## Dual-Fabric Design with ISL Trunking
+
+```mermaid
+graph TB
+    subgraph "Fabric A"
+        swA1["G620-SW01\nDomain 1\n(edge)"]
+        swA2["G720-Core-A\nDomain 2\n(core / principal)"]
+        swA1 <-->|"ISL trunk\n2×32G"| swA2
+    end
+
+    subgraph "Fabric B"
+        swB1["G620-SW02\nDomain 21\n(edge)"]
+        swB2["G720-Core-B\nDomain 22\n(core / principal)"]
+        swB1 <-->|"ISL trunk\n2×32G"| swB2
+    end
+
+    hostA0(["ESXi HBA0"]) -->|"F_Port"| swA1
+    hostB0(["ESXi HBA1"]) -->|"F_Port"| swB1
+    swA2 -->|"F_Port"| stgA(["Storage CT0"])
+    swB2 -->|"F_Port"| stgB(["Storage CT1"])
+
+    note["Fabric A and Fabric B\nare completely isolated\n(no cross-fabric cables)"]
+```
+
 ## Principal Switch and Domain ID
 
 One switch per fabric is the principal switch, elected by lowest WWN (by default) or by priority setting.
@@ -218,6 +242,26 @@ mapspolicy --show -predefined
 MAPS policies are pre-defined by Broadcom (defaulted to `dflt_conservative_policy` or `dflt_aggressive_policy`) and can be customised with site-specific thresholds. The policy is configured per logical switch.
 
 ---
+
+## Virtual Fabrics — Logical Switch Partitioning
+
+```mermaid
+graph TB
+    subgraph "Physical X7-8 Director"
+        subgraph "Logical Switch FID 1 — Fabric A Production"
+            ports1["Ports 0–23\nHost + Storage F_Ports\nE_Ports to Fabric A switches"]
+        end
+        subgraph "Logical Switch FID 2 — Fabric B Production"
+            ports2["Ports 24–47\nHost + Storage F_Ports\nE_Ports to Fabric B switches"]
+        end
+        subgraph "Logical Switch FID 10 — Replication Fabric"
+            ports3["Ports 48–55\nSRDF / RecoverPoint\nreplication ports"]
+        end
+        hw["Shared hardware:\npower · cooling · backplane\nCP blades"]
+    end
+    ports1 -.->|"isolated namespace\nseparate zone DB"| ports2
+    ports2 -.->|"isolated namespace"| ports3
+```
 
 ## FCIP — Fibre Channel over IP
 

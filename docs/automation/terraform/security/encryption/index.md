@@ -1,5 +1,28 @@
 # Terraform — Encryption
 
+## Secrets and Encryption Architecture
+
+```mermaid
+graph TD
+    tfConfig[".tf configuration\n(no secrets in code)"]
+    sensitiveVar["variable marked\nsensitive = true"]
+    ssmParam["AWS SSM Parameter Store\n(SecureString / KMS)"]
+    secretsMgr["AWS Secrets Manager\n(JSON secret)"]
+    dataSource["data source block\n(read at plan/apply time)"]
+    tfApply["terraform apply\n(secret resolved at runtime)"]
+    stateFile["State File\n(may contain sensitive values)"]
+    s3Encrypted["S3 Bucket\n(SSE-S3 / SSE-KMS\nencrypt=true)"]
+    logs["Plan logs\n(sensitive values redacted)"]
+
+    tfConfig --> sensitiveVar
+    sensitiveVar --> logs
+    ssmParam --> dataSource
+    secretsMgr --> dataSource
+    dataSource --> tfApply
+    tfApply --> stateFile
+    stateFile --> s3Encrypted
+```
+
 ## Encrypted State Storage
 
 State files can contain sensitive values. Always enable encryption at rest for remote backends.

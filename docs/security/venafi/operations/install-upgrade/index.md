@@ -3,6 +3,30 @@
 Venafi TPP manages the full certificate lifecycle — discovery, policy enforcement, issuance, renewal automation, and expiry alerting. This page covers operational lifecycle procedures including upgrades and migration to TLS Protect Cloud (VaaS).
 
 ---
+## Machine Identity Discovery Topology
+
+```mermaid
+graph TD
+    tpp["Venafi Trust Protection Platform"]
+    tpp -->|"schedule scan job"| netDisc["Network Discovery Engine\n(IP range / CIDR scan)"]
+    tpp -->|"agent or agentless WMI"| winDisc["Windows Certificate Store\nDiscovery"]
+    tpp -->|"Edge Proxy"| segNets["Segmented / DMZ Networks\n(via Proxy relay)"]
+
+    netDisc -->|"scan ports 443 8443 636 3389"| tlsEndpoints["TLS Endpoints\n(servers / load balancers)"]
+    winDisc -->|"LocalMachine store"| winHosts["Windows Hosts\n(IIS / app servers)"]
+    segNets -->|"proxy-relayed scan"| segHosts["Isolated Network Hosts"]
+
+    tlsEndpoints -->|"discovered certs"| tpp
+    winHosts -->|"cert inventory"| tpp
+    segHosts -->|"cert inventory"| tpp
+
+    tpp --> certInventory["Certificate Inventory\n(discovered / unmanaged certs)"]
+    certInventory -->|"assign to policy folder"| managed["Managed Certificate\n(lifecycle enforced)"]
+    certInventory -->|"no action"| unmanaged["Unmanaged — weekly\norphan report"]
+```
+
+---
+
 ## Certificate Discovery
 
 Venafi Discovery scans the network for certificates on well-known TLS endpoints, Windows certificate stores, and F5/network devices. Discovery is the first step in bringing unmanaged certificates under Venafi control.
@@ -42,6 +66,29 @@ Key policy controls (configured per policy folder):
 | Auto-issuance | Internal Production: yes; External: manual approval |
 
 Policy violations are surfaced in the Venafi UI and via API. Non-compliant certificates generate alerts and block automated renewal until the violation is resolved.
+
+---
+
+## Automated Renewal Sequence
+
+```mermaid
+sequenceDiagram
+    participant monitor as Venafi Monitor
+    participant tpp as TPP Policy Server
+    participant ca as CA Connector
+    participant caServer as CA Backend
+    participant target as Target System
+
+    monitor->>tpp: Detect cert within renewal window (30 days)
+    tpp->>tpp: Generate new CSR using stored key policy
+    tpp->>ca: Submit CSR to configured CA connector
+    ca->>caServer: Forward CSR (ADCS / DigiCert / Entrust)
+    caServer-->>ca: Issue new certificate
+    ca-->>tpp: Return issued certificate
+    tpp->>tpp: Store new certificate in inventory
+    tpp->>target: Push certificate to target (if driver configured)
+    tpp-->>monitor: Notify certificate owner (email / SNMP)
+```
 
 ---
 

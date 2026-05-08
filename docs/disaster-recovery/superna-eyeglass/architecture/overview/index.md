@@ -51,6 +51,26 @@ When a failover is triggered:
 
 RTO: typically 5–15 minutes for file services, depending on share count.
 
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant EG as Eyeglass DR Assistant
+    participant ProdPS as Production PowerScale
+    participant DRPS as DR PowerScale
+    participant DNS as DNS Server
+
+    Admin->>EG: egcli drfailover --policy POL-NAS-PROD --confirm
+    EG->>ProdPS: Pause / break SyncIQ replication
+    ProdPS-->>EG: SyncIQ stopped
+    EG->>DRPS: Activate access zones
+    EG->>DRPS: Apply NFS exports + SMB shares
+    EG->>DRPS: Apply quota policies
+    EG->>DNS: Update SmartConnect zone delegation → DR VIPs
+    DNS-->>EG: DNS updated
+    EG-->>Admin: Failover complete — notify via SNMP/email
+    Note over DRPS: Clients now resolve to DR cluster
+```
+
 ## Appliance Sizing
 
 | Environment | Eyeglass VM Size |

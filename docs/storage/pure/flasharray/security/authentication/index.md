@@ -4,6 +4,41 @@ FlashArray supports multiple identity sources for admin authentication: local ac
 
 ---
 
+## Authentication Architecture
+
+```mermaid
+flowchart TD
+  subgraph "Human Admin Login"
+    BROWSER["Browser / SSH"]
+    BROWSER --> SAML2{"SAML SSO\nconfigured?"}
+    SAML2 -->|"Yes"| IDP["Enterprise IdP\n(Okta / Azure AD / ADFS)\nenforces MFA"]
+    IDP -->|"SAML assertion\n+ group claims"| PURITY["Purity RBAC\n(maps group → role)"]
+    SAML2 -->|"No"| ADCHECK{"AD / LDAP\nconfigured?"}
+    ADCHECK -->|"Yes"| AD["Active Directory\n(ldaps:// bind)"]
+    AD -->|"group membership"| PURITY
+    ADCHECK -->|"No"| LOCAL2["Local Account\n(break-glass pureuser)"]
+    LOCAL2 --> PURITY
+  end
+
+  subgraph "Automation Login"
+    SCRIPT["Script / Terraform\n/ Ansible"]
+    SCRIPT -->|"x-auth-token header"| APITOKEN["API Token\n(inherits account role)"]
+    APITOKEN --> PURITY
+  end
+
+  PURITY --> ROLE2["Assign Role\n(array_admin / storage_admin\n/ ops_admin / readonly)"]
+  ROLE2 --> AUDIT2["All actions logged\n(pureaudit list → SIEM)"]
+
+  classDef idp fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef purity fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef audit fill:#b45309,stroke:#92400e,color:#fff
+  classDef decision fill:#4b5563,stroke:#374151,color:#fff
+  class IDP,AD,LOCAL2,APITOKEN idp
+  class PURITY,ROLE2 purity
+  class AUDIT2 audit
+  class SAML2,ADCHECK decision
+```
+
 ## Local Accounts
 
 Local accounts are stored on the array itself and are independent of any directory service. Use them for break-glass access and initial setup. Minimise the number of local accounts in production — prefer AD or LDAP for human admin access.

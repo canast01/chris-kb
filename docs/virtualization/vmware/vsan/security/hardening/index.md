@@ -4,6 +4,34 @@ vSAN hardening covers the security baseline configuration applied to the ESXi ho
 
 ---
 
+## Hardening Control Layers
+
+```mermaid
+graph TD
+    subgraph "Network Layer"
+        fw["ESXi Host Firewall\n(restrict SSH, VSAN ports)"]
+        nioc["NIOC — vSAN traffic\nbandwidth reservation"]
+    end
+
+    subgraph "Authentication Layer"
+        lockdown["Lockdown Mode\n(Normal or Strict)"]
+        pwd["Password complexity\n& account lockout"]
+        ntp["NTP — clock sync\n(500 ms max drift for vSAN)"]
+    end
+
+    subgraph "Encryption Layer"
+        dit["Data-in-Transit\nEncryption (AES-256-GCM)"]
+        dar["Data-at-Rest\nEncryption (D@RE via KMS)"]
+    end
+
+    subgraph "Audit Layer"
+        syslog["Syslog to SIEM\n(SSH login, disk events)"]
+        hostProf["Host Profiles\n(enforce baseline; detect drift)"]
+    end
+
+    fw & nioc --> lockdown & pwd & ntp --> dit & dar --> syslog & hostProf
+```
+
 ## ESXi Host Hardening
 
 ### Disable Unnecessary Services

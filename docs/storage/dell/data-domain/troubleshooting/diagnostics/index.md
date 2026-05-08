@@ -2,6 +2,23 @@
 
 ## Overview
 
+```mermaid
+flowchart TD
+    A([Incident Start]) --> B["alerts show current\nfilesys status\nfilesys show space"]
+    B --> C{"Hardware alert\nactive?"}
+    C -->|Yes| D["disk show state\nenclosure show hardware\nOpen Dell support case"]
+    C -->|No| E{"Filesystem\nnot Running?"}
+    E -->|Yes| F["filesys enable\nMonitor: filesys status"]
+    E -->|No| G{"Replication\nin Error?"}
+    G -->|Yes| H["replication show errors\nnet ping dst\nreplication disable + enable"]
+    G -->|No| I{"DDBoost auth\nfailure?"}
+    I -->|Yes| J["ddboost user list\nReset password\nUpdate backup app"]
+    I -->|No| K{"Capacity\n> 80%?"}
+    K -->|Yes| L["filesys clean start\nExpire old backups"]
+    K -->|No| M["support bundle generate\nEscalate to Dell"]
+    D & F & H & J & L & M --> Z([Resolution])
+```
+
 This page provides structured diagnostic procedures for the most common Data Domain failure scenarios. The approach is to gather evidence first, then act — avoid making configuration changes before understanding the root cause.
 
 ---

@@ -1,5 +1,47 @@
 # FlashArray — Integrations
 
+## Integration Architecture Overview
+
+```mermaid
+graph TD
+  subgraph "FlashArray"
+    FA["FlashArray\nCT0 / CT1"]
+    MGMT["Management Port\n(HTTPS 443 / SSH 22)"]
+    REPL["Replication Port\n(TLS inter-array)"]
+    HOST["FC / iSCSI / NVMe Ports\n(host I/O)"]
+    FA --- MGMT & REPL & HOST
+  end
+
+  subgraph "Management Integrations"
+    PURE1["Pure1 Cloud\n(phone-home HTTPS)"]
+    VCENTER["VMware vCenter\n(VASA / vSphere Plugin)"]
+    VEEAM["Veeam B&R\n(FlashArray Plugin)"]
+    ANSIBLE["Ansible / Terraform\n(REST API — api-token)"]
+    SNMP["SNMP NMS\n(SNMPv3 polls + traps)"]
+    SIEM["SIEM\n(TLS syslog)"]
+  end
+
+  subgraph "Host Layer"
+    ESX["ESXi Hosts\n(FC / iSCSI)"]
+    DB["Database Hosts\n(FC / NVMe-oF)"]
+  end
+
+  MGMT -->|"HTTPS"| PURE1
+  MGMT -->|"HTTPS / VASA"| VCENTER
+  MGMT -->|"REST API"| VEEAM & ANSIBLE
+  MGMT -->|"SNMP"| SNMP
+  MGMT -->|"syslog"| SIEM
+  REPL -->|"sync / async replication"| REMOTE["Remote FlashArray\n(ActiveCluster / ActiveDR)"]
+  HOST --> ESX & DB
+
+  classDef fa fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmtInt fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class FA,MGMT,REPL,HOST fa
+  class PURE1,VCENTER,VEEAM,ANSIBLE,SNMP,SIEM mgmtInt
+  class ESX,DB host
+```
+
 ## VMware Integration
 
 Pure Storage provides a native vSphere integration stack for FlashArray:

@@ -4,6 +4,28 @@
 
 ---
 
+## Incident Triage Decision Tree
+
+```mermaid
+flowchart TD
+    incident([Incident Reported]) --> baseline["Fast baseline:\nswitchstatusshow · switchshow\nfabricshow · islshow · porterrshow"]
+    baseline --> healthy{"switchstatusshow\nHEALTHY?"}
+    healthy -->|No| hwCheck["sensorshow · fanshow · psshow\nEnvironmental failure?"]
+    hwCheck -->|Yes| hwAction["Replace fan / PSU\nEscalate to Broadcom TAC"]
+    hwCheck -->|No| portFaulty["porttest suspect port\nHW fault?"]
+    healthy -->|Yes| hostSee{"Host sees storage?"}
+    hostSee -->|No| nsCheck["nsshow — HBA in name server?"]
+    nsCheck -->|No| flogiCheck["portlogshow — FLOGI events?\nCheck cable · SFP · HBA driver"]
+    nsCheck -->|Yes| zoneCheck["zoneshow — WWPN in active zone?"]
+    zoneCheck -->|No| addZone["Create/fix zone\ncfgenable · cfgsave"]
+    zoneCheck -->|Yes| arrayMask["Check array-side LUN masking\n(Pure / PowerMax / ONTAP)"]
+    hostSee -->|Yes| errCheck{"porterrshow\nHigh error counters?"}
+    errCheck -->|Yes| sfpCheck["sfpshow — SFP optical levels\nReplace SFP first"]
+    errCheck -->|No| maps["mapsdb --show\nActive MAPS alerts?"]
+    maps -->|"BB credit zero"| slowDrain["bottleneckmon --show\nDisable slow drain port"]
+    maps -->|"ISL util high"| islAdd["Add ISL capacity\ncheck trunk group"]
+```
+
 ## Triage Approach
 
 Start every investigation with a fast baseline capture. Run all commands before making any changes — the state you see now is evidence.

@@ -67,6 +67,31 @@ Back-end Array LUN
                     └── Virtual Volume  (presented to hosts via storage views)
 ```
 
+```mermaid
+flowchart TD
+    subgraph "Site A — Cluster-1"
+        arrA["Array A LUN\n(PowerMax / Unity)"]
+        svA["Storage Volume\nVPLEX claims LUN"]
+        extA["Extent\nClaim on storage volume"]
+        ldA["Local Device\nRAID-0 (single extent)"]
+    end
+    subgraph "Site B — Cluster-2"
+        arrB["Array B LUN\n(PowerMax / Unity)"]
+        svB["Storage Volume"]
+        extB["Extent"]
+        ldB["Local Device"]
+    end
+    subgraph "Distributed Layer — Metro"
+        dd["Distributed Device\nRAID-1 across both legs"]
+        vv["Virtual Volume\nPresented to hosts"]
+        sv["Storage View\nHost HBA → FE port → vv"]
+    end
+
+    arrA --> svA --> extA --> ldA --> dd
+    arrB --> svB --> extB --> ldB --> dd
+    dd --> vv --> sv
+```
+
 ### Storage Volumes
 
 Storage volumes are unclaimed back-end array LUNs visible to VPLEX back-end ports. VPLEX discovers them when zoning and array masking are correctly configured.
@@ -153,6 +178,24 @@ vplexcli -q -e "distributed-device create \
 | `detached` | Both legs disconnected; I/O suspended | Restore ICL and Witness; resume manually |
 | `paused` | Intentionally paused by administrator | Resume when ready |
 
+```mermaid
+flowchart TD
+    inSync["in-sync\nBoth legs mirrored\nFull Metro redundancy"]
+    rebuilding["rebuilding\nResyncing after interruption\nI/O continues on both legs"]
+    degraded["degraded\nOne leg unreachable\nI/O on surviving leg only"]
+    detached["detached\nBoth legs disconnected\nI/O suspended"]
+    paused["paused\nAdmin-initiated pause"]
+
+    inSync -->|"ICL interruption"| degraded
+    inSync -->|"ICL + Witness both down"| detached
+    inSync -->|"admin pause"| paused
+    degraded -->|"ICL restored\nauto-resync"| rebuilding
+    degraded -->|"Witness also lost"| detached
+    rebuilding -->|"resync complete"| inSync
+    paused -->|"admin resume"| inSync
+    detached -->|"restore ICL + Witness\nmanual resume"| rebuilding
+```
+
 ### Virtual Volumes
 
 Virtual volumes are the objects presented to hosts. They are created on top of a local device (for VPLEX Local) or a distributed device (for VPLEX Metro).
@@ -204,6 +247,23 @@ A storage view is a masking construct that maps a set of virtual volumes to a se
 | Initiator ports | Host HBA WWNs registered with VPLEX |
 | Front-end ports | VPLEX director FC ports through which the volumes are presented |
 | Virtual volumes | The volumes made accessible through this view |
+
+```mermaid
+flowchart TD
+    arrayLUN["Back-end Array LUN"]
+    sv1["Storage Volume"]
+    ext1["Extent"]
+    ld1["Local Device"]
+    dd1["Distributed Device\n(Metro RAID-1)"]
+    vv1["Virtual Volume"]
+    storView["Storage View\nsv-db-prod-01"]
+    fabricZone["SAN Fabric Zone\nHost HBA ↔ VPLEX FE port"]
+    hostHBA["Host HBA WWN\nRegistered initiator port"]
+
+    arrayLUN --> sv1 --> ext1 --> ld1 --> dd1 --> vv1 --> storView
+    hostHBA --> fabricZone --> storView
+    storView -->|"presents volume\nto host"| hostHBA
+```
 
 ### Storage View Operations
 

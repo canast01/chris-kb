@@ -1,5 +1,36 @@
 # PowerShell — Integrations
 
+## PowerCLI VM Management Flow
+
+```mermaid
+graph LR
+    connectVC["Connect-VIServer\n(vCenter)"]
+    getVM["Get-VM\n(filter by name / state)"]
+    vmAction{"VM Action"}
+    powerOn["Start-VM"]
+    powerOff["Stop-VM"]
+    snapshot["New-Snapshot\n(pre-patch)"]
+    configure["Set-VM\n(CPU / Memory)"]
+    revert["Set-VM -Snapshot\n(revert)"]
+    removeSnap["Remove-Snapshot\n(post-patch)"]
+    migrateDS["Move-VM -Datastore\n(Storage vMotion)"]
+    disconnect["Disconnect-VIServer"]
+
+    connectVC --> getVM
+    getVM --> vmAction
+    vmAction --> powerOn
+    vmAction --> powerOff
+    vmAction --> snapshot
+    vmAction --> configure
+    snapshot --> revert
+    snapshot --> removeSnap
+    vmAction --> migrateDS
+    powerOn --> disconnect
+    powerOff --> disconnect
+    configure --> disconnect
+    migrateDS --> disconnect
+```
+
 ## VMware
 
 VMware PowerCLI is a set of PowerShell modules for managing vSphere, NSX, and vSAN.

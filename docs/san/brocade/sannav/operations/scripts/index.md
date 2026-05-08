@@ -1,3 +1,308 @@
 # SANnav — Scripts
 
-Automation scripts and reusable code.
+> Part of the [SANnav](../../) reference.
+
+---
+
+## Overview
+
+This page contains reusable scripts for automating common SANnav operations via the REST API. All scripts use `curl` and Python 3 (standard library only). Adapt credentials and endpoint URLs for your environment before use.
+
+---
+
+## Authentication Helper
+
+Save this as a sourced function or include at the top of each script:
+
+```bash
+#!/usr/bin/env bash
+# sannav-auth.sh — obtain and export a SANnav API token
+
+SANNAV_HOST="https://sannav-dc1.corp.example.com"
+SANNAV_USER="svc-automation"
+SANNAV_PASS="${SANNAV_PASS:-}"  # pass via env variable
+
+if [[ -z "$SANNAV_PASS" ]]; then
+  echo "ERROR: Set SANNAV_PASS environment variable"
+  exit 1
+fi
+
+export SANNAV_TOKEN=$(curl -sk -X POST "${SANNAV_HOST}/rest/login" \
+  -H "Content-Type: application/json" \
+  -d "{\"credentials\":{\"loginName\":\"${SANNAV_USER}\",\"password\":\"${SANNAV_PASS}\"}}" \
+  | python3 -c "import sys,json; print(json.load(sys.stdin).get('authToken',''))")
+
+if [[ -z "$SANNAV_TOKEN" ]]; then
+  echo "ERROR: Failed to obtain SANnav token"
+  exit 1
+fi
+
+echo "Authenticated as ${SANNAV_USER}"
+
+cleanup() {
+  curl -sk -X DELETE "${SANNAV_HOST}/rest/logout" \
+    -H "Authorization: Bearer ${SANNAV_TOKEN}" > /dev/null
+  echo "Session logged out"
+}
+trap cleanup EXIT
+```
+
+---
+
+## Switch Inventory Export
+
+Exports all managed switches to CSV with connectivity state and firmware version:
+
+```bash
+#!/usr/bin/env bash
+# sannav-switch-inventory.sh
+
+SANNAV_HOST="https://sannav-dc1.corp.example.com"
+source ./sannav-auth.sh
+
+OUTPUT="sannav-switches-$(date +%Y%m%d).csv"
+
+curl -sk "${SANNAV_HOST}/rest/resourcegroups/all/switches" \
+  -H "Authorization: Bearer ${SANNAV_TOKEN}" \
+  | python3 - <<'EOF'
+import sys, json, csv
+
+data = json.load(sys.stdin)
+switches = data.get("switches", [])
+
+fields = ["name", "ipAddress", "model", "firmwareVersion",
+          "connectivityState", "switchState", "fabricName"]
+
+writer = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction="ignore")
+writer.writeheader()
+for sw in switches:
+    writer.writerow({f: sw.get(f, "") for f in fields})
+EOF
+# Output goes to stdout — redirect as needed:
+# bash sannav-switch-inventory.sh > sannav-switches-$(date +%Y%m%d).csv
+
+echo "Export complete"
+```
+
+---
+
+## Unreachable Switch Alert
+
+Queries SANnav for any switch not in REACHABLE state and exits non-zero if found (suitable for nagios/Icinga or CI pipeline health gate):
+
+```python
+#!/usr/bin/env python3
+# sannav-check-reachability.py
+
+import sys, json, os
+import urllib.request, urllib.error
+
+HOST = "https://sannav-dc1.corp.example.com"
+USER = "svc-monitor"
+PASS = os.environ.get("SANNAV_PASS", "")
+
+ctx = __import__("ssl").create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = __import__("ssl").CERT_NONE
+
+def api(method, path, body=None):
+    url = HOST + path
+    req = urllib.request.Request(url, method=method,
+          headers={"Content-Type": "application/json",
+                   "Authorization": f"Bearer {TOKEN}"} if "TOKEN" in globals() else
+                  {"Content-Type": "application/json"},
+          data=json.dumps(body).encode() if body else None)
+    with urllib.request.urlopen(req, context=ctx) as r:
+        return json.load(r)
+
+# Login
+resp = api("POST", "/rest/login", {"credentials": {"loginName": USER, "password": PASS}})
+TOKEN = resp["authToken"]
+
+try:
+    data = api("GET", "/rest/resourcegroups/all/switches")
+    unreachable = [s["name"] for s in data.get("switches", [])
+                   if s.get("connectivityState") != "REACHABLE"]
+    if unreachable:
+        print(f"CRITICAL: {len(unreachable)} switch(es) unreachable: {', '.join(unreachable)}")
+        sys.exit(2)
+    else:
+        print(f"OK: All {len(data.get('switches',[]))} switches reachable")
+        sys.exit(0)
+finally:
+    api("DELETE", "/rest/logout")
+```
+
+---
+
+## Offline Port Report
+
+Lists all F_Ports and E_Ports that are not Online — useful for daily port health reporting:
+
+```python
+#!/usr/bin/env python3
+# sannav-offline-ports.py
+
+import sys, json, os, csv
+import urllib.request, ssl
+
+HOST = "https://sannav-dc1.corp.example.com"
+USER = "svc-monitor"
+PASS = os.environ.get("SANNAV_PASS", "")
+
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+def api_get(path, token):
+    req = urllib.request.Request(HOST + path,
+          headers={"Authorization": f"Bearer {token}"})
+    with urllib.request.urlopen(req, context=ctx) as r:
+        return json.load(r)
+
+# Login
+import urllib.parse
+req = urllib.request.Request(HOST + "/rest/login", method="POST",
+      data=json.dumps({"credentials": {"loginName": USER, "password": PASS}}).encode(),
+      headers={"Content-Type": "application/json"})
+with urllib.request.urlopen(req, context=ctx) as r:
+    TOKEN = json.load(r)["authToken"]
+
+try:
+    data = api_get("/rest/resourcegroups/all/ports", TOKEN)
+    writer = csv.writer(sys.stdout)
+    writer.writerow(["Switch", "Port", "Type", "State", "Connected WWN"])
+    for p in data.get("ports", []):
+        ptype = p.get("portType", "")
+        state = p.get("portState", "")
+        if ptype in ("F_PORT", "E_PORT") and state != "ONLINE":
+            writer.writerow([
+                p.get("switchName", ""),
+                p.get("portIndex", ""),
+                ptype,
+                state,
+                p.get("connectedWwn", "")
+            ])
+finally:
+    req = urllib.request.Request(HOST + "/rest/logout", method="DELETE",
+          headers={"Authorization": f"Bearer {TOKEN}"})
+    urllib.request.urlopen(req, context=ctx).close()
+```
+
+---
+
+## Zone Set Export (All Fabrics)
+
+Exports the active zone set for each fabric to a dated JSON file — run as a nightly cron job:
+
+```bash
+#!/usr/bin/env bash
+# sannav-zone-export.sh
+# Cron: 0 2 * * * /opt/scripts/sannav-zone-export.sh >> /var/log/sannav-zone-export.log 2>&1
+
+SANNAV_HOST="https://sannav-dc1.corp.example.com"
+EXPORT_DIR="/opt/sannav-exports/zones"
+DATE=$(date +%Y%m%d)
+
+mkdir -p "${EXPORT_DIR}"
+
+# Get token
+TOKEN=$(curl -sk -X POST "${SANNAV_HOST}/rest/login" \
+  -H "Content-Type: application/json" \
+  -d "{\"credentials\":{\"loginName\":\"svc-automation\",\"password\":\"${SANNAV_PASS}\"}}" \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['authToken'])")
+
+# Get list of fabric IDs
+FABRICS=$(curl -sk "${SANNAV_HOST}/rest/resourcegroups" \
+  -H "Authorization: Bearer ${TOKEN}" \
+  | python3 -c "
+import sys,json
+data = json.load(sys.stdin)
+for rg in data.get('resourceGroups',[]):
+    print(rg['id'], rg['name'].replace(' ','-'))
+")
+
+# Export zone set for each fabric
+while IFS=' ' read -r FABRIC_ID FABRIC_NAME; do
+  OUTPUT="${EXPORT_DIR}/${FABRIC_NAME}-zones-${DATE}.json"
+  curl -sk "${SANNAV_HOST}/rest/resourcegroups/${FABRIC_ID}/zonedb" \
+    -H "Authorization: Bearer ${TOKEN}" \
+    -o "${OUTPUT}"
+  echo "Exported: ${OUTPUT}"
+done <<< "${FABRICS}"
+
+# Cleanup old exports (keep 90 days)
+find "${EXPORT_DIR}" -name "*.json" -mtime +90 -delete
+
+# Logout
+curl -sk -X DELETE "${SANNAV_HOST}/rest/logout" \
+  -H "Authorization: Bearer ${TOKEN}" > /dev/null
+
+echo "Zone export complete: $(date)"
+```
+
+---
+
+## Firmware Version Compliance Check
+
+Checks all switches against a defined minimum firmware version baseline and reports non-compliant switches:
+
+```python
+#!/usr/bin/env python3
+# sannav-firmware-check.py
+
+import sys, json, os
+import urllib.request, ssl
+from packaging.version import Version  # pip install packaging
+
+HOST = "https://sannav-dc1.corp.example.com"
+PASS = os.environ.get("SANNAV_PASS", "")
+
+# Minimum approved firmware by model prefix
+BASELINE = {
+    "G730": "9.2.1a",
+    "G720": "9.2.1a",
+    "G630": "9.1.1c",
+    "G620": "9.1.1c",
+    "G610": "9.1.1c",
+}
+
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+req = urllib.request.Request(HOST + "/rest/login", method="POST",
+      data=json.dumps({"credentials": {"loginName": "svc-monitor", "password": PASS}}).encode(),
+      headers={"Content-Type": "application/json"})
+with urllib.request.urlopen(req, context=ctx) as r:
+    TOKEN = json.load(r)["authToken"]
+
+req = urllib.request.Request(HOST + "/rest/resourcegroups/all/switches",
+      headers={"Authorization": f"Bearer {TOKEN}"})
+with urllib.request.urlopen(req, context=ctx) as r:
+    switches = json.load(r).get("switches", [])
+
+non_compliant = []
+for sw in switches:
+    model = sw.get("model", "")
+    fw = sw.get("firmwareVersion", "")
+    for prefix, min_ver in BASELINE.items():
+        if model.startswith(prefix):
+            try:
+                if Version(fw.replace("v","")) < Version(min_ver):
+                    non_compliant.append((sw["name"], model, fw, min_ver))
+            except Exception:
+                pass
+
+if non_compliant:
+    print(f"NON-COMPLIANT SWITCHES ({len(non_compliant)}):")
+    for name, model, fw, required in non_compliant:
+        print(f"  {name:<30} {model:<10} current={fw:<10} required>={required}")
+    sys.exit(1)
+else:
+    print(f"All {len(switches)} switches meet firmware baseline.")
+
+req = urllib.request.Request(HOST + "/rest/logout", method="DELETE",
+      headers={"Authorization": f"Bearer {TOKEN}"})
+urllib.request.urlopen(req, context=ctx).close()
+```

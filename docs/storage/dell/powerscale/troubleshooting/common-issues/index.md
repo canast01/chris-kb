@@ -15,6 +15,23 @@
 
 ## Incident Triage
 
+```mermaid
+flowchart TD
+    A([Client reports NFS/SMB error\nor node unreachable]) --> B["isi status\nisi event list --limit 20"]
+    B --> C{"SMARTFAIL\nor DOWN node?"}
+    C -->|Yes| D["Monitor Restripe\nDo NOT manually remove\nOpen Dell support case"]
+    C -->|No| E{"Write failure\non quota directory?"}
+    E -->|Yes| F["isi quota quotas list\nRaise hard limit or free space"]
+    E -->|No| G{"SmartConnect DNS\nnot resolving?"}
+    G -->|Yes| H["Verify NS delegation\nisi network pools list\nnslookup SmartConnect zone"]
+    G -->|No| I{"NFS stale file\nhandle?"}
+    I -->|Yes| J["Remount from client\nUse SmartConnect DNS name\nnot a node IP"]
+    I -->|No| K{"SMB access denied\ndespite correct perms?"}
+    K -->|Yes| L["isi auth users view\nCheck AD provider join\nReview share + dir ACL"]
+    K -->|No| M["isi statistics query current\nisi job list\nCapacity or performance path"]
+    D & F & H & J & L & M --> Z([Escalate if unresolved])
+```
+
 When clients report NFS/SMB errors, SyncIQ failures, or a node is unreachable, work through this sequence first.
 
 - [ ] Run `isi status` immediately — confirm which nodes and drives are in a fault state; note SMARTFAIL nodes, DOWN nodes, and drive error counts

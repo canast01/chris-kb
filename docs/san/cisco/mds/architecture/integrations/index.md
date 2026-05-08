@@ -27,6 +27,28 @@ NDFC (formerly DCNM) provides centralised zone management, fabric topology visib
 
 ESXi hosts connect to storage via FC HBAs, which log into the MDS fabric and are zoned to storage target ports.
 
+```mermaid
+sequenceDiagram
+  participant ESXi as ESXi Host
+  participant MDSA as MDS Fabric A
+  participant MDSB as MDS Fabric B
+  participant FA as FlashArray
+
+  ESXi->>MDSA: HBA0 FLOGI (Fabric A, VSAN 10)
+  MDSA-->>ESXi: FCID assigned
+  ESXi->>MDSB: HBA1 FLOGI (Fabric B, VSAN 11)
+  MDSB-->>ESXi: FCID assigned
+
+  Note over MDSA,FA: Admin creates device aliases and zones
+
+  MDSA->>MDSA: device-alias commit<br/>zone create + zoneset activate (VSAN 10)
+  MDSB->>MDSB: device-alias commit<br/>zone create + zoneset activate (VSAN 11)
+
+  ESXi->>FA: PLOGI + PRLI to CT0 via Fabric A
+  ESXi->>FA: PLOGI + PRLI to CT1 via Fabric B
+  FA-->>ESXi: Volumes visible via both paths (ALUA)
+```
+
 **Zone a new ESXi host:**
 
 ```

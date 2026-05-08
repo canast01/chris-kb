@@ -4,6 +4,29 @@ Diagnostic procedures for vSAN performance, object health, network issues, and d
 
 ---
 
+## Diagnostic Sequence
+
+```mermaid
+graph TD
+    incident(["vSAN incident reported"])
+    s1["1. Cluster status\nesxcli vsan cluster get"]
+    s2["2. Health checks\nesxcli vsan health cluster list"]
+    s3["3. Object health\nesxcli vsan debug object list\n(filter: grep -v Healthy)"]
+    s4["4. Resync status\nesxcli vsan debug resync summary get"]
+    s5["5. Disk group status\nesxcli vsan storage list"]
+    s6["6. Network test\nesxcli vsan debug network test\nvmkping -d -s 8972 <peer>"]
+    s7["7. Log review\nvmkernel.log / clomd.log\ncmmdsd.log / vsanmgmt.log"]
+    s8["8. Collect support bundle\nvm-support --vsan\nUpload to Broadcom case"]
+
+    incident --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef start fill:#15803d,stroke:#166534,color:#fff
+
+    class s1,s2,s3,s4,s5,s6,s7,s8 step
+    class incident start
+```
+
 ## Log Locations
 
 | Log | Location | Contents |

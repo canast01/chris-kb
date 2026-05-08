@@ -4,6 +4,47 @@
 
 Use this page for practical Terraform scripts, field-tested commands, known issues, and operational notes.
 
+## Multi-Workspace Deploy Pipeline
+
+```mermaid
+graph LR
+    trigger["Trigger\n(TF_DIR + workspaces)"]
+    selectDev["Select workspace:\ndev"]
+    initDev["terraform init\n-reconfigure"]
+    planDev["terraform plan\n-detailed-exitcode"]
+    approvalDev{"Auto-approve\ndev?"}
+    applyDev["terraform apply"]
+    selectStaging["Select workspace:\nstaging"]
+    planStaging["terraform plan"]
+    approvalStaging{"Operator\napproval?"}
+    applyStaging["terraform apply"]
+    selectProd["Select workspace:\nprod"]
+    planProd["terraform plan"]
+    approvalProd{"Operator\napproval?"}
+    applyProd["terraform apply"]
+    done["All workspaces\ndeployed"]
+    abort["ABORT:\nAlert + stop"]
+
+    trigger --> selectDev
+    selectDev --> initDev
+    initDev --> planDev
+    planDev --> approvalDev
+    approvalDev -->|Yes| applyDev
+    approvalDev -->|No| approvalDev
+    applyDev -->|OK| selectStaging
+    applyDev -->|Fail| abort
+    selectStaging --> planStaging
+    planStaging --> approvalStaging
+    approvalStaging -->|yes| applyStaging
+    applyStaging -->|OK| selectProd
+    applyStaging -->|Fail| abort
+    selectProd --> planProd
+    planProd --> approvalProd
+    approvalProd -->|yes| applyProd
+    applyProd -->|OK| done
+    applyProd -->|Fail| abort
+```
+
 ## Common Checks
 
 - Confirm current health

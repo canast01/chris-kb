@@ -1,5 +1,23 @@
 # Terraform — Common Issues
 
+## Terraform Troubleshooting Decision Flow
+
+```mermaid
+flowchart TD
+    failure["Terraform Error\nor Unexpected Behaviour"]
+    failure --> errType{"Error category?"}
+    errType -->|Provider auth| checkCreds["Check cloud credentials\naws sts get-caller-identity"]
+    checkCreds -->|Invalid| fixCreds["Set AWS_ / ARM_\nenvironment variables"]
+    errType -->|State locked| checkLock["Identify lock holder\n(error message shows lock ID)"]
+    checkLock -->|Stale lock| forceUnlock["terraform force-unlock\n<LOCK_ID>"]
+    errType -->|Resource exists in\nanother state| rmImport["terraform state rm\nthen terraform import"]
+    errType -->|Provider version\nmismatch| initUpgrade["terraform init -upgrade\nupdate lock file"]
+    errType -->|Cycle / dependency| graphCmd["terraform graph | dot\nvisualise dependency tree"]
+    errType -->|Drift after apply| refreshOnly["terraform apply\n-refresh-only"]
+    errType -->|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
+    enableDebug --> reviewLog["Review provider\nAPI call trace"]
+```
+
 ## Provider Errors
 
 ```bash

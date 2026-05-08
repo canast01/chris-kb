@@ -1,5 +1,26 @@
 # Terraform — Authentication
 
+## Provider Credential Flow — CI/CD
+
+```mermaid
+graph LR
+    ciPipeline["CI/CD Pipeline\n(GitHub Actions / GitLab)"]
+    ciSecrets["CI/CD Secrets\n(repository secrets)"]
+    oidcToken["OIDC Token\n(short-lived)"]
+    iamRole["Cloud IAM Role\n(assume via OIDC)"]
+    envVars["Environment Variables\n(AWS_ / ARM_ / GOOGLE_)"]
+    tfProvider["Terraform Provider\n(aws / azurerm / google)"]
+    cloudAPI["Cloud API\n(EC2 / ARM / GCP)"]
+
+    ciPipeline --> ciSecrets
+    ciPipeline --> oidcToken
+    oidcToken -->|Preferred: keyless| iamRole
+    ciSecrets -->|Fallback: static keys| envVars
+    iamRole --> envVars
+    envVars --> tfProvider
+    tfProvider --> cloudAPI
+```
+
 ## Provider Authentication
 
 Terraform providers authenticate to cloud APIs using credentials supplied via environment variables or provider configuration blocks. Never hardcode credentials in `.tf` files.
