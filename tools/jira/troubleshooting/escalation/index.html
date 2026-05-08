@@ -699,6 +699,169 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#l1-l2-l3-role-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L1 / L2 / L3 Role Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sla-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLA Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-escalation-information-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Escalation Information Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-Escalation Information Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#l1-l2-escalation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L1 → L2 Escalation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#l2-l3-escalation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L2 → L3 Escalation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#l3-atlassian-support-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L3 → Atlassian Support Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#atlassian-support-ticket-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atlassian Support Ticket Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emergency-contacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency Contacts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-communication-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Communication Template
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Escalation Communication Template">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#internal-incident-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Incident Update
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-notification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution Notification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-incident-review-pir-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Incident Review (PIR) Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +881,325 @@
 
 
 <h1 id="jira-escalation">Jira — Escalation<a class="headerlink" href="#jira-escalation" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="escalation-matrix">Escalation Matrix<a class="headerlink" href="#escalation-matrix" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    ISSUE([Issue Reported]) --&gt; L1[L1 — Operations / Service Desk\nFirst response, known issues,\npassword resets, basic config]
+
+    L1 --&gt; L1_RESOLVE{Resolved\nat L1?}
+    L1_RESOLVE -- Yes --&gt; DONE([Resolved])
+    L1_RESOLVE -- No --&gt; L1_TIME{Within\nL1 SLA?}
+    L1_TIME -- No --&gt; L2_ESC[Escalate to L2]
+    L1_TIME -- Yes --&gt; L1
+
+    L2_ESC --&gt; L2[L2 — Jira Administrator\nAdvanced config, integrations,\nlog analysis, plugin issues,\nperformance troubleshooting]
+
+    L2 --&gt; L2_RESOLVE{Resolved\nat L2?}
+    L2_RESOLVE -- Yes --&gt; DONE
+    L2_RESOLVE -- No --&gt; L2_TIME{Within\nL2 SLA?}
+    L2_TIME -- No --&gt; L3_ESC[Escalate to L3]
+    L2_TIME -- Yes --&gt; L2
+
+    L3_ESC --&gt; L3[L3 — Senior Engineer / Atlassian Support\nData corruption, code-level bugs,\nDB schema issues, cluster failures,\nAtlassian vendor engagement]
+
+    L3 --&gt; L3_RESOLVE{Resolved\nat L3?}
+    L3_RESOLVE -- Yes --&gt; DONE
+    L3_RESOLVE -- No --&gt; VENDOR[Escalate to Atlassian\nSupport / Emergency Hotline]
+
+    VENDOR --&gt; DONE
+
+    style DONE fill:#2d8a4e,color:#fff
+    style VENDOR fill:#c0392b,color:#fff</code></pre>
+<hr />
+<h2 id="l1-l2-l3-role-definitions">L1 / L2 / L3 Role Definitions<a class="headerlink" href="#l1-l2-l3-role-definitions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Role</th>
+<th>Responsibilities</th>
+<th>Skills Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>L1</strong></td>
+<td>Operations / Service Desk</td>
+<td>First response, incident triage, user-facing issues, known-issue workarounds, access requests</td>
+<td>Jira UI navigation, basic JQL, user administration</td>
+</tr>
+<tr>
+<td><strong>L2</strong></td>
+<td>Jira Administrator</td>
+<td>Configuration changes, plugin management, workflow editing, log analysis, LDAP/SSO issues, performance diagnosis</td>
+<td>Jira admin, REST API, log analysis, DB queries</td>
+</tr>
+<tr>
+<td><strong>L3</strong></td>
+<td>Senior Platform Engineer</td>
+<td>DB-level investigation, JVM analysis, cluster issues, data corruption, architectural changes, Atlassian case management</td>
+<td>PostgreSQL DBA, Java/JVM, Atlassian internals, Data Center architecture</td>
+</tr>
+<tr>
+<td><strong>Vendor</strong></td>
+<td>Atlassian Support</td>
+<td>Product bugs, licensing, undocumented behaviour, Data Center cluster defects</td>
+<td>N/A — Atlassian responsibility</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sla-table">SLA Table<a class="headerlink" href="#sla-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Description</th>
+<th>L1 Response</th>
+<th>L1 Resolution</th>
+<th>L2 Response</th>
+<th>L2 Resolution</th>
+<th>L3 Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>P1 — Critical</strong></td>
+<td>Jira down for all users</td>
+<td>15 min</td>
+<td>1 hour</td>
+<td>30 min</td>
+<td>4 hours</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td><strong>P2 — High</strong></td>
+<td>Core functionality broken (create, transition, search) for majority of users</td>
+<td>30 min</td>
+<td>4 hours</td>
+<td>1 hour</td>
+<td>8 hours</td>
+<td>2 hours</td>
+</tr>
+<tr>
+<td><strong>P3 — Medium</strong></td>
+<td>Functionality degraded, workaround available</td>
+<td>2 hours</td>
+<td>1 business day</td>
+<td>4 hours</td>
+<td>2 business days</td>
+<td>Next business day</td>
+</tr>
+<tr>
+<td><strong>P4 — Low</strong></td>
+<td>Minor issue, cosmetic, single-user problem</td>
+<td>4 hours</td>
+<td>3 business days</td>
+<td>Next BD</td>
+<td>5 business days</td>
+<td>Scheduled</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Business Days</p>
+<p>Business days are Monday–Friday, 08:00–18:00 local time, excluding public holidays. Out-of-hours P1 coverage must be arranged through the on-call rota.</p>
+</div>
+<hr />
+<h2 id="pre-escalation-information-checklist">Pre-Escalation Information Checklist<a class="headerlink" href="#pre-escalation-information-checklist" title="Permanent link">&para;</a></h2>
+<p>Collect the following before escalating to the next level. Incomplete escalations delay resolution.</p>
+<h3 id="l1-l2-escalation-checklist">L1 → L2 Escalation Checklist<a class="headerlink" href="#l1-l2-escalation-checklist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Issue summary: what is broken, what is the user impact</li>
+<li>[ ] First occurrence time and date</li>
+<li>[ ] Number of affected users (all / subset / single user)</li>
+<li>[ ] Steps to reproduce</li>
+<li>[ ] Error message or screenshot (exact text)</li>
+<li>[ ] Jira URL of affected issue/project (if applicable)</li>
+<li>[ ] User(s) affected: username(s) and roles</li>
+<li>[ ] Recent changes: any config changes, upgrades, or deployments in last 48h</li>
+<li>[ ] Temporary workaround in place (yes / no / what)</li>
+</ul>
+<h3 id="l2-l3-escalation-checklist">L2 → L3 Escalation Checklist<a class="headerlink" href="#l2-l3-escalation-checklist" title="Permanent link">&para;</a></h3>
+<p>All L1→L2 items, plus:</p>
+<ul>
+<li>[ ] Jira version and Data Center node count</li>
+<li>[ ] Relevant log excerpts (from <code>atlassian-jira.log</code>, <code>catalina.out</code>) with timestamps</li>
+<li>[ ] Database version and PostgreSQL version</li>
+<li>[ ] Cluster node status (<code>SELECT * FROM clusternodeinfo</code>)</li>
+<li>[ ] JVM heap configuration (<code>JVM_MAXIMUM_MEMORY</code> from <code>setenv.sh</code>)</li>
+<li>[ ] Installed plugins (output of plugin list script or admin UI screenshot)</li>
+<li>[ ] DB query performance: any slow queries identified</li>
+<li>[ ] Recent backup status (date of last successful backup)</li>
+<li>[ ] Timeline of events leading to issue</li>
+<li>[ ] Actions already taken and their results</li>
+</ul>
+<h3 id="l3-atlassian-support-checklist">L3 → Atlassian Support Checklist<a class="headerlink" href="#l3-atlassian-support-checklist" title="Permanent link">&para;</a></h3>
+<p>All L2→L3 items, plus:</p>
+<ul>
+<li>[ ] Atlassian support.zip generated and attached</li>
+<li>[ ] Thread dumps (minimum 3, 10s apart)</li>
+<li>[ ] Heap dump (if OOM or memory-related)</li>
+<li>[ ] Full DB schema version (<code>SELECT attribute_value FROM propertyentry WHERE property_key = 'jira.version'</code>)</li>
+<li>[ ] Exact reproduction steps tested in isolation</li>
+<li>[ ] Licence details (Server ID, SEN)</li>
+<li>[ ] AWS/infrastructure topology diagram (if relevant)</li>
+</ul>
+<hr />
+<h2 id="atlassian-support-ticket-template">Atlassian Support Ticket Template<a class="headerlink" href="#atlassian-support-ticket-template" title="Permanent link">&para;</a></h2>
+<p>Use this template when opening a ticket at <a href="https://support.atlassian.com">support.atlassian.com</a>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Subject: [JIRA DC] &lt;Brief description&gt; — P&lt;1/2/3/4&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Environment
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Product: Jira Software Data Center
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Version: 9.12.3
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Nodes: 3
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- Database: PostgreSQL 15.4
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>- Java: OpenJDK 17.0.9
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>- OS: RHEL 9.3
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>- Atlassian Server ID: BXXXXXXXXXXXXX
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- SEN: SEN-LXXXXXXXXX
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>## Priority Justification
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>[P1 — All users unable to log in since 09:00 UTC]
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>## Summary
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>[Concise one-paragraph description of the problem]
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>## Steps to Reproduce
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>1. 
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>2. 
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>3. 
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>## Expected Behaviour
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>[What should happen]
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>## Actual Behaviour
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>[What actually happens — include exact error message]
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>## Impact
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>- Users affected: [All / X users / Single user]
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>- Business impact: [Project delivery blocked / No workaround / Workaround available]
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>- Since: [Date and time]
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>## Timeline
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>- HH:MM — First report received
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>- HH:MM — L1 investigated, escalated to L2
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>- HH:MM — L2 investigated [describe steps]
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>- HH:MM — Escalated to L3/Atlassian
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>## Actions Taken
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>1. [Action 1 — result]
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>2. [Action 2 — result]
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>## Attachments
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>- [ ] support.zip
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>- [ ] atlassian-jira.log (relevant section)
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>- [ ] catalina.out (relevant section)
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>- [ ] Thread dumps (x3)
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>- [ ] Heap dump (if applicable)
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>- [ ] Screenshots
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>## Contact
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>Primary:  Name, email, phone
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>Secondary: Name, email, phone
+</code></pre></div>
+<hr />
+<h2 id="emergency-contacts">Emergency Contacts<a class="headerlink" href="#emergency-contacts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Contact</th>
+<th>Role</th>
+<th>When to Use</th>
+<th>Channel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jira Admin On-Call</td>
+<td>L2 on-call</td>
+<td>P1/P2 outside business hours</td>
+<td>Ops paging system</td>
+</tr>
+<tr>
+<td>Platform Engineering Lead</td>
+<td>L3 escalation</td>
+<td>P1 — all users affected</td>
+<td>Mobile / Slack</td>
+</tr>
+<tr>
+<td>Atlassian Enterprise Support</td>
+<td>Vendor support</td>
+<td>Confirmed product bug / Data Center defect</td>
+<td>support.atlassian.com + phone</td>
+</tr>
+<tr>
+<td>Atlassian Emergency Hotline</td>
+<td>Vendor critical</td>
+<td>P1 with no ETA, licensed Enterprise customers</td>
+<td>Atlassian Enterprise Support ticket → request callback</td>
+</tr>
+<tr>
+<td>Database Administrator (DBA)</td>
+<td>DB issues</td>
+<td>DB corruption, replication failure, schema issues</td>
+<td>Ops paging system</td>
+</tr>
+<tr>
+<td>Security Team</td>
+<td>Security incidents</td>
+<td>Suspected breach, data exposure, audit failures</td>
+<td>Security Slack channel</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Atlassian Emergency Support</p>
+<p>Atlassian telephone/callback support is available only on <strong>Premier</strong> and <strong>Enterprise</strong> support tiers. Standard support is ticket-only with response within 1 business day for P1. Confirm your support tier in the Atlassian admin portal before planning SLAs.</p>
+</div>
+<hr />
+<h2 id="escalation-communication-template">Escalation Communication Template<a class="headerlink" href="#escalation-communication-template" title="Permanent link">&para;</a></h2>
+<h3 id="internal-incident-update">Internal Incident Update<a class="headerlink" href="#internal-incident-update" title="Permanent link">&para;</a></h3>
+<p>Send to stakeholders during an active P1/P2:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[JIRA INCIDENT] Status Update — HH:MM UTC
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SUMMARY: [One sentence — what is broken]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>IMPACT: [Who is affected, what they cannot do]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>STATUS: [Investigating / Identified root cause / Implementing fix / Monitoring]
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ETA: [Expected resolution time, or &quot;Unknown — under investigation&quot;]
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>LAST ACTION: [Most recent step taken]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>NEXT ACTION: [What is being done now]
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Updates every [30 min / 1 hour] or on status change.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Contact: [on-call name] via [Slack channel / phone]
+</code></pre></div>
+<h3 id="resolution-notification">Resolution Notification<a class="headerlink" href="#resolution-notification" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[JIRA RESOLVED] — HH:MM UTC
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ISSUE: [Brief description]
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>RESOLVED AT: HH:MM UTC (Duration: Xh Ym)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ROOT CAUSE: [One sentence]
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>FIX APPLIED: [What was done]
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>PREVENTIVE ACTION: [What will be done to prevent recurrence]
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Post-mortem scheduled: [Date/time or &quot;within 5 business days&quot;]
+</code></pre></div>
+<hr />
+<h2 id="post-incident-review-pir-checklist">Post-Incident Review (PIR) Checklist<a class="headerlink" href="#post-incident-review-pir-checklist" title="Permanent link">&para;</a></h2>
+<p>Complete within 5 business days for all P1 and P2 incidents.</p>
+<ul>
+<li>[ ] Incident timeline documented (minute by minute for P1)</li>
+<li>[ ] Root cause identified and confirmed</li>
+<li>[ ] Contributing factors listed</li>
+<li>[ ] Immediate fix documented</li>
+<li>[ ] Preventive actions agreed with owners and due dates set</li>
+<li>[ ] Monitoring gaps identified and addressed</li>
+<li>[ ] Documentation updated (runbooks, KB articles)</li>
+<li>[ ] SLA breach assessed — did response and resolution meet targets?</li>
+<li>[ ] PIR document published to Confluence incident space</li>
+<li>[ ] PIR shared with stakeholders</li>
+</ul>
 
 
 
