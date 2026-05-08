@@ -1,8 +1,8 @@
 <div class="hero">
   <div class="hero-body">
-    <p class="section-kicker">Infrastructure Engineering</p>
+    <p class="section-kicker">Infrastructure Engineering · Personal Reference</p>
     <h1>Knowledge Base</h1>
-    <p>Production-grade notes, documentation, and references across VMware virtualization, enterprise storage, cloud, storage area networking, and disaster recovery.</p>
+    <p>A personal technical reference built from real-world infrastructure work — covering VMware, enterprise storage, SAN fabrics, cloud platforms, disaster recovery, automation, and more. Use the navigation above or the <a href="site-map/" style="color:#7dd3fc;">Site Map</a> to explore all topics.</p>
   </div>
   <div class="hero-name">
     <strong>Christos Anastasiadis</strong>
