@@ -699,6 +699,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#log-file-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log File Locations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-node-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Node Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generating-a-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating a Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnosing-ingestion-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnosing Ingestion Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnosing-query-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnosing Query Performance Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-agent-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Agent Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +803,160 @@
 
 
 <h1 id="aria-ops-for-logs-diagnostics">Aria Ops for Logs — Diagnostics<a class="headerlink" href="#aria-ops-for-logs-diagnostics" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="log-file-locations">Log File Locations<a class="headerlink" href="#log-file-locations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Runtime / application</td>
+<td><code>/var/log/loginsight/runtime.log</code></td>
+<td>Main application events, cluster, and service status</td>
+</tr>
+<tr>
+<td>Ingestion</td>
+<td><code>/var/log/loginsight/ingestion.log</code></td>
+<td>Log receiving, parsing, and indexing events</td>
+</tr>
+<tr>
+<td>Query</td>
+<td><code>/var/log/loginsight/query.log</code></td>
+<td>Interactive analytics query execution</td>
+</tr>
+<tr>
+<td>Cassandra</td>
+<td><code>/var/log/loginsight/cassandra/system.log</code></td>
+<td>Storage backend health and compaction</td>
+</tr>
+<tr>
+<td>LI Agent (receiver)</td>
+<td><code>/var/log/loginsight/agent/agentd.log</code></td>
+<td>cfapi agent connections</td>
+</tr>
+<tr>
+<td>Nginx</td>
+<td><code>/var/log/nginx/access.log</code></td>
+<td>HTTP requests to the UI and API</td>
+</tr>
+<tr>
+<td>System</td>
+<td><code>/var/log/messages</code></td>
+<td>OS-level events, NFS, networking</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Watch main application log in real time</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/loginsight/runtime.log
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Search for errors across all logs</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop&quot;</span><span class="w">           </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span><span class="w">           </span>/var/log/loginsight/cassandra/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
+<hr />
+<h2 id="cluster-node-diagnostics">Cluster Node Diagnostics<a class="headerlink" href="#cluster-node-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check all cluster nodes status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state, role: .role, version: .version}&#39;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check cluster ingestion statistics</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/cluster/stats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check disk usage on all nodes</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrli-prod-01<span class="w"> </span>vrli-prod-02<span class="w"> </span>vrli-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$node</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="nv">$node</span>.corp.local<span class="w"> </span><span class="s2">&quot;df -h /var/log/loginsight &amp;&amp; du -sh /var/log/loginsight/*&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">done</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Check if services are running on the master node</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ssh<span class="w"> </span>admin@vrli-prod-01.corp.local
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>systemctl<span class="w"> </span>status<span class="w"> </span>loginsight
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>systemctl<span class="w"> </span>status<span class="w"> </span>nginx
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>systemctl<span class="w"> </span>status<span class="w"> </span>cassandra
+</code></pre></div>
+<hr />
+<h2 id="generating-a-support-bundle">Generating a Support Bundle<a class="headerlink" href="#generating-a-support-bundle" title="Permanent link">&para;</a></h2>
+<p>Collect a support bundle before opening a Broadcom SR:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via API — trigger support bundle generation</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/support/bundle&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># The bundle is generated asynchronously — check status</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/support/bundle/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Download the bundle when status is &quot;COMPLETE&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span>-o<span class="w"> </span>vrli-support-bundle.zip<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/support/bundle/download&quot;</span>
+</code></pre></div>
+<p>Via UI: <strong>Administration → Cluster → Support Bundle → Generate and Download</strong>.</p>
+<p>The support bundle contains: application logs, Cassandra logs, system metrics, configuration (no passwords), and cluster topology.</p>
+<hr />
+<h2 id="diagnosing-ingestion-issues">Diagnosing Ingestion Issues<a class="headerlink" href="#diagnosing-ingestion-issues" title="Permanent link">&para;</a></h2>
+<p>When log events stop arriving or ingestion rate drops to zero:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check ingestion stats</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/cluster/stats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{eventsPerSecond: .eventsIngested, diskPct: .diskUsagePercent}&#39;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Verify syslog listener is running</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;514|1514|9543&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Expected: ports 514 (UDP), 1514 (TCP), 9543 (TCP) listening</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Test syslog reception (from a syslog source)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>logger<span class="w"> </span>-n<span class="w"> </span>vrli-prod-01.corp.local<span class="w"> </span>-P<span class="w"> </span><span class="m">514</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;test message from diagnostic&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Check if the test event appears in Interactive Analytics within 30 seconds</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Check for ingestion errors (parse failures, dropped events)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;drop\|parse error\|overflow&quot;</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
+<hr />
+<h2 id="diagnosing-query-performance-issues">Diagnosing Query Performance Issues<a class="headerlink" href="#diagnosing-query-performance-issues" title="Permanent link">&para;</a></h2>
+<p>If interactive analytics queries are slow or time out:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check Cassandra compaction status — long compaction can cause query slowness</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@vrli-prod-01.corp.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>nodetool<span class="w"> </span>compactionstats
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check Cassandra heap usage — if heap &gt; 90%, queries slow significantly</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>nodetool<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heap&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check current query load</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/loginsight/query.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;slow\|timeout\|error&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="verifying-agent-connectivity">Verifying Agent Connectivity<a class="headerlink" href="#verifying-agent-connectivity" title="Permanent link">&para;</a></h2>
+<p>When an agent is not delivering logs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On the agent host — check agent service</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>liagentd
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check agent log</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/loginsight-agent/liagent.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|connect\|ssl&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Test connectivity from agent to Aria Ops for Logs on port 9543</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vrli-prod-01.corp.local<span class="w"> </span><span class="m">9543</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Expected: Connection to vrli-prod-01.corp.local 9543 port [tcp/*] succeeded!</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Verify agent configuration</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#\|^</span>$<span class="s2">&quot;</span><span class="w"> </span>/var/lib/loginsight-agent/liagent.ini
+</code></pre></div>
+<hr />
+<h2 id="ntp-diagnostics">NTP Diagnostics<a class="headerlink" href="#ntp-diagnostics" title="Permanent link">&para;</a></h2>
+<p>Certificate operations and log timestamp alignment fail when NTP is not synchronised:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check NTP on the Aria Ops for Logs appliance</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># If NTP is drifting: restart chronyd and check sources</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>chronyc<span class="w"> </span>sources
+</code></pre></div>
 
 
 

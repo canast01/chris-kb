@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#private-endpoint-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private Endpoint Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-a-private-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,17 @@
 
 <h1 id="private-endpoints">Private Endpoints<a class="headerlink" href="#private-endpoints" title="Permanent link">&para;</a></h1>
 <p>A Private Endpoint is a network interface that uses a private IP from your VNet to connect to an Azure PaaS service (e.g., Storage Account, Key Vault, SQL Database) over Azure Private Link. Traffic stays on the Microsoft backbone and never crosses the public internet.</p>
+<h2 id="private-endpoint-architecture">Private Endpoint Architecture<a class="headerlink" href="#private-endpoint-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    appVM["Application VM\nin VNet"]
+    subnet["VNet Subnet\nprivate-endpoint-network-policies = disabled"]
+    pe["Private Endpoint\nprivate IP from VNet"]
+    privDNS["Private DNS Zone\nprivatelink.vaultcore.azure.net"]
+    paasService["Azure PaaS Service\nKey Vault · Storage · SQL"]
+
+    appVM --&gt;|"DNS lookup"| privDNS
+    privDNS --&gt;|"resolves to private IP"| pe
+    appVM --&gt; subnet --&gt; pe --&gt;|"private link"| paasService</code></pre>
 <h2 id="creating-a-private-endpoint">Creating a Private Endpoint<a class="headerlink" href="#creating-a-private-endpoint" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Disable network policy on the subnet (required before creating a private endpoint)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>

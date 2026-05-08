@@ -706,10 +706,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#services" class="md-nav__link">
+  <a href="#core-service-components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Services
+        Core Service Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-pod-namespaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Pod Namespaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloud-account-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Account Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-resource-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Resource Requirements
       
     </span>
   </a>
@@ -737,7 +792,8 @@
 
 
 <h1 id="aria-automation-components">Aria Automation — Components<a class="headerlink" href="#aria-automation-components" title="Permanent link">&para;</a></h1>
-<h2 id="services">Services<a class="headerlink" href="#services" title="Permanent link">&para;</a></h2>
+<h2 id="core-service-components">Core Service Components<a class="headerlink" href="#core-service-components" title="Permanent link">&para;</a></h2>
+<p>Aria Automation (formerly vRealize Automation) runs as a Kubernetes-based microservices platform on a Linux appliance. The key services and their functions:</p>
 <table>
 <thead>
 <tr>
@@ -747,28 +803,264 @@
 </thead>
 <tbody>
 <tr>
-<td>Automation Assembler</td>
-<td>Blueprint/template authoring and cloud-agnostic IaC</td>
+<td><strong>Automation Assembler</strong></td>
+<td>Cloud template (blueprint) authoring, IaC in YAML, resource provisioning</td>
 </tr>
 <tr>
-<td>Service Broker</td>
-<td>Self-service catalog; exposes content to end users</td>
+<td><strong>Service Broker</strong></td>
+<td>Self-service catalog — exposes content to end users via projects</td>
 </tr>
 <tr>
-<td>Automation Pipelines</td>
-<td>CI/CD pipeline execution (formerly Code Stream)</td>
+<td><strong>Automation Pipelines</strong></td>
+<td>CI/CD pipeline execution engine (formerly Code Stream)</td>
 </tr>
 <tr>
-<td>Automation Config</td>
+<td><strong>Automation Config</strong></td>
 <td>GitOps-based configuration management (formerly SaltStack Config)</td>
 </tr>
 <tr>
-<td>PostgreSQL</td>
-<td>Backend relational database for deployment state</td>
+<td><strong>Orchestrator</strong></td>
+<td>Workflow engine for Day-2 actions and automation logic (embedded vRO)</td>
 </tr>
 <tr>
-<td>RabbitMQ</td>
+<td><strong>PostgreSQL</strong></td>
+<td>Backend relational database for deployment state, catalog, and event log</td>
+</tr>
+<tr>
+<td><strong>RabbitMQ</strong></td>
 <td>Internal messaging bus between microservices</td>
+</tr>
+<tr>
+<td><strong>Kubernetes (K8s)</strong></td>
+<td>Container orchestration for all microservices (managed by the appliance)</td>
+</tr>
+<tr>
+<td><strong>Nginx / Envoy</strong></td>
+<td>Ingress proxy for UI and API routing</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="deployment-topology">Deployment Topology<a class="headerlink" href="#deployment-topology" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Deployment</th>
+<th>Nodes</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standalone (small)</td>
+<td>1 appliance</td>
+<td>Lab, PoC, development</td>
+</tr>
+<tr>
+<td>Clustered (HA)</td>
+<td>3 appliances</td>
+<td>Production — active/active with shared Postgres</td>
+</tr>
+<tr>
+<td>Scaled-out</td>
+<td>3+ appliances</td>
+<td>Production with high request volume</td>
+</tr>
+</tbody>
+</table>
+<p>For production, a 3-node cluster is the minimum — it provides HA for all services and survives a single node failure.</p>
+<hr />
+<h2 id="network-ports">Network Ports<a class="headerlink" href="#network-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Direction</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>Inbound</td>
+<td>Web UI and REST API</td>
+</tr>
+<tr>
+<td>22</td>
+<td>TCP</td>
+<td>Inbound</td>
+<td>SSH admin access</td>
+</tr>
+<tr>
+<td>5480</td>
+<td>TCP</td>
+<td>Inbound</td>
+<td>VAMI (appliance management)</td>
+</tr>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>Outbound</td>
+<td>vCenter API (cloud account)</td>
+</tr>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>Outbound</td>
+<td>NSX-T Manager API</td>
+</tr>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>Outbound</td>
+<td>Aria Orchestrator</td>
+</tr>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>Outbound</td>
+<td>VIDM/SSO</td>
+</tr>
+<tr>
+<td>5432</td>
+<td>TCP</td>
+<td>Cluster-internal</td>
+<td>PostgreSQL replication</td>
+</tr>
+<tr>
+<td>5671/5672</td>
+<td>TCP</td>
+<td>Cluster-internal</td>
+<td>RabbitMQ messaging</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="kubernetes-pod-namespaces">Kubernetes Pod Namespaces<a class="headerlink" href="#kubernetes-pod-namespaces" title="Permanent link">&para;</a></h2>
+<p>Aria Automation microservices run in Kubernetes namespaces on each appliance. Key namespaces for diagnostics:</p>
+<table>
+<thead>
+<tr>
+<th>Namespace</th>
+<th>Services</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prelude</code></td>
+<td>Core Aria Automation services (assembler, catalog, event-broker)</td>
+</tr>
+<tr>
+<td><code>vro</code></td>
+<td>Embedded vRealize Orchestrator</td>
+</tr>
+<tr>
+<td><code>saltstack</code></td>
+<td>Automation Config (SaltStack)</td>
+</tr>
+<tr>
+<td><code>pipeline</code></td>
+<td>Automation Pipelines (Code Stream)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all namespaces</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>namespaces
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all pods in the prelude namespace</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Get logs for a specific service</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>assembler<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Describe a failing pod for events and error messages</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;
+</code></pre></div>
+<hr />
+<h2 id="cloud-account-types">Cloud Account Types<a class="headerlink" href="#cloud-account-types" title="Permanent link">&para;</a></h2>
+<p>Cloud accounts define the connections to cloud and infrastructure endpoints. Aria Automation uses cloud accounts to discover resources and target deployments.</p>
+<table>
+<thead>
+<tr>
+<th>Cloud Account Type</th>
+<th>Protocol</th>
+<th>Managed Resources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter (vSphere)</td>
+<td>vCenter API (443)</td>
+<td>VMs, networks, datastores, clusters</td>
+</tr>
+<tr>
+<td>NSX-T</td>
+<td>NSX Manager API (443)</td>
+<td>Overlay segments, security groups, load balancers</td>
+</tr>
+<tr>
+<td>VMware Cloud on AWS</td>
+<td>VMware Cloud API</td>
+<td>SDDC VMs and networks</td>
+</tr>
+<tr>
+<td>AWS</td>
+<td>AWS API</td>
+<td>EC2, VPC, S3</td>
+</tr>
+<tr>
+<td>Azure</td>
+<td>Azure Resource Manager API</td>
+<td>VMs, VNets, storage</td>
+</tr>
+<tr>
+<td>GCP</td>
+<td>GCP API</td>
+<td>Compute Engine, VPC</td>
+</tr>
+<tr>
+<td>Kubernetes</td>
+<td>Kubernetes API</td>
+<td>Pod deployments, services</td>
+</tr>
+</tbody>
+</table>
+<p>Configure cloud accounts: <strong>Infrastructure → Connections → Cloud Accounts → Add</strong>.</p>
+<hr />
+<h2 id="appliance-resource-requirements">Appliance Resource Requirements<a class="headerlink" href="#appliance-resource-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Size</th>
+<th>vCPUs</th>
+<th>RAM</th>
+<th>Disk</th>
+<th>Supported Deployments/day</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small (1 node)</td>
+<td>8</td>
+<td>32 GB</td>
+<td>100 GB</td>
+<td>Up to 100</td>
+</tr>
+<tr>
+<td>Medium (3 nodes)</td>
+<td>16 per node</td>
+<td>48 GB per node</td>
+<td>100 GB per node</td>
+<td>Up to 500</td>
+</tr>
+<tr>
+<td>Large (3 nodes)</td>
+<td>24 per node</td>
+<td>64 GB per node</td>
+<td>150 GB per node</td>
+<td>500+</td>
 </tr>
 </tbody>
 </table>

@@ -749,6 +749,17 @@
 
 <h1 id="superna-eyeglass-diagnostics">Superna Eyeglass — Diagnostics<a class="headerlink" href="#superna-eyeglass-diagnostics" title="Permanent link">&para;</a></h1>
 <h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    symptom(["Eyeglass alert\nor anomaly"]) --&gt; serviceStatus
+
+    serviceStatus["igls adm status\nAll services running?"]
+    apiConn["curl -sk https://cluster:8080/\nOneFS API reachable?"]
+    syncLog["tail -f /var/log/eyeglass/sync.log\nErrors or timeouts?"]
+    dnsLog["tail -f /var/log/eyeglass/dns.log\nDNS integration errors?"]
+    foLog["tail -f /var/log/eyeglass/failover.log\nFailover events?"]
+
+    serviceStatus --&gt; apiConn --&gt; syncLog --&gt; dnsLog --&gt; foLog
+    foLog --&gt; resolved(["Root cause identified\nRemediate or escalate"])</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check Eyeglass service status (from appliance console)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>igls<span class="w"> </span>adm<span class="w"> </span>status
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>

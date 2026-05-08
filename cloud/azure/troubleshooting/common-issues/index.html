@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-connectivity-triage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Connectivity Triage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vm-connectivity-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -797,6 +808,26 @@
 </blockquote>
 <p>See also: <a href="../">Troubleshooting</a> for full diagnostic procedures.</p>
 <hr />
+<h2 id="azure-connectivity-triage">Azure Connectivity Triage<a class="headerlink" href="#azure-connectivity-triage" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    connFail["VM / Resource connectivity failure"]
+    nsgCheck{"Effective NSG rules\nallow traffic?"}
+    routeCheck{"Effective routes\ncorrect next hop?"}
+    fwCheck{"Azure Firewall / NVA\nrule allows traffic?"}
+    dnsCheck{"DNS resolution\ncorrect IP?"}
+    vmState{"VM running?\nProvisioning Succeeded?"}
+    resolved["Issue identified\nand resolved"]
+
+    connFail --&gt; vmState
+    vmState -- No --&gt; resolved
+    vmState -- Yes --&gt; nsgCheck
+    nsgCheck -- Deny found --&gt; resolved
+    nsgCheck -- OK --&gt; routeCheck
+    routeCheck -- Incorrect --&gt; resolved
+    routeCheck -- OK --&gt; fwCheck
+    fwCheck -- Blocked --&gt; resolved
+    fwCheck -- OK --&gt; dnsCheck
+    dnsCheck --&gt; resolved</code></pre>
 <h2 id="vm-connectivity-issues">VM Connectivity Issues<a class="headerlink" href="#vm-connectivity-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Check effective NSG rules on the NIC</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>show-effective-nsg<span class="w"> </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>

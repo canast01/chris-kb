@@ -773,6 +773,20 @@
 <blockquote>
 <p>Part of the <a href="../../">Dell VPLEX</a> reference.</p>
 </blockquote>
+<pre class="mermaid"><code>flowchart LR
+    schedCron(["Scheduled cron\nor CI pipeline"])
+    devHealth["vplex_device_health.sh\nSSH to VMS → vplexcli"]
+    cgMonitor["vplex_cg_monitor.pl\nConsistency group state"]
+    dailyCheck["vplex_daily_check.sh\nFull daily health run"]
+    preChange["vplex_precheck.sh\nPre-maintenance gate"]
+    nms["NMS / Monitoring\nNagios / Zabbix / Prometheus"]
+    pagerAlert["Alert\nSev-2 page / ticket"]
+
+    schedCron --&gt; devHealth --&gt; nms
+    schedCron --&gt; cgMonitor --&gt; nms
+    schedCron --&gt; dailyCheck --&gt; nms
+    preChange --&gt;|"exit 2 on failure\nblock maintenance"| pagerAlert
+    nms --&gt;|"threshold breach"| pagerAlert</code></pre>
 <hr />
 <h2 id="distributed-device-health-check">Distributed Device Health Check<a class="headerlink" href="#distributed-device-health-check" title="Permanent link">&para;</a></h2>
 <p>SSH to a VPLEX management server and runs vplexcli commands to check cluster health indications, distributed device health, and director hardware state. Reports any health-state value that is not "ok" and exits non-zero if issues are found.</p>

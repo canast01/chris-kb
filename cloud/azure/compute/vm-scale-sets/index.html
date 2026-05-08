@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#vmss-autoscale-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMSS Autoscale Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#core-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -816,6 +827,23 @@
 <h1 id="vm-scale-sets">VM Scale Sets<a class="headerlink" href="#vm-scale-sets" title="Permanent link">&para;</a></h1>
 <p>Azure Virtual Machine Scale Sets (VMSS) allow you to deploy and manage a group of identical, load-balanced VMs that can automatically scale in or out based on demand or a defined schedule.</p>
 <hr />
+<h2 id="vmss-autoscale-flow">VMSS Autoscale Flow<a class="headerlink" href="#vmss-autoscale-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    monitor["Azure Monitor\nCPU · custom metrics"]
+    autoscaleEngine["Autoscale Engine\nevaluates rules every 1 min"]
+    scaleOut{"Scale Out\ncondition met?"}
+    scaleIn{"Scale In\ncondition met?"}
+    addInstances["Add Instances\noverprovision + remove excess"]
+    removeInstances["Remove Instances\ncooldown period applies"]
+    steady["Steady State\ncurrent capacity maintained"]
+
+    monitor --&gt; autoscaleEngine
+    autoscaleEngine --&gt; scaleOut
+    autoscaleEngine --&gt; scaleIn
+    scaleOut -- Yes --&gt; addInstances --&gt; steady
+    scaleOut -- No --&gt; steady
+    scaleIn -- Yes --&gt; removeInstances --&gt; steady
+    scaleIn -- No --&gt; steady</code></pre>
 <h2 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
