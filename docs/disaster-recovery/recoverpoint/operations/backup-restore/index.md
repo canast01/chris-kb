@@ -2,4 +2,236 @@
 
 > Part of the [RecoverPoint](../../) > [Operations](../) reference.
 
-_Content coming soon._
+## Core Recovery Concepts
+
+Dell EMC RecoverPoint provides continuous data protection (CDP) by maintaining a rolling journal of I/O writes. Recovery is performed by accessing a point-in-time snapshot within the journal — there is no discrete "backup job"; protection is continuous.
+
+| Concept | Description |
+|---|---|
+| **Bookmark** | A named, user-defined point in the journal — equivalent to a snapshot label |
+| **Journal** | Circular log of all writes to a consistency group, maintained at the replica |
+| **Image Access** | Mounting a journal point for read/testing without impacting ongoing replication |
+| **Failover** | Permanently promoting the replica to production; replication link breaks |
+| **Failback** | After failover, reversing direction — re-syncing from DR back to primary |
+| **Test Copy** | Creating a writeable copy of a journal image for DR testing without affecting live replication |
+| **Consistency Group (CG)** | A group of volumes protected together, ensuring write-order consistency |
+
+---
+
+## Creating Bookmarks
+
+Bookmarks mark a specific point in the journal for easy retrieval. Create bookmarks before planned changes (patches, upgrades) or at regular intervals.
+
+### Via RecoverPoint Management Application (RPMA)
+
+1. Log in to the RecoverPoint Management Application.
+2. Navigate to **Consistency Groups** → select the CG.
+3. Click **Add Bookmark**.
+4. Enter a descriptive name: `Pre-Patch-2026-05-08`.
+5. Select **Crash-Consistent** or **Application-Consistent** (requires VSS/application quiesce).
+6. Click **OK**.
+
+### Via CLI (boxmgmt / rpsc)
+
+```bash
+# Connect to RecoverPoint appliance
+ssh admin@rpa01.example.com
+
+# List consistency groups
+get_consistency_groups
+
+# Add a bookmark to a specific CG
+add_bookmark --cg "CG_PROD_SQL" --name "Pre-Patch-2026-05-08" --type CRASH_CONSISTENT
+
+# List bookmarks for a CG
+get_bookmarks --cg "CG_PROD_SQL"
+```
+
+---
+
+## Accessing a Specific Journal Point (Image Access)
+
+Image access mounts a historical journal point as a read-only (or writeable test copy) volume. The production replication continues unaffected.
+
+### Image Access — Read-Only
+
+Use to inspect data at a specific point in time, validate recovery content, or mount for testing.
+
+1. **Consistency Groups** → select CG → **Image Access**.
+2. Select the access type: **Logged Access** (read-only).
+3. Choose the recovery point:
+   - **Latest Image**
+   - **By Bookmark** — select bookmark name
+   - **By Date/Time** — specify the exact timestamp
+4. Click **Enable**.
+5. The image is mounted on the designated access host. The volume appears as a normal disk.
+6. Perform validation.
+7. Click **Disable** to release the image when done. Replication automatically resumes from the point it was at.
+
+### Image Access — Writeable (Virtual Access / Test Copy)
+
+Provides a writeable snapshot — writes go to a separate delta storage, not into the journal.
+
+1. **Consistency Groups** → **Image Access** → select **Virtual Access with Roll**.
+2. Choose the recovery point.
+3. Click **Enable**.
+4. The image is presented as a writeable volume on the access host.
+5. After testing, **Disable** discards all writes made during the test session.
+
+---
+
+## Failover Procedure
+
+Failover permanently promotes the DR replica to production. Use only when the primary site is confirmed unavailable.
+
+### Pre-Failover Checklist
+
+- [ ] Confirm primary site is unrecoverable (not a brief network outage).
+- [ ] Identify the latest consistent journal image.
+- [ ] Notify application owners — failover involves a brief I/O pause.
+- [ ] Confirm DR site storage and compute are ready to accept production load.
+
+### Performing Failover
+
+1. **Consistency Groups** → select the CG(s) to fail over.
+2. Click **Failover** → confirm the warning.
+3. Select the recovery image:
+   - **Latest Image** (lowest RPO)
+   - **Named Bookmark** (for a clean pre-incident state)
+4. Click **Confirm Failover**.
+5. RecoverPoint:
+   - Freezes new I/O to the journal.
+   - Applies all journal entries up to the selected point.
+   - Presents the volume(s) to the DR hosts.
+6. Start DR workloads on the recovered volumes.
+
+### CLI Failover
+
+```bash
+# List CG state
+get_cg_state --cg "CG_PROD_SQL"
+
+# Failover to latest image
+failover --cg "CG_PROD_SQL" --image LATEST
+
+# Failover to a specific bookmark
+failover --cg "CG_PROD_SQL" --bookmark "Pre-Incident-2026-05-07"
+```
+
+---
+
+## Failback Procedure
+
+After the primary site is recovered, fail back from DR to primary.
+
+```mermaid
+sequenceDiagram
+    participant Primary as Primary Site
+    participant RP as RecoverPoint
+    participant DR as DR Site
+
+    Note over DR: DR is running production (post-failover)
+
+    Primary->>RP: Primary site restored — initiate failback
+    RP->>RP: Establish reverse replication (DR→Primary)
+    RP->>Primary: Sync delta changes from DR to Primary
+    Note over RP: Full sync or delta sync depending on state
+
+    RP->>Primary: Sync complete — confirm cutover window
+    Primary->>RP: Initiate failback cutover
+    RP->>DR: Quiesce I/O on DR volumes briefly
+    RP->>Primary: Promote Primary volumes
+    RP->>RP: Flip replication direction (Primary→DR)
+    DR->>RP: DR resumes as replica
+    Primary->>Primary: Restart production workloads
+```
+
+### Failback Steps
+
+1. Confirm the primary site is healthy and volumes are accessible.
+2. **Consistency Groups** → select the CG → **Failback**.
+3. RecoverPoint will:
+   - Establish reverse replication (DR to primary).
+   - Sync changes made during failover back to the primary volumes.
+4. Monitor sync progress — wait for delta sync to minimize cutover window.
+5. When sync is current, click **Commit Failback**:
+   - DR I/O quiesces briefly.
+   - Primary volumes are promoted.
+   - Replication direction flips back to DR.
+6. Start production workloads on the primary.
+
+---
+
+## Test Copy Workflow
+
+A Test Copy provides a writeable DR test without disrupting ongoing replication.
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant RP as RecoverPoint
+    participant TestHost as Test Host (DR Site)
+    participant Prod as Production (Primary)
+
+    Admin->>RP: Create Test Copy from CG bookmark
+    RP->>RP: Branch journal at test point
+    RP->>TestHost: Present writeable test volume
+    Note over Prod,RP: Production replication continues unaffected
+
+    TestHost->>TestHost: Start test workload\nValidate data integrity
+    Admin->>RP: Run DR test scripts / application checks
+
+    Admin->>RP: Complete test — discard test copy
+    RP->>RP: Discard all writes on test copy
+    RP->>TestHost: Remove test volume
+    Note over RP: Journal continues — no impact to production RPO
+```
+
+### Creating a Test Copy via RPMA
+
+1. **Consistency Groups** → select CG → **Test Copy**.
+2. Choose the journal point (bookmark or date/time).
+3. Select the target host where the test volume should be presented.
+4. Click **Create Test Copy**.
+5. The test volume appears on the test host. Boot test VMs, run application checks.
+6. Click **Delete Test Copy** when done — writes are discarded.
+
+---
+
+## Image Access Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant RP as RecoverPoint
+    participant Journal as Journal Store
+    participant AccessHost as Access Host
+
+    Admin->>RP: Enable Image Access (Logged Access, read-only)
+    RP->>Journal: Identify requested journal point
+    Journal->>RP: Acknowledge — image ready
+    RP->>AccessHost: Present volume at selected point in time
+    AccessHost->>AccessHost: Volume visible as disk
+    Admin->>AccessHost: Mount volume / browse data / validate
+    Admin->>RP: Disable Image Access
+    RP->>AccessHost: Remove volume
+    RP->>Journal: Resume normal journal write processing
+    Note over RP: Replication was not interrupted
+```
+
+---
+
+## Post-Recovery Validation Steps
+
+| # | Check | Method |
+|---|---|---|
+| 1 | CG in correct state post-operation | RPMA → CG → Status: Active |
+| 2 | Volumes presented to correct host | OS disk manager / `lsblk` |
+| 3 | File system consistent | `chkdsk` (Windows) / `fsck` (Linux) |
+| 4 | Application data integrity | Application-level query (SQL select, AD objects) |
+| 5 | RPO acceptable at time of recovery | RPMA → CG → RPO indicator |
+| 6 | Replication re-established after failback | RPMA → CG → Replication state: Replicating |
+| 7 | Journal space sufficient | RPMA → Journal → Space utilization |
+| 8 | Bookmarks removed after test | RPMA → Bookmarks → cleanup stale entries |
+| 9 | Test copy fully discarded | RPMA → Test Copy → state: None |
+| 10 | Recovery documented | Incident / DR test report updated |

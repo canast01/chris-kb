@@ -1,3 +1,469 @@
-# ServiceNow — Scripts
+# ServiceNow — Operational Scripts
 
-_Content coming soon._
+Ready-to-use scripts for common ServiceNow operational tasks. All scripts use environment variables for credentials — never hardcode passwords.
+
+```bash
+# Set environment variables before running any script
+export SN_INSTANCE="https://mycompany.service-now.com"
+export SN_USER="api_svc_account"
+export SN_PASS="your-password"
+```
+
+---
+
+## 1. REST API Health Check
+
+Verifies instance availability, authentication, and response time. Suitable for cron-based monitoring or pipeline pre-checks.
+
+```bash
+#!/bin/bash
+# sn_health_check.sh
+# Usage: ./sn_health_check.sh
+# Exit 0 = healthy, Exit 1 = degraded/unavailable
+
+set -euo pipefail
+
+INSTANCE="${SN_INSTANCE:-}"
+USER="${SN_USER:-}"
+PASS="${SN_PASS:-}"
+WARN_MS=3000
+CRIT_MS=8000
+
+if [[ -z "$INSTANCE" || -z "$USER" || -z "$PASS" ]]; then
+  echo "ERROR: SN_INSTANCE, SN_USER, SN_PASS must be set" >&2
+  exit 2
+fi
+
+START=$(date +%s%3N)
+
+RESPONSE=$(curl -s -o /tmp/sn_health_response.json -w "%{http_code}" \
+  --max-time 15 \
+  -u "$USER:$PASS" \
+  -H "Accept: application/json" \
+  "$INSTANCE/api/now/table/sys_user?sysparm_limit=1&sysparm_fields=sys_id")
+
+END=$(date +%s%3N)
+ELAPSED=$((END - START))
+
+echo "HTTP Status : $RESPONSE"
+echo "Response Time: ${ELAPSED}ms"
+
+if [[ "$RESPONSE" -ne 200 ]]; then
+  echo "CRITICAL: HTTP $RESPONSE — instance may be down or credentials invalid"
+  exit 1
+fi
+
+if [[ "$ELAPSED" -gt "$CRIT_MS" ]]; then
+  echo "CRITICAL: Response time ${ELAPSED}ms exceeds ${CRIT_MS}ms threshold"
+  exit 1
+fi
+
+if [[ "$ELAPSED" -gt "$WARN_MS" ]]; then
+  echo "WARNING: Response time ${ELAPSED}ms exceeds ${WARN_MS}ms threshold"
+  exit 0
+fi
+
+echo "OK: Instance healthy"
+exit 0
+```
+
+---
+
+## 2. User Provisioning Automation
+
+Creates or updates a ServiceNow user account from an external source (e.g., HR system CSV export).
+
+```python
+#!/usr/bin/env python3
+# sn_provision_users.py
+# Usage: python3 sn_provision_users.py users.csv
+
+import csv
+import sys
+import os
+import requests
+from requests.auth import HTTPBasicAuth
+
+INSTANCE = os.environ["SN_INSTANCE"]
+AUTH = HTTPBasicAuth(os.environ["SN_USER"], os.environ["SN_PASS"])
+HEADERS = {"Content-Type": "application/json", "Accept": "application/json"}
+
+def get_user_by_username(username: str) -> dict | None:
+    r = requests.get(
+        f"{INSTANCE}/api/now/table/sys_user",
+        params={"sysparm_query": f"user_name={username}", "sysparm_limit": 1,
+                "sysparm_fields": "sys_id,user_name,active"},
+        auth=AUTH, headers=HEADERS
+    )
+    r.raise_for_status()
+    results = r.json()["result"]
+    return results[0] if results else None
+
+def create_user(user: dict) -> str:
+    payload = {
+        "user_name":   user["username"],
+        "first_name":  user["first_name"],
+        "last_name":   user["last_name"],
+        "email":       user["email"],
+        "title":       user.get("title", ""),
+        "department":  user.get("department", ""),
+        "active":      "true",
+    }
+    r = requests.post(
+        f"{INSTANCE}/api/now/table/sys_user",
+        json=payload, auth=AUTH, headers=HEADERS
+    )
+    r.raise_for_status()
+    sys_id = r.json()["result"]["sys_id"]
+    print(f"  CREATED: {user['username']} ({sys_id})")
+    return sys_id
+
+def update_user(sys_id: str, user: dict) -> None:
+    payload = {
+        "email":      user["email"],
+        "title":      user.get("title", ""),
+        "department": user.get("department", ""),
+        "active":     "true",
+    }
+    r = requests.patch(
+        f"{INSTANCE}/api/now/table/sys_user/{sys_id}",
+        json=payload, auth=AUTH, headers=HEADERS
+    )
+    r.raise_for_status()
+    print(f"  UPDATED: {user['username']}")
+
+def assign_role(user_sys_id: str, role_name: str) -> None:
+    # Find role sys_id
+    r = requests.get(
+        f"{INSTANCE}/api/now/table/sys_user_role",
+        params={"sysparm_query": f"name={role_name}", "sysparm_fields": "sys_id"},
+        auth=AUTH, headers=HEADERS
+    )
+    r.raise_for_status()
+    roles = r.json()["result"]
+    if not roles:
+        print(f"  WARN: Role '{role_name}' not found")
+        return
+
+    role_sys_id = roles[0]["sys_id"]
+    payload = {"user": user_sys_id, "role": role_sys_id}
+    r = requests.post(
+        f"{INSTANCE}/api/now/table/sys_user_has_role",
+        json=payload, auth=AUTH, headers=HEADERS
+    )
+    if r.status_code not in (200, 201):
+        # May already exist
+        print(f"  INFO: Role '{role_name}' may already be assigned ({r.status_code})")
+    else:
+        print(f"  ROLE ASSIGNED: {role_name}")
+
+def main(csv_path: str) -> None:
+    with open(csv_path, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            print(f"Processing: {row['username']}")
+            existing = get_user_by_username(row["username"])
+            if existing:
+                update_user(existing["sys_id"], row)
+                sys_id = existing["sys_id"]
+            else:
+                sys_id = create_user(row)
+
+            if row.get("roles"):
+                for role in row["roles"].split("|"):
+                    assign_role(sys_id, role.strip())
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <users.csv>")
+        sys.exit(1)
+    main(sys.argv[1])
+```
+
+**Expected CSV format:**
+
+```csv
+username,first_name,last_name,email,title,department,roles
+jdoe,John,Doe,jdoe@example.com,Senior Engineer,Infrastructure,itil|catalog
+asmith,Alice,Smith,asmith@example.com,Manager,Operations,itil|change_manager
+```
+
+---
+
+## 3. CI Import via Import Sets
+
+Pushes server CI data from an external source into ServiceNow CMDB via the Import Set API.
+
+```python
+#!/usr/bin/env python3
+# sn_import_cis.py
+# Usage: python3 sn_import_cis.py servers.json
+
+import json
+import sys
+import os
+import requests
+from requests.auth import HTTPBasicAuth
+
+INSTANCE = os.environ["SN_INSTANCE"]
+AUTH = HTTPBasicAuth(os.environ["SN_USER"], os.environ["SN_PASS"])
+HEADERS = {"Content-Type": "application/json", "Accept": "application/json"}
+
+# Staging table name — must have a Transform Map configured in ServiceNow
+STAGING_TABLE = "u_import_cmdb_server"
+
+def import_ci(ci: dict) -> dict:
+    payload = {
+        "u_name":          ci["name"],
+        "u_ip_address":    ci.get("ip", ""),
+        "u_os":            ci.get("os", ""),
+        "u_environment":   ci.get("environment", "production"),
+        "u_support_group": ci.get("support_group", ""),
+        "u_location":      ci.get("location", ""),
+        "u_serial_number": ci.get("serial", ""),
+        "u_source":        "external_cmdb_sync",
+    }
+    r = requests.post(
+        f"{INSTANCE}/api/now/import/{STAGING_TABLE}",
+        json=payload, auth=AUTH, headers=HEADERS
+    )
+    r.raise_for_status()
+    return r.json()["result"]
+
+def main(json_path: str) -> None:
+    with open(json_path) as f:
+        servers = json.load(f)
+
+    success, failed = 0, 0
+    for ci in servers:
+        try:
+            result = import_ci(ci)
+            status = result.get("status", "unknown")
+            print(f"  {ci['name']}: {status}")
+            if status == "error":
+                print(f"    Error: {result.get('error_message', 'unknown')}")
+                failed += 1
+            else:
+                success += 1
+        except Exception as e:
+            print(f"  {ci['name']}: EXCEPTION — {e}")
+            failed += 1
+
+    print(f"\nSummary: {success} imported, {failed} failed")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <servers.json>")
+        sys.exit(1)
+    main(sys.argv[1])
+```
+
+---
+
+## 4. Scheduled Report Export
+
+Exports a ServiceNow report to CSV and uploads to a shared location.
+
+```bash
+#!/bin/bash
+# sn_export_report.sh
+# Exports incident data for the past 7 days to CSV
+
+INSTANCE="$SN_INSTANCE"
+OUTDIR="/var/exports/servicenow"
+DATE=$(date +%Y%m%d)
+OUTFILE="$OUTDIR/incidents_${DATE}.csv"
+
+mkdir -p "$OUTDIR"
+
+# Build encoded query: closed in last 7 days
+QUERY="state=6^resolved_atONLast%207%20days@javascript:gs.beginningOfLast7Days()@javascript:gs.endOfLast7Days()"
+
+curl -s -u "$SN_USER:$SN_PASS" \
+  "$INSTANCE/api/now/table/incident" \
+  -G \
+  --data-urlencode "sysparm_query=state=6^resolved_atONLast 7 days@javascript:gs.beginningOfLast7Days()@javascript:gs.endOfLast7Days()" \
+  --data "sysparm_limit=10000" \
+  --data "sysparm_fields=number,short_description,priority,state,resolved_by,resolved_at,assignment_group,category" \
+  --data "sysparm_display_value=true" \
+  --data "sysparm_exclude_reference_link=true" \
+  -H "Accept: text/csv" \
+  -o "$OUTFILE"
+
+if [[ $? -eq 0 ]]; then
+  LINES=$(wc -l < "$OUTFILE")
+  echo "Exported $((LINES - 1)) records to $OUTFILE"
+else
+  echo "ERROR: Export failed" >&2
+  exit 1
+fi
+```
+
+---
+
+## 5. Incident Bulk Update via API
+
+Closes a set of incidents matching a query (e.g., bulk-close stale P4 incidents older than 90 days).
+
+```python
+#!/usr/bin/env python3
+# sn_bulk_close_incidents.py
+
+import os
+import requests
+from requests.auth import HTTPBasicAuth
+
+INSTANCE = os.environ["SN_INSTANCE"]
+AUTH = HTTPBasicAuth(os.environ["SN_USER"], os.environ["SN_PASS"])
+HEADERS = {"Content-Type": "application/json", "Accept": "application/json"}
+
+CLOSE_QUERY = (
+    "priority=4"
+    "^active=true"
+    "^sys_created_onRELATIVELT@dayofweek@last90days"  # created > 90 days ago
+    "^assigned_toISEMPTY"  # unassigned only
+)
+
+CLOSE_PAYLOAD = {
+    "state": "7",          # Closed
+    "close_code": "Closed/Resolved by Other Means",
+    "close_notes": "Auto-closed: P4 incident unassigned for >90 days. "
+                   "Raised via bulk closure script on behalf of Service Desk operations.",
+}
+
+DRY_RUN = True  # Set to False to actually update records
+
+def get_incidents_to_close() -> list:
+    records, offset, limit = [], 0, 100
+    while True:
+        r = requests.get(
+            f"{INSTANCE}/api/now/table/incident",
+            params={
+                "sysparm_query": CLOSE_QUERY,
+                "sysparm_fields": "sys_id,number,short_description",
+                "sysparm_limit": limit,
+                "sysparm_offset": offset,
+                "sysparm_display_value": "true",
+            },
+            auth=AUTH, headers=HEADERS
+        )
+        r.raise_for_status()
+        batch = r.json()["result"]
+        if not batch:
+            break
+        records.extend(batch)
+        offset += limit
+    return records
+
+def close_incident(sys_id: str) -> None:
+    r = requests.patch(
+        f"{INSTANCE}/api/now/table/incident/{sys_id}",
+        json=CLOSE_PAYLOAD, auth=AUTH, headers=HEADERS
+    )
+    r.raise_for_status()
+
+def main() -> None:
+    incidents = get_incidents_to_close()
+    print(f"Found {len(incidents)} incidents to close")
+    if DRY_RUN:
+        print("DRY RUN — no changes made. Set DRY_RUN=False to execute.")
+        for inc in incidents[:20]:
+            print(f"  Would close: {inc['number']} — {inc['short_description']}")
+        return
+
+    closed, failed = 0, 0
+    for inc in incidents:
+        try:
+            close_incident(inc["sys_id"])
+            print(f"  Closed: {inc['number']}")
+            closed += 1
+        except Exception as e:
+            print(f"  FAILED: {inc['number']} — {e}")
+            failed += 1
+
+    print(f"\nSummary: {closed} closed, {failed} failed")
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## 6. MID Server Status Check
+
+Queries all MID Server records and reports any that are not Up or not validated.
+
+```bash
+#!/bin/bash
+# sn_mid_status.sh
+# Reports MID Server health from ServiceNow instance
+
+INSTANCE="$SN_INSTANCE"
+
+echo "MID Server Status Report — $(date -u '+%Y-%m-%d %H:%M UTC')"
+echo "================================================================"
+
+curl -s -u "$SN_USER:$SN_PASS" \
+  "$INSTANCE/api/now/table/ecc_agent" \
+  -G \
+  --data "sysparm_fields=name,status,validated,mid_version,last_refreshed,ip_address" \
+  --data "sysparm_display_value=true" \
+  --data "sysparm_limit=100" \
+  --data "sysparm_exclude_reference_link=true" \
+  -H "Accept: application/json" | \
+  python3 -c "
+import sys, json
+from datetime import datetime, timezone
+
+data = json.load(sys.stdin)
+mids = data.get('result', [])
+
+issues = 0
+for m in mids:
+    status = m.get('status', 'unknown')
+    validated = m.get('validated', 'false')
+    name = m.get('name', 'unknown')
+    version = m.get('mid_version', 'unknown')
+    last_refresh = m.get('last_refreshed', '')
+    ip = m.get('ip_address', '')
+
+    flag = ''
+    if status != 'Up':
+        flag = '  <<< STATUS NOT UP'
+        issues += 1
+    elif validated == 'false':
+        flag = '  <<< NOT VALIDATED'
+        issues += 1
+
+    print(f'  {name:<30} {status:<10} validated={validated:<5} v={version:<15} ip={ip}{flag}')
+
+print()
+print(f'Total MID Servers: {len(mids)} | Issues: {issues}')
+sys.exit(1 if issues > 0 else 0)
+"
+```
+
+**Example output:**
+
+```
+MID Server Status Report — 2026-05-08 08:00 UTC
+================================================================
+  mid-lon-prod-01                Up         validated=true  v=8.4.0.123      ip=10.10.1.200
+  mid-lon-prod-02                Up         validated=true  v=8.4.0.123      ip=10.10.1.201
+  mid-nyc-prod-01                Down       validated=true  v=8.4.0.100      ip=10.20.1.200  <<< STATUS NOT UP
+
+Total MID Servers: 3 | Issues: 1
+```
+
+---
+
+## Script Execution Notes
+
+- All scripts require the service account to have at minimum the `rest_service` and `itil` roles; user provisioning scripts require `user_admin`
+- Use a dedicated integration service account — do not use personal admin credentials
+- Log script output to a file with timestamps for audit trails:
+  ```bash
+  ./sn_health_check.sh 2>&1 | tee -a /var/log/sn_health_$(date +%Y%m%d).log
+  ```
+- Schedule scripts via cron or a CI/CD scheduler (Jenkins, GitLab CI, GitHub Actions)
+- Store credentials in a secrets manager (HashiCorp Vault, AWS Secrets Manager) — never in script files or version control
