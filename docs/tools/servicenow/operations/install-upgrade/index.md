@@ -1,3 +1,252 @@
 # ServiceNow — Install & Upgrade
 
-_Content coming soon._
+ServiceNow cloud instances are upgraded by ServiceNow as part of the managed service. This page covers the upgrade lifecycle from planning through post-upgrade validation, including plugin management, skipped version handling, and rollback considerations.
+
+---
+
+## Release Cadence
+
+ServiceNow releases two major platform versions per year, each named after a city in alphabetical order:
+
+| Year | Releases (approximate) |
+|---|---|
+| 2024 | Washington DC (Q1), Xanadu (Q3) |
+| 2025 | Yokohama (Q1), Zurich (Q3) |
+| 2026 | Accelerate (Q1), Balboa (Q3) |
+
+Each major release includes feature updates, security patches, and bug fixes. **Patch releases** (e.g., Xanadu Patch 3) are applied automatically by ServiceNow on a rolling basis and require no customer action.
+
+---
+
+## Upgrade Lifecycle
+
+```mermaid
+flowchart TD
+    A["Release Announcement\n(~3 months before GA)"]
+    B["Review Release Notes\n& Upgrade Planner Tool"]
+    C["Identify Breaking Changes\n& Deprecated Features"]
+    D["Update Dev Instance\n(ServiceNow schedules)"]
+    E["Developer Testing\nFix compatibility issues"]
+    F["ATF Regression Suite\nExecute in Dev"]
+    G{ATF Pass?}
+    H["Fix Failures\nRe-run ATF"]
+    I["Upgrade UAT Instance\n(ServiceNow schedules)"]
+    J["UAT / Business Acceptance\nTesting"]
+    K{UAT Sign-off?}
+    L["Raise Issues\nFix & Re-test"]
+    M["Schedule Production Upgrade\nwith ServiceNow (HI portal)"]
+    N["Production Upgrade\n(maintenance window)"]
+    O["Post-Upgrade Validation\n(automated + manual)"]
+    P["Close Upgrade Change Request\nDocument lessons learned"]
+
+    A --> B --> C --> D --> E --> F --> G
+    G -- Fail --> H --> F
+    G -- Pass --> I --> J --> K
+    K -- Fail --> L --> J
+    K -- Pass --> M --> N --> O --> P
+```
+
+---
+
+## Upgrade Planner
+
+The Upgrade Planner is the primary pre-upgrade tool. Access it at:
+
+**System Update Sets > Upgrade Center > Upgrade Planner**
+
+It performs a pre-flight analysis comparing your customizations against the new release, identifying:
+
+- **Skipped changes** — ServiceNow changed a file you also customized; your version will override the patch
+- **Reverted changes** — your customization will be lost if not manually re-applied
+- **New features** — highlights capabilities worth enabling post-upgrade
+
+**Action on skipped changes:**
+
+1. Review each skipped file in the planner
+2. Determine whether the ServiceNow update is important (security fix, bug fix, new behavior)
+3. If yes, merge your customization with the ServiceNow version
+4. Mark the item as reviewed in the planner before proceeding
+
+---
+
+## Skipped Versions Policy
+
+ServiceNow supports upgrading across multiple versions. However:
+
+| Versions Skipped | ServiceNow Support | Recommendation |
+|---|---|---|
+| 0 (sequential upgrade) | Full | Preferred |
+| 1 version | Supported | Acceptable |
+| 2 versions | Supported with caveats | Requires thorough ATF testing |
+| 3+ versions | Not recommended | Contact ServiceNow for guidance |
+
+When skipping versions:
+
+- Run the Upgrade Planner for **each skipped version** to surface all breaking changes cumulatively
+- ATF coverage must be > 80% of critical business processes before proceeding
+- Allow double the normal UAT window
+- Document all customizations that required changes during the skip
+
+---
+
+## Pre-Upgrade Checklist
+
+Complete before any instance upgrade:
+
+### Platform Health
+
+- [ ] Instance Stats page shows no critical alerts
+- [ ] All scheduled jobs running cleanly
+- [ ] No active P1/P2 incidents related to the platform
+- [ ] ECC Queue error count = 0
+
+### Customization Review
+
+- [ ] Upgrade Planner run and all items reviewed
+- [ ] Skipped changes documented and merged where required
+- [ ] Update Sets in **Complete** state (no In Progress sets that could conflict)
+- [ ] Custom applications reviewed against release notes for API changes
+
+### Testing Preparation
+
+- [ ] ATF test suites are up to date and cover all critical processes
+- [ ] Test data verified in sub-production instance
+- [ ] Regression test plan reviewed by team leads
+
+### Communication
+
+- [ ] Change Request raised and approved (Normal change type)
+- [ ] Stakeholders notified of maintenance windows
+- [ ] On-call rota confirmed for production upgrade window
+- [ ] Rollback decision tree agreed (see below)
+
+---
+
+## Upgrade Process (Cloud / Auto-Upgrade)
+
+For ServiceNow cloud instances, the upgrade is performed by ServiceNow's automation. Customer action is limited to scheduling and validation.
+
+### Step 1 — Request Sub-Production Upgrade (HI Portal)
+
+Log in to `https://hi.service-now.com` and raise an upgrade request:
+
+```
+Category: Instance Upgrade
+Instance: mycompany-dev.service-now.com
+Target version: Yokohama
+Requested window: 2026-01-15, 02:00–06:00 UTC
+Contact: platform-team@example.com
+```
+
+### Step 2 — ServiceNow Performs Upgrade
+
+- Instance enters maintenance mode (unavailable ~2–4 hours)
+- ServiceNow applies the upgrade, runs internal validation
+- Notification email sent on completion
+
+### Step 3 — Post-Upgrade Dev Validation
+
+Immediately after upgrade completes:
+
+1. Log in; confirm no homepage errors
+2. Navigate to `stats.do` — review for memory or thread alerts
+3. Execute ATF test suite:
+   ```bash
+   snc atf run --suite "Core Regression Suite" --profile dev
+   ```
+4. Fix any ATF failures before proceeding to UAT upgrade
+
+### Step 4 — UAT Upgrade
+
+Repeat Steps 1–3 for the UAT instance. UAT upgrade should follow Dev upgrade by at least 1 week to allow developer fixes.
+
+### Step 5 — Production Upgrade
+
+After UAT sign-off:
+
+1. Raise production upgrade request on HI portal (minimum 5 business days lead time)
+2. Confirm change window with ServiceNow (they will confirm exact start time)
+3. Keep on-call team available throughout the window
+4. Follow post-upgrade validation checklist (below)
+
+---
+
+## Plugin Management
+
+Plugins extend ServiceNow functionality. They are managed separately from the platform upgrade.
+
+### Checking Plugin Status
+
+Navigate to: **System Definitions > Plugins**
+
+```bash
+# List installed plugins via API
+curl -s -u "$SN_USER:$SN_PASS" \
+  "$INSTANCE/api/now/table/v_plugin?sysparm_query=active=true&sysparm_fields=name,id,version&sysparm_limit=200" \
+  -H "Accept: application/json" | jq '.result[] | {id, name, version}'
+```
+
+### Upgrading Plugins
+
+Some plugins have their own release cycle independent of the platform. After a major platform upgrade:
+
+1. Navigate to **System Definitions > Plugins**
+2. Filter: **Upgrade Available = true**
+3. Review each plugin's changelog
+4. Upgrade in Dev first, validate, then promote to UAT and Production via the same change process
+
+### Plugin Upgrade via CLI
+
+```bash
+snc plugin upgrade --id com.snc.itsm.workspace --profile dev
+snc plugin upgrade --id com.snc.discovery --profile dev
+```
+
+---
+
+## Post-Upgrade Testing Checklist
+
+### Automated
+
+- [ ] ATF Core Regression Suite passes (0 failures)
+- [ ] API availability check returns HTTP 200
+- [ ] MID Servers reconnect and show **Up** within 15 minutes
+
+### ITSM Process Validation
+
+- [ ] Create test incident — confirm priority calculation, assignment, SLA start
+- [ ] Escalate test incident — confirm SLA breach notification fires
+- [ ] Resolve test incident — confirm resolution workflow completes
+- [ ] Create test change request — confirm approval workflow routes correctly
+- [ ] Submit test service catalog request — confirm fulfillment flow
+
+### Integrations
+
+- [ ] LDAP import runs successfully
+- [ ] Outbound REST messages reach test endpoints (use test webhooks)
+- [ ] PagerDuty test event creates and resolves incident
+- [ ] Discovery scan completes and populates CMDB
+- [ ] Email: send test notification; confirm receipt at test mailbox
+
+### Performance
+
+- [ ] `stats.do` — no new heap or thread alerts post-upgrade
+- [ ] Homepage load time < 3 seconds (compare to pre-upgrade baseline)
+- [ ] Run at least 2 business days before declaring the upgrade stable
+
+---
+
+## Rollback Options
+
+ServiceNow cloud upgrades are **not directly reversible** by the customer. Rollback options are:
+
+| Scenario | Option | Timeframe |
+|---|---|---|
+| Critical defect within 4 hours | Request ServiceNow emergency rollback (HI P1) | 4–8 hours |
+| Defect discovered after 4 hours | ServiceNow may restore from pre-upgrade snapshot (HI P1) | 8–24 hours |
+| Non-critical issue | Fix forward via hotfix Update Set | Days |
+| Plugin-specific issue | Deactivate plugin (if possible) | Minutes |
+
+**Pre-upgrade snapshot:** ServiceNow automatically takes a snapshot before each upgrade. Request restoration via a P1 HI case within 72 hours. After 72 hours, the snapshot may be overwritten.
+
+**Recommendation:** Plan to fix forward for non-P1 issues. The rollback window is narrow and the process disruptive. Thorough pre-upgrade testing is the primary risk mitigation.
