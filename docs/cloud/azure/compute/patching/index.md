@@ -4,6 +4,23 @@ Azure Update Manager (the successor to Azure Automation Update Management) provi
 
 ---
 
+## Azure Update Manager Flow
+
+```mermaid
+flowchart LR
+    assess["Patch Assessment\ncheck available updates"]
+    maintenanceConfig["Maintenance Configuration\nschedule · reboot policy · scope"]
+    patchOrch["Patch Orchestration\nAzure-managed or customer-managed"]
+    patchInstall["Patch Installation\nOS-native package manager"]
+    reboot{"Reboot\nrequired?"}
+    rebootVM["Reboot VM\nwithin maintenance window"]
+    compliance["Compliance Report\nAzure Update Manager dashboard"]
+
+    assess --> maintenanceConfig --> patchOrch --> patchInstall --> reboot
+    reboot -- Yes --> rebootVM --> compliance
+    reboot -- No --> compliance
+```
+
 ## Azure Update Manager Overview
 
 | Feature | Description |

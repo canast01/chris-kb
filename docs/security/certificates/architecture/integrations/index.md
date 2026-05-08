@@ -2,6 +2,26 @@
 
 Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation layer across all certificate sources. ADCS serves as the enterprise CA backend for internal certificates.
 
+## Certificate Integration Topology
+
+```mermaid
+graph TD
+    venafi["Venafi TPP\n(central policy and lifecycle mgmt)"]
+    adcs["Microsoft ADCS\n(internal CA)"]
+    hashiVault["HashiCorp Vault PKI\n(service-to-service short-lived certs)"]
+    certManager["cert-manager\n(Kubernetes in-cluster automation)"]
+    leAcme["Let's Encrypt ACME\n(public-facing services)"]
+
+    venafi -->|"DCOM / RPC"| adcs
+    venafi -->|"REST API"| vsphere["VMware vSphere\n(auto-enrol ESXi / vCenter certs)"]
+    venafi -->|"REST + credential objects"| f5["F5 / NetScaler\n(LB cert deployment)"]
+    venafi -->|"REST API callback"| snow["ServiceNow\n(approval workflow)"]
+    venafi -->|"Syslog"| siem["SIEM\n(issuance / revocation events)"]
+    certManager -->|"ACME issuer"| leAcme
+    certManager -->|"Vault issuer"| hashiVault
+    certManager -->|"ADCS issuer"| adcs
+```
+
 ## Integration Map
 
 | Integration | Purpose | Protocol |

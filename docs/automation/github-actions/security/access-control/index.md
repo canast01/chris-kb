@@ -57,6 +57,20 @@ gh secret set SHARED_TOKEN --org myorg
 
 ### OIDC — Keyless Authentication
 
+```mermaid
+sequenceDiagram
+    participant Job as Workflow Job
+    participant GH as GitHub OIDC Provider
+    participant Cloud as Cloud Provider\nAWS IAM / GCP WIF
+
+    Job->>GH: Request OIDC JWT\n(permissions: id-token: write)
+    GH-->>Job: Signed JWT\n(iss: token.actions.githubusercontent.com\nsub: repo:org/repo:ref:...)
+    Job->>Cloud: Exchange JWT for credentials\n(AssumeRoleWithWebIdentity)
+    Cloud->>Cloud: Validate JWT signature and claims
+    Cloud-->>Job: Temporary credentials\n(expire automatically)
+    Note over Job,Cloud: No long-lived secret stored in GitHub
+```
+
 OIDC lets workflows authenticate to cloud providers without storing long-lived credentials as secrets.
 
 ```yaml

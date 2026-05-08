@@ -45,11 +45,11 @@ Example: `RPAC-SITEA-01`, `RPAC-SITEB-01`
 
 ## Splitter Selection
 
-| Environment | Recommended Splitter |
-|---|---|
-| PowerMax / VMAX All Flash | Hardware splitter (array-embedded) |
-| VMware environment (non-PowerMax) | Software splitter (RP4VM) |
-| iSCSI-attached storage | iSCSI splitter |
+| Environment | Recommended Splitter | Why |
+|---|---|---|
+| PowerMax / VMAX All Flash | Hardware splitter (array-embedded) | No host agent required; lower overhead; integrated with array microcode |
+| VMware environment (non-PowerMax) | Software splitter (RP4VM) | Works at VMDK level independent of underlying storage array |
+| iSCSI-attached storage | iSCSI splitter | FC hardware splitter not available; iSCSI splitter provides equivalent write capture |
 
 ---
 
@@ -79,8 +79,40 @@ Example: `RPAC-SITEA-01`, `RPAC-SITEB-01`
 
 ## RPO Tiers
 
-| Tier | Target RPO | Review Frequency |
-|---|---|---|
-| Tier 1 (Critical) | < 15 seconds | Monthly DR test |
-| Tier 2 (Business) | < 5 minutes | Quarterly DR test |
-| Tier 3 (Standard) | < 30 minutes | Semi-annual DR test |
+| Tier | Target RPO | Review Frequency | Why |
+|---|---|---|---|
+| Tier 1 (Critical) | < 15 seconds | Monthly DR test | Financial, transactional, or regulatory systems where data loss is unacceptable |
+| Tier 2 (Business) | < 5 minutes | Quarterly DR test | Business-critical apps where short data loss is tolerable but must be bounded |
+| Tier 3 (Standard) | < 30 minutes | Semi-annual DR test | Dev/test or non-critical workloads with relaxed recovery expectations |
+
+## RecoverPoint CG Architecture
+
+```mermaid
+graph TD
+    subgraph cgUnit ["Consistency Group — CG-ORACLE-PROD"]
+        subgraph prodCopy ["Production Copy (PROD-SITEA)"]
+            dataVol1["Data LUN 1"]
+            dataVol2["Data LUN 2"]
+            redoLog["Redo Log LUN"]
+        end
+        subgraph prodJournal ["Production Journal (JRN-CG-ORACLE-PROD-PROD)"]
+            jrnProd["Journal Volume\n(local CDP)"]
+        end
+        subgraph drCopy ["DR Copy (DR-SITEB)"]
+            drVol1["DR Data LUN 1"]
+            drVol2["DR Data LUN 2"]
+            drLog["DR Redo Log LUN"]
+        end
+        subgraph drJournal ["DR Journal (JRN-CG-ORACLE-PROD-DR)"]
+            jrnDr["Journal Volume\n(recovery window)"]
+        end
+        bookmark1["Bookmark: pre-patch-20260507"]
+        bookmark2["Bookmark: app-consistent-20260506"]
+    end
+
+    prodCopy -->|"writes captured"| prodJournal
+    prodJournal -->|"replicated"| drJournal
+    drJournal -->|"drain to replica"| drCopy
+    drJournal --- bookmark1
+    drJournal --- bookmark2
+```

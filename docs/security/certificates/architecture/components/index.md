@@ -1,5 +1,19 @@
 # Certificates — Components
 
+## PKI Certificate Chain
+
+```mermaid
+graph TD
+    rootCA[("Root CA\n(self-signed — offline HSM)")] -->|"signs Intermediate CA cert"| intCA["Intermediate / Issuing CA\n(online — ADCS / commercial CA)"]
+    intCA -->|"issues"| serverCert["Server Certificate\n(end-entity — nginx / IIS / F5)"]
+    intCA -->|"issues"| clientCert["Client Certificate\n(end-entity — user / device auth)"]
+    serverCert -. "AIA chain download" .-> aiaURL["AIA URL\nhttp://pki.corp.example.com/issuing-ca.crt"]
+    serverCert -. "CDP revocation check" .-> cdpURL["CDP / CRL URL\nhttp://pki.corp.example.com/crl/IssuingCA.crl"]
+    serverCert -. "OCSP check" .-> ocsp["OCSP Responder\nhttp://ocsp.corp.example.com/ocsp"]
+```
+
+---
+
 ## Certificate Chains
 
 A certificate chain links an end-entity certificate back to a trusted root CA through one or more intermediates. Chain building failures are the most common cause of TLS trust errors in production.

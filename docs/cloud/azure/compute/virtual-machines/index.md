@@ -4,6 +4,30 @@ Reference for creating, managing, sizing, and operating Azure Virtual Machines u
 
 ---
 
+## Azure VM Architecture
+
+```mermaid
+flowchart TD
+    subgraph vmComponents["VM Components"]
+        compute["Compute\nvCPU · RAM (SKU)"]
+        osDisk["OS Disk\nManaged Disk (P/E/S)"]
+        dataDisks["Data Disks\nup to 64 per VM"]
+        nic["NIC\nIP · NSG · Accelerated Networking"]
+    end
+    subgraph platform["Platform Services"]
+        avail["Availability Zone / Set"]
+        ext["Extensions\nMonitor Agent · Defender · Custom Script"]
+        diagBoot["Boot Diagnostics\nserial console · screenshot"]
+    end
+    rg["Resource Group"]
+    vnet["Virtual Network / Subnet"]
+
+    rg --> vmComponents
+    rg --> platform
+    nic --> vnet
+    avail --> compute
+```
+
 ## Creating VMs
 
 ```bash

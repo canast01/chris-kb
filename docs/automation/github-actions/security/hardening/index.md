@@ -6,6 +6,22 @@
 
 ## Minimal Permissions
 
+```mermaid
+flowchart TD
+    repo["GitHub Repository"]
+    branchProtect["Branch Protection\nmain branch\nrequired status checks\nPR reviews enforced"]
+    workflowPerms["Workflow permissions\ncontents: read (default)\nOverride per job only"]
+    actionPin["Action pinning\nactions/checkout@SHA\nDependabot weekly updates"]
+    secretScan["Secret scanning\nPush protection enabled\nAlert on commit"]
+    selfHostedIsolate["Self-hosted runners\nEphemeral — fresh per run\nIsolated from production"]
+
+    repo --> branchProtect
+    repo --> workflowPerms
+    repo --> actionPin
+    repo --> secretScan
+    repo --> selfHostedIsolate
+```
+
 Grant only the permissions each job requires. The default `GITHUB_TOKEN` permissions can be locked down at the workflow or job level.
 
 ```yaml
@@ -81,3 +97,16 @@ EOF
 | Self-hosted runners | Isolate from production; use ephemeral runners |
 | Secret scanning | Enable push protection to block commits with secrets |
 | Audit log | Review `gh api /orgs/OWNER/audit-log` for anomalies |
+
+```mermaid
+flowchart LR
+    prOpen(["Developer opens PR"])
+    actionlint["actionlint\nworkflow YAML lint"]
+    statusChecks["Required status checks\nbuild + test jobs"]
+    reviewApproval["PR review\n1 required approver"]
+    branchMerge["Merge to main\nprotected branch"]
+    release["Release tag pushed\nv1.2.3"]
+    oidcPublish["OIDC publish\nno stored cloud secrets"]
+
+    prOpen --> actionlint --> statusChecks --> reviewApproval --> branchMerge --> release --> oidcPublish
+```

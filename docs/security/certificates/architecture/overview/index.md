@@ -133,6 +133,36 @@ Get-ChildItem Cert:\LocalMachine\My | Select-Object Subject, NotAfter, Thumbprin
 
 ---
 
+## OCSP and CRL Revocation Validation Flow
+
+```mermaid
+sequenceDiagram
+    participant client as TLS Client
+    participant server as TLS Server
+    participant ocsp as OCSP Responder
+    participant crlDist as CRL Distribution Point
+
+    client->>server: TLS ClientHello
+    server-->>client: Certificate (+ OCSP staple if enabled)
+    note over client: Client must verify revocation status
+
+    alt OCSP Stapling (preferred)
+        note over client,server: OCSP response embedded in TLS handshake
+        client->>client: Verify stapled OCSP response signature
+    else OCSP Live Query
+        client->>ocsp: OCSP Request (cert serial + issuer)
+        ocsp-->>client: OCSP Response (good / revoked / unknown)
+    else CRL Fallback
+        client->>crlDist: HTTP GET CRL file
+        crlDist-->>client: CRL (signed list of revoked serials)
+        client->>client: Check serial against CRL
+    end
+
+    client->>server: Continue TLS handshake (if not revoked)
+```
+
+---
+
 ## Root CA Key Ceremony
 
 The Root CA private key is the most sensitive component of the PKI. Key ceremony requirements:
