@@ -1,14 +1,6 @@
----
-title: AWS Cloud Practitioner CLF-C02 — 14-Day Study Plan
----
-
 # AWS Cloud Practitioner CLF-C02 — 14-Day Study Plan
 
 **3 hrs/day · 50 Q&A per day · May 2026**
-
-AWS CLOUD PRACTITIONER CLF-C02
-14-DAY STUDY PLAN  |  3 HRS/DAY  |  50 Q&A PER DAY
-Christos Anastasiadis  |  May 2026
 
 ## Exam Facts
 
@@ -123,10 +115,12 @@ Christos Anastasiadis  |  May 2026
 
 **Q1.** What is the definition of cloud computing?
 
-> On-demand delivery of IT (Information Technology) resources over the internet with pay-as-you-go pricing.
->
+> On-demand delivery of IT (Information Technology) resources
+> over the internet with pay-as-you-go pricing.
+
 > NEW ACRONYM: IT = Information Technology
 > Everything digital: servers, storage, networking, databases.
+
 ```
 TRADITIONAL IT                    CLOUD (AWS)
 ┌─────────────────┐               ┌─────────────────┐
@@ -136,12 +130,15 @@ TRADITIONAL IT                    CLOUD (AWS)
 │  Guess capacity  │               │  Scale anytime   │
 └─────────────────┘               └─────────────────┘
 ```
+
 **Q2.** Which cloud advantage eliminates the need to guess how much infrastructure capacity you need?
 
-> Stop guessing capacity. AWS scales automatically using Auto Scaling.
->
+> Stop guessing capacity. AWS scales automatically
+> using Auto Scaling.
+
 > NEW ACRONYM: Auto Scaling = AWS service that automatically
 > adds or removes servers based on real-time demand.
+
 ```
 TRADITIONAL (guessing)            CLOUD (auto-match)
 ┌──────────────────┐              ┌──────────────────┐
@@ -151,14 +148,17 @@ TRADITIONAL (guessing)            CLOUD (auto-match)
 │  crashes!        │              │  actual demand   │
 └──────────────────┘              └──────────────────┘
 ```
+
 **Q3.** What does "trade fixed expense for variable expense" mean?
 
-> Instead of investing upfront (CapEx), you pay only for what you consume (OpEx).
->
+> Instead of investing upfront (CapEx), you pay only for
+> what you consume (OpEx).
+
 > CapEx = Capital Expenditure: Big upfront purchase
 >         Example: buying 500 servers for $2M
 > OpEx  = Operational Expenditure: Ongoing costs
 >         Example: paying $50K/month AWS bill
+
 ```
 CAPEX (Traditional)               OPEX (Cloud)
 ┌───────────────────┐             ┌───────────────────┐
@@ -167,10 +167,11 @@ CAPEX (Traditional)               OPEX (Cloud)
 │ Feb-Dec: maintain  │             │ (matches usage)    │
 └───────────────────┘             └───────────────────┘
 ```
+
 **Q4.** Which cloud model gives the most control over infrastructure?
 
 > IaaS (Infrastructure as a Service) — you manage OS and above.
->
+
 ```
 RESPONSIBILITY STACK
 ┌──────────────────────────────────────────────┐
@@ -185,14 +186,16 @@ RESPONSIBILITY STACK
 │  Control: HIGH         MID          LOW      │
 └──────────────────────────────────────────────┘
 ```
+
 **Q5.** EC2 is an example of which cloud model?
 
 > IaaS — you manage the OS, AWS manages physical infra.
->
+
 > NEW ACRONYM: EC2 = Elastic Compute Cloud
 > Elastic = can grow/shrink. Compute = CPU+RAM. Cloud = hosted on AWS.
 > = Virtual servers you rent on AWS. Like a VM on your VMware cluster
 >   except AWS owns the physical hardware.
+
 ```
 ┌──────────────────────────────────┐
 │  EC2 (Elastic Compute Cloud)     │
@@ -200,12 +203,14 @@ RESPONSIBILITY STACK
 │  AWS manages: hardware, hypervisor│
 └──────────────────────────────────┘
 ```
+
 **Q6.** Elastic Beanstalk is an example of which model?
 
 > PaaS — you deploy code, AWS manages everything else.
->
+
 > NEW ACRONYM: PaaS = Platform as a Service
 > AWS provides complete platform. You bring the code.
+
 ```
 ┌──────────────────────────────────────┐
 │  Elastic Beanstalk (PaaS)            │
@@ -214,13 +219,15 @@ RESPONSIBILITY STACK
 │  App is running! (you did nothing)   │
 └──────────────────────────────────────┘
 ```
+
 **Q7.** Which cloud model requires managing the least infrastructure?
 
 > SaaS — provider manages everything, you just use it.
->
+
 > NEW ACRONYM: SaaS = Software as a Service
 > Like a streaming service for software. Just log in and use it.
 > Examples: Gmail, Salesforce, ServiceNow (T. Rowe uses this!), Jira
+
 ```
 ┌──────────────────────────────────────┐
 │  SaaS: Open browser → Log in → Use  │
@@ -228,10 +235,11 @@ RESPONSIBILITY STACK
 │  You manage: NOTHING                 │
 └──────────────────────────────────────┘
 ```
+
 **Q8.** A company wants to keep sensitive data on-premises while using AWS for other workloads. Which deployment model?
 
 > Hybrid cloud — mix of on-premises and cloud.
->
+
 ```
 YOUR DATA CENTER          AWS CLOUD
 ┌──────────────┐          ┌──────────────┐
@@ -242,10 +250,11 @@ YOUR DATA CENTER          AWS CLOUD
 └──────────────┘          └──────────────┘
 THIS IS EXACTLY T. Rowe Price today.
 ```
+
 **Q9.** Which deployment model uses only AWS with no on-premises?
 
 > Public cloud (all-in cloud).
->
+
 ```
 ┌────────────────────────────────────┐
 │  INTERNET → AWS Region             │
@@ -253,13 +262,15 @@ THIS IS EXACTLY T. Rowe Price today.
 │  No servers you own anywhere       │
 └────────────────────────────────────┘
 ```
+
 **Q10.** What is an AWS Region?
 
 > A geographical area with 2+ AZs, isolated from other regions.
->
+
 > NEW ACRONYM: AZ = Availability Zone
 > Physically separate data center(s) within a Region with
 > independent power, cooling, and networking.
+
 ```
 ┌──────────────────────────────────────┐
 │  30+ Regions worldwide               │
@@ -269,10 +280,11 @@ THIS IS EXACTLY T. Rowe Price today.
 │  explicitly move it                  │
 └──────────────────────────────────────┘
 ```
+
 **Q11.** How many AZs does each AWS Region have at minimum?
 
 > At least two. Most have three or more.
->
+
 ```
 AWS REGION (e.g. us-east-1)
 ┌─────────────────────────────────────┐
@@ -284,10 +296,12 @@ AWS REGION (e.g. us-east-1)
 │         High-bandwidth private fiber  │
 └─────────────────────────────────────┘
 ```
+
 **Q12.** What is an Availability Zone?
 
-> One or more discrete data centers with redundant power, networking, and connectivity within a region.
->
+> One or more discrete data centers with redundant power,
+> networking, and connectivity within a region.
+
 ```
 AVAILABILITY ZONE
 ┌──────────────────────────────────┐
@@ -302,12 +316,14 @@ AVAILABILITY ZONE
 Like a separate building in your DC campus
 with its own power feed.
 ```
+
 **Q13.** Why deploy applications across multiple AZs?
 
 > High availability — if one AZ fails, app continues in others.
->
+
 > NEW ACRONYM: HA = High Availability
 > Like your dual-fabric SAN — if Fabric A fails, Fabric B runs.
+
 ```
 SINGLE AZ (bad)          MULTI-AZ (good)
 ┌─────────────┐          ┌─────────────────────┐
@@ -319,50 +335,61 @@ SINGLE AZ (bad)          MULTI-AZ (good)
 │  OUTAGE!    │          │          │    ✓     │
 └─────────────┘          └─────────────────────┘
 ```
+
 **Q14.** What are Edge Locations used for?
 
 > Caching content via CloudFront CDN to reduce latency.
->
+
 > NEW ACRONYM: CDN = Content Delivery Network
 > Network of servers worldwide caching content close to users.
 > CloudFront = AWS's CDN service.
+
 ```
 WITHOUT EDGE: [User: Tokyo] →→→→→ [Origin: us-east-1] ~150ms
 WITH EDGE:    [User: Tokyo] → [Edge: Tokyo] ~5ms (cached)
 ```
+
 **Q15.** Which has more locations — Regions or Edge Locations?
 
 > Edge Locations (400+) vs Regions (30+).
->
+
 ```
 Regions:         ██  30+
 AZs:             █████  90+
 Edge Locations:  ████████████████  400+
 Rule: Edge > AZs > Regions
 ```
+
 **Q16.** What is an AWS Local Zone?
 
-> An extension of an AWS Region placed closer to large population centers for single-digit millisecond latency.
->
+> An extension of an AWS Region placed closer to large
+> population centers for single-digit millisecond latency.
+
 > NEW ACRONYM: ms = milliseconds (1/1000 of a second)
+
 ```
 REGION (N. Virginia) ──extends──► [LA Local Zone]
 User in LA: ~20ms to VA vs ~1ms to Local Zone
 ```
+
 **Q17.** What is AWS Wavelength?
 
-> AWS infrastructure embedded in 5G telecom networks for ultra-low latency mobile applications.
->
+> AWS infrastructure embedded in 5G telecom networks for
+> ultra-low latency mobile applications.
+
 > NEW ACRONYMS: 5G = Fifth Generation mobile network
 >               IoT = Internet of Things
+
 ```
 STANDARD: [Mobile] → [5G Tower] → [Internet] → [AWS] ~15ms
 WAVELENGTH:[Mobile] → [5G Tower + AWS compute] ~1-2ms
 ```
+
 **Q18.** What is AWS Outposts?
 
-> AWS-managed hardware installed in YOUR data center to run AWS services on-premises.
->
+> AWS-managed hardware installed in YOUR data center to run
+> AWS services on-premises.
+
 ```
 YOUR DATA CENTER
 ┌──────────────────────────────────┐
@@ -373,24 +400,24 @@ YOUR DATA CENTER
 └──────────────────────────────────┘
 Relevant to T. Rowe — extend on-prem to AWS.
 ```
+
 **Q19.** Which AWS service runs AWS infrastructure in your own DC?
 
 > AWS Outposts.
->
-
 
 **Q20.** A company needs data to stay in a specific country. What should they consider?
 
-> Select an AWS Region in that country. AWS never moves data out of a region without your explicit action.
->
+> Select an AWS Region in that country. AWS never moves
+> data out of a region without your explicit action.
+
 > NEW ACRONYM: GDPR = General Data Protection Regulation
 > EU law requiring personal data of EU citizens stays in EU.
 
-
 **Q21.** Which is NOT a cloud advantage? A) Go global in minutes  B) Eliminate all security concerns C) Stop guessing capacity  D) Trade fixed for variable
 
-> B — Cloud does NOT eliminate security concerns. Security is a SHARED responsibility.
->
+> B — Cloud does NOT eliminate security concerns.
+> Security is a SHARED responsibility.
+
 > THE REAL 6 ADVANTAGES:
 > 1. Trade CapEx for OpEx
 > 2. Economies of scale
@@ -399,193 +426,159 @@ Relevant to T. Rowe — extend on-prem to AWS.
 > 5. Stop spending on data centers
 > 6. Go global in minutes
 
-
 **Q22.** What does "go global in minutes" mean?
 
 > Deploy in multiple AWS Regions worldwide quickly.
->
+
 > WITHOUT CLOUD: Find DC, sign lease, order hardware → 6 months
 > WITH AWS: Open console, select region, deploy → 10 minutes
 
-
 **Q23.** Which deployment model is most like traditional IT?
 
-> Private cloud — your own hardware, your own DC. Like T. Rowe's VMware/VxRail environment today.
->
-
+> Private cloud — your own hardware, your own DC.
+> Like T. Rowe's VMware/VxRail environment today.
 
 **Q24.** How are AZs connected within a region?
 
-> High-bandwidth, low-latency PRIVATE fiber — NOT internet. Similar to your dual-fabric SAN ISLs between buildings.
->
-
+> High-bandwidth, low-latency PRIVATE fiber — NOT internet.
+> Similar to your dual-fabric SAN ISLs between buildings.
 
 **Q25.** A startup wants global launch with minimal upfront cost. Which cloud advantage?
 
-> Trade fixed expense (CapEx) for variable expense (OpEx). Pay $0 upfront. Pay only when users arrive.
->
-
+> Trade fixed expense (CapEx) for variable expense (OpEx).
+> Pay $0 upfront. Pay only when users arrive.
 
 **Q26.** What factor is NOT used when choosing a Region? A) Compliance  B) Proximity  C) Services  D) Logo color
 
-> D. Real factors: Compliance first, then proximity, available services, then cost.
->
-
+> D. Real factors: Compliance first, then proximity,
+> available services, then cost.
 
 **Q27.** Which is correct about AWS Regions? A) All same services  B) Connected by public internet C) Each region isolated  D) One region only allowed
 
-> C — Regions are geographically isolated. If us-east-1 fails, eu-west-1 is NOT affected.
->
-
+> C — Regions are geographically isolated.
+> If us-east-1 fails, eu-west-1 is NOT affected.
 
 **Q28.** What is the primary purpose of multiple AZs?
 
 > Fault tolerance and HA — apps survive individual AZ failures.
->
+
 > ELB = Elastic Load Balancer (routes traffic to healthy AZs)
 > SYNC = Synchronous replication (data written to both at once)
-
 
 **Q29.** Which component reduces content delivery latency globally?
 
 > Edge Locations used by CloudFront CDN.
->
-
 
 **Q30.** A healthcare company must ensure EU patient data stays in EU.
 
-> AWS Regions — data stays in the region you choose. Deploy in eu-west-1 or eu-central-1.
->
-
+> AWS Regions — data stays in the region you choose.
+> Deploy in eu-west-1 or eu-central-1.
 
 **Q31.** What best describes economies of scale?
 
-> AWS aggregates usage from millions of customers → lower costs → passes savings to customers through lower prices.
->
-
+> AWS aggregates usage from millions of customers → lower costs
+> → passes savings to customers through lower prices.
 
 **Q32.** What type of expense is a monthly AWS bill?
 
 > OpEx (Operational Expenditure) — variable, pay-as-you-go.
->
-
 
 **Q33.** What type of expense is buying physical servers?
 
-> CapEx (Capital Expenditure) — large upfront investment. Goes on balance sheet, depreciated over years.
->
-
+> CapEx (Capital Expenditure) — large upfront investment.
+> Goes on balance sheet, depreciated over years.
 
 **Q34.** T. Rowe Price has on-premises + AWS pilot. Which model?
 
 > Hybrid cloud.
->
-
 
 **Q35.** How many edge locations does AWS have approximately?
 
 > 400+ edge locations worldwide.
->
-
 
 **Q36.** Which is a characteristic of ALL cloud models? A) No security mgmt  B) On-demand self-service C) Requires on-prem  D) Fixed monthly pricing
 
 > B — On-demand self-service (NIST characteristic).
->
+
 > NIST = National Institute of Standards and Technology
 > 5 cloud characteristics: On-demand self-service, broad network
 > access, resource pooling, rapid elasticity, measured service.
 
-
 **Q37.** What makes Wavelength different from AZs?
 
-> Wavelength is embedded in 5G telecom networks (~1-2ms). AZs are standalone data center facilities (~10-20ms).
->
-
+> Wavelength is embedded in 5G telecom networks (~1-2ms).
+> AZs are standalone data center facilities (~10-20ms).
 
 **Q38.** Which for single-digit ms latency near a specific city?
 
 > AWS Local Zone if available near that city.
->
-
 
 **Q39.** Which about AWS global infrastructure is TRUE? A) One region only  B) Edge = region locations C) AZs are physically separate  D) Same services everywhere
 
-> C — AZs are physically separate with independent power and networking.
->
-
+> C — AZs are physically separate with independent
+> power and networking.
 
 **Q40.** What is the main benefit of "increase speed and agility"?
 
-> Access new resources in minutes. New EC2 in 60 seconds vs 6-8 weeks for physical server procurement.
->
-> SSH = Secure Shell (how you remotely access Linux servers)
+> Access new resources in minutes. New EC2 in 60 seconds
+> vs 6-8 weeks for physical server procurement.
 
+> SSH = Secure Shell (how you remotely access Linux servers)
 
 **Q41.** In IaaS, what does the customer manage?
 
 > OS, middleware, runtime, data, and applications.
->
+
 > IaaS boundary: Customer owns OS and above.
 > AWS owns: virtualization, hardware, data center.
 
-
 **Q42.** In PaaS, what does AWS manage?
 
-> Everything except customer data and applications. OS, middleware, runtime, hardware — all AWS.
->
-
+> Everything except customer data and applications.
+> OS, middleware, runtime, hardware — all AWS.
 
 **Q43.** Gmail is an example of which model?
 
 > SaaS — Google manages everything.
->
-
 
 **Q44.** What does Outposts allow that standard Regions do not?
 
-> Run AWS services on your own on-premises hardware inside your building.
->
-
+> Run AWS services on your own on-premises hardware
+> inside your building.
 
 **Q45.** Which advantage for expanding to new countries?
 
-> Go global in minutes — deploy in new regions in minutes vs months of physical DC build-out.
->
-
+> Go global in minutes — deploy in new regions in minutes
+> vs months of physical DC build-out.
 
 **Q46.** How does AWS achieve massive economies of scale?
 
-> Aggregating usage from hundreds of thousands of customers, achieving lower costs and passing savings to customers. AWS has dropped prices 100+ times since 2006.
->
-
+> Aggregating usage from hundreds of thousands of customers,
+> achieving lower costs and passing savings to customers.
+> AWS has dropped prices 100+ times since 2006.
 
 **Q47.** Minimum AZs required for a Region to exist?
 
 > Two. Most regions have three. us-east-1 has six.
->
-
 
 **Q48.** Which is SaaS? A) EC2  B) RDS  C) Salesforce CRM  D) Elastic Beanstalk
 
-> C — Salesforce. Log in via browser, use it. TRICK: RDS is PaaS (you still manage schema and data). CRM = Customer Relationship Management software.
->
-
+> C — Salesforce. Log in via browser, use it.
+> TRICK: RDS is PaaS (you still manage schema and data).
+> CRM = Customer Relationship Management software.
 
 **Q49.** Moving 500 servers to AWS changes from which expense to which?
 
 > From CapEx (owning servers) to OpEx (paying for usage).
->
-
 
 **Q50.** Correct order of AWS infrastructure from largest to smallest?
 
-> Region → Availability Zone → Data Center. (Edge locations exist separately for CloudFront CDN only.)
->
+```
+Region → Availability Zone → Data Center.
+(Edge locations exist separately for CloudFront CDN only.)
+```
 
-
-*DAY 1 COMPLETE*
-
+DAY 1 COMPLETE
 *Tomorrow: Day 2 — Shared Responsibility Model & IAM*
 
 ## Day 2 — SHARED RESPONSIBILITY MODEL & IAM
@@ -651,19 +644,22 @@ Relevant to T. Rowe — extend on-prem to AWS.
 
 **Q1.** What is the AWS Shared Responsibility Model?
 
-> AWS = Security OF the cloud (physical infra, hardware, hypervisor). Customer = Security IN the cloud (data, IAM, OS, apps, network config).
->
+> AWS = Security OF the cloud (physical infra, hardware, hypervisor).
+> Customer = Security IN the cloud (data, IAM, OS, apps, network config).
+
 ```
 CUSTOMER: Your data, IAM, OS patching, app code, security groups
 ═══════════════════════════════════ THE LINE
 AWS: Physical facilities, hardware, hypervisor, global network
 ```
+
 **Q2.** Who patches the OS on an EC2 instance?
 
 > The CUSTOMER. On EC2 you manage the guest OS including patching.
->
+
 > Guest OS = OS running INSIDE your VM (Windows/Linux you installed).
 > Host OS = AWS hypervisor layer (Nitro/Xen — AWS manages this).
+
 ```
 ┌──────────────────────────────────────────┐
 │  EC2 Instance                            │
@@ -673,313 +669,278 @@ AWS: Physical facilities, hardware, hypervisor, global network
 │  PHYSICAL SERVER          ← AWS manages  │
 └──────────────────────────────────────────┘
 ```
+
 **Q3.** Who patches the database engine on RDS?
 
 > AWS. RDS is a managed service — AWS handles OS and DB patching.
->
+
 > RDS vs EC2 DATABASE:
 > RDS: AWS patches OS + DB engine. YOU manage data, schema, access.
 > EC2: YOU patch everything. More control, more work.
 
-
 **Q4.** Who is responsible for physical security of AWS data centers?
 
-> AWS. Always AWS. You never visit or touch AWS hardware. AWS uses: armed guards, biometrics, cameras, unmarked buildings.
->
-
+> AWS. Always AWS. You never visit or touch AWS hardware.
+> AWS uses: armed guards, biometrics, cameras, unmarked buildings.
 
 **Q5.** Customer stores sensitive data in S3. Who encrypts it?
 
-> The CUSTOMER. AWS provides encryption OPTIONS (SSE-S3, SSE-KMS, SSE-C) but YOU must enable and configure encryption.
->
+> The CUSTOMER. AWS provides encryption OPTIONS (SSE-S3, SSE-KMS, SSE-C)
+> but YOU must enable and configure encryption.
+
 > SSE = Server-Side Encryption
 > KMS = Key Management Service (manages encryption keys)
 > Encryption = Converting readable data to scrambled form.
 
-
 **Q6.** Who configures security group rules on EC2?
 
 > The CUSTOMER. Network configuration is always customer responsibility.
->
-
 
 **Q7.** What does "security OF the cloud" mean?
 
-> AWS responsibility — physical facilities, hardware, hypervisor, global infrastructure, managed service underlying infrastructure.
->
-
+> AWS responsibility — physical facilities, hardware, hypervisor,
+> global infrastructure, managed service underlying infrastructure.
 
 **Q8.** What does "security IN the cloud" mean?
 
-> Customer responsibility — data, IAM, OS patching, app code, security groups, NACLs, VPC config, encryption choices.
->
-
+> Customer responsibility — data, IAM, OS patching, app code,
+> security groups, NACLs, VPC config, encryption choices.
 
 **Q9.** For Lambda, what is the customer responsible for?
 
-> Function code and IAM roles/permissions. AWS manages all infrastructure, OS, runtime, scaling.
->
+> Function code and IAM roles/permissions.
+> AWS manages all infrastructure, OS, runtime, scaling.
+
 > Lambda = AWS serverless compute. You upload code, AWS runs it.
 > Serverless = no servers for YOU to manage.
 
-
 **Q10.** Which is ALWAYS AWS's responsibility? A) Encrypting customer data  B) Managing IAM passwords C) Physical decommissioning of storage hardware D) Patching guest OS on EC2
 
-> C — Physical decommissioning. AWS wipes/destroys old disks. DoD = Department of Defense (military-grade data wiping standard).
->
-
+> C — Physical decommissioning. AWS wipes/destroys old disks.
+> DoD = Department of Defense (military-grade data wiping standard).
 
 **Q11.** What is the AWS root user?
 
-> The identity created when account first opens. Complete unrestricted access to everything. Cannot be deleted.
->
-> Like "sa" in SQL Server or "root" in Linux — don't use daily.
+> The identity created when account first opens.
+> Complete unrestricted access to everything. Cannot be deleted.
 
+> Like "sa" in SQL Server or "root" in Linux — don't use daily.
 
 **Q12.** Best practice for AWS root user?
 
-> Enable MFA immediately. Create IAM admin user for daily work. Only use root for tasks that specifically require it.
->
-
+> Enable MFA immediately. Create IAM admin user for daily work.
+> Only use root for tasks that specifically require it.
 
 **Q13.** Which tasks require root user?
 
-> Change account settings/email, close account, change support plan, restore deleted IAM admin, enable MFA delete on S3. Everything else: use IAM users or roles.
->
-
+> Change account settings/email, close account, change support plan,
+> restore deleted IAM admin, enable MFA delete on S3.
+> Everything else: use IAM users or roles.
 
 **Q14.** What does IAM stand for?
 
-> Identity and Access Management. Identity = WHO are you?  Access Management = WHAT can you do? FREE service. GLOBAL (not region-specific).
->
-
+> Identity and Access Management.
+> Identity = WHO are you?  Access Management = WHAT can you do?
+> FREE service. GLOBAL (not region-specific).
 
 **Q15.** Is IAM regional or global?
 
 > GLOBAL. IAM users, groups, roles, policies work across all regions.
->
+
 > GLOBAL services: IAM, Route 53, CloudFront, WAF
 > REGIONAL services: EC2, S3, RDS, VPC, Lambda
 
-
 **Q16.** What permissions does a new IAM user have by default?
 
-> NONE. Zero permissions. Must be explicitly granted. Principle of least privilege: start with nothing, add only what's needed.
->
-
+> NONE. Zero permissions. Must be explicitly granted.
+> Principle of least privilege: start with nothing, add only what's needed.
 
 **Q17.** What is the principle of least privilege?
 
-> Grant users only the minimum permissions needed for their job. If credentials are stolen: minimal damage possible.
->
-
+> Grant users only the minimum permissions needed for their job.
+> If credentials are stolen: minimal damage possible.
 
 **Q18.** What is an IAM Group?
 
-> Collection of IAM users. Attach policies to groups, not individuals. New person joins → add to group → instantly gets all permissions. Person leaves → remove from group → instantly loses permissions.
->
-
+```
+Collection of IAM users. Attach policies to groups, not individuals.
+New person joins → add to group → instantly gets all permissions.
+Person leaves → remove from group → instantly loses permissions.
+```
 
 **Q19.** Can an IAM group contain other IAM groups?
 
-> NO. Groups contain only users, never other groups. A user CAN belong to multiple groups simultaneously.
->
-
+> NO. Groups contain only users, never other groups.
+> A user CAN belong to multiple groups simultaneously.
 
 **Q20.** What is an IAM Role?
 
-> Temporary identity not tied to a specific person. Assumed by: EC2 instances, Lambda functions, cross-account access. Best practice: use roles for EC2 apps instead of access keys.
->
+> Temporary identity not tied to a specific person.
+> Assumed by: EC2 instances, Lambda functions, cross-account access.
+> Best practice: use roles for EC2 apps instead of access keys.
+
 > USER = permanent identity for a specific person.
 > ROLE = like a hat anyone can put on temporarily.
 
-
 **Q21.** When to use IAM Role vs access keys for EC2?
 
-> ALWAYS use IAM Role. Never store access keys on EC2. Roles: no credentials stored, auto-rotate, easy to update. Access keys on EC2: security risk if instance compromised.
->
-
+> ALWAYS use IAM Role. Never store access keys on EC2.
+> Roles: no credentials stored, auto-rotate, easy to update.
+> Access keys on EC2: security risk if instance compromised.
 
 **Q22.** What is an IAM Policy?
 
-> JSON document defining permissions — Allow or Deny specific actions on specific resources.
->
+> JSON document defining permissions — Allow or Deny specific
+> actions on specific resources.
+
 > Example: {"Effect":"Allow","Action":"s3:GetObject","Resource":"*"}
 > ARN = Amazon Resource Name (unique identifier for every AWS resource)
 
-
 **Q23.** Three types of IAM policies?
 
-> AWS managed (created by AWS), customer managed (created by you), inline (embedded directly in a user/role, not reusable).
->
-
+> AWS managed (created by AWS), customer managed (created by you),
+> inline (embedded directly in a user/role, not reusable).
 
 **Q24.** What is MFA?
 
-> Multi-Factor Authentication. Multi = more than one. Factor = proof of identity. = Password (something you know) + Device (something you have). Even if password stolen, attacker needs your physical device.
->
-
+> Multi-Factor Authentication.
+> Multi = more than one. Factor = proof of identity.
+> = Password (something you know) + Device (something you have).
+> Even if password stolen, attacker needs your physical device.
 
 **Q25.** Which MFA type uses a smartphone app?
 
-> Virtual MFA device — Google Authenticator or Authy generates TOTP = Time-based One-Time Password (6-digit code, changes every 30s).
->
-
+> Virtual MFA device — Google Authenticator or Authy generates
+> TOTP = Time-based One-Time Password (6-digit code, changes every 30s).
 
 **Q26.** Developer needs to make API calls from laptop. What credentials?
 
-> Access keys — Access Key ID (like username) + Secret Access Key (like password, shown ONCE at creation).
->
+> Access keys — Access Key ID (like username) +
+> Secret Access Key (like password, shown ONCE at creation).
+
 > CLI = Command Line Interface  SDK = Software Development Kit
 > API = Application Programming Interface
 
-
 **Q27.** Best practice for access keys?
 
-> Never share. Never put in code. Never commit to Git. Use IAM roles instead when possible. Rotate every 90 days. Git = version control system (code repository).
->
-
+> Never share. Never put in code. Never commit to Git.
+> Use IAM roles instead when possible. Rotate every 90 days.
+> Git = version control system (code repository).
 
 **Q28.** All developers need S3 read access. Most efficient approach?
 
-> Create Developers IAM group, attach S3 read policy to group, add all developers to group. One policy update affects all.
->
-
+> Create Developers IAM group, attach S3 read policy to group,
+> add all developers to group. One policy update affects all.
 
 **Q29.** Which is TRUE about IAM? A) $0.01/user/month  B) Regional service C) New users have no permissions  D) Use root daily
 
 > C — new IAM users have ZERO permissions by default.
->
-
 
 **Q30.** EC2 app needs to read from DynamoDB. Correct approach?
 
-> Create IAM Role with DynamoDB read permissions, attach to EC2. DynamoDB = AWS's managed NoSQL database (serverless, ms performance). NoSQL = Not only SQL (flexible schema, key-value store).
->
-
+> Create IAM Role with DynamoDB read permissions, attach to EC2.
+> DynamoDB = AWS's managed NoSQL database (serverless, ms performance).
+> NoSQL = Not only SQL (flexible schema, key-value store).
 
 **Q31.** Difference between authentication and authorization?
 
-> Authentication = verifying WHO you are (login/identity). Authorization = determining WHAT you can do (permissions).
->
-
+> Authentication = verifying WHO you are (login/identity).
+> Authorization = determining WHAT you can do (permissions).
 
 **Q32.** Which is correct about IAM policies? A) Deny always overrides Allow  B) Allow overrides Deny C) They cancel each other  D) Users have Allow by default
 
 > A — DENY ALWAYS OVERRIDES ANY ALLOW. The golden IAM rule.
->
-
 
 **Q33.** User in two groups: one allows S3, one denies S3. Can user access?
 
 > NO. Explicit Deny always wins. S3 access denied.
->
-
 
 **Q34.** What is federated identity in IAM?
 
-> External identity providers (like Active Directory, Google) can assume IAM roles via SAML. No separate IAM users needed per person. SSO = Single Sign-On (log in once, access multiple systems). AD = Active Directory (Microsoft's user directory).
->
-
+> External identity providers (like Active Directory, Google) can
+> assume IAM roles via SAML. No separate IAM users needed per person.
+> SSO = Single Sign-On (log in once, access multiple systems).
+> AD = Active Directory (Microsoft's user directory).
 
 **Q35.** Which service provides SSO across multiple AWS accounts?
 
 > AWS IAM Identity Center (formerly AWS SSO).
->
-
 
 **Q36.** Lost MFA device for root account?
 
-> Contact AWS Support to recover access. Can take DAYS. This is why storing root credentials safely is critical.
->
-
+> Contact AWS Support to recover access. Can take DAYS.
+> This is why storing root credentials safely is critical.
 
 **Q37.** IMMEDIATELY after creating a new AWS account? A) Create 10 IAM users  B) Enable MFA on root C) Delete root  D) Create S3 buckets
 
 > B — Enable MFA on root IMMEDIATELY.
->
-
 
 **Q38.** What is an access key composed of?
 
-> Access Key ID (starts with AKIA, 20 chars, like username) + Secret Access Key (40 chars random, like password, shown ONCE). If secret key lost: create new key pair, cannot retrieve old one.
->
-
+> Access Key ID (starts with AKIA, 20 chars, like username) +
+> Secret Access Key (40 chars random, like password, shown ONCE).
+> If secret key lost: create new key pair, cannot retrieve old one.
 
 **Q39.** Can you retrieve a Secret Access Key after creation?
 
 > NO. Only viewable once at creation. If lost, create new key pair.
->
-
 
 **Q40.** Best IAM entity to grant third party temporary access?
 
-> IAM Role with cross-account trust policy. STS = Security Token Service (issues temporary credentials). They assume the role, get temp creds that expire automatically.
->
-
+> IAM Role with cross-account trust policy.
+> STS = Security Token Service (issues temporary credentials).
+> They assume the role, get temp creds that expire automatically.
 
 **Q41.** What is AWS Organizations?
 
-> Manage multiple AWS accounts centrally with consolidated billing, volume discounts, and Service Control Policies (SCPs). OU = Organizational Unit (folder for grouping accounts).
->
-
+> Manage multiple AWS accounts centrally with consolidated billing,
+> volume discounts, and Service Control Policies (SCPs).
+> OU = Organizational Unit (folder for grouping accounts).
 
 **Q42.** What are Service Control Policies (SCPs)?
 
-> IAM policies at organizational level setting MAXIMUM permission limits for accounts. SCPs can only RESTRICT, never GRANT permissions.
->
-
+> IAM policies at organizational level setting MAXIMUM permission
+> limits for accounts. SCPs can only RESTRICT, never GRANT permissions.
 
 **Q43.** Who manages the hypervisor in EC2?
 
-> AWS. The virtualization layer is always AWS's responsibility. AWS uses Nitro hypervisor (like VMware ESXi but AWS's own).
->
-
+> AWS. The virtualization layer is always AWS's responsibility.
+> AWS uses Nitro hypervisor (like VMware ESXi but AWS's own).
 
 **Q44.** IAM feature that enforces strong passwords?
 
-> IAM Password Policy — set minimum length, complexity, expiry, rotation period, password history (prevent reuse).
->
-
+> IAM Password Policy — set minimum length, complexity, expiry,
+> rotation period, password history (prevent reuse).
 
 **Q45.** Which is customer's responsibility for RDS? A) Patching DB engine  B) Managing EC2 instance C) Configuring security group rules  D) Physical security
 
 > C — Customer configures security groups and network access for RDS.
->
-
 
 **Q46.** Type of policy to grant EC2 permission to write to S3?
 
-> IAM Role with S3 write policy, attached to EC2 as instance profile. Instance Profile = container that passes IAM Role to EC2.
->
-
+> IAM Role with S3 write policy, attached to EC2 as instance profile.
+> Instance Profile = container that passes IAM Role to EC2.
 
 **Q47.** Can you attach multiple IAM policies to one user?
 
 > YES. All policies combined. Any DENY = final answer DENY.
->
-
 
 **Q48.** Difference between IAM user and IAM role?
 
-> User = permanent identity for a specific person. Role = temporary identity assumed by services or users.
->
-
+> User = permanent identity for a specific person.
+> Role = temporary identity assumed by services or users.
 
 **Q49.** Which service logs all API calls in your AWS account?
 
-> AWS CloudTrail — WHO made what API call, when, from where. CloudTrail answers: WHO, WHAT, WHEN, WHERE for every action.
->
-
+> AWS CloudTrail — WHO made what API call, when, from where.
+> CloudTrail answers: WHO, WHAT, WHEN, WHERE for every action.
 
 **Q50.** Who is responsible for enabling CloudTrail?
 
-> The CUSTOMER. AWS provides the service but YOU must enable it. AWS never monitors your account FOR you — you set it up.
->
+> The CUSTOMER. AWS provides the service but YOU must enable it.
+> AWS never monitors your account FOR you — you set it up.
 
-
-*DAY 2 COMPLETE*
-
+DAY 2 COMPLETE
 *Tomorrow: Day 3 — Core Compute Services*
 
 ## Day 3 — CORE COMPUTE SERVICES
@@ -1044,68 +1005,67 @@ AWS: Physical facilities, hardware, hypervisor, global network
 
 **Q1.** What is Amazon EC2?
 
-> Elastic Compute Cloud — virtual servers in the cloud. Like a VM on your VMware cluster but AWS owns the hardware. YOU manage: OS, apps, data, security groups. AWS manages: physical servers, hypervisor, network hardware.
->
-
+> Elastic Compute Cloud — virtual servers in the cloud.
+> Like a VM on your VMware cluster but AWS owns the hardware.
+> YOU manage: OS, apps, data, security groups.
+> AWS manages: physical servers, hypervisor, network hardware.
 
 **Q2.** EC2 family for in-memory databases like SAP HANA?
 
-> Memory Optimized (R5, X1 family). SAP HANA = SAP's enterprise database that keeps data in RAM. RAM is 1,000x faster than SSD — memory-optimized maximizes this.
->
-
+> Memory Optimized (R5, X1 family).
+> SAP HANA = SAP's enterprise database that keeps data in RAM.
+> RAM is 1,000x faster than SSD — memory-optimized maximizes this.
 
 **Q3.** EC2 family for machine learning with GPUs?
 
-> Accelerated Computing (P3, G4 family). GPU = Graphics Processing Unit: thousands of small cores for parallel math — perfect for ML/AI matrix operations.
->
-
+> Accelerated Computing (P3, G4 family).
+> GPU = Graphics Processing Unit: thousands of small cores for
+> parallel math — perfect for ML/AI matrix operations.
 
 **Q4.** Which EC2 option has no upfront commitment and highest hourly cost?
 
-> On-Demand Instances. Maximum flexibility, maximum per-hour price. Best for: testing, unknown workloads, short-term experiments.
->
-
+> On-Demand Instances. Maximum flexibility, maximum per-hour price.
+> Best for: testing, unknown workloads, short-term experiments.
 
 **Q5.** Which EC2 option offers up to 90% discount but can be interrupted?
 
-> Spot Instances. AWS needs capacity back → 2-min warning → terminated. GOOD: batch jobs, big data, CI/CD, rendering (can restart). BAD: production databases, real-time apps (cannot interrupt).
->
-
+```
+Spot Instances. AWS needs capacity back → 2-min warning → terminated.
+GOOD: batch jobs, big data, CI/CD, rendering (can restart).
+BAD: production databases, real-time apps (cannot interrupt).
+```
 
 **Q6.** When would you NOT use Spot Instances?
 
-> Critical workloads that cannot be interrupted: databases, real-time apps. If Spot is terminated at 11 PM → production DOWN.
->
-
+> Critical workloads that cannot be interrupted: databases, real-time
+> apps. If Spot is terminated at 11 PM → production DOWN.
 
 **Q7.** Best option for steady-state workload running 24/7 for 3 years?
 
-> Reserved Instances — 3-year commitment = up to 72% savings. 3yr m5.xlarge: $5,046 On-Demand vs ~$1,413 Reserved = 72% off.
->
-
+> Reserved Instances — 3-year commitment = up to 72% savings.
+> 3yr m5.xlarge: $5,046 On-Demand vs ~$1,413 Reserved = 72% off.
 
 **Q8.** Difference between Standard and Convertible Reserved Instances?
 
-> Standard RI: biggest discount (72%), cannot change instance type. Convertible RI: smaller discount (~66%), CAN change instance family.
->
-
+> Standard RI: biggest discount (72%), cannot change instance type.
+> Convertible RI: smaller discount (~66%), CAN change instance family.
 
 **Q9.** Company needs dedicated physical servers for software licensing.
 
-> Dedicated Hosts. BYOL = Bring Your Own License. You see exact socket/core count for Oracle/Windows licensing.
->
-
+> Dedicated Hosts. BYOL = Bring Your Own License.
+> You see exact socket/core count for Oracle/Windows licensing.
 
 **Q10.** Difference between Dedicated Hosts and Dedicated Instances?
 
-> Dedicated Host: you control and see the physical server. Dedicated Instance: dedicated hardware but AWS manages the host.
->
-
+> Dedicated Host: you control and see the physical server.
+> Dedicated Instance: dedicated hardware but AWS manages the host.
 
 **Q11.** What is Auto Scaling?
 
-> Automatically adjusts EC2 instance count based on demand. Scale out (add instances) when demand rises. Scale in (remove instances) when demand drops.
->
+> Automatically adjusts EC2 instance count based on demand.
+> Scale out (add instances) when demand rises.
+> Scale in (remove instances) when demand drops.
+
 ```
 ┌──────────────────────────────────────────┐
 │  ASG: Min=2, Max=10, Desired=2           │
@@ -1114,242 +1074,208 @@ AWS: Physical facilities, hardware, hypervisor, global network
 │  Always right-sized, never over-paying   │
 └──────────────────────────────────────────┘
 ```
+
 **Q12.** Difference between scaling out and scaling up?
 
-> Scale OUT (horizontal): add more instances. No downtime. Preferred. Scale UP (vertical): increase size of existing instance. Requires restart.
->
-
+> Scale OUT (horizontal): add more instances. No downtime. Preferred.
+> Scale UP (vertical): increase size of existing instance. Requires restart.
 
 **Q13.** Which ELB operates at Layer 7 and supports HTTP/HTTPS routing?
 
-> Application Load Balancer (ALB). Layer 7 = Application layer. Can route by URL path, hostname, headers. Example: /api/* → Server Group A, /web/* → Server Group B
->
-
+```
+Application Load Balancer (ALB).
+Layer 7 = Application layer. Can route by URL path, hostname, headers.
+Example: /api/* → Server Group A, /web/* → Server Group B
+```
 
 **Q14.** Which ELB for ultra-low latency TCP/UDP traffic?
 
-> Network Load Balancer (NLB). Layer 4 = Transport layer. Handles millions of requests/second. Use for: gaming (UDP), financial trading (TCP), IoT.
->
-
+> Network Load Balancer (NLB).
+> Layer 4 = Transport layer. Handles millions of requests/second.
+> Use for: gaming (UDP), financial trading (TCP), IoT.
 
 **Q15.** What is AWS Lambda?
 
-> Serverless compute — run code without managing servers. Event-driven: triggers from S3, API Gateway, SQS, CloudWatch, etc. Pay ONLY when code runs. Free tier: 1M requests/month forever.
->
-
+> Serverless compute — run code without managing servers.
+> Event-driven: triggers from S3, API Gateway, SQS, CloudWatch, etc.
+> Pay ONLY when code runs. Free tier: 1M requests/month forever.
 
 **Q16.** Maximum execution time for a Lambda function?
 
 > 15 minutes (900 seconds). If > 15 min needed: use EC2 or ECS.
->
-
 
 **Q17.** How are you charged for Lambda?
 
-> Number of requests + duration of execution. Pay $0 when not running. 3 AM with no requests = $0 cost.
->
-
+> Number of requests + duration of execution.
+> Pay $0 when not running. 3 AM with no requests = $0 cost.
 
 **Q18.** What is Elastic Beanstalk?
 
-> PaaS — deploy your application, AWS handles everything else. Upload code → Beanstalk creates EC2, ELB, ASG, security groups. Supported: Java, .NET, PHP, Python, Ruby, Go, Node.js, Docker.
->
-
+> PaaS — deploy your application, AWS handles everything else.
+> Upload code → Beanstalk creates EC2, ELB, ASG, security groups.
+> Supported: Java, .NET, PHP, Python, Ruby, Go, Node.js, Docker.
 
 **Q19.** Compute service for Docker containers without managing servers?
 
-> AWS Fargate — serverless containers. No EC2 instances to manage. Docker = platform for building/running containers. Container = lightweight VM-like unit packaging app and dependencies.
->
-
+> AWS Fargate — serverless containers. No EC2 instances to manage.
+> Docker = platform for building/running containers.
+> Container = lightweight VM-like unit packaging app and dependencies.
 
 **Q20.** Difference between ECS and EKS?
 
-> ECS = AWS's own container orchestration (simpler, AWS-native). EKS = Managed Kubernetes on AWS (for teams already using K8s). K8s = Kubernetes (industry standard container orchestration).
->
-
+> ECS = AWS's own container orchestration (simpler, AWS-native).
+> EKS = Managed Kubernetes on AWS (for teams already using K8s).
+> K8s = Kubernetes (industry standard container orchestration).
 
 **Q21.** Startup wants to deploy web app without managing any servers?
 
-> Lambda (backend functions) + Elastic Beanstalk (full app deployment). Fargate also valid for containerized apps. REST API = Representational State Transfer API (web standard).
->
-
+> Lambda (backend functions) + Elastic Beanstalk (full app deployment).
+> Fargate also valid for containerized apps.
+> REST API = Representational State Transfer API (web standard).
 
 **Q22.** Which option commits to $/hr across EC2, Lambda, and Fargate?
 
-> Savings Plans — more flexible than Reserved Instances. Compute Savings Plans: apply across EC2, Lambda, Fargate. EC2 Instance Savings Plans: specific family/region, higher discount.
->
-
+> Savings Plans — more flexible than Reserved Instances.
+> Compute Savings Plans: apply across EC2, Lambda, Fargate.
+> EC2 Instance Savings Plans: specific family/region, higher discount.
 
 **Q23.** Batch processing jobs that can be interrupted. Best option?
 
 > Spot Instances — up to 90% savings, batch jobs can restart.
->
-
 
 **Q24.** What happens to Spot Instance when AWS needs capacity back?
 
-> 2-minute warning, then terminated. Unsaved data = LOST. Save checkpoints to S3 regularly for restartable jobs.
->
-
+> 2-minute warning, then terminated. Unsaved data = LOST.
+> Save checkpoints to S3 regularly for restartable jobs.
 
 **Q25.** Which load balancer for third-party virtual firewall appliances?
 
-> Gateway Load Balancer (GWLB/GLB). Intercepts all traffic, routes through Palo Alto/Fortinet, returns.
->
-
+> Gateway Load Balancer (GWLB/GLB).
+> Intercepts all traffic, routes through Palo Alto/Fortinet, returns.
 
 **Q26.** Two services that handle traffic spikes automatically?
 
-> Auto Scaling (adjusts instance count) + Elastic Load Balancing (distributes traffic to healthy instances).
->
-
+> Auto Scaling (adjusts instance count) +
+> Elastic Load Balancing (distributes traffic to healthy instances).
 
 **Q27.** Best EC2 family for a web server with balanced requirements?
 
-> General Purpose (T3, M5 family). Memory trick: M5 = "Medium/balanced", C5 = "CPU", R5 = "RAM".
->
-
+> General Purpose (T3, M5 family).
+> Memory trick: M5 = "Medium/balanced", C5 = "CPU", R5 = "RAM".
 
 **Q28.** What is an EC2 instance profile?
 
-> Container that passes an IAM Role to an EC2 instance so it can make AWS API calls. App retrieves temp credentials automatically from http://169.254.169.254 (instance metadata service).
->
-
+> Container that passes an IAM Role to an EC2 instance so it can
+> make AWS API calls. App retrieves temp credentials automatically
+> from http://169.254.169.254 (instance metadata service).
 
 **Q29.** Company wants Java web app deployed without managing EC2?
 
-> AWS Elastic Beanstalk — supports Java (WAR files) and manages all underlying infrastructure automatically. JDK = Java Development Kit. WAR = Web Application Archive.
->
-
+> AWS Elastic Beanstalk — supports Java (WAR files) and manages
+> all underlying infrastructure automatically.
+> JDK = Java Development Kit. WAR = Web Application Archive.
 
 **Q30.** How does serverless differ from traditional compute?
 
-> Serverless: don't provision, manage, or pay for idle servers. Pay only when code actually runs. Lambda, Fargate, DynamoDB, S3.
->
-
+> Serverless: don't provision, manage, or pay for idle servers.
+> Pay only when code actually runs. Lambda, Fargate, DynamoDB, S3.
 
 **Q31.** Which is correct about Reserved Instances? A) Change types freely  B) 1 or 3 year commitment C) More expensive than On-Demand  D) One region only
 
 > B — RI requires 1 or 3 year commitment.
->
-
 
 **Q32.** HPC simulations. Which EC2 family?
 
-> Compute Optimized (C5/C5n for CPU) or Accelerated (P3/P4 for GPU). HPC = High Performance Computing (scientific simulations). EFA = Elastic Fabric Adapter (low-latency HPC networking).
->
-
+> Compute Optimized (C5/C5n for CPU) or Accelerated (P3/P4 for GPU).
+> HPC = High Performance Computing (scientific simulations).
+> EFA = Elastic Fabric Adapter (low-latency HPC networking).
 
 **Q33.** Relationship between ECS and Fargate?
 
-> Fargate is a LAUNCH TYPE for ECS (and EKS) that removes need to manage underlying EC2 infrastructure for containers.
->
-
+> Fargate is a LAUNCH TYPE for ECS (and EKS) that removes need
+> to manage underlying EC2 infrastructure for containers.
 
 **Q34.** Which service automatically replaces unhealthy EC2 instances?
 
-> Auto Scaling — health checks detect failure, terminate, replace. Self-healing infrastructure with no human intervention needed.
->
-
+> Auto Scaling — health checks detect failure, terminate, replace.
+> Self-healing infrastructure with no human intervention needed.
 
 **Q35.** Media company processes video in 6-hour nightly batch jobs?
 
 > Spot Instances — batch jobs can tolerate interruption, 90% savings.
->
-
 
 **Q36.** Benefit of multiple AZs with Application Load Balancer?
 
-> High availability — if one AZ fails, ELB routes to healthy AZs. ALB automatically discovers new instances added by Auto Scaling.
->
-
+> High availability — if one AZ fails, ELB routes to healthy AZs.
+> ALB automatically discovers new instances added by Auto Scaling.
 
 **Q37.** Best option for a 3-day experiment?
 
 > On-Demand — no commitment, pay hourly, stop when done.
->
-
 
 **Q38.** Which is a valid Lambda trigger? A) S3 object upload  B) DynamoDB change  C) EC2 launch D) All of the above
 
 > D — Lambda can be triggered by hundreds of AWS events.
->
-
 
 **Q39.** What type of scaling does a load balancer support?
 
-> Horizontal scaling (scale out) — distributing traffic across multiple instances instead of one large server.
->
-
+> Horizontal scaling (scale out) — distributing traffic across
+> multiple instances instead of one large server.
 
 **Q40.** Migrate VMware workloads to AWS. Which service?
 
-> VMware Cloud on AWS — same vCenter, NSX, vSAN tools in AWS. vMotion/HCX for live VM migration with no application changes. HCX = Hybrid Cloud Extension (VMware migration tool).
->
-
+> VMware Cloud on AWS — same vCenter, NSX, vSAN tools in AWS.
+> vMotion/HCX for live VM migration with no application changes.
+> HCX = Hybrid Cloud Extension (VMware migration tool).
 
 **Q41.** What does EC2 stand for?
 
-> Elastic Compute Cloud. Elastic = scales on demand. Compute = CPU+RAM. Cloud = AWS hosted.
->
-
+> Elastic Compute Cloud.
+> Elastic = scales on demand. Compute = CPU+RAM. Cloud = AWS hosted.
 
 **Q42.** Which is NOT a valid EC2 purchasing option? A) On-Demand  B) Spot  C) Perpetual License  D) Savings Plans
 
 > C — Perpetual License is not an EC2 pricing model.
->
-
 
 **Q43.** How much can Reserved Instances save vs On-Demand?
 
 > Up to 72% with 3-year all-upfront commitment.
->
-
 
 **Q44.** How much can Spot Instances save?
 
 > Up to 90% vs On-Demand pricing.
->
-
 
 **Q45.** Compute Savings Plans vs EC2 Instance Savings Plans?
 
-> Compute SP: applies to EC2+Lambda+Fargate, any region (66% off). EC2 Instance SP: specific instance family in specific region (72% off).
->
-
+> Compute SP: applies to EC2+Lambda+Fargate, any region (66% off).
+> EC2 Instance SP: specific instance family in specific region (72% off).
 
 **Q46.** Which service for a serverless REST API backend?
 
 > AWS Lambda with API Gateway — standard serverless API pattern.
->
-
 
 **Q47.** Company wants to never over-provision compute. Which feature?
 
-> Auto Scaling — automatically adjusts capacity to match actual demand. Never paying for idle capacity. Never running short either.
->
-
+> Auto Scaling — automatically adjusts capacity to match actual demand.
+> Never paying for idle capacity. Never running short either.
 
 **Q48.** What makes Fargate different from containers on EC2?
 
-> With Fargate you don't manage underlying EC2 instances at all. Just define container CPU/memory requirements, AWS handles the rest.
->
-
+> With Fargate you don't manage underlying EC2 instances at all.
+> Just define container CPU/memory requirements, AWS handles the rest.
 
 **Q49.** Which model for new app with completely unknown usage pattern?
 
-> On-Demand — no commitment. Observe actual usage for 3 months, then buy Reserved Instances or Savings Plans based on real data.
->
-
+> On-Demand — no commitment. Observe actual usage for 3 months,
+> then buy Reserved Instances or Savings Plans based on real data.
 
 **Q50.** Financial company needs EC2 physically isolated from other customers?
 
-> Dedicated Hosts or Dedicated Instances — hardware not shared with other AWS customer accounts. Tenancy = who shares physical hardware.
->
+> Dedicated Hosts or Dedicated Instances — hardware not shared with
+> other AWS customer accounts.
+> Tenancy = who shares physical hardware.
 
-
-*DAY 3 COMPLETE*
-
+DAY 3 COMPLETE
 *Tomorrow: Day 4 — Storage Services*
 
 ## Day 4 — STORAGE SERVICES
@@ -1406,306 +1332,259 @@ FSx: Windows File Server (SMB/AD), Lustre (HPC), NetApp ONTAP, OpenZFS
 
 **Q1.** What type of storage is Amazon S3?
 
-> Object storage. Files stored as objects with key, data, and metadata. Unlimited storage. Objects up to 5 TB each. Globally unique bucket names. 99.999999999% (11 nines) durability — stored across 3+ AZs automatically.
->
-
+> Object storage. Files stored as objects with key, data, and metadata.
+> Unlimited storage. Objects up to 5 TB each. Globally unique bucket names.
+> 99.999999999% (11 nines) durability — stored across 3+ AZs automatically.
 
 **Q2.** Maximum size of a single S3 object?
 
 > 5 TB. Files > 5 GB must use Multipart Upload (uploads in parallel chunks).
->
-
 
 **Q3.** S3 durability?
 
-> 99.999999999% (11 nines). Store 10 billion objects, expect to lose 1/year. Automatically stores across minimum 3 AZs within the region.
->
-
+> 99.999999999% (11 nines). Store 10 billion objects, expect to lose 1/year.
+> Automatically stores across minimum 3 AZs within the region.
 
 **Q4.** Most cost-effective for data rarely accessed with 12-hour retrieval?
 
 > S3 Glacier Deep Archive. $0.00099/GB/month. 180-day minimum retention.
->
-
 
 **Q5.** Which S3 class for unknown or changing access patterns?
 
-> S3 Intelligent-Tiering — auto-moves objects between tiers. Small monthly monitoring fee. Access object → moves back to frequent tier.
->
-
+> S3 Intelligent-Tiering — auto-moves objects between tiers.
+> Small monthly monitoring fee. Access object → moves back to frequent tier.
 
 **Q6.** Minimum storage duration for S3 Glacier Deep Archive?
 
 > 180 days. Delete before 180 days = still charged for 180.
->
-
 
 **Q7.** Which S3 class stores data in ONLY ONE Availability Zone?
 
-> S3 One Zone-IA. Cheaper but data permanently LOST if that AZ fails. Use only for recreatable data (thumbnails, processed outputs).
->
-
+> S3 One Zone-IA. Cheaper but data permanently LOST if that AZ fails.
+> Use only for recreatable data (thumbnails, processed outputs).
 
 **Q8.** What is an S3 bucket?
 
-> Container for storing objects. Names must be GLOBALLY UNIQUE across all AWS. URL: https://[bucket-name].s3.amazonaws.com/[key]
->
-
+> Container for storing objects. Names must be GLOBALLY UNIQUE across all AWS.
+> URL: https://[bucket-name].s3.amazonaws.com/[key]
 
 **Q9.** How to automatically move S3 objects between classes over time?
 
-> S3 Lifecycle Rules — define policies to transition or expire objects. Example: Standard → Standard-IA (day 30) → Glacier (day 90) → Delete (day 365)
->
-
+```
+S3 Lifecycle Rules — define policies to transition or expire objects.
+Example: Standard → Standard-IA (day 30) → Glacier (day 90) → Delete (day 365)
+```
 
 **Q10.** Store compliance archives for 7 years, rarely accessed?
 
 > S3 Glacier Deep Archive. Most cost-effective. 12-hour retrieval fine for audit.
->
-
 
 **Q11.** What is Amazon EBS?
 
-> Elastic Block Store — persistent block storage volumes for EC2. Like a virtual hard drive. Network-attached (not physically attached). Persists when EC2 stops. Must be in same AZ as EC2 instance.
->
-
+> Elastic Block Store — persistent block storage volumes for EC2.
+> Like a virtual hard drive. Network-attached (not physically attached).
+> Persists when EC2 stops. Must be in same AZ as EC2 instance.
 
 **Q12.** How many EC2 instances can an EBS volume attach to?
 
-> ONE (standard volumes). io2 Multi-Attach allows up to 16 in same AZ. Like a SAN LUN — one host maps to one LUN (normally).
->
-
+> ONE (standard volumes). io2 Multi-Attach allows up to 16 in same AZ.
+> Like a SAN LUN — one host maps to one LUN (normally).
 
 **Q13.** What happens to EBS data when EC2 terminates?
 
-> Root EBS volume: deleted by default. Additional volumes: persist by default. STOPPED (not terminated): all EBS data intact.
->
-
+> Root EBS volume: deleted by default.
+> Additional volumes: persist by default.
+> STOPPED (not terminated): all EBS data intact.
 
 **Q14.** What is an EBS Snapshot?
 
-> Point-in-time backup stored in S3. Incremental (only changed blocks). Use to: restore in same AZ, create in different AZ, copy cross-region.
->
-
+> Point-in-time backup stored in S3. Incremental (only changed blocks).
+> Use to: restore in same AZ, create in different AZ, copy cross-region.
 
 **Q15.** Difference between EBS and Instance Store?
 
-> EBS: persistent — survives stop/terminate (network-attached). Instance Store: temporary — LOST when stopped/terminated/fails. Instance Store: physically attached NVMe, much faster than EBS.
->
-
+> EBS: persistent — survives stop/terminate (network-attached).
+> Instance Store: temporary — LOST when stopped/terminated/fails.
+> Instance Store: physically attached NVMe, much faster than EBS.
 
 **Q16.** Which storage is fastest and physically attached?
 
-> Instance Store — directly attached NVMe SSD. NVMe = Non-Volatile Memory Express (fastest SSD interface). Speed order: Instance Store > EBS gp3 > EFS > S3
->
-
+> Instance Store — directly attached NVMe SSD.
+> NVMe = Non-Volatile Memory Express (fastest SSD interface).
+> Speed order: Instance Store > EBS gp3 > EFS > S3
 
 **Q17.** What is Amazon EFS?
 
-> Elastic File System — managed NFS that multiple EC2 instances can mount SIMULTANEOUSLY. Auto-scales. Linux only. For Windows shared files: use FSx for Windows File Server.
->
-
+> Elastic File System — managed NFS that multiple EC2 instances can
+> mount SIMULTANEOUSLY. Auto-scales. Linux only.
+> For Windows shared files: use FSx for Windows File Server.
 
 **Q18.** How does EFS differ from EBS?
 
-> EFS: shared across MULTIPLE instances and AZs. Auto-scales. NFS. EBS: attached to SINGLE instance. Manual sizing. Block storage. Use EFS: shared content management, web farm (100 servers same files). Use EBS: database volumes, OS boot drives.
->
-
+> EFS: shared across MULTIPLE instances and AZs. Auto-scales. NFS.
+> EBS: attached to SINGLE instance. Manual sizing. Block storage.
+> Use EFS: shared content management, web farm (100 servers same files).
+> Use EBS: database volumes, OS boot drives.
 
 **Q19.** Shared filesystem for 100 Linux EC2 instances simultaneously?
 
 > Amazon EFS — designed for shared access across many instances.
->
-
 
 **Q20.** What is AWS Storage Gateway?
 
-> Hybrid cloud storage — connects on-premises environments to AWS. Apps see local interface; data actually stored in S3/Glacier. Types: File Gateway (NFS/SMB→S3), Volume (iSCSI→S3), Tape (VTL→Glacier)
->
-
+```
+Hybrid cloud storage — connects on-premises environments to AWS.
+Apps see local interface; data actually stored in S3/Glacier.
+Types: File Gateway (NFS/SMB→S3), Volume (iSCSI→S3), Tape (VTL→Glacier)
+```
 
 **Q21.** Which Storage Gateway type presents NFS/SMB interface to S3?
 
 > File Gateway — apps write to NFS/SMB share, data goes to S3.
->
-
 
 **Q22.** Which Storage Gateway type presents iSCSI block storage?
 
-> Volume Gateway. iSCSI = Internet Small Computer Systems Interface (block storage over IP/TCP — like SAN but over Ethernet).
->
-
+> Volume Gateway. iSCSI = Internet Small Computer Systems Interface
+> (block storage over IP/TCP — like SAN but over Ethernet).
 
 **Q23.** Which Storage Gateway type replaces tape libraries?
 
-> Tape Gateway — VTL (Virtual Tape Library) backed by S3/Glacier. Same backup software (NetBackup/TSM) unchanged. No physical tapes.
->
-
+> Tape Gateway — VTL (Virtual Tape Library) backed by S3/Glacier.
+> Same backup software (NetBackup/TSM) unchanged. No physical tapes.
 
 **Q24.** When to use Snowball Edge instead of internet transfer?
 
-> When data is too large (>10TB generally) or bandwidth is insufficient. 1 PB over 100 Mbps internet = ~3 years. Snowball = weeks.
->
-
+> When data is too large (>10TB generally) or bandwidth is insufficient.
+> 1 PB over 100 Mbps internet = ~3 years. Snowball = weeks.
 
 **Q25.** Capacity of AWS Snowmobile?
 
-> 100 petabytes — 45-foot semi-truck. Armed guards, GPS, encrypted. AWS drives the truck to your DC. Plug in fiber, transfer data.
->
-
+> 100 petabytes — 45-foot semi-truck. Armed guards, GPS, encrypted.
+> AWS drives the truck to your DC. Plug in fiber, transfer data.
 
 **Q26.** Best FSx for Windows SMB file shares?
 
-> Amazon FSx for Windows File Server — fully managed, AD integration, DFS namespaces, SMB protocol. AD = Active Directory.
->
-
+> Amazon FSx for Windows File Server — fully managed, AD integration,
+> DFS namespaces, SMB protocol. AD = Active Directory.
 
 **Q27.** Which FSx is relevant to NetApp ONTAP users?
 
-> Amazon FSx for NetApp ONTAP — same SVM, NFS/CIFS/iSCSI, SnapMirror. Migrate NetApp workloads to AWS with no application changes.
->
-
+> Amazon FSx for NetApp ONTAP — same SVM, NFS/CIFS/iSCSI, SnapMirror.
+> Migrate NetApp workloads to AWS with no application changes.
 
 **Q28.** Which S3 feature protects against accidental deletion?
 
-> S3 Versioning — keeps multiple versions. Delete adds a delete marker (versions still exist). Remove marker = file restored.
->
-
+> S3 Versioning — keeps multiple versions. Delete adds a delete marker
+> (versions still exist). Remove marker = file restored.
 
 **Q29.** Replicate S3 data to another region for DR?
 
-> S3 Cross-Region Replication (CRR). Requires versioning on both buckets. SRR = Same-Region Replication (for log aggregation, test sync).
->
-
+> S3 Cross-Region Replication (CRR). Requires versioning on both buckets.
+> SRR = Same-Region Replication (for log aggregation, test sync).
 
 **Q30.** What is an S3 presigned URL?
 
-> Time-limited URL granting temporary access to private S3 object. No AWS credentials needed. Configurable expiry (seconds to days).
->
-
+> Time-limited URL granting temporary access to private S3 object.
+> No AWS credentials needed. Configurable expiry (seconds to days).
 
 **Q31.** Best EBS type for high-performance databases needing high IOPS?
 
 > io2 (Provisioned IOPS SSD) — up to 256,000 IOPS. For SAP HANA, Oracle, SQL Server.
->
-
 
 **Q32.** Best EBS type for general purpose at lowest cost?
 
-> gp3 (General Purpose SSD) — 3,000 baseline IOPS, $0.08/GB. Replaced gp2 as default. IOPS independent of volume size.
->
-
+> gp3 (General Purpose SSD) — 3,000 baseline IOPS, $0.08/GB.
+> Replaced gp2 as default. IOPS independent of volume size.
 
 **Q33.** Can EBS volumes be in a different AZ than EC2?
 
-> NO. Must be in same AZ. To move: take snapshot, create volume from snapshot in target AZ.
->
-
+> NO. Must be in same AZ. To move: take snapshot, create volume
+> from snapshot in target AZ.
 
 **Q34.** How to move EBS volume to a different AZ?
 
-> Snapshot the volume → create new volume from snapshot in target AZ → attach to EC2 in that AZ. Cannot directly "move" a volume.
->
-
+> Snapshot the volume → create new volume from snapshot in target AZ
+> → attach to EC2 in that AZ. Cannot directly "move" a volume.
 
 **Q35.** Which S3 encryption uses AWS-managed keys requiring no customer work?
 
 > SSE-S3 — AWS manages keys entirely. AES-256. Free. No audit trail.
->
-
 
 **Q36.** Which S3 encryption lets you use KMS for key control?
 
-> SSE-KMS — you control key policies, can audit all key usage via CloudTrail. Better for compliance requiring separation of duties.
->
-
+> SSE-KMS — you control key policies, can audit all key usage via CloudTrail.
+> Better for compliance requiring separation of duties.
 
 **Q37.** S3 Standard-IA minimum storage duration?
 
 > 30 days. Delete before 30 days = still charged for 30.
->
-
 
 **Q38.** S3 Glacier Instant Retrieval minimum storage duration?
 
 > 90 days. Millisecond retrieval (vs minutes-hours for Flexible).
->
-
 
 **Q39.** Host a static website (HTML/CSS/JS) with no servers?
 
-> Amazon S3 static website hosting. Extremely cheap. No EC2 needed. Add CloudFront for HTTPS and custom domain.
->
-
+> Amazon S3 static website hosting. Extremely cheap. No EC2 needed.
+> Add CloudFront for HTTPS and custom domain.
 
 **Q40.** Difference between S3 Standard and S3 Standard-IA?
 
-> Standard: $0.023/GB, no retrieval fee, for frequent daily access. Standard-IA: $0.0125/GB + retrieval fee, for monthly/occasional access.
->
-
+> Standard: $0.023/GB, no retrieval fee, for frequent daily access.
+> Standard-IA: $0.0125/GB + retrieval fee, for monthly/occasional access.
 
 **Q41.** Snow Family for migrating 50TB with no internet access?
 
 > Snowball Edge — up to 80TB usable, works offline.
->
-
 
 **Q42.** Which storage auto-grows and shrinks based on usage?
 
 > Amazon EFS — no pre-provisioning. Start at 0 GB. Pay per GB used.
->
-
 
 **Q43.** Can S3 bucket names be reused after deletion?
 
-> YES — name becomes globally available again. Security risk: old URLs could serve attacker's content if they register the name.
->
-
+> YES — name becomes globally available again. Security risk: old URLs
+> could serve attacker's content if they register the name.
 
 **Q44.** What is S3 Object Lock?
 
-> Prevents deletion/overwriting for set time — WORM compliance. Governance Mode: privileged users can override. Compliance Mode: NOBODY can delete (not even root!) during retention. WORM = Write Once Read Many. Use for SEC, FINRA, HIPAA compliance.
->
-
+> Prevents deletion/overwriting for set time — WORM compliance.
+> Governance Mode: privileged users can override.
+> Compliance Mode: NOBODY can delete (not even root!) during retention.
+> WORM = Write Once Read Many. Use for SEC, FINRA, HIPAA compliance.
 
 **Q45.** Extend on-premises NAS to AWS while maintaining local access?
 
-> AWS Storage Gateway File Gateway — local NFS/SMB interface backed by S3. NAS = Network Attached Storage (Isilon/PowerScale, NetApp, etc.)
->
-
+> AWS Storage Gateway File Gateway — local NFS/SMB interface backed by S3.
+> NAS = Network Attached Storage (Isilon/PowerScale, NetApp, etc.)
 
 **Q46.** What happens to Instance Store data if host fails?
 
-> Data is PERMANENTLY LOST. Instance Store has zero durability guarantees. Good for: temporary cache, scratch space, swap files.
->
-
+> Data is PERMANENTLY LOST. Instance Store has zero durability guarantees.
+> Good for: temporary cache, scratch space, swap files.
 
 **Q47.** Company has 2PB to migrate. Internet would take years?
 
-> AWS Snowmobile — 100PB semi-truck. 2PB over Snowmobile: ~27 minutes of data transfer. Plus shipping weeks.
->
-
+> AWS Snowmobile — 100PB semi-truck.
+> 2PB over Snowmobile: ~27 minutes of data transfer. Plus shipping weeks.
 
 **Q48.** Best S3 class for frequently accessed data with highest performance?
 
 > S3 Standard. 99.99% availability, no retrieval fee, no minimum duration.
->
-
 
 **Q49.** What is S3 Transfer Acceleration?
 
-> Uses CloudFront edge locations to speed up S3 uploads worldwide. Upload to mybucket.s3-accelerate.amazonaws.com instead of s3.amazonaws.com.
->
-
+> Uses CloudFront edge locations to speed up S3 uploads worldwide.
+> Upload to mybucket.s3-accelerate.amazonaws.com instead of s3.amazonaws.com.
 
 **Q50.** DR scenario with RTO of 12 hours, data accessed less than once/year?
 
-> S3 Glacier Deep Archive — 12-hour retrieval matches 12-hour RTO. Cheapest option. 180-day minimum retention. RTO = Recovery Time Objective (max acceptable downtime). RPO = Recovery Point Objective (max acceptable data loss).
->
+> S3 Glacier Deep Archive — 12-hour retrieval matches 12-hour RTO.
+> Cheapest option. 180-day minimum retention.
+> RTO = Recovery Time Objective (max acceptable downtime).
+> RPO = Recovery Point Objective (max acceptable data loss).
 
-
-*DAY 4 COMPLETE*
-
+DAY 4 COMPLETE
 *Tomorrow: Day 5 — Databases*
 
 ## Day 5 — DATABASES
@@ -1763,306 +1642,273 @@ Athena: Serverless SQL queries directly on S3 data. $5/TB scanned.
 
 **Q1.** What does RDS manage for you vs running DB on EC2?
 
-> RDS manages: OS patching, DB engine patching, backups, scaling, hardware. You manage: data, schema, queries, access, security groups. EC2 DB: YOU manage everything above plus OS and DB patching.
->
-
+> RDS manages: OS patching, DB engine patching, backups, scaling, hardware.
+> You manage: data, schema, queries, access, security groups.
+> EC2 DB: YOU manage everything above plus OS and DB patching.
 
 **Q2.** Which database engines does RDS support?
 
 > MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, Amazon Aurora.
->
-
 
 **Q3.** Difference between RDS Multi-AZ and Read Replicas?
 
-> Multi-AZ: SYNCHRONOUS replication → HIGH AVAILABILITY → automatic failover. Read Replica: ASYNCHRONOUS replication → PERFORMANCE → read scaling only. Multi-AZ standby: CANNOT be read from (failover only). Read Replica: CAN be read from. Can be in different region. EXAM TRAP: Read Replicas ≠ failover. Only Multi-AZ = failover.
->
-
+```
+Multi-AZ: SYNCHRONOUS replication → HIGH AVAILABILITY → automatic failover.
+Read Replica: ASYNCHRONOUS replication → PERFORMANCE → read scaling only.
+Multi-AZ standby: CANNOT be read from (failover only).
+Read Replica: CAN be read from. Can be in different region.
+EXAM TRAP: Read Replicas ≠ failover. Only Multi-AZ = failover.
+```
 
 **Q4.** Can you use Read Replica for automatic failover?
 
-> NO. Read Replicas are for read scaling only. Multi-AZ handles failover. Failover time for Multi-AZ: ~1-2 minutes (DNS updates automatically).
->
-
+> NO. Read Replicas are for read scaling only. Multi-AZ handles failover.
+> Failover time for Multi-AZ: ~1-2 minutes (DNS updates automatically).
 
 **Q5.** What is Amazon Aurora?
 
-> AWS cloud-native relational DB. MySQL + PostgreSQL compatible. 5x faster than MySQL, 3x faster than PostgreSQL. 6 copies across 3 AZs. Storage auto-grows in 10GB increments to 128TB.
->
-
+> AWS cloud-native relational DB. MySQL + PostgreSQL compatible.
+> 5x faster than MySQL, 3x faster than PostgreSQL.
+> 6 copies across 3 AZs. Storage auto-grows in 10GB increments to 128TB.
 
 **Q6.** How much faster is Aurora vs MySQL?
 
 > Up to 5x faster than standard MySQL.
->
-
 
 **Q7.** What is Aurora Serverless?
 
-> Aurora that auto-starts, scales capacity, and pauses based on demand. Paused = $0 cost. Good for: dev/test, variable/unpredictable load. ACU = Aurora Capacity Unit (unit of compute for Serverless).
->
-
+> Aurora that auto-starts, scales capacity, and pauses based on demand.
+> Paused = $0 cost. Good for: dev/test, variable/unpredictable load.
+> ACU = Aurora Capacity Unit (unit of compute for Serverless).
 
 **Q8.** What is DynamoDB?
 
-> Fully managed NoSQL key-value + document database. Serverless. Single-digit millisecond performance at ANY scale. From 1 item to 10 petabytes — same ms latency.
->
-
+> Fully managed NoSQL key-value + document database.
+> Serverless. Single-digit millisecond performance at ANY scale.
+> From 1 item to 10 petabytes — same ms latency.
 
 **Q9.** What type of database is DynamoDB?
 
-> NoSQL — key-value and document store. NoSQL = Not only SQL. Flexible schema. No rigid table structure.
->
-
+> NoSQL — key-value and document store.
+> NoSQL = Not only SQL. Flexible schema. No rigid table structure.
 
 **Q10.** Which DB service requires no server management and scales automatically?
 
 > DynamoDB — fully serverless NoSQL. Also Aurora Serverless.
->
-
 
 **Q11.** What is DynamoDB DAX?
 
-> DynamoDB Accelerator — in-memory cache for DynamoDB. Microsecond response times (vs ms for DynamoDB). Cache HIT: serve from DAX, no DynamoDB charge. Cache MISS: fetch from DynamoDB, cache it, serve.
->
-
+> DynamoDB Accelerator — in-memory cache for DynamoDB.
+> Microsecond response times (vs ms for DynamoDB).
+> Cache HIT: serve from DAX, no DynamoDB charge.
+> Cache MISS: fetch from DynamoDB, cache it, serve.
 
 **Q12.** DAX vs ElastiCache — when to use each?
 
-> DAX: ONLY for DynamoDB caching. Same API as DynamoDB. ElastiCache: for RDS, MySQL, or any other general caching needs.
->
-
+> DAX: ONLY for DynamoDB caching. Same API as DynamoDB.
+> ElastiCache: for RDS, MySQL, or any other general caching needs.
 
 **Q13.** What is Amazon ElastiCache?
 
-> Managed in-memory caching (Redis or Memcached). Sub-millisecond latency. Reduces database load for repeated queries.
->
-
+> Managed in-memory caching (Redis or Memcached).
+> Sub-millisecond latency. Reduces database load for repeated queries.
 
 **Q14.** What is Amazon Redshift?
 
-> Data warehouse for analytics. OLAP workloads. Columnar storage. Petabyte-scale. Use for BI and complex analytical queries. NOT for transactional workloads (use RDS/DynamoDB for OLTP).
->
-
+> Data warehouse for analytics. OLAP workloads. Columnar storage.
+> Petabyte-scale. Use for BI and complex analytical queries.
+> NOT for transactional workloads (use RDS/DynamoDB for OLTP).
 
 **Q15.** Difference between OLTP and OLAP?
 
-> OLTP: many small fast transactions (INSERT/UPDATE). Use RDS/DynamoDB. Example: ATM, e-commerce orders, trading transactions. OLAP: complex queries on large historical datasets. Use Redshift. Example: revenue by region, risk analysis, regulatory reporting.
->
-
+> OLTP: many small fast transactions (INSERT/UPDATE). Use RDS/DynamoDB.
+>      Example: ATM, e-commerce orders, trading transactions.
+> OLAP: complex queries on large historical datasets. Use Redshift.
+>      Example: revenue by region, risk analysis, regulatory reporting.
 
 **Q16.** Which database for MongoDB workloads?
 
 > Amazon DocumentDB — MongoDB-compatible managed document database.
->
-
 
 **Q17.** What is Amazon Neptune?
 
-> Graph database. Data stored as nodes and edges. Use for: social networks, fraud detection, knowledge graphs. Graph queries are 100x faster than relational JOINs at scale.
->
-
+> Graph database. Data stored as nodes and edges.
+> Use for: social networks, fraud detection, knowledge graphs.
+> Graph queries are 100x faster than relational JOINs at scale.
 
 **Q18.** Which DB for immutable cryptographically verifiable transactions?
 
-> Amazon QLDB — Quantum Ledger Database. Hash chain: change old record → hash chain breaks → tampering detected. Use for: banking ledgers, supply chain, insurance, financial compliance.
->
-
+```
+Amazon QLDB — Quantum Ledger Database.
+Hash chain: change old record → hash chain breaks → tampering detected.
+Use for: banking ledgers, supply chain, insurance, financial compliance.
+```
 
 **Q19.** IoT sensors sending data every second. Which DB?
 
-> Amazon Timestream — purpose-built time-series database. Auto-tiering: recent data hot, older data cold. Built-in time functions.
->
-
+> Amazon Timestream — purpose-built time-series database.
+> Auto-tiering: recent data hot, older data cold. Built-in time functions.
 
 **Q20.** What is AWS DMS?
 
-> Database Migration Service — migrate DBs to AWS with minimal downtime. Full Load (copy existing) + CDC (capture ongoing changes) = near-zero downtime. CDC = Change Data Capture.
->
-
+> Database Migration Service — migrate DBs to AWS with minimal downtime.
+> Full Load (copy existing) + CDC (capture ongoing changes) = near-zero downtime.
+> CDC = Change Data Capture.
 
 **Q21.** What is a homogeneous database migration?
 
-> Same engine: Oracle on-prem → Oracle on RDS. DMS only. No schema conversion needed.
->
-
+> Same engine: Oracle on-prem → Oracle on RDS.
+> DMS only. No schema conversion needed.
 
 **Q22.** What is a heterogeneous database migration?
 
-> Different engines: Oracle → Aurora PostgreSQL. Use AWS Schema Conversion Tool (SCT) first, then DMS.
->
-
+> Different engines: Oracle → Aurora PostgreSQL.
+> Use AWS Schema Conversion Tool (SCT) first, then DMS.
 
 **Q23.** Which service assists with schema conversion?
 
-> AWS Schema Conversion Tool (SCT) — converts schema and SQL code between database engines. Free desktop application.
->
-
+> AWS Schema Conversion Tool (SCT) — converts schema and SQL code
+> between database engines. Free desktop application.
 
 **Q24.** Company wants max read performance for RDS MySQL?
 
-> Add Read Replicas — distribute read queries across multiple replicas. App: reads to replica endpoints, writes to primary endpoint only.
->
-
+> Add Read Replicas — distribute read queries across multiple replicas.
+> App: reads to replica endpoints, writes to primary endpoint only.
 
 **Q25.** What happens during RDS Multi-AZ failover?
 
-> AWS automatically switches DNS endpoint to the standby (~1-2 min). Zero data loss (synchronous replication). App must handle reconnect.
->
-
+> AWS automatically switches DNS endpoint to the standby (~1-2 min).
+> Zero data loss (synchronous replication). App must handle reconnect.
 
 **Q26.** Which DB natively replicates across multiple AWS regions?
 
-> DynamoDB Global Tables — multi-region, multi-active replication. Write anywhere, replicated to all regions in <1 second.
->
-
+> DynamoDB Global Tables — multi-region, multi-active replication.
+> Write anywhere, replicated to all regions in <1 second.
 
 **Q27.** Aurora storage auto-scaling increment?
 
 > 10GB — grows automatically in 10GB increments up to 128TB. No downtime.
->
-
 
 **Q28.** Gaming leaderboard with millions of concurrent users?
 
 > DynamoDB with DAX — serverless, any scale, microsecond latency.
->
-
 
 **Q29.** ElastiCache engine with persistence and pub/sub?
 
-> Redis — more feature-rich. Sorted sets (perfect for leaderboards), persistence, pub/sub, replication, transactions.
->
-
+> Redis — more feature-rich. Sorted sets (perfect for leaderboards),
+> persistence, pub/sub, replication, transactions.
 
 **Q30.** ElastiCache for simple high-throughput caching?
 
 > Memcached — simpler, multi-threaded, no persistence. Pure caching.
->
-
 
 **Q31.** Run SQL queries on S3 data without loading into a database?
 
 > YES — Amazon Athena. Serverless. $5/TB scanned. Query S3 directly.
->
-
 
 **Q32.** Company needs SQL queries on S3 data lake?
 
-> Amazon Athena — define table in Glue Catalog, query S3 with SQL. Use Parquet format: columnar = scan less data = cheaper + faster.
->
-
+> Amazon Athena — define table in Glue Catalog, query S3 with SQL.
+> Use Parquet format: columnar = scan less data = cheaper + faster.
 
 **Q33.** Difference between RDS and database on EC2?
 
-> RDS managed: AWS handles OS, DB patching, backups, HA, scaling. EC2 DB: YOU handle everything. More control, much more work. Use EC2 when: unsupported engine, need OS access, special config.
->
-
+> RDS managed: AWS handles OS, DB patching, backups, HA, scaling.
+> EC2 DB: YOU handle everything. More control, much more work.
+> Use EC2 when: unsupported engine, need OS access, special config.
 
 **Q34.** Which scenario requires database on EC2 rather than RDS?
 
-> Unsupported engine (IBM DB2, Sybase), OS-level access needed, Oracle RAC clustering, specific legacy version not in RDS.
->
-
+> Unsupported engine (IBM DB2, Sybase), OS-level access needed,
+> Oracle RAC clustering, specific legacy version not in RDS.
 
 **Q35.** What is Aurora Global Database?
 
-> Single Aurora database spanning multiple regions. Sub-second replication. RPO < 1 second, RTO < 1 minute. Up to 5 secondary regions.
->
-
+> Single Aurora database spanning multiple regions. Sub-second replication.
+> RPO < 1 second, RTO < 1 minute. Up to 5 secondary regions.
 
 **Q36.** How many Aurora Read Replicas can you have?
 
-> Up to 15 read replicas. NO replication lag (shared distributed storage). Standard RDS: up to 5 replicas (with lag).
->
-
+> Up to 15 read replicas. NO replication lag (shared distributed storage).
+> Standard RDS: up to 5 replicas (with lag).
 
 **Q37.** Which DB for content management storing JSON documents?
 
-> Amazon DocumentDB — MongoDB-compatible. JSON documents stored naturally. No complex JOINs needed for nested document data.
->
-
+> Amazon DocumentDB — MongoDB-compatible. JSON documents stored naturally.
+> No complex JOINs needed for nested document data.
 
 **Q38.** Financial company needs unalterable transaction history?
 
-> Amazon QLDB — immutable ledger, cryptographic hash chain. Prove records were NEVER altered since creation.
->
-
+> Amazon QLDB — immutable ledger, cryptographic hash chain.
+> Prove records were NEVER altered since creation.
 
 **Q39.** What makes Redshift different from RDS for analytics?
 
-> Redshift: COLUMNAR storage — only reads columns needed for query. RDS: ROW storage — must read entire row even if only 2 columns needed. For analytics: columnar = 10-100x faster and cheaper.
->
-
+> Redshift: COLUMNAR storage — only reads columns needed for query.
+> RDS: ROW storage — must read entire row even if only 2 columns needed.
+> For analytics: columnar = 10-100x faster and cheaper.
 
 **Q40.** Cache most frequently run RDS queries?
 
-> Amazon ElastiCache — cache query results, reduce DB load. TTL = Time to Live (how long to keep data in cache before refreshing).
->
-
+> Amazon ElastiCache — cache query results, reduce DB load.
+> TTL = Time to Live (how long to keep data in cache before refreshing).
 
 **Q41.** Primary key structure in DynamoDB?
 
-> Partition key (required) + optional sort key = composite primary key. GSI = Global Secondary Index (query on non-key attributes). LSI = Local Secondary Index (alternative sort key).
->
-
+> Partition key (required) + optional sort key = composite primary key.
+> GSI = Global Secondary Index (query on non-key attributes).
+> LSI = Local Secondary Index (alternative sort key).
 
 **Q42.** E-commerce site needing fast scalable product catalog?
 
-> DynamoDB — flexible schema (different attributes per product), single-digit ms latency, auto-scales for Black Friday traffic.
->
-
+> DynamoDB — flexible schema (different attributes per product),
+> single-digit ms latency, auto-scales for Black Friday traffic.
 
 **Q43.** DynamoDB consistency types?
 
-> Eventually consistent reads (default, cheaper). Strongly consistent reads (request option, 2x cost, no lag). Use strong consistency: financial balances, inventory counts.
->
-
+> Eventually consistent reads (default, cheaper).
+> Strongly consistent reads (request option, 2x cost, no lag).
+> Use strong consistency: financial balances, inventory counts.
 
 **Q44.** RDS feature for compliance by maintaining automated backups?
 
-> Automated backups — daily snapshot + transaction logs every 5 min. PITR = Point-In-Time Recovery — restore to any 5-minute window. Retention: 1-35 days (you configure).
->
-
+> Automated backups — daily snapshot + transaction logs every 5 min.
+> PITR = Point-In-Time Recovery — restore to any 5-minute window.
+> Retention: 1-35 days (you configure).
 
 **Q45.** RDS automated backup retention period?
 
-> 1 to 35 days. Default varies by engine. Manual snapshots: kept UNTIL YOU DELETE THEM (no expiry).
->
-
+> 1 to 35 days. Default varies by engine.
+> Manual snapshots: kept UNTIL YOU DELETE THEM (no expiry).
 
 **Q46.** SQL queries on S3 data without servers?
 
 > Amazon Athena — serverless, no cluster to manage, pay per TB scanned.
->
-
 
 **Q47.** Social network needing to find connections between users?
 
-> Graph database — Amazon Neptune. Nodes=people, Edges=connections. 100x faster than relational JOINs for connected data at scale.
->
-
+> Graph database — Amazon Neptune. Nodes=people, Edges=connections.
+> 100x faster than relational JOINs for connected data at scale.
 
 **Q48.** What is Amazon Redshift Serverless?
 
-> Redshift that auto-provisions and scales capacity. Pay per RPU-second. Good for sporadic analytics workloads. RPU = Redshift Processing Unit.
->
-
+> Redshift that auto-provisions and scales capacity.
+> Pay per RPU-second. Good for sporadic analytics workloads.
+> RPU = Redshift Processing Unit.
 
 **Q49.** Purpose of RDS parameter group?
 
-> Container for DB engine configuration values. Like my.cnf for MySQL or postgresql.conf. Managed by AWS in RDS. Static parameters: require reboot. Dynamic: applied immediately.
->
-
+> Container for DB engine configuration values.
+> Like my.cnf for MySQL or postgresql.conf. Managed by AWS in RDS.
+> Static parameters: require reboot. Dynamic: applied immediately.
 
 **Q50.** Which is correct about DynamoDB? A) Must manage servers  B) Supports SQL natively C) Single-digit ms latency  D) Key-value only
 
-> C — Single-digit millisecond performance at ANY scale. A is wrong: serverless. B: uses its own API (PartiQL for SQL-like). D: key-value AND document, with GSI for rich queries.
->
+> C — Single-digit millisecond performance at ANY scale.
+> A is wrong: serverless. B: uses its own API (PartiQL for SQL-like).
+> D: key-value AND document, with GSI for rich queries.
 
-
-*DAY 5 COMPLETE*
-
+DAY 5 COMPLETE
 *Tomorrow: Day 6 — Networking & Content Delivery*
 
 ## Day 6 — NETWORKING & CONTENT DELIVERY
@@ -2117,306 +1963,299 @@ API Gateway: create/manage APIs, works with Lambda for serverless APIs
 
 **Q1.** What is a VPC?
 
-> Virtual Private Cloud — your logically isolated private network in AWS. You define IP range (CIDR), subnets, routes, gateways, security rules. Like your T. Rowe network today but in the cloud. CIDR: 10.0.0.0/16 = first 16 bits fixed = 65,536 possible IPs.
->
-
+> Virtual Private Cloud — your logically isolated private network in AWS.
+> You define IP range (CIDR), subnets, routes, gateways, security rules.
+> Like your T. Rowe network today but in the cloud.
+> CIDR: 10.0.0.0/16 = first 16 bits fixed = 65,536 possible IPs.
 
 **Q2.** Difference between public and private subnet?
 
-> Public: has route to Internet Gateway (0.0.0.0/0 → IGW). Internet can reach resources. Use for: web servers, load balancers. Private: no direct internet route. Internet cannot reach resources. Use for: databases, application servers.
->
-
+> Public: has route to Internet Gateway (0.0.0.0/0 → IGW).
+> Internet can reach resources. Use for: web servers, load balancers.
+> Private: no direct internet route. Internet cannot reach resources.
+> Use for: databases, application servers.
 
 **Q3.** What is an Internet Gateway?
 
-> VPC component allowing resources to communicate with internet. Bidirectional. Horizontally scaled, redundant, HA. FREE to attach. ONE IGW per VPC. Performs NAT for public IPs.
->
-
+> VPC component allowing resources to communicate with internet.
+> Bidirectional. Horizontally scaled, redundant, HA. FREE to attach.
+> ONE IGW per VPC. Performs NAT for public IPs.
 
 **Q4.** What is a NAT Gateway?
 
-> Allows private subnet instances to initiate OUTBOUND internet connections. Internet CANNOT initiate connection back in (one-way only). Managed service. Must be placed in PUBLIC subnet. Use for: EC2 patching, external API calls from private instances.
->
-
+> Allows private subnet instances to initiate OUTBOUND internet connections.
+> Internet CANNOT initiate connection back in (one-way only).
+> Managed service. Must be placed in PUBLIC subnet.
+> Use for: EC2 patching, external API calls from private instances.
 
 **Q5.** Where must a NAT Gateway be placed?
 
-> In a PUBLIC subnet. It needs internet access (via IGW) itself to forward traffic. NAT in private subnet = broken. Place one in EACH AZ for HA.
->
-
+> In a PUBLIC subnet. It needs internet access (via IGW) itself to forward traffic.
+> NAT in private subnet = broken. Place one in EACH AZ for HA.
 
 **Q6.** What is a Security Group?
 
-> Virtual firewall at INSTANCE level. Stateful. ALLOW rules only. All rules evaluated simultaneously (no order). Default: deny all inbound. Applied to: EC2, RDS, ELB, Lambda (in VPC), ElastiCache.
->
-
+> Virtual firewall at INSTANCE level. Stateful. ALLOW rules only.
+> All rules evaluated simultaneously (no order). Default: deny all inbound.
+> Applied to: EC2, RDS, ELB, Lambda (in VPC), ElastiCache.
 
 **Q7.** What does "stateful" mean for Security Groups?
 
-> Return traffic automatically allowed. If inbound port 443 allowed, response traffic outbound is automatically permitted. Don't need outbound rule for the response. Remembers connections.
->
-
+> Return traffic automatically allowed. If inbound port 443 allowed,
+> response traffic outbound is automatically permitted.
+> Don't need outbound rule for the response. Remembers connections.
 
 **Q8.** What is a Network ACL?
 
-> Firewall at SUBNET level. Stateless. ALLOW + DENY rules. Rules evaluated by number order (lowest first, first match wins). Applies to ALL resources in the subnet automatically.
->
-
+> Firewall at SUBNET level. Stateless. ALLOW + DENY rules.
+> Rules evaluated by number order (lowest first, first match wins).
+> Applies to ALL resources in the subnet automatically.
 
 **Q9.** What does "stateless" mean for NACLs?
 
-> Must explicitly allow BOTH inbound AND outbound traffic. Response traffic NOT automatically allowed. Must add outbound rules for ephemeral ports (1024-65535) to allow responses back out.
->
-
+> Must explicitly allow BOTH inbound AND outbound traffic.
+> Response traffic NOT automatically allowed. Must add outbound rules
+> for ephemeral ports (1024-65535) to allow responses back out.
 
 **Q10.** Can NACLs have Deny rules?
 
-> YES — unlike Security Groups, NACLs support explicit Deny rules. Use to: block specific IP address from accessing your VPC.
->
-
+> YES — unlike Security Groups, NACLs support explicit Deny rules.
+> Use to: block specific IP address from accessing your VPC.
 
 **Q11.** Security Groups operate at which level?
 
 > Instance level — EC2, RDS, Lambda (in VPC), ELB, ElastiCache, etc.
->
-
 
 **Q12.** NACLs operate at which level?
 
-> Subnet level — applies to ALL resources within the subnet. One NACL per subnet. One NACL can cover multiple subnets.
->
-
+> Subnet level — applies to ALL resources within the subnet.
+> One NACL per subnet. One NACL can cover multiple subnets.
 
 **Q13.** Company wants to block a specific IP from accessing VPC?
 
-> Network ACL — add explicit DENY rule for that IP. Security Groups cannot do Deny rules, only NACLs can.
->
-
+> Network ACL — add explicit DENY rule for that IP.
+> Security Groups cannot do Deny rules, only NACLs can.
 
 **Q14.** What is VPC Peering?
 
-> Direct networking connection between two VPCs for private communication. Works across accounts and regions. No overlapping IP ranges allowed. NOT transitive: A↔B + B↔C does NOT give A↔C access.
->
-
+> Direct networking connection between two VPCs for private communication.
+> Works across accounts and regions. No overlapping IP ranges allowed.
+> NOT transitive: A↔B + B↔C does NOT give A↔C access.
 
 **Q15.** Is VPC Peering transitive?
 
-> NO. Each pair needs a direct peering connection. 10 VPCs = 45 peering connections needed = complex mesh. Use TGW instead.
->
-
+> NO. Each pair needs a direct peering connection.
+> 10 VPCs = 45 peering connections needed = complex mesh. Use TGW instead.
 
 **Q16.** What problem does Transit Gateway solve?
 
-> Hub-and-spoke model connecting all VPCs and on-premises networks. Transitive routing: A → TGW → C without direct A↔C peering. 50 VPCs + DX/VPN = just 51 TGW attachments instead of 1,225 peerings.
->
-
+```
+Hub-and-spoke model connecting all VPCs and on-premises networks.
+Transitive routing: A → TGW → C without direct A↔C peering.
+50 VPCs + DX/VPN = just 51 TGW attachments instead of 1,225 peerings.
+```
 
 **Q17.** Difference between VPN Gateway and Direct Connect?
 
-> VPN: encrypted over PUBLIC internet. Hours to set up. Cheap. Variable performance. Direct Connect: PRIVATE fiber. Weeks to set up. Expensive. Consistent low latency. EXAM: "consistent performance" → DX. "quick/cheap" → VPN.
->
-
+```
+VPN: encrypted over PUBLIC internet. Hours to set up. Cheap. Variable performance.
+Direct Connect: PRIVATE fiber. Weeks to set up. Expensive. Consistent low latency.
+EXAM: "consistent performance" → DX. "quick/cheap" → VPN.
+```
 
 **Q18.** What is Amazon CloudFront?
 
-> CDN (Content Delivery Network) — caches content at 400+ edge locations. Also: DDoS protection (Shield), HTTPS/TLS termination, geo-restriction. Reduces latency globally. HTTP/HTTPS only.
->
-
+> CDN (Content Delivery Network) — caches content at 400+ edge locations.
+> Also: DDoS protection (Shield), HTTPS/TLS termination, geo-restriction.
+> Reduces latency globally. HTTP/HTTPS only.
 
 **Q19.** What is Amazon Route 53?
 
-> Managed DNS service. Also: domain registration, health checks, traffic routing. Name: DNS runs on port 53. DNS = translates domain names (example.com) to IP addresses.
->
-
+> Managed DNS service. Also: domain registration, health checks, traffic routing.
+> Name: DNS runs on port 53.
+> DNS = translates domain names (example.com) to IP addresses.
 
 **Q20.** Which Route 53 policy splits 10% traffic to new app version?
 
-> Weighted routing — assign weights (10% new, 90% existing). Use for: A/B testing, blue/green deployments, canary releases.
->
-
+> Weighted routing — assign weights (10% new, 90% existing).
+> Use for: A/B testing, blue/green deployments, canary releases.
 
 **Q21.** Which Route 53 policy routes to lowest latency region?
 
-> Latency-based routing — routes to region with lowest measured latency. Based on actual network latency, not geographic distance.
->
-
+> Latency-based routing — routes to region with lowest measured latency.
+> Based on actual network latency, not geographic distance.
 
 **Q22.** Which Route 53 policy routes by user's physical location?
 
-> Geolocation routing — routes based on user's geographic location. Use for: data compliance, content localization, country restrictions.
->
-
+> Geolocation routing — routes based on user's geographic location.
+> Use for: data compliance, content localization, country restrictions.
 
 **Q23.** Difference between CloudFront and Global Accelerator?
 
-> CloudFront: CACHES content at edge. HTTP/HTTPS only. CDN. Global Accelerator: ROUTES traffic over AWS private network. TCP/UDP. No caching. Provides 2 static anycast IPs. EXAM: "cache images globally" → CF. "2 static IPs whitelist" → GA.
->
-
+```
+CloudFront: CACHES content at edge. HTTP/HTTPS only. CDN.
+Global Accelerator: ROUTES traffic over AWS private network. TCP/UDP.
+                    No caching. Provides 2 static anycast IPs.
+EXAM: "cache images globally" → CF. "2 static IPs whitelist" → GA.
+```
 
 **Q24.** What is Amazon API Gateway?
 
-> Create, publish, manage, and secure APIs at any scale. Works with Lambda for serverless APIs. Handles: auth, throttling, caching. JWT = JSON Web Token (secure authentication token).
->
-
+> Create, publish, manage, and secure APIs at any scale.
+> Works with Lambda for serverless APIs. Handles: auth, throttling, caching.
+> JWT = JSON Web Token (secure authentication token).
 
 **Q25.** Company in US wants low latency for Asian users?
 
-> Amazon CloudFront — caches content at edge locations near Asian users. Tokyo, Singapore, Sydney, Mumbai, Seoul, Hong Kong — all have edge locations.
->
-
+> Amazon CloudFront — caches content at edge locations near Asian users.
+> Tokyo, Singapore, Sydney, Mumbai, Seoul, Hong Kong — all have edge locations.
 
 **Q26.** What does Route 53 Failover routing do?
 
-> Routes to primary when healthy. Automatically switches to secondary when primary fails health checks. Active-passive disaster recovery.
->
-
+> Routes to primary when healthy. Automatically switches to secondary when
+> primary fails health checks. Active-passive disaster recovery.
 
 **Q27.** Which is NOT a valid Route 53 routing policy? A) Simple  B) Weighted  C) Geolocation  D) Alphabetical
 
-> D. Valid: Simple, Weighted, Latency, Failover, Geolocation, Geoproximity, Multivalue, IP-based.
->
-
+> D. Valid: Simple, Weighted, Latency, Failover, Geolocation,
+> Geoproximity, Multivalue, IP-based.
 
 **Q28.** What is an Elastic IP address?
 
-> Static public IPv4 address. Persists even when EC2 stops. Reassign to new instance instantly. FREE when associated with running EC2. CHARGED ($0.005/hr) when not associated or instance stopped.
->
-
+> Static public IPv4 address. Persists even when EC2 stops.
+> Reassign to new instance instantly. FREE when associated with running EC2.
+> CHARGED ($0.005/hr) when not associated or instance stopped.
 
 **Q29.** Two main firewall options and their levels?
 
-> Security Groups (instance level, stateful, allow only) + Network ACLs (subnet level, stateless, allow AND deny). Two layers of defense in VPC architecture.
->
-
+> Security Groups (instance level, stateful, allow only) +
+> Network ACLs (subnet level, stateless, allow AND deny).
+> Two layers of defense in VPC architecture.
 
 **Q30.** Developer wants to connect on-premises to AWS securely and quickly?
 
-> Site-to-Site VPN using VPN Gateway — hours to set up, encrypted. CGW = Customer Gateway (your VPN device). VGW = Virtual Private Gateway (AWS side).
->
-
+> Site-to-Site VPN using VPN Gateway — hours to set up, encrypted.
+> CGW = Customer Gateway (your VPN device).
+> VGW = Virtual Private Gateway (AWS side).
 
 **Q31.** Financial company needs consistent low-latency connectivity to AWS?
 
-> AWS Direct Connect — dedicated private fiber, consistent performance. 1 Gbps, 10 Gbps, 100 Gbps options. Through colocation providers (Equinix).
->
-
+> AWS Direct Connect — dedicated private fiber, consistent performance.
+> 1 Gbps, 10 Gbps, 100 Gbps options. Through colocation providers (Equinix).
 
 **Q32.** What is the default VPC?
 
-> Auto-created in each region on new account. Pre-configured with IGW, public subnets (one per AZ), main route table (internet access). CIDR: 172.31.0.0/16. Less secure for production — use custom VPCs.
->
-
+> Auto-created in each region on new account. Pre-configured with
+> IGW, public subnets (one per AZ), main route table (internet access).
+> CIDR: 172.31.0.0/16. Less secure for production — use custom VPCs.
 
 **Q33.** Which service provides automatic DDoS protection for CloudFront?
 
-> AWS Shield Standard — free, automatic, all customers, Layers 3 & 4. Shield Advanced: $3,000+/month, Layer 7, 24/7 DRT team, cost protection. DRT = DDoS Response Team.
->
-
+> AWS Shield Standard — free, automatic, all customers, Layers 3 & 4.
+> Shield Advanced: $3,000+/month, Layer 7, 24/7 DRT team, cost protection.
+> DRT = DDoS Response Team.
 
 **Q34.** Restrict S3 bucket to only your VPC?
 
-> VPC Endpoint (Gateway Endpoint for S3) — private access, no internet. Traffic stays on AWS network. FREE gateway endpoint.
->
-
+> VPC Endpoint (Gateway Endpoint for S3) — private access, no internet.
+> Traffic stays on AWS network. FREE gateway endpoint.
 
 **Q35.** What is a VPC Endpoint?
 
-> Private connection between VPC and AWS services. No internet, NAT, or DX needed. Gateway Endpoint: S3 and DynamoDB only. FREE. Added to route table. Interface Endpoint: 100s of AWS services. Creates ENI with private IP. Charged.
->
-
+> Private connection between VPC and AWS services. No internet, NAT, or DX needed.
+> Gateway Endpoint: S3 and DynamoDB only. FREE. Added to route table.
+> Interface Endpoint: 100s of AWS services. Creates ENI with private IP. Charged.
 
 **Q36.** Which VPC Endpoint type works like an ENI?
 
-> Interface Endpoint — creates ENI in your subnet with private IP. ENI = Elastic Network Interface (virtual network card). Traffic to AWS service goes to private IP instead of public endpoint.
->
-
+> Interface Endpoint — creates ENI in your subnet with private IP.
+> ENI = Elastic Network Interface (virtual network card).
+> Traffic to AWS service goes to private IP instead of public endpoint.
 
 **Q37.** Which VPC Endpoint type for S3 and DynamoDB?
 
 > Gateway Endpoint — free, added to route table, S3 and DynamoDB ONLY.
->
-
 
 **Q38.** How many route tables can a subnet be associated with?
 
-> ONE at a time. Each subnet has exactly one route table. One route table can cover MANY subnets.
->
-
+> ONE at a time. Each subnet has exactly one route table.
+> One route table can cover MANY subnets.
 
 **Q39.** What wins in a route table (most specific or least)?
 
-> Most specific (longest prefix) wins. /32 > /24 > /16 > /0. Example: traffic to 10.0.1.50 → /32 wins over /0.
->
-
+> Most specific (longest prefix) wins.
+> /32 > /24 > /16 > /0. Example: traffic to 10.0.1.50 → /32 wins over /0.
 
 **Q40.** Company needs global app with two static IPs for whitelisting?
 
-> AWS Global Accelerator — provides 2 static anycast IPs that never change. Anycast = same IP announced from multiple locations. Traffic → nearest.
->
-
+> AWS Global Accelerator — provides 2 static anycast IPs that never change.
+> Anycast = same IP announced from multiple locations. Traffic → nearest.
 
 **Q41.** Difference between Route 53 Simple and Multivalue routing?
 
-> Simple: returns ONE record (no health checks). Multivalue: returns up to 8 HEALTHY records (requires health checks). Multivalue is NOT a full load balancer replacement — use ELB for that.
->
-
+> Simple: returns ONE record (no health checks).
+> Multivalue: returns up to 8 HEALTHY records (requires health checks).
+> Multivalue is NOT a full load balancer replacement — use ELB for that.
 
 **Q42.** What component connects EC2 to the network?
 
-> ENI — Elastic Network Interface (virtual NIC). Each instance has at least one ENI with private IP. Can attach multiple ENIs to one EC2 (multiple network interfaces). NIC = Network Interface Card (physical equivalent).
->
-
+> ENI — Elastic Network Interface (virtual NIC).
+> Each instance has at least one ENI with private IP.
+> Can attach multiple ENIs to one EC2 (multiple network interfaces).
+> NIC = Network Interface Card (physical equivalent).
 
 **Q43.** What is VPC Flow Logs?
 
-> Captures IP traffic metadata (source/dest IPs, ports, protocol, allow/reject). Does NOT capture actual packet content. Destinations: CloudWatch Logs, S3 bucket, Kinesis Firehose.
->
-
+> Captures IP traffic metadata (source/dest IPs, ports, protocol, allow/reject).
+> Does NOT capture actual packet content.
+> Destinations: CloudWatch Logs, S3 bucket, Kinesis Firehose.
 
 **Q44.** Which service filters malicious web traffic?
 
-> AWS WAF (Web Application Firewall) — protects at Layer 7. Blocks: SQL injection, XSS, rate limiting. Works with: CloudFront, ALB, API Gateway. XSS = Cross-Site Scripting. SQL injection = attacker injects SQL code.
->
-
+> AWS WAF (Web Application Firewall) — protects at Layer 7.
+> Blocks: SQL injection, XSS, rate limiting.
+> Works with: CloudFront, ALB, API Gateway.
+> XSS = Cross-Site Scripting. SQL injection = attacker injects SQL code.
 
 **Q45.** Route 53 monitors endpoint health. What feature?
 
-> Route 53 Health Checks — monitors endpoints and removes unhealthy ones from DNS responses. Checks every 10 or 30 seconds.
->
-
+> Route 53 Health Checks — monitors endpoints and removes unhealthy
+> ones from DNS responses. Checks every 10 or 30 seconds.
 
 **Q46.** What does CloudFront's "origin" refer to?
 
-> The source of original content — S3 bucket, EC2, ALB, or any HTTP server. Multiple origins per distribution with path-based routing. /images/* → S3, /api/* → ALB, /* → default.
->
-
+```
+The source of original content — S3 bucket, EC2, ALB, or any HTTP server.
+Multiple origins per distribution with path-based routing.
+/images/* → S3, /api/* → ALB, /* → default.
+```
 
 **Q47.** Accelerate file uploads from worldwide users to S3?
 
-> S3 Transfer Acceleration — uses CloudFront edge locations. Upload to mybucket.s3-accelerate.amazonaws.com. Users in Brazil upload → nearest edge → AWS backbone → S3 in US.
->
-
+```
+S3 Transfer Acceleration — uses CloudFront edge locations.
+Upload to mybucket.s3-accelerate.amazonaws.com.
+Users in Brazil upload → nearest edge → AWS backbone → S3 in US.
+```
 
 **Q48.** Manage routing between 50 VPCs across multiple accounts?
 
-> AWS Transit Gateway — hub-and-spoke, 50 attachments vs 1,225 peerings. Control which VPCs talk to each other via TGW route tables.
->
-
+> AWS Transit Gateway — hub-and-spoke, 50 attachments vs 1,225 peerings.
+> Control which VPCs talk to each other via TGW route tables.
 
 **Q49.** Key difference between Security Group rules and NACL evaluation?
 
-> Security Groups: ALL rules evaluated simultaneously, then decision made. NACLs: rules evaluated in NUMBER ORDER, first match STOPS evaluation.
->
-
+> Security Groups: ALL rules evaluated simultaneously, then decision made.
+> NACLs: rules evaluated in NUMBER ORDER, first match STOPS evaluation.
 
 **Q50.** Technical difference between CloudFront and Global Accelerator?
 
-> CloudFront: CACHES content at edge. HTTP/HTTPS. CDN. Best for static content, website performance. Global Accelerator: ROUTES traffic over AWS private network. ANY TCP/UDP. No caching. Best for gaming, IoT, non-HTTP, static IPs.
->
+> CloudFront: CACHES content at edge. HTTP/HTTPS. CDN.
+>           Best for static content, website performance.
+> Global Accelerator: ROUTES traffic over AWS private network. ANY TCP/UDP.
+>                    No caching. Best for gaming, IoT, non-HTTP, static IPs.
 
-
-*DAY 6 COMPLETE*
-
+DAY 6 COMPLETE
 *Tomorrow: Day 7 — Security Services*
 
 ## Day 7 — SECURITY SERVICES
@@ -2476,306 +2315,299 @@ STS: Security Token Service — issues temporary credentials for roles.
 
 **Q1.** What does AWS KMS do?
 
-> Creates and manages encryption keys (CMKs) used to encrypt data. Keys stored securely in HSM hardware. Access controlled by IAM. Every use logged in CloudTrail. Auto-rotation annually. HSM = Hardware Security Module (physical hardware for crypto keys).
->
-
+> Creates and manages encryption keys (CMKs) used to encrypt data.
+> Keys stored securely in HSM hardware. Access controlled by IAM.
+> Every use logged in CloudTrail. Auto-rotation annually.
+> HSM = Hardware Security Module (physical hardware for crypto keys).
 
 **Q2.** What does CloudTrail record?
 
-> Every API call in your AWS account — every action (console click, CLI command, SDK call). Records: WHO, WHAT, WHEN, WHERE (IP address).
->
-
+> Every API call in your AWS account — every action (console click,
+> CLI command, SDK call). Records: WHO, WHAT, WHEN, WHERE (IP address).
 
 **Q3.** Is CloudTrail enabled by default?
 
-> YES — 90-day event history free in console. For long-term: create Trail to deliver logs to S3 bucket. Management events: control plane (creating/deleting resources). Data events: S3 reads/writes (extra cost).
->
-
+> YES — 90-day event history free in console.
+> For long-term: create Trail to deliver logs to S3 bucket.
+> Management events: control plane (creating/deleting resources).
+> Data events: S3 reads/writes (extra cost).
 
 **Q4.** Difference between CloudTrail and CloudWatch?
 
-> CloudTrail: "WHO did WHAT?" — API audit log. CloudWatch: "HOW is it performing?" — metrics (CPU, latency, errors). EXAM: "audit log" = CloudTrail. "CPU alarm" = CloudWatch.
->
-
+> CloudTrail: "WHO did WHAT?" — API audit log.
+> CloudWatch: "HOW is it performing?" — metrics (CPU, latency, errors).
+> EXAM: "audit log" = CloudTrail. "CPU alarm" = CloudWatch.
 
 **Q5.** Difference between CloudTrail and AWS Config?
 
-> CloudTrail: WHO made API calls (activity). Config: WHAT resources looked like before/after (configuration history + compliance). Use both: Config = WHAT changed. CloudTrail = WHO changed it.
->
-
+> CloudTrail: WHO made API calls (activity).
+> Config: WHAT resources looked like before/after (configuration history + compliance).
+> Use both: Config = WHAT changed. CloudTrail = WHO changed it.
 
 **Q6.** Who changed a security group last Tuesday?
 
-> AWS CloudTrail — records all API calls including SG modifications. Filter by: EventName=AuthorizeSecurityGroupIngress, date range.
->
-
+> AWS CloudTrail — records all API calls including SG modifications.
+> Filter by: EventName=AuthorizeSecurityGroupIngress, date range.
 
 **Q7.** Verify EC2 instances always used encrypted EBS volumes?
 
-> AWS Config — tracks configuration history and runs compliance rules. Rule: ec2-ebs-encryption-by-default.
->
-
+> AWS Config — tracks configuration history and runs compliance rules.
+> Rule: ec2-ebs-encryption-by-default.
 
 **Q8.** What does Amazon GuardDuty do?
 
-> Intelligent threat detection using ML, anomaly detection, and threat intel. Detects: compromised credentials, cryptomining, port scanning, data exfiltration. Analyzes: CloudTrail, VPC Flow Logs, DNS logs. No agents needed.
->
-
+> Intelligent threat detection using ML, anomaly detection, and threat intel.
+> Detects: compromised credentials, cryptomining, port scanning, data exfiltration.
+> Analyzes: CloudTrail, VPC Flow Logs, DNS logs. No agents needed.
 
 **Q9.** Does GuardDuty require agents on EC2?
 
-> NO. Fully managed. Reads logs that already exist. Enable → click "Enable" → monitoring starts. No software to install.
->
-
+```
+NO. Fully managed. Reads logs that already exist.
+Enable → click "Enable" → monitoring starts. No software to install.
+```
 
 **Q10.** What does Amazon Inspector do?
 
-> Automated vulnerability assessment for EC2 and container images. Finds: unpatched CVEs, network exposure (open ports), software vulns. CVE = Common Vulnerabilities and Exposures (public database of security flaws). RCE = Remote Code Execution (attacker runs code on your server).
->
-
+> Automated vulnerability assessment for EC2 and container images.
+> Finds: unpatched CVEs, network exposure (open ports), software vulns.
+> CVE = Common Vulnerabilities and Exposures (public database of security flaws).
+> RCE = Remote Code Execution (attacker runs code on your server).
 
 **Q11.** What does Amazon Macie do?
 
-> ML to discover and protect sensitive data (PII, credentials) in S3. Finds: SSNs, credit card numbers, AWS access keys, medical records. PII = Personally Identifiable Information.
->
-
+> ML to discover and protect sensitive data (PII, credentials) in S3.
+> Finds: SSNs, credit card numbers, AWS access keys, medical records.
+> PII = Personally Identifiable Information.
 
 **Q12.** What is AWS Security Hub?
 
-> Central security dashboard aggregating findings from multiple services. Combines: GuardDuty, Inspector, Macie, Config, IAM Analyzer, third-party. CSPM compliance checks. Multi-account support. CSPM = Cloud Security Posture Management.
->
-
+> Central security dashboard aggregating findings from multiple services.
+> Combines: GuardDuty, Inspector, Macie, Config, IAM Analyzer, third-party.
+> CSPM compliance checks. Multi-account support.
+> CSPM = Cloud Security Posture Management.
 
 **Q13.** Difference between Shield Standard and Advanced?
 
-> Standard: FREE, automatic, ALL customers, Layers 3 and 4. Advanced: $3,000+/month, Layer 7 app DDoS, 24/7 DRT team, cost protection. SYN flood = DDoS attack type (send many SYN packets without completing handshake).
->
-
+> Standard: FREE, automatic, ALL customers, Layers 3 and 4.
+> Advanced: $3,000+/month, Layer 7 app DDoS, 24/7 DRT team, cost protection.
+> SYN flood = DDoS attack type (send many SYN packets without completing handshake).
 
 **Q14.** What does AWS WAF protect against?
 
-> SQL injection, XSS, rate limiting, bot attacks at Layer 7. Works with: CloudFront, ALB, API Gateway. AWS Managed Rules: pre-built for common threats. Custom rules: you write.
->
-
+> SQL injection, XSS, rate limiting, bot attacks at Layer 7.
+> Works with: CloudFront, ALB, API Gateway.
+> AWS Managed Rules: pre-built for common threats. Custom rules: you write.
 
 **Q15.** Which services can AWS WAF protect?
 
 > CloudFront (edge), Application Load Balancer (regional), API Gateway.
->
-
 
 **Q16.** What is AWS Secrets Manager?
 
-> Store, rotate, and manage secrets (DB passwords, API keys, tokens). AUTO-ROTATION built in for RDS, Redshift, DocumentDB. $0.40/secret/month. No credentials hardcoded in code.
->
-
+> Store, rotate, and manage secrets (DB passwords, API keys, tokens).
+> AUTO-ROTATION built in for RDS, Redshift, DocumentDB.
+> $0.40/secret/month. No credentials hardcoded in code.
 
 **Q17.** Benefit of Secrets Manager over storing credentials in code?
 
-> Never hardcoded. Auto-rotation without code changes. Full audit trail. Access via IAM. Encrypted at rest (KMS).
->
-
+> Never hardcoded. Auto-rotation without code changes.
+> Full audit trail. Access via IAM. Encrypted at rest (KMS).
 
 **Q18.** Difference between Secrets Manager and Parameter Store?
 
-> Secrets Manager: built for secrets, auto-rotation, $0.40/secret/month. Parameter Store: config + secrets, FREE standard tier, no auto-rotation. Use SM: DB passwords with rotation needed. Use PS: app config values, feature flags, connection strings.
->
-
+> Secrets Manager: built for secrets, auto-rotation, $0.40/secret/month.
+> Parameter Store: config + secrets, FREE standard tier, no auto-rotation.
+> Use SM: DB passwords with rotation needed.
+> Use PS: app config values, feature flags, connection strings.
 
 **Q19.** What does ACM provide?
 
-> Free SSL/TLS certificates for AWS services with automatic renewal. Never pay for cert, never worry about expiry. Works with: CloudFront, ALB, API Gateway. SSL/TLS = protocol for encrypting data in transit (HTTPS).
->
-
+> Free SSL/TLS certificates for AWS services with automatic renewal.
+> Never pay for cert, never worry about expiry.
+> Works with: CloudFront, ALB, API Gateway.
+> SSL/TLS = protocol for encrypting data in transit (HTTPS).
 
 **Q20.** What is Amazon Cognito?
 
-> User authentication for web/mobile apps. User Pools: authentication (sign-up, sign-in, MFA, social login). Returns JWT tokens (not AWS credentials). Identity Pools: authorization (exchange JWT for temporary AWS credentials). OAuth = Open Authorization standard for social login.
->
-
+> User authentication for web/mobile apps.
+> User Pools: authentication (sign-up, sign-in, MFA, social login).
+>            Returns JWT tokens (not AWS credentials).
+> Identity Pools: authorization (exchange JWT for temporary AWS credentials).
+> OAuth = Open Authorization standard for social login.
 
 **Q21.** What is AWS Artifact?
 
-> Portal providing access to AWS compliance reports and certifications. Download: SOC 1/2/3, PCI DSS, ISO 27001, FedRAMP, HIPAA BAA. FREE. No waiting. Download in minutes for auditors.
->
-
+> Portal providing access to AWS compliance reports and certifications.
+> Download: SOC 1/2/3, PCI DSS, ISO 27001, FedRAMP, HIPAA BAA.
+> FREE. No waiting. Download in minutes for auditors.
 
 **Q22.** Company needs compliance reports proving AWS is PCI compliant?
 
-> AWS Artifact — download PCI DSS Attestation of Compliance directly. PCI DSS = Payment Card Industry Data Security Standard.
->
-
+> AWS Artifact — download PCI DSS Attestation of Compliance directly.
+> PCI DSS = Payment Card Industry Data Security Standard.
 
 **Q23.** What does Trusted Advisor check?
 
-> Five categories: 1. Cost Optimization (oversized instances) 2. Performance (IOPS limits) 3. Security (public S3 buckets, open ports) 4. Fault Tolerance (no Multi-AZ on RDS) 5. Service Limits/Quotas (approaching limits)
->
-
+> Five categories:
+> 1. Cost Optimization (oversized instances)
+> 2. Performance (IOPS limits)
+> 3. Security (public S3 buckets, open ports)
+> 4. Fault Tolerance (no Multi-AZ on RDS)
+> 5. Service Limits/Quotas (approaching limits)
 
 **Q24.** Which Trusted Advisor checks are free?
 
-> 7 core checks including S3 bucket permissions, SG open ports, root MFA, IAM use, service limits. Full checks require Business or Enterprise support plan.
->
-
+> 7 core checks including S3 bucket permissions, SG open ports,
+> root MFA, IAM use, service limits.
+> Full checks require Business or Enterprise support plan.
 
 **Q25.** Which support plan gives access to ALL Trusted Advisor checks?
 
 > Business ($100+/month), Enterprise On-Ramp ($5,500+), or Enterprise ($15,000+).
->
-
 
 **Q26.** Startup left S3 bucket publicly accessible. Which alerts them?
 
-> Trusted Advisor (security check) and AWS Config (rule). Also: S3 Block Public Access (account-level prevention setting).
->
-
+> Trusted Advisor (security check) and AWS Config (rule).
+> Also: S3 Block Public Access (account-level prevention setting).
 
 **Q27.** How does GuardDuty detect threats?
 
-> ML behavior baseline + anomaly detection + threat intelligence feeds. Learns: "admin always logs in from New York at 9 AM" Detects: "admin login from Russia at 3 AM" → HIGH severity alert.
->
-
+> ML behavior baseline + anomaly detection + threat intelligence feeds.
+> Learns: "admin always logs in from New York at 9 AM"
+> Detects: "admin login from Russia at 3 AM" → HIGH severity alert.
 
 **Q28.** Which service monitors CPU and alerts when it exceeds 80%?
 
-> Amazon CloudWatch — create metric alarm on CPUUtilization. Alarm states: OK, ALARM, INSUFFICIENT_DATA. Memory metrics require CloudWatch Agent (not available by default).
->
-
+> Amazon CloudWatch — create metric alarm on CPUUtilization.
+> Alarm states: OK, ALARM, INSUFFICIENT_DATA.
+> Memory metrics require CloudWatch Agent (not available by default).
 
 **Q29.** What is a CloudWatch Alarm?
 
-> Notification triggered when metric crosses a threshold. Actions: SNS notification, Auto Scaling, EC2 action. SNS = Simple Notification Service (sends to email, SMS, etc.).
->
-
+> Notification triggered when metric crosses a threshold.
+> Actions: SNS notification, Auto Scaling, EC2 action.
+> SNS = Simple Notification Service (sends to email, SMS, etc.).
 
 **Q30.** What is Amazon EventBridge?
 
-> Serverless event bus connecting AWS services with automation. Event (EC2 stopped, S3 upload) → Rule → Target (Lambda, SNS, SSM).
->
-
+```
+Serverless event bus connecting AWS services with automation.
+Event (EC2 stopped, S3 upload) → Rule → Target (Lambda, SNS, SSM).
+```
 
 **Q31.** Ensure all S3 buckets are encrypted. Which service?
 
-> AWS Config with rule: s3-bucket-server-side-encryption-enabled. Auto-remediation: detects non-compliant → automatically enables encryption.
->
-
+> AWS Config with rule: s3-bucket-server-side-encryption-enabled.
+> Auto-remediation: detects non-compliant → automatically enables encryption.
 
 **Q32.** Single view of security across all AWS accounts?
 
-> AWS Security Hub — aggregate all security findings into one dashboard. Security account as admin → all member accounts feed findings in.
->
-
+> AWS Security Hub — aggregate all security findings into one dashboard.
+> Security account as admin → all member accounts feed findings in.
 
 **Q33.** What logs does GuardDuty analyze?
 
-> CloudTrail event logs + VPC Flow Logs + Route 53 DNS query logs. No additional setup needed — these logs already exist.
->
-
+> CloudTrail event logs + VPC Flow Logs + Route 53 DNS query logs.
+> No additional setup needed — these logs already exist.
 
 **Q34.** Difference between CloudWatch and CloudTrail for EC2?
 
-> CloudWatch: CPU, memory, network, disk performance (HOW running). CloudTrail: who started/stopped/modified instances (ACTIONS taken).
->
-
+> CloudWatch: CPU, memory, network, disk performance (HOW running).
+> CloudTrail: who started/stopped/modified instances (ACTIONS taken).
 
 **Q35.** What is AWS Systems Manager?
 
-> Manage EC2 infrastructure at scale. Session Manager: browser-based shell, no SSH keys or open port 22. Run Command: execute scripts on 1000s of instances at once. Patch Manager: automate OS patching with maintenance windows.
->
-
+> Manage EC2 infrastructure at scale.
+> Session Manager: browser-based shell, no SSH keys or open port 22.
+> Run Command: execute scripts on 1000s of instances at once.
+> Patch Manager: automate OS patching with maintenance windows.
 
 **Q36.** Which CloudWatch metric requires agent (NOT available by default)?
 
-> Memory utilization — AWS cannot see inside guest OS without agent. Default metrics: CPU, Network, Disk I/O. Memory/disk utilization: require CloudWatch Agent installed on EC2.
->
-
+> Memory utilization — AWS cannot see inside guest OS without agent.
+> Default metrics: CPU, Network, Disk I/O.
+> Memory/disk utilization: require CloudWatch Agent installed on EC2.
 
 **Q37.** Purpose of KMS key rotation?
 
-> Auto-rotates key material annually. Key ID stays same. Old data still decryptable (KMS keeps old versions). Limits exposure window if key is ever compromised.
->
-
+> Auto-rotates key material annually. Key ID stays same.
+> Old data still decryptable (KMS keeps old versions).
+> Limits exposure window if key is ever compromised.
 
 **Q38.** Company wants to auto-rotate RDS passwords every 30 days?
 
-> AWS Secrets Manager — built-in RDS rotation, configurable schedule. Updates password in RDS and in Secrets Manager. App unchanged.
->
-
+> AWS Secrets Manager — built-in RDS rotation, configurable schedule.
+> Updates password in RDS and in Secrets Manager. App unchanged.
 
 **Q39.** Difference between AWS managed keys and customer managed keys?
 
-> AWS managed: auto-created by service, FREE, cannot customize, no audit. Customer managed: you create, $1/month, customize policy, full CloudTrail audit.
->
-
+> AWS managed: auto-created by service, FREE, cannot customize, no audit.
+> Customer managed: you create, $1/month, customize policy, full CloudTrail audit.
 
 **Q40.** Which service detects IAM credentials used from unusual location?
 
-> Amazon GuardDuty — ML detects anomalous credential usage. Login from Russia when user always logs in from New York → HIGH severity.
->
-
+> Amazon GuardDuty — ML detects anomalous credential usage.
+> Login from Russia when user always logs in from New York → HIGH severity.
 
 **Q41.** What does Macie specifically look for in S3?
 
-> PII (SSN, passport, driver's license), financial data (credit cards, bank accounts), credentials (AWS access keys, private keys, HTTP auth), medical records (PHI).
->
-
+> PII (SSN, passport, driver's license), financial data (credit cards, bank accounts),
+> credentials (AWS access keys, private keys, HTTP auth), medical records (PHI).
 
 **Q42.** Compliance frameworks accessible via AWS Artifact?
 
 > SOC 1/2/3, PCI DSS, ISO 27001/27017/27018/9001, FedRAMP, GDPR, ITAR, HIPAA BAA.
->
-
 
 **Q43.** Developer hardcoded RDS password in code. Recommended fix?
 
-> 1. Rotate password immediately (it may be compromised via Git). 2. Store in Secrets Manager. 3. Update app to call Secrets Manager API at runtime. 4. Enable auto-rotation every 90 days.
->
-
+> 1. Rotate password immediately (it may be compromised via Git).
+> 2. Store in Secrets Manager.
+> 3. Update app to call Secrets Manager API at runtime.
+> 4. Enable auto-rotation every 90 days.
 
 **Q44.** What is an AWS Config Rule?
 
-> Evaluates whether resources comply with your configuration policies. AWS managed: 300+ pre-built rules. Custom: Lambda function with your compliance logic.
->
-
+> Evaluates whether resources comply with your configuration policies.
+> AWS managed: 300+ pre-built rules.
+> Custom: Lambda function with your compliance logic.
 
 **Q45.** Full history of changes to EC2 security group over past year?
 
-> AWS Config — configuration timeline showing before/after for every change. CloudTrail tells WHO changed it. Config tells WHAT changed.
->
-
+> AWS Config — configuration timeline showing before/after for every change.
+> CloudTrail tells WHO changed it. Config tells WHAT changed.
 
 **Q46.** What is Amazon Detective?
 
-> Security investigation tool. Visualizes findings from GuardDuty. Shows: IP relationships, API call patterns, connections between events. Reduces investigation from hours to minutes.
->
-
+> Security investigation tool. Visualizes findings from GuardDuty.
+> Shows: IP relationships, API call patterns, connections between events.
+> Reduces investigation from hours to minutes.
 
 **Q47.** Difference between Cognito User Pool and Identity Pool?
 
-> User Pool: authentication (who are you?) → returns JWT tokens. Identity Pool: authorization (here are your AWS permissions) → temp AWS creds.
->
-
+> User Pool: authentication (who are you?) → returns JWT tokens.
+> Identity Pool: authorization (here are your AWS permissions) → temp AWS creds.
 
 **Q48.** What is VPC Flow Logs?
 
-> Captures network traffic metadata. Does NOT capture packet content. Records: source IP, dest IP, ports, protocol, bytes, ACCEPT/REJECT. Send to: CloudWatch Logs, S3, Kinesis Firehose.
->
-
+> Captures network traffic metadata. Does NOT capture packet content.
+> Records: source IP, dest IP, ports, protocol, bytes, ACCEPT/REJECT.
+> Send to: CloudWatch Logs, S3, Kinesis Firehose.
 
 **Q49.** What is the AWS Security Token Service (STS)?
 
-> Issues temporary, limited-privilege credentials for IAM roles. Temp credentials: Access Key ID + Secret Key + Session Token + Expiration. Used by: EC2 instance roles, cross-account access, federation.
->
-
+> Issues temporary, limited-privilege credentials for IAM roles.
+> Temp credentials: Access Key ID + Secret Key + Session Token + Expiration.
+> Used by: EC2 instance roles, cross-account access, federation.
 
 **Q50.** Company considering AWS migration needs compliance certs. Where?
 
-> AWS Artifact — immediate access to all AWS compliance documentation. Log in → download → give to auditor. 5 minutes total. FREE.
->
+```
+AWS Artifact — immediate access to all AWS compliance documentation.
+Log in → download → give to auditor. 5 minutes total. FREE.
+```
 
-
-*DAY 7 COMPLETE*
-
+DAY 7 COMPLETE
 *Tomorrow: Day 8 — Monitoring, Management & Pricing*
 
 ## Day 8 — MONITORING, MANAGEMENT & PRICING
@@ -2836,306 +2668,296 @@ Cost Optimization, Sustainability
 
 **Q1.** What is AWS CloudFormation?
 
-> Infrastructure as Code — define AWS resources in JSON or YAML templates. Deploy as a "stack" — create, update, delete all resources together. Same template + deploy 10 times = same result every time. IaC = Infrastructure as Code (treat infra like software — versioned, repeatable).
->
-
+> Infrastructure as Code — define AWS resources in JSON or YAML templates.
+> Deploy as a "stack" — create, update, delete all resources together.
+> Same template + deploy 10 times = same result every time.
+> IaC = Infrastructure as Code (treat infra like software — versioned, repeatable).
 
 **Q2.** What is a CloudFormation Stack?
 
-> Collection of AWS resources created, updated, deleted as a unit. Template → Stack. Delete stack → all resources deleted automatically. Prevents orphaned resources (forgotten EC2s, security groups, etc.).
->
-
+```
+Collection of AWS resources created, updated, deleted as a unit.
+Template → Stack. Delete stack → all resources deleted automatically.
+Prevents orphaned resources (forgotten EC2s, security groups, etc.).
+```
 
 **Q3.** Benefit of CloudFormation over manually creating resources?
 
-> Repeatability, consistency, version control, disaster recovery (redeploy template). Config drift = gradual deviation from intended configuration over time. CloudFormation Drift Detection finds resources changed outside CloudFormation.
->
-
+> Repeatability, consistency, version control, disaster recovery (redeploy template).
+> Config drift = gradual deviation from intended configuration over time.
+> CloudFormation Drift Detection finds resources changed outside CloudFormation.
 
 **Q4.** Three fundamental AWS pricing principles?
 
-> 1. Pay as you go (no upfront, variable costs). 2. Save when you reserve (1-3 year commits = 72% off). 3. Pay less as you use more (volume discounts).
->
-
+> 1. Pay as you go (no upfront, variable costs).
+> 2. Save when you reserve (1-3 year commits = 72% off).
+> 3. Pay less as you use more (volume discounts).
 
 **Q5.** Is data transfer INTO AWS charged?
 
-> NO — data transfer IN to AWS is ALWAYS FREE. Upload to S3, send to EC2, any inbound = FREE.
->
-
+> NO — data transfer IN to AWS is ALWAYS FREE.
+> Upload to S3, send to EC2, any inbound = FREE.
 
 **Q6.** Is data transfer OUT of AWS charged?
 
-> YES — outbound to internet ~$0.09/GB. S3 → CloudFront: FREE. CloudFront → users: cheaper than S3 direct. Cross-region: ~$0.02/GB. Same region/AZ via private IP: FREE.
->
-
+```
+YES — outbound to internet ~$0.09/GB.
+S3 → CloudFront: FREE. CloudFront → users: cheaper than S3 direct.
+Cross-region: ~$0.02/GB. Same region/AZ via private IP: FREE.
+```
 
 **Q7.** What is the AWS Free Tier?
 
-> Always Free (permanent): Lambda 1M req/month, DynamoDB 25GB, etc. 12-month Free: EC2 t2.micro 750 hrs, S3 5GB, RDS 750 hrs. Short Trials: Redshift 2 months, Lightsail 3 months.
->
-
+> Always Free (permanent): Lambda 1M req/month, DynamoDB 25GB, etc.
+> 12-month Free: EC2 t2.micro 750 hrs, S3 5GB, RDS 750 hrs.
+> Short Trials: Redshift 2 months, Lightsail 3 months.
 
 **Q8.** How many Lambda requests in always-free tier?
 
-> 1 million requests/month FOREVER + 400,000 GB-seconds compute/month. Most small apps run on Lambda completely free permanently.
->
-
+> 1 million requests/month FOREVER + 400,000 GB-seconds compute/month.
+> Most small apps run on Lambda completely free permanently.
 
 **Q9.** What is AWS Cost Explorer?
 
-> Visualize and analyze historical spending. RI recommendations. Forecasting. View by service, tag, region, account. FREE to use. Direction: looking BACKWARD (and forecasting forward).
->
-
+> Visualize and analyze historical spending. RI recommendations. Forecasting.
+> View by service, tag, region, account. FREE to use.
+> Direction: looking BACKWARD (and forecasting forward).
 
 **Q10.** What is AWS Budgets?
 
-> Set spending/usage thresholds and receive alerts. Budget Actions: automatically apply IAM or SCP policies when exceeded. Direction: looking FORWARD (prevent overspend proactively).
->
-
+> Set spending/usage thresholds and receive alerts.
+> Budget Actions: automatically apply IAM or SCP policies when exceeded.
+> Direction: looking FORWARD (prevent overspend proactively).
 
 **Q11.** Which tool provides most granular billing data?
 
-> AWS Cost and Usage Report (CUR) — hourly line-item detail. Delivered to S3. Query with Athena. Used for chargebacks/showbacks. Blended vs unblended cost. RI discounts applied per line item.
->
-
+> AWS Cost and Usage Report (CUR) — hourly line-item detail.
+> Delivered to S3. Query with Athena. Used for chargebacks/showbacks.
+> Blended vs unblended cost. RI discounts applied per line item.
 
 **Q12.** Which tool estimates costs BEFORE deploying?
 
-> AWS Pricing Calculator at calculator.aws. No AWS account needed. FREE. Build estimate: add services → see monthly cost → share URL.
->
-
+```
+AWS Pricing Calculator at calculator.aws. No AWS account needed. FREE.
+Build estimate: add services → see monthly cost → share URL.
+```
 
 **Q13.** Which support plan has a dedicated TAM?
 
-> Enterprise Support ($15,000+/month) — dedicated TAM assigned to your account. Enterprise On-Ramp: pool of shared TAMs (not dedicated).
->
-
+> Enterprise Support ($15,000+/month) — dedicated TAM assigned to your account.
+> Enterprise On-Ramp: pool of shared TAMs (not dedicated).
 
 **Q14.** Which plan for 24/7 phone+chat with 1-hour prod-down response?
 
-> Business Support ($100+/month). Response times: General guidance 24hr, System impaired 12hr, Prod impaired 4hr, Prod DOWN 1 HOUR.
->
-
+> Business Support ($100+/month).
+> Response times: General guidance 24hr, System impaired 12hr,
+> Prod impaired 4hr, Prod DOWN 1 HOUR.
 
 **Q15.** Startup needs AWS support but only $29/month budget?
 
-> Developer Support — email support during business hours. NOT for production workloads (12-hour business-hours response only).
->
-
+> Developer Support — email support during business hours.
+> NOT for production workloads (12-hour business-hours response only).
 
 **Q16.** What is AWS Organizations?
 
-> Central management of multiple AWS accounts. Consolidated billing (one invoice, volume discounts, RI sharing). Service Control Policies (SCPs) for account-level guardrails.
->
-
+> Central management of multiple AWS accounts.
+> Consolidated billing (one invoice, volume discounts, RI sharing).
+> Service Control Policies (SCPs) for account-level guardrails.
 
 **Q17.** What is a Service Control Policy (SCP)?
 
-> Policy at organizational level setting MAXIMUM permission limits. SCPs can only RESTRICT, never GRANT permissions. Example: DENY all services except in us-east-1 and us-west-2.
->
-
+> Policy at organizational level setting MAXIMUM permission limits.
+> SCPs can only RESTRICT, never GRANT permissions.
+> Example: DENY all services except in us-east-1 and us-west-2.
 
 **Q18.** Can an SCP grant permissions to a user?
 
-> NO. SCPs only restrict. Actual permissions still need IAM policies. Effective permissions = SCP (ceiling) AND IAM policies (grant). Must satisfy BOTH to get access.
->
-
+> NO. SCPs only restrict. Actual permissions still need IAM policies.
+> Effective permissions = SCP (ceiling) AND IAM policies (grant).
+> Must satisfy BOTH to get access.
 
 **Q19.** Benefit of consolidated billing in Organizations?
 
-> One bill for all accounts. Volume discounts combined across accounts. RI sharing: unused RI in Account A auto-applies to Account B. Save money by pooling usage for better discount tiers.
->
-
+> One bill for all accounts. Volume discounts combined across accounts.
+> RI sharing: unused RI in Account A auto-applies to Account B.
+> Save money by pooling usage for better discount tiers.
 
 **Q20.** What is AWS Control Tower?
 
-> Sets up and governs a secure multi-account environment. Landing Zone = pre-configured accounts (Management, Log Archive, Security). Guardrails = SCPs + Config rules (Mandatory, Recommended, Elective).
->
-
+> Sets up and governs a secure multi-account environment.
+> Landing Zone = pre-configured accounts (Management, Log Archive, Security).
+> Guardrails = SCPs + Config rules (Mandatory, Recommended, Elective).
 
 **Q21.** Difference between CloudFormation and CDK?
 
-> CloudFormation: templates in JSON or YAML (declarative). CDK: define infra in Python/Java/TypeScript → generates CloudFormation. CDK benefits: loops, functions, type checking, IDE autocomplete.
->
-
+> CloudFormation: templates in JSON or YAML (declarative).
+> CDK: define infra in Python/Java/TypeScript → generates CloudFormation.
+> CDK benefits: loops, functions, type checking, IDE autocomplete.
 
 **Q22.** What is Systems Manager Session Manager?
 
-> Browser-based shell access to EC2 with NO SSH keys, NO port 22, NO bastion. All sessions logged in CloudTrail. Works for private instances via SSM agent.
->
-
+> Browser-based shell access to EC2 with NO SSH keys, NO port 22, NO bastion.
+> All sessions logged in CloudTrail. Works for private instances via SSM agent.
 
 **Q23.** What is Systems Manager Run Command?
 
-> Execute scripts/commands on many EC2 instances simultaneously. "Patch 500 web servers NOW" → one Run Command → done in minutes. Results per server. Rate control (e.g., 50 servers at a time).
->
-
+```
+Execute scripts/commands on many EC2 instances simultaneously.
+"Patch 500 web servers NOW" → one Run Command → done in minutes.
+Results per server. Rate control (e.g., 50 servers at a time).
+```
 
 **Q24.** What is Systems Manager Patch Manager?
 
-> Automate OS patching. Define patch baseline. Schedule maintenance windows. Auto-patches during window. Reports compliance status per instance.
->
-
+> Automate OS patching. Define patch baseline. Schedule maintenance windows.
+> Auto-patches during window. Reports compliance status per instance.
 
 **Q25.** What is AWS Service Catalog?
 
-> Create approved IT service catalog. Teams self-serve compliant resources. Admin creates product (approved EC2 with correct tags/encryption). Developer selects from catalog → compliance automatic.
->
-
+> Create approved IT service catalog. Teams self-serve compliant resources.
+> Admin creates product (approved EC2 with correct tags/encryption).
+> Developer selects from catalog → compliance automatic.
 
 **Q26.** Which tool for understanding and forecasting your AWS bill?
 
 > AWS Cost Explorer — charts of historical spending + cost forecast.
->
-
 
 **Q27.** Company wants alert when monthly AWS bill exceeds $1,000?
 
 > AWS Budgets — set $1,000 cost budget with alert at 80% and 100%.
->
-
 
 **Q28.** Difference between AWS Budgets and Cost Explorer?
 
-> Budgets: proactive alerts and actions (FORWARD looking, prevent overspend). Cost Explorer: analytical charts and history (BACKWARD looking, understand spend).
->
-
+> Budgets: proactive alerts and actions (FORWARD looking, prevent overspend).
+> Cost Explorer: analytical charts and history (BACKWARD looking, understand spend).
 
 **Q29.** Which EC2 type in 12-month free tier?
 
-> t2.micro (or t3.micro). 750 hours/month. 730 hours in a month — 1 instance running 24/7 = within free tier. 2 instances running = 1,460 hours, charged for extra 710.
->
-
+> t2.micro (or t3.micro). 750 hours/month.
+> 730 hours in a month — 1 instance running 24/7 = within free tier.
+> 2 instances running = 1,460 hours, charged for extra 710.
 
 **Q30.** What happens to free tier limits after 12 months?
 
-> 12-month offers expire — standard rates apply. Always-free (Lambda, DynamoDB) continue forever. Best practice: set $1 Budget alert — fires when free tier expires.
->
-
+> 12-month offers expire — standard rates apply.
+> Always-free (Lambda, DynamoDB) continue forever.
+> Best practice: set $1 Budget alert — fires when free tier expires.
 
 **Q31.** Which plan for 15-minute critical response?
 
-> Enterprise Support ($15,000+/month) — 15-minute response for business-critical down. Enterprise On-Ramp: 30 minutes. Business: 1 hour.
->
-
+> Enterprise Support ($15,000+/month) — 15-minute response for business-critical down.
+> Enterprise On-Ramp: 30 minutes. Business: 1 hour.
 
 **Q32.** What is a CloudFormation ChangeSet?
 
-> Preview of changes BEFORE executing update. Shows: + Add, ~ Modify, - Delete. Prevents accidental deletions (like production database). Review ChangeSet → fix issues → execute safely.
->
-
+```
+Preview of changes BEFORE executing update. Shows: + Add, ~ Modify, - Delete.
+Prevents accidental deletions (like production database).
+Review ChangeSet → fix issues → execute safely.
+```
 
 **Q33.** What is CloudFormation Drift Detection?
 
-> Detects when actual configuration differs from CloudFormation expected state. "Who manually changed that security group in the console?" Drift = difference between actual state and IaC template.
->
-
+> Detects when actual configuration differs from CloudFormation expected state.
+> "Who manually changed that security group in the console?"
+> Drift = difference between actual state and IaC template.
 
 **Q34.** Maximum response time for Business Support production system down?
 
-> 1 HOUR for production system completely inaccessible. Response time = when engineer contacts you (not fix time).
->
-
+> 1 HOUR for production system completely inaccessible.
+> Response time = when engineer contacts you (not fix time).
 
 **Q35.** Developer plan customer has critical production outage response time?
 
-> Developer plan only supports email during business hours. Saturday afternoon outage → response may come Monday. Very bad for production. Developer plan = development only (not for production).
->
-
+> Developer plan only supports email during business hours.
+> Saturday afternoon outage → response may come Monday. Very bad for production.
+> Developer plan = development only (not for production).
 
 **Q36.** What is AWS Compute Optimizer?
 
-> Analyzes CloudWatch metrics → recommends right-sized resources. "This m5.4xlarge runs at 2% CPU — downsize to m5.xlarge, save $280/month." Analyzes: EC2 instances, EBS volumes, Lambda functions.
->
-
+> Analyzes CloudWatch metrics → recommends right-sized resources.
+> "This m5.4xlarge runs at 2% CPU — downsize to m5.xlarge, save $280/month."
+> Analyzes: EC2 instances, EBS volumes, Lambda functions.
 
 **Q37.** Which provides recommendations across Cost, Performance, Security, FT, Limits?
 
 > AWS Trusted Advisor.
->
-
 
 **Q38.** Difference between Trusted Advisor and Cost Explorer?
 
-> Trusted Advisor: "Here is what you should DO" (actionable recommendations). Cost Explorer: "Here is how you SPENT money" (analytical visibility).
->
-
+> Trusted Advisor: "Here is what you should DO" (actionable recommendations).
+> Cost Explorer: "Here is how you SPENT money" (analytical visibility).
 
 **Q39.** Which CloudFormation resource type for nested stack?
 
-> AWS::CloudFormation::Stack — modular template composition. Benefits: reuse templates, teams own their templates, easier to manage large stacks.
->
-
+> AWS::CloudFormation::Stack — modular template composition.
+> Benefits: reuse templates, teams own their templates, easier to manage large stacks.
 
 **Q40.** What is the AWS Well-Architected Framework?
 
-> Best practices across 6 pillars. Memory: "Only Stupid Rabbits Play Cost-free Sustainability" Operational Excellence, Security, Reliability, Performance, Cost, Sustainability.
->
-
+> Best practices across 6 pillars.
+> Memory: "Only Stupid Rabbits Play Cost-free Sustainability"
+> Operational Excellence, Security, Reliability, Performance, Cost, Sustainability.
 
 **Q41.** 6th pillar of Well-Architected Framework added in 2021?
 
-> Sustainability — minimize environmental impact. Right-size resources, use managed services, maximize utilization. AWS: 100% renewable energy (achieved 2023), water positive 2030, net zero 2040.
->
-
+> Sustainability — minimize environmental impact.
+> Right-size resources, use managed services, maximize utilization.
+> AWS: 100% renewable energy (achieved 2023), water positive 2030, net zero 2040.
 
 **Q42.** Give partner access without creating IAM users?
 
-> IAM Roles with cross-account trust policy. Partner assumes role → gets temporary credentials → accesses specific resources. Role can be revoked instantly. No permanent credentials shared.
->
-
+```
+IAM Roles with cross-account trust policy.
+Partner assumes role → gets temporary credentials → accesses specific resources.
+Role can be revoked instantly. No permanent credentials shared.
+```
 
 **Q43.** Custom reports on spending by department, project, and time?
 
-> AWS Cost and Usage Report (CUR) + Amazon Athena. CUR delivers to S3 → Athena SQL queries for custom analysis.
->
-
+> AWS Cost and Usage Report (CUR) + Amazon Athena.
+> CUR delivers to S3 → Athena SQL queries for custom analysis.
 
 **Q44.** What are AWS Cost Allocation Tags?
 
-> Key-value pairs on resources that appear in billing reports. Example: Project=WebApp, Environment=Prod, Team=Backend, Owner=alice. Must activate tags in billing console for them to appear in reports.
->
-
+> Key-value pairs on resources that appear in billing reports.
+> Example: Project=WebApp, Environment=Prod, Team=Backend, Owner=alice.
+> Must activate tags in billing console for them to appear in reports.
 
 **Q45.** What is the AWS TCO Calculator?
 
-> Compare total cost of on-premises vs AWS cloud. On-premises hidden costs: power, cooling, space, staff, hardware refresh. TCO = Total Cost of Ownership (ALL costs over time).
->
-
+> Compare total cost of on-premises vs AWS cloud.
+> On-premises hidden costs: power, cooling, space, staff, hardware refresh.
+> TCO = Total Cost of Ownership (ALL costs over time).
 
 **Q46.** How do Reserved Instances work with consolidated billing?
 
-> RI discounts shared across all accounts in Organizations. Unused RI in Account A auto-applies to Account B's matching instance. Can disable RI sharing per account if needed.
->
-
+> RI discounts shared across all accounts in Organizations.
+> Unused RI in Account A auto-applies to Account B's matching instance.
+> Can disable RI sharing per account if needed.
 
 **Q47.** What is Amazon Managed Grafana?
 
-> Managed Grafana for visualizing CloudWatch, Prometheus, X-Ray data. Build operational dashboards. AWS manages server, you manage dashboards. Prometheus = open-source monitoring time-series database.
->
-
+> Managed Grafana for visualizing CloudWatch, Prometheus, X-Ray data.
+> Build operational dashboards. AWS manages server, you manage dashboards.
+> Prometheus = open-source monitoring time-series database.
 
 **Q48.** Which monitors costs and can automatically restrict usage when exceeded?
 
-> AWS Budgets Actions — applies IAM policies or SCPs when budget exceeded. Example: deny ec2:RunInstances for dev group when budget hit 90%.
->
-
+> AWS Budgets Actions — applies IAM policies or SCPs when budget exceeded.
+> Example: deny ec2:RunInstances for dev group when budget hit 90%.
 
 **Q49.** AWS Free Tier for S3?
 
-> 5GB Standard storage + 20,000 GET requests + 2,000 PUT requests per month. Valid for 12 months from account creation.
->
-
+> 5GB Standard storage + 20,000 GET requests + 2,000 PUT requests per month.
+> Valid for 12 months from account creation.
 
 **Q50.** Minimum plan for 24/7 phone and chat support?
 
-> Business Support ($100+/month). EXAM ANSWER: always "Business Support." Developer = email business hours only. Basic = no engineer contact.
->
+> Business Support ($100+/month). EXAM ANSWER: always "Business Support."
+> Developer = email business hours only. Basic = no engineer contact.
 
-
-*DAY 8 COMPLETE*
-
+DAY 8 COMPLETE
 *Tomorrow: Day 9 — Cloud Migration & Architecture*
 
 ## Day 9 — CLOUD MIGRATION & ARCHITECTURE
@@ -3193,306 +3015,313 @@ Step Functions: orchestrate workflows with visual state machines.
 
 **Q1.** What are the 6 R's of migration?
 
-> Rehost, Replatform, Repurchase, Refactor, Retire, Retain. Memory: "Real People Really Refuse Refactoring Regularly"
->
-
+> Rehost, Replatform, Repurchase, Refactor, Retire, Retain.
+> Memory: "Real People Really Refuse Refactoring Regularly"
 
 **Q2.** Which migration strategy is "lift and shift"?
 
-> Rehost — move to EC2 exactly as-is. No code or architecture changes. Tool: AWS Application Migration Service (MGN). Continuous replication. Fastest to execute. Lowest effort. Least cloud benefit long-term.
->
-
+> Rehost — move to EC2 exactly as-is. No code or architecture changes.
+> Tool: AWS Application Migration Service (MGN). Continuous replication.
+> Fastest to execute. Lowest effort. Least cloud benefit long-term.
 
 **Q3.** Moving MySQL from EC2 to RDS with minimal changes. Which R?
 
-> Replatform — move to managed service with minor optimization. App code: unchanged. Operations: better (AWS manages patching/backups). Other examples: Tomcat on EC2 → Elastic Beanstalk, Redis on EC2 → ElastiCache.
->
-
+```
+Replatform — move to managed service with minor optimization.
+App code: unchanged. Operations: better (AWS manages patching/backups).
+Other examples: Tomcat on EC2 → Elastic Beanstalk, Redis on EC2 → ElastiCache.
+```
 
 **Q4.** Which R requires most effort but provides most cloud benefit?
 
-> Refactor (re-architect) — rebuild as cloud-native. Monolith → microservices, Lambda, containers, event-driven. Highest effort, highest ROI long-term. 50-70% cost savings possible.
->
-
+> Refactor (re-architect) — rebuild as cloud-native.
+> Monolith → microservices, Lambda, containers, event-driven.
+> Highest effort, highest ROI long-term. 50-70% cost savings possible.
 
 **Q5.** Which R means shutting off applications no longer needed?
 
-> Retire — discover unused/redundant apps and decommission them. Typical: 10-20% of enterprise applications can be retired at migration time. Reduces: migration scope, ongoing costs, security attack surface.
->
-
+> Retire — discover unused/redundant apps and decommission them.
+> Typical: 10-20% of enterprise applications can be retired at migration time.
+> Reduces: migration scope, ongoing costs, security attack surface.
 
 **Q6.** Which R means keeping apps on-premises for now?
 
-> Retain — not ready, recently purchased hardware, compliance requirement, mainframe with no cloud equivalent, too complex to migrate now. Revisit retained apps periodically as cloud options evolve.
->
-
+> Retain — not ready, recently purchased hardware, compliance requirement,
+> mainframe with no cloud equivalent, too complex to migrate now.
+> Revisit retained apps periodically as cloud options evolve.
 
 **Q7.** What are the 6 perspectives of the AWS CAF?
 
-> Business, People, Governance, Platform, Security, Operations. Memory trick: "Business People Go Play Soccer Online"
->
-
+> Business, People, Governance, Platform, Security, Operations.
+> Memory trick: "Business People Go Play Soccer Online"
 
 **Q8.** Which CAF perspective focuses on HR and change management?
 
-> People perspective — culture change, skills development (certs!), organizational change management, leadership alignment.
->
-
+> People perspective — culture change, skills development (certs!),
+> organizational change management, leadership alignment.
 
 **Q9.** What is AWS Migration Hub?
 
-> Central dashboard tracking migration status across all tools and accounts. Integrates: MGN, DMS, Snowball, App Discovery, partner tools. One view: discovered, in-progress, completed, failed server counts.
->
-
+> Central dashboard tracking migration status across all tools and accounts.
+> Integrates: MGN, DMS, Snowball, App Discovery, partner tools.
+> One view: discovered, in-progress, completed, failed server counts.
 
 **Q10.** What is AWS Application Migration Service (MGN)?
 
-> Continuous block-level replication from source servers to AWS. Steps: Install agent → Continuous replication → Test launch → Cutover. Downtime: minutes (only during final cutover). Zero data loss. Replaced: old AWS Server Migration Service (SMS — deprecated).
->
-
+```
+Continuous block-level replication from source servers to AWS.
+Steps: Install agent → Continuous replication → Test launch → Cutover.
+Downtime: minutes (only during final cutover). Zero data loss.
+Replaced: old AWS Server Migration Service (SMS — deprecated).
+```
 
 **Q11.** What is AWS DataSync?
 
-> Automated data transfer between on-premises storage and AWS. Use for: bulk/scheduled batch transfers. One-time migration. Supports: on-prem NFS/SMB to S3/EFS/FSx. Also S3→S3, EFS→EFS. Speed: up to 10 Gbps.
->
-
+```
+Automated data transfer between on-premises storage and AWS.
+Use for: bulk/scheduled batch transfers. One-time migration.
+Supports: on-prem NFS/SMB to S3/EFS/FSx. Also S3→S3, EFS→EFS.
+Speed: up to 10 Gbps.
+```
 
 **Q12.** Which service handles SFTP-based file transfers to S3 or EFS?
 
-> AWS Transfer Family — managed SFTP, FTPS, FTP endpoints. Partners upload via SFTP to your managed endpoint → files go to S3. AWS manages: server, HA, keys. You manage: users, bucket policy.
->
-
+> AWS Transfer Family — managed SFTP, FTPS, FTP endpoints.
+> Partners upload via SFTP to your managed endpoint → files go to S3.
+> AWS manages: server, HA, keys. You manage: users, bucket policy.
 
 **Q13.** Well-Architected pillar focused on recovering from failures?
 
-> Reliability — recover automatically from failures, scale to meet demand. Design patterns: Multi-AZ, Auto Scaling, tested backups, chaos engineering.
->
-
+> Reliability — recover automatically from failures, scale to meet demand.
+> Design patterns: Multi-AZ, Auto Scaling, tested backups, chaos engineering.
 
 **Q14.** Well-Architected pillar focused on using right resources at right size?
 
-> Performance Efficiency — use resources efficiently. Principles: democratize tech, go global in minutes, use serverless, experiment.
->
-
+> Performance Efficiency — use resources efficiently.
+> Principles: democratize tech, go global in minutes, use serverless, experiment.
 
 **Q15.** Well-Architected pillar focused on minimizing environmental impact?
 
-> Sustainability — added 2021. Right-size, maximize utilization, use managed services. AWS: 100% renewable energy (2023), water positive 2030, net zero 2040.
->
-
+> Sustainability — added 2021. Right-size, maximize utilization, use managed services.
+> AWS: 100% renewable energy (2023), water positive 2030, net zero 2040.
 
 **Q16.** What is Amazon SNS?
 
-> Simple Notification Service — pub/sub messaging. Publish to TOPIC → ALL subscribers receive simultaneously. Protocols: email, SMS, HTTP, SQS, Lambda. Fan-out: one message → multiple SQS queues simultaneously.
->
-
+> Simple Notification Service — pub/sub messaging.
+> Publish to TOPIC → ALL subscribers receive simultaneously.
+> Protocols: email, SMS, HTTP, SQS, Lambda.
+> Fan-out: one message → multiple SQS queues simultaneously.
 
 **Q17.** What does SNS stand for?
 
-> Simple Notification Service. S = Simple (easy to use). N = Notification (push alerts). S = Service.
->
-
+> Simple Notification Service.
+> S = Simple (easy to use). N = Notification (push alerts). S = Service.
 
 **Q18.** What is Amazon SQS?
 
-> Simple Queue Service — decoupling applications with message queues. Producer → Queue → Consumer POLLS for messages. Messages stored safely if consumer is down (up to 14 days).
->
-
+```
+Simple Queue Service — decoupling applications with message queues.
+Producer → Queue → Consumer POLLS for messages.
+Messages stored safely if consumer is down (up to 14 days).
+```
 
 **Q19.** Maximum retention period for SQS messages?
 
-> 14 days. Default is 4 days. Minimum 1 minute. After max retention: message deleted automatically regardless.
->
-
+> 14 days. Default is 4 days. Minimum 1 minute.
+> After max retention: message deleted automatically regardless.
 
 **Q20.** Difference between SNS and SQS?
 
-> SNS: push to MANY subscribers simultaneously (fan-out). Message delivered once. SQS: STORED in queue, ONE consumer per message, persists until processed. Combined pattern: SNS → multiple SQS queues (fan-out + durability).
->
-
+> SNS: push to MANY subscribers simultaneously (fan-out). Message delivered once.
+> SQS: STORED in queue, ONE consumer per message, persists until processed.
+> Combined pattern: SNS → multiple SQS queues (fan-out + durability).
 
 **Q21.** What is Amazon Kinesis?
 
-> Real-time streaming data collection and processing. High-volume streams from many sources simultaneously. Multiple consumers can read same stream. Kinesis Data Streams: raw stream, you manage consumers. Kinesis Data Firehose: managed delivery to S3/Redshift (near real-time).
->
-
+> Real-time streaming data collection and processing.
+> High-volume streams from many sources simultaneously.
+> Multiple consumers can read same stream.
+> Kinesis Data Streams: raw stream, you manage consumers.
+> Kinesis Data Firehose: managed delivery to S3/Redshift (near real-time).
 
 **Q22.** Which service for processing real-time clickstream data?
 
-> Amazon Kinesis — designed for high-volume real-time streaming. Detect fraud in seconds vs batch processing next day.
->
-
+> Amazon Kinesis — designed for high-volume real-time streaming.
+> Detect fraud in seconds vs batch processing next day.
 
 **Q23.** What is AWS Step Functions?
 
-> Serverless workflow orchestration — coordinate Lambda and AWS services in visual state machine workflows. Features: retry logic, error handling, parallel branches, human approval. Standard: up to 1 year. Express: high-volume up to 5 minutes.
->
-
+> Serverless workflow orchestration — coordinate Lambda and AWS services
+> in visual state machine workflows.
+> Features: retry logic, error handling, parallel branches, human approval.
+> Standard: up to 1 year. Express: high-volume up to 5 minutes.
 
 **Q24.** What is Amazon Lightsail?
 
-> Simple VPS platform with fixed monthly pricing. Pre-configured for WordPress, LAMP, Node.js, etc. Starting at $3.50/month. For: beginners, small businesses, simple web apps, portfolio sites.
->
-
+> Simple VPS platform with fixed monthly pricing.
+> Pre-configured for WordPress, LAMP, Node.js, etc. Starting at $3.50/month.
+> For: beginners, small businesses, simple web apps, portfolio sites.
 
 **Q25.** Who is Lightsail designed for?
 
-> Users wanting simplicity without deep cloud knowledge. Small businesses, freelancers, startup MVPs. NOT for: complex architectures, auto-scaling enterprise apps.
->
-
+> Users wanting simplicity without deep cloud knowledge.
+> Small businesses, freelancers, startup MVPs.
+> NOT for: complex architectures, auto-scaling enterprise apps.
 
 **Q26.** Well-Architected pillar about cost waste and undifferentiated work?
 
-> Cost Optimization — avoid unnecessary costs, use managed services. "Undifferentiated heavy lifting" = work that doesn't make your product unique.
->
-
+> Cost Optimization — avoid unnecessary costs, use managed services.
+> "Undifferentiated heavy lifting" = work that doesn't make your product unique.
 
 **Q27.** Which R for replacing on-premises HR software with Workday SaaS?
 
-> Repurchase — moving from self-managed app to commercial SaaS. Other examples: on-prem CRM → Salesforce, on-prem email → Google Workspace. ITSM = IT Service Management (ServiceNow, Jira are common tools).
->
-
+```
+Repurchase — moving from self-managed app to commercial SaaS.
+Other examples: on-prem CRM → Salesforce, on-prem email → Google Workspace.
+ITSM = IT Service Management (ServiceNow, Jira are common tools).
+```
 
 **Q28.** What is the Well-Architected Tool?
 
-> Free tool reviewing your architecture against 6 pillars. Answer ~65 questions → get findings (High/Medium risk) → improvement plan. WAR = Well-Architected Review (formal review with AWS Solution Architect).
->
-
+```
+Free tool reviewing your architecture against 6 pillars.
+Answer ~65 questions → get findings (High/Medium risk) → improvement plan.
+WAR = Well-Architected Review (formal review with AWS Solution Architect).
+```
 
 **Q29.** Relationship between Trusted Advisor and Well-Architected?
 
-> Well-Architected: theoretical best practices, manual review, done occasionally. Trusted Advisor: automated checks against YOUR actual environment, daily. TA implements WA principles as automated real-time checks.
->
-
+> Well-Architected: theoretical best practices, manual review, done occasionally.
+> Trusted Advisor: automated checks against YOUR actual environment, daily.
+> TA implements WA principles as automated real-time checks.
 
 **Q30.** Critical app taking 2 years to re-architect. What to do now?
 
-> Retain (keep on-premises) OR Rehost to EC2 now while planning Refactor. Common pattern: Rehost → stabilize → Replatform/Refactor over time.
->
-
+```
+Retain (keep on-premises) OR Rehost to EC2 now while planning Refactor.
+Common pattern: Rehost → stabilize → Replatform/Refactor over time.
+```
 
 **Q31.** Which CAF perspective covers risk management?
 
-> Governance perspective — portfolio management, risk, compliance, program management, benefits realization, financial management.
->
-
+> Governance perspective — portfolio management, risk, compliance,
+> program management, benefits realization, financial management.
 
 **Q32.** Which service fans out one message to multiple SQS queues?
 
-> Amazon SNS — publish to topic, multiple SQS queues subscribe. Each queue processes independently. One failure doesn't affect others.
->
-
+> Amazon SNS — publish to topic, multiple SQS queues subscribe.
+> Each queue processes independently. One failure doesn't affect others.
 
 **Q33.** Reliability pillar approach to designing for failure?
 
-> "Everything fails all the time" — Werner Vogels, AWS CTO. No single points of failure. Automate recovery. Test failure scenarios. Chaos engineering = intentionally causing failures to test recovery.
->
-
+> "Everything fails all the time" — Werner Vogels, AWS CTO.
+> No single points of failure. Automate recovery. Test failure scenarios.
+> Chaos engineering = intentionally causing failures to test recovery.
 
 **Q34.** Which R has highest ROI long-term but most effort?
 
-> Refactor — cloud-native re-architecture. 50-70% cost savings possible. Elasticity, pay-per-use, faster delivery.
->
-
+> Refactor — cloud-native re-architecture.
+> 50-70% cost savings possible. Elasticity, pay-per-use, faster delivery.
 
 **Q35.** What is AWS Application Discovery Service?
 
-> Discover on-premises servers before migration. Map dependencies. Agentless (VMware vCenter) or Agent-based (physical/other VMs). WebServer → AppServer → Database → must migrate all 3 together!
->
-
+```
+Discover on-premises servers before migration. Map dependencies.
+Agentless (VMware vCenter) or Agent-based (physical/other VMs).
+WebServer → AppServer → Database → must migrate all 3 together!
+```
 
 **Q36.** Difference between DataSync and Storage Gateway?
 
-> DataSync: MIGRATION/TRANSFER — move data to AWS (one-time or scheduled batch). Storage Gateway: ONGOING HYBRID — permanent connection, apps use S3 as local storage.
->
-
+> DataSync: MIGRATION/TRANSFER — move data to AWS (one-time or scheduled batch).
+> Storage Gateway: ONGOING HYBRID — permanent connection, apps use S3 as local storage.
 
 **Q37.** SQS queue type guaranteeing exactly-once processing and order?
 
-> FIFO (First-In-First-Out) queue. Standard: at-least-once (may duplicate), unlimited throughput. FIFO: exactly-once, strict order, up to 3,000 msg/sec. Use FIFO: financial transactions, order processing, anything order-sensitive.
->
-
+> FIFO (First-In-First-Out) queue.
+> Standard: at-least-once (may duplicate), unlimited throughput.
+> FIFO: exactly-once, strict order, up to 3,000 msg/sec.
+> Use FIFO: financial transactions, order processing, anything order-sensitive.
 
 **Q38.** Standard SQS queue's delivery guarantee?
 
-> At-least-once delivery — messages may be delivered more than once. Apps must be idempotent (same result whether processed once or twice). Idempotent = same result when done multiple times as when done once.
->
-
+> At-least-once delivery — messages may be delivered more than once.
+> Apps must be idempotent (same result whether processed once or twice).
+> Idempotent = same result when done multiple times as when done once.
 
 **Q39.** What is Amazon EventBridge?
 
-> Serverless event bus routing AWS events to targets automatically. Event (EC2 stops) → Rule (matches) → Target (Lambda, SNS, SSM automation). Formerly CloudWatch Events. Used for event-driven automation.
->
-
+```
+Serverless event bus routing AWS events to targets automatically.
+Event (EC2 stops) → Rule (matches) → Target (Lambda, SNS, SSM automation).
+Formerly CloudWatch Events. Used for event-driven automation.
+```
 
 **Q40.** Well-Architected pillar covering CI/CD and monitoring?
 
-> Operational Excellence — run, monitor, and improve operations. Principles: IaC, frequent small reversible changes, post-incident reviews. PIR = Post-Incident Review (blameless, improve runbooks after incidents).
->
-
+> Operational Excellence — run, monitor, and improve operations.
+> Principles: IaC, frequent small reversible changes, post-incident reviews.
+> PIR = Post-Incident Review (blameless, improve runbooks after incidents).
 
 **Q41.** Company found 40% of servers unused. Which R?
 
-> Retire — decommission unused servers before migration. Saves: migration effort, licensing costs, hardware refresh, security risk.
->
-
+> Retire — decommission unused servers before migration.
+> Saves: migration effort, licensing costs, hardware refresh, security risk.
 
 **Q42.** Replatforming to RDS instead of MySQL on EC2 provides?
 
-> Managed service benefits: automatic patching, backups, Multi-AZ HA. No application code changes. Same MySQL engine. 9 hours/month freed per DB.
->
-
+> Managed service benefits: automatic patching, backups, Multi-AZ HA.
+> No application code changes. Same MySQL engine. 9 hours/month freed per DB.
 
 **Q43.** What is the CAF Operations perspective?
 
-> Ensuring cloud services are delivered per agreed business SLAs. Monitoring, incident management, DR testing, cloud operations model. CCoE = Cloud Center of Excellence (team that sets cloud standards).
->
-
+> Ensuring cloud services are delivered per agreed business SLAs.
+> Monitoring, incident management, DR testing, cloud operations model.
+> CCoE = Cloud Center of Excellence (team that sets cloud standards).
 
 **Q44.** What does the CAF Platform perspective cover?
 
-> Building cloud platform architecture, landing zones, network topology. Application architecture: microservices, containers, serverless patterns. Your VMware/SAN/storage expertise directly relevant here.
->
-
+> Building cloud platform architecture, landing zones, network topology.
+> Application architecture: microservices, containers, serverless patterns.
+> Your VMware/SAN/storage expertise directly relevant here.
 
 **Q45.** Which migration tool provides continuous replication for lift-and-shift?
 
-> AWS Application Migration Service (MGN) — continuous block-level replication. Install agent → replicate → test → cutover (minutes of downtime).
->
-
+```
+AWS Application Migration Service (MGN) — continuous block-level replication.
+Install agent → replicate → test → cutover (minutes of downtime).
+```
 
 **Q46.** What is an SNS topic?
 
-> Logical communication channel. Publishers send to topic. Subscribers receive from topic. Like a TV channel — one broadcast, many viewers. Standard topics: high throughput, unordered. FIFO topics: ordered, exactly-once.
->
-
+> Logical communication channel. Publishers send to topic.
+> Subscribers receive from topic. Like a TV channel — one broadcast, many viewers.
+> Standard topics: high throughput, unordered. FIFO topics: ordered, exactly-once.
 
 **Q47.** Maximum message size in SQS?
 
-> 256 KB. For larger payloads: store in S3, put S3 reference in SQS message. AWS Extended Client Library handles this pattern automatically.
->
-
+> 256 KB. For larger payloads: store in S3, put S3 reference in SQS message.
+> AWS Extended Client Library handles this pattern automatically.
 
 **Q48.** Service for serverless workflows coordinating Lambda and AWS services?
 
-> AWS Step Functions — visual workflow builder. Standard (up to 1 year, complex orchestration) or Express (up to 5 min, high volume event processing).
->
-
+> AWS Step Functions — visual workflow builder.
+> Standard (up to 1 year, complex orchestration) or
+> Express (up to 5 min, high volume event processing).
 
 **Q49.** What is the CAF Business perspective?
 
-> Align cloud investment with business goals. Business case: TCO analysis, expected savings. Success metrics: cost per transaction, time-to-market, availability %.
->
-
+> Align cloud investment with business goals.
+> Business case: TCO analysis, expected savings.
+> Success metrics: cost per transaction, time-to-market, availability %.
 
 **Q50.** Most appropriate R for legacy mainframe with no cloud equivalent?
 
-> Retain — keep on-premises until viable migration path exists or app retired. Mainframe migration: can take years. Plan, document, gradual replacement. Strangler fig pattern = gradually replace old system piece by piece.
->
+> Retain — keep on-premises until viable migration path exists or app retired.
+> Mainframe migration: can take years. Plan, document, gradual replacement.
+> Strangler fig pattern = gradually replace old system piece by piece.
 
-
-*DAY 9 COMPLETE*
-
+DAY 9 COMPLETE
 *Tomorrow: Day 10 — Additional Services & Full Review*
 
 ## Day 10 — ADDITIONAL SERVICES & FULL REVIEW
@@ -3551,305 +3380,335 @@ Connect:     Cloud contact center
 
 **Q1.** Which AWS AI service converts speech to text?
 
-> Amazon Transcribe — STT. Takes audio, returns text transcript. Use for: call center analytics, meeting notes, video subtitles. Features: speaker identification, PII redaction from transcripts.
->
-
+> Amazon Transcribe — STT. Takes audio, returns text transcript.
+> Use for: call center analytics, meeting notes, video subtitles.
+> Features: speaker identification, PII redaction from transcripts.
 
 **Q2.** Which AWS AI service converts text to speech?
 
-> Amazon Polly — TTS. 60+ voices, 29 languages. Neural TTS = natural sound. Use for: accessibility, e-learning narration, IVR systems, notifications. IVR = Interactive Voice Response (phone menu systems).
->
-
+> Amazon Polly — TTS. 60+ voices, 29 languages. Neural TTS = natural sound.
+> Use for: accessibility, e-learning narration, IVR systems, notifications.
+> IVR = Interactive Voice Response (phone menu systems).
 
 **Q3.** Which analyzes images and videos for objects, faces, and scenes?
 
-> Amazon Rekognition — computer vision service. Detects: objects, scenes, faces, celebrities, text in images, unsafe content. Videos: track people across frames, detect activities.
->
-
+> Amazon Rekognition — computer vision service.
+> Detects: objects, scenes, faces, celebrities, text in images, unsafe content.
+> Videos: track people across frames, detect activities.
 
 **Q4.** Which service powers chatbots (same tech as Alexa)?
 
-> Amazon Lex — Natural Language Understanding. User speaks/types → Lex identifies intent and extracts slots (parameters). Integrates with: Lambda, Amazon Connect, Slack, Facebook Messenger.
->
-
+> Amazon Lex — Natural Language Understanding.
+> User speaks/types → Lex identifies intent and extracts slots (parameters).
+> Integrates with: Lambda, Amazon Connect, Slack, Facebook Messenger.
 
 **Q5.** Service for building, training, and deploying ML models?
 
-> Amazon SageMaker — complete ML lifecycle platform. Data Wrangler (prepare) → Studio (build) → Training (train) → Endpoints (deploy). Pay only for compute when training runs.
->
-
+```
+Amazon SageMaker — complete ML lifecycle platform.
+Data Wrangler (prepare) → Studio (build) → Training (train) → Endpoints (deploy).
+Pay only for compute when training runs.
+```
 
 **Q6.** Service extracting structured data from scanned documents?
 
-> Amazon Textract — OCR+ extracts key-value pairs, tables, forms. Regular OCR: just raw text. Textract: structured JSON output. Use for: invoice processing, tax form extraction, contract analysis.
->
-
+> Amazon Textract — OCR+ extracts key-value pairs, tables, forms.
+> Regular OCR: just raw text. Textract: structured JSON output.
+> Use for: invoice processing, tax form extraction, contract analysis.
 
 **Q7.** Add product recommendations to e-commerce site?
 
-> Amazon Personalize — real-time personalized recommendations. Same ML as Amazon.com. Feed historical data → train model → query API. No ML expertise needed.
->
-
+```
+Amazon Personalize — real-time personalized recommendations.
+Same ML as Amazon.com. Feed historical data → train model → query API.
+No ML expertise needed.
+```
 
 **Q8.** Service for serverless SQL queries on S3?
 
-> Amazon Athena — serverless, $5/TB scanned, standard SQL. Glue Data Catalog = metadata store (schema definitions for S3 data). Parquet format: columnar = scan less data = cheaper + faster.
->
-
+> Amazon Athena — serverless, $5/TB scanned, standard SQL.
+> Glue Data Catalog = metadata store (schema definitions for S3 data).
+> Parquet format: columnar = scan less data = cheaper + faster.
 
 **Q9.** What is AWS Glue?
 
-> Serverless ETL service — extract, transform, load data for analytics. Connects: S3, RDS, DynamoDB → transforms → delivers to Redshift, S3. Runs on managed Spark. Glue Crawlers: auto-discover schema.
->
-
+```
+Serverless ETL service — extract, transform, load data for analytics.
+Connects: S3, RDS, DynamoDB → transforms → delivers to Redshift, S3.
+Runs on managed Spark. Glue Crawlers: auto-discover schema.
+```
 
 **Q10.** What is Amazon QuickSight?
 
-> AWS BI (Business Intelligence) service. Interactive dashboards. Reads directly from S3, Athena, Redshift, RDS. Serverless. Pay per session. ML-powered anomaly detection built-in.
->
-
+> AWS BI (Business Intelligence) service. Interactive dashboards.
+> Reads directly from S3, Athena, Redshift, RDS. Serverless. Pay per session.
+> ML-powered anomaly detection built-in.
 
 **Q11.** What is Amazon EMR?
 
-> Elastic MapReduce — managed Hadoop/Spark clusters for big data. AWS manages: cluster setup, config, scaling. You manage: your code. Use Spot Instances for task nodes = 90% savings on big data processing.
->
-
+> Elastic MapReduce — managed Hadoop/Spark clusters for big data.
+> AWS manages: cluster setup, config, scaling. You manage: your code.
+> Use Spot Instances for task nodes = 90% savings on big data processing.
 
 **Q12.** What is AWS CodePipeline?
 
-> Orchestrates complete CI/CD pipeline: source → build → test → deploy. Integrates: CodeCommit (source), CodeBuild (build), CodeDeploy (deploy). All automated — developer pushes code → production deployment.
->
-
+```
+Orchestrates complete CI/CD pipeline: source → build → test → deploy.
+Integrates: CodeCommit (source), CodeBuild (build), CodeDeploy (deploy).
+All automated — developer pushes code → production deployment.
+```
 
 **Q13.** Difference between CodeBuild and CodeDeploy?
 
-> CodeBuild: BUILD + TEST code (CI). Input: source code. Output: artifact. CodeDeploy: DEPLOY artifact (CD). Input: artifact. Output: running app.
->
-
+> CodeBuild: BUILD + TEST code (CI). Input: source code. Output: artifact.
+> CodeDeploy: DEPLOY artifact (CD). Input: artifact. Output: running app.
 
 **Q14.** What is AWS X-Ray?
 
-> Distributed tracing — trace requests through all microservices. Shows which service is slow/erroring. Service Map: API GW (15ms) → Lambda (45ms) → RDS (890ms) ← PROBLEM!
->
-
+```
+Distributed tracing — trace requests through all microservices.
+Shows which service is slow/erroring.
+Service Map: API GW (15ms) → Lambda (45ms) → RDS (890ms) ← PROBLEM!
+```
 
 **Q15.** What is AWS WorkSpaces?
 
-> Managed virtual desktop service (DaaS). Full Windows/Linux desktop in the cloud. Access from any device via browser. Use for: remote work, contractors, regulated environments, call centers.
->
-
+> Managed virtual desktop service (DaaS).
+> Full Windows/Linux desktop in the cloud. Access from any device via browser.
+> Use for: remote work, contractors, regulated environments, call centers.
 
 **Q16.** What is Amazon SES?
 
-> Simple Email Service — managed email at scale. Transactional: "Your order shipped" (triggered by app). Bulk/marketing: newsletters to 500K subscribers. Cost: $0.10/1,000 emails.
->
-
+> Simple Email Service — managed email at scale.
+> Transactional: "Your order shipped" (triggered by app).
+> Bulk/marketing: newsletters to 500K subscribers.
+> Cost: $0.10/1,000 emails.
 
 **Q17.** Service for ML-powered intelligent enterprise search?
 
-> Amazon Kendra — understands natural language questions. "How many vacation days in first year?" → reads HR docs → returns direct answer. Not just keyword matching — understands context and intent.
->
-
+```
+Amazon Kendra — understands natural language questions.
+"How many vacation days in first year?" → reads HR docs → returns direct answer.
+Not just keyword matching — understands context and intent.
+```
 
 **Q18.** What is AWS Lake Formation?
 
-> Set up and secure data lakes in days instead of months. Automates: S3 setup, Glue crawlers, data catalog, access permissions. Column-level security = restrict access to specific columns (hide SSNs).
->
-
+> Set up and secure data lakes in days instead of months.
+> Automates: S3 setup, Glue crawlers, data catalog, access permissions.
+> Column-level security = restrict access to specific columns (hide SSNs).
 
 **Q19.** What is Amazon AppStream 2.0?
 
-> Stream specific applications via browser. No local install needed. Different from WorkSpaces (full desktop) — AppStream = specific apps only. Use for: expensive licensed software (AutoCAD), shared across users.
->
-
+> Stream specific applications via browser. No local install needed.
+> Different from WorkSpaces (full desktop) — AppStream = specific apps only.
+> Use for: expensive licensed software (AutoCAD), shared across users.
 
 **Q20.** Which service for ML-based fraud detection?
 
-> Amazon Fraud Detector — ML models trained on fraud patterns. Analyzes: account age, location, device, time, amount → fraud score. Return: fraud score + outcome (approve/review/block).
->
-
+> Amazon Fraud Detector — ML models trained on fraud patterns.
+> Analyzes: account age, location, device, time, amount → fraud score.
+> Return: fraud score + outcome (approve/review/block).
 
 **Q21.** REVIEW: Key difference between CloudWatch and CloudTrail?
 
-> CloudWatch: "How is infrastructure PERFORMING?" (metrics, CPU, latency). CloudTrail: "WHO did WHAT to my infrastructure?" (API audit log). EXAM: "audit log" → CloudTrail. "CPU alarm" → CloudWatch.
->
-
+```
+CloudWatch: "How is infrastructure PERFORMING?" (metrics, CPU, latency).
+CloudTrail: "WHO did WHAT to my infrastructure?" (API audit log).
+EXAM: "audit log" → CloudTrail. "CPU alarm" → CloudWatch.
+```
 
 **Q22.** REVIEW: Security Group vs NACL?
 
-> Security Group: INSTANCE level, STATEFUL, ALLOW only. NACL: SUBNET level, STATELESS, ALLOW + DENY. "Block specific IP" → NACL. "Open port 443 on EC2" → Security Group.
->
-
+```
+Security Group: INSTANCE level, STATEFUL, ALLOW only.
+NACL: SUBNET level, STATELESS, ALLOW + DENY.
+"Block specific IP" → NACL. "Open port 443 on EC2" → Security Group.
+```
 
 **Q23.** REVIEW: RDS Multi-AZ vs Read Replicas?
 
-> Multi-AZ: SYNCHRONOUS, HIGH AVAILABILITY, automatic failover, cannot read standby. Read Replica: ASYNCHRONOUS, PERFORMANCE, read scaling, any region. "Disaster recovery" → Multi-AZ. "Scale reads" → Read Replica.
->
-
+```
+Multi-AZ: SYNCHRONOUS, HIGH AVAILABILITY, automatic failover, cannot read standby.
+Read Replica: ASYNCHRONOUS, PERFORMANCE, read scaling, any region.
+"Disaster recovery" → Multi-AZ. "Scale reads" → Read Replica.
+```
 
 **Q24.** REVIEW: When to use Spot Instances?
 
-> For fault-tolerant, interruptible workloads: batch jobs, big data, CI/CD, rendering. NEVER for: production databases, real-time apps (cannot be interrupted).
->
-
+> For fault-tolerant, interruptible workloads: batch jobs, big data, CI/CD, rendering.
+> NEVER for: production databases, real-time apps (cannot be interrupted).
 
 **Q25.** REVIEW: Difference between SNS and SQS?
 
-> SNS: push to MANY simultaneously, fan-out, message lost if subscriber down. SQS: STORED queue, one consumer per message, persists up to 14 days. "Send to multiple recipients" → SNS. "Decouple applications" → SQS.
->
-
+```
+SNS: push to MANY simultaneously, fan-out, message lost if subscriber down.
+SQS: STORED queue, one consumer per message, persists up to 14 days.
+"Send to multiple recipients" → SNS. "Decouple applications" → SQS.
+```
 
 **Q26.** REVIEW: Direct Connect vs VPN?
 
-> Direct Connect: PRIVATE fiber, CONSISTENT performance, weeks, expensive. VPN: ENCRYPTED internet, VARIABLE performance, hours, cheap. "Consistent performance" → DX. "Quick/cheap setup" → VPN.
->
-
+```
+Direct Connect: PRIVATE fiber, CONSISTENT performance, weeks, expensive.
+VPN: ENCRYPTED internet, VARIABLE performance, hours, cheap.
+"Consistent performance" → DX. "Quick/cheap setup" → VPN.
+```
 
 **Q27.** REVIEW: GuardDuty vs Inspector vs Macie?
 
-> GuardDuty: THREATS in account (ML, anomaly detection, threat intel). Inspector: VULNERABILITIES in EC2/containers (CVE scanning). Macie: SENSITIVE DATA in S3 (PII, credentials, financial data).
->
-
+> GuardDuty: THREATS in account (ML, anomaly detection, threat intel).
+> Inspector: VULNERABILITIES in EC2/containers (CVE scanning).
+> Macie: SENSITIVE DATA in S3 (PII, credentials, financial data).
 
 **Q28.** REVIEW: CloudFront vs Global Accelerator?
 
-> CloudFront: CACHES content at edge, HTTP/HTTPS only, CDN. Global Accelerator: ROUTES over AWS private network, TCP/UDP, static IPs. "Cache images globally" → CF. "Two static IPs for whitelist" → GA.
->
-
+```
+CloudFront: CACHES content at edge, HTTP/HTTPS only, CDN.
+Global Accelerator: ROUTES over AWS private network, TCP/UDP, static IPs.
+"Cache images globally" → CF. "Two static IPs for whitelist" → GA.
+```
 
 **Q29.** REVIEW: Secrets Manager vs Parameter Store?
 
-> Secrets Manager: secrets + auto-rotation, $0.40/secret/month. Parameter Store: config + secrets, FREE standard tier, no auto-rotation. "DB passwords with auto-rotation" → SM. "Config values" → PS.
->
-
+```
+Secrets Manager: secrets + auto-rotation, $0.40/secret/month.
+Parameter Store: config + secrets, FREE standard tier, no auto-rotation.
+"DB passwords with auto-rotation" → SM. "Config values" → PS.
+```
 
 **Q30.** REVIEW: S3 vs EBS vs EFS vs Instance Store?
 
-> S3: object/unlimited. EBS: block/single-instance/persistent. EFS: file/multi-instance/persistent. Instance Store: temporary/fastest. "Multiple EC2 share files" → EFS. "Database volume" → EBS.
->
-
+```
+S3: object/unlimited. EBS: block/single-instance/persistent.
+EFS: file/multi-instance/persistent. Instance Store: temporary/fastest.
+"Multiple EC2 share files" → EFS. "Database volume" → EBS.
+```
 
 **Q31.** Translate app into 50 languages?
 
-> Amazon Translate — neural machine translation, 75+ languages. Use for: real-time chat translation, content localization, document translation.
->
-
+> Amazon Translate — neural machine translation, 75+ languages.
+> Use for: real-time chat translation, content localization, document translation.
 
 **Q32.** Running Apache Spark jobs on large datasets?
 
-> Amazon EMR — managed Hadoop/Spark. Submit Spark job, AWS runs it. Core nodes process data. Task nodes (Spot Instances) for cost savings.
->
-
+> Amazon EMR — managed Hadoop/Spark. Submit Spark job, AWS runs it.
+> Core nodes process data. Task nodes (Spot Instances) for cost savings.
 
 **Q33.** Build complete CI/CD pipeline using only AWS services?
 
-> CodeCommit (source) → CodeBuild (build/test) → CodeDeploy (deploy). CodePipeline orchestrates the entire flow end-to-end.
->
-
+```
+CodeCommit (source) → CodeBuild (build/test) → CodeDeploy (deploy).
+CodePipeline orchestrates the entire flow end-to-end.
+```
 
 **Q34.** What is Amazon Cloud9?
 
-> Cloud-based browser IDE. Full code editor, terminal, pre-installed AWS CLI. Runs on EC2. Access from any device — iPad, library computer, client site. Collaborative editing (pair programming).
->
-
+> Cloud-based browser IDE. Full code editor, terminal, pre-installed AWS CLI.
+> Runs on EC2. Access from any device — iPad, library computer, client site.
+> Collaborative editing (pair programming).
 
 **Q35.** Service providing NLP for sentiment and entity extraction?
 
-> Amazon Comprehend — NLP for text analysis. Sentiment: positive/negative/neutral/mixed. Entities: PERSON, ORGANIZATION, LOCATION, DATE. Key phrases, language detection, topic modeling.
->
-
+> Amazon Comprehend — NLP for text analysis.
+> Sentiment: positive/negative/neutral/mixed.
+> Entities: PERSON, ORGANIZATION, LOCATION, DATE.
+> Key phrases, language detection, topic modeling.
 
 **Q36.** Difference between Kinesis Data Streams and Firehose?
 
-> Data Streams: real-time (ms), you write consumers, multiple readers, replay. Firehose: near real-time (60s buffer), managed delivery, one destination, simpler. Use Streams: need replay, multiple consumers, custom processing. Use Firehose: just deliver to S3/Redshift/OpenSearch easily.
->
-
+> Data Streams: real-time (ms), you write consumers, multiple readers, replay.
+> Firehose: near real-time (60s buffer), managed delivery, one destination, simpler.
+> Use Streams: need replay, multiple consumers, custom processing.
+> Use Firehose: just deliver to S3/Redshift/OpenSearch easily.
 
 **Q37.** Which service sends push notifications to mobile devices?
 
-> Amazon SNS — supports APNs (Apple) and FCM (Android/Google). APNs = Apple Push Notification service. FCM = Firebase Cloud Messaging.
->
-
+> Amazon SNS — supports APNs (Apple) and FCM (Android/Google).
+> APNs = Apple Push Notification service. FCM = Firebase Cloud Messaging.
 
 **Q38.** REVIEW: Which pillar covers encryption, least privilege, MFA?
 
-> Security pillar — protect data, systems, and assets. Implement strong identity, enable traceability, apply security at all layers.
->
-
+> Security pillar — protect data, systems, and assets.
+> Implement strong identity, enable traceability, apply security at all layers.
 
 **Q39.** REVIEW: Which pillar covers Multi-AZ, Auto Scaling, backups?
 
-> Reliability pillar — recover from failures, scale dynamically. Design for failure. Automate recovery. Test recovery procedures.
->
-
+> Reliability pillar — recover from failures, scale dynamically.
+> Design for failure. Automate recovery. Test recovery procedures.
 
 **Q40.** REVIEW: What does Replatform mean?
 
-> "Lift, tinker, and shift" — minor optimization, no re-architecture. App code unchanged. Architecture mostly same. Operations improved. Examples: EC2 MySQL → RDS MySQL. Tomcat EC2 → Elastic Beanstalk.
->
-
+```
+"Lift, tinker, and shift" — minor optimization, no re-architecture.
+App code unchanged. Architecture mostly same. Operations improved.
+Examples: EC2 MySQL → RDS MySQL. Tomcat EC2 → Elastic Beanstalk.
+```
 
 **Q41.** Hadoop on-premises. AWS equivalent?
 
-> Amazon EMR (Elastic MapReduce) — managed Hadoop/Spark on AWS. You submit jobs. AWS manages cluster, scaling, OS. Store data in S3 (not HDFS). Use Spot for 90% savings.
->
-
+> Amazon EMR (Elastic MapReduce) — managed Hadoop/Spark on AWS.
+> You submit jobs. AWS manages cluster, scaling, OS.
+> Store data in S3 (not HDFS). Use Spot for 90% savings.
 
 **Q42.** What is Amazon Forecast?
 
-> ML time-series forecasting. Demand, staffing, energy predictions. Feed historical data → Forecast trains model → return predictions with confidence. Same technology Amazon uses for supply chain forecasting.
->
-
+```
+ML time-series forecasting. Demand, staffing, energy predictions.
+Feed historical data → Forecast trains model → return predictions with confidence.
+Same technology Amazon uses for supply chain forecasting.
+```
 
 **Q43.** Which developer tool finds performance bottlenecks in microservices?
 
-> AWS X-Ray — distributed tracing. Service Map shows latency per service. Each request traced through ALL services it touches.
->
-
+> AWS X-Ray — distributed tracing. Service Map shows latency per service.
+> Each request traced through ALL services it touches.
 
 **Q44.** REVIEW: Three AWS pricing fundamentals?
 
-> 1. Pay as you go (variable, no upfront). 2. Save when you reserve (1-3 year commit = 72% off). 3. Pay less as you use more (volume discounts — S3 tiers).
->
-
+> 1. Pay as you go (variable, no upfront).
+> 2. Save when you reserve (1-3 year commit = 72% off).
+> 3. Pay less as you use more (volume discounts — S3 tiers).
 
 **Q45.** REVIEW: Is data transfer into AWS free?
 
-> YES — data transfer IN to AWS is ALWAYS FREE. Data OUT costs money (~$0.09/GB to internet). EXAM SHORTCUT: Data IN = Free. Data OUT = Costs.
->
-
+> YES — data transfer IN to AWS is ALWAYS FREE.
+> Data OUT costs money (~$0.09/GB to internet).
+> EXAM SHORTCUT: Data IN = Free. Data OUT = Costs.
 
 **Q46.** REVIEW: What is AWS CAF?
 
-> Cloud Adoption Framework. 6 perspectives: Business, People, Governance, Platform, Security, Operations. Memory: "Business People Go Play Soccer Online"
->
-
+> Cloud Adoption Framework. 6 perspectives:
+> Business, People, Governance, Platform, Security, Operations.
+> Memory: "Business People Go Play Soccer Online"
 
 **Q47.** REVIEW: Which S3 class is cheapest with 12-hour retrieval?
 
-> S3 Glacier Deep Archive — $0.00099/GB/month. 12-hour retrieval. 180-day min. Storage class order (cheapest last): Standard → Intelligent → Standard-IA → One Zone-IA → Glacier Instant → Glacier Flexible → Glacier Deep Archive.
->
-
+```
+S3 Glacier Deep Archive — $0.00099/GB/month. 12-hour retrieval. 180-day min.
+Storage class order (cheapest last):
+Standard → Intelligent → Standard-IA → One Zone-IA → Glacier Instant
+→ Glacier Flexible → Glacier Deep Archive.
+```
 
 **Q48.** REVIEW: What does a NAT Gateway allow?
 
-> Private subnet instances initiate OUTBOUND internet connections. Internet CANNOT initiate inbound connections to private instances. Must be in PUBLIC subnet. One per AZ for HA.
->
-
+> Private subnet instances initiate OUTBOUND internet connections.
+> Internet CANNOT initiate inbound connections to private instances.
+> Must be in PUBLIC subnet. One per AZ for HA.
 
 **Q49.** REVIEW: Which support plan includes a dedicated TAM?
 
-> Enterprise Support ($15,000+/month) — dedicated TAM. Enterprise On-Ramp: pool of shared TAMs. Business: no TAM.
->
-
+> Enterprise Support ($15,000+/month) — dedicated TAM.
+> Enterprise On-Ramp: pool of shared TAMs. Business: no TAM.
 
 **Q50.** REVIEW: What is the principle of least privilege?
 
-> Grant only minimum permissions needed for the job. Start: zero permissions. Add: only what's needed. Review: remove unused. If compromised with least privilege: minimal blast radius.
->
+> Grant only minimum permissions needed for the job.
+> Start: zero permissions. Add: only what's needed. Review: remove unused.
+> If compromised with least privilege: minimal blast radius.
 
-
-*DAY 10 COMPLETE — ALL CONTENT COVERED*
+DAY 10 COMPLETE — ALL CONTENT COVERED
 
 ## Day 11 — FULL PRACTICE EXAM #1
 
