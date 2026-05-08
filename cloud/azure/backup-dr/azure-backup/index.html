@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-backup-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Backup Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#recovery-services-vault-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,27 @@
 <h1 id="azure-backup">Azure Backup<a class="headerlink" href="#azure-backup" title="Permanent link">&para;</a></h1>
 <p>Azure Backup is a cloud-native backup service that provides simple, secure, and cost-effective solutions for protecting VMs, SQL databases, file shares, and on-premises workloads.</p>
 <hr />
+<h2 id="azure-backup-architecture">Azure Backup Architecture<a class="headerlink" href="#azure-backup-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph sources["Protected Sources"]
+        azureVMs["Azure VMs\nLinux · Windows"]
+        sqlInVM["SQL Server in VM"]
+        azureFiles["Azure Files"]
+        onpremWS["On-Premises\nMARS Agent"]
+    end
+    vault["Recovery Services Vault\nBackup Policies · Retention"]
+    subgraph storage["Backup Storage"]
+        lrs["LRS Storage\nlocally redundant"]
+        grs["GRS Storage\ngeo-redundant (default)"]
+    end
+    restore["Restore\nVM · File · DB"]
+
+    azureVMs --&gt; vault
+    sqlInVM --&gt; vault
+    azureFiles --&gt; vault
+    onpremWS --&gt; vault
+    vault --&gt; lrs &amp; grs
+    vault --&gt; restore</code></pre>
 <h2 id="recovery-services-vault-setup">Recovery Services Vault Setup<a class="headerlink" href="#recovery-services-vault-setup" title="Permanent link">&para;</a></h2>
 <p>All Azure Backup configurations are anchored to a Recovery Services Vault.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a Recovery Services Vault</span>

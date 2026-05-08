@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#windows-certificate-operations-use-certutil-for-verification-revocation-and-store-management-linux-operations-rely-on-openssl-for-inspection-verification-and-tls-connectivity-testing-powershell-provides-get-childitem-cert-for-the-windows-certificate-store-and-test-certificate-for-chain-validation" class="md-nav__link">
+  <a href="#tool-selection-by-task" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Windows certificate operations use certutil for verification, revocation, and store management. Linux operations rely on openssl for inspection, verification, and TLS connectivity testing. PowerShell provides Get-ChildItem Cert:\ for the Windows certificate store and Test-Certificate for chain validation.
+        Tool Selection by Task
       
     </span>
   </a>
@@ -803,7 +803,18 @@
 
 
 <h1 id="certificates-cli-reference">Certificates CLI Reference<a class="headerlink" href="#certificates-cli-reference" title="Permanent link">&para;</a></h1>
-<h2 id="windows-certificate-operations-use-certutil-for-verification-revocation-and-store-management-linux-operations-rely-on-openssl-for-inspection-verification-and-tls-connectivity-testing-powershell-provides-get-childitem-cert-for-the-windows-certificate-store-and-test-certificate-for-chain-validation">Windows certificate operations use <code>certutil</code> for verification, revocation, and store management. Linux operations rely on <code>openssl</code> for inspection, verification, and TLS connectivity testing. PowerShell provides <code>Get-ChildItem Cert:\</code> for the Windows certificate store and <code>Test-Certificate</code> for chain validation.<a class="headerlink" href="#windows-certificate-operations-use-certutil-for-verification-revocation-and-store-management-linux-operations-rely-on-openssl-for-inspection-verification-and-tls-connectivity-testing-powershell-provides-get-childitem-cert-for-the-windows-certificate-store-and-test-certificate-for-chain-validation" title="Permanent link">&para;</a></h2>
+<p>Windows certificate operations use <code>certutil</code> for verification, revocation, and store management. Linux operations rely on <code>openssl</code> for inspection, verification, and TLS connectivity testing. PowerShell provides <code>Get-ChildItem Cert:\</code> for the Windows certificate store and <code>Test-Certificate</code> for chain validation.</p>
+<h2 id="tool-selection-by-task">Tool Selection by Task<a class="headerlink" href="#tool-selection-by-task" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    task{"Certificate task"}
+    task --&gt;|"inspect cert fields / SANs"| opensslText["openssl x509 -in cert.pem -noout -text"]
+    task --&gt;|"verify key matches cert"| opensslModulus["openssl x509 / rsa -noout -modulus\n+ md5sum comparison"]
+    task --&gt;|"test live TLS endpoint"| opensslClient["openssl s_client -connect host:443\n-servername host"]
+    task --&gt;|"verify chain"| opensslVerify["openssl verify -CAfile root.pem\n-untrusted intermediate.pem cert.pem"]
+    task --&gt;|"Windows store operations"| certutil["certutil -store My\ncertutil -verify cert.pem\ncertutil -addstore Root ca.crt"]
+    task --&gt;|"PowerShell Windows store"| psStore["Get-ChildItem Cert:\\LocalMachine\\My\nTest-Certificate"]
+    task --&gt;|"generate key + CSR"| csrGen["openssl req -new -newkey rsa:4096\n-keyout key.pem -out csr.pem"]</code></pre>
+<hr />
 <h2 id="openssl-inspection">openssl — Inspection<a class="headerlink" href="#openssl-inspection" title="Permanent link">&para;</a></h2>
 <p>Inspect certificates, keys, and chains before deploying or renewing.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># View all certificate fields</span>

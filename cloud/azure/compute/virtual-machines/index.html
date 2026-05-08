@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-vm-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure VM Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-vms" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,26 @@
 <h1 id="virtual-machines">Virtual Machines<a class="headerlink" href="#virtual-machines" title="Permanent link">&para;</a></h1>
 <p>Reference for creating, managing, sizing, and operating Azure Virtual Machines using the <code>az vm</code> CLI commands.</p>
 <hr />
+<h2 id="azure-vm-architecture">Azure VM Architecture<a class="headerlink" href="#azure-vm-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph vmComponents["VM Components"]
+        compute["Compute\nvCPU · RAM (SKU)"]
+        osDisk["OS Disk\nManaged Disk (P/E/S)"]
+        dataDisks["Data Disks\nup to 64 per VM"]
+        nic["NIC\nIP · NSG · Accelerated Networking"]
+    end
+    subgraph platform["Platform Services"]
+        avail["Availability Zone / Set"]
+        ext["Extensions\nMonitor Agent · Defender · Custom Script"]
+        diagBoot["Boot Diagnostics\nserial console · screenshot"]
+    end
+    rg["Resource Group"]
+    vnet["Virtual Network / Subnet"]
+
+    rg --&gt; vmComponents
+    rg --&gt; platform
+    nic --&gt; vnet
+    avail --&gt; compute</code></pre>
 <h2 id="creating-vms">Creating VMs<a class="headerlink" href="#creating-vms" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a Linux VM with defaults</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>vm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

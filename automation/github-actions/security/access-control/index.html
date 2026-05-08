@@ -833,6 +833,17 @@
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>SHARED_TOKEN<span class="w"> </span>--org<span class="w"> </span>myorg
 </code></pre></div>
 <h3 id="oidc-keyless-authentication">OIDC — Keyless Authentication<a class="headerlink" href="#oidc-keyless-authentication" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Job as Workflow Job
+    participant GH as GitHub OIDC Provider
+    participant Cloud as Cloud Provider\nAWS IAM / GCP WIF
+
+    Job-&gt;&gt;GH: Request OIDC JWT\n(permissions: id-token: write)
+    GH--&gt;&gt;Job: Signed JWT\n(iss: token.actions.githubusercontent.com\nsub: repo:org/repo:ref:...)
+    Job-&gt;&gt;Cloud: Exchange JWT for credentials\n(AssumeRoleWithWebIdentity)
+    Cloud-&gt;&gt;Cloud: Validate JWT signature and claims
+    Cloud--&gt;&gt;Job: Temporary credentials\n(expire automatically)
+    Note over Job,Cloud: No long-lived secret stored in GitHub</code></pre>
 <p>OIDC lets workflows authenticate to cloud providers without storing long-lived credentials as secrets.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># AWS OIDC setup</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">permissions</span><span class="p">:</span>

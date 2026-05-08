@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#rpo-violation-triage-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RPO Violation Triage Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rpo-compliance-check" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -852,39 +863,46 @@
 <tr>
 <th>Check</th>
 <th>Command</th>
-<th>Notes</th>
+<th>Expected</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>[ ] All Consistency Groups (CGs) are in ACTIVE replication state</td>
-<td></td>
-<td>none suspended, in error, or paused without a corresponding change ticket</td>
+<td><code>groups status</code></td>
+<td>All ACTIVE</td>
+<td>Non-active CGs mean data is not being protected</td>
 </tr>
 <tr>
 <td>[ ] All RPA nodes are online and clustered</td>
-<td></td>
-<td>no degraded or faulted RPA</td>
+<td><code>system status</code></td>
+<td>All nodes running</td>
+<td>Lost RPA node reduces cluster HA headroom</td>
 </tr>
 <tr>
 <td>[ ] Journal capacity</td>
-<td></td>
-<td></td>
+<td><code>journals list</code></td>
+<td>&lt; 70%</td>
+<td>Journal overflow halts replication without warning</td>
 </tr>
 <tr>
-<td>[ ] Replication lag / RPO is within the acceptable threshold (typically &lt; 15 min)</td>
-<td></td>
-<td></td>
+<td>[ ] Replication lag / RPO is within the acceptable threshold</td>
+<td><code>group status --gname n</code></td>
+<td>Within SLA</td>
+<td>Lag = data exposure window at time of failure</td>
 </tr>
 <tr>
 <td>[ ] No image access sessions are left enabled from a previous DR test</td>
-<td></td>
-<td></td>
+<td><code>groups status detail</code></td>
+<td>No active image access</td>
+<td>Active image access pauses live replication</td>
 </tr>
 <tr>
 <td>[ ] Confirm both production and DR site RecoverPoint clusters are reachable</td>
-<td></td>
-<td></td>
+<td><code>network connectivity check</code></td>
+<td>Connected</td>
+<td>Inter-site link health determines replication continuity</td>
 </tr>
 </tbody>
 </table>
@@ -955,6 +973,47 @@
 <a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <hr />
+<h2 id="rpo-violation-triage-decision-tree">RPO Violation Triage Decision Tree<a class="headerlink" href="#rpo-violation-triage-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    rpoAlert["RPO Violation Alert\nLag exceeds threshold"]
+    checkCGState["Check CG State\ngroups status detail"]
+    cgActive{"CG\nState?"}
+    cgError["CG in ERROR\nor PAUSED"]
+    cgActive2["CG ACTIVE\nbut lagging"]
+    checkJournal["Check Journal Utilization\njournals list"]
+    journalHigh{"Journal &gt; 70%?"}
+    checkLink["Check Inter-site Link\nlinks statistics"]
+    linkSaturated{"Link Bandwidth\nSaturated?"}
+    checkWriteRate["Check Write Rate\nIdentify high-write application"]
+    expandJournal["Expand Journal\nor reduce retention window"]
+    engageNetwork["Engage Network Team\nIncrease WAN bandwidth or QoS"]
+    checkRPALoad["Check RPA Load\nsystem status\nDistribute CGs if overloaded"]
+    monitorRPO["Monitor RPO Recovery\nevery 5 minutes"]
+    resolved["RPO Within SLA\nClose Alert"]
+
+    rpoAlert --&gt; checkCGState
+    checkCGState --&gt; cgActive
+    cgActive --&gt;|"ERROR / PAUSED"| cgError
+    cgActive --&gt;|"ACTIVE"| cgActive2
+    cgError --&gt; checkJournal
+    cgActive2 --&gt; checkLink
+    checkJournal --&gt; journalHigh
+    journalHigh --&gt;|"Yes"| expandJournal
+    journalHigh --&gt;|"No"| checkLink
+    expandJournal --&gt; monitorRPO
+    checkLink --&gt; linkSaturated
+    linkSaturated --&gt;|"Yes"| engageNetwork
+    linkSaturated --&gt;|"No"| checkWriteRate
+    engageNetwork --&gt; monitorRPO
+    checkWriteRate --&gt; checkRPALoad
+    checkRPALoad --&gt; monitorRPO
+    monitorRPO --&gt;|"RPO recovering"| resolved
+
+    style rpoAlert fill:#be123c,color:#fff
+    style resolved fill:#15803d,color:#fff
+    style cgError fill:#be123c,color:#fff
+    style expandJournal fill:#b45309,color:#fff
+    style engageNetwork fill:#b45309,color:#fff</code></pre>
 <h2 id="rpo-compliance-check">RPO Compliance Check<a class="headerlink" href="#rpo-compliance-check" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check per-CG RPO against current lag (SSH)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>group<span class="w"> </span>status<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;

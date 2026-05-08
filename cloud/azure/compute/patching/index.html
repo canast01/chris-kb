@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-update-manager-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Update Manager Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#azure-update-manager-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,19 @@
 <h1 id="patching">Patching<a class="headerlink" href="#patching" title="Permanent link">&para;</a></h1>
 <p>Azure Update Manager (the successor to Azure Automation Update Management) provides centralised OS patch management for Azure VMs, Arc-connected servers, and on-premises machines. This page covers assessments, maintenance windows, and compliance reporting.</p>
 <hr />
+<h2 id="azure-update-manager-flow">Azure Update Manager Flow<a class="headerlink" href="#azure-update-manager-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    assess["Patch Assessment\ncheck available updates"]
+    maintenanceConfig["Maintenance Configuration\nschedule · reboot policy · scope"]
+    patchOrch["Patch Orchestration\nAzure-managed or customer-managed"]
+    patchInstall["Patch Installation\nOS-native package manager"]
+    reboot{"Reboot\nrequired?"}
+    rebootVM["Reboot VM\nwithin maintenance window"]
+    compliance["Compliance Report\nAzure Update Manager dashboard"]
+
+    assess --&gt; maintenanceConfig --&gt; patchOrch --&gt; patchInstall --&gt; reboot
+    reboot -- Yes --&gt; rebootVM --&gt; compliance
+    reboot -- No --&gt; compliance</code></pre>
 <h2 id="azure-update-manager-overview">Azure Update Manager Overview<a class="headerlink" href="#azure-update-manager-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

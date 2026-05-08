@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pki-certificate-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PKI Certificate Chain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#certificate-chains" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -803,6 +814,15 @@
 
 
 <h1 id="certificates-components">Certificates — Components<a class="headerlink" href="#certificates-components" title="Permanent link">&para;</a></h1>
+<h2 id="pki-certificate-chain">PKI Certificate Chain<a class="headerlink" href="#pki-certificate-chain" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    rootCA[("Root CA\n(self-signed — offline HSM)")] --&gt;|"signs Intermediate CA cert"| intCA["Intermediate / Issuing CA\n(online — ADCS / commercial CA)"]
+    intCA --&gt;|"issues"| serverCert["Server Certificate\n(end-entity — nginx / IIS / F5)"]
+    intCA --&gt;|"issues"| clientCert["Client Certificate\n(end-entity — user / device auth)"]
+    serverCert -. "AIA chain download" .-&gt; aiaURL["AIA URL\nhttp://pki.corp.example.com/issuing-ca.crt"]
+    serverCert -. "CDP revocation check" .-&gt; cdpURL["CDP / CRL URL\nhttp://pki.corp.example.com/crl/IssuingCA.crl"]
+    serverCert -. "OCSP check" .-&gt; ocsp["OCSP Responder\nhttp://ocsp.corp.example.com/ocsp"]</code></pre>
+<hr />
 <h2 id="certificate-chains">Certificate Chains<a class="headerlink" href="#certificate-chains" title="Permanent link">&para;</a></h2>
 <p>A certificate chain links an end-entity certificate back to a trusted root CA through one or more intermediates. Chain building failures are the most common cause of TLS trust errors in production.</p>
 <h2 id="chain-structure">Chain Structure<a class="headerlink" href="#chain-structure" title="Permanent link">&para;</a></h2>

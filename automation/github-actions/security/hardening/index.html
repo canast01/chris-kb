@@ -775,6 +775,19 @@
 </blockquote>
 <hr />
 <h2 id="minimal-permissions">Minimal Permissions<a class="headerlink" href="#minimal-permissions" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    repo["GitHub Repository"]
+    branchProtect["Branch Protection\nmain branch\nrequired status checks\nPR reviews enforced"]
+    workflowPerms["Workflow permissions\ncontents: read (default)\nOverride per job only"]
+    actionPin["Action pinning\nactions/checkout@SHA\nDependabot weekly updates"]
+    secretScan["Secret scanning\nPush protection enabled\nAlert on commit"]
+    selfHostedIsolate["Self-hosted runners\nEphemeral — fresh per run\nIsolated from production"]
+
+    repo --&gt; branchProtect
+    repo --&gt; workflowPerms
+    repo --&gt; actionPin
+    repo --&gt; secretScan
+    repo --&gt; selfHostedIsolate</code></pre>
 <p>Grant only the permissions each job requires. The default <code>GITHUB_TOKEN</code> permissions can be locked down at the workflow or job level.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Workflow-level: restrict all jobs</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">permissions</span><span class="p">:</span>
@@ -861,6 +874,16 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart LR
+    prOpen(["Developer opens PR"])
+    actionlint["actionlint\nworkflow YAML lint"]
+    statusChecks["Required status checks\nbuild + test jobs"]
+    reviewApproval["PR review\n1 required approver"]
+    branchMerge["Merge to main\nprotected branch"]
+    release["Release tag pushed\nv1.2.3"]
+    oidcPublish["OIDC publish\nno stored cloud secrets"]
+
+    prOpen --&gt; actionlint --&gt; statusChecks --&gt; reviewApproval --&gt; branchMerge --&gt; release --&gt; oidcPublish</code></pre>
 
 
 

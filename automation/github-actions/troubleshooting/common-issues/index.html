@@ -764,6 +764,25 @@
 </blockquote>
 <hr />
 <h2 id="common-failures">Common Failures<a class="headerlink" href="#common-failures" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    failure(["Workflow failure\nor unexpected behaviour"])
+    noTrigger{"Did the workflow\ntrigger at all?"}
+    checkPaths["Check on.paths filter\nDoes it match the changed files?"]
+    stepFail{"Which step\nfailed?"}
+    permErr["Resource not accessible\n→ Add permissions: block to job"]
+    ctxErr["Context access invalid\n→ Fix ${{ }} expression syntax"]
+    exitErr["Exit code 1\n→ Check step output in logs"]
+    secretErr["Secret is empty\n→ Check repo vs env vs org scope"]
+    wdErr["No such file\n→ Add working-directory: or cd"]
+
+    failure --&gt; noTrigger
+    noTrigger --&gt;|No| checkPaths
+    noTrigger --&gt;|Yes| stepFail
+    stepFail --&gt; permErr
+    stepFail --&gt; ctxErr
+    stepFail --&gt; exitErr
+    stepFail --&gt; secretErr
+    stepFail --&gt; wdErr</code></pre>
 <table>
 <thead>
 <tr>

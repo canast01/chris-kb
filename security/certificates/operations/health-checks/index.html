@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#certificate-expiration-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -799,6 +810,21 @@
 
 <h1 id="certificates-health-checks">Certificates — Health Checks<a class="headerlink" href="#certificates-health-checks" title="Permanent link">&para;</a></h1>
 <p>Weekly operations include reviewing the certificate expiry dashboard for certificates expiring within 30, 60, and 90 days, checking CRL and OCSP responder availability for all CAs, verifying CA service health (for ADCS: check Certificate Services in Server Manager and confirm the service is running), and confirming auto-renewal jobs completed successfully. Monthly, audit newly issued certificates against naming and validity standards.</p>
+<h2 id="certificate-expiry-monitoring-flow">Certificate Expiry Monitoring Flow<a class="headerlink" href="#certificate-expiry-monitoring-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    monitor["Continuous certificate monitoring\n(Venafi / Prometheus / openssl scans)"]
+    monitor --&gt; expiryCheck{"Days until\nexpiry?"}
+    expiryCheck --&gt;|"90 days"| ticket90["Create ticket\nAssign to certificate owner"]
+    expiryCheck --&gt;|"30 days"| escalate30["Escalate to team lead\nStart renewal process"]
+    expiryCheck --&gt;|"14 days"| daily14["Daily alerts\nManagement notification"]
+    expiryCheck --&gt;|"7 days"| p1["P1 incident declared\nEmergency renewal"]
+    expiryCheck --&gt;|"expired"| outage["Service outage declared\nBreak-glass renewal procedure"]
+    ticket90 --&gt; renewAction["Initiate renewal\n(auto or manual)"]
+    escalate30 --&gt; renewAction
+    daily14 --&gt; renewAction
+    p1 --&gt; renewAction
+    renewAction --&gt; newCert["New certificate installed\nand validated"]
+    newCert --&gt; monitor</code></pre>
 <p>OCSP and CRL freshness must be checked proactively — a stale CRL can cause widespread certificate validation failures across services that depend on it.</p>
 <p><strong>Weekly checklist:</strong></p>
 <ul>

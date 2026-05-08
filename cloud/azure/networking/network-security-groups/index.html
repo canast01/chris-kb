@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#nsg-rule-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSG Rule Evaluation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-and-managing-nsgs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,23 @@
 
 <h1 id="network-security-groups">Network Security Groups<a class="headerlink" href="#network-security-groups" title="Permanent link">&para;</a></h1>
 <p>Network Security Groups (NSGs) are stateful packet filters that control inbound and outbound traffic to Azure resources. They can be associated with subnets or individual network interfaces. Rules are evaluated by priority — the lowest number wins.</p>
+<h2 id="nsg-rule-evaluation">NSG Rule Evaluation<a class="headerlink" href="#nsg-rule-evaluation" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    traffic["Inbound / Outbound Traffic"]
+    defaultDeny["Default Deny-All rule\npriority 65500"]
+    rule100{"Priority 100\nrule matches?"}
+    rule200{"Priority 200\nrule matches?"}
+    ruleN{"Priority N\nnext rule..."}
+    allow["ALLOW\ntraffic passes"]
+    deny["DENY\ntraffic dropped"]
+
+    traffic --&gt; rule100
+    rule100 --&gt;|"Allow match"| allow
+    rule100 --&gt;|"Deny match"| deny
+    rule100 --&gt;|"No match"| rule200
+    rule200 --&gt;|"Match"| allow
+    rule200 --&gt;|"No match"| ruleN
+    ruleN --&gt; defaultDeny --&gt; deny</code></pre>
 <h2 id="creating-and-managing-nsgs">Creating and Managing NSGs<a class="headerlink" href="#creating-and-managing-nsgs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create an NSG</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

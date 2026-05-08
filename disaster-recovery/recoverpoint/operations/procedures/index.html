@@ -762,6 +762,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#bookmark-based-recovery-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bookmark-Based Recovery Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pre-failover-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -799,6 +810,17 @@
     <span class="md-ellipsis">
       
         Post-Failover Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failover-and-failback-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover and Failback Sequence
       
     </span>
   </a>
@@ -1067,6 +1089,7 @@
 <th>Mode</th>
 <th>Description</th>
 <th>Impact on Replication</th>
+<th>When to use</th>
 </tr>
 </thead>
 <tbody>
@@ -1074,15 +1097,40 @@
 <td>Image Access (DR Test)</td>
 <td>Non-disruptive — accesses a DR copy snapshot; production replication continues</td>
 <td>Replication paused during image access; resumes on disable</td>
+<td>Quarterly DR tests; point-in-time validation</td>
 </tr>
 <tr>
 <td>Failover (Production DR)</td>
 <td>Disruptive — production copy is demoted; DR copy becomes production</td>
 <td>Requires failback procedure to restore normal replication direction</td>
+<td>Declared DR events; production site failure</td>
 </tr>
 </tbody>
 </table>
 <p>For planned DR tests, use Image Access. Invoke a full failover only on declared DR events.</p>
+<h3 id="bookmark-based-recovery-flow">Bookmark-Based Recovery Flow<a class="headerlink" href="#bookmark-based-recovery-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    listBookmarks["List Available Bookmarks\ngroup list_bookmarks --gname cgname"]
+    selectBookmark["Select Target Bookmark\n(or timestamp)"]
+    enableImageAccess["Enable Image Access\ngroup enable-image-access --gname cgname\n--copy DR_Copy --image bookmark --access-mode virtual"]
+    confirmImageAccess["Confirm Image Access Active\ngroup status --gname cgname"]
+    mountVolumes["Mount DR Volumes\n(host-level step — SAN zoning / masking)"]
+    validateApp["Validate Application Data\n(app team confirms)"]
+    disableImageAccess["Disable Image Access\ngroup disable-image-access --gname cgname"]
+    confirmActive["Confirm CG Returns to ACTIVE\ngroups status"]
+
+    listBookmarks --&gt; selectBookmark
+    selectBookmark --&gt; enableImageAccess
+    enableImageAccess --&gt; confirmImageAccess
+    confirmImageAccess --&gt; mountVolumes
+    mountVolumes --&gt; validateApp
+    validateApp --&gt; disableImageAccess
+    disableImageAccess --&gt; confirmActive
+
+    style listBookmarks fill:#2563eb,color:#fff
+    style enableImageAccess fill:#b45309,color:#fff
+    style disableImageAccess fill:#b45309,color:#fff
+    style confirmActive fill:#15803d,color:#fff</code></pre>
 <h3 id="pre-failover-checklist">Pre-Failover Checklist<a class="headerlink" href="#pre-failover-checklist" title="Permanent link">&para;</a></h3>
 <p>Complete before enabling image access or invoking failover.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm all CGs are in ACTIVE state</span>
@@ -1172,6 +1220,28 @@
 </tr>
 </tbody>
 </table>
+<h3 id="failover-and-failback-sequence">Failover and Failback Sequence<a class="headerlink" href="#failover-and-failback-sequence" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant ops as Operations Team
+    participant rpaA as RPA Cluster Site A
+    participant rpaB as RPA Cluster Site B
+    participant drHosts as DR Hosts
+
+    Note over ops,drHosts: Declared DR Event
+    ops-&gt;&gt;rpaB: enable-image-access --copy DR_Copy --access-mode logged
+    rpaB--&gt;&gt;ops: Image access active
+    ops-&gt;&gt;drHosts: Mount DR volumes and start applications
+    drHosts--&gt;&gt;ops: Applications running at DR site
+    ops-&gt;&gt;rpaB: recover-production
+    rpaB--&gt;&gt;ops: DR copy is now production
+
+    Note over ops,drHosts: Primary Site Restored — Failback
+    ops-&gt;&gt;rpaB: reverse-replication
+    rpaB-&gt;&gt;rpaA: Replicate from DR back to primary
+    rpaA--&gt;&gt;rpaB: Primary site caught up
+    ops-&gt;&gt;rpaB: failback
+    rpaA--&gt;&gt;ops: Original production copy restored
+    ops-&gt;&gt;drHosts: Stop DR applications, unmount DR volumes</code></pre>
 <h3 id="failback-return-to-original-production-site">Failback — Return to Original Production Site<a class="headerlink" href="#failback-return-to-original-production-site" title="Permanent link">&para;</a></h3>
 <p>After DR operations are complete and the primary site is restored:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Step 1 — Ensure primary site storage is ready</span>

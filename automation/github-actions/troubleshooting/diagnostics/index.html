@@ -764,6 +764,22 @@
 </blockquote>
 <hr />
 <h2 id="debug-logging">Debug Logging<a class="headerlink" href="#debug-logging" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    symptom(["Workflow failure\nor unexpected behaviour"])
+    uiCheck["GitHub Actions UI\nCheck step logs for error"]
+    runLogs["gh run view RUN_ID --log\nFull log download"]
+    debugSecrets["Set repo secrets\nACTIONS_RUNNER_DEBUG=true\nACTIONS_STEP_DEBUG=true"]
+    rerunDebug["Re-run jobs with\ndebug logging enabled"]
+    actLocal["act push --job build\nRun locally in Docker"]
+    dumpCtx["Add step: dump github context\ntoJson(github)"]
+    identify(["Identify root cause\nFix and re-push"])
+
+    symptom --&gt; uiCheck
+    uiCheck --&gt;|"Insufficient detail"| debugSecrets
+    debugSecrets --&gt; rerunDebug --&gt; identify
+    uiCheck --&gt;|"Need local iteration"| actLocal --&gt; identify
+    uiCheck --&gt;|"Context issue"| dumpCtx --&gt; identify
+    uiCheck --&gt;|"Logs clear"| runLogs --&gt; identify</code></pre>
 <p>Enable additional diagnostic output without modifying workflow files.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Set these repository secrets to enable debug logs for the next run</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">ACTIONS_RUNNER_DEBUG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#full-certificate-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Certificate Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#lifecycle-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -810,6 +821,23 @@
 
 <h1 id="certificates-install-upgrade">Certificates — Install &amp; Upgrade<a class="headerlink" href="#certificates-install-upgrade" title="Permanent link">&para;</a></h1>
 <p>The certificate lifecycle spans six stages: enrolment, issuance, installation, monitoring, renewal, and revocation. Auto-renewal must be configured wherever possible (Venafi, ACME, cert-manager). Manual processes are a fallback only.</p>
+<h2 id="full-certificate-lifecycle">Full Certificate Lifecycle<a class="headerlink" href="#full-certificate-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    enrol["Enrolment\n(service provisioning trigger)"]
+    enrol --&gt; csrGen["CSR generation on target host\nor automated via Venafi / ACME"]
+    csrGen --&gt; issuance["Issuance\n(CA receives and signs CSR)"]
+    issuance --&gt;|"internal — automated"| autoInstall["Auto-installation\n(cert-manager / Venafi driver)"]
+    issuance --&gt;|"external — manual"| manualInstall["Manual installation\n(download + deploy to service)"]
+    autoInstall --&gt; monitor["Monitoring\n(Venafi / Prometheus — 90/30/7 day alerts)"]
+    manualInstall --&gt; monitor
+    monitor --&gt; renewTrigger{"80% of validity\nelapsed?"}
+    renewTrigger --&gt;|"yes"| renewAuto{"Automated\nrenewal?"}
+    renewAuto --&gt;|"Venafi / ACME"| csrGen
+    renewAuto --&gt;|"manual"| ownerNotify["Notify certificate owner\nManual renewal started"]
+    ownerNotify --&gt; csrGen
+    renewTrigger --&gt;|"no"| monitor
+    monitor --&gt;|"compromise / decommission"| revoke["Revocation\n(ADCS / CA portal — immediate for key compromise)"]
+    revoke --&gt; newCert["Issue replacement certificate\non clean host with new key"]</code></pre>
 <hr />
 <h2 id="lifecycle-overview">Lifecycle Overview<a class="headerlink" href="#lifecycle-overview" title="Permanent link">&para;</a></h2>
 <table>

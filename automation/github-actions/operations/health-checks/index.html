@@ -836,6 +836,19 @@
 </blockquote>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start(["Daily health check"]) --&gt; workflowList
+
+    workflowList["gh workflow list\nAll workflows enabled?"]
+    runList["gh run list --limit 20\nFailed runs in last 24h?"]
+    secretList["gh secret list\nExpected secrets present?"]
+    runnerCheck["gh api /repos/OWNER/REPO/actions/runners\nRunners online?"]
+    branchProt["Confirm branch protection rules\nmain: required checks + reviews"]
+
+    workflowList --&gt; runList --&gt; secretList --&gt; runnerCheck --&gt; branchProt
+    branchProt --&gt; result{Issues found?}
+    result --&gt;|No| ok(["Health check passed"])
+    result --&gt;|Yes| investigate(["Investigate and remediate"])</code></pre>
 <table>
 <thead>
 <tr>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#asr-replication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASR Replication Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prerequisites-and-vault-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,19 @@
 <h1 id="azure-site-recovery">Azure Site Recovery<a class="headerlink" href="#azure-site-recovery" title="Permanent link">&para;</a></h1>
 <p>Azure Site Recovery (ASR) orchestrates replication, failover, and failback for Azure VMs and on-premises workloads. It enables business continuity with RPO targets as low as 30 seconds for Azure-to-Azure replication.</p>
 <hr />
+<h2 id="asr-replication-flow">ASR Replication Flow<a class="headerlink" href="#asr-replication-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    sourceVM["Source VM\nPrimary Region"]
+    asrAgent["ASR Mobility Agent\nor Azure Fabric"]
+    replication["Continuous Replication\nRPO ~ 30 seconds"]
+    cacheStorage["Cache Storage Account\nPrimary Region"]
+    targetStorage["Replica Managed Disk\nDR Region"]
+    vault["Recovery Services Vault\nDR Region"]
+    failover["Failover\nTest · Planned · Unplanned"]
+    targetVM["Target VM\nDR Region — running"]
+
+    sourceVM --&gt; asrAgent --&gt; cacheStorage --&gt; replication --&gt; targetStorage --&gt; vault
+    vault --&gt; failover --&gt; targetVM</code></pre>
 <h2 id="prerequisites-and-vault-setup">Prerequisites and Vault Setup<a class="headerlink" href="#prerequisites-and-vault-setup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a Recovery Services Vault in the target (DR) region</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>backup<span class="w"> </span>vault<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

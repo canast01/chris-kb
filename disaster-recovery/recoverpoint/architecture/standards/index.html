@@ -810,6 +810,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#recoverpoint-cg-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RecoverPoint CG Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -885,20 +896,24 @@
 <tr>
 <th>Environment</th>
 <th>Recommended Splitter</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>PowerMax / VMAX All Flash</td>
 <td>Hardware splitter (array-embedded)</td>
+<td>No host agent required; lower overhead; integrated with array microcode</td>
 </tr>
 <tr>
 <td>VMware environment (non-PowerMax)</td>
 <td>Software splitter (RP4VM)</td>
+<td>Works at VMDK level independent of underlying storage array</td>
 </tr>
 <tr>
 <td>iSCSI-attached storage</td>
 <td>iSCSI splitter</td>
+<td>FC hardware splitter not available; iSCSI splitter provides equivalent write capture</td>
 </tr>
 </tbody>
 </table>
@@ -932,6 +947,7 @@
 <th>Tier</th>
 <th>Target RPO</th>
 <th>Review Frequency</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
@@ -939,19 +955,50 @@
 <td>Tier 1 (Critical)</td>
 <td>&lt; 15 seconds</td>
 <td>Monthly DR test</td>
+<td>Financial, transactional, or regulatory systems where data loss is unacceptable</td>
 </tr>
 <tr>
 <td>Tier 2 (Business)</td>
 <td>&lt; 5 minutes</td>
 <td>Quarterly DR test</td>
+<td>Business-critical apps where short data loss is tolerable but must be bounded</td>
 </tr>
 <tr>
 <td>Tier 3 (Standard)</td>
 <td>&lt; 30 minutes</td>
 <td>Semi-annual DR test</td>
+<td>Dev/test or non-critical workloads with relaxed recovery expectations</td>
 </tr>
 </tbody>
 </table>
+<h2 id="recoverpoint-cg-architecture">RecoverPoint CG Architecture<a class="headerlink" href="#recoverpoint-cg-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph cgUnit ["Consistency Group — CG-ORACLE-PROD"]
+        subgraph prodCopy ["Production Copy (PROD-SITEA)"]
+            dataVol1["Data LUN 1"]
+            dataVol2["Data LUN 2"]
+            redoLog["Redo Log LUN"]
+        end
+        subgraph prodJournal ["Production Journal (JRN-CG-ORACLE-PROD-PROD)"]
+            jrnProd["Journal Volume\n(local CDP)"]
+        end
+        subgraph drCopy ["DR Copy (DR-SITEB)"]
+            drVol1["DR Data LUN 1"]
+            drVol2["DR Data LUN 2"]
+            drLog["DR Redo Log LUN"]
+        end
+        subgraph drJournal ["DR Journal (JRN-CG-ORACLE-PROD-DR)"]
+            jrnDr["Journal Volume\n(recovery window)"]
+        end
+        bookmark1["Bookmark: pre-patch-20260507"]
+        bookmark2["Bookmark: app-consistent-20260506"]
+    end
+
+    prodCopy --&gt;|"writes captured"| prodJournal
+    prodJournal --&gt;|"replicated"| drJournal
+    drJournal --&gt;|"drain to replica"| drCopy
+    drJournal --- bookmark1
+    drJournal --- bookmark2</code></pre>
 
 
 

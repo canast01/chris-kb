@@ -699,6 +699,163 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#support-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-escalate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Escalate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information-to-collect-before-opening-a-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information to Collect Before Opening a Case
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Information to Collect Before Opening a Case">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#symptom-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Symptom Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nsx-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-node-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Node Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#esxi-host-dfw-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Host DFW Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#severity-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Severity Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-tier-response-times" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Tier Response Times
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-commands-to-run-before-calling-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Commands to Run Before Calling Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-vmware-security-advisories-vmsa-nsx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known VMware Security Advisories (VMSA) — NSX
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +875,266 @@
 
 
 <h1 id="nsx-escalation">NSX — Escalation<a class="headerlink" href="#nsx-escalation" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="support-portal">Support Portal<a class="headerlink" href="#support-portal" title="Permanent link">&para;</a></h2>
+<p>All VMware/NSX support is handled through the Broadcom Support Portal:</p>
+<p><strong>https://support.broadcom.com</strong></p>
+<p>Log in with your Broadcom Support account. NSX support entitlement is tied to your licence contract. Navigate to <strong>My Dashboard → Support → Create Case</strong>.</p>
+<hr />
+<h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
+<p>Escalate to Broadcom Support when:</p>
+<ul>
+<li>NSX Manager cluster is UNSTABLE and cannot be recovered with documented procedures</li>
+<li>All BGP sessions down on a T0 gateway after confirming physical underlay is healthy</li>
+<li>DFW rules not syncing to transport nodes (hosts show old policy after NSX Manager shows updated policy)</li>
+<li>Transport node preparation failing repeatedly after VIB reinstall attempts</li>
+<li>Corfu DB (control plane) corruption: <code>get corfu-cluster status</code> shows repeated errors</li>
+<li>Certificate operations failing and blocking API/UI access</li>
+<li>Post-upgrade regression: known-good functionality broken after NSX version upgrade</li>
+</ul>
+<hr />
+<h2 id="information-to-collect-before-opening-a-case">Information to Collect Before Opening a Case<a class="headerlink" href="#information-to-collect-before-opening-a-case" title="Permanent link">&para;</a></h2>
+<p>Collecting the right data upfront reduces time-to-resolution significantly.</p>
+<h3 id="environment-information">Environment Information<a class="headerlink" href="#environment-information" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>How to Retrieve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NSX version and build</td>
+<td><code>get version</code> on NSX Manager CLI</td>
+</tr>
+<tr>
+<td>ESXi version and build</td>
+<td><code>vmware -v</code> on any ESXi host</td>
+</tr>
+<tr>
+<td>vCenter version</td>
+<td>vSphere Client → Help → About</td>
+</tr>
+<tr>
+<td>Edge node version</td>
+<td><code>get version</code> on Edge CLI</td>
+</tr>
+<tr>
+<td>VCF version (if applicable)</td>
+<td>SDDC Manager UI</td>
+</tr>
+<tr>
+<td>Topology</td>
+<td>Number of Manager nodes, Edge clusters, ESXi hosts, T0/T1 gateways</td>
+</tr>
+</tbody>
+</table>
+<h3 id="symptom-data">Symptom Data<a class="headerlink" href="#symptom-data" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Collection Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Error message (exact text)</td>
+<td>Screenshot or copy from UI/CLI</td>
+</tr>
+<tr>
+<td>Time of first occurrence</td>
+<td>NSX Manager audit log + vCenter events timestamp</td>
+</tr>
+<tr>
+<td>Reproducibility</td>
+<td>Consistent or intermittent; steps to reproduce</td>
+</tr>
+<tr>
+<td>Impact scope</td>
+<td>Which segments, VMs, or tenants are affected</td>
+</tr>
+<tr>
+<td>Recent changes</td>
+<td>List of changes within 72 hours before symptom started</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nsx-support-bundle">NSX Support Bundle<a class="headerlink" href="#nsx-support-bundle" title="Permanent link">&para;</a></h3>
+<p>Generate and download the NSX support bundle — this includes all Manager logs, DB state, and system configuration.</p>
+<p>From NSX Manager UI: <strong>System → Support Bundle → Download</strong></p>
+<p>Or via API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Trigger support bundle generation</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;log_age&quot;: 48}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/support-bundles&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Poll for completion</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/support-bundles/status&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Download the bundle (URL returned in the status response)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-O<span class="w"> </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/support-bundles/download/&lt;bundle-id&gt;&quot;</span>
+</code></pre></div>
+<h3 id="edge-node-logs">Edge Node Logs<a class="headerlink" href="#edge-node-logs" title="Permanent link">&para;</a></h3>
+<p>For routing or Edge-specific issues, collect Edge node logs separately:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to Edge node</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get<span class="w"> </span>log<span class="w"> </span>edge<span class="w"> </span>follow<span class="w">        </span><span class="c1"># Real-time log</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>get<span class="w"> </span>logs<span class="w">                   </span><span class="c1"># Recent logs snapshot</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Log files on Edge node</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ls<span class="w"> </span>/var/log/vmware/nsx-edge/
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>tail<span class="w"> </span>-500<span class="w"> </span>/var/log/vmware/nsx-edge/edge.log
+</code></pre></div>
+<h3 id="esxi-host-dfw-logs">ESXi Host DFW Logs<a class="headerlink" href="#esxi-host-dfw-logs" title="Permanent link">&para;</a></h3>
+<p>For DFW-related issues, collect from the affected ESXi host:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to ESXi host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vm-support<span class="w"> </span>-n<span class="w"> </span>-w<span class="w"> </span>/tmp/
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Copy bundle to accessible location</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>cp<span class="w"> </span>/tmp/esx-*.tgz<span class="w"> </span>/vmfs/volumes/&lt;datastore&gt;/support/
+</code></pre></div>
+<p>Key files within the ESXi support bundle for NSX:
+- <code>/var/log/vmkernel.log</code> — NSX VIB and Geneve events
+- Filter-specific logs from <code>vsipioctl</code> output
+- <code>/etc/vmware/nsx/</code> — NSX configuration on host</p>
+<hr />
+<h2 id="severity-levels">Severity Levels<a class="headerlink" href="#severity-levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Criteria</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1 — Critical</td>
+<td>Production down; data loss risk; no workaround</td>
+<td>NSX Manager cluster UNSTABLE; all VMs on an overlay segment unreachable</td>
+</tr>
+<tr>
+<td>P2 — Major</td>
+<td>Production degraded; workaround exists</td>
+<td>One Edge node down (second Edge still active); specific DFW rules not pushing</td>
+</tr>
+<tr>
+<td>P3 — Minor</td>
+<td>Non-production affected; low business impact</td>
+<td>Lab NSX Manager unreachable; minor DFW logging issues</td>
+</tr>
+<tr>
+<td>P4 — Informational</td>
+<td>How-to questions; feature requests</td>
+<td>Best practice questions; upgrade planning</td>
+</tr>
+</tbody>
+</table>
+<p>Set the correct severity at case creation — P1 cases receive immediate 24x7 engineer response.</p>
+<hr />
+<h2 id="support-tier-response-times">Support Tier Response Times<a class="headerlink" href="#support-tier-response-times" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Support Tier</th>
+<th>P1 Initial Response</th>
+<th>P2 Initial Response</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production Support</td>
+<td>30 minutes</td>
+<td>4 hours</td>
+<td>24x7</td>
+</tr>
+<tr>
+<td>Business Critical Support</td>
+<td>15 minutes</td>
+<td>2 hours</td>
+<td>24x7 + dedicated TAM</td>
+</tr>
+</tbody>
+</table>
+<p>Business Critical Support includes a Technical Account Manager (TAM) for proactive guidance and expedited escalation.</p>
+<hr />
+<h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Initial case</strong> — Broadcom Support Portal. Provide all required data upfront.</li>
+<li><strong>Status stall</strong> — If no meaningful progress within the expected response SLA, request case escalation through the support portal.</li>
+<li><strong>TAM escalation</strong> — If Business Critical tier, contact your TAM directly by phone or email.</li>
+<li><strong>Executive escalation</strong> — For P1 incidents not progressing, request Broadcom Escalation Management via the TAM or directly through the support portal escalation workflow.</li>
+</ol>
+<hr />
+<h2 id="diagnostic-commands-to-run-before-calling-support">Diagnostic Commands to Run Before Calling Support<a class="headerlink" href="#diagnostic-commands-to-run-before-calling-support" title="Permanent link">&para;</a></h2>
+<p>Run these commands and have the output ready before opening a case:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># NSX Manager CLI (SSH to any Manager node)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nsxcli
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>get<span class="w"> </span>managers
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>get<span class="w"> </span>services
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>get<span class="w"> </span>transport-node-status
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>get<span class="w"> </span>version
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Edge node CLI (SSH to each Edge)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>get<span class="w"> </span>version
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>get<span class="w"> </span>services
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>get<span class="w"> </span>interfaces
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># From NSX Manager API</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/cluster/status&quot;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
+</code></pre></div>
+<p>Save all output with timestamps. Support engineers will ask for these as a first step — having them ready accelerates triage.</p>
+<hr />
+<h2 id="known-vmware-security-advisories-vmsa-nsx">Known VMware Security Advisories (VMSA) — NSX<a class="headerlink" href="#known-vmware-security-advisories-vmsa-nsx" title="Permanent link">&para;</a></h2>
+<p>Subscribe to VMware Security Advisories for NSX CVE notifications:</p>
+<ul>
+<li>RSS/email: <strong>https://support.broadcom.com/web/ecx/security-advisory</strong></li>
+<li>Filter by: Product = NSX-T Data Center</li>
+</ul>
+<p>Patch response SLAs (align with your security policy):</p>
+<table>
+<thead>
+<tr>
+<th>CVSS Score</th>
+<th>Classification</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9.0+ (Critical)</td>
+<td>Critical</td>
+<td>Patch within 72 hours; emergency change if active exploitation</td>
+</tr>
+<tr>
+<td>7.0–8.9 (High)</td>
+<td>High</td>
+<td>Patch within 30 days</td>
+</tr>
+<tr>
+<td>4.0–6.9 (Medium)</td>
+<td>Medium</td>
+<td>Include in next quarterly cycle</td>
+</tr>
+<tr>
+<td>&lt; 4.0 (Low)</td>
+<td>Low</td>
+<td>Risk-assess; patch in next scheduled window</td>
+</tr>
+</tbody>
+</table>
+<p>Note: NSX CVEs that affect the DFW bypass or allow unauthenticated API access should be treated as Critical regardless of CVSS score due to the security control impact.</p>
 
 
 

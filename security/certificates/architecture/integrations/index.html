@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#certificate-integration-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Integration Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#integration-map" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +815,22 @@
 
 <h1 id="certificates-integrations">Certificates — Integrations<a class="headerlink" href="#certificates-integrations" title="Permanent link">&para;</a></h1>
 <p>Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation layer across all certificate sources. ADCS serves as the enterprise CA backend for internal certificates.</p>
+<h2 id="certificate-integration-topology">Certificate Integration Topology<a class="headerlink" href="#certificate-integration-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    venafi["Venafi TPP\n(central policy and lifecycle mgmt)"]
+    adcs["Microsoft ADCS\n(internal CA)"]
+    hashiVault["HashiCorp Vault PKI\n(service-to-service short-lived certs)"]
+    certManager["cert-manager\n(Kubernetes in-cluster automation)"]
+    leAcme["Let's Encrypt ACME\n(public-facing services)"]
+
+    venafi --&gt;|"DCOM / RPC"| adcs
+    venafi --&gt;|"REST API"| vsphere["VMware vSphere\n(auto-enrol ESXi / vCenter certs)"]
+    venafi --&gt;|"REST + credential objects"| f5["F5 / NetScaler\n(LB cert deployment)"]
+    venafi --&gt;|"REST API callback"| snow["ServiceNow\n(approval workflow)"]
+    venafi --&gt;|"Syslog"| siem["SIEM\n(issuance / revocation events)"]
+    certManager --&gt;|"ACME issuer"| leAcme
+    certManager --&gt;|"Vault issuer"| hashiVault
+    certManager --&gt;|"ADCS issuer"| adcs</code></pre>
 <h2 id="integration-map">Integration Map<a class="headerlink" href="#integration-map" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

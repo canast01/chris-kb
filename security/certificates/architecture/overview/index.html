@@ -772,6 +772,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ocsp-and-crl-revocation-validation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCSP and CRL Revocation Validation Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#root-ca-key-ceremony" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -972,6 +983,31 @@
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># View certificates in the machine store</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
 </code></pre></div>
+<hr />
+<h2 id="ocsp-and-crl-revocation-validation-flow">OCSP and CRL Revocation Validation Flow<a class="headerlink" href="#ocsp-and-crl-revocation-validation-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant client as TLS Client
+    participant server as TLS Server
+    participant ocsp as OCSP Responder
+    participant crlDist as CRL Distribution Point
+
+    client-&gt;&gt;server: TLS ClientHello
+    server--&gt;&gt;client: Certificate (+ OCSP staple if enabled)
+    note over client: Client must verify revocation status
+
+    alt OCSP Stapling (preferred)
+        note over client,server: OCSP response embedded in TLS handshake
+        client-&gt;&gt;client: Verify stapled OCSP response signature
+    else OCSP Live Query
+        client-&gt;&gt;ocsp: OCSP Request (cert serial + issuer)
+        ocsp--&gt;&gt;client: OCSP Response (good / revoked / unknown)
+    else CRL Fallback
+        client-&gt;&gt;crlDist: HTTP GET CRL file
+        crlDist--&gt;&gt;client: CRL (signed list of revoked serials)
+        client-&gt;&gt;client: Check serial against CRL
+    end
+
+    client-&gt;&gt;server: Continue TLS handshake (if not revoked)</code></pre>
 <hr />
 <h2 id="root-ca-key-ceremony">Root CA Key Ceremony<a class="headerlink" href="#root-ca-key-ceremony" title="Permanent link">&para;</a></h2>
 <p>The Root CA private key is the most sensitive component of the PKI. Key ceremony requirements:</p>
