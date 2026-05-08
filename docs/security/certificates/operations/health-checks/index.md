@@ -2,6 +2,26 @@
 
 Weekly operations include reviewing the certificate expiry dashboard for certificates expiring within 30, 60, and 90 days, checking CRL and OCSP responder availability for all CAs, verifying CA service health (for ADCS: check Certificate Services in Server Manager and confirm the service is running), and confirming auto-renewal jobs completed successfully. Monthly, audit newly issued certificates against naming and validity standards.
 
+## Certificate Expiry Monitoring Flow
+
+```mermaid
+flowchart TD
+    monitor["Continuous certificate monitoring\n(Venafi / Prometheus / openssl scans)"]
+    monitor --> expiryCheck{"Days until\nexpiry?"}
+    expiryCheck -->|"90 days"| ticket90["Create ticket\nAssign to certificate owner"]
+    expiryCheck -->|"30 days"| escalate30["Escalate to team lead\nStart renewal process"]
+    expiryCheck -->|"14 days"| daily14["Daily alerts\nManagement notification"]
+    expiryCheck -->|"7 days"| p1["P1 incident declared\nEmergency renewal"]
+    expiryCheck -->|"expired"| outage["Service outage declared\nBreak-glass renewal procedure"]
+    ticket90 --> renewAction["Initiate renewal\n(auto or manual)"]
+    escalate30 --> renewAction
+    daily14 --> renewAction
+    p1 --> renewAction
+    renewAction --> newCert["New certificate installed\nand validated"]
+    newCert --> monitor
+```
+
+
 OCSP and CRL freshness must be checked proactively — a stale CRL can cause widespread certificate validation failures across services that depend on it.
 
 **Weekly checklist:**

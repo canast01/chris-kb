@@ -20,14 +20,14 @@ RecoverPoint health checks cover four areas: RPA cluster node health, consistenc
 
 ## Daily Checks
 
-| Check | Command | Notes |
-|---|---|---|
-| [ ] All Consistency Groups (CGs) are in ACTIVE replication state |  | none suspended, in error, or paused without a corresponding change ticket |
-| [ ] All RPA nodes are online and clustered |  | no degraded or faulted RPA |
-| [ ] Journal capacity |  |  |
-| [ ] Replication lag / RPO is within the acceptable threshold (typically < 15 min) |  |  |
-| [ ] No image access sessions are left enabled from a previous DR test |  |  |
-| [ ] Confirm both production and DR site RecoverPoint clusters are reachable |  |  |
+| Check | Command | Expected | Why |
+|---|---|---|---|
+| [ ] All Consistency Groups (CGs) are in ACTIVE replication state | `groups status` | All ACTIVE | Non-active CGs mean data is not being protected |
+| [ ] All RPA nodes are online and clustered | `system status` | All nodes running | Lost RPA node reduces cluster HA headroom |
+| [ ] Journal capacity | `journals list` | < 70% | Journal overflow halts replication without warning |
+| [ ] Replication lag / RPO is within the acceptable threshold | `group status --gname n` | Within SLA | Lag = data exposure window at time of failure |
+| [ ] No image access sessions are left enabled from a previous DR test | `groups status detail` | No active image access | Active image access pauses live replication |
+| [ ] Confirm both production and DR site RecoverPoint clusters are reachable | `network connectivity check` | Connected | Inter-site link health determines replication continuity |
 
 ---
 

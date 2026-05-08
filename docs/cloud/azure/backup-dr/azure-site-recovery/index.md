@@ -4,6 +4,23 @@ Azure Site Recovery (ASR) orchestrates replication, failover, and failback for A
 
 ---
 
+## ASR Replication Flow
+
+```mermaid
+flowchart LR
+    sourceVM["Source VM\nPrimary Region"]
+    asrAgent["ASR Mobility Agent\nor Azure Fabric"]
+    replication["Continuous Replication\nRPO ~ 30 seconds"]
+    cacheStorage["Cache Storage Account\nPrimary Region"]
+    targetStorage["Replica Managed Disk\nDR Region"]
+    vault["Recovery Services Vault\nDR Region"]
+    failover["Failover\nTest · Planned · Unplanned"]
+    targetVM["Target VM\nDR Region — running"]
+
+    sourceVM --> asrAgent --> cacheStorage --> replication --> targetStorage --> vault
+    vault --> failover --> targetVM
+```
+
 ## Prerequisites and Vault Setup
 
 ```bash

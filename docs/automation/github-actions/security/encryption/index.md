@@ -6,6 +6,20 @@
 
 ## Secrets Management
 
+```mermaid
+flowchart LR
+    dev(["Developer\nsets secret"])
+    ghSettings["GitHub Settings\nRepo / Env / Org"]
+    ghEncrypted["GitHub Encrypted Store\nLibSodium public key encryption"]
+    wfRun["Workflow Run\nRunner environment"]
+    step["Step\nenv: VAR=${{ secrets.X }}"]
+    logs["Workflow Logs\nValue masked as ***"]
+
+    dev --> ghSettings --> ghEncrypted
+    ghEncrypted -->|"injected at runtime\nnot stored on disk"| wfRun
+    wfRun --> step --> logs
+```
+
 Secrets are encrypted environment variables stored in GitHub and injected into workflow runs.
 
 ```yaml

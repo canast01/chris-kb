@@ -96,12 +96,39 @@
 
 RecoverPoint supports two failover modes:
 
-| Mode | Description | Impact on Replication |
-|---|---|---|
-| Image Access (DR Test) | Non-disruptive — accesses a DR copy snapshot; production replication continues | Replication paused during image access; resumes on disable |
-| Failover (Production DR) | Disruptive — production copy is demoted; DR copy becomes production | Requires failback procedure to restore normal replication direction |
+| Mode | Description | Impact on Replication | When to use |
+|---|---|---|---|
+| Image Access (DR Test) | Non-disruptive — accesses a DR copy snapshot; production replication continues | Replication paused during image access; resumes on disable | Quarterly DR tests; point-in-time validation |
+| Failover (Production DR) | Disruptive — production copy is demoted; DR copy becomes production | Requires failback procedure to restore normal replication direction | Declared DR events; production site failure |
 
 For planned DR tests, use Image Access. Invoke a full failover only on declared DR events.
+
+### Bookmark-Based Recovery Flow
+
+```mermaid
+flowchart TD
+    listBookmarks["List Available Bookmarks\ngroup list_bookmarks --gname cgname"]
+    selectBookmark["Select Target Bookmark\n(or timestamp)"]
+    enableImageAccess["Enable Image Access\ngroup enable-image-access --gname cgname\n--copy DR_Copy --image bookmark --access-mode virtual"]
+    confirmImageAccess["Confirm Image Access Active\ngroup status --gname cgname"]
+    mountVolumes["Mount DR Volumes\n(host-level step — SAN zoning / masking)"]
+    validateApp["Validate Application Data\n(app team confirms)"]
+    disableImageAccess["Disable Image Access\ngroup disable-image-access --gname cgname"]
+    confirmActive["Confirm CG Returns to ACTIVE\ngroups status"]
+
+    listBookmarks --> selectBookmark
+    selectBookmark --> enableImageAccess
+    enableImageAccess --> confirmImageAccess
+    confirmImageAccess --> mountVolumes
+    mountVolumes --> validateApp
+    validateApp --> disableImageAccess
+    disableImageAccess --> confirmActive
+
+    style listBookmarks fill:#2563eb,color:#fff
+    style enableImageAccess fill:#b45309,color:#fff
+    style disableImageAccess fill:#b45309,color:#fff
+    style confirmActive fill:#15803d,color:#fff
+```
 
 ### Pre-Failover Checklist
 
@@ -182,6 +209,32 @@ alarms list
 | Image access | None active |
 | Journal | < 70% utilization |
 | Alarms | No critical alarms |
+
+### Failover and Failback Sequence
+
+```mermaid
+sequenceDiagram
+    participant ops as Operations Team
+    participant rpaA as RPA Cluster Site A
+    participant rpaB as RPA Cluster Site B
+    participant drHosts as DR Hosts
+
+    Note over ops,drHosts: Declared DR Event
+    ops->>rpaB: enable-image-access --copy DR_Copy --access-mode logged
+    rpaB-->>ops: Image access active
+    ops->>drHosts: Mount DR volumes and start applications
+    drHosts-->>ops: Applications running at DR site
+    ops->>rpaB: recover-production
+    rpaB-->>ops: DR copy is now production
+
+    Note over ops,drHosts: Primary Site Restored — Failback
+    ops->>rpaB: reverse-replication
+    rpaB->>rpaA: Replicate from DR back to primary
+    rpaA-->>rpaB: Primary site caught up
+    ops->>rpaB: failback
+    rpaA-->>ops: Original production copy restored
+    ops->>drHosts: Stop DR applications, unmount DR volumes
+```
 
 ### Failback — Return to Original Production Site
 

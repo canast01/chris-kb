@@ -2,6 +2,27 @@
 
 Network Security Groups (NSGs) are stateful packet filters that control inbound and outbound traffic to Azure resources. They can be associated with subnets or individual network interfaces. Rules are evaluated by priority — the lowest number wins.
 
+## NSG Rule Evaluation
+
+```mermaid
+flowchart TD
+    traffic["Inbound / Outbound Traffic"]
+    defaultDeny["Default Deny-All rule\npriority 65500"]
+    rule100{"Priority 100\nrule matches?"}
+    rule200{"Priority 200\nrule matches?"}
+    ruleN{"Priority N\nnext rule..."}
+    allow["ALLOW\ntraffic passes"]
+    deny["DENY\ntraffic dropped"]
+
+    traffic --> rule100
+    rule100 -->|"Allow match"| allow
+    rule100 -->|"Deny match"| deny
+    rule100 -->|"No match"| rule200
+    rule200 -->|"Match"| allow
+    rule200 -->|"No match"| ruleN
+    ruleN --> defaultDeny --> deny
+```
+
 ## Creating and Managing NSGs
 
 ```bash

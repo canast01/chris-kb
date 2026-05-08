@@ -6,6 +6,25 @@
 
 ## Debug Logging
 
+```mermaid
+flowchart TD
+    symptom(["Workflow failure\nor unexpected behaviour"])
+    uiCheck["GitHub Actions UI\nCheck step logs for error"]
+    runLogs["gh run view RUN_ID --log\nFull log download"]
+    debugSecrets["Set repo secrets\nACTIONS_RUNNER_DEBUG=true\nACTIONS_STEP_DEBUG=true"]
+    rerunDebug["Re-run jobs with\ndebug logging enabled"]
+    actLocal["act push --job build\nRun locally in Docker"]
+    dumpCtx["Add step: dump github context\ntoJson(github)"]
+    identify(["Identify root cause\nFix and re-push"])
+
+    symptom --> uiCheck
+    uiCheck -->|"Insufficient detail"| debugSecrets
+    debugSecrets --> rerunDebug --> identify
+    uiCheck -->|"Need local iteration"| actLocal --> identify
+    uiCheck -->|"Context issue"| dumpCtx --> identify
+    uiCheck -->|"Logs clear"| runLogs --> identify
+```
+
 Enable additional diagnostic output without modifying workflow files.
 
 ```bash

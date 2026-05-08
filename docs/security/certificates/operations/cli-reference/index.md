@@ -1,6 +1,21 @@
 # Certificates CLI Reference
 
 Windows certificate operations use `certutil` for verification, revocation, and store management. Linux operations rely on `openssl` for inspection, verification, and TLS connectivity testing. PowerShell provides `Get-ChildItem Cert:\` for the Windows certificate store and `Test-Certificate` for chain validation.
+
+## Tool Selection by Task
+
+```mermaid
+graph TD
+    task{"Certificate task"}
+    task -->|"inspect cert fields / SANs"| opensslText["openssl x509 -in cert.pem -noout -text"]
+    task -->|"verify key matches cert"| opensslModulus["openssl x509 / rsa -noout -modulus\n+ md5sum comparison"]
+    task -->|"test live TLS endpoint"| opensslClient["openssl s_client -connect host:443\n-servername host"]
+    task -->|"verify chain"| opensslVerify["openssl verify -CAfile root.pem\n-untrusted intermediate.pem cert.pem"]
+    task -->|"Windows store operations"| certutil["certutil -store My\ncertutil -verify cert.pem\ncertutil -addstore Root ca.crt"]
+    task -->|"PowerShell Windows store"| psStore["Get-ChildItem Cert:\\LocalMachine\\My\nTest-Certificate"]
+    task -->|"generate key + CSR"| csrGen["openssl req -new -newkey rsa:4096\n-keyout key.pem -out csr.pem"]
+```
+
 ---
 
 ## openssl — Inspection
