@@ -21,7 +21,7 @@
     
     
       
-        <title>High Availability (HA) Design - Chris KB</title>
+        <title>High Availability Design - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="High Availability (HA) Design · Chris KB">
+  <meta property="og:title" content="High Availability Design · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="High Availability (HA) Design · Chris KB">
+  <meta name="twitter:title" content="High Availability Design · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#high-availability-ha-design" class="md-skip">
+        <a href="#high-availability-design" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              High Availability (HA) Design
+              High Availability Design
             
           </span>
         </div>
@@ -717,10 +717,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#core-principles" class="md-nav__link">
+  <a href="#ha-tier-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Principles
+        HA Tier Model
       
     </span>
   </a>
@@ -728,10 +728,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-checks" class="md-nav__link">
+  <a href="#ha-redundancy-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation Checks
+        HA Redundancy Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HA Redundancy Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#n1-single-spare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N+1 (Single Spare)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nn-full-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N+N (Full Duplication)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-active" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active-Active
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-passive-standby" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active-Passive (Standby)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-domain-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure Domain Design
       
     </span>
   </a>
@@ -739,13 +800,263 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#design-workflow" class="md-nav__link">
+  <a href="#vmware-vsphere-ha-design" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Design Workflow
+        VMware vSphere HA Design
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="VMware vSphere HA Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-ha-key-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere HA Key Design Decisions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-fault-tolerance-ft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Fault Tolerance (FT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage High Availability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage High Availability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raid-and-local-redundancy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAID and Local Redundancy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multipath-io-mpio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multipath I/O (MPIO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsan-stretched-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Stretched Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network High Availability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network High Availability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nic-bonding-lacp-8023ad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NIC Bonding (LACP / 802.3ad)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dual-top-of-rack-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dual Top-of-Rack Topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecmp-for-layer-3-redundancy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ECMP for Layer 3 Redundancy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-layer-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application-Layer High Availability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Application-Layer High Availability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-balancers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load Balancers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Clustering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rto-targets-by-ha-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTO Targets by HA Mechanism
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ha-design-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HA Design Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HA Design Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -769,32 +1080,548 @@
 
 
 
-<h1 id="high-availability-ha-design">High Availability (HA) Design<a class="headerlink" href="#high-availability-ha-design" title="Permanent link">&para;</a></h1>
+<h1 id="high-availability-design">High Availability Design<a class="headerlink" href="#high-availability-design" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>High availability ensures services remain operational during hardware, software, or network failures.</p>
-<h2 id="core-principles">Core Principles<a class="headerlink" href="#core-principles" title="Permanent link">&para;</a></h2>
+<p>High availability (HA) is the discipline of engineering systems so that service disruptions — whether caused by hardware failure, software faults, planned maintenance, or network events — are either invisible to end users or resolved within a predetermined recovery window. Enterprise HA design is not a single technique; it is a layered strategy that must be applied consistently across compute, storage, networking, and application tiers.</p>
+<p>This guide covers the architectural patterns, failure domain analysis, technology choices, and validation steps required to design HA into enterprise infrastructure from the ground up.</p>
+<hr />
+<h2 id="ha-tier-model">HA Tier Model<a class="headerlink" href="#ha-tier-model" title="Permanent link">&para;</a></h2>
+<p>Not all services require the same level of redundancy. Applying the highest-cost HA pattern uniformly is wasteful; under-protecting critical workloads creates unacceptable risk. Define service tiers first, then map them to HA patterns.</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Label</th>
+<th>Target Availability</th>
+<th>Max Planned Downtime/Year</th>
+<th>Max Unplanned Downtime/Year</th>
+<th>Typical Workloads</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Mission-Critical</td>
+<td>99.999% (5 nines)</td>
+<td>0 min</td>
+<td>~5 min</td>
+<td>Core banking, trading platforms, 911 dispatch</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Business-Critical</td>
+<td>99.99% (4 nines)</td>
+<td>30 min</td>
+<td>~52 min</td>
+<td>ERP, patient records, e-commerce checkout</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Business-Important</td>
+<td>99.9% (3 nines)</td>
+<td>4 hr</td>
+<td>~8.7 hr</td>
+<td>Internal portals, analytics, dev/test</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Standard</td>
+<td>99.5%</td>
+<td>8 hr</td>
+<td>~43 hr</td>
+<td>Batch jobs, low-priority apps</td>
+</tr>
+</tbody>
+</table>
+<p>RTO and RPO targets must be defined at tier assignment. Refer to the <a href="../disaster-recovery-design/">Disaster Recovery Design</a> guide for RPO/RTO tables.</p>
+<hr />
+<h2 id="ha-redundancy-patterns">HA Redundancy Patterns<a class="headerlink" href="#ha-redundancy-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="n1-single-spare">N+1 (Single Spare)<a class="headerlink" href="#n1-single-spare" title="Permanent link">&para;</a></h3>
+<p>One extra component exists to absorb a single failure. Cost-effective for Tier 2/3 workloads. After a failure, the system is in a degraded (N+0) state until the failed component is replaced.</p>
 <ul>
-<li>Redundancy</li>
-<li>Failover</li>
-<li>Load distribution</li>
-<li>Health monitoring</li>
-<li>Automatic recovery</li>
+<li>Example: 3-node vSAN cluster (2N = capacity needed, +1 host for failure tolerance)</li>
+<li>Example: Dual PSU in a server</li>
 </ul>
-<h2 id="validation-checks">Validation Checks<a class="headerlink" href="#validation-checks" title="Permanent link">&para;</a></h2>
+<h3 id="nn-full-duplication">N+N (Full Duplication)<a class="headerlink" href="#nn-full-duplication" title="Permanent link">&para;</a></h3>
+<p>Every active component has an identical standby. After one failure, full capacity is maintained. Used for Tier 0/1 compute and network paths.</p>
 <ul>
-<li>Multiple nodes available</li>
-<li>Heartbeat functioning</li>
-<li>Failover tested</li>
-<li>Monitoring alerts configured</li>
+<li>Example: Dual Cisco Nexus 9000 core switches in vPC</li>
+<li>Example: Dual-site active-passive with identical hardware footprint</li>
 </ul>
-<h2 id="design-workflow">Design Workflow<a class="headerlink" href="#design-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Identify critical services</li>
-<li>Define redundancy model</li>
-<li>Implement failover mechanism</li>
-<li>Test failure scenarios</li>
-<li>Document recovery behavior</li>
-</ol>
+<h3 id="active-active">Active-Active<a class="headerlink" href="#active-active" title="Permanent link">&para;</a></h3>
+<p>Both instances serve traffic simultaneously. Load is distributed across all nodes; any single node failure is absorbed by the remaining nodes without a failover event. Requires stateless application design or distributed session management.</p>
+<ul>
+<li>Example: NSX-T Edge nodes in ECMP active-active forwarding</li>
+<li>Example: NLB cluster with session persistence at the load balancer layer</li>
+</ul>
+<h3 id="active-passive-standby">Active-Passive (Standby)<a class="headerlink" href="#active-passive-standby" title="Permanent link">&para;</a></h3>
+<p>The passive node is warm and ready but does not serve traffic until a failover event occurs. Simpler to implement than active-active but wastes standby capacity and introduces a brief failover window.</p>
+<ul>
+<li>Example: vSphere HA restarting VMs on surviving hosts</li>
+<li>Example: SQL Server Always On Availability Groups with synchronous replica</li>
+</ul>
+<hr />
+<h2 id="failure-domain-design">Failure Domain Design<a class="headerlink" href="#failure-domain-design" title="Permanent link">&para;</a></h2>
+<p>A failure domain is the set of components that share a single point of failure. HA design means distributing workloads across independent failure domains so that no single event takes down a complete service.</p>
+<pre class="mermaid"><code>graph TD
+    Site["Site Failure Domain"]
+    PDU_A["PDU A"]
+    PDU_B["PDU B"]
+    Rack_A["Rack A"]
+    Rack_B["Rack B"]
+    Rack_C["Rack C (different PDU)"]
+    SW_ToR_A["ToR Switch A"]
+    SW_ToR_B["ToR Switch B"]
+    Host1["ESXi Host 1"]
+    Host2["ESXi Host 2"]
+    Host3["ESXi Host 3"]
+
+    Site --&gt; PDU_A
+    Site --&gt; PDU_B
+    PDU_A --&gt; Rack_A
+    PDU_A --&gt; Rack_B
+    PDU_B --&gt; Rack_C
+    Rack_A --&gt; SW_ToR_A
+    Rack_B --&gt; SW_ToR_B
+    SW_ToR_A --&gt; Host1
+    SW_ToR_A --&gt; Host2
+    SW_ToR_B --&gt; Host3</code></pre>
+<p><strong>Failure domain layers and design decisions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Failure Event</th>
+<th>Design Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server NIC</td>
+<td>Single NIC failure</td>
+<td>LACP bonding (802.3ad) across dual NICs</td>
+</tr>
+<tr>
+<td>ToR Switch</td>
+<td>Switch failure or upgrade</td>
+<td>Dual ToR per rack; hosts dual-home to both</td>
+</tr>
+<tr>
+<td>PDU</td>
+<td>PDU breaker trip</td>
+<td>Distribute racks across PDU A and PDU B; dual PSU per server</td>
+</tr>
+<tr>
+<td>Rack</td>
+<td>Rack power loss or cooling</td>
+<td>Spread HA pairs across multiple racks</td>
+</tr>
+<tr>
+<td>Row/Room</td>
+<td>Room-level CRAC failure</td>
+<td>Separate rows fed by independent cooling</td>
+</tr>
+<tr>
+<td>Site</td>
+<td>Site-level disaster</td>
+<td>DR replication to secondary site (see DR Design guide)</td>
+</tr>
+</tbody>
+</table>
+<p>Rule: no two nodes that form an HA pair should share the same PDU and the same ToR switch.</p>
+<hr />
+<h2 id="vmware-vsphere-ha-design">VMware vSphere HA Design<a class="headerlink" href="#vmware-vsphere-ha-design" title="Permanent link">&para;</a></h2>
+<p>vSphere HA provides automatic VM restart on surviving hosts when a host fails. It is the baseline Tier 1/2 compute HA mechanism in VMware environments.</p>
+<h3 id="vsphere-ha-key-design-decisions">vSphere HA Key Design Decisions<a class="headerlink" href="#vsphere-ha-key-design-decisions" title="Permanent link">&para;</a></h3>
+<p><strong>Admission Control Policy</strong>
+Set admission control to reserve capacity for N host failures. For a 6-host cluster tolerating 1 failure, reserve 1/6 of total cluster resources (CPU + memory).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Reserved capacity = (1 / total_hosts) × cluster_resources
+</code></pre></div>
+<p>For variable host sizes, use the "percentage of cluster resources" policy rather than "host failures cluster tolerates" to get accurate reservations.</p>
+<p><strong>Heartbeat Datastores</strong>
+Configure at least 2 datastore heartbeat targets on separate storage paths to prevent false-positive host isolation events. Use non-vSAN datastores (NFS or VMFS on external storage) as heartbeat targets in vSAN clusters to avoid circular dependency.</p>
+<p><strong>Isolation Response</strong>
+Default: "Leave powered on" — appropriate when the network, not the host, has failed. Set to "Shut down and restart" only when storage fencing ensures split-brain cannot occur (e.g., vSAN witness ensures quorum).</p>
+<p><strong>Host Monitoring</strong>
+Enable host monitoring. Set the PDL (Permanent Device Loss) response to "Power off and restart VMs" for vSAN clusters — PDL indicates the storage fabric, not just a transient path failure.</p>
+<h3 id="vsphere-fault-tolerance-ft">vSphere Fault Tolerance (FT)<a class="headerlink" href="#vsphere-fault-tolerance-ft" title="Permanent link">&para;</a></h3>
+<p>FT provides zero-downtime protection (RTO ~0) for single VMs. Use cases are narrow due to cost and constraints.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>vSphere HA</th>
+<th>vSphere FT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTO</td>
+<td>30–180 s (restart)</td>
+<td>~0 s (lockstep)</td>
+</tr>
+<tr>
+<td>RPO</td>
+<td>Loss of in-flight transactions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>vCPU limit</td>
+<td>No limit</td>
+<td>8 vCPU per VM</td>
+</tr>
+<tr>
+<td>Memory limit</td>
+<td>No limit</td>
+<td>No official limit (practical: &lt;128 GB)</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Included in vSphere</td>
+<td>Requires dedicated CPU reservation</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>All Tier 1/2 VMs</td>
+<td>Tier 0: core network services, license servers</td>
+</tr>
+</tbody>
+</table>
+<p>FT requires a dedicated 10 GbE or 25 GbE logging network segment, isolated from vMotion traffic.</p>
+<hr />
+<h2 id="storage-high-availability">Storage High Availability<a class="headerlink" href="#storage-high-availability" title="Permanent link">&para;</a></h2>
+<h3 id="raid-and-local-redundancy">RAID and Local Redundancy<a class="headerlink" href="#raid-and-local-redundancy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>RAID Level</th>
+<th>Min Drives</th>
+<th>Failure Tolerance</th>
+<th>Write Penalty</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAID-1</td>
+<td>2</td>
+<td>1 drive</td>
+<td>2×</td>
+<td>OS/boot volumes, small critical data</td>
+</tr>
+<tr>
+<td>RAID-5</td>
+<td>3</td>
+<td>1 drive</td>
+<td>4×</td>
+<td>General purpose (not recommended for &gt;4 TB drives)</td>
+</tr>
+<tr>
+<td>RAID-6</td>
+<td>4</td>
+<td>2 drives</td>
+<td>6×</td>
+<td>Archive, large spinning disk arrays</td>
+</tr>
+<tr>
+<td>RAID-10</td>
+<td>4</td>
+<td>1 per mirrored pair</td>
+<td>2×</td>
+<td>OLTP, high I/O databases</td>
+</tr>
+<tr>
+<td>RAID-50</td>
+<td>6</td>
+<td>1 per RAID-5 set</td>
+<td>4×</td>
+<td>Balanced capacity and performance</td>
+</tr>
+</tbody>
+</table>
+<p>For flash arrays (Dell PowerMax, Pure Storage, NetApp AFF), vendor-specific RAID-DP or parity schemes replace traditional RAID. Validate the effective drive failure tolerance with the vendor before deployment.</p>
+<h3 id="multipath-io-mpio">Multipath I/O (MPIO)<a class="headerlink" href="#multipath-io-mpio" title="Permanent link">&para;</a></h3>
+<p>Always configure multipath for SAN-attached storage. Two independent paths are the minimum for HA; four paths (two HBAs × two fabrics) are standard for Tier 0/1.</p>
+<p><strong>Path selection policies:</strong>
+- <strong>Round Robin</strong> — distributes I/O across all active paths; preferred for uniform path speeds
+- <strong>Fixed (preferred)</strong> — all I/O on one path; others are standby; used when paths have unequal bandwidth
+- <strong>MRU (Most Recently Used)</strong> — stays on one path until it fails; least optimal; avoid for production</p>
+<p>For VMware with Dell PowerMax: use VMware Native Multipathing (NMP) with the PowerPath/VE plugin and <code>RoundRobin</code> with I/O operations limit set to 1 (IOPS-based switching rather than byte-count switching).</p>
+<h3 id="vsan-stretched-cluster">vSAN Stretched Cluster<a class="headerlink" href="#vsan-stretched-cluster" title="Permanent link">&para;</a></h3>
+<p>vSAN Stretched Cluster extends a single cluster across two sites with a witness host in a third location (or vCenter). It provides RPO=0 and RTO measured in seconds for site-level failures.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph Site_A["Site A (Primary)"]
+        H1["ESXi Host 1\nvSAN Data"]
+        H2["ESXi Host 2\nvSAN Data"]
+    end
+    subgraph Site_B["Site B (Secondary)"]
+        H3["ESXi Host 3\nvSAN Data"]
+        H4["ESXi Host 4\nvSAN Data"]
+    end
+    subgraph Witness_Site["Witness Site / Cloud"]
+        W["vSAN Witness\n(metadata only)"]
+    end
+    H1 &lt;--&gt;|"Sync replication\n&lt;5ms RTT required"| H3
+    H2 &lt;--&gt;|"Sync replication"| H4
+    H1 &amp; H2 &lt;--&gt;|"Witness heartbeat"| W
+    H3 &amp; H4 &lt;--&gt;|"Witness heartbeat"| W</code></pre>
+<p><strong>vSAN Stretched Cluster requirements:</strong>
+- Intersite latency: ≤5 ms RTT (synchronous replication)
+- Bandwidth: size for peak write throughput × 2 (all writes cross both sites)
+- Witness host: 4 vCPU, 16 GB RAM per 750 VM components
+- Storage Policy: FTT=1, RAID-1, stretched — ensures one copy per site</p>
+<hr />
+<h2 id="network-high-availability">Network High Availability<a class="headerlink" href="#network-high-availability" title="Permanent link">&para;</a></h2>
+<h3 id="nic-bonding-lacp-8023ad">NIC Bonding (LACP / 802.3ad)<a class="headerlink" href="#nic-bonding-lacp-8023ad" title="Permanent link">&para;</a></h3>
+<p>All production ESXi hosts should have a minimum of 2 × 25 GbE NICs bonded in LACP across two upstream ToR switches. Configure the vSphere Distributed Switch (vDS) uplink team with <strong>Route based on IP hash</strong> or <strong>Route based on physical NIC load</strong> (enhanced LACP) teaming policy.</p>
+<p>Separate traffic types onto dedicated VMkernel ports with dedicated uplinks:</p>
+<table>
+<thead>
+<tr>
+<th>Traffic Type</th>
+<th>Recommended Bandwidth</th>
+<th>VLAN Assignment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM Network (Production)</td>
+<td>Shared 25 GbE bond</td>
+<td>VLAN 100–199</td>
+</tr>
+<tr>
+<td>vMotion</td>
+<td>Dedicated 25 GbE (or 10 GbE)</td>
+<td>VLAN 200</td>
+</tr>
+<tr>
+<td>vSAN / Storage</td>
+<td>Dedicated 25 GbE (or 10 GbE)</td>
+<td>VLAN 300</td>
+</tr>
+<tr>
+<td>Management (ESXi/vCenter)</td>
+<td>Shared or dedicated 1 GbE</td>
+<td>VLAN 400</td>
+</tr>
+<tr>
+<td>Backup / Replication</td>
+<td>Shared or dedicated 10 GbE</td>
+<td>VLAN 500</td>
+</tr>
+<tr>
+<td>FT Logging</td>
+<td>Dedicated 10 GbE</td>
+<td>VLAN 600</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dual-top-of-rack-topology">Dual Top-of-Rack Topology<a class="headerlink" href="#dual-top-of-rack-topology" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    Core_A["Core Switch A\n(Cisco Nexus 9504)"]
+    Core_B["Core Switch B\n(Cisco Nexus 9504)"]
+    ToR_A["ToR Switch A\n(Nexus 93180YC-FX)"]
+    ToR_B["ToR Switch B\n(Nexus 93180YC-FX)"]
+    H1["ESXi Host 1\n2×25GbE"]
+    H2["ESXi Host 2\n2×25GbE"]
+    H3["ESXi Host 3\n2×25GbE"]
+
+    Core_A &lt;--&gt;|"vPC peer-link\n2×100GbE"| Core_B
+    Core_A --&gt; ToR_A &amp; ToR_B
+    Core_B --&gt; ToR_A &amp; ToR_B
+    ToR_A &lt;--&gt;|"vPC"| ToR_B
+    H1 --&gt;|"NIC 1"| ToR_A
+    H1 --&gt;|"NIC 2"| ToR_B
+    H2 --&gt;|"NIC 1"| ToR_A
+    H2 --&gt;|"NIC 2"| ToR_B
+    H3 --&gt;|"NIC 1"| ToR_A
+    H3 --&gt;|"NIC 2"| ToR_B</code></pre>
+<p>Cisco vPC (Virtual Port Channel) enables both ToR switches to present a single logical port channel to each host, eliminating Spanning Tree blocking. Both uplinks carry traffic simultaneously.</p>
+<h3 id="ecmp-for-layer-3-redundancy">ECMP for Layer 3 Redundancy<a class="headerlink" href="#ecmp-for-layer-3-redundancy" title="Permanent link">&para;</a></h3>
+<p>For environments using routed access (no Layer 2 between hosts), configure ECMP (Equal Cost Multi-Path) at the distribution and core layers. NSX-T with BGP edge uplinks supports ECMP across 8 paths. This provides both redundancy and horizontal bandwidth scaling.</p>
+<hr />
+<h2 id="application-layer-high-availability">Application-Layer High Availability<a class="headerlink" href="#application-layer-high-availability" title="Permanent link">&para;</a></h2>
+<h3 id="load-balancers">Load Balancers<a class="headerlink" href="#load-balancers" title="Permanent link">&para;</a></h3>
+<p>Deploy load balancers in HA pairs (active-standby or active-active) at each tier boundary.</p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Mode</th>
+<th>Protocol</th>
+<th>Typical Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F5 BIG-IP (physical)</td>
+<td>Active-standby</td>
+<td>L4/L7, SSL offload</td>
+<td>Tier 0/1 external-facing</td>
+</tr>
+<tr>
+<td>NSX Advanced Load Balancer (Avi)</td>
+<td>Active-active (SE cluster)</td>
+<td>L4/L7</td>
+<td>Cloud-native, VMware-integrated</td>
+</tr>
+<tr>
+<td>HAProxy</td>
+<td>Active-passive (Keepalived)</td>
+<td>L4/L7</td>
+<td>Internal, cost-sensitive</td>
+</tr>
+<tr>
+<td>AWS ALB / Azure Application Gateway</td>
+<td>Managed, multi-AZ</td>
+<td>L7</td>
+<td>Cloud workloads</td>
+</tr>
+</tbody>
+</table>
+<p>Ensure load balancer health checks accurately reflect application health, not just TCP reachability. A web server listening on port 443 but returning 500 errors is not healthy.</p>
+<h3 id="database-clustering">Database Clustering<a class="headerlink" href="#database-clustering" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Database</th>
+<th>HA Mechanism</th>
+<th>Failover Time</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQL Server</td>
+<td>Always On AG (sync replica)</td>
+<td>15–30 s automatic</td>
+<td>Requires Windows Server Failover Cluster</td>
+</tr>
+<tr>
+<td>Oracle</td>
+<td>Data Guard (sync) / RAC</td>
+<td>&lt;30 s (DG) / ~0 (RAC)</td>
+<td>RAC requires shared storage</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Patroni + etcd</td>
+<td>10–30 s</td>
+<td>Open source; etcd quorum critical</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>InnoDB Cluster (Group Replication)</td>
+<td>5–10 s</td>
+<td>Built-in; 3 nodes minimum</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rto-targets-by-ha-mechanism">RTO Targets by HA Mechanism<a class="headerlink" href="#rto-targets-by-ha-mechanism" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>HA Mechanism</th>
+<th>Typical RTO</th>
+<th>RPO</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSphere FT</td>
+<td>~0 s</td>
+<td>0</td>
+<td>Lockstep; no data loss</td>
+</tr>
+<tr>
+<td>VRRP / HSRP (network gateway)</td>
+<td>&lt;1 s</td>
+<td>N/A</td>
+<td>Gateway failover</td>
+</tr>
+<tr>
+<td>vSphere HA VM restart</td>
+<td>30–120 s</td>
+<td>In-flight I/O</td>
+<td>Host must be declared failed first</td>
+</tr>
+<tr>
+<td>Storage multipath failover</td>
+<td>1–10 s</td>
+<td>0</td>
+<td>Transparent to OS</td>
+</tr>
+<tr>
+<td>SQL Always On AG (sync)</td>
+<td>15–30 s</td>
+<td>0</td>
+<td>Automatic failover</td>
+</tr>
+<tr>
+<td>vSAN Stretched Cluster</td>
+<td>30–60 s</td>
+<td>0</td>
+<td>Site-level failure</td>
+</tr>
+<tr>
+<td>DNS failover (health-routed)</td>
+<td>30–300 s</td>
+<td>Varies</td>
+<td>TTL-dependent</td>
+</tr>
+<tr>
+<td>Backup restore</td>
+<td>Hours–days</td>
+<td>Hours–days</td>
+<td>Last resort</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ha-design-checklist">HA Design Checklist<a class="headerlink" href="#ha-design-checklist" title="Permanent link">&para;</a></h2>
+<p>Use this checklist at design review and again during pre-production validation.</p>
+<h3 id="compute">Compute<a class="headerlink" href="#compute" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All Tier 0/1 VMs assigned to a vSphere HA-enabled cluster with admission control configured</li>
+<li>[ ] Cluster sized for N+1 host failure without breaching admission control threshold</li>
+<li>[ ] Heartbeat datastores configured (minimum 2, on separate storage paths)</li>
+<li>[ ] FT enabled for all Tier 0 VMs (if vCPU ≤ 8)</li>
+<li>[ ] VM restart priority set correctly (Tier 0 = highest, Tier 3 = low)</li>
+<li>[ ] DRS enabled and set to "Fully Automated" for load balancing after HA restart</li>
+<li>[ ] Anti-affinity rules applied so HA pairs do not run on the same host</li>
+</ul>
+<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All datastores accessible via at least 2 independent paths (2 HBAs, 2 fabrics)</li>
+<li>[ ] MPIO path selection policy configured (Round Robin or vendor plugin)</li>
+<li>[ ] vSAN health check passes with zero critical alerts</li>
+<li>[ ] vSAN stretched cluster witness host accessible from both sites</li>
+<li>[ ] Snapshot schedules do not consume more than 20% of datastore capacity</li>
+</ul>
+<h3 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All hosts dual-homed to independent ToR switches</li>
+<li>[ ] LACP / port-channel configured on both host NICs and upstream switches</li>
+<li>[ ] vPC / MLAG configured on ToR pair to eliminate STP blocking</li>
+<li>[ ] Traffic types separated onto dedicated VMkernel / VLAN segments</li>
+<li>[ ] Management network reachable even if production uplink fails</li>
+</ul>
+<h3 id="application">Application<a class="headerlink" href="#application" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Load balancer HA pair tested — active failover verified</li>
+<li>[ ] Database HA mechanism tested with forced failover</li>
+<li>[ ] Health check endpoints respond correctly and reflect real application state</li>
+<li>[ ] Connection timeouts and retry logic validated in application code/config</li>
+</ul>
+<h3 id="process">Process<a class="headerlink" href="#process" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Failure scenario runbooks documented for each HA tier</li>
+<li>[ ] Failover test results recorded and signed off by service owner</li>
+<li>[ ] Monitoring and alerting configured for all HA state changes</li>
+<li>[ ] HA test schedule defined (minimum: annually for Tier 1, quarterly for Tier 0)</li>
+</ul>
 
 
 

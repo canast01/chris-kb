@@ -717,10 +717,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#symptoms" class="md-nav__link">
+  <a href="#failure-classification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Symptoms
+        Failure Classification
       
     </span>
   </a>
@@ -728,10 +728,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#diagnostic-flowchart" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Diagnostic Flowchart
       
     </span>
   </a>
@@ -739,10 +739,165 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#dig-nslookup-diagnostic-commands-with-output-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        dig / nslookup Diagnostic Commands with Output Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="dig / nslookup Diagnostic Commands with Output Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forward-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverse-ptr-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reverse (PTR) Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srv-records-critical-for-adkerberos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRV Records (critical for AD/Kerberos)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-server-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Server Health Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNS Server Health Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#windows-dns-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows DNS (PowerShell)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linux-bind-named" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux (BIND / named)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zone-transfer-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Transfer Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-forwarder-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Forwarder Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#split-brain-dns-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Split-Brain DNS Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ptr-record-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PTR Record Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-failure-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Failure Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-cache-poisoning-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Cache Poisoning Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Criteria
       
     </span>
   </a>
@@ -771,26 +926,342 @@
 
 <h1 id="dns-resolution-failures">DNS Resolution Failures<a class="headerlink" href="#dns-resolution-failures" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>DNS failures prevent applications, servers, and services from locating required resources.</p>
-<h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Unable to resolve hostname</li>
-<li>Application connection errors</li>
-<li>Service startup failures</li>
-</ul>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nslookup<span class="w"> </span>hostname
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dig<span class="w"> </span>hostname
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ipconfig<span class="w"> </span>/flushdns
+<p>DNS failures cascade rapidly across infrastructure: Kerberos authentication breaks without PTR records, NFS mounts fail, application service discovery stops, and vMotion can fail. This guide provides structured diagnosis from failure type through to resolution across Windows DNS and BIND/named environments.</p>
+<hr />
+<h2 id="failure-classification">Failure Classification<a class="headerlink" href="#failure-classification" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Failure Type</th>
+<th>DNS Response</th>
+<th>Symptom</th>
+<th>Likely Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NXDOMAIN</td>
+<td>Name does not exist</td>
+<td>App cannot connect; "unknown host"</td>
+<td>Missing A/AAAA record; wrong zone</td>
+</tr>
+<tr>
+<td>SERVFAIL</td>
+<td>Server failed</td>
+<td>Intermittent failures; slow resolution</td>
+<td>Forwarding loop; zone load failure</td>
+</tr>
+<tr>
+<td>Timeout (no response)</td>
+<td>No DNS answer</td>
+<td>Complete resolution failure</td>
+<td>DNS server down; firewall on UDP 53</td>
+</tr>
+<tr>
+<td>Wrong record returned</td>
+<td>Resolves but wrong IP</td>
+<td>App connects to wrong host; auth fails</td>
+<td>Stale record; split-brain misconfiguration</td>
+</tr>
+<tr>
+<td>PTR missing</td>
+<td>Reverse lookup fails</td>
+<td>Kerberos fails; NFS mount denied; SMTP rejected</td>
+<td>PTR not created; reverse zone missing</td>
+</tr>
+<tr>
+<td>Conditional forwarder broken</td>
+<td>NXDOMAIN for external domain</td>
+<td>Cross-domain trust auth fails</td>
+<td>Forwarder IP wrong; firewall blocks</td>
+</tr>
+<tr>
+<td>Cache poisoning</td>
+<td>Incorrect cached answer</td>
+<td>Security incident; intermittent wrong routing</td>
+<td>DNSSEC failure; rogue response injected</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A[DNS Failure Reported] --&gt; B[Identify failure type]
+    B --&gt; C{What does dig/nslookup return?}
+    C -- NXDOMAIN --&gt; D[Record missing?\nCheck zone for A/AAAA record]
+    D --&gt; E{Zone loaded?}
+    E -- No --&gt; F[Check zone file syntax\nReload zone: rndc reload]
+    E -- Yes --&gt; G[Record genuinely missing\nAdd DNS record]
+    C -- SERVFAIL --&gt; H[Check DNS server health\nsystemctl status named]
+    H --&gt; I{Service running?}
+    I -- No --&gt; J[Start service\nCheck named.conf syntax: named-checkconf]
+    I -- Yes --&gt; K[Check forwarder chain\ndig @forwarder hostname]
+    C -- Timeout --&gt; L[Verify UDP 53 open\nnc -zu dnsserver 53]
+    L --&gt; M{Port reachable?}
+    M -- No --&gt; N[Fix firewall rule\nCheck ACL on DNS server]
+    M -- Yes --&gt; O[Check DNS server load\nRestart if overloaded]
+    C -- Wrong record --&gt; P[Check all DNS zones\nSplit-brain DNS?]
+    P --&gt; Q[Compare internal vs external answers\ndig @internal vs dig @8.8.8.8]
+    C -- PTR missing --&gt; R[Identify reverse zone\ndig -x IP]
+    R --&gt; S[Add PTR record to reverse zone\nVerify delegated reverse zone]
+    C -- Conditional forwarder --&gt; T[Test forwarder directly\ndig @forwarder-ip domain]
+    T --&gt; U{Forwarder responds?}
+    U -- No --&gt; V[Fix forwarder IP\nCheck connectivity to remote DNS]
+    U -- Yes --&gt; W[Check local forwarder config\nnslookup -type=SOA domain]</code></pre>
+<hr />
+<h2 id="dig-nslookup-diagnostic-commands-with-output-examples">dig / nslookup Diagnostic Commands with Output Examples<a class="headerlink" href="#dig-nslookup-diagnostic-commands-with-output-examples" title="Permanent link">&para;</a></h2>
+<h3 id="forward-resolution">Forward Resolution<a class="headerlink" href="#forward-resolution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Basic forward lookup — using default resolver</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dig<span class="w"> </span>app01.corp.example.com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Expected output (success):</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># ;; ANSWER SECTION:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># app01.corp.example.com. 3600 IN A 10.10.1.55</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Query a specific DNS server</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>dig<span class="w"> </span>@dc01.corp.example.com<span class="w"> </span>app01.corp.example.com
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check all record types</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>dig<span class="w"> </span>app01.corp.example.com<span class="w"> </span>ANY
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Query with full trace from root (bypasses cache)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>dig<span class="w"> </span>+trace<span class="w"> </span>app01.corp.example.com
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># NXDOMAIN response looks like:</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># ;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NXDOMAIN, id: 12345</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># ;; AUTHORITY SECTION:</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># corp.example.com.   3600 IN SOA dc01.corp.example.com. hostmaster.corp.example.com. ...</span>
 </code></pre></div>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm DNS server configuration</li>
-<li>Validate network connectivity</li>
-<li>Check DNS records</li>
-<li>Restart DNS service if required</li>
-<li>Test resolution again</li>
-</ol>
+<h3 id="reverse-ptr-resolution">Reverse (PTR) Resolution<a class="headerlink" href="#reverse-ptr-resolution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Reverse lookup — critical for Kerberos and NFS</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dig<span class="w"> </span>-x<span class="w"> </span><span class="m">10</span>.10.1.55
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Expected output:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># ;; ANSWER SECTION:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 55.1.10.10.in-addr.arpa. 3600 IN PTR app01.corp.example.com.</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># nslookup equivalent</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>nslookup<span class="w"> </span><span class="m">10</span>.10.1.55
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check which reverse zone owns the IP range</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>dig<span class="w"> </span>SOA<span class="w"> </span><span class="m">1</span>.10.10.in-addr.arpa
+</code></pre></div>
+<h3 id="srv-records-critical-for-adkerberos">SRV Records (critical for AD/Kerberos)<a class="headerlink" href="#srv-records-critical-for-adkerberos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Locate Kerberos KDC for a domain</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dig<span class="w"> </span>_kerberos._tcp.corp.example.com<span class="w"> </span>SRV
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected output:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># _kerberos._tcp.corp.example.com. 600 IN SRV 0 100 88 dc01.corp.example.com.</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># _kerberos._tcp.corp.example.com. 600 IN SRV 0 100 88 dc02.corp.example.com.</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Locate LDAP servers</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>dig<span class="w"> </span>_ldap._tcp.corp.example.com<span class="w"> </span>SRV
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Locate PDC emulator</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>dig<span class="w"> </span>_kerberos._tcp.dc._msdcs.corp.example.com<span class="w"> </span>SRV
+</code></pre></div>
+<hr />
+<h2 id="dns-server-health-checks">DNS Server Health Checks<a class="headerlink" href="#dns-server-health-checks" title="Permanent link">&para;</a></h2>
+<h3 id="windows-dns-powershell">Windows DNS (PowerShell)<a class="headerlink" href="#windows-dns-powershell" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Get DNS server configuration</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-DnsServer</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">*</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># List all zones</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-DnsServerZone</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">|</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">Select-Object</span> <span class="n">ZoneName</span><span class="p">,</span> <span class="n">ZoneType</span><span class="p">,</span> <span class="n">IsAutoCreated</span><span class="p">,</span> <span class="n">DynamicUpdate</span><span class="p">,</span> <span class="n">ReplicationScope</span> <span class="p">|</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Check zone for specific record</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Resolve-DnsName</span> <span class="n">-Name</span> <span class="n">app01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Server</span> <span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Type</span> <span class="n">A</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Check conditional forwarders</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Get-DnsServerZone</span> <span class="n">-ComputerName</span> <span class="n">dc01</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ZoneType</span> <span class="o">-eq</span> <span class="s1">&#39;Forwarder&#39;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="nb">Select-Object</span> <span class="n">ZoneName</span><span class="p">,</span> <span class="n">MasterServers</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c"># Test DNS resolution and measure response time</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nb">Measure-Command</span> <span class="p">{</span> <span class="nb">Resolve-DnsName</span> <span class="n">-Name</span> <span class="n">app01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Server</span> <span class="n">dc01</span> <span class="p">}</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c"># Clear DNS server cache</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nb">Clear-DnsServerCache</span> <span class="n">-ComputerName</span> <span class="n">dc01</span> <span class="n">-Force</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c"># Check DNS debug logging (enable for detailed diagnostics)</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nb">Set-DnsServerDiagnostics</span> <span class="n">-ComputerName</span> <span class="n">dc01</span> <span class="n">-All</span> <span class="nv">$true</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c"># Logs to: C:\Windows\System32\dns\dns.log</span>
+</code></pre></div>
+<h3 id="linux-bind-named">Linux (BIND / named)<a class="headerlink" href="#linux-bind-named" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check service status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>named
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># or</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>bind9
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Validate configuration syntax before restart</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>named-checkconf<span class="w"> </span>/etc/named.conf
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Validate zone file</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>named-checkzone<span class="w"> </span>corp.example.com<span class="w"> </span>/var/named/corp.example.com.zone
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Reload zones without restarting</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>rndc<span class="w"> </span>reload
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Flush DNS cache</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>rndc<span class="w"> </span>flush
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Check named statistics</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>rndc<span class="w"> </span>stats
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>cat<span class="w"> </span>/var/named/data/named_stats.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;queries|errors&quot;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># Live query logging (enable temporarily)</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>rndc<span class="w"> </span>querylog<span class="w"> </span>on
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/named/queries.log
+</code></pre></div>
+<hr />
+<h2 id="zone-transfer-verification">Zone Transfer Verification<a class="headerlink" href="#zone-transfer-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test if zone transfer is permitted (AXFR)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dig<span class="w"> </span>AXFR<span class="w"> </span>corp.example.com<span class="w"> </span>@dc01.corp.example.com
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># If permitted, output shows all zone records</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># If blocked:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># ; Transfer failed.</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># corp.example.com.  0  IN  SOA  dc01... (and no records)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check SOA serial number matches between primary and secondary</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>dig<span class="w"> </span>SOA<span class="w"> </span>corp.example.com<span class="w"> </span>@dc01.corp.example.com
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>dig<span class="w"> </span>SOA<span class="w"> </span>corp.example.com<span class="w"> </span>@dc02.corp.example.com
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Serial numbers must match after replication; mismatch = replication issue</span>
+</code></pre></div>
+<hr />
+<h2 id="conditional-forwarder-testing">Conditional Forwarder Testing<a class="headerlink" href="#conditional-forwarder-testing" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test resolution through a conditional forwarder</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Example: corp.example.com forwarder should reach 10.10.1.10</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>dig<span class="w"> </span>@10.10.1.10<span class="w"> </span>host.corp.example.com
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Test forwarder for external partner domain</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>dig<span class="w"> </span>@10.10.1.10<span class="w"> </span>server.partner.com
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Trace the full path (shows if forwarder is being used)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>dig<span class="w"> </span>+trace<span class="w"> </span>@dc01<span class="w"> </span>server.partner.com
+</code></pre></div>
+<hr />
+<h2 id="split-brain-dns-verification">Split-Brain DNS Verification<a class="headerlink" href="#split-brain-dns-verification" title="Permanent link">&para;</a></h2>
+<p>Split-brain DNS serves different answers internally vs externally (common for public services with private back-ends).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Compare internal resolution</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>dig<span class="w"> </span>@dc01.corp.example.com<span class="w"> </span>app.example.com
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Compare external resolution</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>dig<span class="w"> </span>@8.8.8.8<span class="w"> </span>app.example.com
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># If answers differ — this is intentional split-brain</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Document expected internal vs external IPs</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># If they should match and don&#39;t — investigate zone records</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Check which view is being served (BIND views)</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>dig<span class="w"> </span>@nameserver<span class="w"> </span>app.example.com<span class="w"> </span>+short<span class="w">  </span><span class="c1"># from internal IP</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>dig<span class="w"> </span>@nameserver<span class="w"> </span>app.example.com<span class="w"> </span>+short<span class="w">  </span><span class="c1"># from external IP (via VPN off)</span>
+</code></pre></div>
+<hr />
+<h2 id="ptr-record-validation">PTR Record Validation<a class="headerlink" href="#ptr-record-validation" title="Permanent link">&para;</a></h2>
+<p>PTR records are mandatory for Kerberos mutual authentication and NFS access control.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify PTR exists for all servers in a subnet</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">for</span><span class="w"> </span>ip<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">10</span>.10.1.<span class="o">{</span><span class="m">50</span>..60<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nv">result</span><span class="o">=</span><span class="k">$(</span>dig<span class="w"> </span>-x<span class="w"> </span><span class="nv">$ip</span><span class="w"> </span>+short<span class="k">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ip</span><span class="s2"> -&gt; </span><span class="si">${</span><span class="nv">result</span><span class="k">:-</span><span class="nv">MISSING</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">done</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># 10.10.1.50 -&gt; app01.corp.example.com.</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># 10.10.1.51 -&gt; MISSING          ← will cause Kerberos/NFS failures</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># 10.10.1.52 -&gt; db01.corp.example.com.</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Add missing PTR (Windows DNS)</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>Add-DnsServerResourceRecordPtr<span class="w"> </span>-ZoneName<span class="w"> </span><span class="s2">&quot;1.10.10.in-addr.arpa&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span>-Name<span class="w"> </span><span class="s2">&quot;51&quot;</span><span class="w"> </span>-PtrDomainName<span class="w"> </span><span class="s2">&quot;app02.corp.example.com&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>-ComputerName<span class="w"> </span>dc01.corp.example.com
+</code></pre></div>
+<hr />
+<h2 id="common-failure-scenarios">Common Failure Scenarios<a class="headerlink" href="#common-failure-scenarios" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Root Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kerberos KRB5KDC_ERR_C_PRINCIPAL_UNKNOWN</td>
+<td>Missing PTR for client IP</td>
+<td>Add PTR record in reverse zone</td>
+</tr>
+<tr>
+<td>NFS mount fails with "access denied"</td>
+<td>NFS server cannot reverse-resolve client</td>
+<td>Add PTR for NFS client</td>
+</tr>
+<tr>
+<td>vMotion fails "destination host not reachable"</td>
+<td>Hostname of destination host not resolvable</td>
+<td>Verify A and PTR for ESXi management IP</td>
+</tr>
+<tr>
+<td>App can ping IP but not hostname</td>
+<td>Missing or wrong A record</td>
+<td>Check zone; correct A record</td>
+</tr>
+<tr>
+<td>Cross-forest auth fails</td>
+<td>Conditional forwarder for partner domain broken</td>
+<td>Re-create conditional forwarder</td>
+</tr>
+<tr>
+<td>Intermittent failures same hostname</td>
+<td>DNS round-robin; one server down</td>
+<td>Check all A records; remove unhealthy IP</td>
+</tr>
+<tr>
+<td>New server not resolving</td>
+<td>Dynamic DNS registration failed</td>
+<td>Run <code>ipconfig /registerdns</code>; check DHCP scope DNS</td>
+</tr>
+<tr>
+<td>External name resolves internally to public IP</td>
+<td>Missing internal split-brain zone entry</td>
+<td>Add internal zone record</td>
+</tr>
+<tr>
+<td>SMTP email rejected</td>
+<td>PTR for mail server IP missing</td>
+<td>Add PTR matching MX hostname</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dns-cache-poisoning-checks">DNS Cache Poisoning Checks<a class="headerlink" href="#dns-cache-poisoning-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check DNSSEC validation status (Linux resolver)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>dig<span class="w"> </span>+dnssec<span class="w"> </span>corp.example.com
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Look for AD (Authenticated Data) flag in response</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># ;; flags: qr rd ra ad;   ← &#39;ad&#39; flag = DNSSEC validated</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check DNSSEC on Windows DNS</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Get-DnsServerDnsSecZone<span class="w"> </span>-ComputerName<span class="w"> </span>dc01
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Verify response source matches expected nameserver</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>dig<span class="w"> </span>corp.example.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;SERVER:&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># ;; SERVER: 10.10.1.10#53(10.10.1.10)</span>
+</code></pre></div>
+<hr />
+<h2 id="escalation-criteria">Escalation Criteria<a class="headerlink" href="#escalation-criteria" title="Permanent link">&para;</a></h2>
+<p>Escalate to DNS / AD team or network team when:</p>
+<ul>
+<li>All DNS servers for a zone are unreachable simultaneously</li>
+<li>Zone serial number divergence persists after 30 minutes (replication broken)</li>
+<li>DNSSEC validation failures indicate potential cache poisoning or key rollover issue</li>
+<li>AD-integrated DNS zone is not replicating (check AD replication health: <code>repadmin /replsummary</code>)</li>
+<li>DNS resolution fails only for specific VLANs (ACL or scoped response misconfiguration)</li>
+<li>Wildcard records or unexpected record changes discovered (security incident)</li>
+<li>PTR record inconsistencies affect more than 20 hosts (systematic reverse zone issue)</li>
+</ul>
 
 
 
