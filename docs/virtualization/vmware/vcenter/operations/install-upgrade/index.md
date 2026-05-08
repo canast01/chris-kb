@@ -84,3 +84,9 @@ vCenter upgrade rollback is possible only via **file-based backup restore** — 
 - Rollback means full restore from pre-upgrade backup
 - Any changes made post-upgrade (new VMs, config changes) are lost on rollback
 - ESXi downgrades are **not supported** — test on one host first and maintain rollback window before cluster-wide remediation
+
+## Lifecycle
+
+### vSphere Update Manager (VUM) — Legacy
+
+Baseline-based patching. Still available in vSphere 7 but deprecated in 8. Use for standalone hosts not in vLCM-managed clusters.

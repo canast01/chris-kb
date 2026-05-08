@@ -1,0 +1,183 @@
+# ESXi Diagnostics
+
+## Host Health
+
+ESXi host health, sensors, hardware status, services, and operational readiness.
+
+### Daily Checks
+
+| Check | Notes |
+|---|---|
+| Review active alarms | vSphere Client → host → Monitor → Issues |
+| Check recent failed tasks | vSphere Client → host → Monitor → Tasks |
+| Confirm service health | `hostd`, `vpxa`, `ntpd` must be running |
+| Confirm capacity and performance are normal | CPU ready, memory balloon, datastore latency |
+| Check recent changes | Change log or ticket references |
+
+### Health Commands
+
+```bash
+esxcli system version get
+esxcli hardware platform get
+esxcli network ip interface list
+esxcli network nic list
+esxcli storage core path list
+esxcli storage filesystem list
+esxcli system ntp get
+/etc/init.d/hostd status
+/etc/init.d/vpxa status
+```
+
+### Common Issues
+
+- Failed or stuck tasks
+- Certificate, DNS, or authentication issues
+- Capacity pressure
+- Service health warnings
+- Version mismatch after maintenance
+- Monitoring gaps
+
+## Log Analysis
+
+### Key Log Files
+
+| Log | Path | Content |
+|---|---|---|
+| vmkernel | `/var/log/vmkernel.log` | Storage, network, driver-level events |
+| hostd | `/var/log/hostd.log` | Host management agent (API, VM operations) |
+| vpxa | `/var/log/vpxa.log` | vCenter agent communication |
+| vobd | `/var/log/vobd.log` | Hardware/system observation (IPMI, sensors) |
+| fdm | `/var/log/fdm.log` | HA agent (Fault Domain Manager) |
+| auth | `/var/log/auth.log` | SSH logins, sudo |
+
+### Searching Logs
+
+```bash
+# Errors and warnings
+grep -i "error\|warning\|fail\|fault" /var/log/vmkernel.log | tail -30
+grep -i "error" /var/log/hostd.log | tail -20
+grep -i "disconnected\|lost connectivity" /var/log/vpxa.log | tail -10
+
+# Storage path errors
+grep -i "lost path\|path down\|APD\|PDL" /var/log/vmkernel.log | tail -20
+
+# Network errors
+grep -i "link down\|carrier\|vmnic" /var/log/vmkernel.log | tail -20
+
+# HA events
+grep -i "isolation\|restart\;fdm" /var/log/fdm.log | tail -20
+```
+
+### Collect Support Bundle
+
+```bash
+vm-support -n -w /tmp/
+# Output: /tmp/esx-<hostname>-<date>.tgz
+# Or: vSphere Client → Host → Actions → Export System Logs
+```
+
+## Performance Troubleshooting
+
+### Common Symptoms
+
+- High CPU ready time
+- High memory ballooning or swapping
+- High storage latency
+- Slow VM response
+- VM time drift
+- Host contention alarms
+
+### Key Metrics
+
+| Metric | Normal | Caution | Problem |
+|---|---|---|---|
+| CPU Ready | < 5% | 5–10% | > 10% |
+| Memory Balloon | ~0 | Any | Growing |
+| Memory Swap | 0 | Any | Growing |
+| Datastore Latency | < 10 ms | 10–20 ms | > 20 ms |
+
+### esxtop
+
+```bash
+esxtop
+```
+
+Interactive mode keys:
+- `c` — CPU view
+- `m` — Memory view
+- `d` — Disk view
+- `n` — Network view
+
+```bash
+# Batch capture (60 seconds, 2-second intervals)
+esxtop -b -d 2 -n 30 > /tmp/esxtop.csv
+```
+
+### First Actions
+
+1. Identify the affected VM or host
+2. Check CPU ready
+3. Check memory ballooning or swap
+4. Check datastore latency
+5. Check network packet drops
+6. Review recent changes
+
+## Host Disconnect Troubleshooting
+
+### Symptoms
+
+- ESXi host shows disconnected or not responding in vCenter
+- vCenter cannot manage the host
+- Host tasks fail or timeout
+- VMs may still be running but management is degraded
+
+### Likely Causes
+
+- Recent configuration change
+- DNS, certificate, or authentication issue
+- Resource pressure
+- Failed service (`hostd`, `vpxa`)
+- Storage or network dependency issue
+- Version or compatibility mismatch
+
+### Troubleshooting Workflow
+
+1. Confirm scope — is it one host or multiple?
+2. Check recent changes in vCenter Tasks & Events
+3. Review alarms and events on the affected host
+4. Validate management connectivity (ping, traceroute to management vmk0 IP)
+5. Check logs: `hostd.log`, `vpxa.log`, `vmkernel.log`
+6. Isolate the failing dependency (DNS, NTP, certificate, storage)
+7. Apply fix or escalate with evidence
+
+```bash
+# Restart management agents if host is accessible via SSH or console
+/etc/init.d/hostd restart
+/etc/init.d/vpxa restart
+```
+
+## Maintenance Mode Validation
+
+Use before placing a host into maintenance mode and before returning it to service.
+
+### Pre-Checks
+
+- Confirm cluster has sufficient capacity to absorb workload
+- Confirm maintenance window if changes are planned
+- Confirm current health and check recent alerts and tasks
+- Confirm access to management tools
+- Confirm rollback path if configuration changes are made
+
+### Post-Maintenance Validation
+
+- Confirm the host is Connected in vCenter
+- Confirm no new critical alarms
+- Confirm monitoring reflects the expected state
+- Confirm related systems still have access
+- Document the result
+
+### Rollback
+
+- Revert the changed setting if possible
+- Restore prior configuration from documented state
+- Escalate if rollback requires vendor support

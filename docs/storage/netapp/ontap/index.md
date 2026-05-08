@@ -1,34 +1,14 @@
 # NetApp ONTAP
 
-<div class="kb-grid kb-grid-11">
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>Cluster, volume, SVM, NFS, CIFS, iSCSI, FC, SnapMirror, and QoS commands.</span>
-</a>
-
+<div class="kb-grid kb-grid-4">
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Architecture overview, components, and design patterns.</span>
+  <span>Architecture overview, components, standards, and integrations.</span>
 </a>
 
-<a class="kb-card" href="cluster-health/">
-  <strong>Cluster Health</strong>
-  <span>Cluster Health notes, checks, commands, and references.</span>
-</a>
-
-<a class="kb-card" href="integration/">
-  <strong>Integration</strong>
-  <span>Integration with other systems and platforms.</span>
-</a>
-
-<a class="kb-card" href="lifecycle/">
-  <strong>Lifecycle</strong>
-  <span>Installation, upgrades, patching, and decommission.</span>
-</a>
-
-<a class="kb-card" href="protocols/">
-  <strong>Protocols</strong>
-  <span>Protocols notes, checks, commands, and references.</span>
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Health checks, procedures, CLI reference, scripts, and lifecycle.</span>
 </a>
 
 <a class="kb-card" href="security/">
@@ -36,33 +16,9 @@
   <span>Security configuration, hardening, and access control.</span>
 </a>
 
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Configuration standards, naming conventions, and baselines.</span>
-</a>
-
-<a class="kb-card" href="svms/">
-  <strong>Svms</strong>
-  <span>Svms notes, checks, commands, and references.</span>
-</a>
-
 <a class="kb-card" href="troubleshooting/">
   <strong>Troubleshooting</strong>
-  <span>Common issues, diagnostic steps, and resolution guides.</span>
-</a>
-
-<a class="kb-card" href="vendor-support/">
-  <strong>Vendor Support</strong>
-  <span>Support bundles, case management, and escalation paths.</span>
-</a>
-</div>
-  <a class="kb-card" href="scripts/">
-    <strong>Scripts</strong>
-    <span>Perl cluster health check, SnapMirror lag monitor, Python volume reporter, and Ansible playbook.</span>
-  </a>
-<a class="kb-card" href="operations/">
-  <strong>Operations</strong>
-  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+  <span>Common issues, diagnostic steps, and escalation paths.</span>
 </a>
 </div>
 ## Overview

@@ -1,0 +1,145 @@
+# PowerMax — Diagnostics
+
+## Diagnostic Commands
+
+```bash
+# Full array health summary
+symcfg -sid <SID> show
+
+# List all director and port states
+symcfg -sid <SID> list -dir all
+
+# Query SRDF pair state for a specific RDF group
+symrdf -sid <SID> -rdfg <group> query
+
+# List all SRDF groups and their pair counts
+symdf list -sid <SID>
+
+# List SnapVX snapshots for a storage group
+symsnap list -sid <SID> -sg <storage-group>
+
+# Check physical drive state
+sympd list -sid <SID>
+
+# Show thin pool capacity
+symcfg -sid <SID> -pool <pool-name> show
+
+# Show real-time I/O statistics
+symstat -sid <SID> -type rw -i 5 -c 6
+
+# List masking views and their components
+symmaskdb -sid <SID> list database
+
+# Show host login (initiator) visibility per port
+symmask -sid <SID> list logins
+```
+
+## Log Locations
+
+| Log | Location | Notes |
+|---|---|---|
+| Solutions Enabler daemon log | `/var/symapi/log/se_deamons.log` (Linux) | Main SE service log; check for connection and authentication errors |
+| SYMCLI command log | `/var/symapi/log/` | Per-command log files created for each SYMCLI invocation |
+| Unisphere application log | Unisphere vApp → `/var/log/emc/` | Web service and API errors |
+| Array sysmgr log | Accessible via Dell Support remote session | Internal array operating system logs; not user-accessible |
+| Audit log (SYMCLI) | `symevent -sid <SID> list` | Records all configuration change events on the array |
+
+## Performance Analysis
+
+### Quick Performance Check (SYMCLI)
+
+```bash
+# Storage Group I/O stats — snapshot
+symstat -sid <sid> list -type sg
+
+# Device-level stats — identify hot volumes
+symstat -sid <sid> list -type dev | sort -k4 -rn | head -20   # sort by read IOPS
+
+# Cache write pending — should stay below 31%
+symstat -sid <sid> list -type cache | grep -E "WP|Write Pending"
+
+# Front-end port utilisation
+symstat -sid <sid> list -type port | grep -v "^$" | sort -k5 -rn | head -10
+```
+
+### Key Metrics and Thresholds
+
+| Metric | Normal | Warning | Critical |
+|---|---|---|---|
+| Read Response Time | < 1 ms | 1–3 ms | > 3 ms |
+| Write Response Time | < 1 ms | 1–3 ms | > 3 ms |
+| Cache Write Pending % | < 15% | 15–30% | > 31% |
+| SRP Subscription % | < 70% | 70–85% | > 85% |
+| FA Port Utilisation % | < 50% | 50–70% | > 70% |
+| BE Utilisation % | < 60% | 60–80% | > 80% |
+
+### Continuous Monitoring
+
+```bash
+# Monitor SG stats every 30 seconds for 10 minutes
+symstat -sid <sid> list -type sg -i 30 -c 20
+
+# Monitor a specific device
+symstat -sid <sid> list -type dev -devn <devname> -i 10 -c 30
+
+# Monitor cache in real time
+symstat -sid <sid> list -type cache -i 30
+```
+
+### Identify Performance Issues
+
+```bash
+# High latency investigation — find the busiest SGs
+symstat -sid <sid> list -type sg | sort -k6 -rn | head -10   # sort by response time
+
+# Back-end busy — check disk group saturation
+symstat -sid <sid> list -type be | sort -k5 -rn | head -10
+
+# SRDF impact — RDF director stats
+symstat -sid <sid> list -type rdf
+
+# Host sending too many IOPS — check IG → SG → device mapping
+symaccess show view <view_name> -sid <sid>
+```
+
+### Unisphere for PowerMax Performance Dashboard
+
+Unisphere provides 7-day rolling performance history:
+- **System → Performance → Array** — overall throughput and latency
+- **System → Performance → Storage Group** — per-SG response time, IOPS, MB/s
+- **System → Performance → Port** — per-FA-port utilisation and I/O count
+- **Alert Policies** — set thresholds to generate email/SNMP alerts
+
+### Dell CloudIQ
+
+CloudIQ provides longer-term performance trending (30+ days) and anomaly detection:
+- Automatically collects metrics from connected PowerMax arrays
+- Latency forecasting and proactive alerts
+- Cross-array comparison and capacity planning
+- Access via [cloudiq.dell.com](https://cloudiq.dell.com)
+
+### Performance Data for TAC
+
+```bash
+# Collect 15-minute perf data for all subsystems
+for type in sg dev dir be cache rdf port; do
+    symstat -sid <sid> list -type $type -i 60 -c 15 > /tmp/powermax-${type}-perf-$(date +%Y%m%d).txt &
+done
+wait
+tar czf /tmp/powermax-perf-$(date +%Y%m%d).tar.gz /tmp/powermax-*-perf-*.txt
+```
+
+## Before Calling Support
+
+Collect the following before opening a Dell Support case:
+
+1. Symmetrix SID: `symcfg list`
+2. PowerMaxOS version: `symcfg -sid <SID> show | grep -i "microcode"`
+3. Solutions Enabler version: `symcli -version`
+4. Full array health output: `symcfg -sid <SID> show > array_health.txt`
+5. SRDF group state (if replication issue): `symrdf -sid <SID> -rdfg <group> query > srdf_state.txt`
+6. Director/port status: `symcfg -sid <SID> list -dir all > director_status.txt`
+7. Recent Unisphere alerts: export from Unisphere → Alerts → Export
+8. Symptom description, time of first occurrence, and business impact
+
+Use Dell SupportAssist (if licensed) to automatically collect and upload diagnostic bundles: accessible from Unisphere → System → SupportAssist.

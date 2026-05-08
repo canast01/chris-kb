@@ -1,0 +1,181 @@
+# Windows Server — Procedures
+
+Day-to-day operational tasks and how-to guides.
+
+## Change Readiness Checks
+
+```powershell
+# 1. Confirm system health before any change
+Get-Service | Where-Object { $_.StartType -eq "Automatic" -and $_.Status -ne "Running" }
+Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Used/($_.Used+$_.Free) -gt 0.85 }
+
+# 2. Capture current installed updates (rollback reference)
+Get-HotFix | Sort-Object InstalledOn -Descending |
+    Select-Object HotFixID, Description, InstalledOn |
+    Export-Csv C:\Logs\pre-change-hotfixes-$(Get-Date -Format yyyyMMdd).csv -NoTypeInformation
+
+# 3. Capture OS version and build
+[System.Environment]::OSVersion.Version
+(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").CurrentBuild
+```
+
+## Maintenance Tasks
+
+### Weekly
+
+- Review Windows Update compliance for all servers
+- Check backup job success in Veeam or Windows Server Backup
+- Review Defender threat detection log
+- Verify DC replication health: `repadmin /replsummary`
+- Check certificate expiry for IIS and LDAPS: `Get-ChildItem Cert:\LocalMachine\My`
+
+### Monthly
+
+- Apply Patch Tuesday updates per patching cadence
+- Review local administrator accounts: `Get-LocalGroupMember -Group Administrators`
+- Rotate LAPS passwords if manual override has been set
+- Review scheduled task inventory for orphaned tasks
+- Check system uptime and schedule reboots if > 30 days without patching
+
+### Quarterly
+
+- Review and test backup restores
+- Verify cluster health (if WSFC): `Test-Cluster`
+- Audit services set to Automatic that are stopped
+- Review GPO application: `gpresult /h c:\temp\gpresult.html`
+- Review Event Log custom views for recurring errors
+
+## Reboot Procedure
+
+1. Notify application owners and update change record
+2. Verify no active user sessions: `query session`
+3. Check cluster ownership if clustered: `Get-ClusterGroup`
+4. Initiate graceful shutdown of application services
+5. Reboot: `Restart-Computer -Force`
+6. Verify services start cleanly post-reboot: `Get-Service | Where-Object {$_.StartType -eq 'Automatic' -and $_.Status -ne 'Running'}`
+7. Confirm event log is clean (no critical errors in first 15 minutes)
+8. Notify application owners and close change record
+
+## Common Operational Commands
+
+```powershell
+# Check active RDP sessions
+query session /server:<hostname>
+
+# Check currently logged-on users
+Get-CimInstance Win32_LoggedOnUser | Select-Object Antecedent
+
+# Check open network connections
+netstat -ano | findstr ESTABLISHED
+
+# Check DNS resolution
+Resolve-DnsName <hostname> -Server <dns-server>
+
+# Test connectivity to remote host and port
+Test-NetConnection -ComputerName <target> -Port 443
+
+# Check Group Policy last applied
+gpresult /r
+
+# Force Group Policy refresh
+gpupdate /force
+
+# Check domain membership
+dsregcmd /status
+```
+
+---
+
+## Service Management
+
+```powershell
+# Check service status
+Get-Service -Name <ServiceName>
+Get-Service -Name <ServiceName> | Select-Object *
+
+# Start / stop / restart
+Start-Service -Name <ServiceName>
+Stop-Service -Name <ServiceName>
+Restart-Service -Name <ServiceName> -Force
+
+# Set startup type
+Set-Service -Name <ServiceName> -StartupType Automatic
+Set-Service -Name <ServiceName> -StartupType Disabled
+Set-Service -Name <ServiceName> -StartupType Manual
+```
+
+### Listing Services
+
+```powershell
+# All running services
+Get-Service | Where-Object { $_.Status -eq "Running" }
+
+# Automatic-start services that are stopped
+Get-Service | Where-Object { $_.StartType -eq "Automatic" -and $_.Status -ne "Running" } |
+    Select-Object Name, DisplayName, Status
+
+# All services with start type
+Get-Service | Select-Object Name, DisplayName, Status, StartType | Sort-Object StartType, Name
+```
+
+### Service Account and Dependencies
+
+```powershell
+# View service account via WMI
+Get-CimInstance Win32_Service -Filter "Name='wuauserv'" |
+    Select-Object Name, StartName, State, StartMode
+
+# All services not running as LocalSystem or NetworkService
+Get-CimInstance Win32_Service |
+    Where-Object { $_.StartName -notin @("LocalSystem","NT AUTHORITY\NetworkService","NT AUTHORITY\LocalService") } |
+    Select-Object Name, StartName, State
+
+# Service dependencies
+(Get-Service -Name <ServiceName>).DependentServices
+(Get-Service -Name <ServiceName>).ServicesDependedOn
+```
+
+### Key Infrastructure Services
+
+| Service Name | Display Name | Role |
+|---|---|---|
+| W32Time | Windows Time | Time sync with AD / NTP |
+| Netlogon | Netlogon | AD domain authentication |
+| NTDS | Active Directory Domain Services | DC — AD database |
+| DNS | DNS Server | DNS resolution |
+| WinRM | Windows Remote Management | PowerShell remoting |
+| EventLog | Windows Event Log | Event logging |
+| wuauserv | Windows Update | Patch management |
+| CryptSvc | Cryptographic Services | Certificate store |
+| BFE | Base Filtering Engine | Windows Firewall core |
+| mpssvc | Windows Defender Firewall | Host firewall |
+| WinDefend | Windows Defender Antivirus | AV (if not replaced) |
+
+### Remote Service Management
+
+```powershell
+# Check service on a remote server
+Get-Service -Name <ServiceName> -ComputerName <servername>
+
+# Restart service on remote server
+Invoke-Command -ComputerName <servername> -ScriptBlock { Restart-Service -Name <ServiceName> -Force }
+
+# Check multiple servers at once
+$servers = @("srv01","srv02","srv03")
+$servers | ForEach-Object {
+    $svc = Get-Service -Name <ServiceName> -ComputerName $_ -ErrorAction SilentlyContinue
+    [PSCustomObject]@{ Server = $_; Status = $svc.Status; StartType = $svc.StartType }
+}
+```
+
+### Service Logs via Event Viewer
+
+```powershell
+# Service start/stop events (Event ID 7036)
+Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7036 } -MaxEvents 20 |
+    Select-Object TimeCreated, Message | Format-List
+
+# Unexpected service termination (Event ID 7034)
+Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7034 } -MaxEvents 10 |
+    Select-Object TimeCreated, Message | Format-List
+```

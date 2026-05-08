@@ -1,0 +1,1199 @@
+# MDS — Scripts
+
+> Part of the [Cisco MDS](../../) reference.
+
+---
+
+## Fabric Health Check (Bash)
+
+SSH to a Cisco MDS switch, collect key diagnostic outputs, and print a health summary flagging down interfaces, environmental issues, and zoning problems.
+
+~~~bash
+#!/bin/bash
+# mds_fabric_health.sh
+# Usage: MDS_HOST=mds1 MDS_USER=admin ./mds_fabric_health.sh
+
+MDS_HOST="${MDS_HOST:-192.168.1.20}"
+MDS_USER="${MDS_USER:-admin}"
+SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=10"
+PASS=0; WARN=1; CRIT=2
+overall=0
+
+run_cmd() {
+  ssh $SSH_OPTS "${MDS_USER}@${MDS_HOST}" "$1" 2>/dev/null
+}
+
+status_label() {
+  case $1 in
+    0) echo "PASS"    ;;
+    1) echo "WARNING" ;;
+    2) echo "CRITICAL";;
+  esac
+}
+
+echo "==============================="
+echo " Cisco MDS Fabric Health Check"
+echo " Host : ${MDS_HOST}"
+echo " $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+echo "==============================="
+
+# --- show interface brief ---
+intf_out=$(run_cmd "show interface brief")
+down_fc=$(echo "$intf_out" | awk '/^fc/ && /down/' | wc -l | tr -d ' ')
+if   [ "$down_fc" -gt 5 ]; then s=$CRIT
+elif [ "$down_fc" -gt 0 ]; then s=$WARN
+else s=$PASS; fi
+[ $s -gt $overall ] && overall=$s
+printf "[%-8s] interface brief    — %d FC interface(s) down\n" "$(status_label $s)" "$down_fc"
+
+# --- show flogi database ---
+flogi_out=$(run_cmd "show flogi database")
+flogi_count=$(echo "$flogi_out" | grep -c "^fc") || flogi_count=0
+printf "[%-8s] flogi database     — %d logged-in device(s)\n" "PASS" "$flogi_count"
+
+# --- show topology ---
+topo_out=$(run_cmd "show topology")
+isolated=$(echo "$topo_out" | grep -ic "isolated\|no ISL") || isolated=0
+if   [ "$isolated" -gt 0 ]; then s=$WARN
+else s=$PASS; fi
+[ $s -gt $overall ] && overall=$s
+printf "[%-8s] topology           — %d isolated switch/ISL issue(s)\n" "$(status_label $s)" "$isolated"
+
+# --- show zoneset active ---
+zone_out=$(run_cmd "show zoneset active")
+zone_err=$(echo "$zone_out" | grep -ic "error\|mismatch") || zone_err=0
+if   [ "$zone_err" -gt 0 ]; then s=$CRIT
+else s=$PASS; fi
+[ $s -gt $overall ] && overall=$s
+printf "[%-8s] zoneset active     — %d zoning error(s)\n" "$(status_label $s)" "$zone_err"
+
+# --- show logging last 50 ---
+log_out=$(run_cmd "show logging last 50")
+log_crit=$(echo "$log_out" | grep -ic "critical\|ERROR\|link down") || log_crit=0
+if   [ "$log_crit" -gt 5 ]; then s=$CRIT
+elif [ "$log_crit" -gt 0 ]; then s=$WARN
+else s=$PASS; fi
+[ $s -gt $overall ] && overall=$s
+printf "[%-8s] logging            — %d critical/error log line(s)\n" "$(status_label $s)" "$log_crit"
+
+# --- show environment ---
+env_out=$(run_cmd "show environment")
+env_warn=$(echo "$env_out" | grep -ic "warning\|critical\|fail\|absent") || env_warn=0
+if   [ "$env_warn" -gt 0 ]; then s=$CRIT
+else s=$PASS; fi
+[ $s -gt $overall ] && overall=$s
+printf "[%-8s] environment        — %d environmental alert(s)\n" "$(status_label $s)" "$env_warn"
+
+echo "==============================="
+printf " Overall: %s\n" "$(status_label $overall)"
+echo "==============================="
+exit $overall
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Linux or macOS machine (or WSL on Windows)
+- `ssh` installed (already present on Linux/Mac)
+- Network access to the Cisco MDS switch management IP
+- MDS switch admin credentials with SSH access enabled
+
+**Step 1 — Save the file**
+
+1. Open a text editor
+2. Copy the entire code block above
+3. Save it as `mds_fabric_health.sh`
+
+**Step 2 — Fill in your details**
+
+Edit these lines near the top of the script:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `MDS_HOST` | IP address of the MDS switch | Check your Cisco DCNM or ask your SAN admin |
+| `MDS_USER` | SSH username | Usually `admin` |
+
+**Step 3 — Open a terminal**
+
+- **For .sh:** Open Terminal on Linux/Mac, or use Git Bash / WSL on Windows
+
+**Step 4 — Make the script executable and run it**
+
+```
+chmod +x mds_fabric_health.sh
+MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_fabric_health.sh
+```
+
+Enter the SSH password when prompted.
+
+**What you should see**
+
+Six check results, each labelled PASS, WARNING, or CRITICAL: FC interfaces down, FLOGI device count, topology isolation, zoning errors, log entries with critical keywords, and environmental status. The final line shows the overall result.
+
+---
+
+## FLOGI Database Report (Python)
+
+SSH to MDS using Paramiko, parse the FLOGI database per VSAN, and flag duplicate FCIDs, unexpected VSAN logins, and unzoned devices.
+
+~~~python
+#!/usr/bin/env python3
+"""
+mds_flogi_report.py
+Usage: python3 mds_flogi_report.py
+"""
+
+import os, re, sys
+import paramiko
+
+MDS_HOST = os.environ.get("MDS_HOST", "192.168.1.20")
+MDS_USER = os.environ.get("MDS_USER", "admin")
+SSH_KEY  = os.environ.get("SSH_KEY",  os.path.expanduser("~/.ssh/id_rsa"))
+
+# Expected VSAN IDs — devices logged in elsewhere are flagged
+EXPECTED_VSANS = set(map(int, os.environ.get("EXPECTED_VSANS", "10,20").split(",")))
+
+
+def ssh_run(host, cmd):
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(host, username=MDS_USER, key_filename=SSH_KEY, timeout=15)
+    _, stdout, _ = client.exec_command(cmd)
+    out = stdout.read().decode()
+    client.close()
+    return out
+
+
+def parse_flogi(flogi_out):
+    """
+    Parse 'show flogi database' output.
+    Columns: INTERFACE  VSAN  FCID  PORT WWN  NODE WWN
+    Returns list of dicts.
+    """
+    entries = []
+    for line in flogi_out.splitlines():
+        # fc1/1     10    0x010200  20:00:00:... 20:00:00:...
+        m = re.match(
+            r'^(fc\S+)\s+(\d+)\s+(0x[0-9a-fA-F]+)\s+([0-9a-fA-F:]{23})\s+([0-9a-fA-F:]{23})',
+            line.strip()
+        )
+        if m:
+            entries.append({
+                "interface": m.group(1),
+                "vsan":      int(m.group(2)),
+                "fcid":      m.group(3),
+                "pwwn":      m.group(4),
+                "nwwn":      m.group(5),
+            })
+    return entries
+
+
+def parse_active_zones(zoneset_out):
+    """Return set of all PWWNs referenced in any active zone."""
+    return set(re.findall(r'[0-9a-fA-F]{2}(?::[0-9a-fA-F]{2}){7}', zoneset_out))
+
+
+flogi_raw    = ssh_run(MDS_HOST, "show flogi database")
+zoneset_raw  = ssh_run(MDS_HOST, "show zoneset active vsan all")
+
+entries      = parse_flogi(flogi_raw)
+zoned_wwns   = parse_active_zones(zoneset_raw)
+
+# Group by VSAN
+vsans = {}
+for e in entries:
+    vsans.setdefault(e["vsan"], []).append(e)
+
+issues = []
+
+for vsan_id in sorted(vsans):
+    vsan_entries = vsans[vsan_id]
+    print(f"\n--- VSAN {vsan_id} ({len(vsan_entries)} devices) ---")
+    print(f"  {'Interface':<12} {'FCID':<10} {'Port WWN':<26} {'Status'}")
+    print("  " + "-" * 70)
+
+    seen_fcids = {}
+    for e in sorted(vsan_entries, key=lambda x: x["interface"]):
+        flags = []
+
+        # Duplicate FCID detection
+        if e["fcid"] in seen_fcids:
+            flags.append(f"DUPLICATE_FCID (also on {seen_fcids[e['fcid']]})")
+            issues.append(f"VSAN {vsan_id}: Duplicate FCID {e['fcid']} on {e['interface']} and {seen_fcids[e['fcid']]}")
+        else:
+            seen_fcids[e["fcid"]] = e["interface"]
+
+        # Unexpected VSAN login
+        if EXPECTED_VSANS and vsan_id not in EXPECTED_VSANS:
+            flags.append(f"UNEXPECTED_VSAN")
+            issues.append(f"VSAN {vsan_id}: Device {e['pwwn']} logged into unexpected VSAN")
+
+        # Unzoned device
+        if e["pwwn"] not in zoned_wwns:
+            flags.append("UNZONED")
+            issues.append(f"VSAN {vsan_id}: Device {e['pwwn']} on {e['interface']} is not in any active zone")
+
+        status = ", ".join(flags) if flags else "OK"
+        print(f"  {e['interface']:<12} {e['fcid']:<10} {e['pwwn']:<26} {status}")
+
+print(f"\n\n{'='*50}")
+if issues:
+    print(f"ISSUES FOUND ({len(issues)}):")
+    for i in issues:
+        print(f"  {i}")
+    sys.exit(1)
+else:
+    print("No issues found.")
+    sys.exit(0)
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3.7 or later installed
+- The `paramiko` SSH library: `pip install paramiko`
+- An SSH key set up for the MDS switch, or modify the script to use password auth
+- Network access to the MDS switch management IP
+
+**Step 1 — Save the file**
+
+1. Open a text editor
+2. Copy the entire code block above
+3. Save it as `mds_flogi_report.py`
+
+**Step 2 — Fill in your details**
+
+Set these as environment variables, or edit the defaults at the top of the script:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `MDS_HOST` | IP address of the MDS switch | Switch management IP |
+| `MDS_USER` | SSH username | Usually `admin` |
+| `SSH_KEY` | Path to your SSH private key | Typically `~/.ssh/id_rsa` |
+| `EXPECTED_VSANS` | Comma-separated list of valid VSAN IDs | Ask your SAN admin which VSANs should have devices |
+
+**Step 3 — Open a terminal**
+
+- **For .py:** Open Terminal (Linux/Mac) or Command Prompt / Git Bash (Windows). Install Python from python.org. Install packages: `pip install paramiko`
+
+**Step 4 — Run the script**
+
+```
+MDS_HOST=192.168.1.20 MDS_USER=admin EXPECTED_VSANS=10,20 python3 mds_flogi_report.py
+```
+
+**What you should see**
+
+Per-VSAN sections listing each logged-in device with its interface, FCID, and Port WWN. Any device with a duplicate FCID, unexpected VSAN login, or no active zone membership is flagged. A summary at the bottom shows total issues found.
+
+---
+
+## Zoning Consistency Audit (Perl)
+
+SSH to MDS, cross-reference active zone members against the FLOGI database, and report stale zone entries and unzoned devices per VSAN.
+
+~~~perl
+#!/usr/bin/env perl
+# mds_zoning_audit.pl
+# Usage: MDS_HOST=mds1 MDS_USER=admin perl mds_zoning_audit.pl
+
+use strict;
+use warnings;
+
+my $MDS_HOST  = $ENV{MDS_HOST}  // '192.168.1.20';
+my $MDS_USER  = $ENV{MDS_USER}  // 'admin';
+my $SSH_OPTS  = '-o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes';
+
+sub ssh_cmd {
+    my ($cmd) = @_;
+    return `ssh $SSH_OPTS ${MDS_USER}\@${MDS_HOST} "$cmd" 2>/dev/null`;
+}
+
+my $zoneset_out = ssh_cmd('show zoneset active vsan all');
+my $flogi_out   = ssh_cmd('show flogi database vsan all');
+
+# --- Parse logged-in WWNs per VSAN ---
+my %logged_in;  # vsan -> { pwwn -> interface }
+for my $line (split /\n/, $flogi_out) {
+    if ($line =~ /^(fc\S+)\s+(\d+)\s+0x[0-9a-fA-F]+\s+([0-9a-fA-F:]{23})/) {
+        $logged_in{$2}{$3} = $1;
+    }
+}
+
+# --- Parse active zone members per VSAN ---
+my %zone_members;  # vsan -> zone -> [wwns]
+my ($cur_vsan, $cur_zone);
+for my $line (split /\n/, $zoneset_out) {
+    if ($line =~ /vsan\s+(\d+)/i) {
+        $cur_vsan = $1;
+    } elsif ($line =~ /^\s+zone\s+name\s+(\S+)/i) {
+        $cur_zone = $1;
+    } elsif ($cur_vsan && $cur_zone && $line =~ /([0-9a-fA-F]{2}(?::[0-9a-fA-F]{2}){7})/) {
+        push @{$zone_members{$cur_vsan}{$cur_zone}}, $1;
+    }
+}
+
+my @findings;
+
+for my $vsan (sort { $a <=> $b } keys %zone_members) {
+    my $li = $logged_in{$vsan} // {};
+
+    # Collect all zoned WWNs for this VSAN
+    my %zoned_wwns;
+    for my $zone (keys %{$zone_members{$vsan}}) {
+        for my $wwn (@{$zone_members{$vsan}{$zone}}) {
+            $zoned_wwns{$wwn} = $zone;
+
+            # Stale zone member (in zone but not logged in)
+            unless (exists $li->{$wwn}) {
+                push @findings,
+                    sprintf("WARN  VSAN %4d  STALE    zone=%-30s  wwn=%s  (not logged in)", $vsan, $zone, $wwn);
+            }
+        }
+    }
+
+    # Unzoned devices (logged in but not in any zone)
+    for my $pwwn (keys %{$li}) {
+        unless (exists $zoned_wwns{$pwwn}) {
+            push @findings,
+                sprintf("CRIT  VSAN %4d  UNZONED  intf=%-10s  wwn=%s", $vsan, $li->{$pwwn}, $pwwn);
+        }
+    }
+}
+
+printf "=== MDS Zoning Consistency Audit: %s ===\n\n", $MDS_HOST;
+
+if (@findings) {
+    print "$_\n" for sort @findings;
+} else {
+    print "No issues found.\n";
+}
+
+my $crits = scalar grep { /^CRIT/ } @findings;
+my $warns = scalar grep { /^WARN/ } @findings;
+printf "\nSummary: %d critical, %d warnings\n", $crits, $warns;
+exit $crits ? 2 : $warns ? 1 : 0;
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Linux or macOS machine with Perl installed
+- SSH key-based authentication to the MDS switch (or password auth with `sshpass`)
+- Network access to the MDS switch management IP
+
+**Step 1 — Save the file**
+
+1. Open a text editor
+2. Copy the entire code block above
+3. Save it as `mds_zoning_audit.pl`
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `$MDS_HOST` | IP address of the MDS switch | Switch management IP |
+| `$MDS_USER` | SSH username | Usually `admin` |
+
+**Step 3 — Open a terminal**
+
+- **For .pl:** Open Terminal on Linux/Mac. On Windows, install Strawberry Perl from strawberryperl.com, or use WSL.
+
+**Step 4 — Make the script executable and run it**
+
+```
+chmod +x mds_zoning_audit.pl
+MDS_HOST=192.168.1.20 MDS_USER=admin perl mds_zoning_audit.pl
+```
+
+**What you should see**
+
+A list of findings sorted alphabetically. CRIT lines mean a device is logged into a VSAN but has no zone membership (a configuration problem). WARN lines mean a zone contains a WWN that is not currently logged in (could be a stale entry). The summary line shows counts of each. Exit code 0 means clean, 1 means warnings, 2 means critical issues.
+
+---
+
+## Interface Error Counter Monitor (Bash)
+
+Collect FC interface error counters from MDS, compare against a stored baseline, and alert on significant increments.
+
+~~~bash
+#!/bin/bash
+# mds_interface_errors.sh
+# Usage: MDS_HOST=mds1 MDS_USER=admin ./mds_interface_errors.sh
+# Run via cron every 15 minutes.
+
+MDS_HOST="${MDS_HOST:-192.168.1.20}"
+MDS_USER="${MDS_USER:-admin}"
+SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes"
+BASELINE_FILE="/var/tmp/mds_err_baseline_${MDS_HOST}.dat"
+ALERT_THRESHOLD=100   # increment threshold to alert
+CRIT_THRESHOLD=1000
+TS=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+
+# Collect current error counters
+raw=$(ssh $SSH_OPTS "${MDS_USER}@${MDS_HOST}" "show interface counters errors" 2>/dev/null)
+
+if [ -z "$raw" ]; then
+  echo "[$TS] ERROR: Could not connect to $MDS_HOST" >&2
+  exit 2
+fi
+
+declare -A current
+
+while IFS= read -r line; do
+  # Match interface line: fc1/1 is up
+  if [[ $line =~ ^(fc[0-9/]+) ]]; then
+    cur_intf="${BASH_REMATCH[1]}"
+  fi
+  # Match counter lines: "   2 input errors"
+  if [[ -n "$cur_intf" && $line =~ ([0-9]+)[[:space:]]+(input errors|output errors|discards|buffer credit recovery|link failures) ]]; then
+    key="${cur_intf}__${BASH_REMATCH[2]// /_}"
+    current["$key"]="${BASH_REMATCH[1]}"
+  fi
+done <<< "$raw"
+
+# Load baseline
+declare -A baseline
+if [ -f "$BASELINE_FILE" ]; then
+  while IFS=$'\t' read -r k v; do
+    baseline["$k"]="$v"
+  done < "$BASELINE_FILE"
+fi
+
+# Compare
+alerts=()
+for key in "${!current[@]}"; do
+  cur="${current[$key]}"
+  base="${baseline[$key]:-0}"
+  delta=$(( cur - base ))
+  (( delta < 0 )) && delta=0  # counter reset
+  if (( delta >= CRIT_THRESHOLD )); then
+    alerts+=("CRIT  ${key/__/  }  delta=${delta}")
+  elif (( delta >= ALERT_THRESHOLD )); then
+    alerts+=("WARN  ${key/__/  }  delta=${delta}")
+  fi
+done
+
+# Print results
+echo "[$TS] MDS Interface Error Monitor — $MDS_HOST"
+if [ ${#alerts[@]} -gt 0 ]; then
+  printf '%s\n' "${alerts[@]}"
+  rc=1
+else
+  echo "OK — all counter deltas within threshold"
+  rc=0
+fi
+
+# Save new baseline
+: > "$BASELINE_FILE"
+for key in "${!current[@]}"; do
+  printf '%s\t%s\n' "$key" "${current[$key]}" >> "$BASELINE_FILE"
+done
+
+exit $rc
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Linux or macOS machine (or WSL on Windows)
+- SSH key-based authentication to the MDS switch for non-interactive cron use
+- Network access to the MDS switch management IP
+
+**Step 1 — Save the file**
+
+1. Open a text editor
+2. Copy the entire code block above
+3. Save it as `mds_interface_errors.sh` in `/opt/scripts/` or your home directory
+
+**Step 2 — Fill in your details**
+
+Edit these variables near the top of the script:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `MDS_HOST` | IP address of the MDS switch | Switch management IP |
+| `MDS_USER` | SSH username | Usually `admin` |
+| `ALERT_THRESHOLD` | Error delta count to trigger a warning | Default 100 — lower it if you want earlier alerts |
+| `CRIT_THRESHOLD` | Error delta count to trigger critical | Default 1000 |
+
+**Step 3 — Open a terminal**
+
+- **For .sh:** Open Terminal on Linux/Mac, or use Git Bash / WSL on Windows
+
+**Step 4 — Make the script executable and run it manually first**
+
+```
+chmod +x mds_interface_errors.sh
+MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_interface_errors.sh
+```
+
+**Step 5 — Schedule via cron (optional)**
+
+```
+crontab -e
+```
+Add:
+```
+*/15 * * * * MDS_HOST=192.168.1.20 MDS_USER=admin /opt/scripts/mds_interface_errors.sh >> /var/log/mds_errors.log 2>&1
+```
+
+**What you should see**
+
+On the first run a baseline file is created and the output is `OK — all counter deltas within threshold`. On subsequent runs, any interface whose error counter increased by more than the threshold since the last run is reported as WARN or CRIT with the counter name and delta value.
+
+---
+
+## Ansible MDS Config Backup Playbook
+
+Capture running configuration, NX-OS version, and active zoning from all MDS switches in the `cisco_mds` group, then archive with a datestamp.
+
+~~~yaml
+---
+# mds_backup.yml
+# Usage: ansible-playbook -i inventory mds_backup.yml
+# Inventory group: cisco_mds
+# Required vars: mds_user, backup_path
+
+- name: Cisco MDS — Configuration Backup
+  hosts: cisco_mds
+  gather_facts: false
+  vars:
+    mds_user: admin
+    backup_path: /backups/mds
+    date_stamp: "{{ lookup('pipe', 'date +%Y%m%d_%H%M%S') }}"
+    local_tmp: "/tmp/mds_backup_{{ inventory_hostname }}_{{ date_stamp }}"
+
+  tasks:
+
+    - name: Create local temp directory
+      ansible.builtin.file:
+        path: "{{ local_tmp }}"
+        state: directory
+        mode: "0750"
+      delegate_to: localhost
+
+    - name: Capture running configuration
+      ansible.builtin.raw: show running-config
+      register: running_config
+
+    - name: Save running-config to local file
+      ansible.builtin.copy:
+        content: "{{ running_config.stdout }}"
+        dest: "{{ local_tmp }}/running-config.txt"
+      delegate_to: localhost
+
+    - name: Capture NX-OS version
+      ansible.builtin.raw: show version
+      register: show_version
+
+    - name: Save version output
+      ansible.builtin.copy:
+        content: "{{ show_version.stdout }}"
+        dest: "{{ local_tmp }}/version.txt"
+      delegate_to: localhost
+
+    - name: Capture active zoneset (all VSANs)
+      ansible.builtin.raw: show zoneset active vsan all
+      register: zoneset_active
+
+    - name: Save zoneset output
+      ansible.builtin.copy:
+        content: "{{ zoneset_active.stdout }}"
+        dest: "{{ local_tmp }}/zoneset-active.txt"
+      delegate_to: localhost
+
+    - name: Archive outputs to backup server
+      ansible.builtin.archive:
+        path: "{{ local_tmp }}"
+        dest: "{{ backup_path }}/{{ inventory_hostname }}_backup_{{ date_stamp }}.tar.gz"
+        format: gz
+      delegate_to: localhost
+
+    - name: Report completion
+      ansible.builtin.debug:
+        msg: "Backup complete: {{ backup_path }}/{{ inventory_hostname }}_backup_{{ date_stamp }}.tar.gz"
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Linux or WSL machine with Ansible installed (`pip install ansible`)
+- An Ansible inventory file listing your MDS switches under the group `cisco_mds`
+- SSH access from the Ansible control machine to each MDS switch
+- A writable backup directory (`backup_path`)
+
+**Step 1 — Save the file**
+
+1. Open a text editor
+2. Copy the entire code block above
+3. Save it as `mds_backup.yml`
+
+**Step 2 — Fill in your details**
+
+Edit the `vars:` section:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `mds_user` | SSH username for the MDS switches | Usually `admin` |
+| `backup_path` | Directory where backups will be saved | Any writable local path, e.g. `/backups/mds` |
+
+**Step 3 — Create an inventory file**
+
+Create a file called `inventory` next to the playbook:
+```
+[cisco_mds]
+mds1 ansible_host=192.168.1.20
+mds2 ansible_host=192.168.1.21
+```
+
+**Step 4 — Open a terminal**
+
+- **For .yml (Ansible):** Requires Linux/WSL. Open a Linux or WSL terminal.
+
+**Step 5 — Run the playbook**
+
+```
+ansible-playbook -i inventory mds_backup.yml
+```
+
+**What you should see**
+
+Ansible runs through each task for every MDS switch in the inventory: creates a temp directory, captures running-config, NX-OS version, and active zoneset, archives them into a `.tar.gz` file, and prints the archive path. Check the backup directory to confirm the files are present.
+
+---
+
+## Windows: Cisco MDS Health Check via Plink (CMD)
+
+Use plink.exe to SSH to a Cisco MDS switch and run key NX-OS commands with labelled separator lines to produce a quick health report from a Windows PC.
+
+~~~batch
+@echo off
+REM mds-health.bat — Cisco MDS health check via SSH (plink)
+REM Uses plink.exe (from PuTTY) for SSH. Download: https://www.putty.org
+REM
+REM FIRST-TIME SETUP — Accept SSH fingerprint (run once):
+REM   plink.exe -ssh admin@YOUR_MDS_IP
+REM   Type 'y' to accept the fingerprint, then Ctrl+C.
+
+set MDS_HOST=192.168.1.20
+set SSH_USER=admin
+set PLINK=plink.exe
+
+echo.
+echo === Cisco MDS Health Check ===
+echo Switch: %MDS_HOST%
+echo.
+
+echo ----------------------------------------
+echo SOFTWARE VERSION AND UPTIME (show version)
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %MDS_HOST% "show version"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %MDS_HOST%.
+    echo Check: 1) hostname is correct, 2) SSH is enabled on the switch,
+    echo        3) you have accepted the SSH fingerprint (run plink manually once).
+    exit /b 1
+)
+
+echo.
+echo ----------------------------------------
+echo INTERFACE STATUS (show interface brief)
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %MDS_HOST% "show interface brief"
+
+echo.
+echo ----------------------------------------
+echo LOGGED-IN DEVICES (show flogi database)
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %MDS_HOST% "show flogi database"
+
+echo.
+echo ----------------------------------------
+echo ACTIVE ZONE CONFIGURATION (show zoneset active)
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %MDS_HOST% "show zoneset active"
+
+echo.
+echo ----------------------------------------
+echo LAST 20 LOG ENTRIES (show logging last 20)
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %MDS_HOST% "show logging last 20"
+
+echo.
+echo ----------------------------------------
+echo CPU AND MEMORY (show system resources)
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %MDS_HOST% "show system resources"
+
+echo.
+echo Done.
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- PuTTY installed on Windows — download from https://www.putty.org
+- `plink.exe` available (installed with PuTTY, usually at `C:\Program Files\PuTTY\plink.exe`)
+- SSH access to the Cisco MDS switch management IP
+- MDS switch admin credentials
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Save it as `mds-health.bat` on your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and change these lines near the top:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `MDS_HOST` | IP address of the MDS switch | Switch management IP — ask your SAN admin |
+| `SSH_USER` | SSH username | Usually `admin` |
+| `PLINK` | Path to plink.exe | Default `plink.exe` if PuTTY is in PATH, otherwise `C:\Program Files\PuTTY\plink.exe` |
+
+**Step 3 — Accept the SSH fingerprint first (one-time step)**
+
+Open Command Prompt and run:
+```
+plink.exe -ssh admin@192.168.1.20
+```
+Type `y` when asked, then Ctrl+C. Do this once per switch.
+
+**Step 4 — Open a terminal**
+
+Open **Command Prompt**: Windows key → search `cmd` → press Enter
+
+**Step 5 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+mds-health.bat
+```
+
+**What you should see**
+
+Six labelled sections: NX-OS software version and uptime, interface brief (all FC/Ethernet interfaces), FLOGI database (logged-in HBAs and storage ports), active zoneset configuration, last 20 syslog entries, and CPU/memory utilisation.
+
+---
+
+## Windows: Cisco MDS Port Report (PowerShell via Plink)
+
+Use PowerShell to call plink and capture Cisco MDS NX-OS output, then parse it to build a clean port report showing interface state, speed, and connected device WWPNs.
+
+~~~powershell
+# mds-port-report.ps1
+# Usage: .\mds-port-report.ps1 -MdsHost <IP> -SshUser <user> -PlinkPath <path>
+# Requires: plink.exe from PuTTY (https://www.putty.org)
+# FIRST-TIME: run  plink.exe -ssh admin@<IP>  and accept the fingerprint.
+
+param(
+    [Parameter(Mandatory)][string]$MdsHost,
+    [string]$SshUser   = "admin",
+    [string]$PlinkPath = "plink.exe"
+)
+
+function Invoke-Plink {
+    param([string]$Command)
+    $output = & $PlinkPath -ssh -l $SshUser -batch $MdsHost $Command 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: plink failed for command: $Command" -ForegroundColor Red
+        Write-Host "Make sure you have accepted the SSH fingerprint by running plink manually once." -ForegroundColor Yellow
+        exit 1
+    }
+    return $output
+}
+
+Write-Host ""
+Write-Host "=== Cisco MDS Port Report ===" -ForegroundColor Cyan
+Write-Host "Switch : $MdsHost"
+Write-Host "Date   : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+Write-Host ""
+
+# --- Collect interface brief ---
+Write-Host "Collecting interface status..." -ForegroundColor DarkYellow
+$intfLines = Invoke-Plink "show interface brief"
+
+# --- Collect FLOGI database ---
+Write-Host "Collecting FLOGI database..." -ForegroundColor DarkYellow
+$flogiLines = Invoke-Plink "show flogi database"
+
+# --- Parse interface brief ---
+# Example line: fc1/1    1    up      F      8000  auto  on    0x010200
+$interfaces = @()
+foreach ($line in $intfLines) {
+    if ($line -match '^(fc\d+/\d+)\s+(\d+)\s+(up|down|trunking|isolated)\s+(\S+)\s+(\S+)') {
+        $interfaces += [PSCustomObject]@{
+            Interface = $Matches[1]
+            VSAN      = $Matches[2]
+            State     = $Matches[3]
+            Mode      = $Matches[4]
+            Speed     = $Matches[5]
+            WWPN      = ""
+        }
+    }
+}
+
+# --- Parse FLOGI database to get connected WWPNs per interface ---
+# Example: fc1/1     10    0x010200  20:00:00:25:b5:00:00:01  20:00:00:25:b5:00:00:01
+$flogiMap = @{}
+foreach ($line in $flogiLines) {
+    if ($line -match '^(fc\d+/\d+)\s+\d+\s+0x[0-9a-fA-F]+\s+([0-9a-fA-F:]{23})') {
+        $flogiMap[$Matches[1]] = $Matches[2]
+    }
+}
+
+# --- Enrich interface data with WWPN ---
+foreach ($intf in $interfaces) {
+    if ($flogiMap.ContainsKey($intf.Interface)) {
+        $intf.WWPN = $flogiMap[$intf.Interface]
+    }
+}
+
+# --- Print report ---
+Write-Host ""
+Write-Host ("{0,-10} {1,-6} {2,-10} {3,-8} {4,-8} {5}" -f `
+    "Interface", "VSAN", "State", "Mode", "Speed", "Connected WWPN")
+Write-Host ("-" * 72)
+
+$downCount = 0
+foreach ($intf in $interfaces | Sort-Object Interface) {
+    $isDown = ($intf.State -eq "down") -or ($intf.State -eq "isolated")
+    $color  = if ($isDown) { "Red" } else { "Green" }
+    if ($isDown) { $downCount++ }
+
+    $wwpnDisplay = if ($intf.WWPN) { $intf.WWPN } else { "(no device)" }
+    Write-Host ("{0,-10} {1,-6} {2,-10} {3,-8} {4,-8} {5}" -f `
+        $intf.Interface, $intf.VSAN, $intf.State, $intf.Mode, $intf.Speed, $wwpnDisplay) -ForegroundColor $color
+}
+
+Write-Host ""
+if ($downCount -gt 0) {
+    Write-Host "RESULT: $downCount interface(s) are DOWN or ISOLATED (shown in red)." -ForegroundColor Red
+} else {
+    Write-Host "RESULT: All FC interfaces are up." -ForegroundColor Green
+}
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows 10 or 11 with PowerShell (already installed)
+- PuTTY installed — download from https://www.putty.org — this provides `plink.exe`
+- Network access to the Cisco MDS switch management IP
+- MDS switch admin credentials
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Save it as `mds-port-report.ps1` on your Desktop
+
+**Step 2 — Fill in your details**
+
+You pass all values on the command line:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `$MdsHost` | IP address of the MDS switch | Switch management IP |
+| `$SshUser` | SSH username | Usually `admin` |
+| `$PlinkPath` | Full path to plink.exe | Default `plink.exe` if in PATH, or `C:\Program Files\PuTTY\plink.exe` |
+
+**Step 3 — Accept the SSH fingerprint first (one-time step)**
+
+Open Command Prompt and run:
+```
+plink.exe -ssh admin@192.168.1.20
+```
+Type `y` when asked, then Ctrl+C.
+
+**Step 4 — Open a terminal**
+
+Windows key → search `PowerShell` → right-click → **Run as Administrator**
+
+**Step 5 — Allow scripts to run**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 6 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+.\mds-port-report.ps1 -MdsHost 192.168.1.20 -SshUser admin -PlinkPath "C:\Program Files\PuTTY\plink.exe"
+```
+
+**What you should see**
+
+A table with one row per FC interface showing VSAN, state (up/down/isolated), mode (F-Port, E-Port, etc.), speed, and the WWN of the connected device (from the FLOGI database). Interfaces that are down or isolated are highlighted in red. The final line gives an overall result.
+
+---
+
+## Daily Check Script
+
+SSH to the Cisco MDS switch, check software version, interface states, FLOGI count, system resources, and recent log entries.
+
+~~~bash
+#!/bin/bash
+# mds_daily_check.sh
+# Usage: MDS_HOST=<ip> SSH_USER=admin ./mds_daily_check.sh
+
+MDS_HOST="${MDS_HOST:-192.168.1.20}"
+SSH_USER="${SSH_USER:-admin}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+FAIL=0
+
+ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$MDS_HOST" "$1" 2>/dev/null; }
+
+echo "=== Cisco MDS Daily Check: $MDS_HOST — $(date) ==="
+
+# Version
+VER=$(ssh_cmd "show version" | grep "system:" | head -1)
+echo "[INFO] $VER"
+
+# Interfaces down
+INTF=$(ssh_cmd "show interface brief")
+DOWN=$(echo "$INTF" | awk '/^fc/ && /down/' | wc -l | tr -d ' ')
+if [ "$DOWN" -gt 0 ]; then
+  echo "[FAIL] $DOWN FC interface(s) down"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All FC interfaces up"
+fi
+
+# FLOGI count
+FLOGI=$(ssh_cmd "show flogi database" | grep -c "^fc" || true)
+echo "[INFO] $FLOGI device(s) logged in via FLOGI"
+
+# CPU/memory
+RES=$(ssh_cmd "show system resources")
+CPU=$(echo "$RES" | awk '/CPU states/ {print $NF}')
+echo "[INFO] CPU utilisation: $CPU"
+
+# Recent log errors
+LOG_ERRS=$(ssh_cmd "show logging last 20" | grep -ic "critical\|ERROR\|link down" || true)
+if [ "$LOG_ERRS" -gt 0 ]; then
+  echo "[FAIL] $LOG_ERRS severity error(s) in recent log"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   No critical/error entries in recent log"
+fi
+
+echo ""
+echo "Daily check: $FAIL failure(s)"
+[ "$FAIL" -gt 0 ] && exit 2 || exit 0
+~~~
+
+---
+
+## Incident Triage Script
+
+Capture a full diagnostic snapshot to a timestamped file for use during incident investigation.
+
+~~~bash
+#!/bin/bash
+# mds_triage.sh
+# Usage: MDS_HOST=<ip> SSH_USER=admin ./mds_triage.sh
+
+MDS_HOST="${MDS_HOST:-192.168.1.20}"
+SSH_USER="${SSH_USER:-admin}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+OUTFILE="/tmp/mds_triage_${MDS_HOST}_$(date +%Y%m%d_%H%M%S).txt"
+
+ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$MDS_HOST" "$1" 2>/dev/null; }
+
+{
+  echo "=== Cisco MDS Incident Triage: $MDS_HOST — $(date) ==="
+  echo ""
+  echo "--- show version ---"
+  ssh_cmd "show version"
+  echo ""
+  echo "--- show interface brief ---"
+  ssh_cmd "show interface brief"
+  echo ""
+  echo "--- show flogi database ---"
+  ssh_cmd "show flogi database"
+  echo ""
+  echo "--- show zoneset active vsan all ---"
+  ssh_cmd "show zoneset active vsan all"
+  echo ""
+  echo "--- show system resources ---"
+  ssh_cmd "show system resources"
+  echo ""
+  echo "--- show logging last 100 ---"
+  ssh_cmd "show logging last 100"
+  echo ""
+  echo "--- show environment ---"
+  ssh_cmd "show environment"
+} > "$OUTFILE" 2>&1
+
+echo "Triage data saved to: $OUTFILE"
+~~~
+
+---
+
+## Change Pre-Check Script
+
+Validate MDS state before a firmware upgrade or zone change. Exits 2 on any failure.
+
+~~~bash
+#!/bin/bash
+# mds_precheck.sh
+# Usage: MDS_HOST=<ip> SSH_USER=admin EXPECTED_FLOGI=50 EXPECTED_ZONESET=prod_zoneset ./mds_precheck.sh
+
+MDS_HOST="${MDS_HOST:-192.168.1.20}"
+SSH_USER="${SSH_USER:-admin}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+EXPECTED_FLOGI="${EXPECTED_FLOGI:-0}"
+EXPECTED_ZONESET="${EXPECTED_ZONESET:-}"
+FAIL=0
+
+ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$MDS_HOST" "$1" 2>/dev/null; }
+
+echo "=== Cisco MDS Pre-Change Check: $MDS_HOST — $(date) ==="
+
+# All expected interfaces up
+DOWN=$(ssh_cmd "show interface brief" | awk '/^fc/ && /down/' | wc -l | tr -d ' ')
+if [ "$DOWN" -gt 0 ]; then
+  echo "[FAIL] $DOWN FC interface(s) down"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All FC interfaces up"
+fi
+
+# Active zoneset matches expected name
+if [ -n "$EXPECTED_ZONESET" ]; then
+  ACTIVE_ZS=$(ssh_cmd "show zoneset active vsan all" | grep "^zoneset name" | awk '{print $3}' | head -1)
+  if [ "$ACTIVE_ZS" = "$EXPECTED_ZONESET" ]; then
+    echo "[OK]   Active zoneset: $ACTIVE_ZS"
+  else
+    echo "[FAIL] Active zoneset '$ACTIVE_ZS' does not match expected '$EXPECTED_ZONESET'"; FAIL=$((FAIL+1))
+  fi
+fi
+
+# No logging errors in last 30 min
+LOG_ERRS=$(ssh_cmd "show logging last 30" | grep -ic "critical\|ERROR" || true)
+if [ "$LOG_ERRS" -gt 0 ]; then
+  echo "[FAIL] $LOG_ERRS error(s) in recent log"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   No recent log errors"
+fi
+
+# Supervisor CPU < 70%
+CPU_VAL=$(ssh_cmd "show system resources" | awk '/CPU states/ {gsub(/%/,"",$NF); print int($NF)}')
+if [ "${CPU_VAL:-0}" -gt 70 ]; then
+  echo "[FAIL] CPU at ${CPU_VAL}% — above 70% threshold"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   CPU at ${CPU_VAL:-N/A}%"
+fi
+
+# FLOGI count matches expected
+if [ "$EXPECTED_FLOGI" -gt 0 ]; then
+  FLOGI=$(ssh_cmd "show flogi database" | grep -c "^fc" || true)
+  if [ "$FLOGI" -eq "$EXPECTED_FLOGI" ]; then
+    echo "[OK]   FLOGI count: $FLOGI"
+  else
+    echo "[FAIL] FLOGI count $FLOGI does not match expected $EXPECTED_FLOGI"; FAIL=$((FAIL+1))
+  fi
+fi
+
+echo ""
+echo "Pre-check: $FAIL failure(s)"
+[ "$FAIL" -gt 0 ] && exit 2 || exit 0
+~~~
+
+---
+
+## Post-Change Validation Script
+
+Confirm the MDS has returned to a healthy state after maintenance.
+
+~~~bash
+#!/bin/bash
+# mds_postcheck.sh
+# Usage: MDS_HOST=<ip> SSH_USER=admin ./mds_postcheck.sh
+
+MDS_HOST="${MDS_HOST:-192.168.1.20}"
+SSH_USER="${SSH_USER:-admin}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+FAIL=0
+
+ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$MDS_HOST" "$1" 2>/dev/null; }
+
+echo "=== Cisco MDS Post-Change Validation: $MDS_HOST — $(date) ==="
+
+# Interface states restored
+DOWN=$(ssh_cmd "show interface brief" | awk '/^fc/ && /down/' | wc -l | tr -d ' ')
+if [ "$DOWN" -gt 0 ]; then
+  echo "[FAIL] $DOWN FC interface(s) still down"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All FC interfaces up"
+fi
+
+# Zone set active
+ZONE=$(ssh_cmd "show zoneset active vsan all")
+if echo "$ZONE" | grep -qi "zoneset name"; then
+  ACTIVE_ZS=$(echo "$ZONE" | grep "^zoneset name" | awk '{print $3}' | head -1)
+  echo "[OK]   Active zoneset: $ACTIVE_ZS"
+else
+  echo "[FAIL] No active zoneset found"; FAIL=$((FAIL+1))
+fi
+
+# FLOGI database — initiators present
+FLOGI=$(ssh_cmd "show flogi database" | grep -c "^fc" || true)
+echo "[INFO] $FLOGI device(s) in FLOGI database"
+if [ "$FLOGI" -eq 0 ]; then
+  echo "[FAIL] FLOGI database empty — no logged-in devices"; FAIL=$((FAIL+1))
+fi
+
+# No new logging errors
+LOG_ERRS=$(ssh_cmd "show logging last 20" | grep -ic "critical\|ERROR" || true)
+if [ "$LOG_ERRS" -gt 0 ]; then
+  echo "[WARN] $LOG_ERRS new error(s) in logging after change — review"
+else
+  echo "[OK]   No new logging errors"
+fi
+
+echo ""
+echo "Post-change validation: $FAIL failure(s)"
+[ "$FAIL" -gt 0 ] && exit 2 || exit 0
+~~~
+
+---
+
+## Health Check Script
+
+Cron-safe summary: switch name, firmware, interface counts, FLOGI count, active zoneset, and CPU. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
+
+~~~bash
+#!/bin/bash
+# mds_health_check.sh
+# Cron: */5 * * * * MDS_HOST=<ip> SSH_USER=admin /opt/scripts/mds_health_check.sh
+
+MDS_HOST="${MDS_HOST:-192.168.1.20}"
+SSH_USER="${SSH_USER:-admin}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+
+ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$MDS_HOST" "$1" 2>/dev/null; }
+
+FW=$(ssh_cmd "show version" | grep "system:" | awk '{print $NF}')
+INTF=$(ssh_cmd "show interface brief")
+UP=$(echo "$INTF" | awk '/^fc/ && /up/' | wc -l | tr -d ' ')
+DOWN=$(echo "$INTF" | awk '/^fc/ && /down/' | wc -l | tr -d ' ')
+FLOGI=$(ssh_cmd "show flogi database" | grep -c "^fc" || true)
+ZONESET=$(ssh_cmd "show zoneset active vsan all" | grep "^zoneset name" | awk '{print $3}' | head -1)
+CPU=$(ssh_cmd "show system resources" | awk '/CPU states/ {gsub(/%/,"",$NF); print int($NF)}')
+
+echo "switch=$MDS_HOST firmware=$FW interfaces_up=$UP interfaces_down=$DOWN flogi_count=$FLOGI active_zoneset=${ZONESET:-none} cpu_pct=${CPU:-N/A}"
+
+if [ "${DOWN:-0}" -gt 5 ]; then
+  exit 2
+elif [ "${DOWN:-0}" -gt 0 ]; then
+  exit 1
+fi
+exit 0
+~~~

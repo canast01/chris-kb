@@ -1,0 +1,132 @@
+# FlashArray — Health Checks
+
+## Daily Checks
+
+| Check | Command | Notes |
+|---|---|---|
+| [ ] Run `purealert list` | `purealert list` | review all active alerts; flag any with severity `error` or `warning` |
+| [ ] Run `puredrive list` | `puredrive list` | confirm all drives are in `healthy` state; flag any `failed`, `recovering`, or `missing` drives |
+| [ ] Run `purearray list --space` | `purearray list --space` | review array capacity and data reduction ratio; flag if used capacity > 80% |
+| [ ] Run `purepod list` | `purepod list` | confirm all ActiveCluster pods are `stretched` and online (if configured) |
+| [ ] Check Pure1 portal for AI-driven health recommendations, anomalies |  |  |
+| [ ] Run `purevol list --space` | `purevol list --space` | review volume space usage; flag any volumes approaching their allocated limit |
+| [ ] Run `puresnap list` | `puresnap list` | check snapshot count; flag runaway snapshot growth from misconfigured protection group schedules |
+| [ ] Confirm replication to the secondary array is current | `purepod list --replicating` |  |
+
+## Health Check
+
+- [ ] No active alerts in `purealert list`
+- [ ] All drives healthy — `puredrive list` shows no `failed` or `recovering` drives
+- [ ] Array capacity below 80% used
+- [ ] Both controllers are healthy and running the same Purity version: `purearray list --controller`
+- [ ] ActiveCluster pods are stretched and replicating: `purepod list --replicating` shows `true`
+- [ ] All host connections are active — no hosts with zero paths: `purehost list`
+- [ ] No runaway snapshot growth consuming unexpected capacity
+
+```bash
+# Array overall status and Purity version
+purearray list
+
+# Controller status and firmware version
+purearray list --controller
+
+# Array capacity, data reduction, and space usage
+purearray list --space
+
+# All active alerts
+purealert list
+
+# All drives and health state
+puredrive list
+
+# ActiveCluster pods and replication state
+purepod list
+purepod list --replicating
+
+# All volumes with space usage
+purevol list --space
+
+# Snapshot count and usage
+puresnap list
+
+# Real-time performance (latency, IOPS, bandwidth)
+purearray monitor
+
+# Host and host group connectivity
+purehost list
+purehgroup list
+```
+
+## Controller Health
+
+```bash
+purehw list | grep -i ct
+```
+
+Both controllers (CT0, CT1) should show `status: ok` and `temperature` within normal range.
+
+## Drive Health
+
+```bash
+puredrive list
+```
+
+All drives should show `status: healthy`. Any drive in `failed`, `unhealthy`, or `recovering` state requires attention.
+
+## Volume Health
+
+```bash
+purevol list
+purevol list --space
+```
+
+Verify no volumes are in an unexpected state and capacity is within expected range.
+
+## Host Connectivity
+
+```bash
+# List hosts and their connected volumes
+purehost list
+purehost list --connect
+
+# List host connections
+purehost list --connection
+```
+
+Confirm all expected hosts are connected.
+
+## Replication Health
+
+```bash
+# FlashArray Async Replication (ActiveDR or async)
+purepod list
+purepod list --replicating
+purepod list --schedule
+```
+
+Verify pod/protection group replication is healthy.
+
+## Pure1 Cloud Monitoring
+
+Pure1 provides proactive health monitoring and AI-driven alerts:
+- Log in to **Pure1 → Arrays** → verify all arrays show green
+- **Analysis → Capacity** — no arrays approaching full
+- **Alerts** — no critical unacknowledged alerts
+
+## Pre-Change Checklist
+
+- [ ] All drives `healthy`
+- [ ] Both controllers `ok`
+- [ ] No critical active alerts
+- [ ] Replication healthy
+- [ ] Capacity below 80%
+
+## Health Summary Table
+
+| Check | Command | Expected |
+|---|---|---|
+| Array health | `purearray list` | No warnings |
+| Drives | `puredrive list` | All healthy |
+| Hardware | `purehw list` | All ok |
+| Alerts | `purealert list` | No critical |
+| Capacity | `purearray list --space` | < 80% used |
