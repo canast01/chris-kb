@@ -308,6 +308,25 @@
   
   
   
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
     
     
       <li class="md-tabs__item">
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,91 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment-models" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deployment Models
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#on-premises-cluster-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        On-Premises Cluster Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#services-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Services / Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#single-node-vs-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Single-Node vs. Cluster
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-ports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Ports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Sections
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -821,163 +780,29 @@
 
 
 <h1 id="aria-automation-architecture">Aria Automation — Architecture<a class="headerlink" href="#aria-automation-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Aria Automation (formerly vRealize Automation) is available as a <strong>SaaS offering</strong> (VMware Aria Automation Cloud) or as an <strong>on-premises appliance cluster</strong>. The on-premises deployment is an appliance-based Kubernetes platform running microservices.</p>
-<hr />
-<h2 id="deployment-models">Deployment Models<a class="headerlink" href="#deployment-models" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Model</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SaaS (Cloud)</td>
-<td>VMware-hosted; no infrastructure to manage; connected via cloud extensibility proxy</td>
-</tr>
-<tr>
-<td>On-Premises</td>
-<td>One or three appliance cluster; self-managed; supports air-gap environments</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="on-premises-cluster-topology">On-Premises Cluster Topology<a class="headerlink" href="#on-premises-cluster-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  CAT["Service Catalog\n(consumer portal)"] --&gt; ORCH["Aria Automation Orchestrator\n(workflow engine)"]
-  ORCH --&gt; IAAS["IaaS Service\n(compute engine)"]
-  IAAS --&gt; VCTR["vCenter\n(VM provisioning)"]
-  IAAS --&gt; NSX_T["NSX\n(network provisioning)"]
-  IAAS --&gt; CLOUDS["Public Cloud\nAWS · Azure · GCP"]
-  ADMIN(["Cloud Admin"]) --&gt;|"UI / API"| CAT
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  class CAT,ORCH,IAAS ctrl
-  class VCTR,NSX_T mgmt
-  class ADMIN host
-  class CLOUDS cloud</code></pre>
-<hr />
-<h2 id="services-components">Services / Components<a class="headerlink" href="#services-components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Automation Assembler</td>
-<td>Blueprint/template authoring and cloud-agnostic IaC</td>
-</tr>
-<tr>
-<td>Service Broker</td>
-<td>Self-service catalog; exposes content to end users</td>
-</tr>
-<tr>
-<td>Automation Pipelines</td>
-<td>CI/CD pipeline execution (formerly Code Stream)</td>
-</tr>
-<tr>
-<td>Automation Config</td>
-<td>GitOps-based configuration management (formerly SaltStack Config)</td>
-</tr>
-<tr>
-<td>PostgreSQL</td>
-<td>Backend relational database for deployment state</td>
-</tr>
-<tr>
-<td>RabbitMQ</td>
-<td>Internal messaging bus between microservices</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="single-node-vs-cluster">Single-Node vs. Cluster<a class="headerlink" href="#single-node-vs-cluster" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Attribute</th>
-<th>Single Node</th>
-<th>3-Node Cluster</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HA</td>
-<td>No — single point of failure</td>
-<td>Yes — quorum-based HA</td>
-</tr>
-<tr>
-<td>Use case</td>
-<td>Lab / non-prod</td>
-<td>Production</td>
-</tr>
-<tr>
-<td>Load balancer</td>
-<td>Not required</td>
-<td>Required (VIP in front of 3 nodes)</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>A load balancer VIP is required for the 3-node cluster. NSX LB, HAProxy, or an external LB are all supported.</p>
-</blockquote>
-<hr />
-<h2 id="network-ports">Network Ports<a class="headerlink" href="#network-ports" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Port</th>
-<th>Protocol</th>
-<th>Direction</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>443</td>
-<td>TCP</td>
-<td>Inbound</td>
-<td>UI and API access</td>
-</tr>
-<tr>
-<td>443</td>
-<td>TCP</td>
-<td>Outbound</td>
-<td>vCenter, NSX, cloud accounts</td>
-</tr>
-<tr>
-<td>5432</td>
-<td>TCP</td>
-<td>Internal</td>
-<td>PostgreSQL (inter-node)</td>
-</tr>
-<tr>
-<td>5671/5672</td>
-<td>TCP</td>
-<td>Internal</td>
-<td>RabbitMQ AMQP (inter-node)</td>
-</tr>
-<tr>
-<td>8443</td>
-<td>TCP</td>
-<td>Internal</td>
-<td>Kubernetes API server</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="related-sections">Related Sections<a class="headerlink" href="#related-sections" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../standards/">Standards</a> — naming conventions and build baseline</li>
-<li><a href="../lifecycle/">Lifecycle</a> — upgrade paths</li>
-<li><a href="../operations/">Operations</a> — health monitoring</li>
-</ul>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>Architecture overview, deployment models, and cluster topology.</span>
+</a>
+
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>Services, microservices, and single-node vs. cluster design.</span>
+</a>
+
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>Integration with vCenter, NSX, and cloud accounts.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Naming conventions, design rules, and configuration baselines.</span>
+</a>
+
+</div>
 
 
 

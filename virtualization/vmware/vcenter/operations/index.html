@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>vCenter — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="vCenter — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="vCenter — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#vcenter-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              vCenter — Operations
             
           </span>
         </div>
@@ -300,6 +300,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
   
 
       
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,80 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -809,192 +779,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">vCenter</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Confirm vCenter GUI is accessible and all VCSA services are health</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Run <code>Get-Cluster | Select Name,DrsEnabled,HAEnabled</code></td>
-<td><code>Get-Cluster | Select Name,DrsEnabled,HAEnabled</code></td>
-<td>DRS and HA enabled on all clusters</td>
-</tr>
-<tr>
-<td>[ ] Run <code>Get-VMHost | Where-Object {$_.ConnectionState -ne "Connected" |</code>Get-VMHost</td>
-<td>Where-Object {$_.ConnectionState -ne "Connected"}`</td>
-<td>result should be empty; any non-connected hosts require investigation</td>
-</tr>
-<tr>
-<td>[ ] Run <code>Get-VM | Where-Object {$_.PowerState -eq "PoweredOff"} | Wher |</code>Get-VM</td>
-<td>Where-Object {$_.PowerState -eq "PoweredOff"}</td>
-<td>Where-Object {$_.Notes -notmatch "intentional"}`</td>
-</tr>
-<tr>
-<td>[ ] Run <code>Get-VM | Get-Snapshot | Where-Object {$_.Created -lt (Get-Dat |</code>Get-VM</td>
-<td>Get-Snapshot</td>
-<td>Where-Object {$_.Created -lt (Get-Date).AddDays(-3)}`</td>
-</tr>
-<tr>
-<td>[ ] Check vCenter alarms dashboard</td>
-<td></td>
-<td>no critical unacknowledged alarms outstanding</td>
-</tr>
-<tr>
-<td>[ ] Check certificate expiry for VCSA and ESXi hosts</td>
-<td></td>
-<td>flag any expiring within 60 days</td>
-</tr>
-<tr>
-<td>[ ] Review vCenter Monitor → Tasks for recent task failures or error-s</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All VCSA services running: VAMI → Services, all in Started state</li>
-<li>[ ] All ESXi hosts connected: <code>Get-VMHost | Select Name,ConnectionState</code></li>
-<li>[ ] DRS and HA active on all clusters: <code>Get-Cluster | Select Name,DrsEnabled,HAEnabled</code></li>
-<li>[ ] No critical unacknowledged vCenter alarms</li>
-<li>[ ] No recent error-level events: <code>Get-VIEvent -MaxSamples 100 -Type Error</code></li>
-<li>[ ] Certificate validity confirmed for VCSA and hosts</li>
-<li>[ ] vCenter REST API responding: <code>GET /api/vcenter/health/system</code></li>
-<li>[ ] SSO/PSC health confirmed via VAMI</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># PowerCLI health checks</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,ConnectionState,PowerState
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Get-Cluster<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,DrsEnabled,HAEnabled,HAEnabled
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Get-VIEvent<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">100</span><span class="w"> </span>-Type<span class="w"> </span>Error<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>CreatedTime,FullFormattedMessage
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Created<span class="w"> </span>-lt<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddDays<span class="o">(</span>-3<span class="o">)}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>VM,Name,Created
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># vCenter REST API (run from jump host with valid session)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;administrator@vsphere.local&#39;</span><span class="w"> </span>https://&lt;vcenter&gt;/api/vcenter/health/system
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] vCenter backup is current — file-based backup or VAMI snapshot completed and verified</li>
-<li>[ ] No active DRS migrations in progress: confirm vCenter Tasks pane is idle</li>
-<li>[ ] HA admission control capacity checked: cluster can tolerate intended host changes</li>
-<li>[ ] Certificates valid for more than 30 days — do not proceed if expiry is imminent</li>
-<li>[ ] SSO and PSC health confirmed before any appliance-level change</li>
-<li>[ ] Rollback plan documented: VCSA restore procedure confirmed and tested</li>
-<li>[ ] Change window approved and communicated to all dependent teams</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vCenter backup current</td>
-<td></td>
-<td>Backup timestamp confirmed</td>
-</tr>
-<tr>
-<td>No active DRS migrations</td>
-<td></td>
-<td>Tasks pane idle</td>
-</tr>
-<tr>
-<td>HA admission control OK</td>
-<td></td>
-<td>Cluster capacity headroom</td>
-</tr>
-<tr>
-<td>Certificates valid &gt; 30 days</td>
-<td></td>
-<td>Earliest expiry date</td>
-</tr>
-<tr>
-<td>Change window approved</td>
-<td></td>
-<td>Ticket reference</td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Check vCenter services via VAMI → Services — identify any stopped or failed services</li>
-<li>[ ] Check SSO / PSC health — authentication failures often root-cause in SSO component</li>
-<li>[ ] Review vCenter logs: <code>/var/log/vmware/vpxd/vpxd.log</code> on VCSA for errors at incident time</li>
-<li>[ ] Check database health — VCSA embedded Postgres: <code>service-control --status vmware-vpostgres</code></li>
-<li>[ ] Review vCenter events for the affected objects: <code>Get-VIEvent -Entity &lt;cluster/host/vm&gt; -MaxSamples 200</code></li>
-<li>[ ] Check certificate validity — expired cert causes cascading authentication and agent failures</li>
-<li>[ ] Verify network connectivity to VCSA — DNS resolution, vCenter FQDN reachable from hosts</li>
-<li>[ ] Escalate to VMware Support if VPXD service cannot be restarted or database corruption suspected</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which VCSA services are stopped?</td>
-<td>VAMI → Services — identify failed service</td>
-</tr>
-<tr>
-<td>Is SSO/PSC healthy?</td>
-<td>VAMI → SSO, or check <code>lookupservice</code> log</td>
-</tr>
-<tr>
-<td>What does vpxd.log show?</td>
-<td><code>/var/log/vmware/vpxd/vpxd.log</code> at incident time</td>
-</tr>
-<tr>
-<td>Are certificates valid?</td>
-<td>VAMI → Certificate Management — check expiry</td>
-</tr>
-<tr>
-<td>Can hosts connect to vCenter?</td>
-<td>Host agent log: <code>/var/log/vmware/hostd.log</code> on ESXi</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Take a VCSA backup via VAMI → Backup, or snapshot the VCSA VM if running virtualized</li>
-<li>Confirm no active DRS migrations or critical tasks running in vCenter</li>
-<li>Notify all teams that vCenter will be unavailable during maintenance — workloads remain running on ESXi</li>
-<li>If performing VCSA update: follow the VAMI → Update workflow; do not interrupt mid-update</li>
-<li>After update or change, verify all VCSA services have started: VAMI → Services, all in Started state</li>
-<li>Test PowerCLI connection: <code>Connect-VIServer -Server &lt;vcenter&gt;</code> — confirm connection succeeds</li>
-<li>Validate all ESXi hosts are Connected: <code>Get-VMHost | Where-Object {$_.ConnectionState -ne "Connected"}</code></li>
-<li>Confirm DRS and HA are active, no new alarms, and tasks are processing normally</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All VCSA services running: VAMI → Services shows all Started</li>
-<li>[ ] All ESXi hosts Connected: <code>Get-VMHost | Where-Object {$_.ConnectionState -ne "Connected"}</code> returns empty</li>
-<li>[ ] DRS and HA active on all clusters: <code>Get-Cluster | Select Name,DrsEnabled,HAEnabled</code></li>
-<li>[ ] No critical unacknowledged alarms in vCenter</li>
-<li>[ ] PowerCLI connection successful: <code>Connect-VIServer</code> completes without error</li>
-<li>[ ] vCenter REST API responding: <code>GET /api/vcenter/health/system</code> returns GREEN</li>
-<li>[ ] No new vpxd.log errors introduced by the change</li>
-<li>[ ] Close change ticket with VAMI service status screenshot and PowerCLI connection confirmation</li>
-</ul>
+<h1 id="vcenter-operations">vCenter — Operations<a class="headerlink" href="#vcenter-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Commands, syntax, and quick reference.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Routine checks, service validation, and status verification.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Day-to-day operational tasks and how-to guides.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Installation, upgrade, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Backup configuration, restore procedures, and validation.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts and reusable code.</span>
+</a>
+
+</div>
 
 
 

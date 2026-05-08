@@ -21,7 +21,7 @@
     
     
       
-        <title>VMware Cloud Foundation Security - Chris KB</title>
+        <title>VCF — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="VMware Cloud Foundation Security · Chris KB">
+  <meta property="og:title" content="VCF — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="VMware Cloud Foundation Security · Chris KB">
+  <meta name="twitter:title" content="VCF — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vmware-cloud-foundation-security" class="md-skip">
+        <a href="#vcf-security" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VMware Cloud Foundation Security
+              VCF — Security
             
           </span>
         </div>
@@ -300,6 +300,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
   
 
       
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,91 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac-sddc-manager-roles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC — SDDC Manager Roles
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#password-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Password Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging-and-siem-forwarding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging and SIEM Forwarding
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-access-controls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Access Controls
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vsan-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSAN Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -820,187 +779,30 @@
 
 
 
-<h1 id="vmware-cloud-foundation-security">VMware Cloud Foundation Security<a class="headerlink" href="#vmware-cloud-foundation-security" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">VCF</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All default passwords rotated via SDDC Manager Password Management at first use</li>
-<li>[ ] Password rotation schedule configured to 90 days (or per policy)</li>
-<li>[ ] SDDC Manager RBAC roles mapped to AD groups — no shared local accounts for day-to-day operations</li>
-<li>[ ] Local <code>admin</code> and <code>vcf</code> accounts locked after initial deployment; passwords stored in vault</li>
-<li>[ ] TLS 1.2 minimum enforced on all VCF component endpoints (verify via SDDC Manager Security UI)</li>
-<li>[ ] Certificates for all components replaced with CA-signed certificates via SDDC Manager Certificate Management</li>
-<li>[ ] Syslog forwarding to SIEM configured under Administration → Syslog</li>
-<li>[ ] Network access to SDDC Manager UI (TCP 443) restricted to management jump-host CIDR via firewall</li>
-<li>[ ] vSAN data-at-rest encryption enabled for workload domains handling sensitive data</li>
-<li>[ ] SDDC Manager audit logs reviewed monthly for privilege escalation or unexpected API activity</li>
-</ul>
-<hr />
-<h2 id="rbac-sddc-manager-roles">RBAC — SDDC Manager Roles<a class="headerlink" href="#rbac-sddc-manager-roles" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Access</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ADMIN</td>
-<td>Full access — lifecycle, security, credential rotation</td>
-</tr>
-<tr>
-<td>OPERATOR</td>
-<td>Day-to-day operations — health, tasks, monitoring; no credential access</td>
-</tr>
-<tr>
-<td>VIEWER</td>
-<td>Read-only dashboards and health views</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Assign roles to AD groups:</strong></p>
-<ol>
-<li>SDDC Manager → Administration → Single Sign-On → add Active Directory identity source</li>
-<li>Administration → Users and Groups → assign roles to AD groups</li>
-<li>Remove direct user-level assignments — group-based assignment is auditable and survives staff changes</li>
-</ol>
-<hr />
-<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
-<p>All VCF component certificates are managed through SDDC Manager's Certificate Management workflow. Do not replace certificates directly through component UIs (vCenter VAMI, NSX Manager) — SDDC Manager will lose track of the state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SDDC Manager → Security → Certificate Management
-</code></pre></div>
-<p><strong>Replacement procedure:</strong></p>
-<ol>
-<li>Generate CSR in SDDC Manager for the target component</li>
-<li>Submit CSR to internal CA and receive the signed certificate + CA chain</li>
-<li>Import the signed cert and chain back into SDDC Manager</li>
-<li>SDDC Manager installs the certificate on the component and restarts affected services</li>
-</ol>
-<p><strong>Check certificate expiry from the appliance:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SDDC Manager certificate</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;sddc-manager-ip&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># NSX Manager certificate</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;nsx-mgr-ip&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># vCenter certificate</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-</code></pre></div>
-<p><strong>Lead times:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Timeline</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>60 days</td>
-<td>Plan renewal — raise change ticket</td>
-</tr>
-<tr>
-<td>30 days</td>
-<td>Schedule maintenance window</td>
-</tr>
-<tr>
-<td>7 days</td>
-<td>Treat as P2 — renew immediately</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SDDC Manager → Security → Password Management
-</code></pre></div>
-<ul>
-<li>View current password state for all managed accounts</li>
-<li>Rotate individual accounts or schedule bulk rotation</li>
-<li>Password rotation log shows last rotated timestamp per account</li>
-</ul>
-<p><strong>Break-glass rotation procedure (manual):</strong></p>
-<ol>
-<li>Retrieve the break-glass account password from the enterprise vault</li>
-<li>Rotate the password in SDDC Manager → Password Management</li>
-<li>Update the vault entry with the new password immediately</li>
-<li>Log the rotation in the change management system</li>
-</ol>
-<hr />
-<h2 id="audit-logging-and-siem-forwarding">Audit Logging and SIEM Forwarding<a class="headerlink" href="#audit-logging-and-siem-forwarding" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SDDC Manager → Administration → Syslog → Add Syslog Server
-</code></pre></div>
-<ul>
-<li>Protocol: TLS recommended for production (port 6514); UDP/TCP 514 also supported</li>
-<li>Test: perform a UI action after configuring and verify the event appears in the SIEM</li>
-</ul>
-<p><strong>SDDC Manager audit log locations (SSH access):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/var/log/vmware/vcf/sddc-manager/sddc-manager.log<span class="w">   </span><span class="c1"># API and UI actions</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/var/log/vmware/vcf/lcm/lcm.log<span class="w">                     </span><span class="c1"># Lifecycle operations</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/var/log/vmware/vcf/domainmanager/domainmanager.log<span class="w">  </span><span class="c1"># Domain management events</span>
-</code></pre></div>
-<hr />
-<h2 id="network-access-controls">Network Access Controls<a class="headerlink" href="#network-access-controls" title="Permanent link">&para;</a></h2>
-<p>Firewall rules for SDDC Manager management plane:</p>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>Destination</th>
-<th>Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Management jump-host CIDR</td>
-<td>SDDC Manager IP</td>
-<td>TCP 443</td>
-<td>SDDC Manager UI/API</td>
-</tr>
-<tr>
-<td>SDDC Manager</td>
-<td>vCenter IPs</td>
-<td>TCP 443</td>
-<td>Component management</td>
-</tr>
-<tr>
-<td>SDDC Manager</td>
-<td>NSX Manager IPs</td>
-<td>TCP 443</td>
-<td>NSX API</td>
-</tr>
-<tr>
-<td>SDDC Manager</td>
-<td>ESXi management IPs</td>
-<td>TCP 443, 902</td>
-<td>Host management</td>
-</tr>
-<tr>
-<td>SDDC Manager</td>
-<td>SIEM IP</td>
-<td>UDP/TCP 514 or TLS 6514</td>
-<td>Syslog</td>
-</tr>
-</tbody>
-</table>
-<p>Block direct access from workstation VLANs to SDDC Manager — all access goes through the management jump host.</p>
-<hr />
-<h2 id="vsan-encryption">vSAN Encryption<a class="headerlink" href="#vsan-encryption" title="Permanent link">&para;</a></h2>
-<p>For workload domains handling sensitive data:</p>
-<ol>
-<li>Deploy and configure a KMS (Key Management Server) — SDDC Manager supports vSphere native KMS.</li>
-<li>In vCenter for the workload domain: Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Enable.</li>
-<li>Define a key rotation schedule (annual minimum or per policy) and document the rotation procedure.</li>
-<li>Ensure the KMS is highly available — KMS loss makes the vSAN datastore inaccessible.</li>
-</ol>
-<p>Key rotation is performed through vCenter → vSAN → Key Management → Rotate Keys. This is a live operation and does not require downtime.</p>
+<h1 id="vcf-security">VCF — Security<a class="headerlink" href="#vcf-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>SSO, LDAP, local accounts, and identity sources.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>Roles, permissions, and least privilege access.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>Data encryption, key management, and TLS configuration.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Security baselines, compliance, and STIG configuration.</span>
+</a>
+
+</div>
 
 
 

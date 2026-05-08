@@ -308,6 +308,25 @@
   
   
   
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
     
     
       <li class="md-tabs__item">
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,80 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#blueprint-validation-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Blueprint Validation Errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment-failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deployment Failures
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vro-workflow-failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vRO Workflow Failures
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-deployment-error-patterns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Deployment Error Patterns
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#support-bundle-collection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Support Bundle Collection
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -810,200 +780,24 @@
 
 
 <h1 id="aria-automation-troubleshooting">Aria Automation — Troubleshooting<a class="headerlink" href="#aria-automation-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="blueprint-validation-errors">Blueprint Validation Errors<a class="headerlink" href="#blueprint-validation-errors" title="Permanent link">&para;</a></h2>
-<p>Blueprint validation errors appear in the Design canvas or via the API response. Most are YAML syntax errors, missing required inputs, or invalid resource property values.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Validate a blueprint via API</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/blueprint/api/blueprints/validate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span>@./blueprint-payload.json
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check blueprint content for YAML issues locally</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import yaml,sys; yaml.safe_load(open(&#39;blueprint.yaml&#39;))&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;YAML OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;YAML syntax error&quot;</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Get blueprint validation details</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/blueprint/api/blueprints/&lt;blueprint-id&gt;/versions/&lt;version&gt;/validate&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<p>Common blueprint validation errors:</p>
-<table>
-<thead>
-<tr>
-<th>Error</th>
-<th>Cause</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Resource type not found</code></td>
-<td>Typo in resource type or cloud account not linked</td>
-<td>Verify resource type and cloud account association</td>
-</tr>
-<tr>
-<td><code>Required property missing</code></td>
-<td>Mandatory field omitted</td>
-<td>Add required property from schema reference</td>
-</tr>
-<tr>
-<td><code>Circular dependency</code></td>
-<td>Resource A depends on B which depends on A</td>
-<td>Remove circular <code>${resource...}</code> reference</td>
-</tr>
-<tr>
-<td><code>Invalid expression</code></td>
-<td>Bad <code>${}</code> interpolation syntax</td>
-<td>Check expression against schema; use <code>${input.x}</code></td>
-</tr>
-<tr>
-<td><code>Flavor not found</code></td>
-<td>Flavor mapping missing for cloud zone</td>
-<td>Add flavor mapping in Infrastructure &gt; Flavor Mappings</td>
-</tr>
-<tr>
-<td><code>Image not found</code></td>
-<td>Image mapping missing</td>
-<td>Add image mapping in Infrastructure &gt; Image Mappings</td>
-</tr>
-</tbody>
-</table>
-<h2 id="deployment-failures">Deployment Failures<a class="headerlink" href="#deployment-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get deployment failure details</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/deployment/api/deployments/&lt;deployment-id&gt;/events?eventTypes=FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check Aria Automation application logs</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ssh<span class="w"> </span>root@&lt;vra-appliance&gt;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vra/vco-server/app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vra/catalog-service/app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check the provisioning service log</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vra/provisioning/app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|failed&quot;</span>
-</code></pre></div>
-<p>Log file locations:</p>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Path</th>
-<th>Service</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Catalog service</td>
-<td><code>/var/log/vra/catalog-service/app.log</code></td>
-<td>Service Catalog</td>
-</tr>
-<tr>
-<td>Provisioning</td>
-<td><code>/var/log/vra/provisioning/app.log</code></td>
-<td>VM provisioning</td>
-</tr>
-<tr>
-<td>vRO (Orchestrator)</td>
-<td><code>/var/log/vro/app.log</code></td>
-<td>Workflow engine</td>
-</tr>
-<tr>
-<td>IAaaS (cloud proxy)</td>
-<td><code>/var/log/vra-iaas/agent.log</code></td>
-<td>On-prem cloud proxy</td>
-</tr>
-<tr>
-<td>Gateway</td>
-<td><code>/var/log/vra/gateway/app.log</code></td>
-<td>API gateway</td>
-</tr>
-</tbody>
-</table>
-<h2 id="integration-issues">Integration Issues<a class="headerlink" href="#integration-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test vCenter cloud account connectivity</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/iaas/api/cloud-accounts/&lt;account-id&gt;/test&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Refresh data collection for a cloud account</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/iaas/api/cloud-accounts/&lt;account-id&gt;/data-collection&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check cloud proxy status (on-prem environments)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/iaas/api/data-collector-registrations<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;status&quot;|&quot;name&quot;&#39;</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Check cloud proxy logs on the proxy VM</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ssh<span class="w"> </span>root@&lt;cloud-proxy-vm&gt;
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>tail<span class="w"> </span>-200<span class="w"> </span>/opt/vmware/tocata/agent/logs/agent.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|disconnect&quot;</span>
-</code></pre></div>
-<h2 id="vro-workflow-failures">vRO Workflow Failures<a class="headerlink" href="#vro-workflow-failures" title="Permanent link">&para;</a></h2>
-<p>When ABX actions or vRO workflow integrations fail, check the Orchestrator logs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check vRO workflow run status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/vco/api/workflows/&lt;workflow-id&gt;/executions/&lt;execution-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Get workflow execution log</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/vco/api/workflows/&lt;workflow-id&gt;/executions/&lt;execution-id&gt;/logs&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># List failed workflow runs from the last 24h</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/vco/api/workflows/executions?status=failed&amp;maxResult=50&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<h2 id="common-deployment-error-patterns">Common Deployment Error Patterns<a class="headerlink" href="#common-deployment-error-patterns" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Root Cause</th>
-<th>Resolution</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VM stuck in <code>Provisioning</code> &gt; 30 min</td>
-<td>vCenter task hung or cloud proxy offline</td>
-<td>Check vCenter tasks; restart cloud proxy</td>
-</tr>
-<tr>
-<td><code>Flavor not found</code> during deploy</td>
-<td>Flavor mapping not set for cloud zone</td>
-<td>Add mapping in Infrastructure</td>
-</tr>
-<tr>
-<td>Network resource fails with <code>no available IPs</code></td>
-<td>IP range exhausted in NSX or IPAM</td>
-<td>Expand IP range or release unused IPs</td>
-</tr>
-<tr>
-<td>Snapshot day-2 action fails</td>
-<td>VM has existing snapshot limit hit</td>
-<td>Remove old snapshots; default VMware limit is 31</td>
-</tr>
-<tr>
-<td><code>Authentication failed</code> in ABX action</td>
-<td>Secret expired in Action runtime</td>
-<td>Rotate secret in Cloud Assembly &gt; ABX &gt; Secrets</td>
-</tr>
-</tbody>
-</table>
-<h2 id="support-bundle-collection">Support Bundle Collection<a class="headerlink" href="#support-bundle-collection" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate Aria Automation support bundle</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/var/lib/vra/support/collect-support-data.sh<span class="w"> </span>--output<span class="w"> </span>/tmp/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Collect specific service logs</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/var/lib/vra/support/collect-support-data.sh<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--services<span class="w"> </span>catalog,provisioning,vro<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--since<span class="w"> </span><span class="s2">&quot;2026-05-06 00:00&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--output<span class="w"> </span>/tmp/
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/vra-support-*.zip
-</code></pre></div>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>Frequently seen problems and resolution steps.</span>
+</a>
+
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Log locations, diagnostic commands, and data collection.</span>
+</a>
+
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>When and how to escalate to VMware support.</span>
+</a>
+
+</div>
 
 
 

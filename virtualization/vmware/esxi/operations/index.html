@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>ESXi — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="ESXi — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="ESXi — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#esxi-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              ESXi — Operations
             
           </span>
         </div>
@@ -300,6 +300,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
   
 
       
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,80 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -809,194 +779,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">ESXi</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>Get-VMHost | Select Name,ConnectionState,PowerState</code></td>
-<td><code>Get-VMHost | Select Name,ConnectionState,PowerState</code></td>
-<td>confirm all hosts are Connected and PoweredOn</td>
-</tr>
-<tr>
-<td>[ ] Check hardware health alerts in vCenter</td>
-<td></td>
-<td>flag any red or yellow alarms on ESXi host objects</td>
-</tr>
-<tr>
-<td>[ ] Run <code>esxcli storage core path list | grep -c dead</code></td>
-<td><code>esxcli storage core path list | grep -c dead</code></td>
-<td>result should be 0; any dead paths require immediate investigation</td>
-</tr>
-<tr>
-<td>[ ] Run <code>esxcli network vswitch dvs vmware list</code></td>
-<td><code>esxcli network vswitch dvs vmware list</code></td>
-<td>verify dvSwitch uplinks are all connected with expected active NICs</td>
-</tr>
-<tr>
-<td>[ ] Review vCenter alarms dashboard for any triggered host-level alarm</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Verify NTP sync on all hosts</td>
-<td><code>esxcli system ntp get</code></td>
-<td>confirm <code>Running: true</code> and servers configured</td>
-</tr>
-<tr>
-<td>[ ] Review ESXi vmkernel log for NMP, SCSI, or network errors</td>
-<td><code>/var/log/vmkernel.log</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm no hosts are in maintenance mode unexpectedly</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All hosts Connected and PoweredOn: <code>Get-VMHost | Select Name,ConnectionState,PowerState</code></li>
-<li>[ ] No hardware health warnings or critical alerts: <code>esxcli hardware health get</code></li>
-<li>[ ] All storage paths active — no dead paths: <code>esxcli storage nmp device list</code></li>
-<li>[ ] All vmnic uplinks connected: <code>esxcli network nic list</code></li>
-<li>[ ] NTP running and synchronized: <code>esxcli system ntp get</code></li>
-<li>[ ] No vmkernel errors in recent log entries</li>
-<li>[ ] PowerCLI hardware summary clean: <code>Get-VMHostHardware</code></li>
-<li>[ ] No unexpected maintenance mode hosts</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># ESXi host health sweep (run per host via SSH or esxcli -s)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>health<span class="w"> </span>get
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dead
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># PowerCLI (run from management workstation)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,ConnectionState,PowerState
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Get-VMHostHardware<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>VMHost,Manufacturer,Model,CpuCount,MemorySize
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] vMotion tested and working between affected hosts before any maintenance</li>
-<li>[ ] Host not in maintenance mode — no other concurrent work on same host</li>
-<li>[ ] HA admission control checked: cluster has capacity to tolerate host loss</li>
-<li>[ ] All storage paths healthy and no dead paths before starting: <code>esxcli storage core path list | grep dead</code></li>
-<li>[ ] vCenter backup is current (file-based backup or VAMI snapshot taken recently)</li>
-<li>[ ] DRS is enabled and configured to fully automated — VMs will migrate automatically</li>
-<li>[ ] Change window approved and communicated; storage and compute teams notified</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vMotion tested</td>
-<td></td>
-<td>Test migration successful</td>
-</tr>
-<tr>
-<td>HA admission control OK</td>
-<td></td>
-<td>Cluster has failover capacity</td>
-</tr>
-<tr>
-<td>Storage paths healthy</td>
-<td></td>
-<td><code>grep dead</code> returns 0</td>
-</tr>
-<tr>
-<td>vCenter backup current</td>
-<td></td>
-<td>Backup timestamp</td>
-</tr>
-<tr>
-<td>Change window approved</td>
-<td></td>
-<td>Ticket reference</td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Check host connection state in vCenter — is the host Connected, Disconnected, or Not Responding?</li>
-<li>[ ] Run <code>esxcli hardware health get</code> — identify any hardware component reporting Warning or Error status</li>
-<li>[ ] Check storage paths: <code>esxcli storage core path list | grep dead</code> — dead paths indicate storage connectivity issue</li>
-<li>[ ] Check network uplinks: <code>esxcli network nic list</code> — look for down links on affected host</li>
-<li>[ ] Review vmkernel log for the time of the incident: <code>tail -500 /var/log/vmkernel.log</code></li>
-<li>[ ] Check NTP status — a drifted clock can cause certificate and authentication failures</li>
-<li>[ ] Review vCenter events for the affected host around the incident time</li>
-<li>[ ] If host is Not Responding, attempt IPMI/iDRAC/iLO console access for out-of-band diagnosis</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>What is the host's connection state in vCenter?</td>
-<td>Connected / Disconnected / Not Responding</td>
-</tr>
-<tr>
-<td>Are there hardware health alerts?</td>
-<td><code>esxcli hardware health get</code></td>
-</tr>
-<tr>
-<td>Are storage paths dead?</td>
-<td><code>esxcli storage core path list \| grep dead</code></td>
-</tr>
-<tr>
-<td>Are vmnic uplinks down?</td>
-<td><code>esxcli network nic list</code></td>
-</tr>
-<tr>
-<td>What does vmkernel.log show at incident time?</td>
-<td><code>/var/log/vmkernel.log</code> — SCSI, NMP, network errors</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm host is healthy and not already in maintenance mode: <code>Get-VMHost | Select Name,ConnectionState</code></li>
-<li>Check HA admission control — ensure cluster can tolerate one less host during maintenance</li>
-<li>Put host into maintenance mode: <code>Set-VMHost -VMHost &lt;hostname&gt; -State Maintenance</code></li>
-<li>Wait for all VMs to vMotion off the host — monitor via vCenter Tasks pane</li>
-<li>Confirm zero VMs running on the host before proceeding: <code>Get-VM -Location &lt;host&gt; | Where-Object {$_.PowerState -eq "PoweredOn"}</code></li>
-<li>Perform the required maintenance work (patching, hardware replacement, config change)</li>
-<li>Exit maintenance mode: <code>Set-VMHost -VMHost &lt;hostname&gt; -State Connected</code></li>
-<li>Validate host is Connected, all storage paths active, NTP in sync, and VMs have migrated back or are running correctly</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Host shows Connected and PoweredOn in vCenter</li>
-<li>[ ] No hardware health alarms triggered: <code>esxcli hardware health get</code></li>
-<li>[ ] All storage paths active, no dead paths: <code>esxcli storage core path list | grep dead</code></li>
-<li>[ ] All vmnic uplinks connected: <code>esxcli network nic list</code></li>
-<li>[ ] VMs running correctly on the host or successfully migrated back</li>
-<li>[ ] NTP synchronized: <code>esxcli system ntp get</code> confirms <code>Running: true</code></li>
-<li>[ ] No new vCenter alarms or vmkernel errors introduced by the change</li>
-<li>[ ] Close change ticket with validation evidence attached</li>
-</ul>
+<h1 id="esxi-operations">ESXi — Operations<a class="headerlink" href="#esxi-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Commands, syntax, and quick reference.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Routine checks, service validation, and status verification.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Day-to-day operational tasks and how-to guides.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Installation, upgrade, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Backup configuration, restore procedures, and validation.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts and reusable code.</span>
+</a>
+
+</div>
 
 
 

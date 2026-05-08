@@ -21,7 +21,7 @@
     
     
       
-        <title>VMware vSAN Architecture - Chris KB</title>
+        <title>vSAN — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="VMware vSAN Architecture · Chris KB">
+  <meta property="og:title" content="vSAN — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="VMware vSAN Architecture · Chris KB">
+  <meta name="twitter:title" content="vSAN — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vmware-vsan-architecture" class="md-skip">
+        <a href="#vsan-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VMware vSAN Architecture
+              vSAN — Architecture
             
           </span>
         </div>
@@ -300,6 +300,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
   
 
       
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,91 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#vsan-cluster-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSAN Cluster Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disk-group-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disk Group Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ftt-and-raid-policies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FTT and RAID Policies
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stretched-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stretched Cluster
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing Guidelines
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -820,265 +779,30 @@
 
 
 
-<h1 id="vmware-vsan-architecture">VMware vSAN Architecture<a class="headerlink" href="#vmware-vsan-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="vsan-cluster-topology">vSAN Cluster Topology<a class="headerlink" href="#vsan-cluster-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  H1["ESXi-01\nCache NVMe + Capacity SSD"] &amp; H2["ESXi-02\nCache NVMe + Capacity SSD"] &amp; H3["ESXi-03\nCache NVMe + Capacity SSD"] --&gt; VSANNET["vSAN VMkernel Network\n25 / 10 GbE dedicated"]
-  VSANNET --&gt; DS[("vSAN Datastore\nFTT policy — RAID-1 / RAID-5 / RAID-6")]
-  DS --&gt; VM(["VM Workloads"])
-  VCSA["vCenter\n(vSAN management)"] --&gt; VSANNET
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class H1,H2,H3 ctrl
-  class VSANNET net
-  class DS store
-  class VM host
-  class VCSA mgmt</code></pre>
-<div class="kb-grid kb-grid-15">
+<h1 id="vsan-architecture">vSAN — Architecture<a class="headerlink" href="#vsan-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
 
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>esxcli vsan, disk groups, object health, resync, PowerCLI, and RVC commands.</span>
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>Architecture overview, topology, and how it fits in the stack.</span>
 </a>
 
-<a class="kb-card" href="health-checks/">
-  <strong>Health Checks</strong>
-  <span>Skyline health, cluster checks, object health, capacity, and policy compliance.</span>
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>Disk groups, cache tiers, storage policies, and fault domains.</span>
 </a>
 
-<a class="kb-card" href="resync-rebuild/">
-  <strong>Resync and Rebuild</strong>
-  <span>Resync review, rebuild behavior, impact checks, and operational handling.</span>
-</a>
-
-<a class="kb-card" href="field-reference/">
-  <strong>Field Reference</strong>
-  <span>Architecture, dependencies, ports, daily checks, recovery notes, and RCA examples.</span>
-</a>
-
-<a class="kb-card" href="technical-deep-dive/">
-  <strong>Technical Deep Dive</strong>
-  <span>Components, logs, commands, failure points, resync, and upgrade notes.</span>
-</a>
-
-<a class="kb-card" href="scripts/">
-  <strong>Scripts</strong>
-  <span>PowerCLI vSAN health check, disk group report, RVC diagnostics, and Ansible vSAN playbook.</span>
-</a>
-
-<a class="kb-card" href="operations/">
-  <strong>Operations</strong>
-  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
-</a>
-
-<a class="kb-card" href="troubleshooting/">
-  <strong>Troubleshooting</strong>
-  <span>Resync review, object health, disk group failures, and vSAN recovery procedures.</span>
-</a>
-
-
-<a class="kb-card" href="architecture/">
-  <strong>Architecture</strong>
-  <span>Architecture overview, components, and design patterns.</span>
-</a>
-
-<a class="kb-card" href="disk-groups/">
-  <strong>Disk Groups</strong>
-  <span>Disk Groups notes, checks, commands, and references.</span>
-</a>
-
-<a class="kb-card" href="integration/">
-  <strong>Integration</strong>
-  <span>Integration with other systems and platforms.</span>
-</a>
-
-<a class="kb-card" href="lifecycle/">
-  <strong>Lifecycle</strong>
-  <span>Installation, upgrades, patching, and decommission.</span>
-</a>
-
-<a class="kb-card" href="performance/">
-  <strong>Performance</strong>
-  <span>Performance monitoring, tuning, and baselining.</span>
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>Integration with vCenter, HCI Mesh, and external storage.</span>
 </a>
 
 <a class="kb-card" href="standards/">
   <strong>Standards</strong>
-  <span>Configuration standards, naming conventions, and baselines.</span>
+  <span>Naming conventions, design rules, and configuration baselines.</span>
 </a>
 
-<a class="kb-card" href="storage-policies/">
-  <strong>Storage Policies</strong>
-  <span>Storage Policies notes, checks, commands, and references.</span>
-</a>
 </div>
-
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>vSAN is VMware's hyper-converged storage solution, introduced in vSphere 5.5. Unlike traditional shared storage, vSAN pools local disks across ESXi hosts to create a distributed shared datastore. Compute and storage run on the same ESXi hosts, eliminating the need for an external SAN or NAS.</p>
-<p>The vSAN datastore is presented as a single shared storage namespace to all hosts in the vSAN cluster. VMs on any host in the cluster can access any object on the datastore because vSAN handles replication and distribution transparently.</p>
-<p>vSAN is policy-driven: each VM's storage characteristics (availability, performance, capacity) are defined by a VM Storage Policy assigned at provisioning time.</p>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Disk Group</strong></td>
-<td>Unit of storage on each host: one cache device + one or more capacity devices (OSA). ESA uses NVMe only with no separate cache tier.</td>
-</tr>
-<tr>
-<td><strong>CLOM</strong></td>
-<td>Cluster Level Object Manager — responsible for policy compliance, placement decisions, and triggering resyncs when policy is violated.</td>
-</tr>
-<tr>
-<td><strong>DOM</strong></td>
-<td>Distributed Object Manager — handles I/O for each vSAN object; coordinates reads and writes across components on different hosts.</td>
-</tr>
-<tr>
-<td><strong>LSOM</strong></td>
-<td>Local Log-Structured Object Manager — manages on-disk layout within disk groups; handles write buffering on cache tier.</td>
-</tr>
-<tr>
-<td><strong>CMMDS</strong></td>
-<td>Cluster Monitoring Membership Directory Service — tracks cluster membership, disk group membership, and health metadata.</td>
-</tr>
-<tr>
-<td><strong>vSAN Datastore</strong></td>
-<td>The logical datastore namespace visible to vCenter and all cluster hosts.</td>
-</tr>
-<tr>
-<td><strong>vSAN Witness</strong></td>
-<td>A lightweight host or appliance that holds only metadata for 2-node clusters to provide tiebreaker arbitration.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="disk-group-design">Disk Group Design<a class="headerlink" href="#disk-group-design" title="Permanent link">&para;</a></h2>
-<p><strong>Original Storage Architecture (OSA) — vSAN 6.x and 7.x:</strong></p>
-<ul>
-<li>Each disk group consists of 1 cache SSD (write buffer and read cache) and up to 7 capacity drives (SSD or HDD).</li>
-<li>Each host can have up to 5 disk groups.</li>
-<li>All-Flash (AF) configurations: cache tier is SSD, capacity tier is SSD — cache used for write buffering only.</li>
-<li>Hybrid configurations: cache tier is SSD, capacity tier is HDD — cache used for both read caching and write buffering.</li>
-</ul>
-<p><strong>Express Storage Architecture (ESA) — vSAN 8.0+:</strong></p>
-<ul>
-<li>NVMe-only architecture; no separate cache tier.</li>
-<li>Each NVMe device contributes directly to capacity with built-in compression and a log-structured layout.</li>
-<li>Minimum 4 hosts required.</li>
-<li>Higher throughput and lower latency compared to OSA.</li>
-<li>Requires NVMe devices on the vSAN HCL for ESA.</li>
-</ul>
-<h2 id="ftt-and-raid-policies">FTT and RAID Policies<a class="headerlink" href="#ftt-and-raid-policies" title="Permanent link">&para;</a></h2>
-<p>vSAN storage policies define the Failures To Tolerate (FTT) and the RAID method used for data protection.</p>
-<table>
-<thead>
-<tr>
-<th>FTT</th>
-<th>RAID Method</th>
-<th>Minimum Hosts</th>
-<th>Space Overhead</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>RAID-1 (Mirroring)</td>
-<td>3</td>
-<td>2x</td>
-<td>Default; suitable for most workloads</td>
-</tr>
-<tr>
-<td>1</td>
-<td>RAID-5 (Erasure Coding)</td>
-<td>4</td>
-<td>1.33x</td>
-<td>More efficient; higher CPU and network overhead</td>
-</tr>
-<tr>
-<td>2</td>
-<td>RAID-6 (Erasure Coding)</td>
-<td>6</td>
-<td>1.5x</td>
-<td>Best capacity efficiency for FTT=2</td>
-</tr>
-<tr>
-<td>2</td>
-<td>RAID-1 (Mirroring)</td>
-<td>5</td>
-<td>3x</td>
-<td>Maximum redundancy; least capacity efficient</td>
-</tr>
-<tr>
-<td>3</td>
-<td>RAID-1 (Mirroring)</td>
-<td>7</td>
-<td>4x</td>
-<td>Rarely used; extreme environments</td>
-</tr>
-</tbody>
-</table>
-<p>Erasure Coding (RAID-5/6) is only supported on All-Flash and ESA configurations. Choose RAID-5 (FTT=1) or RAID-6 (FTT=2) for capacity-sensitive workloads where the additional CPU overhead is acceptable.</p>
-<h2 id="stretched-cluster">Stretched Cluster<a class="headerlink" href="#stretched-cluster" title="Permanent link">&para;</a></h2>
-<p>A vSAN Stretched Cluster spans two active data sites with a third witness site:</p>
-<ul>
-<li><strong>Site A and Site B:</strong> Both sites host production VMs and hold RAID-1 mirrors of each VM object. Both sites are active simultaneously.</li>
-<li><strong>Witness Site:</strong> Holds only metadata components (no VM data). Acts as tiebreaker if Site A and Site B lose communication (split-brain prevention).</li>
-</ul>
-<p><strong>Network requirements:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Link</th>
-<th>Maximum Latency</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Site A to Site B (data sites)</td>
-<td>&lt; 5 ms RTT</td>
-</tr>
-<tr>
-<td>Data sites to Witness</td>
-<td>&lt; 200 ms RTT</td>
-</tr>
-</tbody>
-</table>
-<p>The witness can be a physical host or the vSAN Witness Appliance (virtual). The witness appliance can run on a third site's vSphere infrastructure.</p>
-<p>In a stretched cluster, the default FTT policy becomes 1 across sites. An FTT=1 RAID-1 policy means one copy per site.</p>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<p><strong>Capacity planning:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Usable capacity = (Raw capacity) / (Space overhead factor × slack factor)
-</code></pre></div>
-<ul>
-<li>Slack factor: reserve 30% for resync, snapshots, and operational headroom.</li>
-<li>Example: 6-host cluster, 4 × 3.84TB NVMe per host, FTT=1 RAID-5:</li>
-<li>Raw = 6 × 4 × 3.84 = 92.16 TB</li>
-<li>Usable ≈ 92.16 / (1.33 × 1.43) ≈ 48.5 TB effective</li>
-</ul>
-<p><strong>CPU overhead:</strong></p>
-<ul>
-<li>OSA: approximately 10% CPU overhead per host for vSAN operations.</li>
-<li>ESA: slightly higher initial overhead due to inline compression, but improved I/O efficiency.</li>
-</ul>
-<p><strong>Memory:</strong></p>
-<ul>
-<li>Reserve 32 GB RAM minimum per host for vSAN kernel modules and cache structures.</li>
-<li>ESA requires 512 GB RAM for optimal performance at scale.</li>
-</ul>
-<p><strong>Network:</strong></p>
-<ul>
-<li>Minimum 10 GbE for all-flash OSA clusters.</li>
-<li>25 GbE recommended for ESA or high-throughput workloads.</li>
-<li>MTU 9000 (jumbo frames) required on vSAN network.</li>
-</ul>
 
 
 

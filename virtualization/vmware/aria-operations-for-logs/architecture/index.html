@@ -21,7 +21,7 @@
     
     
       
-        <title>Aria Operations for Logs — Architecture - Chris KB</title>
+        <title>Aria Ops for Logs — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Aria Operations for Logs — Architecture · Chris KB">
+  <meta property="og:title" content="Aria Ops for Logs — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Aria Operations for Logs — Architecture · Chris KB">
+  <meta name="twitter:title" content="Aria Ops for Logs — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#aria-operations-for-logs-architecture" class="md-skip">
+        <a href="#aria-ops-for-logs-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Aria Operations for Logs — Architecture
+              Aria Ops for Logs — Architecture
             
           </span>
         </div>
@@ -300,6 +300,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
   
 
       
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,102 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-pipeline-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Pipeline Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cluster-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cluster Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-ports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Ports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#content-packs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Content Packs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cloud-proxy-for-remote-sites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud Proxy for Remote Sites
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -831,151 +779,30 @@
 
 
 
-<h1 id="aria-operations-for-logs-architecture">Aria Operations for Logs — Architecture<a class="headerlink" href="#aria-operations-for-logs-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Aria Operations for Logs (formerly vRealize Log Insight) is a log analytics platform that collects, indexes, and correlates log data from VMware infrastructure and other sources. It is based on an Elasticsearch-backed storage and indexing engine.</p>
-<hr />
-<h2 id="log-pipeline-architecture">Log Pipeline Architecture<a class="headerlink" href="#log-pipeline-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  SRC1(["ESXi / vCenter syslog"]) &amp; SRC2(["NSX / VMs syslog"]) &amp; SRC3(["Linux / Windows agent"]) --&gt; VRLI["Aria Operations for Logs\n(Log Intelligence cluster)"]
-  VRLI --&gt; IDX[("Log Index\nhot + warm retention")]
-  VRLI --&gt; ALERTS["Alert Rules &amp; Notifications"]
-  ADMIN(["Operator"]) --&gt;|"browser"| VRLI
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VRLI ctrl
-  class IDX store
-  class SRC1,SRC2,SRC3,ADMIN host</code></pre>
-<h2 id="cluster-topology">Cluster Topology<a class="headerlink" href="#cluster-topology" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Node Role</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Master</strong></td>
-<td>Primary node — handles ingestion, indexing, query coordination, and cluster management UI</td>
-</tr>
-<tr>
-<td><strong>Worker</strong></td>
-<td>Scale-out nodes — add workers to increase ingestion throughput and storage capacity</td>
-</tr>
-</tbody>
-</table>
-<p>A minimum of <strong>3 nodes</strong> (1 master + 2 workers) is recommended for production HA. Workers must be added through the master's Administration UI.</p>
-<hr />
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Log Insight Cluster</strong></td>
-<td>Master + worker VMs</td>
-</tr>
-<tr>
-<td><strong>Windows Agent</strong></td>
-<td>Installed on Windows hosts to forward logs and Windows Event Log</td>
-</tr>
-<tr>
-<td><strong>Linux Agent</strong></td>
-<td>Installed on Linux hosts to forward syslog, log files, and journald</td>
-</tr>
-<tr>
-<td><strong>Syslog Receiver</strong></td>
-<td>Receives syslog over UDP/TCP on port 514, 1514; TLS on port 6514</td>
-</tr>
-<tr>
-<td><strong>Content Packs</strong></td>
-<td>Pre-built dashboards, extracted fields, and alerts for specific products (vSphere, NSX, VCF, etc.)</td>
-</tr>
-<tr>
-<td><strong>Cloud Proxy</strong></td>
-<td>Lightweight forwarder deployed at remote sites to collect and forward logs to the central cluster</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="network-ports">Network Ports<a class="headerlink" href="#network-ports" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Port</th>
-<th>Protocol</th>
-<th>Direction</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>514</td>
-<td>UDP/TCP</td>
-<td>Inbound</td>
-<td>Syslog (plaintext)</td>
-</tr>
-<tr>
-<td>1514</td>
-<td>UDP/TCP</td>
-<td>Inbound</td>
-<td>Syslog (plaintext, alternate)</td>
-</tr>
-<tr>
-<td>6514</td>
-<td>TCP</td>
-<td>Inbound</td>
-<td>Syslog over TLS</td>
-</tr>
-<tr>
-<td>9000</td>
-<td>TCP</td>
-<td>Inbound</td>
-<td>Log Insight agent ingestion</td>
-</tr>
-<tr>
-<td>443</td>
-<td>TCP</td>
-<td>Inbound</td>
-<td>Web UI (HTTPS)</td>
-</tr>
-<tr>
-<td>9543</td>
-<td>TCP</td>
-<td>Inbound</td>
-<td>Agent API (TLS)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="storage-architecture">Storage Architecture<a class="headerlink" href="#storage-architecture" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Based on <strong>Elasticsearch</strong> for indexing and querying.</li>
-<li>Storage is partitioned into <strong>hot</strong> (recent, fast SSD) and <strong>cold</strong> (older, capacity) tiers.</li>
-<li>Disk usage should not exceed <strong>70%</strong> of total capacity — Log Insight will throttle ingestion as it approaches capacity.</li>
-<li>Size storage for <strong>30 days of hot retention</strong> at the expected peak ingestion rate.</li>
-<li>Rule of thumb: 100 GB/day ingestion requires approximately 3 TB raw for 30 days (with indexing overhead).</li>
-</ul>
-<hr />
-<h2 id="content-packs">Content Packs<a class="headerlink" href="#content-packs" title="Permanent link">&para;</a></h2>
-<p>Content packs provide pre-built dashboards, extracted fields, and alert definitions for specific products:</p>
-<ul>
-<li>VMware vSphere Content Pack</li>
-<li>VMware NSX Content Pack</li>
-<li>VMware VCF Content Pack</li>
-<li>Linux Content Pack</li>
-<li>Windows Content Pack</li>
-</ul>
-<p>Install and update content packs from <strong>Administration &gt; Content Packs</strong>. Content pack updates are independent of platform upgrades.</p>
-<hr />
-<h2 id="cloud-proxy-for-remote-sites">Cloud Proxy for Remote Sites<a class="headerlink" href="#cloud-proxy-for-remote-sites" title="Permanent link">&para;</a></h2>
-<p>For remote sites with latency or bandwidth constraints, deploy a <strong>Cloud Proxy</strong> appliance at the remote site. The proxy collects syslog and agent logs locally and forwards them to the central cluster, reducing direct log flow across WAN links.</p>
+<h1 id="aria-ops-for-logs-architecture">Aria Ops for Logs — Architecture<a class="headerlink" href="#aria-ops-for-logs-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>Architecture overview, log pipeline, and cluster topology.</span>
+</a>
+
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>Master, worker nodes, indexing, and retention design.</span>
+</a>
+
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>Integration with ESXi, vCenter, NSX, and SIEM.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Naming conventions, design rules, and configuration baselines.</span>
+</a>
+
+</div>
 
 
 

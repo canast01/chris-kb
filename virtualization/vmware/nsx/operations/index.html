@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>NSX — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="NSX — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="NSX — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#nsx-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              NSX — Operations
             
           </span>
         </div>
@@ -300,6 +300,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
   
 
       
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,80 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -809,192 +779,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">NSX</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] NSX-T Manager UI → System → Overview</td>
-<td></td>
-<td>confirm overall system health is green, no component warnings</td>
-</tr>
-<tr>
-<td>[ ] <code>GET /api/v1/cluster/status</code></td>
-<td><code>GET /api/v1/cluster/status</code></td>
-<td>management cluster status should show <code>STABLE</code>; flag any <code>DEGRADED</code> or <code>UNSTABLE</code> nodes</td>
-</tr>
-<tr>
-<td>[ ] <code>GET /api/v1/transport-nodes/status</code></td>
-<td><code>GET /api/v1/transport-nodes/status</code></td>
-<td>all transport nodes should report <code>UP</code>; flag any <code>DOWN</code> or <code>DEGRADED</code></td>
-</tr>
-<tr>
-<td>[ ] Check Edge cluster health</td>
-<td><code>GET /api/v1/edge-clusters</code></td>
-<td>all Edge nodes reachable and healthy</td>
-</tr>
-<tr>
-<td>[ ] <code>GET /api/v1/alarms?status=OPEN</code></td>
-<td><code>GET /api/v1/alarms?status=OPEN</code></td>
-<td>review all open alarms; action any at HIGH or CRITICAL severity</td>
-</tr>
-<tr>
-<td>[ ] Verify T0/T1 BGP sessions are established (if BGP in use): NSX-T UI → Networking → T0 Gateways → BGP Neighbors, or from Edge CLI</td>
-<td><code>get logical-router &lt;id&gt; bgp neighbor summary</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check DFW rule count is not approaching platform limits</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review NSX Manager backup status</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Management cluster stable: <code>GET /api/v1/cluster/status</code></li>
-<li>[ ] All transport nodes UP: <code>GET /api/v1/transport-nodes/status</code></li>
-<li>[ ] All Edge nodes reachable: <code>GET /api/v1/edge-clusters</code></li>
-<li>[ ] No open HIGH or CRITICAL alarms: <code>GET /api/v1/alarms?status=OPEN</code></li>
-<li>[ ] BGP sessions established on all T0 gateways</li>
-<li>[ ] Overlay tunnels healthy (GENEVE): <code>GET /api/v1/tunnel-endpoints</code></li>
-<li>[ ] DFW rule count within safe limits</li>
-<li>[ ] NSX Manager backup current</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># NSX-T REST API health checks (replace &lt;nsx-manager&gt; and use a valid session token)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/cluster/status
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/alarms?status<span class="o">=</span>OPEN
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># From Edge node CLI (SSH to Edge)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>get<span class="w"> </span>logical-router<span class="w"> </span>&lt;tier0-router-id&gt;<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>get<span class="w"> </span>tunnel-port<span class="w"> </span>status
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] NSX Manager backup is current — confirm backup completed within the last 24 hours</li>
-<li>[ ] Edge cluster healthy — all Edge nodes UP and BGP sessions established before any change</li>
-<li>[ ] All transport node health confirmed UP: <code>GET /api/v1/transport-nodes/status</code></li>
-<li>[ ] DFW rule change reviewed for impact — confirm rule ordering and scope are correct before push</li>
-<li>[ ] Rollback plan for routing changes documented — BGP prefix filter or static route revert procedure confirmed</li>
-<li>[ ] Change window approved and communicated to networking and compute teams</li>
-<li>[ ] BFD session health confirmed if used for fast failover detection</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NSX Manager backup current</td>
-<td></td>
-<td>Backup timestamp confirmed</td>
-</tr>
-<tr>
-<td>Edge cluster healthy</td>
-<td></td>
-<td>All Edge nodes UP</td>
-</tr>
-<tr>
-<td>Transport nodes all UP</td>
-<td></td>
-<td>API status check</td>
-</tr>
-<tr>
-<td>DFW rule change reviewed</td>
-<td></td>
-<td>Peer review completed</td>
-</tr>
-<tr>
-<td>Change window approved</td>
-<td></td>
-<td>Ticket reference</td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Check transport node status: <code>GET /api/v1/transport-nodes/status</code> — identify any DOWN or DEGRADED nodes</li>
-<li>[ ] Check Edge node health: NSX-T UI → System → Fabric → Nodes → Edge Transport Nodes</li>
-<li>[ ] Review open alarms: <code>GET /api/v1/alarms?status=OPEN</code> — filter by severity HIGH or CRITICAL</li>
-<li>[ ] Check specific segment or gateway for overlay connectivity: <code>GET /api/v1/logical-ports?logical_switch_id=&lt;id&gt;</code></li>
-<li>[ ] Check DFW for unintended block rules if VM connectivity is affected: review recent DFW rule changes in NSX audit log</li>
-<li>[ ] Verify BGP sessions from Edge CLI: <code>get logical-router &lt;id&gt; bgp neighbor summary</code> — look for sessions in Idle or Connect state</li>
-<li>[ ] Check BFD session health if fast convergence is configured</li>
-<li>[ ] If management cluster is degraded, check NSX Manager VM health, disk space, and service status on the appliance</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Are transport nodes UP?</td>
-<td><code>GET /api/v1/transport-nodes/status</code></td>
-</tr>
-<tr>
-<td>Are Edge nodes reachable?</td>
-<td>NSX-T UI → Fabric → Edge Transport Nodes</td>
-</tr>
-<tr>
-<td>What alarms are open?</td>
-<td><code>GET /api/v1/alarms?status=OPEN</code></td>
-</tr>
-<tr>
-<td>Are BGP sessions established?</td>
-<td>Edge CLI: <code>get logical-router &lt;id&gt; bgp neighbor summary</code></td>
-</tr>
-<tr>
-<td>Is DFW blocking traffic?</td>
-<td>Review recent DFW rule changes and audit log</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm all transport nodes are UP and no open HIGH/CRITICAL alarms before starting</li>
-<li>Take NSX Manager backup via UI → System → Backup &amp; Restore — confirm backup completes successfully</li>
-<li>For Edge node maintenance: migrate Edge workloads off the affected Edge node if possible (active/standby failover)</li>
-<li>Perform the required work on the Edge node or transport node</li>
-<li>After work is complete, confirm the node is back UP: <code>GET /api/v1/transport-nodes/status</code></li>
-<li>Validate routing: check BGP neighbor sessions are re-established from Edge CLI</li>
-<li>Confirm BFD sessions restored if BFD is configured</li>
-<li>Verify DFW rules are still applied correctly: spot-check connectivity for key VMs through the affected segment</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All transport nodes UP: <code>GET /api/v1/transport-nodes/status</code> — no DOWN or DEGRADED entries</li>
-<li>[ ] No open HIGH or CRITICAL alarms: <code>GET /api/v1/alarms?status=OPEN</code></li>
-<li>[ ] BGP sessions established on all T0 gateways — confirmed from Edge CLI</li>
-<li>[ ] BFD sessions restored (if applicable)</li>
-<li>[ ] DFW rules applied correctly — test VM-to-VM connectivity through affected segments</li>
-<li>[ ] Overlay network connectivity verified — GENEVE tunnels healthy</li>
-<li>[ ] NSX Manager backup taken post-change to capture final configuration state</li>
-<li>[ ] Close change ticket with transport node status and BGP summary output attached</li>
-</ul>
+<h1 id="nsx-operations">NSX — Operations<a class="headerlink" href="#nsx-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Commands, syntax, and quick reference.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Routine checks, service validation, and status verification.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Day-to-day operational tasks and how-to guides.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Installation, upgrade, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Backup configuration, restore procedures, and validation.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts and reusable code.</span>
+</a>
+
+</div>
 
 
 

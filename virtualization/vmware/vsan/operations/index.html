@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>vSAN — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="vSAN — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="vSAN — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#vsan-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              vSAN — Operations
             
           </span>
         </div>
@@ -300,6 +300,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
   
 
       
@@ -565,8 +584,6 @@
       
         
       
-        
-      
     
     
     
@@ -607,6 +624,33 @@
   
 
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -717,80 +761,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -809,192 +779,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">vSAN</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>Get-VsanClusterHealthSummary</code></td>
-<td><code>Get-VsanClusterHealthSummary</code></td>
-<td>all health tests should return green; any yellow or red requires investigation</td>
-</tr>
-<tr>
-<td>[ ] Check vSAN object health in vCenter → vSAN → Monitor → Virtual Obj</td>
-<td></td>
-<td>flag any inaccessible or degraded objects</td>
-</tr>
-<tr>
-<td>[ ] Run <code>Get-VsanDiskGroup</code></td>
-<td><code>Get-VsanDiskGroup</code></td>
-<td>all disk groups healthy, no drives in evacuating or absent state</td>
-</tr>
-<tr>
-<td>[ ] vCenter → vSAN → Monitor → Resyncing Objects</td>
-<td></td>
-<td>confirm no resync is in progress from previous failure or change</td>
-</tr>
-<tr>
-<td>[ ] Check capacity per host</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Verify vSAN witness appliance is reachable (2-node or stretched cluster)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review vSAN performance dashboard for latency or throughput anomal</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm vSAN Health Service is running and the health check data i</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All vSAN health tests green: <code>Get-VsanClusterHealthSummary</code></li>
-<li>[ ] No degraded or inaccessible VM objects</li>
-<li>[ ] All disk groups healthy and no evacuating drives: <code>Get-VsanDiskGroup</code></li>
-<li>[ ] No active resync in progress</li>
-<li>[ ] Disk group capacity below 70% per host</li>
-<li>[ ] Witness appliance reachable (2-node/stretched)</li>
-<li>[ ] No performance anomalies in vSAN performance dashboard</li>
-<li>[ ] vSAN Health Service up to date</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># PowerCLI vSAN health sweep</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">Groups</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">GroupName</span><span class="p">,</span><span class="n">GroupHealth</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Get-VsanDiskGroup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">VMHost</span><span class="p">,</span><span class="n">State</span><span class="p">,@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;DiskCount&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Disks</span><span class="p">.</span><span class="n">Count</span><span class="p">}}</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c"># Check for degraded/inaccessible objects</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanObjectSystem-vsan-object-system&quot;</span> <span class="p">|</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">QueryVsanObjectUuidsByFilter</span><span class="p">(</span><span class="nv">$null</span><span class="p">,</span> <span class="n">100</span><span class="p">,</span> <span class="n">0</span><span class="p">)</span> <span class="p">}</span>
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All vSAN health tests green before any host maintenance: <code>Get-VsanClusterHealthSummary</code></li>
-<li>[ ] No active resync in progress — wait for resync to complete before starting maintenance</li>
-<li>[ ] Disk group capacity headroom confirmed — at least 30% free per host after planned change</li>
-<li>[ ] No hosts currently in maintenance mode — only one host at a time for vSAN maintenance</li>
-<li>[ ] vSAN license valid and not expired</li>
-<li>[ ] Full data migration option selected when putting host into maintenance mode (not <code>Ensure Accessibility</code>)</li>
-<li>[ ] Change window approved; storage admin and compute team notified</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All health tests green</td>
-<td></td>
-<td><code>Get-VsanClusterHealthSummary</code></td>
-</tr>
-<tr>
-<td>No active resync</td>
-<td></td>
-<td>vCenter → vSAN → Resyncing Objects</td>
-</tr>
-<tr>
-<td>Disk group capacity OK</td>
-<td></td>
-<td>&lt; 70% per host</td>
-</tr>
-<tr>
-<td>No other hosts in maintenance</td>
-<td></td>
-<td>One host at a time</td>
-</tr>
-<tr>
-<td>Change window approved</td>
-<td></td>
-<td>Ticket reference</td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>Get-VsanClusterHealthSummary</code> — identify which health test(s) are failing and in which category</li>
-<li>[ ] Check disk group health: <code>Get-VsanDiskGroup</code> — look for absent, degraded, or evacuating disks</li>
-<li>[ ] Check vSAN network health in vSAN Health → Network — confirm VMkernel adapter connectivity between hosts</li>
-<li>[ ] Check vSAN object accessibility: vCenter → vSAN → Monitor → Virtual Objects — identify VMs with inaccessible objects</li>
-<li>[ ] Review ESXi vmkernel log on affected host for vSAN-related errors: <code>grep -i vsan /var/log/vmkernel.log</code></li>
-<li>[ ] Check witness appliance health (2-node/stretched): confirm witness host is connected and its vSAN component is healthy</li>
-<li>[ ] Review resync status — degraded objects after a disk or host failure will show here</li>
-<li>[ ] If objects are permanently inaccessible and resync cannot start, escalate to VMware Support immediately</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which health tests are failing?</td>
-<td><code>Get-VsanClusterHealthSummary</code> — test name and status</td>
-</tr>
-<tr>
-<td>Are disk groups healthy?</td>
-<td><code>Get-VsanDiskGroup</code> — absent or evacuating disks</td>
-</tr>
-<tr>
-<td>Is the vSAN network healthy?</td>
-<td>vSAN Health → Network category</td>
-</tr>
-<tr>
-<td>Are any VM objects inaccessible?</td>
-<td>vCenter → vSAN → Virtual Objects</td>
-</tr>
-<tr>
-<td>What does vmkernel.log show?</td>
-<td><code>grep -i vsan /var/log/vmkernel.log</code> on affected host</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm all vSAN health tests are green and no resync is in progress before starting</li>
-<li>Check disk group capacity — ensure remaining hosts have sufficient capacity after data migration</li>
-<li>Put host into maintenance mode with <strong>Full Data Migration</strong> selected (not <code>Ensure Accessibility</code>)</li>
-<li>Monitor resync progress: vCenter → vSAN → Monitor → Resyncing Objects — wait for resync to complete before proceeding to next host</li>
-<li>Perform the required maintenance work on the evacuated host</li>
-<li>Exit maintenance mode and wait for the host to rejoin the vSAN cluster</li>
-<li>Confirm <code>Get-VsanClusterHealthSummary</code> returns all green and no resync is queued before touching the next host</li>
-<li>Repeat for each host — never put more than one host into maintenance mode simultaneously</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All vSAN health tests green: <code>Get-VsanClusterHealthSummary</code></li>
-<li>[ ] No resync in progress: vCenter → vSAN → Monitor → Resyncing Objects shows empty</li>
-<li>[ ] All disk groups healthy and online: <code>Get-VsanDiskGroup</code></li>
-<li>[ ] All VM objects accessible: vCenter → vSAN → Monitor → Virtual Objects — no degraded or inaccessible state</li>
-<li>[ ] Disk group capacity within acceptable range per host</li>
-<li>[ ] vSAN network health confirmed green</li>
-<li>[ ] No new vmkernel errors on any vSAN host since change completed</li>
-<li>[ ] Close change ticket with health summary screenshot and resync status confirmation</li>
-</ul>
+<h1 id="vsan-operations">vSAN — Operations<a class="headerlink" href="#vsan-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Commands, syntax, and quick reference.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Routine checks, service validation, and status verification.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Day-to-day operational tasks and how-to guides.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Installation, upgrade, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Backup configuration, restore procedures, and validation.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts and reusable code.</span>
+</a>
+
+</div>
 
 
 
