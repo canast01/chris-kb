@@ -65,6 +65,26 @@ Azure Firewall in the hub VNet controls all east-west and internet-bound traffic
 | Azure SQL Failover Groups | Active geo-replication | < 30 seconds RPO |
 | Azure Backup cross-region restore | Recovery Services Vault | 12–24 hours RTO |
 
+## Azure Key Vault Secret Access
+
+```mermaid
+sequenceDiagram
+    participant app as Application\n(VM / Function / AKS pod)
+    participant mi as Managed Identity\n(IMDS endpoint)
+    participant aad as Azure AD
+    participant kv as Key Vault
+    participant policy as Key Vault Access Policy\nor RBAC
+
+    app->>mi: GET token (resource=vault.azure.net)
+    mi->>aad: Token request (MSI credential)
+    aad-->>mi: Bearer token (JWT)
+    mi-->>app: Bearer token
+    app->>kv: GET secret (Authorization: Bearer token)
+    kv->>policy: Evaluate access policy / RBAC
+    policy-->>kv: Allow / Deny
+    kv-->>app: Secret value (200 OK) or 403 Forbidden
+```
+
 ## Azure AD Auth Flow
 
 ```mermaid

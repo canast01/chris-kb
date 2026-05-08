@@ -89,6 +89,25 @@ flowchart LR
     request --> iamCheck --> amiSelect --> networkPlace --> sgApply --> instanceProfile --> userData --> running
 ```
 
+## IAM Assume-Role Sequence
+
+```mermaid
+sequenceDiagram
+    participant principal as Principal\n(user / service / CI-CD)
+    participant sts as AWS STS
+    participant iam as IAM Policy Engine
+    participant resource as AWS Resource\n(S3 / EC2 / RDS)
+
+    principal->>sts: AssumeRole (RoleArn, ExternalId)
+    sts->>iam: Evaluate trust policy on role
+    iam-->>sts: Trust policy allows principal?
+    sts-->>principal: Temporary credentials\n(AccessKey + SecretKey + SessionToken)
+    principal->>resource: API call with temporary credentials
+    resource->>iam: Evaluate identity + resource policies
+    iam-->>resource: Allow / Deny decision
+    resource-->>principal: Response
+```
+
 ## IAM Structure
 
 ```

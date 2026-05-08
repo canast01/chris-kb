@@ -6,6 +6,37 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
 
 BitLocker provides full-volume encryption for OS and data drives. On servers, it is typically combined with Active Directory key escrow so recovery keys are centrally stored.
 
+### BitLocker Unlock Flow
+
+```mermaid
+flowchart TD
+    powerOn["Server Powers On\nUEFI POST"]
+    tpmCheck{"TPM present\nand healthy?"}
+    pcrMeasure["TPM measures boot components\nUEFI · MBR · bootloader · BCD"]
+    pcrMatch{"PCR values match\nexpected sealed state?"}
+    pinPrompt{"PIN protector\nconfigured?"}
+    pinEntry["Prompt for\nStartup PIN"]
+    networkUnlock{"Network Unlock\nconfigured + on corp network?"}
+    wdsUnlock["WDS server provides\nNetwork Unlock key"]
+    vmkRelease["TPM releases\nVolume Master Key (VMK)"]
+    fvekDecrypt["VMK decrypts\nFull Volume Encryption Key (FVEK)"]
+    driveUnlocked["Drive Unlocked\nOS boots normally"]
+    recoveryPrompt["BitLocker Recovery\nPrompt for 48-digit key"]
+    adEscrow["Retrieve key from\nActive Directory"]
+
+    powerOn --> tpmCheck
+    tpmCheck -- No --> recoveryPrompt
+    tpmCheck -- Yes --> pcrMeasure --> pcrMatch
+    pcrMatch -- No --> recoveryPrompt
+    pcrMatch -- Yes --> pinPrompt
+    pinPrompt -- Yes --> pinEntry --> networkUnlock
+    pinPrompt -- No --> networkUnlock
+    networkUnlock -- Yes --> wdsUnlock --> vmkRelease
+    networkUnlock -- No --> vmkRelease
+    vmkRelease --> fvekDecrypt --> driveUnlocked
+    recoveryPrompt --> adEscrow --> driveUnlocked
+```
+
 ### Prerequisites
 
 ```powershell

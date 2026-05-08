@@ -2,6 +2,22 @@
 
 Management groups provide a level of scope above subscriptions. They enable you to organise subscriptions into a hierarchy and apply governance controls (policies, RBAC) at scale without configuring each subscription individually.
 
+## Azure Resource Hierarchy
+
+```mermaid
+flowchart TD
+    tenant["Azure Tenant\nEntra ID boundary"]
+    mgRoot["Tenant Root Group\nManagement Group"]
+    mg["Child Management Group\ne.g. mg-production"]
+    sub["Subscription\nBilling + quota boundary"]
+    rg["Resource Group\nLifecycle + RBAC boundary"]
+    resource["Resource\nVM · Storage · Key Vault · VNet"]
+
+    tenant --> mgRoot --> mg --> sub --> rg --> resource
+```
+
+Governance controls — Azure Policy and RBAC — applied at any level are inherited by all children.
+
 ## Hierarchy Design
 
 A well-designed management group hierarchy mirrors your organisational structure and access control requirements. All management groups reside under a single root (Tenant Root Group).

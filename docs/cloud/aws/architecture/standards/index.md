@@ -42,6 +42,22 @@ Region abbreviations: `euw1` = eu-west-1, `use1` = us-east-1, `apse1` = ap-south
 | SCP guardrails | Deny: root access without MFA, actions outside approved regions, disabling CloudTrail |
 | Permission boundary | Apply to all IAM roles created by automation |
 
+## S3 Object Lifecycle
+
+```mermaid
+flowchart LR
+    standard["S3 Standard\nFrequent access\n(day 0)"]
+    ia["S3 Standard-IA\nInfrequent access\n(day 30+)"]
+    glacier["S3 Glacier\nInstant Retrieval\n(day 90+)"]
+    deepArchive["S3 Glacier\nDeep Archive\n(day 180+)"]
+    expire["Object Expired\nDeleted by lifecycle rule"]
+
+    standard -->|"Transition rule\n≥ 30 days"| ia
+    ia -->|"Transition rule\n≥ 90 days"| glacier
+    glacier -->|"Transition rule\n≥ 180 days"| deepArchive
+    deepArchive -->|"Expiration rule"| expire
+```
+
 ## S3 Standards
 
 | Setting | Requirement |
@@ -74,6 +90,33 @@ flowchart TD
     iamAllow -- No --> resourcePolicy
     resourcePolicy -- Yes --> allow
     resourcePolicy -- No --> defaultDeny
+```
+
+## CloudFormation Stack Lifecycle
+
+```mermaid
+flowchart TD
+    template["Template\nYAML / JSON"]
+    validate["aws cloudformation validate-template"]
+    createStack["CREATE_IN_PROGRESS\naws cloudformation create-stack"]
+    createComplete["CREATE_COMPLETE\nStack resources provisioned"]
+    createFailed["CREATE_FAILED\nRollback triggered"]
+    rollbackComplete["ROLLBACK_COMPLETE\nResources removed"]
+    updateStack["UPDATE_IN_PROGRESS\naws cloudformation update-stack"]
+    updateComplete["UPDATE_COMPLETE\nChanges applied"]
+    updateFailed["UPDATE_ROLLBACK_COMPLETE\nPrevious state restored"]
+    deleteStack["DELETE_IN_PROGRESS\naws cloudformation delete-stack"]
+    deleteComplete["DELETE_COMPLETE\nStack removed"]
+
+    template --> validate --> createStack
+    createStack --> createComplete
+    createStack --> createFailed --> rollbackComplete
+    createComplete --> updateStack
+    updateStack --> updateComplete
+    updateStack --> updateFailed
+    createComplete --> deleteStack
+    updateComplete --> deleteStack
+    deleteStack --> deleteComplete
 ```
 
 ## Security Standards

@@ -28,6 +28,30 @@ flowchart TD
     avail --> compute
 ```
 
+## Azure VM Deployment Flow
+
+```mermaid
+flowchart TD
+    request["Deployment Request\nPortal · CLI · Terraform · ARM"]
+    rbacCheck["RBAC Check\nMicrosoft.Compute/virtualMachines/write"]
+    policyCheck["Azure Policy Evaluation\nallowed SKUs · location · tags"]
+    policyDeny["Deployment DENIED\npolicy non-compliant"]
+    armValidate["ARM Template Validation\nresource provider checks"]
+    resourceGroup["Resource Group\ncontainer for resources"]
+    subgraph provision["Provisioning"]
+        osDisk["OS Disk\nManaged Disk provisioned"]
+        nic["NIC\nIP allocated from subnet"]
+        compute["Compute\nVM SKU allocated in AZ"]
+    end
+    extensions["Extensions Applied\nMonitor Agent · Defender · Custom Script"]
+    running["VM Running\nProvisioning state: Succeeded"]
+
+    request --> rbacCheck --> policyCheck
+    policyCheck -- Non-compliant --> policyDeny
+    policyCheck -- Compliant --> armValidate --> resourceGroup --> provision
+    provision --> extensions --> running
+```
+
 ## Creating VMs
 
 ```bash

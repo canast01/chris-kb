@@ -101,8 +101,6 @@ flowchart TD
     selinuxCheck -- Yes --> allow --> object
 ```
 
-
-
 ### SELinux Modes
 
 ```bash
@@ -197,8 +195,6 @@ flowchart TD
     policyCheck -- Match --> allowed
     policyCheck -- No match (enforce) --> denied
 ```
-
-
 
 ```bash
 # Check status

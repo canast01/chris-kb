@@ -6,6 +6,44 @@ Active Directory integration, Kerberos, NTLM audit, LAPS, smart card, and Creden
 
 Windows Server uses Kerberos as the primary authentication protocol within an AD domain. NTLM is a legacy fallback used only when Kerberos is not available.
 
+### Kerberos Authentication Sequence
+
+```mermaid
+sequenceDiagram
+    participant client as Client\n(workstation)
+    participant kdc as KDC (Domain Controller)\nAS + TGS
+    participant server as Target Server\n(e.g. file server)
+
+    client->>kdc: AS-REQ — pre-auth (encrypted timestamp)
+    kdc-->>client: AS-REP — TGT + session key (encrypted with user secret)
+    client->>kdc: TGS-REQ — TGT + requested service SPN
+    kdc-->>client: TGS-REP — Service Ticket (encrypted with server secret)
+    client->>server: AP-REQ — Service Ticket + authenticator
+    server-->>client: AP-REP — mutual auth confirmation
+    client->>server: Application request (authorised session)
+```
+
+### AD / DNS Dependency
+
+```mermaid
+flowchart TD
+    dns["DNS Server\nSRV records for KDC · LDAP · GC"]
+    kdc["KDC\nKey Distribution Center\n(lsass.exe on DC)"]
+    ldap["LDAP\nDirectory queries\nport 389 / 636"]
+    netlogon["Netlogon\nDC locator · secure channel"]
+    client["Domain Member\nworkstation / server"]
+    ad["AD Database\nNTDS.dit"]
+
+    dns --> kdc
+    kdc --> ad
+    ldap --> ad
+    client -->|"DC locator via DNS"| dns
+    client -->|"Kerberos port 88"| kdc
+    client -->|"LDAP port 389"| ldap
+    client -->|"secure channel"| netlogon
+    netlogon --> kdc
+```
+
 ### Domain Join
 
 ```powershell

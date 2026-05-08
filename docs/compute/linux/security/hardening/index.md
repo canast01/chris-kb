@@ -2,6 +2,37 @@
 
 CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login.defs, and PAM password policy.
 
+## Linux Hardening Layers
+
+```mermaid
+flowchart TD
+    subgraph kernel["Kernel Hardening"]
+        sysctl["sysctl\nnetwork · ASLR · ptrace"]
+        secBoot["Secure Boot\nUEFI · GRUB password"]
+        mods["Kernel modules\ndisable unused FS/protocols"]
+    end
+    subgraph mac["Mandatory Access Control"]
+        selinux["SELinux\nRHEL — enforcing mode"]
+        apparmor["AppArmor\nUbuntu — enforce profiles"]
+    end
+    subgraph auth["Authentication Controls"]
+        pam["PAM\npwquality · faillock · access.conf"]
+        loginDefs["login.defs\npassword aging · umask"]
+        ssh["SSH\nPubkeyAuth · no root login"]
+    end
+    subgraph audit["Audit and Monitoring"]
+        auditd["auditd\nsyscall · file · identity events"]
+        logFwd["rsyslog / syslog-ng\nSIEM forwarding"]
+    end
+    subgraph fs["Filesystem Hardening"]
+        mntOpts["Mount options\nnoexec · nosuid · nodev"]
+        chattr["chattr +i\nimmutable critical files"]
+    end
+
+    kernel --> mac --> auth --> audit
+    fs --> audit
+```
+
 ## CIS Benchmark Baseline
 
 The CIS (Center for Internet Security) Benchmark for Linux provides a prioritised set of controls. Level 1 covers essential, low-risk hardening; Level 2 is for high-security environments.
