@@ -1,19 +1,35 @@
-# CyberArk Operations
+# CyberArk — Operations
 
-Daily operations focus on confirming that the Vault service is running, CPM is successfully rotating passwords, PSM is brokering sessions without errors, and no critical accounts are in a failed rotation state. Check the PVWA dashboard for failed rotation jobs (red accounts), CPM heartbeat status, and DR replication lag each morning. Weekly, review session recording storage capacity to ensure sufficient space for recordings retention.
+<div class="kb-grid kb-grid-3">
 
-**Daily checks:**
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>PACLI, REST API, and CyberArk command reference.</span>
+</a>
 
-- Vault service health: confirm `PrivateArk Server` service is running on primary and DR
-- CPM heartbeat: PVWA → Administration → System Health → CPM status green
-- PSM health: PVWA → Administration → System Health → PSM status green
-- Failed rotation jobs: PVWA → Accounts → filter by "Rotation failed" status
-- DR Vault replication: confirm `replication lag = 0` in Vault DR dashboard
-- Safe utilisation: flag safes approaching 10,000 object limit
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily checks, vault health, and status verification.</span>
+</a>
 
-**Weekly checks:**
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Account management, password rotation, and session procedures.</span>
+</a>
 
-- Session recording storage capacity (target: >30% free)
-- Review new safe creation requests against naming standards
-- Confirm CPM platform configurations are up to date
-- Audit users with "Vault Admin" role for any additions
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>Version matrix, upgrade paths, and lifecycle management.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>Vault backup procedures and restore workflows.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for account management and health checks.</span>
+</a>
+
+</div>

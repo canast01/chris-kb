@@ -1,18 +1,35 @@
-# CommVault Operations
+# Commvault — Operations
 
-Daily CommVault operations begin in the Job Controller (Command Center or Java GUI) to review all jobs from the previous 24 hours. Failed jobs display a status code — hovering reveals a description, and the job detail view shows phase-level failure logs. MediaAgent connectivity status and library health (if tape is in use) must be checked each morning, as a downed MediaAgent silently prevents any job targeting its storage pools from running. DDB space must be monitored closely; a full DDB causes all deduplication-enabled jobs to fail.
+<div class="kb-grid kb-grid-3">
 
-**Daily Checklist**
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>qcommand, qlist, qoperation, REST API, and job management.</span>
+</a>
 
-- [ ] Job Controller — review all Failed and Pending jobs from last 24 hours
-- [ ] Alert Console — clear or acknowledge resolved alerts; investigate new ones
-- [ ] MediaAgent status — all MediaAgents online and communicating with CommServe
-- [ ] Library status (if tape) — all drives online; no media errors
-- [ ] DDB space — `qlist ddb` or Command Center Storage > Deduplication; alert if <20% free
-- [ ] CommServe DB backup — confirm it completed last night
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily checks, job review, MediaAgent health, and DDB monitoring.</span>
+</a>
 
-**Weekly**
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Change readiness, maintenance windows, and operational procedures.</span>
+</a>
 
-- Verify auxiliary copy jobs ran successfully for all secondary copy pools
-- Review SLA reports in Command Center — identify any clients below SLA threshold
-- Run DDB verification on any DDB that has not been verified in the last 7 days
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>Version matrix, upgrade workflow, and lifecycle management.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>Backup policies, restore procedures, and recovery validation.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for health checks and operations.</span>
+</a>
+
+</div>

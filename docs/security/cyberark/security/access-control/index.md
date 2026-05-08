@@ -1,0 +1,31 @@
+# CyberArk — Access Control
+
+All production safes enforce dual-control to prevent unilateral credential access. Safe access is managed via AD group membership mapped to Vault roles.
+
+| Control | Implementation |
+|---|---|
+| Dual-control for PROD | Enforced via Master Policy; requires approver in PVWA before retrieval |
+| Master Policy review | Quarterly review of base policy and platform-specific overrides |
+| Vault DR access | DR Vault is read-only replica; promotion only during declared disaster |
+
+## AD Groups and Vault Roles
+
+| AD Group | Vault Role |
+|---|---|
+| `GG_CyberArk_Auditors` | Auditors role — read-only access to all safes |
+| `GG_CyberArk_SafeOwners` | Safe Owner role — manage assigned safes |
+| `GG_CyberArk_VaultAdmins` | Vault Admins — full administrative rights |
+
+## Safe Standards
+
+| Standard | Value |
+|---|---|
+| Safe naming | `ENV-TEAM-PURPOSE` |
+| Domain account naming | `username@domain.fqdn` |
+| Local account naming | `local-admin@hostname` |
+| Dual-control enforcement | Required for all PROD safes |
+| Service account rotation | 90 days |
+| Admin account rotation | 60 days |
+| Root / local admin rotation | 30 days |
+| Max safe member count | 20 (review if exceeded) |
+| Master Policy base | Require dual control, enforce check-in/out |

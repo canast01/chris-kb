@@ -1,8 +1,4 @@
-# Dell PowerStore
-
-<div class="kb-summary">
-Mid-range all-flash unified storage — block and file with AppsON container-native apps, intelligent automation, NVMe-oF, and inline data reduction for general-purpose and virtualised workloads.
-</div>
+# PowerStore
 
 <div class="kb-grid kb-grid-3">
 
@@ -13,7 +9,7 @@ Mid-range all-flash unified storage — block and file with AppsON container-nat
 
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
-  <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>
+  <span>CLI reference, health checks, procedures, lifecycle, and scripts.</span>
 </a>
 
 <a class="kb-card" href="security/">

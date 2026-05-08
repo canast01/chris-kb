@@ -1,18 +1,35 @@
-# NetBackup Operations
+# NetBackup — Operations
 
-Daily operational checks form the baseline for a healthy NetBackup environment. Run `bpjobs -summary` each morning to get a count of successful, failed, and active jobs, then investigate any failed jobs using `bpdbjobs -report -failed` to retrieve detailed status codes and error messages. Verify the catalog backup completed successfully — catalog loss is unrecoverable — and review storage unit disk usage via `bpstulist -label <stu>` to ensure no units are near capacity. Confirm media server connectivity by checking `bptestbpcd` against each media server from the master.
+<div class="kb-grid kb-grid-3">
 
-**Daily Checklist**
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>bpbackup, bprestore, bpadm, nbstatus, and admin commands.</span>
+</a>
 
-- [ ] `bpjobs -summary` — review totals; zero failed is the target
-- [ ] `bpdbjobs -report -failed -hoursago 24` — investigate each failure
-- [ ] Confirm catalog backup job completed successfully
-- [ ] `bpstulist` — check `Total Capacity` vs `Free Space` on all disk STUs
-- [ ] `nbemmcmd -listhosts` — verify all media servers are registered and reachable
-- [ ] OpsCenter / Admin Console — review any active alerts
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily checks, job monitoring, and status verification.</span>
+</a>
 
-**Weekly**
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Backup policies, restore procedures, and validation workflows.</span>
+</a>
 
-- Verify tape media inventory if tape library in use (`tpconfig -d`, `vmquery -b`)
-- Review policy schedule calendar for upcoming full backup windows
-- Confirm deduplication ratio on OST storage units (Data Domain DDOS UI)
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>Version matrix, upgrade paths, and lifecycle management.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>Restore procedures and recovery workflows.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for NetBackup operations.</span>
+</a>
+
+</div>
