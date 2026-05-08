@@ -29,16 +29,14 @@ self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
   if (url.hostname !== self.location.hostname) return;
 
+  // Network-first: always fetch fresh content, cache for offline fallback
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(res => {
-        if (res.ok) {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
-        }
-        return res;
-      }).catch(() => caches.match(OFFLINE));
-    })
+    fetch(e.request).then(res => {
+      if (res.ok) {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+      }
+      return res;
+    }).catch(() => caches.match(e.request).then(cached => cached || caches.match(OFFLINE)))
   );
 });
