@@ -6,6 +6,59 @@ SRDF/S issues typically manifest as pair state transitions away from `Synchroniz
 
 Always collect `symrdf query -g <group> -v` and array event logs before engaging Dell support.
 
+## Link-Down Recovery Decision Tree
+
+```mermaid
+flowchart TD
+    linkAlert["Alert: SRDF/S Link Down\nor Pairs not Synchronized"]
+    checkPairState["Check Pair State\nsymrdf -g dgname -sid sid query"]
+    pairStateVal{"Pair State?"}
+    writeDisabled["Write Disabled\n→ Array stopped writes\nto protect consistency"]
+    invalidState["Invalid State\n→ Possible data divergence"]
+    suspended["Suspended\n→ Link dropped or manual suspend"]
+    partitioned["Partitioned\n→ Link interrupted mid-transfer"]
+
+    checkPhysLink["Check Physical Link\nFCIP tunnel / dark fibre state"]
+    linkUp{"Link\nRestored?"}
+    checkRTT["Check RTT\nping -c 20 dr-site-ip"]
+    rttNormal{"RTT ≤ 5ms?"}
+    resumePair["Resume Pair\nsymrdf -g dgname -sid sid resume -noprompt"]
+    resyncPair["Resync Pair\nsymrdf -g dgname -sid sid resync -noprompt"]
+    monitorSync["Monitor SyncInProg\nuntil Synchronized"]
+    checkDataAuth["Identify Authoritative Side\nDo NOT resync without confirming"]
+    engageSupport["Engage Dell Support\nData consistency risk"]
+    escalateNet["Escalate to Network Team\nRTT still elevated"]
+
+    linkAlert --> checkPairState
+    checkPairState --> pairStateVal
+    pairStateVal -->|"Write Disabled"| writeDisabled
+    pairStateVal -->|"Invalid"| invalidState
+    pairStateVal -->|"Suspended"| suspended
+    pairStateVal -->|"Partitioned"| partitioned
+
+    writeDisabled --> checkPhysLink
+    suspended --> checkPhysLink
+    partitioned --> checkPhysLink
+
+    checkPhysLink --> linkUp
+    linkUp -->|"Yes"| checkRTT
+    linkUp -->|"No"| escalateNet
+    checkRTT --> rttNormal
+    rttNormal -->|"Yes — Write Disabled / Suspended"| resyncPair
+    rttNormal -->|"Yes — Partitioned"| resumePair
+    rttNormal -->|"No"| escalateNet
+    resyncPair --> monitorSync
+    resumePair --> monitorSync
+    invalidState --> checkDataAuth
+    checkDataAuth --> engageSupport
+
+    style linkAlert fill:#be123c,color:#fff
+    style monitorSync fill:#15803d,color:#fff
+    style engageSupport fill:#be123c,color:#fff
+    style escalateNet fill:#b45309,color:#fff
+    style checkDataAuth fill:#be123c,color:#fff
+```
+
 ---
 
 ## High Host Write Latency

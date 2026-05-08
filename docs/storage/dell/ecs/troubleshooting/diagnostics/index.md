@@ -4,6 +4,33 @@
 
 ECS diagnostics span three layers: the Management REST API (cluster-level health and configuration), node-level SSH access (OS and service health), and the S3 API (data path functional testing). Start with the REST API — it provides the fastest cluster-wide view — then drill into SSH-level diagnostics for specific node or service issues.
 
+```mermaid
+graph TD
+  START(["Incident reported"]) --> REST["REST API Layer\nGET /vdc/nodes · /vdc/alerts\n/vdc/capacity · /vdc/geo-replication/status"]
+  REST --> NODE_OK{All nodes\nGOOD?}
+  NODE_OK -->|No| SSH["SSH to affected node\nsystemctl status storageos\ndf -h /data/ · lsblk"]
+  SSH --> DISK_F{Disk\nFAILED?}
+  DISK_F -->|Yes| REPLACE["Initiate disk replacement\nvia Portal guided procedure"]
+  DISK_F -->|No| SRVC{Service\nrunning?}
+  SRVC -->|No| RESTART["Investigate service logs\n/var/log/ecs/\nOpen Dell case if unresolved"]
+  SRVC -->|Yes| CASS["Check Cassandra\nnodetool status (all UN?)"]
+  NODE_OK -->|Yes| S3TEST["S3 API test\naws s3api head-bucket"]
+  S3TEST --> S3OK{200 OK?}
+  S3OK -->|No| AUTH["S3 Access Denied?\nCheck: IAM user · bucket policy\naddressing style · namespace"]
+  S3OK -->|Yes| GEOREP["Check geo-replication lag\nGET /vdc/geo-replication/status"]
+  GEOREP --> LAG{Lag\ngrowing?}
+  LAG -->|Yes| WAN["Check WAN bandwidth :9100\nConfirm remote VDC health\nAdjust replication throttle"]
+  LAG -->|No| BUNDLE["Collect support bundle\nOpen Dell case"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class NODE_OK,DISK_F,SRVC,S3OK,LAG decision
+  class REST,SSH,CASS,S3TEST,AUTH,GEOREP,BUNDLE action
+  class REPLACE,RESTART,WAN warn
+  class START term
+```
+
 ## Management API Diagnostics
 
 ```bash

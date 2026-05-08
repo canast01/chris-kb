@@ -4,6 +4,40 @@
 
 ---
 
+## SRDF/S Triage Flow
+
+```mermaid
+flowchart TD
+    alert["Alert or Issue Reported"]
+    collectState["Collect Pair State\nsymrdf query -g group -v"]
+    pairOk{"Pairs\nSynchronized?"}
+    collectEvents["Collect Array Events\nsymevent list -sid SID -type rdf -last 100"]
+    collectRTT["Measure WAN RTT\nping -c 20 dr-site-ip"]
+    rttOk{"RTT ≤ 5ms?"}
+    collectLinkStats["Collect Link Stats\nsymstat -sid sid -type rdf -v"]
+    notifyNetwork["Notify Network Team\nRTT exceeds SRDF/S budget"]
+    bundleDiags["Bundle Diagnostics\nsymrdf query > diag.txt"]
+    openSupport["Open Dell SR if\nno clear root cause"]
+    resolved["Resolved\nDocument in incident ticket"]
+
+    alert --> collectState
+    collectState --> pairOk
+    pairOk -->|"No"| collectEvents
+    pairOk -->|"Yes — latency issue"| collectRTT
+    collectEvents --> collectRTT
+    collectRTT --> rttOk
+    rttOk -->|"No"| notifyNetwork
+    rttOk -->|"Yes"| collectLinkStats
+    collectLinkStats --> bundleDiags
+    notifyNetwork --> bundleDiags
+    bundleDiags --> openSupport
+    openSupport --> resolved
+
+    style alert fill:#be123c,color:#fff
+    style resolved fill:#15803d,color:#fff
+    style notifyNetwork fill:#b45309,color:#fff
+```
+
 ## Initial Data Collection
 
 Always collect these before engaging Dell support or escalating:

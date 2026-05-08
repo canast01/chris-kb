@@ -59,6 +59,33 @@
 - [ ] Service account credentials still valid and not expiring within 14 days
 - [ ] Module versions on target hosts match the expected baseline
 
+## PowerShell Error Handling Flow
+
+```mermaid
+flowchart TD
+    scriptStart["Script Execution\n($ErrorActionPreference = Stop)"]
+    tryBlock["try { ... }"]
+    cmdRun["Cmdlet / Command\nExecutes"]
+    success["Command succeeds\n(continue)"]
+    termErr["Terminating Error\nthrown"]
+    catchBlock["catch { ... }\n(inspect $_.Exception)"]
+    logError["Write-Error / Out-File\n(log error to file)"]
+    sendAlert["Send-MailMessage\nor webhook alert"]
+    finallyBlock["finally { ... }\n(cleanup / Stop-Transcript)"]
+    exitCode["exit 1\n(non-zero signals failure)"]
+
+    scriptStart --> tryBlock
+    tryBlock --> cmdRun
+    cmdRun -->|OK| success
+    cmdRun -->|Error| termErr
+    termErr --> catchBlock
+    catchBlock --> logError
+    logError --> sendAlert
+    sendAlert --> finallyBlock
+    success --> finallyBlock
+    finallyBlock --> exitCode
+```
+
 ## Reports
 
 CSV exports are the simplest way to produce shareable tabular data.

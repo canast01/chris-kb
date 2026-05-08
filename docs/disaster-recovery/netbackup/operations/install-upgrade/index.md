@@ -14,6 +14,32 @@ Check lifecycle dates at: [sort.veritas.com](https://sort.veritas.com) → EOL d
 
 ## Upgrade Order
 
+### Upgrade Dependency Chain
+
+```mermaid
+flowchart TD
+    start(["Start upgrade window"])
+    start --> catBackup["Force catalog backup\nbpbackup -i -h <master> -p NBU_Catalog_Backup\nVerify completion"]
+    catBackup --> catOK{"Catalog backup\ncomplete?"}
+    catOK -->|No| halt["STOP — catalog must be\nbacked up before proceeding"]
+    catOK -->|Yes| eebReview["Review EEB register\nNote which EEBs\nsuperseded by this upgrade"]
+    eebReview --> masterUpgrade["Upgrade Primary Server\nAll media servers can still backup\nduring master upgrade (N-1 supported)"]
+    masterUpgrade --> masterVerify["bpclntcmd -self\nVerify master server version"]
+    masterVerify --> mediaUpgrade["Upgrade Media Servers\none at a time\nbpclntcmd -hn <ms> -chk after each"]
+    mediaUpgrade --> clientUpgrade["Upgrade Clients\npush from Admin Console\nor manual per client"]
+    clientUpgrade --> postValid["Post-upgrade validation:\nbpdbm -consistency_check\nbpbackup test run"]
+    postValid --> done(["Upgrade complete"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef warn fill:#be123c,stroke:#9f1239,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class catBackup,eebReview,masterUpgrade,masterVerify,mediaUpgrade,clientUpgrade,postValid action
+    class catOK decision
+    class halt warn
+    class start,done terminal
+```
+
 **Critical: always upgrade Master Server first.**
 
 1. **Pre-upgrade**: Run catalog backup; verify it completes successfully

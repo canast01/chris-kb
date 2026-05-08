@@ -4,6 +4,24 @@
 
 Verify these items before performing any VPLEX change — GeoSynchrony upgrades, director replacements, back-end storage changes, or storage view modifications.
 
+```mermaid
+flowchart TD
+    startChange(["Maintenance window requested"])
+    ddCheck["ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices health-state: ok?"]
+    witnessChk["ll /metro-node/*/witness/\nWitness connected from both clusters?"]
+    cgChk["ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?"]
+    hostPathChk["powermt display dev=all\nmultipath -ll\nHost path counts match baseline?"]
+    arrayChk["Back-end array health check\nPowerMax / Unity"]
+    vmsBackup["VMS VM backup\ncurrent snapshot taken?"]
+    proceed{All checks pass?}
+    holdChange["Do not proceed\nResolve issues first"]
+    doChange(["Execute maintenance\nprocedure"])
+
+    startChange --> ddCheck --> witnessChk --> cgChk --> hostPathChk --> arrayChk --> vmsBackup --> proceed
+    proceed -->|No| holdChange
+    proceed -->|Yes| doChange
+```
+
 - [ ] `ll /distributed-storage/distributed-devices/*/health-indications/` — all distributed devices show `health-state: ok`; do not start a change with any device out-of-sync
 - [ ] Witness is reachable from both Metro clusters: `ll /metro-node/*/witness/` — loss of Witness during a change that takes a cluster offline will suspend I/O on consistency group volumes
 - [ ] All consistency groups show `operational-status: ok`: `ll /distributed-storage/consistency-groups/`
@@ -125,6 +143,29 @@ VPLEX Metro stretches virtual volumes across two sites with synchronous mirrorin
 - **WAN COM** — inter-cluster communication link (Fibre Channel or Ethernet)
 - **Distributed Devices** — virtual volumes that span both clusters
 - **Witness** — third-party tiebreaker for split-brain scenarios
+
+```mermaid
+flowchart TD
+    iclFails(["ICL failure detected"])
+    witnessChk["Does Witness contact\nboth clusters?"]
+    witnessGrants["Witness grants quorum\nto first requesting cluster"]
+    survivorIo["Surviving cluster\ncontinues I/O normally"]
+    otherSuspend["Other cluster distributed\ndevice legs suspended"]
+    iclRestore["ICL restored"]
+    autoResync["VPLEX auto-resync\nrebuild-progress → 100%"]
+    inSync(["Distributed device\nin-sync — Metro restored"])
+    noWitness["Both clusters unsure\nof each other's state"]
+    ioSuspend["I/O suspended on\nall CG volumes"]
+    manualRecover["Manual recovery\nidentify active leg\ndevice resume"]
+
+    iclFails --> witnessChk
+    witnessChk -->|"Witness reachable"| witnessGrants
+    witnessGrants --> survivorIo
+    witnessGrants --> otherSuspend
+    survivorIo --> iclRestore --> autoResync --> inSync
+    witnessChk -->|"Witness also unreachable"| noWitness
+    noWitness --> ioSuspend --> manualRecover
+```
 
 ### Check Distributed Device Status
 

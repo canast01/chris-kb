@@ -347,6 +347,26 @@ Get-ADPrincipalGroupMembership -Identity "DC01$" | Select-Object Name
 
 GPOs apply configuration to computers and users in AD. They are linked to Sites, Domains, or OUs and processed in that order (SDOU). Understanding GPO inheritance, filtering, and result sets is essential for managing policy reliably.
 
+## GPO Processing Order (SDOU)
+
+```mermaid
+graph TD
+    local["1. Local Policy\n(machine-local, lowest priority)"]
+    site["2. Site GPOs\n(physical site — rarely used)"]
+    domain["3. Domain GPOs\n(domain-wide defaults)"]
+    ou["4. OU GPOs\n(parent OU — inherited)"]
+    childOU["5. Child OU GPOs\n(closest OU — highest priority)"]
+
+    local -->|"overridden by"| site
+    site -->|"overridden by"| domain
+    domain -->|"overridden by"| ou
+    ou -->|"overridden by"| childOU
+
+    enforced["Enforced GPO\n(No Override — cannot be blocked)"]
+    blockInherit["Block Inheritance OU\n(blocks parent GPOs except Enforced)"]
+    enforced -. "bypasses block" .-> blockInherit
+```
+
 ### GPO Processing Order
 
 | Level | Priority (low to high) | Notes |

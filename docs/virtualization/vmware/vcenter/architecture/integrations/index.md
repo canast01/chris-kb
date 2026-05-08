@@ -38,6 +38,37 @@ Register VASA providers: **vCenter → Storage → Storage Providers → Add**
 
 VADP is the standard backup API. Backup solutions use VADP to take crash-consistent or application-consistent snapshots without requiring an agent inside each VM.
 
+```mermaid
+graph TD
+    backupSrv["Backup Server\n(Veeam / Commvault)"]
+    vcenter["vCenter\n(VADP API)"]
+    proxy["Backup Proxy VM\n(on same cluster)"]
+    targetVM["Protected VM\n(snapshot via CBT)"]
+    backupRepo["Backup Repository\n(SFTP / S3 / disk)"]
+
+    subgraph "Hot-Add (preferred)"
+        proxy -->|"mount VMDK directly"| targetVM
+    end
+
+    subgraph "NBD / NBDSSL (fallback)"
+        proxy2["Backup Proxy"] -->|"network transfer\nover management LAN"| targetVM2["Protected VM"]
+    end
+
+    backupSrv --> vcenter
+    vcenter --> proxy
+    proxy --> backupRepo
+
+    classDef server fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef proxy fill:#15803d,stroke:#166534,color:#fff
+    classDef vm fill:#b45309,stroke:#92400e,color:#fff
+    classDef repo fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class backupSrv,vcenter server
+    class proxy,proxy2 proxy
+    class targetVM,targetVM2 vm
+    class backupRepo repo
+```
+
 **Supported backup proxy modes:**
 - **Hot-add** (preferred) — backup proxy VM mounts target VM disks directly; highest performance
 - **NBD/NBDSSL** — network-based transfer over LAN; fallback mode
