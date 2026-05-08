@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>PowerScale — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="PowerScale — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="PowerScale — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#powerscale-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              PowerScale — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,216 +717,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Dell PowerScale</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>isi status</code></td>
-<td><code>isi status</code></td>
-<td>confirm all nodes show <code>ONLINE</code> and no node is in <code>SMARTFAIL</code> or <code>DOWN</code> state; note any drive alerts</td>
-</tr>
-<tr>
-<td>[ ] Run <code>isi job list</code></td>
-<td><code>isi job list</code></td>
-<td>confirm no active cluster jobs are in <code>ERROR</code> or <code>PAUSED</code> state; note unusually long-running Restripe or MultiScan jobs</td>
-</tr>
-<tr>
-<td>[ ] Check SyncIQ policies</td>
-<td><code>isi sync policies list</code></td>
-<td>confirm each policy shows <code>Last Success</code> with a timestamp within the expected RPO window</td>
-</tr>
-<tr>
-<td>[ ] Review recent events</td>
-<td><code>isi event list --limit 20</code></td>
-<td>triage any CRITICAL or ERROR severity events</td>
-</tr>
-<tr>
-<td>[ ] Check storage pool capacity</td>
-<td><code>isi storagepool list</code></td>
-<td>alert if any pool or tier exceeds 80% used</td>
-</tr>
-<tr>
-<td>[ ] Check SmartQuota violations</td>
-<td><code>isi quota quotas list</code></td>
-<td>look for directories that have exceeded soft or hard thresholds</td>
-</tr>
-<tr>
-<td>[ ] Review InsightIQ or CloudIQ for performance anomalies</td>
-<td></td>
-<td>flag any node with sustained CPU utilisation above 85% or latency spikes</td>
-</tr>
-<tr>
-<td>[ ] Confirm SyncIQ RPO compliance by checking <code>isi sync reports list - |</code>isi sync reports list --limit 5`</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<p>Run these checks before any maintenance or change, or as first steps when investigating a reported issue.</p>
-<ul>
-<li>[ ] <code>isi status</code> — cluster health summary, node states, and drive health are all clean (no SMARTFAIL, no DOWN, no drive faults)</li>
-<li>[ ] <code>isi storagepool list</code> — all pools and tiers are below 80% used; confirm SmartPool tiering policies are active</li>
-<li>[ ] <code>isi job list</code> — no jobs in ERROR or unexpectedly PAUSED; note any job running longer than its typical duration</li>
-<li>[ ] <code>isi sync reports list --limit 5</code> — most recent SyncIQ reports for all policies show SUCCESS; check for policies with repeated failures</li>
-<li>[ ] <code>isi event list</code> — no unacknowledged CRITICAL events in the last 24 hours</li>
-<li>[ ] <code>isi license list</code> — all required licenses (SmartQuotas, SyncIQ, SmartPools, SnapshotIQ) are valid and not near expiry</li>
-<li>[ ] <code>isi network subnets list</code> — SmartConnect zones are configured correctly and DNS delegation is in place</li>
-<li>[ ] <code>isi statistics query current --keys CPU</code> — no individual nodes showing sustained CPU saturation</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Overall cluster node and drive health summary</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>status
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all storage pool tiers and their capacity usage</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>list
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List active and recent cluster background jobs</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>job<span class="w"> </span>list
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List SyncIQ policies and their last run status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show the 5 most recent SyncIQ replication reports</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all cluster events (triage CRITICAL severity first)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>isi<span class="w"> </span>event<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># List all SmartQuota entries including directories near threshold</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Query current per-node CPU utilisation</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>current<span class="w"> </span>--keys<span class="w"> </span>CPU
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show installed OneFS version and license status</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>isi<span class="w"> </span>license<span class="w"> </span>list
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<p>Verify these items before performing any change on a PowerScale cluster — node additions, OneFS upgrades, SyncIQ policy changes, or quota modifications.</p>
-<ul>
-<li>[ ] <code>isi status</code> is clean — no SMARTFAIL nodes, no DOWN nodes, no unacknowledged drive faults</li>
-<li>[ ] SyncIQ policies are in a successful or idle state — <code>isi sync policies list</code> shows no policies in ERROR; pause scheduled policies during the change window if needed</li>
-<li>[ ] Quota headroom confirmed — <code>isi quota quotas list</code> shows no directories at or above hard threshold before the change</li>
-<li>[ ] No active cluster jobs that would conflict: <code>isi job list</code> — Restripe, MultiScan, and FSAnalyze should not be running during major changes</li>
-<li>[ ] Snapshot reserve space is within limits — <code>isi snapshot list</code> confirms no unexpected snapshot accumulation consuming pool headroom</li>
-<li>[ ] Confirm OneFS version is within the supported upgrade path if this is a software change (Dell upgrade compatibility matrix)</li>
-<li>[ ] Inform NFS and SMB client teams of the change window; confirm application quiesce plan if node-level work is planned</li>
-<li>[ ] If removing or SmartFailing a node, confirm the cluster has sufficient capacity to absorb the restripe</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>isi status clean (no SMARTFAIL / DOWN)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SyncIQ policies idle or paused</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No active conflicting cluster jobs</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Quota headroom confirmed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Snapshot reserve within limits</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p>When clients report NFS/SMB errors, SyncIQ failures, or a node is unreachable, work through this sequence first.</p>
-<ul>
-<li>[ ] Run <code>isi status</code> immediately — confirm which nodes and drives are in a fault state; note SMARTFAIL nodes, DOWN nodes, and drive error counts</li>
-<li>[ ] Run <code>isi event list --limit 20</code> — find CRITICAL or ERROR events timestamped near the start of the incident; note the event code and description</li>
-<li>[ ] Check SyncIQ if the report involves replication failures: <code>isi sync policies list</code> and <code>isi sync reports list --limit 5</code> — identify the failing policy and the error message in the report</li>
-<li>[ ] Check quota violations if clients report write failures: <code>isi quota quotas list</code> — identify directories at or above hard threshold</li>
-<li>[ ] Verify network connectivity for client-facing interfaces: <code>isi network subnets list</code> — confirm all SmartConnect zones and IP pools are intact</li>
-<li>[ ] Check cluster job status: <code>isi job list</code> — a long-running Restripe after a node SMARTFAIL can cause elevated latency across the cluster</li>
-<li>[ ] Review per-node statistics for the affected time window: <code>isi statistics query current --keys CPU</code> and <code>isi statistics query current --keys DISK</code></li>
-<li>[ ] If a node is DOWN, do not manually remove it — open a Dell support case and monitor <code>isi job list</code> for Restripe progress</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which nodes are SMARTFAIL or DOWN in isi status?</td>
-<td></td>
-</tr>
-<tr>
-<td>What CRITICAL events appear in isi event list?</td>
-<td></td>
-</tr>
-<tr>
-<td>Which SyncIQ policies are failing and what is the error?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are any quota directories at or above hard threshold?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is a Restripe job running and what is its progress?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p>Steps for planned maintenance on a PowerScale cluster — node SmartFail, OneFS upgrade, or network reconfiguration.</p>
-<ol>
-<li>Notify NFS and SMB client teams; confirm the maintenance window and coordinate any application quiesce if node-level work is planned</li>
-<li>Confirm <code>isi status</code> is clean — no SMARTFAIL, no DOWN nodes, no unresolved drive faults before starting</li>
-<li>Pause all SyncIQ scheduled policies to prevent replication from running during the change: <code>isi sync policies modify &lt;name&gt; --enabled false</code> for each active policy</li>
-<li>If adding or removing a node, confirm the cluster has sufficient capacity headroom in <code>isi storagepool list</code> to absorb the restripe without crossing 80% used</li>
-<li>To SmartFail a node for planned maintenance: <code>isi devices node smartfail &lt;node-lnn&gt;</code> — monitor Restripe job progress in <code>isi job list</code> until complete before physically servicing the node</li>
-<li>Perform the change per the approved runbook</li>
-<li>After the change, run <code>isi status</code> to confirm all nodes are back ONLINE and drive health is clean</li>
-<li>Re-enable SyncIQ policies: <code>isi sync policies modify &lt;name&gt; --enabled true</code>; trigger a manual run with <code>isi sync policies run &lt;name&gt;</code> and confirm SUCCESS before closing the window</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<p>Run these checks after any change to confirm the cluster is healthy and client services have resumed normally.</p>
-<ul>
-<li>[ ] <code>isi status</code> — all nodes ONLINE, no SMARTFAIL, no DOWN, no drive faults introduced by the change</li>
-<li>[ ] <code>isi storagepool list</code> — all pools and tiers below 80% used; Restripe job completed if a node was added or removed</li>
-<li>[ ] <code>isi sync policies list</code> — all SyncIQ policies re-enabled and showing a successful run after the change</li>
-<li>[ ] <code>isi event list --limit 20</code> — no new CRITICAL events introduced by the change</li>
-<li>[ ] NFS and SMB client connectivity verified from at least one representative client per access zone</li>
-<li>[ ] Snapshot schedules running as expected: <code>isi snapshot schedules list</code></li>
-<li>[ ] Quota thresholds intact: <code>isi quota quotas list</code> shows no unexpected threshold exceedances introduced by the change</li>
-<li>[ ] CloudIQ or InsightIQ shows no new performance anomalies in the post-change window</li>
-</ul>
+<h1 id="powerscale-operations">PowerScale — Operations<a class="headerlink" href="#powerscale-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Routine checks, service validation, and status verification.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Day-to-day operational tasks and how-to guides.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Installation, upgrade, patching, and decommission.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Backup configuration, restore procedures, and validation.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts and reusable code.</span>
+</a>
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Commands, syntax, and quick reference.</span>
+</a>
+
+</div>
 
 
 

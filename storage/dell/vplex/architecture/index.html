@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell VPLEX Architecture - Chris KB</title>
+        <title>Dell VPLEX — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Dell VPLEX Architecture · Chris KB">
+  <meta property="og:title" content="Dell VPLEX — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dell VPLEX Architecture · Chris KB">
+  <meta name="twitter:title" content="Dell VPLEX — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell VPLEX Architecture
+              Dell VPLEX — Architecture
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-federation-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Federation Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing Guidelines
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,151 +717,13 @@
 
 
 
-<h1 id="dell-vplex-architecture">Dell VPLEX Architecture<a class="headerlink" href="#dell-vplex-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell VPLEX is a storage virtualisation and federation platform that presents unified virtual volumes to hosts from one or more heterogeneous backend storage arrays. VPLEX abstracts physical storage into virtual volumes, enabling live data mobility between arrays, active-active block storage access across sites, and non-disruptive migration without host changes. VPLEX is deployed as a set of director pairs, each running the GeoSynchrony software stack. Management is via the <code>vplexcli</code> command-line interface or Unisphere for VPLEX web GUI.</p>
-<h2 id="storage-federation-topology">Storage Federation Topology<a class="headerlink" href="#storage-federation-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  H1(["Hosts Site A"]) --&gt; DIR1["VPLEX Director Pair\nCluster 1 — Site A"]
-  H2(["Hosts Site B"]) --&gt; DIR2["VPLEX Director Pair\nCluster 2 — Site B"]
-  DIR1 &lt;--&gt;|"WAN link\nGeoSynchrony"| DIR2
-  DIR1 --&gt; STG1[("Local Storage A")]
-  DIR2 --&gt; STG2[("Local Storage B")]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class DIR1,DIR2 ctrl
-  class STG1,STG2 store
-  class H1,H2 host</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VPLEX Director</td>
-<td>The core processing unit; each director has front-end FC ports (to hosts), back-end FC ports (to storage arrays), and a write cache module</td>
-</tr>
-<tr>
-<td>Director Pair</td>
-<td>Two directors in a chassis share a common cache over a high-speed interconnect; a director pair is the minimum HA unit</td>
-</tr>
-<tr>
-<td>Engine</td>
-<td>A VPLEX chassis containing one or two director pairs</td>
-</tr>
-<tr>
-<td>VPLEX VS2</td>
-<td>Single-cluster deployment (one or two engines at one site) for local virtualisation and data mobility</td>
-</tr>
-<tr>
-<td>VPLEX Metro</td>
-<td>Two-cluster deployment across two sites with synchronous cache mirroring (&lt;5ms RTT); provides active-active access with zero RPO</td>
-</tr>
-<tr>
-<td>VPLEX Geo</td>
-<td>Two-cluster deployment for longer distances using asynchronous replication via RecoverPoint; for DR, not active-active</td>
-</tr>
-<tr>
-<td>Witness</td>
-<td>A lightweight VM deployed at a third site that acts as a tiebreaker for VPLEX Metro quorum decisions</td>
-</tr>
-<tr>
-<td>VPLEX Management Server (VMS)</td>
-<td>A VM that hosts the management console and <code>vplexcli</code>; does not participate in the data path</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p><strong>Single site (VS2 / Local):</strong></p>
-<ul>
-<li>Director pairs provide N+1 redundancy within a site — one director can fail without interrupting I/O.</li>
-<li>Cache within a director pair is mirrored; losing one director does not lose write data.</li>
-<li>Backend arrays connect to both directors in a pair for multipath redundancy.</li>
-</ul>
-<p><strong>Metro (active-active, two sites):</strong></p>
-<ul>
-<li>Distributed devices span both clusters; each site has a complete copy of the data (synchronous mirroring).</li>
-<li>Hosts at both sites access the same distributed device simultaneously with full read/write capability.</li>
-<li>If one cluster becomes unreachable, the Witness determines which cluster continues serving I/O (quorum). Without a Witness, a cluster partition causes both sites to suspend I/O.</li>
-<li>Inter-Cluster Link (ICL) carries write synchronisation traffic between sites; RTT must be ≤5ms for Metro.</li>
-</ul>
-<p><strong>Geo (async, two sites):</strong></p>
-<ul>
-<li>Uses RecoverPoint for asynchronous replication; VPLEX Geo presents the volume on one site at a time.</li>
-<li>Not active-active; Geo is a DR configuration for sites beyond Metro RTT limits.</li>
-</ul>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Protocol / Interface</th>
-<th>Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Host to VPLEX</td>
-<td>Fibre Channel (8Gb/16Gb)</td>
-<td>Hosts zone to VPLEX front-end FC ports; VPLEX presents virtual volumes to hosts</td>
-</tr>
-<tr>
-<td>VPLEX to Backend Array</td>
-<td>Fibre Channel (8Gb/16Gb)</td>
-<td>VPLEX back-end FC ports zone to backend array ports; VPLEX discovers and claims storage volumes</td>
-</tr>
-<tr>
-<td>Inter-Cluster Link (Metro)</td>
-<td>10GbE or 25GbE WAN / dark fibre</td>
-<td>Carries synchronous write data between Metro clusters; requires ≤5ms RTT</td>
-</tr>
-<tr>
-<td>Management</td>
-<td>1GbE management interface</td>
-<td>VMS connects to directors for management; vplexcli connects to the VMS</td>
-</tr>
-</tbody>
-</table>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Guidance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Virtual volume size</td>
-<td>Maximum virtual volume size determined by GeoSynchrony version; check release notes</td>
-</tr>
-<tr>
-<td>Write cache per director</td>
-<td>Cache size is fixed per director model; do not exceed 70% cache utilisation under sustained write workloads</td>
-</tr>
-<tr>
-<td>Backend IOPS budget</td>
-<td>Sum of all virtual volume IOPS must not exceed the backend array's rated IOPS after accounting for RAID overhead</td>
-</tr>
-<tr>
-<td>ICL bandwidth (Metro)</td>
-<td>ICL bandwidth must exceed peak write throughput at either site; provision 2× expected write bandwidth for headroom</td>
-</tr>
-<tr>
-<td>Director port count</td>
-<td>Allocate front-end ports based on host count and bandwidth requirements; maintain port balance across directors within an engine</td>
-</tr>
-<tr>
-<td>Consistency groups</td>
-<td>One consistency group per multi-volume application; do not exceed documented CG limits per GeoSynchrony version</td>
-</tr>
-</tbody>
-</table>
+<h1 id="dell-vplex-architecture">Dell VPLEX — Architecture<a class="headerlink" href="#dell-vplex-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+</div>
 
 
 

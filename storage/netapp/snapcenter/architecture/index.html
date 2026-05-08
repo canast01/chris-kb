@@ -21,7 +21,7 @@
     
     
       
-        <title>SnapCenter Architecture - Chris KB</title>
+        <title>NetApp SnapCenter — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SnapCenter Architecture · Chris KB">
+  <meta property="og:title" content="NetApp SnapCenter — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SnapCenter Architecture · Chris KB">
+  <meta name="twitter:title" content="NetApp SnapCenter — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snapcenter-architecture" class="md-skip">
+        <a href="#netapp-snapcenter-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SnapCenter Architecture
+              NetApp SnapCenter — Architecture
             
           </span>
         </div>
@@ -699,69 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing Guidelines
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -780,128 +717,13 @@
 
 
 
-<h1 id="snapcenter-architecture">SnapCenter Architecture<a class="headerlink" href="#snapcenter-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>SnapCenter is a Windows-based centralized data protection platform that orchestrates application-consistent ONTAP snapshots across a fleet of hosts and applications. It communicates with ONTAP storage systems via the ONTAP REST API or ZAPI, with application hosts via the SnapCenter Agent (TCP 8145), and exposes a web GUI on port 8146 and a REST API for automation. The architecture separates the control plane (SnapCenter Server), the data plane (ONTAP snapshots), and the agent layer (plugins on protected hosts).</p>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SnapCenter Server</td>
-<td>Windows Server hosting the SnapCenter web application, scheduler, and REST API; accessible at <code>https://&lt;server&gt;:8146</code></td>
-</tr>
-<tr>
-<td>Repository Database</td>
-<td>MySQL database installed on the SnapCenter Server host (or a separate MySQL server); stores all job history, policies, resource groups, and RBAC configuration</td>
-</tr>
-<tr>
-<td>SnapCenter Agent</td>
-<td>Lightweight Windows or Linux service (port 8145) installed on each protected host; communicates with the SnapCenter Server and runs pre/post quiesce scripts</td>
-</tr>
-<tr>
-<td>SnapCenter Plug-in for Windows</td>
-<td>Agent extension for Windows filesystem and VSS-based application backup; supports SQL Server, Exchange, and Windows filesystems</td>
-</tr>
-<tr>
-<td>SnapCenter Plug-in for UNIX</td>
-<td>Agent extension for Linux/AIX; supports Oracle, SAP HANA, and UNIX filesystems</td>
-</tr>
-<tr>
-<td>SnapCenter Plug-in for VMware vSphere</td>
-<td>Separate OVA appliance registered with vCenter; provides VM-level and datastore-level backup without an agent inside VMs</td>
-</tr>
-<tr>
-<td>ONTAP Storage Systems</td>
-<td>Registered as storage connections in SnapCenter; SnapCenter creates and manages ONTAP snapshots, SnapMirror updates, and SnapVault transfers via ONTAP APIs</td>
-</tr>
-<tr>
-<td>SMTP / Email Relay</td>
-<td>Optional; SnapCenter sends job success/failure notifications via SMTP</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p>SnapCenter Server itself is not natively HA in the open way a cluster is. Recommended approaches:</p>
-<ul>
-<li><strong>SQL Server FCI or Always On for repository</strong>: Run the MySQL repository on a highly available MySQL cluster to prevent data loss</li>
-<li><strong>Windows Failover Cluster</strong>: Host the SnapCenter Server application on a Windows Server Failover Cluster (WSFC) for automatic failover of the application server</li>
-<li><strong>VM-based resilience</strong>: Run SnapCenter Server as a VM protected by VMware HA; RPO is the last SnapCenter Server backup; RTO is VM restart time (~5 minutes)</li>
-<li><strong>SnapCenter Server backup</strong>: Use the built-in <code>SnapCenter Server backup</code> feature to snapshot the repository and application configuration daily; store on secondary ONTAP</li>
-</ul>
-<pre class="mermaid"><code>graph TB
-  SCW["SnapCenter Server\n(Windows / Linux VM)"]
-  SCW --&gt; PL1["Plug-in for SQL Server"]
-  SCW --&gt; PL2["Plug-in for Oracle"]
-  SCW --&gt; PL3["Plug-in for VMware"]
-  PL1 &amp; PL2 &amp; PL3 --&gt; ONTAP["NetApp ONTAP\nSnapshot · SnapMirror · SnapVault"]
-  ADMIN(["DBA / Storage Admin"]) --&gt;|"web UI / REST API"| SCW
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class SCW,PL1,PL2,PL3 ctrl
-  class ONTAP store
-  class ADMIN host</code></pre>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Connection</th>
-<th>Protocol / Port</th>
-<th>Direction</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Admin browser to SnapCenter GUI</td>
-<td>HTTPS/8146</td>
-<td>Client → Server</td>
-</tr>
-<tr>
-<td>SnapCenter Server to ONTAP</td>
-<td>HTTPS/443 (REST) or ZAPI</td>
-<td>Server → ONTAP cluster-mgmt LIF</td>
-</tr>
-<tr>
-<td>SnapCenter Server to Agent</td>
-<td>TCP/8145</td>
-<td>Server → Host agent</td>
-</tr>
-<tr>
-<td>SnapCenter Agent to Server</td>
-<td>TCP/8145</td>
-<td>Host → Server (callback)</td>
-</tr>
-<tr>
-<td>SnapCenter to MySQL repository</td>
-<td>TCP/3306</td>
-<td>Local (or network if remote DB)</td>
-</tr>
-<tr>
-<td>SnapCenter to SMTP relay</td>
-<td>TCP/25 or 587</td>
-<td>Server → Mail relay</td>
-</tr>
-<tr>
-<td>SnapCenter Plug-in for VMware to vCenter</td>
-<td>HTTPS/443</td>
-<td>Plugin OVA → vCenter</td>
-</tr>
-</tbody>
-</table>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>SnapCenter Server</strong>: Minimum 4 vCPU, 8 GB RAM for up to 50 hosts; scale to 8 vCPU / 16 GB for 50–200 hosts; dedicated Windows Server (2019 or 2022)</li>
-<li><strong>Repository database</strong>: MySQL data directory sizing — allow ~500 MB per 1,000 backup jobs retained; 20 GB minimum partition</li>
-<li><strong>Concurrent jobs</strong>: Default maximum concurrent jobs is 5; increase to 10–20 in SnapCenter global settings for large environments, limited by ONTAP API throughput</li>
-<li><strong>Plugin hosts per server</strong>: A single SnapCenter Server supports up to several hundred registered hosts; beyond 300–400 active hosts, evaluate a secondary SnapCenter instance for scale-out</li>
-<li><strong>SnapCenter Plug-in for VMware</strong>: Deploy one OVA per vCenter; supports thousands of VMs; requires access to vCenter API and ONTAP APIs for all datastores</li>
-</ul>
+<h1 id="netapp-snapcenter-architecture">NetApp SnapCenter — Architecture<a class="headerlink" href="#netapp-snapcenter-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
+</div>
 
 
 

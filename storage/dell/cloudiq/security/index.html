@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell CloudIQ Security - Chris KB</title>
+        <title>CloudIQ — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Dell CloudIQ Security · Chris KB">
+  <meta property="og:title" content="CloudIQ — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dell CloudIQ Security · Chris KB">
+  <meta name="twitter:title" content="CloudIQ — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dell-cloudiq-security" class="md-skip">
+        <a href="#cloudiq-security" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell CloudIQ Security
+              CloudIQ — Security
             
           </span>
         </div>
@@ -699,69 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Security
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Security
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-log" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Log
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -780,88 +717,13 @@
 
 
 
-<h1 id="dell-cloudiq-security">Dell CloudIQ Security<a class="headerlink" href="#dell-cloudiq-security" title="Permanent link">&para;</a></h1>
-<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>CloudIQ uses Dell account-based authentication for portal access. Accounts are managed at <a href="https://myaccount.dell.com">https://myaccount.dell.com</a>.</p>
-<ul>
-<li><strong>SSO/Federation</strong>: CloudIQ supports identity federation via Azure AD and Okta. Configure federation under <strong>Settings &gt; Identity Provider</strong> in the CloudIQ admin console. With federation enabled, users authenticate via your corporate IdP and CloudIQ accepts the SAML assertion.</li>
-<li><strong>MFA</strong>: Enforce multi-factor authentication on all Dell accounts that have access to CloudIQ. For federated accounts, MFA enforcement is managed by your IdP. For non-federated Dell accounts, enable MFA in <strong>My Dell Account</strong> settings.</li>
-<li><strong>Session management</strong>: CloudIQ sessions have a fixed idle timeout; users are required to re-authenticate after inactivity.</li>
-</ul>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>CloudIQ provides role-based access control to limit what each user can view and modify.</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Permissions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CloudIQ Admin</td>
-<td>Full access: manage users, roles, notification rules, API credentials, and all system data</td>
-</tr>
-<tr>
-<td>System Admin</td>
-<td>Manage and view assigned systems; cannot manage users or global settings</td>
-</tr>
-<tr>
-<td>Viewer</td>
-<td>Read-only access to dashboards, health scores, capacity, and alerts; cannot modify settings or acknowledge alerts</td>
-</tr>
-</tbody>
-</table>
-<p>Assign roles under <strong>Settings &gt; Users</strong>. Apply the principle of least privilege — most operational users should be Viewer or System Admin; CloudIQ Admin should be restricted to a small number of named individuals.</p>
-<h2 id="api-security">API Security<a class="headerlink" href="#api-security" title="Permanent link">&para;</a></h2>
-<p>API client credentials (client ID and client secret) provide programmatic access with the same permissions as the user account that created them.</p>
-<p>Best practices:</p>
-<ul>
-<li><strong>Rotate client secrets every 90 days</strong>. Create the new credential before deleting the old one to avoid automation downtime.</li>
-<li><strong>Store secrets in a vault</strong>: use CyberArk, HashiCorp Vault, AWS Secrets Manager, or equivalent. Never store client secrets in plaintext configuration files, scripts, or version control.</li>
-<li><strong>Use separate credentials per integration</strong>: create one client credential per integration (Splunk, Grafana, ServiceNow, etc.) so that a compromised credential can be revoked without affecting other integrations.</li>
-<li><strong>Scope by use case</strong>: access tokens derived from client credentials inherit the role of the creating account. Create API accounts with the minimum required role (typically Viewer for monitoring integrations).</li>
-<li><strong>Monitor credential usage</strong>: review the CloudIQ audit log for API calls made with each credential to detect unusual access patterns.</li>
-</ul>
-<h2 id="data-security">Data Security<a class="headerlink" href="#data-security" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Protection</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Telemetry in transit (SCG to Dell)</td>
-<td>TLS 1.2 or higher; certificate-pinned connection from SCG to Dell SRS endpoint</td>
-</tr>
-<tr>
-<td>Telemetry at rest (Dell cloud)</td>
-<td>Encrypted at rest in Dell's cloud infrastructure</td>
-</tr>
-<tr>
-<td>Portal access</td>
-<td>HTTPS (TLS 1.2+); sessions protected by Dell's cloud infrastructure</td>
-</tr>
-<tr>
-<td>Data content</td>
-<td>Telemetry contains configuration metadata and performance statistics only — no user data, file contents, or host data is transmitted</td>
-</tr>
-</tbody>
-</table>
-<p>CloudIQ telemetry does not include: file names, directory paths, user credentials, application data, or any content stored on the managed arrays.</p>
-<h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
-<p>CloudIQ logs all user actions and API calls in a tamper-evident audit log. Access the audit log under <strong>Admin &gt; Audit Log</strong> in the CloudIQ portal.</p>
-<p>Audit events include:</p>
-<ul>
-<li>User logins and logouts (including source IP)</li>
-<li>Changes to notification rules, user roles, and API credentials</li>
-<li>API calls made by integration accounts</li>
-<li>System registration and deregistration events</li>
-</ul>
-<p>The audit log can be filtered by date, user, and event type and exported as CSV for SIEM ingestion. Integrate with your SIEM (Splunk, Microsoft Sentinel, etc.) by periodically exporting the audit log via the CloudIQ API or by configuring a scheduled export.</p>
-<p>Retain audit log exports for a minimum of 90 days in accordance with your organisation's security policy.</p>
+<h1 id="cloudiq-security">CloudIQ — Security<a class="headerlink" href="#cloudiq-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>
+<a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>
+<a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>
+<a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
+</div>
 
 
 

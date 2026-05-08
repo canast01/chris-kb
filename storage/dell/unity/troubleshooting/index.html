@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell Unity Troubleshooting - Chris KB</title>
+        <title>Unity — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Dell Unity Troubleshooting · Chris KB">
+  <meta property="og:title" content="Unity — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dell Unity Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="Unity — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dell-unity-troubleshooting" class="md-skip">
+        <a href="#unity-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell Unity Troubleshooting
+              Unity — Troubleshooting
             
           </span>
         </div>
@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Calling Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -769,138 +717,25 @@
 
 
 
-<h1 id="dell-unity-troubleshooting">Dell Unity Troubleshooting<a class="headerlink" href="#dell-unity-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LUN not visible to FC host</td>
-<td>Host not registered in Unisphere, or FC zoning incomplete</td>
-<td>Register the host and its initiator WWNs in Unisphere &gt; Hosts; confirm FC zone is active and contains both host and Unity SP ports</td>
-</tr>
-<tr>
-<td>LUN not visible to iSCSI host</td>
-<td>iSCSI IQN not registered in Unisphere, or iSCSI portal unreachable</td>
-<td>Add host IQN in Unisphere &gt; Hosts; verify iSCSI portal IP is reachable from host; confirm iSCSI initiator login</td>
-</tr>
-<tr>
-<td>Replication session in Error or Paused state</td>
-<td>Network interruption between source and destination arrays, or destination pool full</td>
-<td>Check <code>uemcli /rep/session show</code>; verify network reachability; resolve capacity issue; resume with <code>uemcli /rep/session -id &lt;id&gt; resume</code></td>
-</tr>
-<tr>
-<td>NAS server not responding</td>
-<td>SP failover in progress, NAS server in error state, or network interface issue</td>
-<td>Check Unisphere health dashboard; verify NAS server status with <code>uemcli /net/nas show</code>; confirm the NAS server IP is on the active SP</td>
-</tr>
-<tr>
-<td>Pool approaching capacity</td>
-<td>Snapshot accumulation, or thin LUNs consuming more than expected</td>
-<td>Run <code>uemcli /stor/pool show -detail</code>; delete unneeded snapshots with <code>uemcli /stor/snap delete</code>; expand pool or thin-provision additional capacity</td>
-</tr>
-<tr>
-<td>SP fault (SP offline)</td>
-<td>Hardware failure — memory, CPU, SSD, or power module</td>
-<td>Check fault LED on SP chassis; run <code>uemcli /env/health show -filter "health.value ne OK"</code>; peer SP takes over automatically; open Dell support case immediately</td>
-</tr>
-<tr>
-<td>Write cache dirty warning</td>
-<td>SP peer communication lost; cache cannot mirror to partner</td>
-<td>Verify both SPs are online and the SP interconnect link is healthy; resolve SP communication fault before further I/O accumulates</td>
-</tr>
-<tr>
-<td>Disk fault in pool</td>
-<td>Physical drive failure</td>
-<td>Check <code>uemcli /env/health show -filter "health.value ne OK"</code>; identify faulted drive; replace physical drive; Unity automatically rebuilds if a hot spare or free drive is available</td>
-</tr>
-<tr>
-<td>Unisphere GUI unreachable</td>
-<td>SP management NIC fault, or management service crashed</td>
-<td>Try the peer SP's management IP; restart the Unisphere service via <code>uemcli /sys/service start -svc unisphere</code> if accessible via uemcli</td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all components not in an OK health state</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/env/health<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;health.value ne OK&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show system-wide general health and software version</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/sys/general<span class="w"> </span>show
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show all active system alerts</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/sys/alert<span class="w"> </span>show
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show detailed pool capacity, health, and FAST Cache status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/stor/pool<span class="w"> </span>show<span class="w"> </span>-detail
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show all LUNs with pool assignment and capacity</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/stor/prov/luns<span class="w"> </span>show
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show all replication sessions and their current state</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/rep/session<span class="w"> </span>show
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Show all snapshots and their parent resource</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/stor/snap<span class="w"> </span>show
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Show both SP states</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/env/sp<span class="w"> </span>show
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show all NAS servers and their SP assignment</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/net/nas<span class="w"> </span>show
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Show alert history (most recent 50 events)</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/sys/alert/hist<span class="w"> </span>show
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log / Bundle</th>
-<th>Location</th>
-<th>How to Access</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Support bundle (SP logs)</td>
-<td>Collected from the array on demand</td>
-<td>Unisphere: <strong>System &gt; Support &gt; Collect Service Information</strong>; or <code>uemcli /sys/serviceinfo collect</code></td>
-</tr>
-<tr>
-<td>Unisphere event log</td>
-<td>Unisphere GUI</td>
-<td><strong>Unisphere &gt; System &gt; Events</strong></td>
-</tr>
-<tr>
-<td>Replication session log</td>
-<td>Embedded in the replication session detail</td>
-<td><code>uemcli /rep/session show -detail</code></td>
-</tr>
-<tr>
-<td>Hardware event log</td>
-<td>Embedded in hardware component health</td>
-<td><code>uemcli /env/health show</code></td>
-</tr>
-</tbody>
-</table>
-<p>The support bundle (<code>collect service information</code>) gathers SP logs, configuration snapshots, and hardware data into a single file for upload to a Dell support case.</p>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<p>Collect the following before or when opening a Dell support case:</p>
-<ul>
-<li><strong>SP serial numbers</strong>: visible on the chassis label and in Unisphere under <strong>System &gt; Hardware</strong>.</li>
-<li><strong>Unity OE version</strong>: <code>uemcli /sys/sw show</code> or Unisphere &gt; <strong>System &gt; Software</strong>.</li>
-<li><strong>Support bundle</strong>: collected via Unisphere &gt; <strong>System &gt; Support &gt; Collect Service Information</strong>; upload directly to the Dell case via the secure upload link.</li>
-<li><strong>Health page screenshot</strong>: Unisphere health dashboard showing the fault status.</li>
-<li><strong>Alert history</strong>: <code>uemcli /sys/alert/hist show</code> output.</li>
-<li><strong>Timeline of events</strong>: when the issue started, any changes made in the preceding 24 hours, and client impact.</li>
-</ul>
+<h1 id="unity-troubleshooting">Unity — Troubleshooting<a class="headerlink" href="#unity-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>Known issues, symptoms, and resolution steps.</span>
+</a>
+
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Diagnostic commands, log locations, and analysis tools.</span>
+</a>
+
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>Dell support portal, case opening, SLA tiers, and escalation path.</span>
+</a>
+
+</div>
 
 
 

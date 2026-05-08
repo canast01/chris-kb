@@ -21,7 +21,7 @@
     
     
       
-        <title>Certificates Architecture - Chris KB</title>
+        <title>Certificates — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Certificates Architecture · Chris KB">
+  <meta property="og:title" content="Certificates — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Certificates Architecture · Chris KB">
+  <meta name="twitter:title" content="Certificates — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Certificates Architecture
+              Certificates — Architecture
             
           </span>
         </div>
@@ -699,91 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pki-hierarchy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PKI Hierarchy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adcs-role-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ADCS Role Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Templates
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cdp-and-aia-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CDP and AIA Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#auto-enrollment-via-group-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Auto-Enrollment via Group Policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#root-ca-key-ceremony" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Root CA Key Ceremony
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#crl-and-ocsp-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CRL and OCSP Monitoring
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -802,172 +717,30 @@
 
 
 
-<h1 id="certificates-architecture">Certificates Architecture<a class="headerlink" href="#certificates-architecture" title="Permanent link">&para;</a></h1>
-<p>Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-gapped Root CA at the trust anchor, an online Issuing CA for day-to-day issuance, and optionally a Registration Authority (RA) to separate enrolment approval from issuance. Internal PKI is implemented with Microsoft ADCS. External and public-facing services use commercial CAs (DigiCert, Entrust) or Let's Encrypt via ACME.</p>
-<hr />
-<h2 id="pki-hierarchy">PKI Hierarchy<a class="headerlink" href="#pki-hierarchy" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  ROOT[("Root CA\n(offline — HSM)")] --&gt;|"signs"| INT1["Intermediate CA 1\nInternal Issuing CA"]
-  ROOT --&gt;|"signs"| INT2["Intermediate CA 2\nPublic / External CA"]
-  INT1 --&gt;|"issues"| CERT1["Server Certificate"]
-  INT1 --&gt;|"issues"| CERT2["Client Certificate"]
-  INT2 --&gt;|"issues"| CERT3["Publicly Trusted Cert"]
-  CERT1 &amp; CERT2 &amp; CERT3 -.-&gt;|"OCSP / CRL"| CRL["Revocation\nCRL / OCSP Responder"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class ROOT store
-  class INT1,INT2 ctrl
-  class CERT1,CERT2,CERT3 host
-  class CRL mgmt</code></pre>
-<h2 id="adcs-role-components">ADCS Role Components<a class="headerlink" href="#adcs-role-components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Certification Authority (CA)</td>
-<td>Core CA service; issues and revokes certificates</td>
-</tr>
-<tr>
-<td>CA Web Enrollment</td>
-<td>Browser-based manual certificate requests (legacy)</td>
-</tr>
-<tr>
-<td>Network Device Enrollment Service (NDES)</td>
-<td>SCEP for network devices and mobile MDM</td>
-</tr>
-<tr>
-<td>Online Responder (OCSP)</td>
-<td>Real-time revocation status; preferred over CRL for large deployments</td>
-</tr>
-<tr>
-<td>Certificate Enrollment Web Service (CEP/CES)</td>
-<td>HTTP(S)-based auto-enrollment for non-domain members</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="certificate-templates">Certificate Templates<a class="headerlink" href="#certificate-templates" title="Permanent link">&para;</a></h2>
-<p>Templates are created on the Issuing CA and determine key usage, validity, and enrollment permissions.</p>
-<p>Common templates in use:</p>
-<table>
-<thead>
-<tr>
-<th>Template Name</th>
-<th>Purpose</th>
-<th>Key Usage</th>
-<th>Validity</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>WebServer-Internal</code></td>
-<td>Internal HTTPS services</td>
-<td>Server Authentication</td>
-<td>2 years</td>
-</tr>
-<tr>
-<td><code>WorkstationAuth</code></td>
-<td>Computer authentication (802.1X)</td>
-<td>Client Authentication</td>
-<td>1 year</td>
-</tr>
-<tr>
-<td><code>SmartcardLogon</code></td>
-<td>User smart card / FIDO logon</td>
-<td>Smart Card Logon</td>
-<td>1 year</td>
-</tr>
-<tr>
-<td><code>CodeSigning-Internal</code></td>
-<td>Internal script / binary signing</td>
-<td>Code Signing</td>
-<td>1 year</td>
-</tr>
-<tr>
-<td><code>SubCA</code></td>
-<td>Issuing CA certificate</td>
-<td>All key usages</td>
-<td>10 years</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all published certificate templates on the CA</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">certutil</span> <span class="n">-catemplates</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># View key details of a specific template</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-CATemplate</span> <span class="n">-TemplateName</span> <span class="s2">&quot;WebServer-Internal&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Duplicate a template from the CA MMC snap-in:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># certsrv.msc -&gt; Certificate Templates -&gt; right-click -&gt; Duplicate Template</span>
-</code></pre></div>
-<hr />
-<h2 id="cdp-and-aia-configuration">CDP and AIA Configuration<a class="headerlink" href="#cdp-and-aia-configuration" title="Permanent link">&para;</a></h2>
-<p>CRL Distribution Points (CDP) and Authority Information Access (AIA) extensions must be resolvable by all relying parties — including non-domain members.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># View current CDP and AIA configuration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">certutil</span> <span class="n">-getreg</span> <span class="n">CA</span><span class="p">\</span><span class="n">CRLPublicationURLs</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">certutil</span> <span class="n">-getreg</span> <span class="n">CA</span><span class="p">\</span><span class="n">CACertPublicationURLs</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Recommended CDP URLs (set on Issuing CA):</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># 1. LDAP://... (domain members only)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># 2. http://pki.corp.example.com/crl/&lt;CAName&gt;&lt;CRLNameSuffix&gt;&lt;DeltaCRLAllowed&gt;.crl</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># (HTTP CDP must be accessible to ALL systems that receive certificates)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Set CDP via PowerShell (restart CertSvc after changes)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nv">$cdpUrls</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  <span class="s2">&quot;1:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  <span class="s2">&quot;2:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="s2">&quot;2:http://pki.corp.example.com/crl/%3%8%9.crl&quot;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">certutil</span> <span class="n">-setreg</span> <span class="n">CA</span><span class="p">\</span><span class="n">CRLPublicationURLs</span> <span class="p">(</span><span class="nv">$cdpUrls</span> <span class="n">-join</span> <span class="s2">&quot;\n&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">Restart-Service</span> <span class="n">CertSvc</span>
-</code></pre></div>
-<hr />
-<h2 id="auto-enrollment-via-group-policy">Auto-Enrollment via Group Policy<a class="headerlink" href="#auto-enrollment-via-group-policy" title="Permanent link">&para;</a></h2>
-<p>Auto-enrollment automatically issues and renews certificates to domain members without user interaction.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>GPO Path: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>          Public Key Policies &gt; Certificate Services Client - Auto-Enrollment
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Settings:
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  - Configuration Model: Enabled
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  - Renew expired certificates: Checked
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  - Update certificates that use certificate templates: Checked
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  - Expiry notification: 10% before expiry
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Trigger manual auto-enrollment on a client (useful for testing)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">certutil</span> <span class="n">-pulse</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># View certificates in the machine store</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
-</code></pre></div>
-<hr />
-<h2 id="root-ca-key-ceremony">Root CA Key Ceremony<a class="headerlink" href="#root-ca-key-ceremony" title="Permanent link">&para;</a></h2>
-<p>The Root CA private key is the most sensitive component of the PKI. Key ceremony requirements:</p>
-<ul>
-<li>Performed in a secure, access-controlled room with at least two witnesses.</li>
-<li>Key generated inside an HSM (e.g., nCipher, Thales) or a verified offline server.</li>
-<li>Key backup stored in HSM firmware card set with M-of-N quorum (e.g., 3-of-5).</li>
-<li>Ceremony is documented, signed by all witnesses, and stored with the CA policy documentation.</li>
-<li>Root CA certificate renewed 12 months before expiry with a new key pair.</li>
-</ul>
-<hr />
-<h2 id="crl-and-ocsp-monitoring">CRL and OCSP Monitoring<a class="headerlink" href="#crl-and-ocsp-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check CRL validity and next publish time</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">certutil</span> <span class="n">-URL</span> <span class="n">http</span><span class="p">://</span><span class="n">pki</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">crl</span><span class="p">/</span><span class="n">IssuingCA</span><span class="p">.</span><span class="n">crl</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Verify the CRL is accessible and not expired</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">certutil</span> <span class="n">-verify</span> <span class="n">-urlfetch</span> <span class="p">&lt;</span><span class="n">certificate</span><span class="p">.</span><span class="n">cer</span><span class="p">&gt;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Check OCSP responder health</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">certutil</span> <span class="n">-URL</span> <span class="n">http</span><span class="p">://</span><span class="n">ocsp</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">ocsp</span>
-</code></pre></div>
-<p>Set a monitoring alert to fire when the CRL validity period drops below 24 hours. The Issuing CA CRL overlap period should be set to at least 10% of the publication interval to avoid gaps.</p>
+<h1 id="certificates-architecture">Certificates — Architecture<a class="headerlink" href="#certificates-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>PKI architecture, design principles, and topology.</span>
+</a>
+
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>CA hierarchy, certificate chains, and PKI components.</span>
+</a>
+
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>Integration with VMware, load balancers, and platform services.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Certificate standards, naming conventions, and key policies.</span>
+</a>
+
+</div>
 
 
 

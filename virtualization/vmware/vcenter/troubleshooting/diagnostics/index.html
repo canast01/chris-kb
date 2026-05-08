@@ -1,0 +1,1817 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>vCenter — Diagnostics - Chris KB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <meta property="og:site_name" content="Chris KB">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="vCenter — Diagnostics · Chris KB">
+  <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="vCenter — Diagnostics · Chris KB">
+  <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vcenter-diagnostics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../../.." title="Chris KB" class="md-header__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Chris KB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              vCenter — Diagnostics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../" class="md-tabs__link">
+          
+  
+  
+  Platforms
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../../automation/" class="md-tabs__link">
+          
+  
+  
+  Operations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../../tools/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../standards/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Standards
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../../site-map/" class="md-tabs__link">
+          
+  
+  
+  Site Admin
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../about.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../.." title="Chris KB" class="md-nav__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Chris KB
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platforms
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../../automation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../../tools/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Standards
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../../site-map/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Site Admin
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../about.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#service-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Health
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#appliance-management-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Management Interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-service-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Service Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disk-partition-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Partition Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sso-and-lookup-service-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO and Lookup Service Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-related-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate-Related Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-and-ntp-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS and NTP Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restarting-services-safely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restarting Services Safely
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-restore-from-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Restore from Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence-to-collect-before-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence to Collect Before Escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks-and-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks and Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks and Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#daily-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Health Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Health Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-checks_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rollback_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#field-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-it-fits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where It Fits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-and-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture and Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ports-and-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ports and Protocols
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#daily-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-and-recovery-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup and Recovery Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-issues_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#root-cause-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certification-relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certification Relevance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  <div class="kb-progress" id="kb-progress"></div>
+  
+  
+                  
+
+
+
+<h1 id="vcenter-diagnostics">vCenter — Diagnostics<a class="headerlink" href="#vcenter-diagnostics" title="Permanent link">&para;</a></h1>
+<h2 id="service-health">Service Health<a class="headerlink" href="#service-health" title="Permanent link">&para;</a></h2>
+<h3 id="appliance-management-interface">Appliance Management Interface<a class="headerlink" href="#appliance-management-interface" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Log into the VCSA Appliance Management Interface (VAMI) at <code>https://&lt;vcenter&gt;:5480</code></li>
+<li>Check CPU, memory, and disk usage</li>
+<li>Confirm all services are shown as healthy</li>
+</ul>
+<h3 id="checking-service-status">Checking Service Status<a class="headerlink" href="#checking-service-status" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to vCenter, then:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>service-control<span class="w"> </span>--status
+</code></pre></div>
+<h3 id="disk-partition-usage">Disk Partition Usage<a class="headerlink" href="#disk-partition-usage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>df<span class="w"> </span>-h
+</code></pre></div>
+<p>Key partitions to monitor:
+- <code>/storage/log</code> — fills quickly during issues
+- <code>/storage/db</code> — vCenter database
+- <code>/storage/core</code> — core appliance data</p>
+<h3 id="sso-and-lookup-service-health">SSO and Lookup Service Health<a class="headerlink" href="#sso-and-lookup-service-health" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Confirm SSO is running: <code>service-control --status vmware-sts</code></li>
+<li>Confirm Lookup Service: <code>service-control --status vmware-lookupsvc</code></li>
+<li>Confirm Identity Management: <code>service-control --status vmware-eam</code></li>
+</ul>
+<h3 id="certificate-related-failures">Certificate-Related Failures<a class="headerlink" href="#certificate-related-failures" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Browser certificate warning usually means the machine SSL cert is expired</li>
+<li>Login failures with SSO errors often point to the STS certificate</li>
+<li>Check certificate expiration in VAMI → Certificate Management</li>
+</ul>
+<h3 id="dns-and-ntp-validation">DNS and NTP Validation<a class="headerlink" href="#dns-and-ntp-validation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check DNS from vCenter appliance shell</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nslookup<span class="w"> </span>&lt;vcenter-fqdn&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>dig<span class="w"> </span>&lt;vcenter-fqdn&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check NTP status</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>timedatectl
+</code></pre></div>
+<h3 id="restarting-services-safely">Restarting Services Safely<a class="headerlink" href="#restarting-services-safely" title="Permanent link">&para;</a></h3>
+<p>Only restart services after checking disk space and reviewing recent changes.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>--all
+</code></pre></div>
+<blockquote>
+<p>Restart one service at a time where possible. A full restart causes brief vCenter unavailability.</p>
+</blockquote>
+<h3 id="when-to-restore-from-backup">When to Restore from Backup<a class="headerlink" href="#when-to-restore-from-backup" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Corrupt database</li>
+<li>STS certificate failure that cannot be resolved in place</li>
+<li>Multi-service failure with no clear root cause</li>
+<li>Disk partition full with no recovery path</li>
+</ul>
+<h3 id="evidence-to-collect-before-escalation">Evidence to Collect Before Escalation<a class="headerlink" href="#evidence-to-collect-before-escalation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>df -h</code> output</li>
+<li><code>service-control --status</code> output</li>
+<li>Screenshots of VAMI health</li>
+<li>Recent vCenter events and tasks</li>
+<li>Support bundle from VAMI</li>
+</ul>
+<h2 id="tasks-and-failures">Tasks and Failures<a class="headerlink" href="#tasks-and-failures" title="Permanent link">&para;</a></h2>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>Failed tasks, stuck tasks, event review, job ownership, and first-pass triage.</p>
+<h3 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review active alarms.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check recent failed tasks.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm service health.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm capacity and performance are normal.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Check recent changes.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add environment-specific commands here</span>
+</code></pre></div>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Failed or stuck tasks.</li>
+<li>Certificate, DNS, or authentication issues.</li>
+<li>Capacity pressure.</li>
+<li>Service health warnings.</li>
+<li>Version mismatch after maintenance.</li>
+<li>Monitoring gaps.</li>
+</ul>
+<h3 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review alarms and events.</td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm ownership and support notes.</td>
+<td></td>
+</tr>
+<tr>
+<td>Validate dependencies.</td>
+<td></td>
+</tr>
+<tr>
+<td>Document changes.</td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm monitoring coverage.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Confirm compatibility.</li>
+<li>Review known issues.</li>
+<li>Confirm rollback plan.</li>
+<li>Validate health before and after the change.</li>
+</ul>
+<h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keep naming consistent.</td>
+<td>Keep naming consistent.</td>
+</tr>
+<tr>
+<td>Keep versions aligned.</td>
+<td>Keep versions aligned.</td>
+</tr>
+<tr>
+<td>Avoid unsupported version combinations.</td>
+<td>Avoid unsupported version combinations.</td>
+</tr>
+<tr>
+<td>Document exceptions.</td>
+<td>Document exceptions.</td>
+</tr>
+<tr>
+<td>Validate after every change.</td>
+<td>Validate after every change.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="certificate-checks">Certificate Checks<a class="headerlink" href="#certificate-checks" title="Permanent link">&para;</a></h2>
+<h3 id="overview_1">Overview<a class="headerlink" href="#overview_1" title="Permanent link">&para;</a></h3>
+<p>Use this section to check vCenter certificate health, expiration risk, and renewal readiness.</p>
+<h3 id="pre-checks">Pre-Checks<a class="headerlink" href="#pre-checks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Confirm scope.</li>
+<li>Confirm maintenance window if changes are planned.</li>
+<li>Confirm current health.</li>
+<li>Check recent alerts and tasks.</li>
+<li>Confirm access to management tools.</li>
+<li>Confirm rollback path if configuration changes are made.</li>
+</ul>
+<h3 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Identify the affected object.</li>
+<li>Capture current state.</li>
+<li>Review alarms, logs, and recent changes.</li>
+<li>Apply the planned action.</li>
+<li>Validate service health.</li>
+<li>Record notes and follow-up items.</li>
+</ol>
+<h3 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Confirm the object is healthy.</li>
+<li>Confirm no new critical alarms.</li>
+<li>Confirm monitoring reflects the expected state.</li>
+<li>Confirm related systems still have access.</li>
+<li>Document the result.</li>
+</ul>
+<h3 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Revert the changed setting if possible.</li>
+<li>Restore prior configuration from documented state.</li>
+<li>Escalate if rollback requires vendor support.</li>
+</ul>
+<h3 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h3>
+<p>Keep screenshots, task IDs, error messages, and timestamps with the change or incident record.</p>
+<h2 id="service-health-checks">Service Health Checks<a class="headerlink" href="#service-health-checks" title="Permanent link">&para;</a></h2>
+<h3 id="overview_2">Overview<a class="headerlink" href="#overview_2" title="Permanent link">&para;</a></h3>
+<p>Use this section to review core vCenter service health, task failures, and management plane availability.</p>
+<h3 id="pre-checks_1">Pre-Checks<a class="headerlink" href="#pre-checks_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Confirm scope.</li>
+<li>Confirm maintenance window if changes are planned.</li>
+<li>Confirm current health.</li>
+<li>Check recent alerts and tasks.</li>
+<li>Confirm access to management tools.</li>
+<li>Confirm rollback path if configuration changes are made.</li>
+</ul>
+<h3 id="steps_1">Steps<a class="headerlink" href="#steps_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Identify the affected object.</li>
+<li>Capture current state.</li>
+<li>Review alarms, logs, and recent changes.</li>
+<li>Apply the planned action.</li>
+<li>Validate service health.</li>
+<li>Record notes and follow-up items.</li>
+</ol>
+<h3 id="validation_1">Validation<a class="headerlink" href="#validation_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Confirm the object is healthy.</li>
+<li>Confirm no new critical alarms.</li>
+<li>Confirm monitoring reflects the expected state.</li>
+<li>Confirm related systems still have access.</li>
+<li>Document the result.</li>
+</ul>
+<h3 id="rollback_1">Rollback<a class="headerlink" href="#rollback_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Revert the changed setting if possible.</li>
+<li>Restore prior configuration from documented state.</li>
+<li>Escalate if rollback requires vendor support.</li>
+</ul>
+<h3 id="notes_1">Notes<a class="headerlink" href="#notes_1" title="Permanent link">&para;</a></h3>
+<p>Keep screenshots, task IDs, error messages, and timestamps with the change or incident record.</p>
+<h2 id="field-reference">Field Reference<a class="headerlink" href="#field-reference" title="Permanent link">&para;</a></h2>
+<h3 id="overview_3">Overview<a class="headerlink" href="#overview_3" title="Permanent link">&para;</a></h3>
+<p>vCenter is the main VMware management plane for clusters, hosts, VMs, datastores, networks, permissions, alarms, tasks, and events.</p>
+<h3 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h3>
+<p>This sits in the virtualization stack with compute, storage, networking, monitoring, backup, automation, and security controls. Treat it as a Tier 1 infrastructure area when workloads depend on it.</p>
+<h3 id="architecture-and-components">Architecture and Components<a class="headerlink" href="#architecture-and-components" title="Permanent link">&para;</a></h3>
+<ul>
+<li>vCenter Server Appliance</li>
+<li>vPostgres database</li>
+<li>vSphere Client</li>
+<li>SSO and identity services</li>
+<li>Inventory service</li>
+<li>Task and event system</li>
+<li>Alarm and monitoring framework</li>
+<li>API and automation interfaces</li>
+</ul>
+<h3 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h3>
+<p>Common dependencies:</p>
+<ul>
+<li>DNS</li>
+<li>NTP</li>
+<li>Active Directory or LDAP</li>
+<li>Network connectivity</li>
+<li>Storage availability</li>
+<li>Licensing</li>
+<li>Monitoring</li>
+<li>Backup or recovery tooling</li>
+<li>Vendor support access</li>
+</ul>
+<h3 id="ports-and-protocols">Ports and Protocols<a class="headerlink" href="#ports-and-protocols" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Protocol</th>
+<th>Typical Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>SNMP</td>
+<td>161</td>
+</tr>
+<tr>
+<td>Logging</td>
+<td>Syslog</td>
+<td>514</td>
+</tr>
+<tr>
+<td>API</td>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+</tbody>
+</table>
+<h3 id="daily-operations">Daily Operations<a class="headerlink" href="#daily-operations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Review vCenter alarms.</li>
+<li>Check failed or stuck tasks.</li>
+<li>Confirm vCenter services are healthy.</li>
+<li>Review backup status.</li>
+<li>Confirm certificate status.</li>
+<li>Validate connectivity to ESXi hosts.</li>
+<li>Review recent permission or inventory changes.</li>
+</ul>
+<h3 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>vCenter service status</li>
+<li>Appliance CPU and memory</li>
+<li>Appliance disk usage</li>
+<li>Database health</li>
+<li>Certificate expiration</li>
+<li>Host connection state</li>
+<li>Backup job status</li>
+<li>Recent task failures</li>
+</ul>
+<h3 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Verify compatibility.</li>
+<li>Confirm backups or recovery point.</li>
+<li>Validate maintenance window.</li>
+<li>Check current platform health.</li>
+<li>Apply the upgrade or patch.</li>
+<li>Monitor logs and tasks.</li>
+<li>Validate health after the change.</li>
+<li>Record results and follow-up items.</li>
+</ol>
+<h3 id="backup-and-recovery-considerations">Backup and Recovery Considerations<a class="headerlink" href="#backup-and-recovery-considerations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Confirm configuration backup coverage.</li>
+<li>Confirm appliance or platform backup status where supported.</li>
+<li>Confirm snapshots are used only when appropriate.</li>
+<li>Confirm restore steps are documented.</li>
+<li>Test recovery periodically.</li>
+<li>Keep backup evidence with change records.</li>
+</ul>
+<h3 id="common-issues_1">Common Issues<a class="headerlink" href="#common-issues_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>vCenter login failure</li>
+<li>Host disconnected</li>
+<li>Certificate expiration</li>
+<li>Failed appliance backup</li>
+<li>Appliance disk full</li>
+<li>Slow inventory loading</li>
+<li>Failed tasks or stuck tasks</li>
+<li>SSO or identity source issue</li>
+</ul>
+<h3 id="troubleshooting-steps">Troubleshooting Steps<a class="headerlink" href="#troubleshooting-steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Confirm scope.</li>
+<li>Review recent changes.</li>
+<li>Check alarms and events.</li>
+<li>Review system logs.</li>
+<li>Validate DNS, NTP, authentication, network, and storage.</li>
+<li>Check resource utilization.</li>
+<li>Escalate with timestamps, errors, screenshots, and support bundle if unresolved.</li>
+</ol>
+<h3 id="root-cause-examples">Root Cause Examples<a class="headerlink" href="#root-cause-examples" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Possible Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cannot log in</td>
+<td>SSO or identity source issue</td>
+<td>Validate identity source and local administrator access</td>
+</tr>
+<tr>
+<td>Host disconnected</td>
+<td>Network, DNS, or host agent issue</td>
+<td>Validate management network and host services</td>
+</tr>
+<tr>
+<td>Appliance warning</td>
+<td>Disk or service issue</td>
+<td>Check VAMI, service status, and appliance partitions</td>
+</tr>
+<tr>
+<td>Backup failed</td>
+<td>Backup target or credential issue</td>
+<td>Validate target path, account, and backup schedule</td>
+</tr>
+</tbody>
+</table>
+<h3 id="best-practices_1">Best Practices<a class="headerlink" href="#best-practices_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Maintain consistent patch levels.</td>
+<td>Maintain consistent patch levels.</td>
+</tr>
+<tr>
+<td>Monitor capacity trends.</td>
+<td>Monitor capacity trends.</td>
+</tr>
+<tr>
+<td>Document configuration changes.</td>
+<td>Document configuration changes.</td>
+</tr>
+<tr>
+<td>Perform routine health checks.</td>
+<td>Perform routine health checks.</td>
+</tr>
+<tr>
+<td>Test recovery procedures.</td>
+<td>Test recovery procedures.</td>
+</tr>
+<tr>
+<td>Keep support contracts current.</td>
+<td>Keep support contracts current.</td>
+</tr>
+<tr>
+<td>Keep naming and ownership clean.</td>
+<td>Keep naming and ownership clean.</td>
+</tr>
+<tr>
+<td>Validate changes after implementation.</td>
+<td>Validate changes after implementation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="certification-relevance">Certification Relevance<a class="headerlink" href="#certification-relevance" title="Permanent link">&para;</a></h3>
+<p>Useful certification study areas:</p>
+<ul>
+<li>Architecture design</li>
+<li>High availability</li>
+<li>Performance optimization</li>
+<li>Troubleshooting workflows</li>
+<li>Security controls</li>
+<li>Backup and recovery</li>
+<li>Lifecycle management</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © Christos Anastasiadis
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+  
+      <script src="../../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  <script>
+    (function () {
+      var bar = document.getElementById('kb-progress');
+      if (!bar) return;
+      function update() {
+        var scroll = window.scrollY;
+        var total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scroll / total * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+
+  </body>
+</html>

@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>FOD — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="FOD — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="FOD — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#fod-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              FOD — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,171 +717,15 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Flex on Demand</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Check if FOD burst is currently active on any array</td>
-<td></td>
-<td>burst should only be active if a planned workload increase justified it</td>
-</tr>
-<tr>
-<td>[ ] Review what percentage of the burst ceiling is consumed</td>
-<td></td>
-<td>flag if above 80% of the burst allowance</td>
-</tr>
-<tr>
-<td>[ ] Confirm whether the current month's consumption report is availabl</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check that base capacity allocation has not changed unexpectedly</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to Unisphere REST API</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Replace &lt;unisphere_ip&gt;, &lt;user&gt;, and &lt;password&gt; with actual values</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/version/system/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;&lt;user&gt;&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Get FOD/flex capacity status for the array</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{sid: .symmetrixId, total_usable_cap_gb: .total_usable_cap_gb, total_subscribed_cap_gb: .total_subscribed_cap_gb}&#39;</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Get SRP details to review burst and allocated capacity</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;/srp&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.srpId[]&#39;</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Get detailed SRP capacity including emulation and burst state</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere_ip&gt;:8443/univmax/restapi/100/sloprovisioning/symmetrix/&lt;sid&gt;/srp/&lt;srp_id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{srp: .srpId, emulation: .emulation, reserved_cap_percent: .reserved_cap_percent, total_usable_cap_gb: .srp_capacity.usable_total_tb}&#39;</span>
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Estimate expected capacity growth from the planned workload increase (in TB)</li>
-<li>[ ] Confirm the FOD burst ceiling is sufficient to cover the planned increase without being exceeded</li>
-<li>[ ] If the planned increase is expected to be sustained (not a temporary burst), notify the Dell account team to discuss adjusting the base contracted capacity</li>
-<li>[ ] Confirm the billing implications are understood — sustained burst usage is charged at the burst rate</li>
-<li>[ ] Document the current base and burst consumption figures before the workload change</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Expected capacity growth estimated</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Burst headroom sufficient for planned increase</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Dell account team notified if sustained increase</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Billing implications understood and documented</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Pre-change base and burst consumption recorded</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p><strong>On alert or issue:</strong>
-1. Log in to the Dell APEX console (console.dell.com/apex) or Unisphere to check current burst consumption
-2. Identify when burst was triggered and which workloads drove the increase
-3. If the burst ceiling has been reached, new capacity allocations will fail — immediately assess which workloads can be reduced or tiered
-4. Contact the Dell account team to request an emergency burst ceiling increase or expedited base capacity expansion
-5. Review the previous month's consumption report to determine if a sustained base capacity increase is warranted</p>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Burst ceiling reached, no new capacity available</td>
-<td>Workload growth exceeded contracted burst allowance</td>
-<td>Reduce provisioning, contact Dell account team for emergency ceiling raise</td>
-</tr>
-<tr>
-<td>Unexpected billing charges</td>
-<td>Sustained burst usage above contracted base</td>
-<td>Pull consumption report, identify workloads driving burst, plan base capacity increase</td>
-</tr>
-<tr>
-<td>Capacity allocation error in Unisphere</td>
-<td>Array reporting over-subscription beyond burst</td>
-<td>Check SRP utilization via REST API, confirm burst state, open Dell support case</td>
-</tr>
-<tr>
-<td>FOD consumption not resetting at month boundary</td>
-<td>Reporting/billing cycle misalignment</td>
-<td>Confirm billing cycle dates with Dell account team, pull consumption report</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p>FOD itself has no software maintenance requirement. However, any planned workload or storage change that will affect consumption must be documented:</p>
-<ol>
-<li>Before the window: record current base capacity consumption and burst consumption (in TB and %)</li>
-<li>Perform the planned workload or storage configuration change</li>
-<li>Monitor capacity consumption in Unisphere during the window — watch for unexpected burst activation</li>
-<li>After the window: compare post-change consumption figures against pre-change baseline</li>
-<li>If the change caused a sustained increase in capacity, update the capacity planning record and notify the Dell account team within 5 business days</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] FOD burst consumption returns to the pre-change baseline after any temporary workload increase</li>
-<li>[ ] Burst is not active where it was not expected to be</li>
-<li>[ ] Monthly consumption report updated to reflect any intentional capacity changes</li>
-<li>[ ] Dell account team notified if sustained capacity increase is expected to exceed the contracted base</li>
-<li>[ ] Capacity planning records updated with new baseline figures</li>
-</ul>
+<h1 id="fod-operations">FOD — Operations<a class="headerlink" href="#fod-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+</div>
 
 
 

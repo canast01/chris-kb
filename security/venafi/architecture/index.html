@@ -21,7 +21,7 @@
     
     
       
-        <title>Venafi Architecture - Chris KB</title>
+        <title>Venafi — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Venafi Architecture · Chris KB">
+  <meta property="og:title" content="Venafi — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Venafi Architecture · Chris KB">
+  <meta name="twitter:title" content="Venafi — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Venafi Architecture
+              Venafi — Architecture
             
           </span>
         </div>
@@ -699,91 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#component-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Component Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trust-protection-platform-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Trust Protection Platform Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#policy-tree-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Policy Tree Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ca-connectors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CA Connectors
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#high-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Availability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rest-api-access" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        REST API Access
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -802,235 +717,30 @@
 
 
 
-<h1 id="venafi-architecture">Venafi Architecture<a class="headerlink" href="#venafi-architecture" title="Permanent link">&para;</a></h1>
-<p>Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle management system. It enforces certificate policy, integrates with multiple CA backends, automates renewal, and provides visibility across all managed certificates. The SaaS equivalent is Venafi as a Service (VaaS / TLS Protect Cloud).</p>
-<hr />
-<h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-<th>Deployment</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Policy Server</td>
-<td>Lifecycle management, CA integration, policy enforcement</td>
-<td>On-prem VM (primary + secondary)</td>
-</tr>
-<tr>
-<td>Edge Proxy</td>
-<td>Certificate discovery across segmented networks</td>
-<td>Lightweight on-prem agent</td>
-</tr>
-<tr>
-<td>Log Server</td>
-<td>Audit event aggregation and SIEM forwarding</td>
-<td>On-prem VM or syslog target</td>
-</tr>
-<tr>
-<td>VaaS / TLS Protect Cloud</td>
-<td>SaaS alternative to TPP</td>
-<td>Hosted by Venafi</td>
-</tr>
-<tr>
-<td>CA Connectors</td>
-<td>Integration adapters for ADCS, DigiCert, Entrust</td>
-<td>Configured on Policy Server</td>
-</tr>
-<tr>
-<td>Venafi SDK / REST API</td>
-<td>Automation and integration interface</td>
-<td>Consumed by CI/CD and scripts</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="trust-protection-platform-topology">Trust Protection Platform Topology<a class="headerlink" href="#trust-protection-platform-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  TPP["Venafi Trust Protection Platform"]
-  TPP --&gt; DISC["Discovery Engine\n(network scan / agent)"]
-  TPP --&gt; CA1["CA Connector — ADCS"]
-  TPP --&gt; CA2["CA Connector — DigiCert / Entrust"]
-  TPP --&gt; AUTO["Automation\n(renewal / provisioning)"]
-  DISC --&gt;|"found certs"| TPP
-  ADMIN(["Security Admin"]) --&gt;|"portal"| TPP
-  TPP --&gt;|"SIEM / SNMP"| SIEM(["SIEM / Monitoring"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class TPP,DISC ctrl
-  class CA1,CA2,AUTO mgmt
-  class ADMIN,SIEM host</code></pre>
-<h2 id="policy-tree-structure">Policy Tree Structure<a class="headerlink" href="#policy-tree-structure" title="Permanent link">&para;</a></h2>
-<p>The Venafi policy tree (<code>\VED\Policy\</code>) organises certificates into folders that apply inheritance-based policy. Certificates inherit policy settings from parent folders unless explicitly overridden.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>\VED\Policy\
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Internal\
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── Production\
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   ├── Servers\
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │   └── Services\
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── Non-Production\
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   ├── Dev\
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │   └── Test\
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └── Infrastructure\
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│       ├── Network\
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│       └── VMware\
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└── External\
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    ├── Public\
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    └── Partners\
-</code></pre></div>
-<p>Policy folder settings (configured per folder):
-- CA template / connector to use for issuance
-- Validity period and renewal window
-- Key algorithm and minimum key size
-- Required SANs and prohibited wildcard usage
-- Approval workflow (auto-issue vs. manual approval)
-- Notification contacts for expiry alerts</p>
-<hr />
-<h2 id="ca-connectors">CA Connectors<a class="headerlink" href="#ca-connectors" title="Permanent link">&para;</a></h2>
-<p>Venafi integrates with multiple CA backends. Each connector is configured once at the Policy Server level and referenced by policy folders.</p>
-<table>
-<thead>
-<tr>
-<th>CA Type</th>
-<th>Connector</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Microsoft ADCS</td>
-<td>ADCS connector (built-in)</td>
-<td>Requires CES/CEP or direct RPC access to CA</td>
-</tr>
-<tr>
-<td>DigiCert</td>
-<td>DigiCert connector</td>
-<td>Requires DigiCert API key; supports OV/EV/DV</td>
-</tr>
-<tr>
-<td>Entrust</td>
-<td>Entrust connector</td>
-<td>Requires Entrust API key and client credentials</td>
-</tr>
-<tr>
-<td>Let's Encrypt</td>
-<td>ACME connector</td>
-<td>HTTP-01 or DNS-01 challenge; requires accessible validation endpoint</td>
-</tr>
-<tr>
-<td>Internal standalone CA</td>
-<td>Generic PKCS#10 / SCEP</td>
-<td>For CAs without a native connector</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List configured CA connectors via Venafi REST API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="s2">&quot;X-Venafi-API-Key&quot;</span> <span class="p">=</span> <span class="nv">$apiKey</span> <span class="p">}</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://venafi.corp.example.com/vedsdk/Certificates/CheckPolicy&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-Headers</span> <span class="nv">$headers</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="p">`</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="n">-Body</span> <span class="s1">&#39;{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Internal\\Production&quot;}&#39;</span>
-</code></pre></div>
-<hr />
-<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
-<p>Venafi TPP is deployed as a primary + secondary pair sharing a common Microsoft SQL Server backend.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[Client / API consumer]
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>         |
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>         | HTTPS (443)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>         v
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>[Load Balancer / VIP]
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    /           \
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>[TPP Primary]  [TPP Secondary]
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>         \           /
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>          [SQL Server]
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>          (Always On AG preferred)
-</code></pre></div>
-<ul>
-<li>Both nodes are active; the load balancer distributes requests.</li>
-<li>SQL Server is the single source of truth; both nodes are stateless with respect to certificate data.</li>
-<li>Failover is transparent — if one node fails, the load balancer routes all traffic to the remaining node.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check TPP service health on both nodes (run on each node)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;Venafi*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Verify SQL connectivity from TPP node</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">sql01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">1433</span>
-</code></pre></div>
-<hr />
-<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>Destination</th>
-<th>Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>TPP Policy Server</td>
-<td>ADCS (CES endpoint)</td>
-<td>TCP 443</td>
-<td>Certificate enrolment</td>
-</tr>
-<tr>
-<td>TPP Policy Server</td>
-<td>DigiCert / Entrust APIs</td>
-<td>TCP 443</td>
-<td>External CA issuance</td>
-</tr>
-<tr>
-<td>TPP Policy Server</td>
-<td>SQL Server</td>
-<td>TCP 1433</td>
-<td>Database backend</td>
-</tr>
-<tr>
-<td>Edge Proxy</td>
-<td>TPP Policy Server</td>
-<td>TCP 443</td>
-<td>Proxy registration and data sync</td>
-</tr>
-<tr>
-<td>Admin / CI-CD</td>
-<td>TPP Policy Server</td>
-<td>TCP 443</td>
-<td>REST API and web UI</td>
-</tr>
-<tr>
-<td>TPP Log Server</td>
-<td>Splunk / SIEM</td>
-<td>TCP 514 / 6514</td>
-<td>Syslog event forwarding</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="rest-api-access">REST API Access<a class="headerlink" href="#rest-api-access" title="Permanent link">&para;</a></h2>
-<p>Venafi TPP exposes a REST API at <code>https://&lt;tpp-fqdn&gt;/vedsdk/</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Authenticate and get API key</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$body</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">Username</span> <span class="p">=</span> <span class="s2">&quot;svc-venafi-api&quot;</span><span class="p">;</span> <span class="n">Password</span> <span class="p">=</span> <span class="s2">&quot;password&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$response</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://venafi.corp.example.com/vedauth/authorize&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="nv">$body</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$apiKey</span> <span class="p">=</span> <span class="nv">$response</span><span class="p">.</span><span class="n">APIKey</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Request a certificate</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">$certRequest</span> <span class="p">=</span> <span class="p">@{</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">PolicyDN</span> <span class="p">=</span> <span class="s2">&quot;\\VED\\Policy\\Internal\\Production\\Servers&quot;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">Subject</span>  <span class="p">=</span> <span class="s2">&quot;app01.corp.example.com&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">SubjectAltNames</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="p">@{</span> <span class="n">TypedName</span> <span class="p">=</span> <span class="s2">&quot;dns:app01.corp.example.com&quot;</span> <span class="p">},</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="p">@{</span> <span class="n">TypedName</span> <span class="p">=</span> <span class="s2">&quot;dns:app01-internal.corp.example.com&quot;</span> <span class="p">}</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="p">)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">5</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://venafi.corp.example.com/vedsdk/Certificates/Request&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  <span class="n">-Headers</span> <span class="p">@{</span> <span class="s2">&quot;X-Venafi-API-Key&quot;</span> <span class="p">=</span> <span class="nv">$apiKey</span> <span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="nv">$certRequest</span>
-</code></pre></div>
+<h1 id="venafi-architecture">Venafi — Architecture<a class="headerlink" href="#venafi-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>Architecture overview, design principles, and topology.</span>
+</a>
+
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>Trust Protection Platform components and services.</span>
+</a>
+
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>CA integrations, platform connectors, and API connections.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Policy configuration, design standards, and naming conventions.</span>
+</a>
+
+</div>
 
 
 

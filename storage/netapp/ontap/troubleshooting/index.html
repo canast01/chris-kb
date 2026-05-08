@@ -21,7 +21,7 @@
     
     
       
-        <title>ONTAP Troubleshooting - Chris KB</title>
+        <title>ONTAP — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ONTAP Troubleshooting · Chris KB">
+  <meta property="og:title" content="ONTAP — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ONTAP Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="ONTAP — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ONTAP Troubleshooting
+              ONTAP — Troubleshooting
             
           </span>
         </div>
@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Calling Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -769,171 +717,12 @@
 
 
 
-<h1 id="ontap-troubleshooting">ONTAP Troubleshooting<a class="headerlink" href="#ontap-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Volume full / write errors to hosts</td>
-<td>Volume space exhausted; autogrow not configured or hit max</td>
-<td><code>volume show -fields used-percent,autosize-mode</code>; increase max-autosize or delete old snapshots with <code>snapshot delete</code></td>
-</tr>
-<tr>
-<td>Aggregate nearly full (&gt;90%)</td>
-<td>Thin-provisioned volumes grew beyond aggregate free space</td>
-<td><code>storage aggregate show</code>; move volumes with <code>volume move start</code> or reduce snapshot reserves</td>
-</tr>
-<tr>
-<td>SnapMirror lag exceeding RPO</td>
-<td>Network bandwidth contention, dedupe/SnapMirror scheduling conflict, or throttle active</td>
-<td><code>snapmirror show -fields lag-time,transfer-bytes</code>; adjust schedule; check <code>snapmirror config-replication show</code></td>
-</tr>
-<tr>
-<td>NFS mount hangs after SP takeover</td>
-<td>Stale NFS lock; automount not recovering after LIF migration</td>
-<td>Verify LIF on correct port: <code>network interface show</code>; unmount and remount on client; check NFS grace period</td>
-</tr>
-<tr>
-<td>iSCSI session dropped</td>
-<td>LIF failover changed IP; host iSCSI initiator did not reconnect</td>
-<td><code>iscsi session show</code>; confirm LIF IP stability; rescan iSCSI on host; verify multipath (<code>multipath -ll</code> on Linux)</td>
-</tr>
-<tr>
-<td>Node takeover not auto-triggering</td>
-<td>Storage failover disabled or partner unreachable</td>
-<td><code>storage failover show</code>; check cluster interconnect with <code>cluster ping-cluster -node &lt;node&gt;</code>; verify <code>options cf.mode</code></td>
-</tr>
-<tr>
-<td>SMB/CIFS shares inaccessible</td>
-<td>CIFS server stopped or Kerberos ticket issue with Active Directory</td>
-<td><code>vserver cifs show</code>; <code>vserver cifs domain info -vserver &lt;svm&gt;</code>; verify AD connectivity and DNS resolution</td>
-</tr>
-<tr>
-<td>Slow NFS performance</td>
-<td>Jumbo frames not configured end-to-end, or QoS ceiling throttling workload</td>
-<td>Check MTU on ONTAP ports (<code>network port show -fields mtu</code>) and switches; review QoS stats: <code>qos statistics performance show</code></td>
-</tr>
-<tr>
-<td>Volume move failing mid-way</td>
-<td>Destination aggregate too full, or a cutover window was missed</td>
-<td><code>volume move show</code>; check destination aggregate space; re-run <code>volume move start</code> with <code>-cutover-window</code> extended</td>
-</tr>
-<tr>
-<td>EMS callhome alerts firing</td>
-<td>Disk failure, RAID degraded, or hardware fault</td>
-<td><code>storage disk show -broken</code>; <code>storage aggregate show -state degraded</code>; check <code>system health alert show</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cluster and node health</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>system<span class="w"> </span>node<span class="w"> </span>show
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Aggregate and disk health</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>degraded
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Volume capacity and status</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>used-percent,autosize-mode,space-guarantee
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>offline
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Network interface health</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>network<span class="w"> </span>interface<span class="w"> </span>show
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>health-status,mtu
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># SnapMirror relationship health and lag</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy,relationship-status
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># EMS event log — recent errors and warnings</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>warning<span class="w"> </span>-time-range<span class="w"> </span>24h
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>callhome.*
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Active health alerts</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>system<span class="w"> </span>health<span class="w"> </span>subsystem<span class="w"> </span>show
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="c1"># iSCSI session and initiator status</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>iscsi<span class="w"> </span>initiator<span class="w"> </span>show
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="c1"># QoS policy and statistics</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>show
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="c1"># AutoSupport status</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log Source</th>
-<th>Location / Command</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>EMS event log</td>
-<td><code>event log show</code> (CLI); <code>/mroot/etc/log/ems</code> (node shell)</td>
-</tr>
-<tr>
-<td>AutoSupport history</td>
-<td><code>system node autosupport history show -node &lt;node&gt;</code></td>
-</tr>
-<tr>
-<td>Audit log (admin actions)</td>
-<td><code>security audit log show</code></td>
-</tr>
-<tr>
-<td>CIFS/SMB audit</td>
-<td>SVM-level audit log configured to NAS volume via <code>vserver audit</code> commands</td>
-</tr>
-<tr>
-<td>Crash dumps / core files</td>
-<td><code>system node coredump show</code>; files on <code>/mroot/etc/crash/</code></td>
-</tr>
-<tr>
-<td>Disk firmware log</td>
-<td><code>storage disk show -fields firmware-revision</code>; firmware log in AutoSupport</td>
-</tr>
-<tr>
-<td>Node syslog</td>
-<td><code>system node run -node &lt;node&gt; syslog</code> (node shell)</td>
-</tr>
-<tr>
-<td>SP / BMC logs</td>
-<td><code>system service-processor log show -node &lt;node&gt;</code></td>
-</tr>
-</tbody>
-</table>
-<p>AutoSupport bundles are the primary support artifact. Generate one before calling support:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;case &lt;number&gt; - &lt;description&gt;&quot;</span>
-</code></pre></div>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Capture current cluster state: <code>cluster show</code>, <code>storage failover show</code>, <code>system health alert show</code></li>
-<li>Collect EMS events for the relevant timeframe: <code>event log show -time-range &lt;start&gt;..&lt;end&gt;</code></li>
-<li>Generate an AutoSupport: <code>system node autosupport invoke -node * -type all -message "case &lt;number&gt;"</code></li>
-<li>Note the exact ONTAP version: <code>system image show</code></li>
-<li>Record the hardware platform and serial numbers: <code>system node show -fields model,serial-number</code></li>
-<li>Describe the timeline of the issue — when it started, what changed (upgrade, config change, load change)</li>
-<li>Have the NetApp support site login ready: <a href="https://mysupport.netapp.com">https://mysupport.netapp.com</a></li>
-</ol>
+<h1 id="ontap-troubleshooting">ONTAP — Troubleshooting<a class="headerlink" href="#ontap-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="diagnostics/"><strong>Diagnostics</strong><span>Diagnostic procedures and log analysis.</span></a>
+<a class="kb-card" href="escalation/"><strong>Escalation</strong><span>Vendor escalation procedures and support contacts.</span></a>
+</div>
 
 
 

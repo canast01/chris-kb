@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerMax Troubleshooting - Chris KB</title>
+        <title>PowerMax — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerMax Troubleshooting · Chris KB">
+  <meta property="og:title" content="PowerMax — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerMax Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="PowerMax — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerMax Troubleshooting
+              PowerMax — Troubleshooting
             
           </span>
         </div>
@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Calling Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -769,140 +717,25 @@
 
 
 
-<h1 id="powermax-troubleshooting">PowerMax Troubleshooting<a class="headerlink" href="#powermax-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SRDF pair in <code>R1 Updated</code> or <code>Transmit Idle</code></td>
-<td>WAN link failure, R2 array unreachable, or RDF director port error</td>
-<td><code>symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; query</code>; check RDF port state with <code>symcfg -sid &lt;SID&gt; show</code>; inspect WAN link and switch port between arrays</td>
-</tr>
-<tr>
-<td>SRDF pair in <code>Suspended</code> state</td>
-<td>Manual suspend or automatic suspend triggered by I/O error on R2</td>
-<td>Confirm cause in Unisphere alerts; verify R2 is in a consistent state; resume with <code>symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; resume</code></td>
-</tr>
-<tr>
-<td>SnapVX session count at 256 per device</td>
-<td>Accumulated snapshots not being expired; backup software snap retention too long</td>
-<td><code>symsnap list -sid &lt;SID&gt; -sg &lt;sg&gt;</code> to find stale sessions; <code>symsnap -sid &lt;SID&gt; -sg &lt;sg&gt; -snap &lt;name&gt; terminate</code> to remove; review backup software retention policy</td>
-</tr>
-<tr>
-<td>Thin device subscription warning</td>
-<td>Thin pool consumed capacity approaching 80–90%; thin devices over-allocated</td>
-<td><code>symcfg -sid &lt;SID&gt; -pool &lt;pool&gt; show</code>; expand pool with additional thin devices; identify over-consuming SGs with <code>symsg list -sid &lt;SID&gt;</code></td>
-</tr>
-<tr>
-<td>Director port I/O errors / link resets</td>
-<td>SAN fabric event, failed SFP, cable issue, or host HBA problem</td>
-<td><code>symcfg -sid &lt;SID&gt; show</code> for port error counters; check switch interface statistics; inspect HBA and cable at host end</td>
-</tr>
-<tr>
-<td>Host cannot see LUN after masking view creation</td>
-<td>Incorrect port group, initiator WWN mismatch, or zone not active on fabric</td>
-<td>Verify masking view with <code>symmask -sid &lt;SID&gt; list logins</code>; confirm host WWN is in initiator group; check fabric zone is active and port is online</td>
-</tr>
-<tr>
-<td>Unisphere GUI inaccessible</td>
-<td>Unisphere service stopped, vApp out of resources, or TLS certificate expired</td>
-<td>Check Unisphere vApp VM health; restart Unisphere via <code>service dell-unisphere restart</code>; renew TLS cert if expired</td>
-</tr>
-<tr>
-<td>Performance SLO violations (response time &gt;2 ms)</td>
-<td>Pool tier imbalance, FAST VP not migrating data, or I/O load spike</td>
-<td>Review FAST VP tier placement in Unisphere → Performance; run <code>symstat -sid &lt;SID&gt;</code>; check for runaway workloads in storage groups</td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Full array health summary</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all director and port states</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Query SRDF pair state for a specific RDF group</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List all SRDF groups and their pair counts</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List SnapVX snapshots for a storage group</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symsnap<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;storage-group&gt;
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check physical drive state</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Show thin pool capacity</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-pool<span class="w"> </span>&lt;pool-name&gt;<span class="w"> </span>show
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Show real-time I/O statistics</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rw<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">6</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># List masking views and their components</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>symmaskdb<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>database
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Show host login (initiator) visibility per port</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>symmask<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>logins
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Location</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Solutions Enabler daemon log</td>
-<td><code>/var/symapi/log/se_deamons.log</code> (Linux)</td>
-<td>Main SE service log; check for connection and authentication errors</td>
-</tr>
-<tr>
-<td>SYMCLI command log</td>
-<td><code>/var/symapi/log/</code></td>
-<td>Per-command log files created for each SYMCLI invocation</td>
-</tr>
-<tr>
-<td>Unisphere application log</td>
-<td>Unisphere vApp → <code>/var/log/emc/</code></td>
-<td>Web service and API errors</td>
-</tr>
-<tr>
-<td>Array sysmgr log</td>
-<td>Accessible via Dell Support remote session</td>
-<td>Internal array operating system logs; not user-accessible</td>
-</tr>
-<tr>
-<td>Audit log (SYMCLI)</td>
-<td><code>symevent -sid &lt;SID&gt; list</code></td>
-<td>Records all configuration change events on the array</td>
-</tr>
-</tbody>
-</table>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<p>Collect the following before opening a Dell Support case:</p>
-<ol>
-<li>Symmetrix SID: <code>symcfg list</code></li>
-<li>PowerMaxOS version: <code>symcfg -sid &lt;SID&gt; show | grep -i "microcode"</code></li>
-<li>Solutions Enabler version: <code>symcli -version</code></li>
-<li>Full array health output: <code>symcfg -sid &lt;SID&gt; show &gt; array_health.txt</code></li>
-<li>SRDF group state (if replication issue): <code>symrdf -sid &lt;SID&gt; -rdfg &lt;group&gt; query &gt; srdf_state.txt</code></li>
-<li>Director/port status: <code>symcfg -sid &lt;SID&gt; list -dir all &gt; director_status.txt</code></li>
-<li>Recent Unisphere alerts: export from Unisphere → Alerts → Export</li>
-<li>Symptom description, time of first occurrence, and business impact</li>
-</ol>
-<p>Use Dell SupportAssist (if licensed) to automatically collect and upload diagnostic bundles: accessible from Unisphere → System → SupportAssist.</p>
+<h1 id="powermax-troubleshooting">PowerMax — Troubleshooting<a class="headerlink" href="#powermax-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>Known issues, symptoms, and resolution steps.</span>
+</a>
+
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Diagnostic commands, log locations, and performance analysis.</span>
+</a>
+
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>Dell support portal, case opening, SLA tiers, and escalation path.</span>
+</a>
+
+</div>
 
 
 

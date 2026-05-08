@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>NetApp Keystone — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="NetApp Keystone — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="NetApp Keystone — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#netapp-keystone-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              NetApp Keystone — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,192 +717,16 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">NetApp Keystone</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Verify Keystone Collector service is running</td>
-<td><code>systemctl status keystone-collector</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check last collection timestamp in collector logs</td>
-<td><code>journalctl -u keystone-collector -n 50 | grep -i "collection\|reported\|error"</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Open BlueXP → Digital Wallet → Keystone</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check burst usage</td>
-<td></td>
-<td>flag if any service level is consuming burst &gt; 10% above committed tier</td>
-</tr>
-<tr>
-<td>[ ] Run <code>volume show -fields qos-policy-group</code> on the ONTAP cluster</td>
-<td><code>volume show -fields qos-policy-group</code></td>
-<td>confirm all Keystone volumes have an AQoS policy assigned</td>
-</tr>
-<tr>
-<td>[ ] Check for unclassified volumes (missing or incorrect QoS policy gr</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review the Keystone Collector health dashboard in BlueXP for any c</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Collector service is active and not in a failed or activating loop</li>
-<li>[ ] Last successful telemetry report is within the expected collection interval (typically 1 hour)</li>
-<li>[ ] No collection errors in <code>/var/log/keystone-collector/</code> or systemd journal</li>
-<li>[ ] BlueXP Keystone dashboard reflects current capacity — data is not stale</li>
-<li>[ ] No service-level SLA breaches flagged (availability, latency, IOPS/TB)</li>
-<li>[ ] All volumes are assigned to the correct Keystone service-level AQoS policy group</li>
-<li>[ ] Burst usage is within acceptable range — not approaching the burst limit</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On the Keystone Collector VM — check collector service status</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>keystone-collector
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># View recent collector logs for errors or collection timestamps</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>keystone-collector<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Tail the collector log file directly</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/keystone-collector/keystone-collector.log
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># On the ONTAP cluster — verify AQoS policies exist for all Keystone service levels</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>qos<span class="w"> </span>policy-group<span class="w"> </span>show
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check that all volumes have a Keystone AQoS policy group assigned</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,svm,qos-policy-group
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Confirm ONTAP cluster is reachable from the Collector VM</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;cluster-mgmt-lif&gt;/api/cluster<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Keystone Collector is running and last reported telemetry within the expected interval</li>
-<li>[ ] Confirm the change is not scheduled immediately before the monthly billing close (avoid capacity spikes at billing cutover)</li>
-<li>[ ] All volumes involved in the change have correct AQoS policy-group assignments — verify before and after</li>
-<li>[ ] If adding new volumes, the target Keystone service level has sufficient committed capacity headroom</li>
-<li>[ ] If decommissioning volumes, confirm snapshot copies on those volumes are also being removed to avoid lingering capacity charges</li>
-<li>[ ] Collector configuration backup taken: copy <code>/etc/keystone-collector/</code> and current config before any Collector changes</li>
-<li>[ ] BlueXP dashboard reviewed for current consumed vs. committed — document baseline before change</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Collector reporting current telemetry</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Change timed away from billing close</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AQoS policy-group assignments verified</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Target service level has capacity headroom</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Baseline consumption documented in BlueXP</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] If no telemetry in BlueXP: run <code>systemctl status keystone-collector</code> — check for crash or config error</li>
-<li>[ ] If Collector stopped: restart with <code>systemctl restart keystone-collector</code>; then check logs for root cause</li>
-<li>[ ] If capacity discrepancy in BlueXP: audit volume QoS assignments with <code>volume show -fields qos-policy-group</code> — identify unclassified or mis-assigned volumes</li>
-<li>[ ] If burst usage spike: identify which service level is bursting in BlueXP dashboard; review recent provisioning and snapshot schedules</li>
-<li>[ ] If billing question or discrepancy: export the consumption report from BlueXP Digital Wallet; compare against provisioned volumes; open a Keystone support case if data is inconsistent</li>
-<li>[ ] If Collector cannot reach ONTAP cluster: test connectivity from the Collector VM with <code>curl -sk https://&lt;cluster-mgmt-lif&gt;/api/cluster</code>; check firewall and credentials</li>
-<li>[ ] If SLA latency breach: review <code>qos statistics performance show</code> on ONTAP; consider escalating workload to a higher service level tier</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Is the Collector service running and reporting?</td>
-<td></td>
-</tr>
-<tr>
-<td>What does the BlueXP Keystone dashboard show?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are all volumes assigned to correct AQoS policies?</td>
-<td></td>
-</tr>
-<tr>
-<td>Which service level is bursting and by how much?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is this a billing discrepancy or a real capacity issue?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Record the current consumed capacity baseline from BlueXP Digital Wallet before starting</li>
-<li>If performing Collector maintenance: stop the Collector with <code>systemctl stop keystone-collector</code>; complete changes; restart with <code>systemctl start keystone-collector</code></li>
-<li>For ONTAP cluster changes that affect Keystone-reported volumes: complete the ONTAP change following the standard ONTAP maintenance procedure</li>
-<li>After ONTAP changes, verify AQoS policy-group assignments are still intact: <code>volume show -fields qos-policy-group</code></li>
-<li>Restart Keystone Collector if any ONTAP credentials or cluster management LIF changed: update the Collector configuration via the TUI first</li>
-<li>Monitor Collector logs for the next collection cycle to confirm successful telemetry reporting</li>
-<li>Validate the BlueXP Keystone dashboard reflects accurate consumption within one reporting cycle before closing the maintenance window</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Keystone Collector is running and not in an error state: <code>systemctl status keystone-collector</code></li>
-<li>[ ] New collection timestamp visible in logs — telemetry resumed after the change</li>
-<li>[ ] BlueXP Keystone dashboard shows updated consumption data (not stale from before the change)</li>
-<li>[ ] All volumes — including any newly provisioned during the window — have correct AQoS policy-group assignments</li>
-<li>[ ] No unclassified volumes: <code>volume show -fields qos-policy-group</code> shows no blanks for Keystone volumes</li>
-<li>[ ] Consumed capacity in BlueXP is consistent with expected provisioned capacity post-change</li>
-<li>[ ] No unexpected burst activation triggered by the change</li>
-</ul>
+<h1 id="netapp-keystone-operations">NetApp Keystone — Operations<a class="headerlink" href="#netapp-keystone-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+</div>
 
 
 

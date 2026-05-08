@@ -21,7 +21,7 @@
     
     
       
-        <title>CloudIQ Architecture - Chris KB</title>
+        <title>CloudIQ — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="CloudIQ Architecture · Chris KB">
+  <meta property="og:title" content="CloudIQ — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CloudIQ Architecture · Chris KB">
+  <meta name="twitter:title" content="CloudIQ — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CloudIQ Architecture
+              CloudIQ — Architecture
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-pipeline-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Pipeline Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How It Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity-and-integration-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity and Integration Points
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-and-capacity-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing and Capacity Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,144 +717,30 @@
 
 
 
-<h1 id="cloudiq-architecture">CloudIQ Architecture<a class="headerlink" href="#cloudiq-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.</p>
-<h2 id="data-pipeline-topology">Data Pipeline Topology<a class="headerlink" href="#data-pipeline-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  ARRAYS["Dell Arrays\nPowerMax · Unity · PowerScale · PowerStore"] --&gt;|"secure telemetry HTTPS"| CLOUDIQ["Dell CloudIQ\n(SaaS analytics)"]
-  CLOUDIQ --&gt; HEALTH["Health Score &amp; Alerts"]
-  CLOUDIQ --&gt; CAP["Capacity Forecasting"]
-  CLOUDIQ --&gt; REC["AI Recommendations"]
-  ADMIN(["IT Admin"]) --&gt;|"web portal"| CLOUDIQ
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class ARRAYS ctrl
-  class CLOUDIQ,HEALTH,CAP,REC cloud
-  class ADMIN host</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Location</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CloudIQ SaaS Platform</td>
-<td>Dell-hosted cloud</td>
-<td>Analytics engine, health scoring, capacity forecasting, alert generation</td>
-</tr>
-<tr>
-<td>CloudIQ Web Dashboard</td>
-<td>Browser (SaaS)</td>
-<td>Primary operator interface for health, alerts, capacity, and performance views</td>
-</tr>
-<tr>
-<td>CloudIQ REST API</td>
-<td>Dell-hosted (<code>cloudiq.dell.com</code>)</td>
-<td>Programmatic access to all CloudIQ data; used for automation and integrations</td>
-</tr>
-<tr>
-<td>Secure Connect Gateway (SCG)</td>
-<td>On-premises (virtual appliance)</td>
-<td>Collects telemetry from registered Dell devices and forwards it to CloudIQ over HTTPS</td>
-</tr>
-<tr>
-<td>Registered storage systems</td>
-<td>On-premises</td>
-<td>PowerMax, PowerStore, PowerScale, Unity, VPLEX, Data Domain, etc.; each registered to SCG</td>
-</tr>
-<tr>
-<td>API client credentials</td>
-<td>CloudIQ → Settings</td>
-<td>OAuth2 <code>client_id</code> / <code>client_secret</code> for REST API access</td>
-</tr>
-</tbody>
-</table>
-<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Each on-premises Dell storage system is registered to an SCG appliance</li>
-<li>The SCG polls the registered systems for telemetry (capacity metrics, performance counters, hardware health) and forwards the data to the Dell CloudIQ back-end over outbound HTTPS (port 443)</li>
-<li>CloudIQ ingests the telemetry, applies ML-based health scoring, and generates alerts when scores drop or anomalies are detected</li>
-<li>Users access results via the CloudIQ web dashboard or the REST API</li>
-<li>Notifications are sent via email or webhook based on configured notification rules</li>
-</ol>
-<p>CloudIQ health scores range from 0 to 100. Scores below 80 indicate a condition requiring attention; scores below 60 are typically active hardware or configuration alerts.</p>
-<h2 id="connectivity-and-integration-points">Connectivity and Integration Points<a class="headerlink" href="#connectivity-and-integration-points" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Interface</th>
-<th>Protocol / Endpoint</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SCG → CloudIQ telemetry</td>
-<td>HTTPS 443 outbound</td>
-<td>Telemetry upload from SCG to Dell CloudIQ back-end</td>
-</tr>
-<tr>
-<td>CloudIQ REST API</td>
-<td>HTTPS <code>https://cloudiq.dell.com/cloudiq/rest/v1/</code></td>
-<td>Programmatic access to health, alerts, capacity, and performance data</td>
-</tr>
-<tr>
-<td>CloudIQ Auth API</td>
-<td>HTTPS <code>https://cloudiq.dell.com/auth/v1/token</code></td>
-<td>OAuth2 token endpoint for API clients</td>
-</tr>
-<tr>
-<td>Email notifications</td>
-<td>SMTP (Dell-managed)</td>
-<td>Alert email delivery to configured recipients</td>
-</tr>
-<tr>
-<td>Webhook notifications</td>
-<td>HTTPS POST (customer-defined URL)</td>
-<td>Alert delivery to external systems (SIEM, ServiceNow, PagerDuty)</td>
-</tr>
-<tr>
-<td>SSO / IdP</td>
-<td>SAML 2.0</td>
-<td>Optional corporate SSO for CloudIQ web login</td>
-</tr>
-</tbody>
-</table>
-<h2 id="sizing-and-capacity-model">Sizing and Capacity Model<a class="headerlink" href="#sizing-and-capacity-model" title="Permanent link">&para;</a></h2>
-<p>CloudIQ is a SaaS product — there is no on-premises compute to size for CloudIQ itself. The sizing consideration is the SCG appliance:</p>
-<table>
-<thead>
-<tr>
-<th>SCG Parameter</th>
-<th>Guideline</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SCG VM (virtual appliance)</td>
-<td>4 vCPU, 8 GB RAM, 100 GB disk (standard deployment)</td>
-</tr>
-<tr>
-<td>Max devices per SCG</td>
-<td>~500 registered devices (check current SCG documentation)</td>
-</tr>
-<tr>
-<td>SCG redundancy</td>
-<td>Deploy two SCG appliances; register each device to both for failover</td>
-</tr>
-<tr>
-<td>Network requirement</td>
-<td>Outbound HTTPS (443) to <code>cloudiq.dell.com</code> and <code>esrs.emc.com</code>; no inbound ports required</td>
-</tr>
-</tbody>
-</table>
-<p>CloudIQ licensing is per-platform/system. Confirm that all monitored systems are included in the CloudIQ licence entitlement.</p>
+<h1 id="cloudiq-architecture">CloudIQ — Architecture<a class="headerlink" href="#cloudiq-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>Architecture overview, design principles, and topology.</span>
+</a>
+
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>Core components, services, and technical specifications.</span>
+</a>
+
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>Integration with other platforms and external systems.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Sizing guidelines, design standards, and best practices.</span>
+</a>
+
+</div>
 
 
 

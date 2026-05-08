@@ -21,7 +21,7 @@
     
     
       
-        <title>NetBackup Architecture - Chris KB</title>
+        <title>NetBackup — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="NetBackup Architecture · Chris KB">
+  <meta property="og:title" content="NetBackup — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="NetBackup Architecture · Chris KB">
+  <meta name="twitter:title" content="NetBackup — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              NetBackup Architecture
+              NetBackup — Architecture
             
           </span>
         </div>
@@ -699,102 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#three-tier-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Three-Tier Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#three-tier-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Three-Tier Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#master-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Master Server
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#media-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Media Server
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-units" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Units
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#netbackup-appliance-52505350" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NetBackup Appliance (5250/5350)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-ports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Ports
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -813,175 +717,30 @@
 
 
 
-<h1 id="netbackup-architecture">NetBackup Architecture<a class="headerlink" href="#netbackup-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="three-tier-architecture">Three-Tier Architecture<a class="headerlink" href="#three-tier-architecture" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-<th>Typical Scale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Master Server</td>
-<td>Policy management, catalog, scheduling</td>
-<td>1 per domain (HA pair optional)</td>
-</tr>
-<tr>
-<td>Media Server</td>
-<td>Data movement, deduplication, storage writes</td>
-<td>Multiple, load-balanced</td>
-</tr>
-<tr>
-<td>Client</td>
-<td>Backup agent on protected host</td>
-<td>Per protected server/VM</td>
-</tr>
-<tr>
-<td>Storage Unit</td>
-<td>Target storage for backup data</td>
-<td>BasicDisk, AdvancedDisk, OST, Cloud, Tape</td>
-</tr>
-<tr>
-<td>OpsCenter / IT Analytics</td>
-<td>Centralised reporting and monitoring</td>
-<td>Separate server; multi-domain</td>
-</tr>
-</tbody>
-</table>
-<h2 id="three-tier-topology">Three-Tier Topology<a class="headerlink" href="#three-tier-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                     NetBackup Architecture                               │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Primary Server (Master Server)                                 │    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  NetBackup catalogue  Policy DB  Job scheduler  EMM DB          │    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  └──────────────────────────────┬──────────────────────────────────┘    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │                                 │  policy / job control                 │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │         ┌───────────────────────┼────────────────────────┐              │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │         │                       │                        │              │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  ┌──────▼──────┐        ┌───────▼──────┐        ┌───────▼──────┐       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  Media Svr 1│        │  Media Svr 2 │        │  Media Svr 3 │       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  │  (Site A)   │        │  (Site B/DR) │        │  (Cloud gate)│       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  └──────┬──────┘        └───────┬──────┘        └───────┬──────┘       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │         │  data                 │                       │              │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  ┌──────▼──────┐        ┌───────▼──────┐        ┌───────▼──────┐       │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  │ Disk / MSDP │        │ Disk / MSDP  │        │  Cloud (S3)  │       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  │ (dedup pool)│        │  (DR copy)   │        │  (long-term) │       │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  └─────────────┘        └──────────────┘        └──────────────┘       │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │                                                                          │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  Clients: NBU agents on VMs, DB hosts, NAS NDMP, VMware backup host     │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  └──────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="master-server">Master Server<a class="headerlink" href="#master-server" title="Permanent link">&para;</a></h2>
-<p>The master server is the single most critical component — it holds the NetBackup catalog (file system and database tracking all backup images) and all policy definitions. Master server failure means no new jobs schedule.</p>
-<p>High availability:
-- <strong>NetBackup HA</strong> (clustering): Master server as Windows cluster or Linux active/passive
-- <strong>Catalog DR</strong>: Daily catalog backup to a separate media server; restore procedure documented in DR runbook</p>
-<p>Verify catalog backup is running:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bplist<span class="w"> </span>-S<span class="w"> </span>&lt;master_server&gt;<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span><span class="w"> </span>-policy<span class="w"> </span>NBU_Catalog_Backup<span class="w"> </span>-s<span class="w"> </span>-7d<span class="w">   </span><span class="c1"># Jobs in last 7 days</span>
-</code></pre></div></p>
-<h2 id="media-server">Media Server<a class="headerlink" href="#media-server" title="Permanent link">&para;</a></h2>
-<p>Media servers perform data movement and can host Data Domain OST deduplication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List media servers and their status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nbemmcmd<span class="w"> </span>-lisths<span class="w"> </span>-machinetype<span class="w"> </span>media
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check media server connectivity</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>bpclntcmd<span class="w"> </span>-hn<span class="w"> </span>&lt;media_server&gt;<span class="w"> </span>-chk
-</code></pre></div>
-<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Client (backup agent) → TCP 13782
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    │
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    ▼
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Media Server (reads client data, deduplicates if OST, writes to storage unit)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    │
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    ├── AdvancedDisk/BasicDisk (local disk storage units)
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    ├── OpenStorage (Data Domain OST)
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    └── Cloud Storage Unit (S3, Azure Blob)
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    │
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Master Server (catalogs image metadata, orchestrates scheduling)
-</code></pre></div>
-<h2 id="storage-units">Storage Units<a class="headerlink" href="#storage-units" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Use Case</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>BasicDisk</td>
-<td>Simple disk storage</td>
-<td>No dedup; good for short-term</td>
-</tr>
-<tr>
-<td>AdvancedDisk</td>
-<td>Disk with load balancing</td>
-<td>Multiple paths; auto-selection of best path</td>
-</tr>
-<tr>
-<td>OpenStorage (OST)</td>
-<td>Dell Data Domain</td>
-<td>Inline dedup; DD Boost protocol; AIR replication</td>
-</tr>
-<tr>
-<td>Cloud Storage Unit</td>
-<td>S3 / Azure</td>
-<td>Long-term retention; high latency — not for fast restore</td>
-</tr>
-<tr>
-<td>MSDP (Media Server Dedup Pool)</td>
-<td>Native NetBackup dedup</td>
-<td>No external appliance needed</td>
-</tr>
-<tr>
-<td>Tape</td>
-<td>Archival</td>
-<td>LTO8/9; WORM media for compliance</td>
-</tr>
-</tbody>
-</table>
-<h2 id="netbackup-appliance-52505350">NetBackup Appliance (5250/5350)<a class="headerlink" href="#netbackup-appliance-52505350" title="Permanent link">&para;</a></h2>
-<p>Integrated master + media + storage in a single platform:
-- Pre-configured, hardened OS (NetBackup Appliance OS)
-- Managed via NetBackup Appliance Shell Menu (CLISH) or Appliance Management Console (AMC)
-- Scale-out by adding additional appliances to the domain</p>
-<h2 id="key-ports">Key Ports<a class="headerlink" href="#key-ports" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Port</th>
-<th>Protocol</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1556</td>
-<td>TCP</td>
-<td>vnetd (BPRD) — main communication</td>
-</tr>
-<tr>
-<td>13724</td>
-<td>TCP</td>
-<td>bpcd — client daemon</td>
-</tr>
-<tr>
-<td>13782</td>
-<td>TCP</td>
-<td>bpbrm — backup/restore manager</td>
-</tr>
-<tr>
-<td>13785</td>
-<td>TCP</td>
-<td>bpdbm — database manager (master)</td>
-</tr>
-</tbody>
-</table>
+<h1 id="netbackup-architecture">NetBackup — Architecture<a class="headerlink" href="#netbackup-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>Architecture overview, design principles, and topology.</span>
+</a>
+
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>Master server, media servers, clients, catalog, and storage.</span>
+</a>
+
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>Integration with VMware, storage arrays, and cloud platforms.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Sizing guidelines, design standards, and naming conventions.</span>
+</a>
+
+</div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Cisco MDS — Architecture - Chris KB</title>
+        <title>MDS — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Cisco MDS — Architecture · Chris KB">
+  <meta property="og:title" content="MDS — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Cisco MDS — Architecture · Chris KB">
+  <meta name="twitter:title" content="MDS — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cisco-mds-architecture" class="md-skip">
+        <a href="#mds-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cisco MDS — Architecture
+              MDS — Architecture
             
           </span>
         </div>
@@ -699,102 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#cisco-mds-fabric-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cisco MDS Fabric Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#platform-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Platform Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fabric-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fabric Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vsan-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VSAN Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#fc-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FC Services
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#port-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Port Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zoning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zoning
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -813,243 +717,13 @@
 
 
 
-<h1 id="cisco-mds-architecture">Cisco MDS — Architecture<a class="headerlink" href="#cisco-mds-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="mds-architecture">MDS — Architecture<a class="headerlink" href="#mds-architecture" title="Permanent link">&para;</a></h1>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, topology, and how it fits in the stack.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Core services, ports, dependencies, and internals.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with other platforms and services.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Naming conventions, design rules, and configuration baselines.</span>
-</a>
-
+<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
-
-<blockquote>
-<p>Part of the <a href="../">Cisco MDS</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="cisco-mds-fabric-topology">Cisco MDS Fabric Topology<a class="headerlink" href="#cisco-mds-fabric-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  H1A(["esxi-01  HBA0"]) --&gt; MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
-  H2A(["esxi-02  HBA0"]) --&gt; MDSA
-  H1B(["esxi-01  HBA1"]) --&gt; MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
-  H2B(["esxi-02  HBA1"]) --&gt; MDSB
-
-  MDSA &lt;--&gt;|"4× 100G ISL"| MDSB
-
-  MDSA --&gt; FA_CT0[("FlashArray CT0")]
-  MDSA --&gt; PM_A[("PowerMax Dir A")]
-  MDSA --&gt; NA_N1[("NetApp AFF Node 1")]
-  MDSB --&gt; FA_CT1[("FlashArray CT1")]
-  MDSB --&gt; PM_B[("PowerMax Dir B")]
-  MDSB --&gt; NA_N2[("NetApp AFF Node 2")]
-
-  classDef switch fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-  class MDSA,MDSB switch
-  class H1A,H2A,H1B,H2B host
-  class FA_CT0,PM_A,NA_N1,FA_CT1,PM_B,NA_N2 storage</code></pre>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC) and FCoE. The core isolation mechanism is the <strong>VSAN (Virtual SAN)</strong> — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.</p>
-<hr />
-<h2 id="platform-reference">Platform Reference<a class="headerlink" href="#platform-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Model</th>
-<th>Type</th>
-<th>Max FC Ports</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MDS 9132T</td>
-<td>Fixed</td>
-<td>32x 32G FC</td>
-<td>Entry/mid-range</td>
-</tr>
-<tr>
-<td>MDS 9148T</td>
-<td>Fixed</td>
-<td>48x 32G FC</td>
-<td>Mid-range</td>
-</tr>
-<tr>
-<td>MDS 9396T</td>
-<td>Fixed</td>
-<td>96x 32G FC</td>
-<td>High-density fixed</td>
-</tr>
-<tr>
-<td>MDS 9706</td>
-<td>Director</td>
-<td>Up to 384 FC</td>
-<td>Modular director</td>
-</tr>
-<tr>
-<td>MDS 9710</td>
-<td>Director</td>
-<td>Up to 576 FC</td>
-<td>Large-scale director</td>
-</tr>
-</tbody>
-</table>
-<p>Directors (9706/9710) support ISSU (In-Service Software Upgrade), making them the preferred platform for environments requiring zero-downtime maintenance.</p>
-<hr />
-<h2 id="fabric-design">Fabric Design<a class="headerlink" href="#fabric-design" title="Permanent link">&para;</a></h2>
-<p>Typical enterprise deployment uses a <strong>dual-fabric</strong> architecture — each host HBA port connects to a separate switch, with storage targets dual-homed across both fabrics. A failure of one fabric does not impact the other.</p>
-<p>Each fabric is completely independent — a failure of one fabric does not impact the other. All hosts and storage targets are connected to both fabrics for redundancy.</p>
-<p><strong>ISLs (Inter-Switch Links):</strong> Used when multiple MDS switches form a fabric. ISLs are configured as port-channel trunks (minimum 2 links). All VSANs allowed on the ISL must be explicitly permitted.</p>
-<hr />
-<h2 id="vsan-design">VSAN Design<a class="headerlink" href="#vsan-design" title="Permanent link">&para;</a></h2>
-<p>VSANs segment the fabric logically. Common VSAN allocation:</p>
-<table>
-<thead>
-<tr>
-<th>VSAN</th>
-<th>Purpose</th>
-<th>Fabric A</th>
-<th>Fabric B</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Production</td>
-<td>ESXi hosts → storage</td>
-<td>10</td>
-<td>11</td>
-</tr>
-<tr>
-<td>Replication</td>
-<td>SRDF/A or SnapMirror</td>
-<td>20</td>
-<td>21</td>
-</tr>
-<tr>
-<td>Management</td>
-<td>Out-of-band fabric mgmt</td>
-<td>99</td>
-<td>99</td>
-</tr>
-</tbody>
-</table>
-<p>Each VSAN has its own:
-- FC Name Server (FCNS)
-- Domain ID space
-- Zone database
-- FLOGI/PLOGI table</p>
-<p>VSAN 1 is the default VSAN — do not use VSAN 1 for production; all production traffic should be in dedicated VSANs.</p>
-<hr />
-<h2 id="fc-services">FC Services<a class="headerlink" href="#fc-services" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FCNS (Name Server)</td>
-<td>Registers all devices (hosts and storage) that FLOGI into the fabric</td>
-</tr>
-<tr>
-<td>FSPF</td>
-<td>Fabric Shortest Path First — routing protocol for FC fabrics</td>
-</tr>
-<tr>
-<td>FLOGI DB</td>
-<td>Records all fabric login events (WWN, FCID, port)</td>
-</tr>
-<tr>
-<td>Zoning</td>
-<td>Controls which initiators can communicate with which targets</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Key commands:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all devices logged into a VSAN</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show all FLOGI entries</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>show<span class="w"> </span>flogi<span class="w"> </span>database
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show fabric shortest path</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>show<span class="w"> </span>fspf<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show port status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
-</code></pre></div>
-<hr />
-<h2 id="port-types">Port Types<a class="headerlink" href="#port-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Port Type</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>F_Port</td>
-<td>Connects to a host HBA or storage target port</td>
-</tr>
-<tr>
-<td>E_Port</td>
-<td>ISL — connects to another switch</td>
-</tr>
-<tr>
-<td>TE_Port</td>
-<td>Trunking E_Port — carries multiple VSANs over an ISL trunk</td>
-</tr>
-<tr>
-<td>NP_Port</td>
-<td>N_Port Proxy — used in NPV mode</td>
-</tr>
-<tr>
-<td>SD_Port</td>
-<td>SPAN Destination Port — used for FC traffic capture</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check port type and state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set a port to F_Port mode (override auto-negotiation)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>F
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>no<span class="w"> </span>shutdown
-</code></pre></div>
-<hr />
-<h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
-<p>Zoning controls which initiator (host HBA) can communicate with which target (storage port). Best practice is <strong>single-initiator / single-target</strong> zones — one zone per host-port-to-storage-port pair.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show active zone set for a VSAN</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show all zones (active and inactive)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check if a specific WWPN is zoned</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>wwn<span class="w"> </span>&lt;wwpn&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-</code></pre></div>
-<p>Zone sets must be <strong>activated</strong> for zoning to take effect. An inactive zone set change is not applied to the fabric.</p>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerScale Architecture - Chris KB</title>
+        <title>PowerScale — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerScale Architecture · Chris KB">
+  <meta property="og:title" content="PowerScale — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerScale Architecture · Chris KB">
+  <meta name="twitter:title" content="PowerScale — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerScale Architecture
+              PowerScale — Architecture
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scale-out-nas-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scale-Out NAS Cluster
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing Guidelines
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,156 +717,30 @@
 
 
 
-<h1 id="powerscale-architecture">PowerScale Architecture<a class="headerlink" href="#powerscale-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the <strong>OneFS</strong> distributed operating system. All nodes in a cluster are peers — there is no dedicated metadata controller. The entire cluster presents a single namespace rooted at <code>/ifs</code> across all protocols (NFS, SMB, HDFS, S3, FTP). Clusters scale from a minimum of 3 nodes to 252 nodes, with each node added linearly contributing both capacity and throughput. PowerScale is available in all-flash (F-series), hybrid (H-series), and archive (A-series) node families.</p>
-<h2 id="scale-out-nas-cluster">Scale-Out NAS Cluster<a class="headerlink" href="#scale-out-nas-cluster" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  N1["Node 1"] &amp; N2["Node 2"] &amp; N3["Node 3"] &amp; NN["Node N…"] --&gt; INT["InfiniBand / 100GbE\nInternal Cluster Network"]
-  INT --&gt; SC["SmartConnect\n(DNS-based load balancing)"]
-  SC --&gt; NFS(["NFS v3/v4 Clients"])
-  SC --&gt; SMB(["SMB / CIFS Clients"])
-  SC --&gt; HDFS(["HDFS / S3 Clients"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class N1,N2,N3,NN ctrl
-  class INT,SC net
-  class NFS,SMB,HDFS host</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>OneFS Node</td>
-<td>Individual server unit; contains CPU, RAM, NVMe/SSD/HDD storage, and network interfaces. Every node runs OneFS and participates in the distributed file system.</td>
-</tr>
-<tr>
-<td>OneFS OS</td>
-<td>Distributed OS running on all nodes; manages a single coherent namespace across the cluster.</td>
-</tr>
-<tr>
-<td>SmartPools</td>
-<td>Policy-based data tiering; automatically migrates files between node pools (SSD, SAS, SATA/NL-SAS) based on access time or custom criteria.</td>
-</tr>
-<tr>
-<td>Access Zones</td>
-<td>Virtual NAS partitions; each zone has its own IP pool, authentication provider, and export/share namespace. Used to multi-tenant the cluster.</td>
-</tr>
-<tr>
-<td>SmartConnect</td>
-<td>DNS-based connection load balancing; distributes NFS/SMB client connections across node IP addresses within a zone.</td>
-</tr>
-<tr>
-<td>SyncIQ</td>
-<td>Asynchronous replication engine; replicates directories to a remote PowerScale cluster at scheduled intervals or continuously.</td>
-</tr>
-<tr>
-<td>SnapshotIQ</td>
-<td>Per-directory point-in-time snapshots stored within <code>/ifs/.snapshot/</code></td>
-</tr>
-<tr>
-<td>SmartQuotas</td>
-<td>Per-directory or per-user capacity quotas with advisory, soft, and hard thresholds.</td>
-</tr>
-<tr>
-<td>CloudPools</td>
-<td>Tiering of cold data to object stores (AWS S3, Azure Blob, ECS) as a transparent extension of <code>/ifs</code>.</td>
-</tr>
-<tr>
-<td>InsightIQ</td>
-<td>(Legacy) Performance analytics collector; replaced by CloudIQ in current deployments.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p>OneFS implements redundancy at the file system level rather than through a primary/secondary controller model:</p>
-<ul>
-<li><strong>N+1 / N+2 / N+3 protection</strong>: Data is protected using a distributed Reed-Solomon-like scheme. Protection level (N+1 to N+4) is set per directory or at the pool level. N+2 can survive two simultaneous node or drive failures.</li>
-<li><strong>No single controller</strong>: All nodes are symmetric. Losing a single node triggers a <strong>SMARTFAIL</strong> process where OneFS rebalances the data from the failed node across remaining nodes.</li>
-<li><strong>Intra-cluster network (back-end)</strong>: Nodes are connected via a dedicated back-end InfiniBand or 10/25 GbE network for inter-node data and metadata traffic. This is separate from the front-end client network.</li>
-<li><strong>Quorum</strong>: OneFS requires a strict majority of nodes to be online for writes. Read access continues with fewer nodes but write quorum must be maintained.</li>
-<li><strong>FlexProtect</strong>: Dynamic protection rebalancing; continuously adjusts data layout as nodes are added or removed.</li>
-</ul>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NFS v3/v4</td>
-<td>Primary Unix/Linux client protocol; exposed per access zone</td>
-</tr>
-<tr>
-<td>SMB 2.x/3.x</td>
-<td>Windows file sharing; per access zone</td>
-</tr>
-<tr>
-<td>HDFS</td>
-<td>Hadoop workloads; maps <code>/ifs</code> paths as HDFS volumes</td>
-</tr>
-<tr>
-<td>S3</td>
-<td>Object storage API over S3-compatible interface; per access zone</td>
-</tr>
-<tr>
-<td>FTP/FTPS</td>
-<td>Supported but not recommended for high-throughput workloads</td>
-</tr>
-</tbody>
-</table>
-<p>Network design:
-- Front-end client network: 10 or 25 GbE per node; aggregate bandwidth scales linearly with nodes.
-- Back-end cluster network: dedicated InfiniBand (older nodes) or 25/100 GbE; must be isolated from client traffic.
-- SmartConnect DNS delegation: parent zone must delegate the SmartConnect zone to the cluster's back-end node IPs.</p>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Dimension</th>
-<th>Guidance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Minimum cluster size</td>
-<td>3 nodes (OneFS requires minimum 3 for quorum and N+1 protection)</td>
-</tr>
-<tr>
-<td>Target capacity utilisation</td>
-<td>Stay below 80% of usable capacity; OneFS performance degrades above 90%</td>
-</tr>
-<tr>
-<td>Node type selection</td>
-<td>F-series (all-NVMe) for high-IOPS workloads; H-series for mixed; A-series for archive and cold data</td>
-</tr>
-<tr>
-<td>Protection level</td>
-<td>N+2 or N+3 recommended for production clusters; N+1 minimum</td>
-</tr>
-<tr>
-<td>SmartConnect zones</td>
-<td>One IP pool per access zone; at least 3 IPs per pool for effective round-robin balancing</td>
-</tr>
-<tr>
-<td>SyncIQ bandwidth</td>
-<td>Size WAN link to sustain peak change rate; enable SyncIQ throttle for business hours</td>
-</tr>
-<tr>
-<td>Snapshot retention</td>
-<td>Limit snapshot count per policy; large snapshot counts on heavily-changed directories consume metadata space</td>
-</tr>
-</tbody>
-</table>
+<h1 id="powerscale-architecture">PowerScale — Architecture<a class="headerlink" href="#powerscale-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>Architecture overview, design principles, and topology.</span>
+</a>
+
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>Core components, services, and technical specifications.</span>
+</a>
+
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>Integration with other platforms and external systems.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Sizing guidelines, design standards, and best practices.</span>
+</a>
+
+</div>
 
 
 

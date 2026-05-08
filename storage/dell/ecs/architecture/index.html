@@ -21,7 +21,7 @@
     
     
       
-        <title>ECS Architecture - Chris KB</title>
+        <title>Dell ECS — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ECS Architecture · Chris KB">
+  <meta property="og:title" content="Dell ECS — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ECS Architecture · Chris KB">
+  <meta name="twitter:title" content="Dell ECS — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ecs-architecture" class="md-skip">
+        <a href="#dell-ecs-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ECS Architecture
+              Dell ECS — Architecture
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scale-out-object-storage-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scale-Out Object Storage Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How It Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity-and-integration-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity and Integration Points
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-and-capacity-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing and Capacity Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,150 +717,13 @@
 
 
 
-<h1 id="ecs-architecture">ECS Architecture<a class="headerlink" href="#ecs-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform built on commodity x86 nodes. It exposes S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs over standard HTTPS. The software stack runs entirely on commodity hardware and provides geo-distribution across sites via Virtual Data Centers (VDCs) linked into replication groups.</p>
-<h2 id="scale-out-object-storage-topology">Scale-Out Object Storage Topology<a class="headerlink" href="#scale-out-object-storage-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  CLT(["S3 / Swift / Atmos Clients"]) --&gt; GW["Load Balancer\n(optional)"]
-  GW --&gt; N1["ECS Node 1"] &amp; N2["ECS Node 2"] &amp; N3["ECS Node 3"] &amp; NN["Node N…"]
-  N1 &amp; N2 &amp; N3 &amp; NN --&gt; RING[("Object Ring\ndistributed erasure coding")]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class N1,N2,N3,NN ctrl
-  class GW,RING net
-  class CLT host</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ECS Node</td>
-<td>Commodity x86 server running the ECS software stack; each node contributes CPU, memory, and direct-attached disks to the cluster</td>
-</tr>
-<tr>
-<td>Virtual Data Center (VDC)</td>
-<td>Logical grouping of nodes within a single site; the smallest independently manageable unit</td>
-</tr>
-<tr>
-<td>Replication Group</td>
-<td>Named policy object that links two or more VDCs and governs how objects are replicated across sites</td>
-</tr>
-<tr>
-<td>ECS Portal</td>
-<td>Web-based management console (HTTPS, port 443) for administration; backed by the ECS Management REST API</td>
-</tr>
-<tr>
-<td>Management REST API</td>
-<td>Programmatic interface on port 4443 for all administrative operations; used by <code>ecscli</code> and automation scripts</td>
-</tr>
-<tr>
-<td>Data Services layer</td>
-<td>Handles S3/Swift/Atmos/CAS protocol translation, chunking, erasure-coding, and geo-replication</td>
-</tr>
-<tr>
-<td>Namespace</td>
-<td>Multi-tenancy boundary; each namespace has its own replication group assignment, IAM users, and quota</td>
-</tr>
-<tr>
-<td>Bucket</td>
-<td>Object container within a namespace; versioning, lifecycle, and access policy are configured per bucket</td>
-</tr>
-</tbody>
-</table>
-<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>ECS writes incoming objects by chunking them into fixed-size chunks, applying erasure coding (typically 12+4 or 10+2 depending on node count and VDC span), and distributing coded fragments across nodes. For geo-replication, ECS asynchronously or synchronously replicates chunk journals to remote VDCs according to the replication group policy.</p>
-<ul>
-<li><strong>Single-site deployment</strong>: All nodes in one VDC. Erasure coding protects against disk and node failure. No geographic redundancy.</li>
-<li><strong>Multi-site (geo) deployment</strong>: Two or more VDCs in a replication group. Active-active writes are possible; object consistency uses a geo-replication journal. VDC-level failures do not cause data loss if replication lag is near zero.</li>
-<li><strong>Temporary Site Failure (TSF) mode</strong>: When a VDC is unreachable, the remaining VDC enters TSF mode, continues serving data from local copies, and queues a replication backlog to replay on reconnection.</li>
-</ul>
-<h2 id="connectivity-and-integration-points">Connectivity and Integration Points<a class="headerlink" href="#connectivity-and-integration-points" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Interface</th>
-<th>Protocol / Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>S3 API endpoint</td>
-<td>HTTPS 443 or 9021</td>
-<td>Object read/write for applications and backup tools</td>
-</tr>
-<tr>
-<td>Swift API endpoint</td>
-<td>HTTPS 9024</td>
-<td>OpenStack-compatible object access</td>
-</tr>
-<tr>
-<td>Management REST API</td>
-<td>HTTPS 4443</td>
-<td>Administration, monitoring, and automation</td>
-</tr>
-<tr>
-<td>ECS Portal</td>
-<td>HTTPS 443</td>
-<td>Web-based administration console</td>
-</tr>
-<tr>
-<td>Geo-replication</td>
-<td>TCP 9100</td>
-<td>Inter-VDC replication traffic between nodes</td>
-</tr>
-<tr>
-<td>LDAP/AD</td>
-<td>TCP 389 / 636</td>
-<td>Optional namespace-level user authentication</td>
-</tr>
-<tr>
-<td>Syslog</td>
-<td>UDP/TCP 514</td>
-<td>External log forwarding for SIEM integration</td>
-</tr>
-</tbody>
-</table>
-<h2 id="sizing-and-capacity-model">Sizing and Capacity Model<a class="headerlink" href="#sizing-and-capacity-model" title="Permanent link">&para;</a></h2>
-<p>ECS nodes are standardised appliance configurations (ECS U-Series, CX-Series). Raw capacity is converted to usable capacity after erasure coding overhead (approximately 1.33× raw for 12+4 EC) and a 30% overhead reservation.</p>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Guideline</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Minimum cluster size</td>
-<td>4 nodes per VDC for production (required for 12+4 EC)</td>
-</tr>
-<tr>
-<td>Target utilisation threshold</td>
-<td>70% of usable capacity — plan expansion before this point</td>
-</tr>
-<tr>
-<td>Hard-limit concern</td>
-<td>ECS performance degrades significantly above 85% utilisation</td>
-</tr>
-<tr>
-<td>Geo-replication node count</td>
-<td>Each VDC must independently satisfy minimum node requirements</td>
-</tr>
-<tr>
-<td>Storage per node</td>
-<td>Typically 60–90 × 8 TB or 12 TB HDDs per node in dense configurations</td>
-</tr>
-</tbody>
-</table>
-<p>Plan ECS node additions in increments of at least one full row (4 nodes minimum) to maintain erasure coding stripe width and avoid rebalancing penalties.</p>
+<h1 id="dell-ecs-architecture">Dell ECS — Architecture<a class="headerlink" href="#dell-ecs-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+</div>
 
 
 

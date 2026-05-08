@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell Unity Security - Chris KB</title>
+        <title>Unity — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Dell Unity Security · Chris KB">
+  <meta property="og:title" content="Unity — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dell Unity Security · Chris KB">
+  <meta name="twitter:title" content="Unity — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dell-unity-security" class="md-skip">
+        <a href="#unity-security" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell Unity Security
+              Unity — Security
             
           </span>
         </div>
@@ -699,69 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardening" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compliance
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -780,124 +717,30 @@
 
 
 
-<h1 id="dell-unity-security">Dell Unity Security<a class="headerlink" href="#dell-unity-security" title="Permanent link">&para;</a></h1>
-<h2 id="hardening">Hardening<a class="headerlink" href="#hardening" title="Permanent link">&para;</a></h2>
-<p>Apply the following hardening steps on all Unity deployments:</p>
-<ul>
-<li><strong>Change the default admin password</strong> on first login. Use a password meeting your organisation's complexity policy and store it in your secrets manager.</li>
-<li><strong>Enforce TLS 1.2 or higher</strong>: disable TLS 1.0 and 1.1 in Unisphere under <strong>Settings &gt; Security &gt; TLS</strong>.</li>
-<li><strong>Disable unused management protocols</strong>: disable FTP and Telnet on management interfaces if they are not required. Unisphere and <code>uemcli</code> over HTTPS/SSH are sufficient for all management tasks.</li>
-<li><strong>Restrict management access</strong>: configure management access control to allow only known management subnets. In Unisphere, restrict allowed IP ranges under <strong>Settings &gt; Access &gt; Management Interfaces</strong>.</li>
-<li><strong>Enable SupportAssist</strong>: required for proactive support and CloudIQ telemetry, and does not expose management access to Dell.</li>
-<li><strong>Disable unused SP ports</strong>: if specific FC or iSCSI host ports are unused, consider disabling them to reduce the attack surface.</li>
-</ul>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>Unisphere for Unity provides role-based access control for all administrative operations.</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Permissions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Administrator</td>
-<td>Full system access: storage provisioning, system configuration, user management, upgrades</td>
-</tr>
-<tr>
-<td>Storage Administrator</td>
-<td>Storage provisioning operations: create and manage pools, LUNs, filesystems, snapshots, replication</td>
-</tr>
-<tr>
-<td>Operator</td>
-<td>Read access plus limited operational actions: acknowledge alerts, collect service bundles</td>
-</tr>
-<tr>
-<td>Viewer</td>
-<td>Read-only: view health, capacity, configuration; cannot make any changes</td>
-</tr>
-</tbody>
-</table>
-<p>Configure users and role assignments in Unisphere under <strong>Settings &gt; Access &gt; Users</strong>. Use LDAP/AD group-to-role mapping to manage Unisphere access via your directory service rather than managing local accounts individually.</p>
-<h2 id="encryption">Encryption<a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Method</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Data at Rest (D@RE)</td>
-<td>AES-256 self-encrypting drives</td>
-<td>Enabled at pool creation on capable hardware; cannot be enabled on an existing unencrypted pool without data migration</td>
-</tr>
-<tr>
-<td>External Key Management</td>
-<td>KMIP protocol to an external KMS (Thales, Vormetric, SafeNet)</td>
-<td>Configure KMIP in Unisphere under Settings &gt; Encryption; recommended for compliance environments</td>
-</tr>
-<tr>
-<td>Data in Transit (management)</td>
-<td>TLS 1.2+ for Unisphere GUI, REST API, and uemcli</td>
-<td>Disable TLS 1.0/1.1; verify with <code>uemcli /sys/security show</code></td>
-</tr>
-<tr>
-<td>Data in Transit (iSCSI)</td>
-<td>CHAP authentication for iSCSI initiator authentication</td>
-<td>Configure CHAP per host in Unisphere &gt; Hosts; mutual CHAP is recommended</td>
-</tr>
-<tr>
-<td>Data in Transit (NFS)</td>
-<td>Kerberos (krb5, krb5i, krb5p) for NFS v4 with AD-joined NAS servers</td>
-<td>Configure Kerberos security mode on NFS exports requiring in-transit protection</td>
-</tr>
-</tbody>
-</table>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>Unity OE records all administrative actions — login/logout, configuration changes, and alert acknowledgements — in an audit log.</p>
-<p><strong>Viewing the audit log:</strong></p>
-<p>In Unisphere, navigate to <strong>System &gt; Events</strong> to review recent administrative events. The event log can be filtered by severity and time range.</p>
-<p><strong>Syslog forwarding for SIEM integration:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a syslog destination for audit log forwarding</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/sys/syslog<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-addr<span class="w"> </span>&lt;syslog_server_ip&gt;<span class="w"> </span>-protocol<span class="w"> </span>udp<span class="w"> </span>-port<span class="w"> </span><span class="m">514</span><span class="w"> </span>-facility<span class="w"> </span>local0
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Confirm the syslog configuration</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/sys/syslog<span class="w"> </span>show
-</code></pre></div>
-<p>Retain audit log data for a minimum of 90 days. For regulated environments (PCI DSS, SOX, HIPAA), ensure the syslog destination retains logs for the required compliance period.</p>
-<h2 id="compliance">Compliance<a class="headerlink" href="#compliance" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Standard</th>
-<th>Unity Capability</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FIPS 140-2</td>
-<td>Unity OE uses FIPS 140-2 validated cryptographic modules for management channel encryption</td>
-</tr>
-<tr>
-<td>DISA STIG</td>
-<td>Dell publishes Unity STIGs for DoD and regulated environments; available on DISA STIG viewer</td>
-</tr>
-<tr>
-<td>PCI DSS</td>
-<td>D@RE, TLS enforcement, audit logging, and RBAC support PCI DSS controls</td>
-</tr>
-<tr>
-<td>HIPAA</td>
-<td>Encryption at rest and in transit, access logging, and role-based access support HIPAA technical safeguards</td>
-</tr>
-</tbody>
-</table>
-<p>Verify FIPS mode status in Unisphere under <strong>Settings &gt; Security</strong>. FIPS mode restricts the cipher suites available for management connections to FIPS-approved algorithms only.</p>
+<h1 id="unity-security">Unity — Security<a class="headerlink" href="#unity-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Active Directory, LDAP integration, and audit logging.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>RBAC roles and permissions for Unisphere.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>Data at rest, data in flight, and key management.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Security hardening checklist and compliance notes.</span>
+</a>
+
+</div>
 
 
 

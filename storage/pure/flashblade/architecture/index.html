@@ -21,7 +21,7 @@
     
     
       
-        <title>FlashBlade Architecture - Chris KB</title>
+        <title>FlashBlade — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FlashBlade Architecture · Chris KB">
+  <meta property="og:title" content="FlashBlade — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FlashBlade Architecture · Chris KB">
+  <meta name="twitter:title" content="FlashBlade — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FlashBlade Architecture
+              FlashBlade — Architecture
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scale-out-blade-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scale-Out Blade Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing Guidelines
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,176 +717,13 @@
 
 
 
-<h1 id="flashblade-architecture">FlashBlade Architecture<a class="headerlink" href="#flashblade-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Pure Storage FlashBlade is a scale-out all-flash storage platform running Purity//FB OS, purpose-built for unstructured data workloads: AI/ML training data, analytics, high-performance computing, backup repositories, and large-scale file storage. The design philosophy differs fundamentally from FlashArray — rather than a fixed dual-controller appliance, FlashBlade is a disaggregated scale-out architecture where both compute and flash capacity scale together by adding blades to a chassis.</p>
-<p>Each FlashBlade blade is an independent storage node containing its own NVMe flash and compute resources. The chassis hosts multiple blades plus Fabric Modules (FMs) that provide the high-speed internal interconnect. This architecture delivers consistently high aggregate throughput regardless of the access pattern — critical for workloads like GPU training jobs that demand tens of GB/s of sustained bandwidth.</p>
-<p>FlashBlade serves multiple protocols natively from a single platform without any protocol gateway: NFS v3/v4.1, SMB 2/3, S3 object, and HDFS, all from the same filesystem or object store namespace.</p>
-<h2 id="scale-out-blade-architecture">Scale-Out Blade Architecture<a class="headerlink" href="#scale-out-blade-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  FMM["Fabric Management Module\n(NVMe-oF internal fabric)"]
-  B1["Blade 1"] &amp; B2["Blade 2"] &amp; B3["Blade 3"] &amp; BN["Blade N…"] --&gt; FMM
-  FMM --&gt; ETH["10 / 25 / 100 GbE\nData Ports"]
-  ETH --&gt; NFS(["NFS v3/v4.1 Clients"])
-  ETH --&gt; S3(["S3 / Object Clients"])
-  ETH --&gt; SMB(["SMB Clients"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class FMM,B1,B2,B3,BN ctrl
-  class ETH net
-  class NFS,S3,SMB host</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Blades</td>
-<td>Individual storage nodes within the chassis; each blade contains NVMe flash and dedicated compute; capacity scales by adding blades</td>
-</tr>
-<tr>
-<td>Fabric Modules (FM)</td>
-<td>Internal high-speed interconnect cards in the chassis; redundant FMs provide fault tolerance; all blades communicate through the FMs</td>
-</tr>
-<tr>
-<td>Chassis</td>
-<td>Physical enclosure holding up to 15 blades (//S) or 10 blades (//E series) plus Fabric Modules, power supplies, and management hardware</td>
-</tr>
-<tr>
-<td>Purity//FB OS</td>
-<td>Operating system running across all blades; manages data services including deduplication, compression, snapshots, replication, and protocol serving</td>
-</tr>
-<tr>
-<td>Pure1 cloud management</td>
-<td>SaaS monitoring, capacity forecasting, upgrade scheduling, and AI analytics — same platform as FlashArray</td>
-</tr>
-<tr>
-<td>ActiveDR</td>
-<td>Asynchronous replication for filesystems and object store to a remote FlashBlade for disaster recovery</td>
-</tr>
-<tr>
-<td>ActiveCluster (FB)</td>
-<td>Synchronous replication for filesystems between two FlashBlade arrays for zero-RPO failover (Purity//FB 4.x+)</td>
-</tr>
-<tr>
-<td>SafeMode snapshots</td>
-<td>Immutable, admin-delete-locked snapshots for ransomware protection</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p>FlashBlade does not use a dual-controller model. High availability is achieved through blade-level redundancy and Fabric Module redundancy within the chassis:</p>
-<ul>
-<li><strong>Blade redundancy:</strong> Data is distributed (striped and replicated) across multiple blades within the chassis; a single blade failure causes no data loss and only a proportional reduction in capacity and performance while the array rebalances</li>
-<li><strong>Fabric Module redundancy:</strong> Two FMs per chassis provide redundant internal connectivity; an FM failure does not interrupt access to data</li>
-<li><strong>Power and cooling:</strong> Dual redundant power supplies and fan trays; each connects to separate PDUs</li>
-</ul>
-<p><strong>Failover behaviour for blade failure:</strong></p>
-<ol>
-<li>Purity//FB detects the blade failure and marks it as unavailable</li>
-<li>Data striped across the failed blade is reconstructed from parity/replicas on surviving blades (similar to RAID rebuild)</li>
-<li>Performance and capacity are reduced during rebuild; NFS, SMB, S3, and HDFS client access continues uninterrupted</li>
-<li>Insert a replacement blade; Purity//FB automatically rebalances data across the new blade</li>
-</ol>
-<p><strong>Protocol service HA:</strong></p>
-<ul>
-<li>Each FlashBlade presents a virtual IP (VIP) per protocol service; VIPs float across blades automatically if a blade fails</li>
-<li>NFS and SMB clients reconnect automatically to the new VIP host when their session reconnects</li>
-<li>S3 clients use the FlashBlade's S3 endpoint VIP; no client reconfiguration is needed on blade failure</li>
-</ul>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Standard</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NFS v3</td>
-<td>NFSv3 over TCP/UDP</td>
-<td>Widely supported; suitable for Linux clients and HPC workloads</td>
-</tr>
-<tr>
-<td>NFS v4.1</td>
-<td>NFSv4.1 over TCP</td>
-<td>Stateful; supports pNFS for parallel access from multiple clients; recommended for AI/ML</td>
-</tr>
-<tr>
-<td>SMB 2.0 / 3.0</td>
-<td>SMB over TCP</td>
-<td>Windows file sharing; SMB 3.0 supports encryption and multichannel</td>
-</tr>
-<tr>
-<td>S3 (object)</td>
-<td>S3-compatible REST API</td>
-<td>Bucket/object model; compatible with AWS S3 SDK, Boto3, and most S3 clients</td>
-</tr>
-<tr>
-<td>HDFS</td>
-<td>HDFS-over-IP</td>
-<td>Compatible with Hadoop/Spark workloads without a dedicated Hadoop cluster</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Network requirements:</strong></p>
-<ul>
-<li>Data interfaces: 10 GbE minimum; 25 GbE or 100 GbE recommended for AI/ML and high-throughput workloads</li>
-<li>Replication interface: dedicated 10 GbE or 25 GbE interface on a separate VLAN for ActiveDR/ActiveCluster replication traffic</li>
-<li>Management interface: dedicated 1 GbE; accessible from admin hosts and Pure1 cloud</li>
-<li>Jumbo frames (MTU 9000) are recommended end-to-end for NFS and S3 data networks to maximise throughput</li>
-<li>Pure1 phone-home: outbound HTTPS (port 443) to <code>*.purestorage.com</code></li>
-</ul>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Dimension</th>
-<th>Guidance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Minimum blades</td>
-<td>3 blades minimum for production redundancy (parity can tolerate 1 blade loss)</td>
-</tr>
-<tr>
-<td>Scale-out</td>
-<td>Add blades in the same chassis up to the chassis maximum; add chassis for larger deployments</td>
-</tr>
-<tr>
-<td>Per-blade capacity</td>
-<td>Varies by blade model: FlashBlade//S 500 = 500 TB usable per blade</td>
-</tr>
-<tr>
-<td>Aggregate throughput</td>
-<td>Scales linearly with blades — each blade adds to the aggregate bandwidth; a 10-blade FlashBlade//S delivers 90+ GB/s aggregate</td>
-</tr>
-<tr>
-<td>NFS/S3 client count</td>
-<td>Hundreds to thousands of concurrent NFS or S3 clients; no hard per-protocol client limit in Purity//FB</td>
-</tr>
-<tr>
-<td>Maximum filesystem size</td>
-<td>Up to 4 PB per filesystem (configuration-dependent)</td>
-</tr>
-<tr>
-<td>S3 bucket limits</td>
-<td>No hard limit on bucket count; object count scales to billions per bucket</td>
-</tr>
-<tr>
-<td>Data reduction</td>
-<td>Inline deduplication and compression; typical backup workloads achieve 2:1–3:1; AI/ML raw data workloads are typically 1:1 (incompressible)</td>
-</tr>
-</tbody>
-</table>
+<h1 id="flashblade-architecture">FlashBlade — Architecture<a class="headerlink" href="#flashblade-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+</div>
 
 
 

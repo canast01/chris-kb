@@ -21,7 +21,7 @@
     
     
       
-        <title>SnapCenter Troubleshooting - Chris KB</title>
+        <title>NetApp SnapCenter — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SnapCenter Troubleshooting · Chris KB">
+  <meta property="og:title" content="NetApp SnapCenter — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SnapCenter Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="NetApp SnapCenter — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snapcenter-troubleshooting" class="md-skip">
+        <a href="#netapp-snapcenter-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SnapCenter Troubleshooting
+              NetApp SnapCenter — Troubleshooting
             
           </span>
         </div>
@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Calling Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -769,148 +717,12 @@
 
 
 
-<h1 id="snapcenter-troubleshooting">SnapCenter Troubleshooting<a class="headerlink" href="#snapcenter-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Plugin not connecting to host</td>
-<td>SnapCenter Agent service stopped or firewall blocking TCP 8145</td>
-<td>Settings → Hosts → Refresh host; check agent service: <code>Get-Service SnapCenter*</code> (Windows) or <code>systemctl status spl</code> (Linux); verify firewall rules</td>
-</tr>
-<tr>
-<td>Backup job failing with quiesce error</td>
-<td>Application not responding to pre-backup script; VSS writer error (SQL/Exchange)</td>
-<td>Check application logs on the host; test script manually; on Windows, check VSS writer state: <code>vssadmin list writers</code></td>
-</tr>
-<tr>
-<td>Clone operation failing with space error</td>
-<td>Insufficient free space on destination aggregate; FlexClone license not present</td>
-<td>Check aggregate capacity on ONTAP: <code>storage aggregate show</code>; verify FlexClone license: <code>system license show</code></td>
-</tr>
-<tr>
-<td>SnapVault update failing — source snapshot missing</td>
-<td>Source snapshot deleted before XDP transfer completed; retention policy mismatch</td>
-<td>On destination cluster: <code>snapmirror show -destination-path</code>; run <code>snapmirror resync</code> or re-initialize the XDP relationship</td>
-</tr>
-<tr>
-<td>Restore job failing with LUN mapping error</td>
-<td>LUN already mapped to another host; igroup mismatch during restore</td>
-<td>Check igroup membership: <code>lun mapping show</code> on ONTAP; unmount LUN on conflicting host; remap to correct igroup</td>
-</tr>
-<tr>
-<td>Resource group stuck in running state</td>
-<td>Agent crash or hung pre/post script on target host</td>
-<td>Kill job from Jobs → Monitor → Cancel; restart SnapCenter agent on host (<code>Restart-Service SnapCenter*</code> or <code>systemctl restart spl</code>); investigate script exit codes</td>
-</tr>
-<tr>
-<td>SnapCenter Server unavailable (GUI 503 error)</td>
-<td>IIS app pool crashed; SnapCenter web service stopped</td>
-<td>On server: <code>iisreset</code>; check Windows services: <code>SnapCenter_WebApp</code>, <code>SchedulerSvc</code>; review IIS error logs</td>
-</tr>
-<tr>
-<td>Backup succeeds but no snapshot visible on ONTAP</td>
-<td>ONTAP storage connection uses wrong SVM credentials; snapshot naming mismatch</td>
-<td>Re-verify ONTAP credentials in Settings → Storage Systems; check <code>snapshot show -volume &lt;vol&gt;</code> on ONTAP directly</td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Connect to SnapCenter via PowerShell</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Open-SmConnection</span> <span class="n">-SMSbaseurl</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">snapcenter-server</span><span class="p">&gt;:</span><span class="n">8146</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># List all jobs and filter by failed status</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-SmJob</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Failed&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">JobId</span><span class="p">,</span> <span class="n">JobType</span><span class="p">,</span> <span class="n">StartDateTime</span><span class="p">,</span> <span class="n">ErrorMessage</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># List all resource groups and their current status</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-SmResourceGroup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">ResourceGroupName</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">LastRunTime</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Check all registered hosts and plugin status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-SmHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">HostName</span><span class="p">,</span> <span class="n">HostType</span><span class="p">,</span> <span class="n">PlugInStatus</span><span class="p">,</span> <span class="n">HostStatus</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># List backups for a specific resource</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Get-SmBackup</span> <span class="n">-ResourceName</span> <span class="p">&lt;</span><span class="n">resource_name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">BackupName</span><span class="p">,</span> <span class="n">BackupTime</span><span class="p">,</span> <span class="n">BackupType</span><span class="p">,</span> <span class="n">Status</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Get detailed information about a specific job</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Get-SmJobSummaryReport</span> <span class="n">-JobId</span> <span class="p">&lt;</span><span class="n">job_id</span><span class="p">&gt;</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># List all ONTAP storage connections</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Get-SmStorageConnection</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">StorageName</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">ClusterVersion</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c"># Check email notification settings</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">Get-SmEmailNotification</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On a Linux plugin host — check SnapCenter agent service</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>spl
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>spl<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># On a Windows plugin host (PowerShell)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Get-Service<span class="w"> </span>SnapCenter*
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Get-EventLog<span class="w"> </span>-LogName<span class="w"> </span>Application<span class="w"> </span>-Source<span class="w"> </span><span class="s2">&quot;SnapCenter*&quot;</span><span class="w"> </span>-Newest<span class="w"> </span><span class="m">50</span>
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log Source</th>
-<th>Location</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SnapCenter Server web application logs</td>
-<td><code>C:\Program Files\NetApp\SnapCenter\SnapCenter Web App\log\</code></td>
-</tr>
-<tr>
-<td>SnapCenter Scheduler service logs</td>
-<td><code>C:\Program Files\NetApp\SnapCenter\SnapCenter Scheduler\log\</code></td>
-</tr>
-<tr>
-<td>SnapCenter SMCore logs (job engine)</td>
-<td><code>C:\Program Files\NetApp\SnapCenter\SMCore\log\</code></td>
-</tr>
-<tr>
-<td>Windows plugin agent logs</td>
-<td><code>C:\Program Files\NetApp\SnapCenter\Snapcenter Plug-in Creator\log\</code></td>
-</tr>
-<tr>
-<td>Linux plugin agent logs</td>
-<td><code>/var/opt/snapcenter/spl/logs/</code></td>
-</tr>
-<tr>
-<td>SnapCenter Plug-in for VMware logs</td>
-<td><code>/var/log/netapp/snapcenter/</code> (inside the OVA appliance)</td>
-</tr>
-<tr>
-<td>MySQL repository logs</td>
-<td><code>C:\Program Files\NetApp\SnapCenter\MySQL Data\</code> → <code>mysql-error.log</code></td>
-</tr>
-<tr>
-<td>IIS access/error logs</td>
-<td><code>C:\inetpub\logs\LogFiles\</code></td>
-</tr>
-</tbody>
-</table>
-<p>For a full support bundle (all logs + config):
-1. In SnapCenter GUI: Help → Support → Generate Support Bundle
-2. Alternatively, run PowerShell: <code>Get-SmSupportBundle -Path C:\temp\snapcenter-bundle</code></p>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Reproduce the issue and capture the Job ID from Jobs → Monitor</li>
-<li>Collect SnapCenter support bundle: Help → Support → Generate Support Bundle</li>
-<li>Note the SnapCenter Server version: Help → About</li>
-<li>Note ONTAP version of all registered storage systems</li>
-<li>Export the error message from the failed job: <code>Get-SmJobSummaryReport -JobId &lt;id&gt;</code></li>
-<li>Collect plugin host OS logs (Windows Event Log or Linux syslog) for the timeframe of the failure</li>
-<li>Open a case at <a href="https://mysupport.netapp.com">https://mysupport.netapp.com</a> under the SnapCenter product</li>
-</ol>
+<h1 id="netapp-snapcenter-troubleshooting">NetApp SnapCenter — Troubleshooting<a class="headerlink" href="#netapp-snapcenter-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="diagnostics/"><strong>Diagnostics</strong><span>Diagnostic procedures and log analysis.</span></a>
+<a class="kb-card" href="escalation/"><strong>Escalation</strong><span>Vendor escalation procedures and support contacts.</span></a>
+</div>
 
 
 

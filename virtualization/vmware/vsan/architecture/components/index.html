@@ -749,6 +749,144 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#technical-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#platform-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Role
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-components_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ports-and-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ports and Protocols
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useful-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-failure-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Failure Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-and-compatibility-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade and Compatibility Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -885,6 +1023,166 @@
 <tr>
 <td>Data sites to Witness</td>
 <td>&lt; 200 ms RTT</td>
+</tr>
+</tbody>
+</table>
+<h2 id="technical-reference">Technical Reference<a class="headerlink" href="#technical-reference" title="Permanent link">&para;</a></h2>
+<p>vSAN is part of the virtualization platform. This section covers technical operations, troubleshooting, upgrade planning, and support handoff.</p>
+<h3 id="platform-role">Platform Role<a class="headerlink" href="#platform-role" title="Permanent link">&para;</a></h3>
+<p>vSAN provides software-defined storage by pooling local disks from ESXi hosts and presenting policy-based storage to virtual machines.</p>
+<h3 id="core-components_1">Core Components<a class="headerlink" href="#core-components_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>vSAN cluster</li>
+<li>Disk groups or ESA storage pools</li>
+<li>Cache and capacity devices</li>
+<li>Storage policies</li>
+<li>Objects and components</li>
+<li>Witness or fault domains where used</li>
+<li>Resync engine</li>
+<li>Health service</li>
+</ul>
+<h3 id="main-dependencies">Main Dependencies<a class="headerlink" href="#main-dependencies" title="Permanent link">&para;</a></h3>
+<ul>
+<li>DNS resolution</li>
+<li>NTP/time sync</li>
+<li>Authentication source</li>
+<li>Management network</li>
+<li>Storage access</li>
+<li>Certificate trust</li>
+<li>Monitoring</li>
+<li>Backup/recovery process</li>
+<li>Vendor support access</li>
+</ul>
+<h3 id="ports-and-protocols">Ports and Protocols<a class="headerlink" href="#ports-and-protocols" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Use</th>
+<th>Protocol</th>
+<th>Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN transport</td>
+<td>TCP/UDP</td>
+<td>2233</td>
+</tr>
+<tr>
+<td>vSAN cluster service</td>
+<td>TCP</td>
+<td>12321</td>
+</tr>
+<tr>
+<td>vCenter management</td>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>TCP/UDP</td>
+<td>53</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>UDP</td>
+<td>123</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-logs">Key Logs<a class="headerlink" href="#key-logs" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>/var/log/vmkernel.log</code></li>
+<li><code>/var/log/vsanmgmt.log</code></li>
+<li><code>/var/log/clomd.log</code></li>
+<li><code>/var/log/cmmdsd.log</code></li>
+<li><code>/var/log/vobd.log</code></li>
+</ul>
+<h3 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Confirm management access.</li>
+<li>Review current alarms.</li>
+<li>Review recent failed tasks.</li>
+<li>Validate DNS and NTP.</li>
+<li>Confirm certificate status.</li>
+<li>Check service health.</li>
+<li>Check capacity and performance.</li>
+<li>Confirm monitoring data is current.</li>
+<li>Review recent changes.</li>
+</ul>
+<h3 id="useful-commands">Useful Commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>vsish<span class="w"> </span>-e<span class="w"> </span>get<span class="w"> </span>/vmkModules/lsom/disks/
+</code></pre></div>
+<h3 id="common-failure-points">Common Failure Points<a class="headerlink" href="#common-failure-points" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Disk failure</li>
+<li>Disk group issue</li>
+<li>Capacity pressure</li>
+<li>Object non-compliance</li>
+<li>Resync backlog</li>
+<li>Network packet loss</li>
+<li>Fault domain imbalance</li>
+<li>Policy mismatch</li>
+</ul>
+<h3 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Confirm the impact and scope.</li>
+<li>Check recent changes.</li>
+<li>Review alerts, tasks, and events.</li>
+<li>Validate DNS, NTP, authentication, and certificates.</li>
+<li>Check service status.</li>
+<li>Check storage and network dependencies.</li>
+<li>Review logs.</li>
+<li>Capture screenshots, timestamps, errors, and task IDs.</li>
+<li>Escalate with clean evidence if needed.</li>
+</ol>
+<h3 id="upgrade-and-compatibility-notes">Upgrade and Compatibility Notes<a class="headerlink" href="#upgrade-and-compatibility-notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Check product interoperability before upgrades.</li>
+<li>Confirm supported version path.</li>
+<li>Confirm backup or rollback method.</li>
+<li>Confirm maintenance window.</li>
+<li>Run pre-checks before change work.</li>
+<li>Validate health after the change.</li>
+<li>Document version before and after.</li>
+</ul>
+<h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keep versions aligned.</td>
+<td>Keep versions aligned.</td>
+</tr>
+<tr>
+<td>Keep certificates tracked.</td>
+<td>Keep certificates tracked.</td>
+</tr>
+<tr>
+<td>Keep DNS and NTP clean.</td>
+<td>Keep DNS and NTP clean.</td>
+</tr>
+<tr>
+<td>Keep alerting actionable.</td>
+<td>Keep alerting actionable.</td>
+</tr>
+<tr>
+<td>Document support ownership.</td>
+<td>Document support ownership.</td>
+</tr>
+<tr>
+<td>Avoid undocumented changes.</td>
+<td>Avoid undocumented changes.</td>
 </tr>
 </tbody>
 </table>

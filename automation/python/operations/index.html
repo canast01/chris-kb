@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>Python Automation — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="Python Automation — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="Python Automation — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#python-automation-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              Python Automation — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,209 +717,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Python</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Confirm all scheduled Python automation jobs ran successfully in t</td>
-<td></td>
-<td>check cron logs, output files, or email alert summaries</td>
-</tr>
-<tr>
-<td>[ ] Review any error output or non-zero exit codes from yesterday's ru</td>
-<td><code>/var/log/cron</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm API tokens used by production scripts have not expired (ch</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review any scripts that interact with external APIs</td>
-<td></td>
-<td>confirm the API endpoints are reachable and returning expected responses</td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check Python version installed on the automation host</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python3<span class="w"> </span>--version
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Confirm the virtual environment is intact (activate and check)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>check
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Verify critical packages are importable</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import boto3; import requests; import paramiko; print(&#39;Core imports OK&#39;)&quot;</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check for packages with known security vulnerabilities</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>pip<span class="w"> </span>audit
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Check connectivity from the automation host to target APIs (example: Dell API Gateway)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://apigw.dell.com/cloudiq/v1/health
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Review last 50 lines of the cron log to check for job failures</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>grep<span class="w"> </span>CRON<span class="w"> </span>/var/log/syslog<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Check exit codes of recent job runs (if using a log wrapper)</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(ERROR|exit code [^0]|Traceback)&quot;</span><span class="w"> </span>/var/log/automation/*.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Check for outdated packages (run monthly)</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>pip<span class="w"> </span>list<span class="w"> </span>--outdated
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] The change has been tested end-to-end in a non-production environment before touching the production script</li>
-<li>[ ] The current cron schedule for the affected script has been noted (run <code>crontab -l</code> on the automation user)</li>
-<li>[ ] A backup of the existing production script has been taken:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cp<span class="w"> </span>/opt/automation/scripts/my_script.py<span class="w"> </span>/opt/automation/scripts/my_script.py.bak.<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-</code></pre></div></li>
-<li>[ ] API tokens used by the script have been confirmed current and not near expiry</li>
-<li>[ ] Connectivity from the automation host to all target APIs/systems has been confirmed</li>
-<li>[ ] If the script writes output files or sends alerts, the output destinations have been confirmed accessible</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Change tested in dev/non-prod environment</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Cron schedule for affected script documented</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Production script backed up with datestamp</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>API tokens confirmed current</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Connectivity to target APIs confirmed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Output destinations (files, email, webhook) accessible</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p><strong>On alert or issue:</strong>
-1. Identify the failing script and the last successful run time — check cron logs (<code>grep CRON /var/log/syslog</code>) and script log files
-2. Reproduce the failure manually in a test shell to get the full traceback:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python3<span class="w"> </span>/opt/automation/scripts/failing_script.py<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/debug_run.log
-</code></pre></div>
-3. Check the error type in the traceback to determine the root cause category
-4. Apply the appropriate fix from the triage table below
-5. After fixing, run the script manually once and confirm successful output before re-enabling the cron job</p>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ModuleNotFoundError: No module named 'X'</code></td>
-<td>Package not installed in active venv</td>
-<td><code>source /opt/automation/venv/bin/activate &amp;&amp; pip install &lt;package&gt;</code></td>
-</tr>
-<tr>
-<td><code>401 Unauthorized</code> from API call</td>
-<td>Expired or revoked API token</td>
-<td>Regenerate token in the target system's API settings, update token in config/secrets store</td>
-</tr>
-<tr>
-<td><code>ConnectionError</code> or <code>requests.exceptions.Timeout</code></td>
-<td>Target API unreachable or network timeout</td>
-<td>Confirm API endpoint from automation host: <code>curl -v &lt;api_url&gt;</code>; check firewall and proxy settings</td>
-</tr>
-<tr>
-<td><code>JSONDecodeError</code> or <code>KeyError</code> in response parsing</td>
-<td>API response format changed</td>
-<td>Compare current response against expected schema, update parsing logic, check API changelog</td>
-</tr>
-<tr>
-<td><code>PermissionError</code> writing output file</td>
-<td>File permissions or path issue</td>
-<td>Check output directory permissions: <code>ls -la /path/to/output/</code>, fix with <code>chmod</code> or <code>chown</code></td>
-</tr>
-<tr>
-<td>Script ran but produced empty or unexpected output</td>
-<td>Logic error or upstream data change</td>
-<td>Add debug logging and re-run manually; compare against last known good output</td>
-</tr>
-<tr>
-<td>Cron job not running at all</td>
-<td>Cron daemon not running or syntax error in crontab</td>
-<td>Check <code>systemctl status cron</code>; validate crontab with <code>crontab -l</code>; check <code>/var/log/syslog</code> for cron errors</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p><strong>Before a maintenance window that affects automation targets (e.g., storage array, API endpoint):</strong></p>
-<ol>
-<li>Identify all scripts that interact with the target system:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;&lt;target_hostname_or_api&gt;&quot;</span><span class="w"> </span>/opt/automation/scripts/<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>-l
-</code></pre></div></li>
-<li>Comment out or temporarily disable the affected cron jobs:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>crontab<span class="w"> </span>-e
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Add a # before the relevant cron entries</span>
-</code></pre></div></li>
-<li>Confirm the jobs are disabled by verifying no scheduled runs will occur during the window</li>
-<li>Perform the maintenance window on the target system</li>
-<li>Re-enable the cron jobs after the window:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>crontab<span class="w"> </span>-e
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Remove the # from the relevant cron entries</span>
-</code></pre></div></li>
-<li>Run the script manually once to confirm it completes successfully against the restored target</li>
-<li>Monitor the output of the first two scheduled runs after re-enabling</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Script runs manually without errors:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">source</span><span class="w"> </span>/opt/automation/venv/bin/activate
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>python3<span class="w"> </span>/opt/automation/scripts/modified_script.py
-</code></pre></div></li>
-<li>[ ] Output matches expected format and content</li>
-<li>[ ] No new errors in the script log file after the manual run</li>
-<li>[ ] Cron job re-enabled and confirmed active (<code>crontab -l</code>)</li>
-<li>[ ] First scheduled run after the change completes successfully and output is verified</li>
-<li>[ ] Second scheduled run also completes successfully (confirms no transient issue)</li>
-<li>[ ] Backup copy of the previous script version retained for at least 30 days</li>
-</ul>
+<h1 id="python-automation-operations">Python Automation — Operations<a class="headerlink" href="#python-automation-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Python CLI commands, pip, virtual environments, and debugging.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Job monitoring, health checks, and status verification.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Job scheduling, automation procedures, and reporting.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>Python version management, package installation, and upgrades.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>Script backup and environment restore procedures.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for infrastructure operations.</span>
+</a>
+
+</div>
 
 
 

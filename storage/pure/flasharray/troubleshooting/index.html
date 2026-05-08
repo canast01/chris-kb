@@ -21,7 +21,7 @@
     
     
       
-        <title>FlashArray Troubleshooting - Chris KB</title>
+        <title>FlashArray — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FlashArray Troubleshooting · Chris KB">
+  <meta property="og:title" content="FlashArray — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FlashArray Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="FlashArray — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FlashArray Troubleshooting
+              FlashArray — Troubleshooting
             
           </span>
         </div>
@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Calling Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -769,169 +717,12 @@
 
 
 
-<h1 id="flasharray-troubleshooting">FlashArray Troubleshooting<a class="headerlink" href="#flasharray-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Drive in <code>failed</code> or <code>recovering</code> state</td>
-<td>NVMe or SAS SSD failure; Purity begins automatic rebuild</td>
-<td>Run <code>puredrive list</code> to confirm state; monitor rebuild with <code>puredrive list --progress</code>; open Pure support case if rebuild stalls or multiple drives fail</td>
-</tr>
-<tr>
-<td>Host loses all paths to volumes</td>
-<td>FC zone misconfiguration, iSCSI network outage, or both HBAs failed</td>
-<td>Run <code>purehost list</code> and <code>pureport list</code>; verify FC zoning on switches; confirm iSCSI connectivity and routing; check host HBA status</td>
-</tr>
-<tr>
-<td>Host loses one path (single-path warning)</td>
-<td>One HBA, port, or FC switch path failed</td>
-<td>Identify the failed path via <code>purehost list --connection</code>; check the physical port and cable on the affected array port; investigate FC switch or iSCSI switch for port errors</td>
-</tr>
-<tr>
-<td>ActiveCluster pod mediator unreachable</td>
-<td>Network change between arrays and Purity Mediator service</td>
-<td>Run <code>purepod list</code>; verify Mediator IP is reachable from both arrays on port 443; pods continue replicating across the inter-array link even without Mediator — Mediator is only required for tiebreaker during split-brain</td>
-</tr>
-<tr>
-<td>ActiveCluster pod out of sync (<code>unhealthy</code> or <code>paused</code>)</td>
-<td>Inter-array replication link down or overloaded</td>
-<td>Run <code>purepod list</code> for pod status; check replication network path; confirm replication interface is <code>up</code> on both arrays with <code>pureport list</code>; check for bandwidth saturation</td>
-</tr>
-<tr>
-<td>Unexpected capacity growth</td>
-<td>Snapshot retention not expiring old snaps; volume over-provisioning</td>
-<td>Run <code>puresnap list --space</code> to identify largest consumers; check protection group schedules with <code>purepgroup list --schedule</code>; expire or eradicate stale snapshots</td>
-</tr>
-<tr>
-<td>Purity upgrade hangs or fails mid-way</td>
-<td>Pre-check condition not met; drive fault during upgrade</td>
-<td>Check <code>purearray upgrade --status</code>; review upgrade logs; contact Pure Support with upgrade log output — do not reboot controllers manually</td>
-</tr>
-<tr>
-<td>Volume not visible on host after provisioning</td>
-<td>Volume connected to host but not to the correct host group, or host WWN/IQN not registered</td>
-<td>Run <code>purehost list --connection</code> and <code>purehgroup list --connection</code>; confirm the host's WWN or IQN is registered; confirm volume is connected to the host or its host group; rescan HBA on the host side</td>
-</tr>
-<tr>
-<td>Array reporting high latency (&gt; 1 ms reads)</td>
-<td>Workload spike, QoS limit, or drive rebuild consuming controller resources</td>
-<td>Run <code>purearray monitor</code> for real-time latency/IOPS; run <code>purevol list --monitor</code> to identify top consumers; check for active drive rebuilds with <code>puredrive list</code></td>
-</tr>
-<tr>
-<td>Controller shows <code>not ready</code> or missing</td>
-<td>Controller hardware failure or Purity process crash</td>
-<td>Run <code>purearray list --controller</code>; confirm the surviving controller is serving I/O; open a P1 Pure support case immediately</td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Overall array health and Purity version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Active alerts (all severities)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Drive health and rebuild status</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--progress
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Array capacity and data reduction</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Real-time performance (latency, IOPS, bandwidth)</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>purearray<span class="w"> </span>monitor
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Per-volume performance</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>purevol<span class="w"> </span>list<span class="w"> </span>--monitor
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Host path and connection status</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>purehost<span class="w"> </span>list
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connection
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>purehgroup<span class="w"> </span>list
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connection
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># FC/iSCSI/NVMe port status</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>pureport<span class="w"> </span>list
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Protection group schedules and replication status</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>purepgroup<span class="w"> </span>list
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="c1"># ActiveCluster pod status and failover preference</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>purepod<span class="w"> </span>list<span class="w"> </span>--replicating
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="c1"># Snapshot space usage</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="c1"># Collect diagnostic bundle for support</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>purediag<span class="w"> </span>--send<span class="w">     </span><span class="c1"># sends to Pure Support directly if phone-home is active</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>purediag<span class="w"> </span>--output<span class="w"> </span>/tmp/diag.tgz<span class="w">   </span><span class="c1"># saves locally if phone-home is unavailable</span>
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Location / Command</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Purity system log (controller events, upgrades)</td>
-<td><code>purearray list --log</code> or <code>/var/log/purity/</code> on the controller via SSH</td>
-</tr>
-<tr>
-<td>Alert history</td>
-<td><code>purealert list --flagged true</code> (flagged/resolved alerts)</td>
-</tr>
-<tr>
-<td>Audit log (admin actions)</td>
-<td><code>pureadmin list --audit</code></td>
-</tr>
-<tr>
-<td>Replication log</td>
-<td><code>purepgroup list --replication</code></td>
-</tr>
-<tr>
-<td>Diagnostic bundle</td>
-<td><code>purediag --output &lt;path&gt;</code> — includes all logs, configs, and metrics</td>
-</tr>
-<tr>
-<td>Drive event log</td>
-<td><code>puredrive list</code> — per-drive state history visible in diagnostic bundle</td>
-</tr>
-<tr>
-<td>Pure1 event timeline</td>
-<td>Pure1 portal &gt; Arrays &gt; select array &gt; Events</td>
-</tr>
-</tbody>
-</table>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<p>Collect the following before opening a Pure support case to accelerate triage:</p>
-<ul>
-<li>[ ] Array name and serial number: <code>purearray list</code></li>
-<li>[ ] Purity//FA version: <code>purearray list</code> (Version field)</li>
-<li>[ ] Active alerts: <code>purealert list</code> — copy full output</li>
-<li>[ ] Drive status: <code>puredrive list</code> — copy full output</li>
-<li>[ ] Controller status: <code>purearray list --controller</code></li>
-<li>[ ] Relevant performance data: <code>purearray monitor</code> output at time of issue</li>
-<li>[ ] Host connection details if the issue is host-facing: <code>purehost list --connection</code></li>
-<li>[ ] Pod status for ActiveCluster issues: <code>purepod list</code></li>
-<li>[ ] Diagnostic bundle: <code>purediag --output /tmp/diag_&lt;date&gt;.tgz</code> and upload to case</li>
-<li>[ ] Symptom description: what changed before the issue, when it started, and business impact</li>
-<li>[ ] Change log: any changes made in the 24 hours before the issue (firmware, zoning, network, OS patching)</li>
-</ul>
+<h1 id="flasharray-troubleshooting">FlashArray — Troubleshooting<a class="headerlink" href="#flasharray-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="diagnostics/"><strong>Diagnostics</strong><span>Diagnostic procedures and log analysis.</span></a>
+<a class="kb-card" href="escalation/"><strong>Escalation</strong><span>Vendor escalation procedures and support contacts.</span></a>
+</div>
 
 
 

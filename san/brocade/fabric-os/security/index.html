@@ -21,7 +21,7 @@
     
     
       
-        <title>Brocade Fabric OS — Security - Chris KB</title>
+        <title>FabricOS — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Brocade Fabric OS — Security · Chris KB">
+  <meta property="og:title" content="FabricOS — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Brocade Fabric OS — Security · Chris KB">
+  <meta name="twitter:title" content="FabricOS — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#brocade-fabric-os-security" class="md-skip">
+        <a href="#fabricos-security" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Brocade Fabric OS — Security
+              FabricOS — Security
             
           </span>
         </div>
@@ -699,91 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disable-unused-protocols" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disable Unused Protocols
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#radius-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RADIUS Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac-roles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC Roles
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ipfilter-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IPfilter Policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#snmp-v3-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SNMP v3 Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -802,168 +717,17 @@
 
 
 
-<h1 id="brocade-fabric-os-security">Brocade Fabric OS — Security<a class="headerlink" href="#brocade-fabric-os-security" title="Permanent link">&para;</a></h1>
+<h1 id="fabricos-security">FabricOS — Security<a class="headerlink" href="#fabricos-security" title="Permanent link">&para;</a></h1>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="authentication/">
-  <strong>Authentication</strong>
-  <span>Local accounts, directory integration, MFA, and certificate-based auth.</span>
-</a>
-
-<a class="kb-card" href="access-control/">
-  <strong>Access Control</strong>
-  <span>RBAC, roles, permissions, and service accounts.</span>
-</a>
-
-<a class="kb-card" href="encryption/">
-  <strong>Encryption</strong>
-  <span>Data-at-rest, data-in-transit, and key management.</span>
-</a>
-
-<a class="kb-card" href="hardening/">
-  <strong>Hardening</strong>
-  <span>Security baselines, hardening guides, and compliance controls.</span>
-</a>
-
+<a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>
+<a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>
+<a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>
+<a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
 </div>
 
 <blockquote>
 <p>Part of the <a href="../">Brocade Fabric OS</a> reference.</p>
 </blockquote>
-<hr />
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Telnet and HTTP disabled; SSH and HTTPS only</li>
-<li>[ ] Root account password changed; stored in vault; break-glass use only</li>
-<li>[ ] RADIUS configured pointing to Active Directory; local accounts as fallback only</li>
-<li>[ ] RBAC roles assigned — <code>switchadmin</code> for ops, <code>zoneadmin</code> for zoning-only changes</li>
-<li>[ ] IPfilter policy restricting management plane access to approved management subnet</li>
-<li>[ ] SNMP v3 configured; default community strings removed</li>
-<li>[ ] Audit logging (<code>auditlog</code>) enabled and forwarded to SIEM</li>
-<li>[ ] NTP configured and synced (required for log correlation and certificate-based auth)</li>
-<li>[ ] Password policy enforced: minimum length, complexity, expiry</li>
-</ul>
-<hr />
-<h2 id="disable-unused-protocols">Disable Unused Protocols<a class="headerlink" href="#disable-unused-protocols" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Disable Telnet</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>portdisable<span class="w"> </span>telnet
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Or via configure</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>configure
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># At &quot;Secure mode&quot; prompt: enable</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Disable HTTP (enable HTTPS only)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>httpd<span class="w"> </span>--disable<span class="w">   </span><span class="c1"># Disables the web server</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>httpcfg<span class="w"> </span>--set<span class="w"> </span>-https<span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c1"># Enable HTTPS</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Verify active services</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>portshow<span class="w">   </span><span class="c1"># Review management service ports</span>
-</code></pre></div>
-<hr />
-<h2 id="radius-authentication">RADIUS Authentication<a class="headerlink" href="#radius-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Configure RADIUS server</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aaaconfig<span class="w"> </span>--add<span class="w"> </span>&lt;radius-server-ip&gt;<span class="w"> </span>-conf<span class="w"> </span>radius<span class="w"> </span>-p<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;shared-secret&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set authentication order: RADIUS primary, local fallback</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aaaconfig<span class="w"> </span>--authorder<span class="w"> </span>RADIUS<span class="p">;</span>LOCAL
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify RADIUS is configured</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>aaaconfig<span class="w"> </span>--show
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Test RADIUS authentication</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aaaconfig<span class="w"> </span>--validate<span class="w"> </span>-user<span class="w"> </span>&lt;test-user&gt;
-</code></pre></div>
-<p><strong>Local fallback account</strong> — retain the local <code>admin</code> account as break-glass. Store the password in the enterprise vault.</p>
-<hr />
-<h2 id="rbac-roles">RBAC Roles<a class="headerlink" href="#rbac-roles" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Access</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>admin</td>
-<td>Full switch access — config, firmware, certificates</td>
-</tr>
-<tr>
-<td>switchadmin</td>
-<td>Switch operations — port management, diagnostics</td>
-</tr>
-<tr>
-<td>zoneadmin</td>
-<td>Zoning changes only — cannot modify switch config</td>
-</tr>
-<tr>
-<td>fabricadmin</td>
-<td>Fabric-level operations</td>
-</tr>
-<tr>
-<td>operator</td>
-<td>Read-only — show commands only</td>
-</tr>
-<tr>
-<td>user</td>
-<td>Very limited view access</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Assign a role to a local user</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>zoneadmin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># View current user accounts and roles</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>userconfig<span class="w"> </span>--show
-</code></pre></div>
-<p>RADIUS-authenticated users receive their role from the RADIUS server via the <code>Foundry-User-Priv</code> AV-pair or the configured role-mapping on the switch.</p>
-<hr />
-<h2 id="ipfilter-policy">IPfilter Policy<a class="headerlink" href="#ipfilter-policy" title="Permanent link">&para;</a></h2>
-<p>IPfilter restricts which source IP addresses can connect to the switch management plane.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create an IPfilter policy</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ipfilter<span class="w"> </span>--create<span class="w"> </span>mgmt_policy<span class="w"> </span>-type<span class="w"> </span>ipv4
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add rules to allow management subnet only</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>mgmt_policy<span class="w"> </span>-sip<span class="w"> </span>&lt;mgmt-subnet&gt;/&lt;prefix&gt;<span class="w"> </span>-dp<span class="w"> </span><span class="m">22</span><span class="w"> </span>-proto<span class="w"> </span>tcp<span class="w"> </span>-act<span class="w"> </span>permit<span class="w">    </span><span class="c1"># SSH</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>mgmt_policy<span class="w"> </span>-sip<span class="w"> </span>&lt;mgmt-subnet&gt;/&lt;prefix&gt;<span class="w"> </span>-dp<span class="w"> </span><span class="m">443</span><span class="w"> </span>-proto<span class="w"> </span>tcp<span class="w"> </span>-act<span class="w"> </span>permit<span class="w">   </span><span class="c1"># HTTPS</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>mgmt_policy<span class="w"> </span>-sip<span class="w"> </span>&lt;snmp-server-ip&gt;/32<span class="w"> </span>-dp<span class="w"> </span><span class="m">161</span><span class="w"> </span>-proto<span class="w"> </span>udp<span class="w"> </span>-act<span class="w"> </span>permit<span class="w">      </span><span class="c1"># SNMP</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>mgmt_policy<span class="w"> </span>-sip<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-dp<span class="w"> </span><span class="m">0</span><span class="w"> </span>-proto<span class="w"> </span>any<span class="w"> </span>-act<span class="w"> </span>deny<span class="w">                   </span><span class="c1"># Default deny</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Save and activate the policy</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ipfilter<span class="w"> </span>--save<span class="w"> </span>mgmt_policy
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>ipfilter<span class="w"> </span>--activate<span class="w"> </span>mgmt_policy
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Verify</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>ipfilter<span class="w"> </span>--show<span class="w"> </span>mgmt_policy
-</code></pre></div>
-<hr />
-<h2 id="snmp-v3-configuration">SNMP v3 Configuration<a class="headerlink" href="#snmp-v3-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure SNMP v3 interactively</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>mibCapability
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Follow prompts to configure:</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># - User name</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># - Authentication type: SHA</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># - Authentication password</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># - Privacy type: AES-128</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># - Privacy password</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># - Access level: readOnly or readWrite</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Verify SNMP configuration</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>snmpconfig<span class="w"> </span>--show
-</code></pre></div>
-<hr />
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enable audit logging</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>auditcfg<span class="w"> </span>--class<span class="w"> </span><span class="m">1</span>,2,3,4<span class="w">   </span><span class="c1"># Log zone changes (3), security events (2), firmware (4), fabric (1)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># View recent audit log entries</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>auditlog<span class="w"> </span>--show
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Forward audit log via syslog</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>syslogadmin<span class="w"> </span>--add<span class="w"> </span>-ip<span class="w"> </span>&lt;siem-ip&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Verify syslog configuration</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>syslogadmin<span class="w"> </span>--show
-</code></pre></div>
 
 
 

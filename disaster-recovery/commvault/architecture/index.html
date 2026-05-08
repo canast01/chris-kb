@@ -21,7 +21,7 @@
     
     
       
-        <title>CommVault Architecture - Chris KB</title>
+        <title>Commvault — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="CommVault Architecture · Chris KB">
+  <meta property="og:title" content="Commvault — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CommVault Architecture · Chris KB">
+  <meta name="twitter:title" content="Commvault — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CommVault Architecture
+              Commvault — Architecture
             
           </span>
         </div>
@@ -699,102 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#core-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Core Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#component-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Component Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#commserve" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CommServe
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mediaagent-and-deduplication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MediaAgent and Deduplication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scale-out-with-hyperscale-x" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scale-Out with Hyperscale X
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-library-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Library Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#port-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Port Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -813,163 +717,30 @@
 
 
 
-<h1 id="commvault-architecture">CommVault Architecture<a class="headerlink" href="#commvault-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CommServe</td>
-<td>Management, scheduling, SQL DB</td>
-<td>HA pair (passive standby) for critical environments</td>
-</tr>
-<tr>
-<td>MediaAgent</td>
-<td>Data movement, deduplication (DDB)</td>
-<td>Multiple; one DDB per storage pool</td>
-</tr>
-<tr>
-<td>Client</td>
-<td>Backup agent (Windows, Linux, VSA)</td>
-<td>VSA agent for VMware vSphere</td>
-</tr>
-<tr>
-<td>Command Center</td>
-<td>Web UI for administration</td>
-<td>Replaces legacy Java GUI in FR32+</td>
-</tr>
-<tr>
-<td>Storage Policy</td>
-<td>Job-to-storage mapping</td>
-<td>Primary copy + secondary (offsite) copy</td>
-</tr>
-</tbody>
-</table>
-<h2 id="component-topology">Component Topology<a class="headerlink" href="#component-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  CS["CommServe\n(command &amp; control)"] --&gt; WEBCON["Web Console\n&amp; Command Center"]
-  MA1["Media Agent 1\n(data mover)"] &amp; MA2["Media Agent 2"] --&gt; CS
-  SRC(["Source — VMs / DBs / Files"]) --&gt; MA1 &amp; MA2
-  MA1 &amp; MA2 --&gt; DISK[("Disk Library\nDDB dedup")]
-  DISK --&gt;|"aux copy"| TAPE[("Tape / Object\nlong-term retention")]
-  ADMIN(["Backup Admin"]) --&gt; WEBCON
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class CS,MA1,MA2 ctrl
-  class DISK,TAPE store
-  class SRC,ADMIN host
-  class WEBCON mgmt</code></pre>
-<h2 id="commserve">CommServe<a class="headerlink" href="#commserve" title="Permanent link">&para;</a></h2>
-<p>The CommServe is the single most critical component — it holds the configuration database (SQL Server) that maps every backup job, client, and storage policy. CommServe failure means no new jobs run.</p>
-<p>High availability options:
-- <strong>Passive standby</strong>: Second CommServe instance with SQL log shipping; manual failover
-- <strong>CommServe Failover (active/passive HA)</strong>: Automated failover via CommServe HA option</p>
-<p>CommServe SQL backup should run every 4 hours:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify CommServe DB backup job status</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">qlist</span> <span class="n">job</span> <span class="n">-j</span> <span class="n">CommServeDB_Backup</span> <span class="n">-detail</span>
-</code></pre></div></p>
-<h2 id="mediaagent-and-deduplication">MediaAgent and Deduplication<a class="headerlink" href="#mediaagent-and-deduplication" title="Permanent link">&para;</a></h2>
-<p>MediaAgents perform data movement and host the Deduplication Database (DDB):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>MediaAgent placement best practices:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  - Deploy one MediaAgent per site for local backups
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  - Place DDB on SSD-backed storage — IOPS are critical for large dedup pools
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  - DDB free space: maintain ≥ 20% free at all times
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  - Single DDB should not manage more than 60TB of deduped data
-</code></pre></div>
-<p>Monitor DDB health via Command Center: Storage → Disk Libraries → DDB Status</p>
-<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Client (backup agent)
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    ▼ CVLT network (TCP 8403)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>MediaAgent (reads data, applies dedup, writes to storage)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    ├── Primary copy (disk/dedup, performance tier)
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    └── Secondary copy (offsite/cloud/tape, retention tier)
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>CommServe (orchestrates job, tracks metadata in SQL DB)
-</code></pre></div>
-<h2 id="scale-out-with-hyperscale-x">Scale-Out with Hyperscale X<a class="headerlink" href="#scale-out-with-hyperscale-x" title="Permanent link">&para;</a></h2>
-<p>Hyperscale X integrates CommServe + MediaAgent + storage into scale-out nodes:
-- Minimum 3-node cluster; add nodes for capacity/throughput
-- Built-in object storage using erasure coding
-- Managed via Command Center — no separate storage administration</p>
-<h2 id="storage-library-types">Storage Library Types<a class="headerlink" href="#storage-library-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Use Case</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Disk Library (Dedup)</td>
-<td>Primary backup target</td>
-<td>SSD recommended for DDB</td>
-</tr>
-<tr>
-<td>Cloud Library (S3)</td>
-<td>Long-term retention</td>
-<td>AWS S3, Azure Blob, GCP</td>
-</tr>
-<tr>
-<td>Tape Library</td>
-<td>Offsite/archival</td>
-<td>Via SAN-attached or NDMP</td>
-</tr>
-<tr>
-<td>Hyperscale X</td>
-<td>Integrated scale-out</td>
-<td>CommVault managed hardware</td>
-</tr>
-</tbody>
-</table>
-<h2 id="port-requirements">Port Requirements<a class="headerlink" href="#port-requirements" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>Destination</th>
-<th>Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Clients</td>
-<td>CommServe</td>
-<td>8400</td>
-<td>Job requests</td>
-</tr>
-<tr>
-<td>Clients</td>
-<td>MediaAgent</td>
-<td>8403</td>
-<td>Data movement</td>
-</tr>
-<tr>
-<td>CommServe</td>
-<td>MediaAgent</td>
-<td>8400</td>
-<td>Job orchestration</td>
-</tr>
-<tr>
-<td>Browser (admin)</td>
-<td>Command Center</td>
-<td>443</td>
-<td>Web UI</td>
-</tr>
-</tbody>
-</table>
+<h1 id="commvault-architecture">Commvault — Architecture<a class="headerlink" href="#commvault-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="overview/">
+  <strong>Overview</strong>
+  <span>Architecture overview, design principles, and topology.</span>
+</a>
+
+<a class="kb-card" href="components/">
+  <strong>Components</strong>
+  <span>CommServe, MediaAgents, clients, and storage policies.</span>
+</a>
+
+<a class="kb-card" href="integrations/">
+  <strong>Integrations</strong>
+  <span>Integration with VMware, storage arrays, and external systems.</span>
+</a>
+
+<a class="kb-card" href="standards/">
+  <strong>Standards</strong>
+  <span>Sizing guidelines, design standards, and naming conventions.</span>
+</a>
+
+</div>
 
 
 

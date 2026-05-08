@@ -21,7 +21,7 @@
     
     
       
-        <title>ONTAP Security - Chris KB</title>
+        <title>ONTAP — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ONTAP Security · Chris KB">
+  <meta property="og:title" content="ONTAP — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ONTAP Security · Chris KB">
+  <meta name="twitter:title" content="ONTAP — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ONTAP Security
+              ONTAP — Security
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tls-and-ssh-hardening" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TLS and SSH Hardening
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#snmpv3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SNMPv3
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,144 +717,13 @@
 
 
 
-<h1 id="ontap-security">ONTAP Security<a class="headerlink" href="#ontap-security" title="Permanent link">&para;</a></h1>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>ONTAP has two RBAC scopes: <strong>cluster-level</strong> (managed by the <code>admin</code> account) and <strong>SVM-level</strong> (managed by <code>vsadmin</code> accounts within a specific SVM). Built-in roles:</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Scope</th>
-<th>Access Level</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>admin</code></td>
-<td>Cluster</td>
-<td>Full cluster administration — all commands</td>
-</tr>
-<tr>
-<td><code>readonly</code></td>
-<td>Cluster</td>
-<td>Read-only cluster view — no configuration changes</td>
-</tr>
-<tr>
-<td><code>vsadmin</code></td>
-<td>SVM</td>
-<td>Full SVM administration within one SVM</td>
-</tr>
-<tr>
-<td><code>vsadmin-readonly</code></td>
-<td>SVM</td>
-<td>Read-only view of one SVM</td>
-</tr>
-<tr>
-<td><code>vsadmin-backup</code></td>
-<td>SVM</td>
-<td>Snapshot and SnapMirror operations within one SVM</td>
-</tr>
-<tr>
-<td><code>vsadmin-snaplock</code></td>
-<td>SVM</td>
-<td>SnapLock volume administration within one SVM</td>
-</tr>
-<tr>
-<td><code>vsadmin-protocol</code></td>
-<td>SVM</td>
-<td>Protocol configuration (NFS, CIFS, iSCSI) within one SVM</td>
-</tr>
-</tbody>
-</table>
-<p>Create custom roles with minimum required permissions for automation service accounts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a custom read-only monitoring role</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;version&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>monitor-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Create a service account using the custom role</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>svc-monitor<span class="w"> </span>-application<span class="w"> </span>ssh<span class="w"> </span>-authmethod<span class="w"> </span>publickey<span class="w"> </span>-role<span class="w"> </span>monitor-role
-</code></pre></div>
-<h2 id="encryption">Encryption<a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
-<p><strong>NetApp Volume Encryption (NVE)</strong>: Software-based, per-volume encryption using AES-256. Each volume has a unique data encryption key (DEK) stored in the key manager. Transparent to applications and protocols.</p>
-<p><strong>NetApp Aggregate Encryption (NAE)</strong>: Encrypts at the aggregate level; all volumes within the aggregate share an aggregate key. Required for deduplication cross-volume savings to persist with encryption.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable NVE on an existing volume</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>volume<span class="w"> </span>modify<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-encrypt<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check encryption status</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>encryption-state
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify key manager status</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show-key-query
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span>show<span class="w">   </span><span class="c1"># for KMIP</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>security<span class="w"> </span>key-manager<span class="w"> </span>onboard<span class="w"> </span>show<span class="w">    </span><span class="c1"># for OKM</span>
-</code></pre></div>
-<p><strong>Key Management</strong>: 
-- <strong>Onboard Key Manager (OKM)</strong>: Built-in ONTAP key manager; passphrase-protected; suitable for single-cluster environments
-- <strong>KMIP External Key Manager</strong>: Integrate with external KMS (Thales CipherTrust, IBM SKLM, HashiCorp Vault via KMIP); required for multi-cluster or compliance mandates (FIPS, PCI-DSS)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure external KMIP key manager</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>external<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;<span class="w"> </span>-key-servers<span class="w"> </span>&lt;kmip-server&gt;:5696<span class="w"> </span>-client-cert<span class="w"> </span>&lt;cert-name&gt;<span class="w"> </span>-server-ca-certs<span class="w"> </span>&lt;ca-name&gt;
-</code></pre></div>
-<h2 id="tls-and-ssh-hardening">TLS and SSH Hardening<a class="headerlink" href="#tls-and-ssh-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enforce TLS 1.2 minimum for HTTPS management</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>HTTPS<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check current TLS/SSL configuration</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>security<span class="w"> </span>config<span class="w"> </span>show
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Restrict SSH ciphers and MACs</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>security<span class="w"> </span>ssh<span class="w"> </span>modify<span class="w"> </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span>-ciphers<span class="w"> </span>aes256-ctr,aes192-ctr,aes128-ctr<span class="w"> </span>-macs<span class="w"> </span>hmac-sha2-256,hmac-sha2-512
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Disable Telnet and RSH (should be off by default)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>security<span class="w"> </span>protocol<span class="w"> </span>show
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Ensure telnet and rsh show enabled=false</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Rotate admin SSH host key</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>security<span class="w"> </span>ssh<span class="w"> </span>server<span class="w"> </span>key<span class="w"> </span>regenerate
-</code></pre></div>
-<h2 id="snmpv3">SNMPv3<a class="headerlink" href="#snmpv3" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure SNMPv3 user with authentication and privacy</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>system<span class="w"> </span>snmp<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>snmpv3user<span class="w"> </span>-authmethod<span class="w"> </span>md5<span class="w"> </span>-authpassword<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-privmethod<span class="w"> </span>aes128<span class="w"> </span>-privpassword<span class="w"> </span>&lt;priv-pass&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add SNMPv3 trap host</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>system<span class="w"> </span>snmp<span class="w"> </span>traphost<span class="w"> </span>add<span class="w"> </span>-ipaddr<span class="w"> </span>&lt;monitoring-host&gt;<span class="w"> </span>-username<span class="w"> </span>snmpv3user
-</code></pre></div>
-<p>Disable SNMPv1/v2c if enabled:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>public
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>system<span class="w"> </span>snmp<span class="w"> </span>community<span class="w"> </span>delete<span class="w"> </span>-community-name<span class="w"> </span>&lt;any-other-v1v2-community&gt;
-</code></pre></div></p>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p><strong>Admin action auditing</strong>: All CLI, API, and System Manager operations by authenticated users are captured in the ONTAP audit log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View recent administrative audit events</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-user<span class="w"> </span>admin<span class="w"> </span>-time-range<span class="w"> </span>24h
-</code></pre></div>
-<p><strong>File access auditing via ONTAP Audit Framework</strong>: Captures NFS and SMB file access events to an EVTX audit log on a designated NAS volume:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Configure SVM-level file access auditing</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vserver<span class="w"> </span>audit<span class="w"> </span>create<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>/audit_logs<span class="w"> </span>-events<span class="w"> </span>file-ops,cifs-logon-logoff
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vserver<span class="w"> </span>audit<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-</code></pre></div>
-<p><strong>FPolicy for file access control and monitoring</strong>: FPolicy intercepts file operations and can send them to an external FPolicy server (DLP, ransomware detection, archiving):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show FPolicy configuration</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>fpolicy<span class="w"> </span>show
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>show
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>fpolicy<span class="w"> </span>policy<span class="w"> </span>scope<span class="w"> </span>show
-</code></pre></div>
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Password authentication disabled for <code>admin</code>; public key only</li>
-<li>[ ] Built-in <code>diag</code> and <code>maintenance</code> accounts locked</li>
-<li>[ ] SSH idle session timeout configured: <code>security session timeout modify -timeout 600</code></li>
-<li>[ ] TLS 1.2 minimum enforced for HTTPS</li>
-<li>[ ] SNMPv1/v2c communities deleted; SNMPv3 only</li>
-<li>[ ] AutoSupport using HTTPS (not HTTP/SMTP) for data transmission</li>
-<li>[ ] NVE or NAE enabled on all production volumes containing sensitive data</li>
-<li>[ ] External KMIP key manager configured (OKM acceptable for non-regulated environments)</li>
-<li>[ ] Admin audit logging enabled and log forwarding to SIEM configured</li>
-<li>[ ] FPolicy configured for production NAS SVMs if file access auditing is required by compliance</li>
-<li>[ ] RBAC service accounts with minimum required permissions for all automation and monitoring tools</li>
-</ul>
+<h1 id="ontap-security">ONTAP — Security<a class="headerlink" href="#ontap-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>
+<a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>
+<a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>
+<a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
+</div>
 
 
 

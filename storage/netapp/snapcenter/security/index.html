@@ -21,7 +21,7 @@
     
     
       
-        <title>SnapCenter Security - Chris KB</title>
+        <title>NetApp SnapCenter — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SnapCenter Security · Chris KB">
+  <meta property="og:title" content="NetApp SnapCenter — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SnapCenter Security · Chris KB">
+  <meta name="twitter:title" content="NetApp SnapCenter — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snapcenter-security" class="md-skip">
+        <a href="#netapp-snapcenter-security" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SnapCenter Security
+              NetApp SnapCenter — Security
             
           </span>
         </div>
@@ -699,108 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="RBAC">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#built-in-roles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Built-in Roles
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-roles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom Roles
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tls-and-certificate-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TLS and Certificate Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ontap-service-account-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ONTAP Service Account Security
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -819,97 +717,13 @@
 
 
 
-<h1 id="snapcenter-security">SnapCenter Security<a class="headerlink" href="#snapcenter-security" title="Permanent link">&para;</a></h1>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>SnapCenter implements role-based access control at the application level, layered on top of ONTAP-level permissions.</p>
-<h3 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Access Level</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SnapCenter Admin</td>
-<td>Full access — all operations, settings, user management</td>
-</tr>
-<tr>
-<td>Infrastructure Admin</td>
-<td>Storage connections, hosts, plugins — no backup/restore operations</td>
-</tr>
-<tr>
-<td>Application Backup and Clone Admin</td>
-<td>Create/modify policies, resource groups, run backups, clones, restores</td>
-</tr>
-<tr>
-<td>Backup and Clone Viewer</td>
-<td>Read-only view of jobs, backups, resource groups — no modifications</td>
-</tr>
-</tbody>
-</table>
-<h3 id="custom-roles">Custom Roles<a class="headerlink" href="#custom-roles" title="Permanent link">&para;</a></h3>
-<p>Create custom roles to delegate specific operations to application teams:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a custom role</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-SmRole</span> <span class="n">-RoleName</span> <span class="s2">&quot;Oracle-Restore-Only&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;Oracle DBA can restore and clone only&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Add permissions to the role</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Set-SmRole</span> <span class="n">-RoleName</span> <span class="s2">&quot;Oracle-Restore-Only&quot;</span> <span class="n">-AllowedOperations</span> <span class="s2">&quot;RestoreFromBackup&quot;</span><span class="p">,</span><span class="s2">&quot;Clone&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Assign an AD user to the role</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Add-SmUser</span> <span class="n">-UserName</span> <span class="s2">&quot;domain\ora-dba01&quot;</span> <span class="n">-RoleName</span> <span class="s2">&quot;Oracle-Restore-Only&quot;</span>
-</code></pre></div>
-<p>Assign RBAC at the resource or resource-group level — a user can be granted access to specific resource groups without seeing all resources in SnapCenter.</p>
-<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<ul>
-<li>SnapCenter GUI and API use local accounts or Active Directory accounts</li>
-<li>Multi-factor authentication (MFA): SnapCenter 6.0+ supports MFA via SAML 2.0 integration with an IdP (AD FS, Okta, Azure AD)</li>
-<li>Service accounts used for ONTAP connections should use dedicated accounts with minimum ONTAP RBAC permissions — not personal admin accounts</li>
-<li>Plugin hosts use OS-level credentials for agent communication; store credentials in SnapCenter Credential Store (Settings → Credentials), not in plaintext scripts</li>
-</ul>
-<h2 id="tls-and-certificate-management">TLS and Certificate Management<a class="headerlink" href="#tls-and-certificate-management" title="Permanent link">&para;</a></h2>
-<ul>
-<li>SnapCenter web server uses TLS 1.2 minimum; configure in IIS → SSL Settings</li>
-<li>Replace the default self-signed certificate with a CA-signed certificate for production deployments:</li>
-<li>Generate a CSR from IIS on the SnapCenter Server</li>
-<li>Submit to internal CA or public CA</li>
-<li>Import signed certificate and update the IIS HTTPS binding on port 8146</li>
-<li>Verify the certificate is trusted by all automation hosts and browsers used to access the GUI</li>
-</ul>
-<h2 id="ontap-service-account-security">ONTAP Service Account Security<a class="headerlink" href="#ontap-service-account-security" title="Permanent link">&para;</a></h2>
-<p>SnapCenter connects to ONTAP using credentials stored in the SnapCenter Credential Store. Best practices:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On ONTAP — create a dedicated SnapCenter service account with minimum permissions</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>sc-backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span>-access<span class="w"> </span>none<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>sc-backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>sc-backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapshot&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>sc-backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>sc-backup-role<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;lun&quot;</span><span class="w"> </span>-access<span class="w"> </span>all<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Create the service account</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>svc-snapcenter<span class="w"> </span>-application<span class="w"> </span>ontapi<span class="w"> </span>-authmethod<span class="w"> </span>password<span class="w"> </span>-role<span class="w"> </span>sc-backup-role<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>security<span class="w"> </span>login<span class="w"> </span>create<span class="w"> </span>-username<span class="w"> </span>svc-snapcenter<span class="w"> </span>-application<span class="w"> </span>http<span class="w"> </span>-authmethod<span class="w"> </span>password<span class="w"> </span>-role<span class="w"> </span>sc-backup-role<span class="w"> </span>-vserver<span class="w"> </span>&lt;admin-svm&gt;
-</code></pre></div>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<ul>
-<li>All SnapCenter user operations (login, job trigger, policy change, restore, clone) are written to the audit log</li>
-<li>Access audit log: Settings → Settings → Audit Logs in the GUI, or query via REST API</li>
-<li>Export audit logs to a SIEM: configure syslog forwarding from the Windows Server (use Windows Event Forwarding or a Splunk/Elastic agent on the SnapCenter Server)</li>
-<li>Audit log tampering protection: SnapCenter 6.1+ signs audit log entries with a hash chain for integrity verification</li>
-</ul>
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Default <code>admin</code> password changed from installation default; stored in a secrets vault</li>
-<li>[ ] AD groups used for SnapCenter access; no individual AD user accounts unless required</li>
-<li>[ ] MFA enabled if SnapCenter 6.0+ is deployed and an IdP is available</li>
-<li>[ ] Default self-signed TLS certificate replaced with CA-signed certificate on port 8146</li>
-<li>[ ] TLS 1.2 minimum enforced in IIS</li>
-<li>[ ] ONTAP service account uses least-privilege custom role (not <code>vsadmin</code> or <code>admin</code>)</li>
-<li>[ ] Plugin host credentials stored in SnapCenter Credential Store; no plaintext passwords in scripts</li>
-<li>[ ] Audit log review included in weekly operational checks</li>
-<li>[ ] SnapCenter Server VM is hardened per Windows Server CIS benchmark; not used for other workloads</li>
-<li>[ ] Network access to port 8146 restricted to admin workstations and automation hosts (firewall or NSG rule)</li>
-</ul>
+<h1 id="netapp-snapcenter-security">NetApp SnapCenter — Security<a class="headerlink" href="#netapp-snapcenter-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>
+<a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>
+<a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>
+<a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
+</div>
 
 
 

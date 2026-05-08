@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerPath Architecture - Chris KB</title>
+        <title>PowerPath — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerPath Architecture · Chris KB">
+  <meta property="og:title" content="PowerPath — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerPath Architecture · Chris KB">
+  <meta name="twitter:title" content="PowerPath — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerPath Architecture
+              PowerPath — Architecture
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#host-side-mpio-stack" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Host-Side MPIO Stack
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How It Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity-and-integration-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity and Integration Points
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-and-path-count-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing and Path Count Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,135 +717,13 @@
 
 
 
-<h1 id="powerpath-architecture">PowerPath Architecture<a class="headerlink" href="#powerpath-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell PowerPath is a host-side multipath I/O driver that sits between the operating system's block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it intelligently across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS, regardless of how many physical paths exist.</p>
-<h2 id="host-side-mpio-stack">Host-Side MPIO Stack<a class="headerlink" href="#host-side-mpio-stack" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  HOST(["Host — Linux / Windows / VMware"]) --&gt; PP["PowerPath\n(MPIO driver)"]
-  PP --&gt; P1["HBA0 → Fabric A → SP-A"]
-  PP --&gt; P2["HBA0 → Fabric A → SP-B"]
-  PP --&gt; P3["HBA1 → Fabric B → SP-A"]
-  PP --&gt; P4["HBA1 → Fabric B → SP-B"]
-  P1 &amp; P2 &amp; P3 &amp; P4 --&gt; ARRAY["Storage Array\nPowerMax / Unity"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class PP net
-  class P1,P2,P3,P4 net
-  class HOST host
-  class ARRAY ctrl</code></pre>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PowerPath kernel module</td>
-<td>Loaded at boot; intercepts block I/O and routes it across physical paths</td>
-</tr>
-<tr>
-<td>Pseudo device</td>
-<td>Virtual block device presented to the OS per LUN (e.g., <code>/dev/emcpowera</code> on Linux)</td>
-</tr>
-<tr>
-<td><code>powermt</code> CLI</td>
-<td>Management tool for viewing path state, changing policies, and performing configuration operations</td>
-</tr>
-<tr>
-<td>PowerPath license (registration key)</td>
-<td>Entitlement applied per host; required for paths to be managed (unlicensed paths show as <code>unlic</code>)</td>
-</tr>
-<tr>
-<td>PowerPath configuration file</td>
-<td>Persists path policy and device settings across reboots; saved with <code>powermt save</code></td>
-</tr>
-<tr>
-<td>PowerPath daemon (<code>PowerPath</code> service)</td>
-<td>Userspace service that monitors path health and triggers failover/restore events</td>
-</tr>
-</tbody>
-</table>
-<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>On startup, PowerPath discovers all LUNs visible across all HBA ports and groups paths to the same LUN into a single pseudo device. Each path has a state:
-- <code>alive</code> — path is healthy and eligible for I/O
-- <code>dead</code> — path has failed I/O tests; excluded from routing
-- <code>unlic</code> — path is not licensed; I/O will not be sent over this path</p>
-<p>PowerPath load-balancing policies determine how I/O is distributed across <code>alive</code> paths:
-- <strong>CLAROpt</strong> (<code>co</code>) — Dell/EMC optimised policy; aware of active/passive or ALUA path groupings on PowerMax, Unity, and CLARiiON arrays; sends I/O preferentially over optimised paths
-- <strong>RoundRobin</strong> (<code>rr</code>) — distributes I/O evenly across all paths regardless of ALUA state (not recommended for Dell/EMC arrays)
-- <strong>BasicFailover</strong> (<code>bf</code>) — uses one path, fails over to another on failure; no load balancing</p>
-<p>On path failure, PowerPath automatically marks the path <code>dead</code> and re-routes I/O to remaining <code>alive</code> paths within milliseconds. When <code>powermt restore</code> is run (or periodically by the daemon), dead paths are retested and promoted back to <code>alive</code> if they recover.</p>
-<h2 id="connectivity-and-integration-points">Connectivity and Integration Points<a class="headerlink" href="#connectivity-and-integration-points" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Protocol / Interface</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Fibre Channel</td>
-<td>FC HBA → FC switch → array FA port</td>
-<td>Most common in enterprise environments</td>
-</tr>
-<tr>
-<td>iSCSI</td>
-<td>iSCSI initiator → IP network → array iSCSI port</td>
-<td>Requires iSCSI initiator configured before PowerPath</td>
-</tr>
-<tr>
-<td>Host OS</td>
-<td>Linux (RHEL, SLES, OEL), Windows Server, AIX, HP-UX, Solaris</td>
-<td>Platform-specific PowerPath packages; refer to support matrix</td>
-</tr>
-<tr>
-<td>Array side</td>
-<td>PowerMax, VMAX, Unity, CLARiiON, VNX, PowerStore</td>
-<td>PowerPath CLAROpt policy works with ALUA on these platforms</td>
-</tr>
-<tr>
-<td>VMware</td>
-<td>PowerPath/VE for ESXi</td>
-<td>Separate product for ESXi; integrates with VAAI for offloaded operations</td>
-</tr>
-</tbody>
-</table>
-<h2 id="sizing-and-path-count-model">Sizing and Path Count Model<a class="headerlink" href="#sizing-and-path-count-model" title="Permanent link">&para;</a></h2>
-<p>PowerPath does not consume significant CPU or memory — it is a kernel module. The key sizing consideration is path count per host:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Guideline</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Minimum paths per LUN</td>
-<td>2 (one per fabric / HBA) for redundancy</td>
-</tr>
-<tr>
-<td>Recommended paths per LUN</td>
-<td>4 (two fabrics × two HBA ports per fabric)</td>
-</tr>
-<tr>
-<td>Maximum paths per LUN</td>
-<td>32 (PowerPath supports up to 32 paths per pseudo device)</td>
-</tr>
-<tr>
-<td>Baseline documentation</td>
-<td>Record expected path count per device per host; compare after every fabric change</td>
-</tr>
-</tbody>
-</table>
-<p>A host with 2 dual-port HBAs connected to 2 storage ports per fabric typically has 4 paths per LUN. Confirm the expected count matches the array LUN masking configuration.</p>
+<h1 id="powerpath-architecture">PowerPath — Architecture<a class="headerlink" href="#powerpath-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+</div>
 
 
 

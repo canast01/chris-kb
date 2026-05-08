@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>Ansible — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="Ansible — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="Ansible — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#ansible-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              Ansible — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,200 +717,15 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Ansible</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Review scheduled playbook run results in AWX/Tower job history or</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check AWX/Tower dashboard for job failures and review failure outp</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Validate dynamic inventory sources are returning the expected host</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review Vault-encrypted variable files for secrets nearing expiry</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm Galaxy roles and collections are current and not deprecate</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Verify control node SSH key access to all critical host groups</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check for playbooks pinned to deprecated module names or legacy sy</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm Python version on target hosts meets minimum Ansible requi</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Control node can reach all target hosts via SSH</li>
-<li>[ ] <code>ansible --version</code> reports expected Ansible core version</li>
-<li>[ ] Inventory returns the correct host count for all groups</li>
-<li>[ ] Vault password/file is accessible to the control node</li>
-<li>[ ] Galaxy collections are installed and at expected versions</li>
-<li>[ ] A <code>--check</code> run against a representative playbook completes without errors</li>
-<li>[ ] AWX/Tower API is reachable and job templates are visible</li>
-<li>[ ] Become/sudo access works on a representative target host</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Ansible version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ansible<span class="w"> </span>--version
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Ping all hosts in inventory</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ansible<span class="w"> </span>all<span class="w"> </span>-m<span class="w"> </span>ping<span class="w"> </span>-i<span class="w"> </span>inventory/
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List hosts in a group</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ansible<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--list-hosts<span class="w"> </span>-i<span class="w"> </span>inventory/
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Syntax check a playbook</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ansible-playbook<span class="w"> </span>site.yml<span class="w"> </span>--syntax-check<span class="w"> </span>-i<span class="w"> </span>inventory/
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Dry-run (check mode) against a group</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ansible-playbook<span class="w"> </span>site.yml<span class="w"> </span>--check<span class="w"> </span>--limit<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-i<span class="w"> </span>inventory/
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List installed collections</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>list
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Playbook tested in staging environment or validated with <code>--check</code> mode</li>
-<li>[ ] Inventory validated — <code>--list-hosts</code> confirms correct target scope</li>
-<li>[ ] Vault secrets are accessible (vault password file or prompt configured)</li>
-<li>[ ] <code>--limit</code> flag set to scope the run to the correct host group or pattern</li>
-<li>[ ] Rollback playbook or manual revert procedure documented</li>
-<li>[ ] <code>--tags</code> or <code>--skip-tags</code> configured if running a subset of tasks</li>
-<li>[ ] Syntax check passes: <code>ansible-playbook site.yml --syntax-check</code></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Staging / check-mode run</td>
-<td></td>
-<td>Pass / Fail</td>
-</tr>
-<tr>
-<td>Inventory scope (<code>--limit</code>)</td>
-<td></td>
-<td>Host group or pattern</td>
-</tr>
-<tr>
-<td>Vault access confirmed</td>
-<td></td>
-<td>Yes / No</td>
-</tr>
-<tr>
-<td>Rollback procedure</td>
-<td></td>
-<td>Link to runbook</td>
-</tr>
-<tr>
-<td>Syntax check</td>
-<td></td>
-<td>Pass / Fail</td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Re-run the playbook with <code>-v</code> (verbose) or <code>-vvv</code> (very verbose) to capture detailed output</li>
-<li>[ ] Test SSH connectivity to the failing target host manually</li>
-<li>[ ] Validate <code>become</code>/sudo access on the target host</li>
-<li>[ ] Check the inventory source — confirm the failing host is listed and reachable</li>
-<li>[ ] Confirm the correct Python interpreter is available on the target</li>
-<li>[ ] Review Ansible log file if logging is configured (<code>log_path</code> in ansible.cfg)</li>
-<li>[ ] Check if a Vault-encrypted variable file failed to decrypt</li>
-<li>[ ] Confirm no module or collection version mismatch between control node and requirements</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Is the target host reachable via SSH?</td>
-<td><code>ssh -i &lt;key&gt; user@host</code></td>
-</tr>
-<tr>
-<td>Does become/sudo work?</td>
-<td><code>ansible &lt;host&gt; -m shell -a "id" --become</code></td>
-</tr>
-<tr>
-<td>Is the Vault password accessible?</td>
-<td>Check vault password file/env var</td>
-</tr>
-<tr>
-<td>Is the inventory returning the host?</td>
-<td><code>ansible &lt;group&gt; --list-hosts</code></td>
-</tr>
-<tr>
-<td>Is the correct Python available?</td>
-<td><code>ansible_python_interpreter</code> set?</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Disable AWX/Tower scheduled jobs or comment out cron entries for the affected playbooks during the window.</li>
-<li>Notify team of the maintenance window and the scope of playbook changes.</li>
-<li>Take a snapshot or backup of configuration files on target hosts if the playbook makes destructive changes.</li>
-<li>Run the playbook with <code>--check</code> immediately before the window to confirm expected task list.</li>
-<li>Execute the playbook with <code>--limit</code> scoped to the target group; monitor output.</li>
-<li>If a failure occurs mid-run, stop and execute the rollback playbook or manual revert.</li>
-<li>Re-enable AWX/Tower scheduled jobs or cron entries after successful completion.</li>
-<li>Confirm idempotency with a follow-up <code>--check</code> run.</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Re-run the playbook in <code>--check</code> mode — confirm zero tasks report changes (idempotent)</li>
-<li>[ ] Full re-run produces no unexpected changes on any host</li>
-<li>[ ] Target service or application is healthy and responding</li>
-<li>[ ] AWX/Tower scheduled jobs re-enabled and showing green on next run</li>
-<li>[ ] Ansible log or AWX job output shows no errors or warnings</li>
-<li>[ ] Inventory still returns the expected host count for all groups</li>
-<li>[ ] Vault-encrypted variables still decrypt successfully</li>
-</ul>
+<h1 id="ansible-operations">Ansible — Operations<a class="headerlink" href="#ansible-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+</div>
 
 
 

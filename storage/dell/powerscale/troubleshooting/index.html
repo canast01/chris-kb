@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerScale Troubleshooting - Chris KB</title>
+        <title>PowerScale — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerScale Troubleshooting · Chris KB">
+  <meta property="og:title" content="PowerScale — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerScale Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="PowerScale — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerScale Troubleshooting
+              PowerScale — Troubleshooting
             
           </span>
         </div>
@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Calling Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -769,142 +717,25 @@
 
 
 
-<h1 id="powerscale-troubleshooting">PowerScale Troubleshooting<a class="headerlink" href="#powerscale-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SyncIQ policy stuck in <code>running</code> or <code>failed</code></td>
-<td>Network interruption, snapshot conflict on source, or target cluster quota/capacity reached</td>
-<td><code>isi sync reports list --policy-name &lt;name&gt;</code>; check network to target; resolve snapshot or quota issue; restart with <code>isi sync policies run &lt;name&gt;</code></td>
-</tr>
-<tr>
-<td>Node in SMARTFAIL state</td>
-<td>Drive failures or hardware fault triggered automatic node removal</td>
-<td>Do NOT intervene manually; monitor <code>isi job list</code> for Restripe job progress; replace failed hardware; open Dell Support case</td>
-</tr>
-<tr>
-<td>Write failure on a quota directory</td>
-<td>Hard quota threshold exceeded</td>
-<td><code>isi quota list --path /ifs/&lt;path&gt;</code>; raise or remove hard limit, or delete data to free space; notify directory owner</td>
-</tr>
-<tr>
-<td>SmartConnect DNS name not resolving</td>
-<td>Missing NS delegation in parent DNS zone, or IP pool has no healthy nodes</td>
-<td>Verify NS record delegates zone to cluster node IPs; check pool health with <code>isi network pools list</code>; test with <code>nslookup &lt;sc-zone&gt;</code></td>
-</tr>
-<tr>
-<td>NFS stale file handle</td>
-<td>Node rebooted or network partition caused NFS client to lose session</td>
-<td>Remount on client; ensure NFS client uses SmartConnect DNS name, not a node IP directly</td>
-</tr>
-<tr>
-<td>SMB access denied despite correct share permissions</td>
-<td>SID mapping issue between Windows identity and OneFS local user; ACL misconfiguration</td>
-<td>Check <code>isi auth users view --name &lt;user&gt; --zone &lt;zone&gt;</code>; verify AD provider is joined; review share ACL and directory ACL</td>
-</tr>
-<tr>
-<td>Cluster capacity unexpectedly full</td>
-<td>Snapshot accumulation, CloudPools recall, or runaway data ingest</td>
-<td><code>isi snapshot list</code>; delete expired snapshots; check <code>isi quota list</code> for violations; identify largest directories with <code>isi statistics query</code></td>
-</tr>
-<tr>
-<td>High per-node CPU or latency spike</td>
-<td>Imbalanced SmartConnect; hot directory; too many concurrent jobs</td>
-<td><code>isi statistics query current --keys CPU --nodes all</code>; check <code>isi job list</code> for competing cluster jobs; pause non-critical jobs</td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cluster node and drive health summary</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>status
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Per-node hardware component status</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>devices<span class="w"> </span>node<span class="w"> </span>list
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all cluster background jobs and their state</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>job<span class="w"> </span>list
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show CPU and throughput statistics per node</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>current<span class="w"> </span>--keys<span class="w"> </span>CPU,BYTES_OUT,BYTES_IN<span class="w"> </span>--nodes<span class="w"> </span>all
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show storage pool and tier capacity</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>list
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show SyncIQ policy status and last run result</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Show recent cluster events (filter by severity)</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>isi<span class="w"> </span>event<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>critical
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># List all quotas and their consumption</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>isi<span class="w"> </span>quota<span class="w"> </span>list
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Show network interfaces per node</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Verify AD join status per zone</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># Show snapshot space usage</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>list
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Location / Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>OneFS system log</td>
-<td><code>/var/log/messages</code> (on any node)</td>
-<td>Node-level OS and OneFS daemon messages</td>
-</tr>
-<tr>
-<td>Cluster event log</td>
-<td><code>isi event list</code></td>
-<td>Authoritative source for hardware and software events</td>
-</tr>
-<tr>
-<td>SyncIQ job log</td>
-<td><code>isi sync reports view --id &lt;report-id&gt;</code></td>
-<td>Per-policy replication details including errors</td>
-</tr>
-<tr>
-<td>Audit log (protocol)</td>
-<td><code>isi audit settings global view</code></td>
-<td>Configures syslog forwarding of NFS/SMB access events</td>
-</tr>
-<tr>
-<td>isi_logs bundle</td>
-<td><code>isi_gather_info</code> (run on any node as root)</td>
-<td>Collects full cluster diagnostic bundle for Dell Support</td>
-</tr>
-</tbody>
-</table>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<ol>
-<li>OneFS version: <code>isi version</code></li>
-<li>Cluster serial number: <code>isi config</code></li>
-<li>Node health summary: <code>isi status &gt; /tmp/status.txt</code></li>
-<li>Event log: <code>isi event list &gt; /tmp/events.txt</code></li>
-<li>For SyncIQ issues: <code>isi sync reports list &gt; /tmp/synciq.txt</code></li>
-<li>For node hardware faults: note the node number and drive bay from <code>isi status</code></li>
-<li>Collect a full diagnostic bundle: <code>isi_gather_info</code> — saves to <code>/ifs/data/Isilon_Support/</code></li>
-</ol>
-<p>Upload the <code>isi_gather_info</code> bundle via the Dell Support case portal or via SupportAssist auto-collection.</p>
+<h1 id="powerscale-troubleshooting">PowerScale — Troubleshooting<a class="headerlink" href="#powerscale-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>Quick reference for common problems and resolutions.</span>
+</a>
+
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Diagnostic procedures and log analysis.</span>
+</a>
+
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>Vendor escalation procedures and support contacts.</span>
+</a>
+
+</div>
 
 
 

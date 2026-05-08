@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>PowerShell — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="PowerShell — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="PowerShell — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#powershell-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              PowerShell — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,198 +717,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">PowerShell</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Verify scheduled PowerShell tasks are not disabled</td>
-<td><code>Get-ScheduledTask | Where-Object {$_.State -eq 'Disabled'}</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check execution policy on managed hosts</td>
-<td><code>Get-ExecutionPolicy -List</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review script error logs and transcript files for failed scheduled</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm PSGallery or internal module feed is accessible</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Validate service account credentials used by scheduled scripts are</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review PowerShell event log for script block logging errors</td>
-<td><code>Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 50</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm WinRM is running on remote targets if remoting is in use</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] PowerShell version is at expected level on all managed hosts</li>
-<li>[ ] Execution policy permits script execution</li>
-<li>[ ] Required modules are installed and at expected versions</li>
-<li>[ ] Service accounts used by scheduled tasks have valid, non-expired credentials</li>
-<li>[ ] WinRM service is running and reachable on remote targets</li>
-<li>[ ] Transcript logging path is writable and recent transcripts exist</li>
-<li>[ ] PSGallery or internal feed is reachable from the control host</li>
-<li>[ ] No errors in the PowerShell operational event log from the last 24 hours</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># PowerShell version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$PSVersionTable</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Execution policy (all scopes)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-ExecutionPolicy</span> <span class="n">-List</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Installed modules</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Scheduled tasks — flag disabled tasks</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s1">&#39;Disabled&#39;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  <span class="nb">Select-Object</span> <span class="n">TaskName</span><span class="p">,</span> <span class="n">TaskPath</span><span class="p">,</span> <span class="n">State</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># Test WinRM connectivity to a remote host</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c"># Last 50 PowerShell operational log entries</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s1">&#39;Microsoft-Windows-PowerShell/Operational&#39;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LevelDisplayName</span> <span class="n">-in</span> <span class="s1">&#39;Error&#39;</span><span class="p">,</span><span class="s1">&#39;Warning&#39;</span> <span class="p">}</span>
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Script tested in non-production environment and output validated</li>
-<li>[ ] Execution policy on target hosts allows the script to run</li>
-<li>[ ] Required modules confirmed installed: <code>Get-Module -ListAvailable</code></li>
-<li>[ ] Transcript logging configured to capture the change: <code>Start-Transcript -Path &lt;path&gt;</code></li>
-<li>[ ] Rollback script or manual revert procedure documented</li>
-<li>[ ] Service account credentials confirmed valid for the duration of the change</li>
-<li>[ ] WinRM connectivity verified to all target hosts before starting</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Non-production test</td>
-<td></td>
-<td>Pass / Fail</td>
-</tr>
-<tr>
-<td>Execution policy</td>
-<td></td>
-<td>RemoteSigned / AllSigned</td>
-</tr>
-<tr>
-<td>Required modules installed</td>
-<td></td>
-<td>Module names and versions</td>
-</tr>
-<tr>
-<td>Transcript logging</td>
-<td></td>
-<td>Log path configured</td>
-</tr>
-<tr>
-<td>Rollback script</td>
-<td></td>
-<td>Link to script or runbook</td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Re-run the script with <code>-Verbose</code> flag to capture detailed execution output</li>
-<li>[ ] Inspect <code>$Error[0]</code> or <code>$Error</code> for the most recent error details</li>
-<li>[ ] Check whether the service account or token used by the script has expired</li>
-<li>[ ] Review the PowerShell event log for the time of failure: <code>Get-EventLog -LogName "Windows PowerShell" -Newest 50</code></li>
-<li>[ ] Confirm WinRM is working for remoting: <code>Test-WSMan -ComputerName &lt;hostname&gt;</code></li>
-<li>[ ] Check that required modules are present on the target host (not just the control host)</li>
-<li>[ ] Review transcript files from the failed run for the exact line and error message</li>
-<li>[ ] Validate that file paths, registry keys, or remote share paths referenced by the script are accessible</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>What does <code>$Error[0]</code> show?</td>
-<td>Run interactively to inspect</td>
-</tr>
-<tr>
-<td>Is the credential expired?</td>
-<td>Check service account password expiry</td>
-</tr>
-<tr>
-<td>Is WinRM reachable?</td>
-<td><code>Test-WSMan -ComputerName &lt;host&gt;</code></td>
-</tr>
-<tr>
-<td>Are required modules present on target?</td>
-<td><code>Invoke-Command -ComputerName &lt;host&gt; -ScriptBlock { Get-Module -ListAvailable }</code></td>
-</tr>
-<tr>
-<td>Is the execution policy blocking the script?</td>
-<td><code>Get-ExecutionPolicy -List</code> on target</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Notify team of the planned maintenance window and scope of script changes.</li>
-<li>Disable scheduled tasks that would fire during the window: <code>Disable-ScheduledTask -TaskName &lt;name&gt;</code>.</li>
-<li>Start transcript logging before executing any changes: <code>Start-Transcript -Path "C:\Logs\maint-$(Get-Date -f yyyyMMdd-HHmm).log"</code>.</li>
-<li>Execute the script or change steps, monitoring output at each stage.</li>
-<li>If an error occurs, stop and execute the rollback script; do not proceed to the next step.</li>
-<li>Stop transcript logging on completion: <code>Stop-Transcript</code>.</li>
-<li>Re-enable scheduled tasks after validation: <code>Enable-ScheduledTask -TaskName &lt;name&gt;</code>.</li>
-<li>Retain the transcript log for the change record.</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Re-run the script and confirm output matches expected results</li>
-<li>[ ] <code>$Error</code> is empty or contains only pre-existing, acknowledged errors</li>
-<li>[ ] No new error entries in the PowerShell operational event log since the change</li>
-<li>[ ] Remote targets are accessible via WinRM: <code>Test-WSMan -ComputerName &lt;host&gt;</code></li>
-<li>[ ] All disabled scheduled tasks have been re-enabled</li>
-<li>[ ] Transcript log archived and attached to the change record</li>
-<li>[ ] Service account credentials still valid and not expiring within 14 days</li>
-<li>[ ] Module versions on target hosts match the expected baseline</li>
-</ul>
+<h1 id="powershell-operations">PowerShell — Operations<a class="headerlink" href="#powershell-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>PowerShell command reference with syntax and examples.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily checks and status verification.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Change readiness, maintenance windows, and operational procedures.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>Version management, module installation, and upgrades.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>Script backup and configuration restore procedures.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for infrastructure operations.</span>
+</a>
+
+</div>
 
 
 

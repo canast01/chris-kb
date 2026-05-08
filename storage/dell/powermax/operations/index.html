@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>PowerMax — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="PowerMax — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="PowerMax — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#powermax-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              PowerMax — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,220 +717,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Dell PowerMax</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Open Unisphere for PowerMax → Dashboard and review the Alerts pane</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Run <code>symcfg list</code> to confirm all registered arrays are online and</td>
-<td><code>symcfg list</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check SRDF pair states</td>
-<td><code>symrdf list -sid XXXX</code></td>
-<td>all R1/R2 pairs should show <code>Synchronized</code> (SRDF/S) or <code>Consistent</code> (SRDF/A); investigate any pair showing <code>Transmit Idle</code>, <code>R1 Updated</code>, or <code>Suspended</code></td>
-</tr>
-<tr>
-<td>[ ] Check failed or degraded physical drives</td>
-<td><code>sympd list -sid XXXX -failed</code></td>
-<td>output should be empty</td>
-</tr>
-<tr>
-<td>[ ] Review active SnapVX sessions</td>
-<td><code>symsnap list -sid XXXX</code></td>
-<td>confirm no device is approaching the 256-snapshot limit; expire stale snaps</td>
-</tr>
-<tr>
-<td>[ ] Check thin device pool utilisation in Unisphere → Storage → Thin P</td>
-<td></td>
-<td>alert if any pool exceeds 80% consumed</td>
-</tr>
-<tr>
-<td>[ ] Review Unisphere → Performance → Array for I/O response time and t</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm CloudIQ shows no critical findings for the array; review a</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<p>Run these commands from a host with Solutions Enabler installed to get a complete picture of array health before any change or incident response.</p>
-<ul>
-<li>[ ] <code>symcfg list</code> returns the expected array SIDs with status <code>Online</code></li>
-<li>[ ] <code>symcfg -sid XXXX show</code> shows all directors and ports in a healthy state with no fault indicators</li>
-<li>[ ] <code>sympd list -sid XXXX -failed</code> returns no output (no failed drives)</li>
-<li>[ ] <code>symrdf list -sid XXXX</code> shows all SRDF groups and pair states — note any that are not <code>Synchronized</code> or <code>Consistent</code></li>
-<li>[ ] <code>symdg list -sid XXXX</code> lists all device groups without errors</li>
-<li>[ ] <code>symsg list -sid XXXX</code> lists all storage groups and confirms no group is reporting capacity issues</li>
-<li>[ ] <code>symsnap list -sid XXXX</code> shows all active SnapVX sessions with no expired or stuck sessions</li>
-<li>[ ] Unisphere → System → Hardware confirms no director, drive, or port faults</li>
-<li>[ ] CloudIQ risk score is green or within accepted threshold</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all Symmetrix arrays and confirm they are Online</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Full array health and director/port status for a specific SID</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>show
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all physical drives — check for Failed or Degraded state</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Filter for failed drives only (should return empty on a healthy array)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>-failed
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List SRDF groups and pair states</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show detailed SRDF pair state for a specific RDF group</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>XXXX<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># List all device groups</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symdg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># List all storage groups</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># List all SnapVX snapshots across the array</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>symsnap<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Show replication sessions (SRDF and SnapVX combined view)</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>symreplicate<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>XXXX
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<p>Verify these items before performing any change on the PowerMax — array configuration changes, code upgrades, or DR tests.</p>
-<ul>
-<li>[ ] SRDF state confirmed: <code>symrdf list -sid XXXX</code> shows all pairs <code>Synchronized</code> or <code>Consistent</code> — do not proceed if any pair is in a degraded state without a plan to handle it</li>
-<li>[ ] Take a SnapVX snapshot of source devices before making masking or storage group changes: <code>symsnap -sid XXXX create -sg &lt;sg-name&gt; -name pre-change-$(date +%Y%m%d)</code></li>
-<li>[ ] Confirm no active SRDF sessions are in the middle of a mode change or link recovery</li>
-<li>[ ] Verify host I/O path health: <code>powermt display dev=all</code> on connected hosts shows no dead paths</li>
-<li>[ ] Confirm no outstanding Unisphere alerts that could indicate a pre-existing fault</li>
-<li>[ ] Validate thin pool headroom — confirm the pool has at least 20% free before adding devices or expanding storage groups</li>
-<li>[ ] Confirm Solutions Enabler version matches the running PowerMaxOS version to avoid CLI compatibility issues</li>
-<li>[ ] Inform application owners of the change window and confirm I/O drain or application quiesce plan if needed</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SRDF pairs Synchronized / Consistent</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SnapVX pre-change snapshot created</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No active Unisphere alerts</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Host path health verified (powermt / multipath)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Thin pool headroom ≥ 20%</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p>When a host reports I/O errors, latency, or a LUN is inaccessible, work through this sequence before escalating.</p>
-<ul>
-<li>[ ] Check Unisphere Dashboard immediately for any active alerts flagged in the last 30 minutes — note alert severity and affected component</li>
-<li>[ ] Run <code>symcfg -sid XXXX show</code> to confirm array directors and ports are all healthy; look for any director in a degraded or faulted state</li>
-<li>[ ] Check SRDF state: <code>symrdf list -sid XXXX</code> — an unexpected <code>Suspended</code> or <code>R1 Updated</code> state may indicate the cause of host impact</li>
-<li>[ ] Check for failed drives: <code>sympd list -sid XXXX -failed</code> — a drive failure can cause I/O latency during rebuild</li>
-<li>[ ] Check host multipath status from the affected host: <code>powermt display dev=all</code> — look for dead paths or asymmetric path counts</li>
-<li>[ ] Check Fibre Channel port errors in Unisphere → Hardware → Directors → Ports for CRC errors or login/logout counts</li>
-<li>[ ] Run <code>symstat -sid XXXX -type r2</code> to check real-time array I/O statistics for throughput and latency anomalies</li>
-<li>[ ] Review the event log: Unisphere → System → Audit Log and filter by time of the incident</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which hosts are affected and what is the LUN device ID?</td>
-<td></td>
-</tr>
-<tr>
-<td>What is the current SRDF state for relevant RDF groups?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are there active Unisphere alerts at the time of the incident?</td>
-<td></td>
-</tr>
-<tr>
-<td>What is the host multipath path count and state?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are there director or port fault indicators in Unisphere?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p>Steps for planned maintenance on a PowerMax array — applies to firmware upgrades, director replacements, and SRDF maintenance.</p>
-<ol>
-<li>Notify application owners and confirm the maintenance window; record the start and end time</li>
-<li>Take a full SnapVX snapshot of all production storage groups: <code>symsnap -sid XXXX create -sg &lt;sg-name&gt; -name maint-pre-$(date +%Y%m%d)</code></li>
-<li>If the maintenance involves SRDF, confirm the current SRDF state with <code>symrdf list -sid XXXX</code> and suspend replication if directed by the change procedure: <code>symrdf -sid XXXX -rdfg &lt;group&gt; suspend</code></li>
-<li>Quiesce or drain host I/O if the change requires a storage group or masking view modification — coordinate with the application team for a clean I/O halt</li>
-<li>Perform the change per the approved runbook (firmware upgrade, configuration change, or hardware swap)</li>
-<li>After the change, run <code>symcfg -sid XXXX show</code> to confirm all directors and ports returned to a healthy state</li>
-<li>If SRDF was suspended, resume and monitor resync: <code>symrdf -sid XXXX -rdfg &lt;group&gt; resume</code> then <code>symrdf list -sid XXXX</code> until all pairs return to <code>Synchronized</code> or <code>Consistent</code></li>
-<li>Validate host I/O has resumed and confirm application health with application owners before closing the window</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<p>Run these checks after any change to the PowerMax to confirm the array is healthy and hosts are unaffected.</p>
-<ul>
-<li>[ ] <code>symcfg -sid XXXX show</code> — all directors and ports in healthy state, no new faults introduced</li>
-<li>[ ] <code>symrdf list -sid XXXX</code> — all SRDF pairs back to <code>Synchronized</code> (SRDF/S) or <code>Consistent</code> (SRDF/A); resync time noted if SRDF was suspended</li>
-<li>[ ] <code>sympd list -sid XXXX -failed</code> — no failed drives; confirm no drive fault was introduced during the change</li>
-<li>[ ] Host multipath validation: <code>powermt display dev=all</code> on each affected host shows all paths alive with the expected path count</li>
-<li>[ ] Unisphere Dashboard shows no new alerts introduced by the change</li>
-<li>[ ] CloudIQ shows no new critical findings post-change</li>
-<li>[ ] Application owners confirm I/O has resumed and application is healthy</li>
-<li>[ ] SnapVX pre-change snapshot retained until the post-change validation period has passed (minimum 24 hours)</li>
-</ul>
+<h1 id="powermax-operations">PowerMax — Operations<a class="headerlink" href="#powermax-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>SYMCLI command reference for PowerMax administration.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily checks, array health commands, and status verification.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Change readiness, maintenance windows, provisioning, and masking views.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>Software version matrix, upgrade paths, and lifecycle management.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>Backup procedures and restore workflows.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for health checks, SRDF monitoring, and operations.</span>
+</a>
+
+</div>
 
 
 

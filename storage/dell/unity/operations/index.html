@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>Unity — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="Unity — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="Unity — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#unity-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              Unity — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,216 +717,15 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Dell Unity</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>uemcli /env/health show -filter "health.value ne OK"</code></td>
-<td><code>uemcli /env/health show -filter "health.value ne OK"</code></td>
-<td>any non-OK result requires immediate investigation before proceeding with other work</td>
-</tr>
-<tr>
-<td>[ ] Check active alerts</td>
-<td><code>uemcli /sys/alert show</code></td>
-<td>triage by severity; acknowledge alerts that have been resolved to keep the alert list clean</td>
-</tr>
-<tr>
-<td>[ ] Check pool capacity</td>
-<td><code>uemcli /stor/pool show -detail</code></td>
-<td>alert if any pool is above 80% consumed or over-subscribed</td>
-</tr>
-<tr>
-<td>[ ] Verify both SPs are Active</td>
-<td><code>uemcli /env/sp show</code></td>
-<td>SP A and SP B should both report <code>Active</code>; a single SP active indicates a failover has occurred</td>
-</tr>
-<tr>
-<td>[ ] Check replication sessions</td>
-<td><code>uemcli /rep/session show</code></td>
-<td>all sessions should show <code>Active</code> state; investigate any session in <code>Error</code>, <code>Paused</code>, or <code>Interrupted</code> state</td>
-</tr>
-<tr>
-<td>[ ] Check disk health</td>
-<td><code>uemcli /stor/disk show</code></td>
-<td>confirm no disks in <code>Faulted</code> or <code>Degraded</code> state</td>
-</tr>
-<tr>
-<td>[ ] Review snapshot capacity consumption</td>
-<td><code>uemcli /stor/snap show</code></td>
-<td>confirm snapshots are not consuming unexpected pool space</td>
-</tr>
-<tr>
-<td>[ ] Review Unisphere Dashboard for any threshold warnings or capacity</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<p>Run these checks before any planned change or as first-response steps when investigating a reported issue.</p>
-<ul>
-<li>[ ] <code>uemcli /env/health show -filter "health.value ne OK"</code> returns no output — all components healthy</li>
-<li>[ ] <code>uemcli /env/sp show</code> — both SP A and SP B are <code>Active</code> with no faults</li>
-<li>[ ] <code>uemcli /stor/pool show -detail</code> — all pools below 80% consumed; FAST Cache status is Enabled if configured</li>
-<li>[ ] <code>uemcli /sys/alert show</code> — no unacknowledged alerts of severity <code>ERROR</code> or <code>CRITICAL</code></li>
-<li>[ ] <code>uemcli /rep/session show</code> — all replication sessions in <code>Active</code> state</li>
-<li>[ ] <code>uemcli /stor/disk show</code> — no faulted or degraded disks</li>
-<li>[ ] <code>uemcli /stor/snap show</code> — no snapshot schedule failures; snapshot count not approaching pool capacity limits</li>
-<li>[ ] <code>uemcli /sys/sw show</code> — current software version noted; no pending updates flagged as critical</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all components not in an OK health state</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>/env/health<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;health.value ne OK&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show both SP health and current state</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>uemcli<span class="w"> </span>/env/sp<span class="w"> </span>show
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show detailed pool capacity, health, and FAST Cache status</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uemcli<span class="w"> </span>/stor/pool<span class="w"> </span>show<span class="w"> </span>-detail
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show all active system alerts</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uemcli<span class="w"> </span>/sys/alert<span class="w"> </span>show
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show all replication sessions and their current state</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>uemcli<span class="w"> </span>/rep/session<span class="w"> </span>show
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show all disks and their health state</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>uemcli<span class="w"> </span>/stor/disk<span class="w"> </span>show
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Show all snapshots and their pool consumption</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>uemcli<span class="w"> </span>/stor/snap<span class="w"> </span>show
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Show installed software version and any pending upgrades</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>uemcli<span class="w"> </span>/sys/sw<span class="w"> </span>show
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show all LUNs with pool assignment and capacity</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>uemcli<span class="w"> </span>/store/lun<span class="w"> </span>show
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<p>Verify these items before performing any change on the Unity array — pool expansions, LUN provisioning, replication configuration changes, or firmware upgrades.</p>
-<ul>
-<li>[ ] <code>uemcli /env/health show -filter "health.value ne OK"</code> returns no output — no pre-existing faults before the change</li>
-<li>[ ] Both SPs are Active: <code>uemcli /env/sp show</code> — do not proceed with a firmware upgrade or disruptive change with only one SP active</li>
-<li>[ ] Pool capacity headroom confirmed: <code>uemcli /stor/pool show -detail</code> — ensure the pool targeted by the change has at least 20% free capacity</li>
-<li>[ ] Replication session state confirmed: <code>uemcli /rep/session show</code> — note the current state for all sessions; confirm no session is in a degraded state before starting</li>
-<li>[ ] Snapshot reserve checked: <code>uemcli /stor/snap show</code> — confirm snapshot consumption is not crowding pool capacity</li>
-<li>[ ] No active alerts that relate to the component being changed: <code>uemcli /sys/alert show</code></li>
-<li>[ ] Notify host owners if the change involves a LUN or NAS server they use; coordinate I/O quiesce if needed</li>
-<li>[ ] Confirm the Unisphere System Health Check has been run: <code>uemcli /sys/general healthcheck</code></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No pre-existing health faults</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SP A and SP B both Active</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Pool capacity headroom ≥ 20%</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Replication sessions Active</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No unacknowledged critical alerts</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p>When hosts report I/O errors, LUNs are inaccessible, or NFS mounts are stale, work through this sequence first.</p>
-<ul>
-<li>[ ] Run <code>uemcli /env/health show -filter "health.value ne OK"</code> immediately — identify the faulted component (SP, disk, fan, PSU, pool)</li>
-<li>[ ] Run <code>uemcli /env/sp show</code> — confirm whether a SP failover has occurred; a single <code>Active</code> SP means the other has faulted or restarted</li>
-<li>[ ] Check pool health: <code>uemcli /stor/pool show -detail</code> — a pool below 5% free will cause Unity to automatically invalidate snapshots and replication sessions; check for over-consumption</li>
-<li>[ ] Check active alerts: <code>uemcli /sys/alert show</code> — identify the alert that corresponds to the incident start time</li>
-<li>[ ] Check replication sessions if the report involves DR or backup data: <code>uemcli /rep/session show</code> — note which sessions are broken and what error is reported</li>
-<li>[ ] For NFS stale file handle errors after a SP failover, instruct clients to remount the export — the NAS interface IP has moved to the surviving SP</li>
-<li>[ ] Check disk health: <code>uemcli /stor/disk show</code> — a disk fault that triggers a rebuild can cause latency elevation across the affected pool</li>
-<li>[ ] If the issue is unresolved after these checks, run <code>uemcli /sys/general healthcheck</code> and open a Dell support case with the output</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which component is not OK in /env/health show?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are both SPs Active or has a failover occurred?</td>
-<td></td>
-</tr>
-<tr>
-<td>What is the current pool consumed percentage?</td>
-<td></td>
-</tr>
-<tr>
-<td>Which replication sessions are not Active?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is there a faulted disk triggering a pool rebuild?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p>Steps for planned maintenance on a Unity array — firmware upgrades, pool expansions, or SP-level work.</p>
-<ol>
-<li>Notify host and application owners; confirm the maintenance window and any required I/O quiesce</li>
-<li>Run <code>uemcli /env/health show -filter "health.value ne OK"</code> to confirm no pre-existing faults; resolve all faults before starting</li>
-<li>Confirm both SP A and SP B are in Active state via <code>uemcli /env/sp show</code> — a firmware upgrade will restart each SP sequentially and requires both to be healthy</li>
-<li>Create a pre-maintenance snapshot of critical LUNs or file systems: <code>uemcli /stor/snap create -storRes &lt;resource_id&gt; -name maint-pre-$(date +%Y%m%d)</code></li>
-<li>Note current replication session states with <code>uemcli /rep/session show</code> — be prepared to resume sessions after the maintenance if they are paused</li>
-<li>Perform the change per the approved runbook; for firmware upgrades, Unisphere upgrades SP B first then SP A — monitor progress and do not interrupt the process</li>
-<li>After the change, run <code>uemcli /env/health show</code>, <code>uemcli /env/sp show</code>, and <code>uemcli /stor/pool show -detail</code> to confirm the array is healthy</li>
-<li>Confirm replication sessions return to <code>Active</code> state; resume any sessions that remain paused: <code>uemcli /rep/session -id &lt;id&gt; resume</code></li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<p>Run these checks after any change to confirm the Unity is healthy and host connectivity is restored.</p>
-<ul>
-<li>[ ] <code>uemcli /env/health show -filter "health.value ne OK"</code> returns no output — no new faults introduced</li>
-<li>[ ] <code>uemcli /env/sp show</code> — both SP A and SP B are back to <code>Active</code> state after any SP-level maintenance</li>
-<li>[ ] <code>uemcli /stor/pool show -detail</code> — all pools healthy; capacity consumption within expected range</li>
-<li>[ ] <code>uemcli /rep/session show</code> — all replication sessions back to <code>Active</code>; note any sessions that need manual resumption</li>
-<li>[ ] <code>uemcli /sys/sw show</code> — confirms the new software version is installed (if this was a firmware upgrade)</li>
-<li>[ ] Host connectivity verified: iSCSI or FC LUNs accessible from representative hosts; NFS mounts responding</li>
-<li>[ ] Application owners confirm their applications are running normally</li>
-<li>[ ] Pre-change snapshot retained until the post-change validation period has passed (minimum 24 hours)</li>
-</ul>
+<h1 id="unity-operations">Unity — Operations<a class="headerlink" href="#unity-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+</div>
 
 
 

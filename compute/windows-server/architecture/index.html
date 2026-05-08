@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#edition-and-installation-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edition and Installation Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#roles-and-features-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Roles and Features Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Sections
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -771,93 +719,11 @@
 
 <h1 id="windows-server-architecture">Windows Server — Architecture<a class="headerlink" href="#windows-server-architecture" title="Permanent link">&para;</a></h1>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, topology, and how it fits in the stack.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Core services, ports, dependencies, and internals.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with other platforms and services.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Naming conventions, design rules, and configuration baselines.</span>
-</a>
-
+<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
-
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Windows Server is Microsoft's server operating system, available in Standard and Datacenter editions. Current supported versions are 2016, 2019, 2022, and 2025. The installation type choice — Server Core (headless) or Desktop Experience (full GUI) — is made at install time and cannot be changed post-install.</p>
-<h2 id="edition-and-installation-types">Edition and Installation Types<a class="headerlink" href="#edition-and-installation-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Version</th>
-<th>Edition</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Windows Server 2019/2022/2025</td>
-<td>Standard</td>
-<td>Up to 2 Hyper-V VMs per licence</td>
-</tr>
-<tr>
-<td>Windows Server 2019/2022/2025</td>
-<td>Datacenter</td>
-<td>Unlimited Hyper-V VMs, extra features (Storage Spaces Direct, SDN)</td>
-</tr>
-<tr>
-<td>All</td>
-<td>Server Core</td>
-<td>No GUI; managed via PowerShell remoting or RSAT; smaller attack surface</td>
-</tr>
-<tr>
-<td>All</td>
-<td>Desktop Experience</td>
-<td>Full GUI; larger footprint; required for some legacy management tools</td>
-</tr>
-</tbody>
-</table>
-<h2 id="roles-and-features-model">Roles and Features Model<a class="headerlink" href="#roles-and-features-model" title="Permanent link">&para;</a></h2>
-<p>Windows Server functionality is delivered through <strong>Roles</strong> (major services) and <strong>Features</strong> (supporting components), installed via Server Manager or PowerShell:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List installed roles and features</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-WindowsFeature</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Installed</span> <span class="o">-eq</span> <span class="nv">$true</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Install a role example</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">```</span><span class="n">mermaid</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">graph</span> <span class="n">TB</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  <span class="n">WS</span><span class="p">[</span><span class="s2">&quot;Windows Server 2019 / 2022&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  <span class="n">WS</span> <span class="p">--&gt;</span> <span class="n">AD</span><span class="p">[</span><span class="s2">&quot;Active Directory DS\n(DC role)&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  <span class="n">WS</span> <span class="p">--&gt;</span> <span class="n">DNS_R</span><span class="p">[</span><span class="s2">&quot;DNS Server&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  <span class="n">WS</span> <span class="p">--&gt;</span> <span class="n">FS</span><span class="p">[</span><span class="s2">&quot;File Server\nSMB · DFS&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  <span class="n">WS</span> <span class="p">--&gt;</span> <span class="n">IIS</span><span class="p">[</span><span class="s2">&quot;IIS / App Roles&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  <span class="n">WS</span> <span class="p">--&gt;</span> <span class="n">WSUS</span><span class="p">[</span><span class="s2">&quot;Windows Update\nWSUS / Azure Update Manager&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  <span class="n">WS</span> <span class="p">--&gt;</span> <span class="n">SEC</span><span class="p">[</span><span class="s2">&quot;Windows Defender\nFirewall · Audit Policy&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  <span class="n">ADMIN</span><span class="p">([</span><span class="s2">&quot;Windows Admin&quot;</span><span class="p">])</span> <span class="p">--&gt;|</span><span class="s2">&quot;RDP / PowerShell&quot;</span><span class="p">|</span> <span class="n">WS</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  <span class="n">classDef</span> <span class="n">ctrl</span> <span class="n">fill</span><span class="p">:</span><span class="c">#2563eb,stroke:#1d4ed8,color:#fff</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  <span class="n">classDef</span> <span class="n">mgmt</span> <span class="n">fill</span><span class="p">:</span><span class="c">#b45309,stroke:#92400e,color:#fff</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  <span class="n">classDef</span> <span class="n">host</span> <span class="n">fill</span><span class="p">:</span><span class="c">#15803d,stroke:#166534,color:#fff</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  <span class="n">class</span> <span class="n">WS</span> <span class="n">ctrl</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  <span class="n">class</span> <span class="n">AD</span><span class="p">,</span><span class="n">DNS_R</span><span class="p">,</span><span class="n">FS</span><span class="p">,</span><span class="n">IIS</span><span class="p">,</span><span class="n">WSUS</span><span class="p">,</span><span class="n">SEC</span> <span class="n">mgmt</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  <span class="n">class</span> <span class="n">ADMIN</span> <span class="n">host</span>
-</code></pre></div>
-<h2 id="related-sections">Related Sections<a class="headerlink" href="#related-sections" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../standards/">Standards</a> — hostname and OU conventions</li>
-<li><a href="../operations/">Operations</a> — daily health checks</li>
-<li><a href="../troubleshooting/">Troubleshooting</a> — common failure scenarios</li>
-</ul>
 
 
 

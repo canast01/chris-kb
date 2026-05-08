@@ -21,7 +21,7 @@
     
     
       
-        <title>NetApp SnapMirror Troubleshooting - Chris KB</title>
+        <title>NetApp SnapMirror — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="NetApp SnapMirror Troubleshooting · Chris KB">
+  <meta property="og:title" content="NetApp SnapMirror — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="NetApp SnapMirror Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="NetApp SnapMirror — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              NetApp SnapMirror Troubleshooting
+              NetApp SnapMirror — Troubleshooting
             
           </span>
         </div>
@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Calling Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -769,106 +717,12 @@
 
 
 
-<h1 id="netapp-snapmirror-troubleshooting">NetApp SnapMirror Troubleshooting<a class="headerlink" href="#netapp-snapmirror-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Relationship in <code>broken-off</code> state</td>
-<td><code>snapmirror quiesce</code> + <code>snapmirror break</code> was run manually for a DR test or failover and was never resynced</td>
-<td>Resync with <code>snapmirror resync -destination-path svm_dst:vol_dst</code>; confirm data direction before running</td>
-</tr>
-<tr>
-<td>Lag time exceeding RPO</td>
-<td>Network congestion, high source change rate, or transfer schedule too infrequent</td>
-<td>Check <code>snapmirror show -fields lag-time,transfer-bytes</code>; increase schedule frequency or investigate network bandwidth</td>
-</tr>
-<tr>
-<td>Transfer stuck in progress</td>
-<td>Network interruption mid-transfer or source snapshot deleted before transfer completed</td>
-<td>Run <code>snapmirror abort -destination-path svm_dst:vol_dst</code>; wait for abort to complete; restart with <code>snapmirror update</code></td>
-</tr>
-<tr>
-<td>Destination volume full</td>
-<td>SnapVault/XDP retention policy not pruning old snapshots; autogrow not configured</td>
-<td>Check destination volume space with <code>volume show -fields size,used</code>; review SnapVault retention rules; delete excess snapshots</td>
-</tr>
-<tr>
-<td>SMBC mediator unreachable</td>
-<td>Network connectivity issue to mediator VM or mediator service not running</td>
-<td>Check mediator connectivity from both clusters: <code>snapmirror mediator show</code>; verify mediator VM status and network path</td>
-</tr>
-<tr>
-<td>Initialize failing: destination not DP type</td>
-<td>Destination volume created as RW instead of DP</td>
-<td>Delete and recreate destination volume with <code>-type DP</code>; rerun <code>snapmirror initialize</code></td>
-</tr>
-<tr>
-<td>SnapMirror Sync showing <code>Out-of-Sync</code></td>
-<td>Inter-site latency exceeded threshold or network interruption</td>
-<td>Check intercluster LIF connectivity; relationship auto-resyncs when connectivity restores within the resync window</td>
-</tr>
-<tr>
-<td>SVM-DR update failing</td>
-<td>SVM configuration change on source not yet reflected on destination</td>
-<td>Run <code>snapmirror update -destination-path svm_dst:</code> at the SVM level to force a configuration sync</td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all relationships with lag time and health</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy,status
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show full detail for a specific relationship</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show transfer history for a relationship</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snapmirror<span class="w"> </span>show-history<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List all destination relationships across the cluster</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snapmirror<span class="w"> </span>list-destinations
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show intercluster LIF status</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check SMBC mediator connectivity</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>snapmirror<span class="w"> </span>mediator<span class="w"> </span>show
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Show relationships in broken-off state</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Abort a stuck transfer</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>snapmirror<span class="w"> </span>abort<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>ONTAP EMS log</strong> — <code>event log show -severity error -time-range &lt;start&gt;..&lt;end&gt;</code></li>
-<li><strong>SnapMirror-specific EMS events</strong> — <code>event log show -message-name snapmirror.*</code></li>
-<li><strong>Transfer history</strong> — <code>snapmirror show-history -destination-path svm_dst:vol_dst</code></li>
-<li><strong>System Manager</strong> — Protection &gt; Relationships view shows a visual timeline of transfer health</li>
-</ul>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<p>Gather the following before opening a NetApp support case:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># AutoSupport from both clusters</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;case &lt;number&gt;&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Full relationship output</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-expanded
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># EMS error extract</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>error<span class="w"> </span>-time-range<span class="w"> </span>&lt;start&gt;..&lt;end&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Intercluster LIF status</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
-</code></pre></div>
-<p>Also collect: ONTAP version on both clusters, relationship name, symptom description and timeline, and whether the issue is impacting production access.</p>
+<h1 id="netapp-snapmirror-troubleshooting">NetApp SnapMirror — Troubleshooting<a class="headerlink" href="#netapp-snapmirror-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="diagnostics/"><strong>Diagnostics</strong><span>Diagnostic procedures and log analysis.</span></a>
+<a class="kb-card" href="escalation/"><strong>Escalation</strong><span>Vendor escalation procedures and support contacts.</span></a>
+</div>
 
 
 

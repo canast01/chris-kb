@@ -21,7 +21,7 @@
     
     
       
-        <title>ECS Security - Chris KB</title>
+        <title>Dell ECS — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ECS Security · Chris KB">
+  <meta property="og:title" content="Dell ECS — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ECS Security · Chris KB">
+  <meta name="twitter:title" content="Dell ECS — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ecs-security" class="md-skip">
+        <a href="#dell-ecs-security" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ECS Security
+              Dell ECS — Security
             
           </span>
         </div>
@@ -699,69 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compliance
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -780,126 +717,13 @@
 
 
 
-<h1 id="ecs-security">ECS Security<a class="headerlink" href="#ecs-security" title="Permanent link">&para;</a></h1>
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Change the default <code>sysadmin</code> password immediately after initial deployment</li>
-<li>[ ] Replace self-signed TLS certificates on the Management API (4443) and S3 endpoint (443) with certificates signed by the corporate CA</li>
-<li>[ ] Disable HTTP (port 9021) in production; require HTTPS for all S3 access</li>
-<li>[ ] Enable TLS 1.2 minimum on all endpoints; disable TLS 1.0 and 1.1</li>
-<li>[ ] Create named management service accounts; disable or restrict the <code>sysadmin</code> account from use in automation</li>
-<li>[ ] Apply namespace quotas; do not allow namespaces with no quota in production</li>
-<li>[ ] Enable bucket-level access logging for namespaces with compliance or audit requirements</li>
-<li>[ ] Configure syslog forwarding to the SIEM for all ECS management and access events</li>
-<li>[ ] Enable Object Lock (WORM) on buckets designated for compliance or immutable backup data</li>
-<li>[ ] Restrict ECS Portal (port 443) and Management API (port 4443) access to management network VLANs via firewall rules</li>
-<li>[ ] Review and disable unused API protocols (Swift, Atmos, CAS) on namespaces that only require S3</li>
-<li>[ ] Rotate object user secret keys every 12 months and update consuming applications</li>
-</ul>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>ECS implements role-based access at two levels: system management and object (data) access.</p>
-<p><strong>System Management Roles:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Scope</th>
-<th>Permissions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>System Admin</td>
-<td>Global</td>
-<td>Full system configuration, hardware management, VDC management</td>
-</tr>
-<tr>
-<td>System Monitor</td>
-<td>Global</td>
-<td>Read-only access to system health, capacity, and alerts</td>
-</tr>
-<tr>
-<td>Namespace Admin</td>
-<td>Namespace</td>
-<td>Create and manage buckets, IAM users, and lifecycle policies within the namespace</td>
-</tr>
-<tr>
-<td>Namespace User</td>
-<td>Namespace</td>
-<td>Read-only namespace management; cannot create or delete buckets</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Object (Data) Access via IAM Policies:</strong></p>
-<p>ECS supports S3-style IAM bucket policies and object ACLs. Best practices:
-- Grant the minimum required S3 actions (<code>s3:GetObject</code>, <code>s3:PutObject</code>) per application
-- Do not use wildcard (<code>*</code>) actions on production buckets
-- Prefer bucket policies over ACLs for maintainability
-- Create one IAM object user per application or service; do not share credentials</p>
-<h2 id="encryption">Encryption<a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Method</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Data in transit</td>
-<td>TLS 1.2+</td>
-<td>Enforced on S3 (443), Management API (4443); configure minimum TLS version in ECS Portal → Settings → Security</td>
-</tr>
-<tr>
-<td>Data at rest</td>
-<td>Software AES-256 (ECS encryption at rest)</td>
-<td>Enable per-namespace in ECS Portal → Namespace → Edit → Encryption; key management via internal or external KMIP KMS</td>
-</tr>
-<tr>
-<td>Key management</td>
-<td>Internal ECS KMS or external KMIP server</td>
-<td>For compliance, use an external KMIP-compatible KMS (e.g., Dell PowerProtect Data Manager, HashiCorp Vault)</td>
-</tr>
-</tbody>
-</table>
-<p>Enable encryption at rest on namespaces that hold regulated data (PCI, HIPAA, GDPR). Note that enabling encryption on an existing namespace does not retroactively encrypt already-stored objects.</p>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>ECS generates audit logs for all administrative actions (namespace/bucket create/modify/delete, IAM changes) and optionally for object access.</p>
-<ul>
-<li><strong>Management audit log</strong>: ECS Portal → Monitoring → Audit — export for compliance reviews</li>
-<li><strong>Access log</strong>: Enable per-bucket via ECS Portal → Buckets → Edit → Access Logging; logs are written to a designated audit bucket</li>
-<li><strong>Syslog forwarding</strong>: Configure in ECS Portal → Settings → Syslog; forward to a SIEM for real-time alerting on privileged actions</li>
-<li>Retain access logs per the organisation's data retention policy; ECS does not enforce audit log retention itself</li>
-</ul>
-<h2 id="compliance">Compliance<a class="headerlink" href="#compliance" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Framework</th>
-<th>Relevant ECS Capability</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>WORM / SEC 17a-4</td>
-<td>S3 Object Lock in Compliance mode; immutable retention enforced at object level</td>
-</tr>
-<tr>
-<td>GDPR</td>
-<td>Object-level deletion capability; namespace-scoped data residency via VDC assignment</td>
-</tr>
-<tr>
-<td>PCI DSS</td>
-<td>Encryption at rest and in transit; audit logging; IAM least-privilege enforcement</td>
-</tr>
-<tr>
-<td>HIPAA</td>
-<td>Encryption at rest; access logging; RBAC namespace isolation</td>
-</tr>
-</tbody>
-</table>
-<p>For compliance deployments, always use Compliance mode Object Lock (not Governance mode) — Governance mode can be overridden by a privileged user.</p>
+<h1 id="dell-ecs-security">Dell ECS — Security<a class="headerlink" href="#dell-ecs-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>
+<a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>
+<a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>
+<a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
+</div>
 
 
 

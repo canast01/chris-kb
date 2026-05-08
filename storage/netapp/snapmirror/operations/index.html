@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>NetApp SnapMirror — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="NetApp SnapMirror — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="NetApp SnapMirror — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#netapp-snapmirror-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              NetApp SnapMirror — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,193 +717,16 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">NetApp SnapMirror</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>snapmirror show -fields lag-time,healthy,state</code></td>
-<td><code>snapmirror show -fields lag-time,healthy,state</code></td>
-<td>confirm all relationships are healthy with lag within RPO thresholds</td>
-</tr>
-<tr>
-<td>[ ] Flag any relationship with <code>healthy |</code>healthy: false`</td>
-<td>review the reason field for root cause</td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Flag any relationship with lag exceeding the defined RPO (typicall</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check for relationships in <code>broken-off</code> state from DR tests that have not been resynced</td>
-<td><code>snapmirror show -relationship-status broken-off</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check XDP (SnapVault) relationships are up to date</td>
-<td><code>snapmirror show -type XDP -fields lag-time,healthy</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Verify transfer schedules are running as expected</td>
-<td><code>snapmirror show -fields schedule,last-transfer-end-timestamp</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] For SMBC/AutomatedFailOver</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All relationships show <code>healthy: true</code></li>
-<li>[ ] No relationships in <code>broken-off</code> state</li>
-<li>[ ] All lag times are within the defined RPO for their relationship type</li>
-<li>[ ] SnapMirror Synchronous relationships show <code>In-Sync</code> (not <code>Out-of-Sync</code>)</li>
-<li>[ ] SMBC mediator is reachable if AutomatedFailOver policies are configured</li>
-<li>[ ] Destination aggregate has sufficient free space for incoming transfers</li>
-<li>[ ] No transfer queue backlog on the destination cluster</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all relationships with lag time, health, and state</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state,last-transfer-end-timestamp
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show only unhealthy relationships</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy<span class="w"> </span>-health-status<span class="w"> </span>unhealthy
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show relationships in broken-off state</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show XDP (SnapVault) relationships specifically</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>XDP<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy,state
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show transfer history — check for failures in the last 24 hours</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,status,transfer-size
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show SnapMirror Synchronous relationships and sync state</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-type<span class="w"> </span>sync<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy,is-healthy
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All relationships are healthy before quiescing — check <code>snapmirror show -fields healthy</code> returns <code>true</code> for all</li>
-<li>[ ] Lag is within RPO on all critical volumes — document baseline lag before the change</li>
-<li>[ ] No relationships are in <code>broken-off</code> state from a prior DR test — resync before entering the change window</li>
-<li>[ ] Destination aggregate has at least 20% free space to continue receiving transfers after the change</li>
-<li>[ ] Transfer schedules reviewed — plan the maintenance window to avoid overlapping with scheduled large transfers</li>
-<li>[ ] SnapMirror quiesce plan documented for source volumes involved in the change: <code>snapmirror quiesce -destination-path &lt;svm:vol&gt;</code></li>
-<li>[ ] SMBC mediator reachable and pod state healthy before any change to synchronous relationships</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All relationships healthy</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Lag within RPO on all critical volumes</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No broken-off relationships</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Destination aggregate has free space</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SMBC mediator reachable (if applicable)</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>snapmirror show -fields lag-time,healthy,state</code> — identify which relationships are affected</li>
-<li>[ ] Check the <code>reason</code> field on unhealthy relationships: <code>snapmirror show -destination-path &lt;svm:vol&gt;</code> for full detail</li>
-<li>[ ] Check network bandwidth between source and destination — large lag increases often point to bandwidth saturation: <code>network port show</code> and review inter-cluster LIF stats</li>
-<li>[ ] Check destination volume space: <code>volume show -vserver &lt;dst-svm&gt; -volume &lt;dst-vol&gt; -fields used-percent</code> — a full destination volume blocks transfers</li>
-<li>[ ] For <code>broken-off</code> state: determine if this was an intentional DR test or an unplanned break; do not resync without confirming data direction first</li>
-<li>[ ] For SnapMirror Synchronous <code>Out-of-Sync</code>: check inter-cluster LIF connectivity; relationship will attempt auto-resync once connectivity is restored</li>
-<li>[ ] For SMBC: run <code>snapmirror mediator show</code> to verify mediator health; check pod state with the source-cluster <code>snapmirror show</code> command</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which relationships are unhealthy or lagging?</td>
-<td></td>
-</tr>
-<tr>
-<td>What is the reason field showing?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is this broken-off intentional (DR test) or unplanned?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the destination volume full?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the network path between sites healthy?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Identify all SnapMirror relationships for source volumes involved in the change</li>
-<li>Quiesce relationships to pause future transfers while finishing any in-progress transfer: <code>snapmirror quiesce -destination-path &lt;svm:vol&gt;</code></li>
-<li>Confirm quiesce completes — <code>snapmirror show -destination-path &lt;svm:vol&gt;</code> should show <code>Quiesced</code></li>
-<li>Perform the planned source-side change (ONTAP upgrade, volume move, aggregate maintenance, etc.)</li>
-<li>Resume relationships after the change is complete: <code>snapmirror resume -destination-path &lt;svm:vol&gt;</code></li>
-<li>Trigger an immediate incremental update to minimize lag catch-up: <code>snapmirror update -destination-path &lt;svm:vol&gt;</code></li>
-<li>Monitor lag recovery: <code>snapmirror show -fields lag-time</code> — confirm lag returns to within RPO</li>
-<li>For SMBC: confirm pod state returns to <code>InSync</code> after resuming; verify mediator is registering both arrays</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>snapmirror show -fields healthy</code> — all relationships show <code>healthy: true</code></li>
-<li>[ ] Run <code>snapmirror show -relationship-status broken-off</code> — returns no results</li>
-<li>[ ] Lag time is recovering and trending back within RPO on all critical relationships</li>
-<li>[ ] <code>snapmirror show -type sync -fields is-healthy</code> — all synchronous relationships show <code>In-Sync</code></li>
-<li>[ ] Transfer history shows successful incremental transfers post-change: <code>snapmirror history show</code></li>
-<li>[ ] Destination aggregate has sufficient free space — no space-related transfer errors</li>
-<li>[ ] SMBC pod state is healthy and mediator connectivity confirmed (if applicable)</li>
-</ul>
+<h1 id="netapp-snapmirror-operations">NetApp SnapMirror — Operations<a class="headerlink" href="#netapp-snapmirror-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+</div>
 
 
 

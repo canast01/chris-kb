@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>FlashArray — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="FlashArray — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="FlashArray — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#flasharray-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              FlashArray — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,212 +717,15 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Pure FlashArray</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>purealert list</code></td>
-<td><code>purealert list</code></td>
-<td>review all active alerts; flag any with severity <code>error</code> or <code>warning</code></td>
-</tr>
-<tr>
-<td>[ ] Run <code>puredrive list</code></td>
-<td><code>puredrive list</code></td>
-<td>confirm all drives are in <code>healthy</code> state; flag any <code>failed</code>, <code>recovering</code>, or <code>missing</code> drives</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purearray list --space</code></td>
-<td><code>purearray list --space</code></td>
-<td>review array capacity and data reduction ratio; flag if used capacity &gt; 80%</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purepod list</code></td>
-<td><code>purepod list</code></td>
-<td>confirm all ActiveCluster pods are <code>stretched</code> and online (if configured)</td>
-</tr>
-<tr>
-<td>[ ] Check Pure1 portal for AI-driven health recommendations, anomalies</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Run <code>purevol list --space</code></td>
-<td><code>purevol list --space</code></td>
-<td>review volume space usage; flag any volumes approaching their allocated limit</td>
-</tr>
-<tr>
-<td>[ ] Run <code>puresnap list</code></td>
-<td><code>puresnap list</code></td>
-<td>check snapshot count; flag runaway snapshot growth from misconfigured protection group schedules</td>
-</tr>
-<tr>
-<td>[ ] Confirm replication to the secondary array is current</td>
-<td><code>purepod list --replicating</code></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] No active alerts in <code>purealert list</code></li>
-<li>[ ] All drives healthy — <code>puredrive list</code> shows no <code>failed</code> or <code>recovering</code> drives</li>
-<li>[ ] Array capacity below 80% used</li>
-<li>[ ] Both controllers are healthy and running the same Purity version: <code>purearray list --controller</code></li>
-<li>[ ] ActiveCluster pods are stretched and replicating: <code>purepod list --replicating</code> shows <code>true</code></li>
-<li>[ ] All host connections are active — no hosts with zero paths: <code>purehost list</code></li>
-<li>[ ] No runaway snapshot growth consuming unexpected capacity</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Array overall status and Purity version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Controller status and firmware version</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Array capacity, data reduction, and space usage</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># All active alerts</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># All drives and health state</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># ActiveCluster pods and replication state</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>purepod<span class="w"> </span>list<span class="w"> </span>--replicating
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># All volumes with space usage</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Snapshot count and usage</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>puresnap<span class="w"> </span>list
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Real-time performance (latency, IOPS, bandwidth)</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>purearray<span class="w"> </span>monitor
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Host and host group connectivity</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>purehost<span class="w"> </span>list
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>purehgroup<span class="w"> </span>list
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] No active drive rebuilds — <code>puredrive list</code> shows all drives <code>healthy</code>, no <code>recovering</code> drives</li>
-<li>[ ] ActiveCluster mediator is reachable and pods are in sync before any change affecting replication</li>
-<li>[ ] Snapshot count is reasonable — no protection group schedules running away that would fill capacity during the window</li>
-<li>[ ] All host connections are documented — run <code>purehost list --connection</code> and note current state for post-change comparison</li>
-<li>[ ] Volume connections validated — confirm which hosts connect to which volumes before any connectivity changes</li>
-<li>[ ] Array capacity is below 70% — leaving headroom for snapshot creation during the change</li>
-<li>[ ] Purity upgrade image staged if upgrading: <code>purearray upgrade --stage &lt;image&gt;</code> completed and <code>purearray upgrade --check</code> passed</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No active drive rebuilds</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>ActiveCluster mediator reachable</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Snapshot count reasonable</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Host path inventory documented</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Array capacity &lt; 70%</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>purealert list</code> first — active alerts are the fastest path to identifying the failure domain</li>
-<li>[ ] Run <code>puredrive list</code> — a failed or rebuilding drive is the most common hardware event</li>
-<li>[ ] Check host connectivity: <code>purehost list</code> — verify which hosts have lost paths; confirm expected path counts per host</li>
-<li>[ ] Check ActiveCluster pod state: <code>purepod list</code> — a pod in <code>unhealthy</code> or <code>paused</code> state indicates a replication or mediator event</li>
-<li>[ ] Review Pure1 portal for array-level health events, historical latency spikes, or capacity anomalies</li>
-<li>[ ] For latency issues: run <code>purearray monitor</code> and check which volumes are consuming the most IOPS/bandwidth</li>
-<li>[ ] If all paths lost to a host: check FC zoning or iSCSI network connectivity from the host side before escalating to Pure Support</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>What does <code>purealert list</code> show?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are any drives in failed or recovering state?</td>
-<td></td>
-</tr>
-<tr>
-<td>Which hosts have lost connectivity?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the ActiveCluster pod state healthy?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is this a single-array or dual-site issue?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm all hosts have at least two active paths before beginning — <code>purehost list --connection</code>; the NDU controller restart requires proper multipathing</li>
-<li>For ActiveCluster environments: confirm both pods are healthy and replicating before upgrading; upgrade one array at a time</li>
-<li>For Purity NDU upgrade: run pre-upgrade check <code>purearray upgrade --check</code> to clear all blockers</li>
-<li>Execute the upgrade: <code>purearray upgrade --exec</code> — monitor with <code>purearray list</code> until both controllers are on the new version</li>
-<li>For NVMe drive replacement: follow the Pure hot-swap procedure; confirm <code>puredrive list</code> shows the replacement drive as <code>healthy</code> after rebuild</li>
-<li>For controller refresh (Evergreen): coordinate with Pure Support; monitor <code>purearray monitor</code> during the upgrade for any I/O impact</li>
-<li>After any change, run <code>purealert list</code> — acknowledge and clear any informational alerts generated by the maintenance activity</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <code>purealert list</code> — no unresolved error or warning alerts</li>
-<li>[ ] <code>puredrive list</code> — all drives healthy; no drives in <code>recovering</code> state</li>
-<li>[ ] <code>purepod list --replicating</code> — all ActiveCluster pods stretched and replicating <code>true</code></li>
-<li>[ ] <code>purehost list --connection</code> — all hosts have the expected number of active paths (compare against pre-change inventory)</li>
-<li>[ ] <code>purearray list --controller</code> — both controllers online and running the same Purity version</li>
-<li>[ ] <code>purearray list --space</code> — capacity is as expected; no unexpected snapshot growth</li>
-<li>[ ] Confirm replication to secondary array is current — check replication link status in Pure1 or <code>purepod list</code></li>
-<li>[ ] Validate host I/O from application monitoring — confirm latency and throughput are within normal range</li>
-</ul>
+<h1 id="flasharray-operations">FlashArray — Operations<a class="headerlink" href="#flasharray-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+</div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>Dell ECS — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="Dell ECS — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="Dell ECS — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#dell-ecs-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              Dell ECS — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,210 +717,15 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Dell ECS</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Log in to ECS Portal → Dashboard and review the Alerts panel for a</td>
-<td></td>
-<td>triage by severity</td>
-</tr>
-<tr>
-<td>[ ] ECS Portal → Dashboard → Capacity</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Query <code>GET /vdc/nodes</code> via the Management REST API (or check ECS P</td>
-<td><code>GET /vdc/nodes</code></td>
-<td>all nodes should report <code>GOOD</code>; a <code>DEGRADED</code> or offline node requires immediate investigation</td>
-</tr>
-<tr>
-<td>[ ] Query <code>GET /vdc/capacity</code> to retrieve current cluster capacity met</td>
-<td><code>GET /vdc/capacity</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] ECS Portal → Geo Monitoring</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm the S3 endpoint is responding</td>
-<td><code>HEAD</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review bucket-level capacity for fast-growing buckets</td>
-<td></td>
-<td>identify any namespace where week-over-week growth is accelerating beyond expected rates</td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<p>Run these checks before any planned change or as first-response steps when investigating node, replication, or S3 access issues.</p>
-<ul>
-<li>[ ] ECS Portal → Hardware → Nodes: all nodes show <code>GOOD</code>; no nodes are <code>DEGRADED</code> or offline</li>
-<li>[ ] <code>GET /vdc/nodes</code> — programmatic confirmation that all nodes report healthy status</li>
-<li>[ ] <code>GET /vdc/capacity</code> — cluster is below 80% used; free capacity is sufficient to absorb a node rebuild if needed</li>
-<li>[ ] <code>GET /vdc/alerts</code> — no active alerts of <code>ERROR</code> or <code>CRITICAL</code> severity</li>
-<li>[ ] ECS Portal → Geo Monitoring — all VDC replication groups are in sync with zero or near-zero lag</li>
-<li>[ ] ECS Portal → Hardware → Disks: no disks in <code>FAILED</code> or <code>SUSPECT</code> state</li>
-<li>[ ] S3 endpoint functional test: a <code>ListBuckets</code> or <code>HeadBucket</code> request completes within expected latency</li>
-<li>[ ] <code>ecscli namespace list</code> — all expected namespaces are present and accessible</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to the ECS Management REST API (returns X-SDS-AUTH-TOKEN)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;sysadmin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/login&quot;</span><span class="w"> </span>-D<span class="w"> </span>-
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Retrieve VDC capacity (total, used, available, percent full)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/capacity&quot;</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># List all nodes and their health status</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/nodes&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Retrieve active alerts for the VDC</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/alerts&quot;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Test S3 endpoint — list buckets for a namespace using a valid access key</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;s3-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--no-verify-ssl
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># List namespaces via ecscli</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># List buckets in a specific namespace</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>list<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<p>Verify these items before performing any change on an ECS cluster — node additions, software upgrades, replication group changes, or VDC configuration updates.</p>
-<ul>
-<li>[ ] All nodes report <code>GOOD</code> in ECS Portal or <code>GET /vdc/nodes</code> — do not begin an upgrade or node addition while any node is <code>DEGRADED</code> or offline</li>
-<li>[ ] No active disk rebuilds: ECS Portal → Hardware → Disks shows no <code>REBUILDING</code> disks — a concurrent rebuild during a node upgrade increases rebuild time and risk</li>
-<li>[ ] Geo-replication lag is at zero or within acceptable threshold for all VDC replication groups — confirm in ECS Portal → Geo Monitoring</li>
-<li>[ ] VDC quorum is healthy — all VDC nodes are online and the cluster has quorum before any configuration change</li>
-<li>[ ] Cluster capacity is below 70% — expansion operations and data rebalancing require headroom above the current used level</li>
-<li>[ ] No active alerts of <code>ERROR</code> or <code>CRITICAL</code> severity: <code>GET /vdc/alerts</code> — resolve pre-existing alerts before starting</li>
-<li>[ ] Inform consuming application teams of the maintenance window; confirm S3 application owners are aware if the endpoint may briefly be unavailable</li>
-<li>[ ] For upgrades: verify the target ECS version is a supported upgrade path from the current version in the Dell ECS release notes</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All nodes GOOD</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No active disk rebuilds</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Geo-replication lag at zero</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>VDC quorum healthy</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Cluster capacity &lt; 70%</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p>When S3 writes fail, geo-replication falls behind, or a node goes offline, work through this sequence first.</p>
-<ul>
-<li>[ ] Check ECS Portal → Hardware → Nodes immediately — identify any node that has moved to <code>DEGRADED</code> or offline state; note when the state change occurred</li>
-<li>[ ] Query <code>GET /vdc/alerts</code> — retrieve the active alert list and identify alerts timestamped near the start of the incident</li>
-<li>[ ] Check geo-replication lag: ECS Portal → Geo Monitoring — growing lag between VDCs can indicate a WAN link issue or a remote VDC node problem</li>
-<li>[ ] Test S3 API availability: send a <code>HeadBucket</code> request to the S3 endpoint — a non-200 response or timeout confirms S3 API impact</li>
-<li>[ ] Check ECS Portal → Hardware → Disks for <code>FAILED</code> or <code>SUSPECT</code> disks on the affected node — disk failures trigger node rebalancing that can cause temporary capacity or performance impact</li>
-<li>[ ] If geo-replication lag is growing: check WAN bandwidth utilisation between sites and confirm the remote VDC is healthy; review replication group configuration with <code>ecscli bucket get</code></li>
-<li>[ ] For S3 authentication failures: confirm the IAM user and access key are correct; check bucket policies with <code>ecscli bucket get --namespace &lt;ns&gt; --name &lt;bucket&gt;</code></li>
-<li>[ ] If the node is unresponsive to the REST API: SSH to the node and check the ECS service status; open a Dell support case for hardware faults</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which nodes are DEGRADED or offline?</td>
-<td></td>
-</tr>
-<tr>
-<td>What active alerts does GET /vdc/alerts return?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is geo-replication lag growing between VDCs?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the S3 API endpoint responding?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are there FAILED or SUSPECT disks on the affected node?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p>Steps for planned maintenance on an ECS cluster — node maintenance, software upgrades, or VDC configuration changes.</p>
-<ol>
-<li>Confirm the maintenance window and notify all teams consuming S3, Swift, or CAS endpoints from the cluster</li>
-<li>Confirm all nodes are <code>GOOD</code> and geo-replication lag is at zero before starting</li>
-<li>For node-level maintenance: use ECS Portal → Hardware → Node → Enter Maintenance Mode to safely drain the node before physical access; do not power off a node without placing it in maintenance mode first</li>
-<li>For a rolling software upgrade: upload the upgrade package via ECS Portal → Settings → Software Update; ECS upgrades one node at a time — do not interrupt the rolling upgrade once started</li>
-<li>Monitor per-node upgrade progress in the portal; wait for each node to return to <code>GOOD</code> state before the upgrade proceeds to the next node</li>
-<li>If VDC quorum requires attention during the change, follow the Dell ECS quorum recovery procedure — do not attempt manual quorum changes without Dell support guidance</li>
-<li>After the change, confirm all nodes return to <code>GOOD</code> via <code>GET /vdc/nodes</code> and geo-replication resumes with no lag</li>
-<li>Run a functional S3 test from at least one consuming application before closing the maintenance window</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<p>Run these checks after any change to confirm the ECS cluster is healthy and object storage services have resumed.</p>
-<ul>
-<li>[ ] <code>GET /vdc/nodes</code> — all nodes report <code>GOOD</code>; no nodes remain in <code>DEGRADED</code> or maintenance state</li>
-<li>[ ] <code>GET /vdc/capacity</code> — capacity metrics are consistent with pre-change baseline; no unexpected increase</li>
-<li>[ ] ECS Portal → Geo Monitoring — geo-replication lag has returned to zero for all VDC replication groups</li>
-<li>[ ] <code>GET /vdc/alerts</code> — no new alerts introduced by the change</li>
-<li>[ ] S3 endpoint functional test: <code>HeadBucket</code> or <code>ListBuckets</code> succeeds from a representative consuming application</li>
-<li>[ ] <code>ecscli namespace list</code> — all namespaces accessible and intact</li>
-<li>[ ] ECS Portal → Hardware → Disks — no new <code>FAILED</code> or <code>SUSPECT</code> disks after the change</li>
-<li>[ ] Application teams confirm S3 workloads are running normally with no authentication or connectivity errors</li>
-</ul>
+<h1 id="dell-ecs-operations">Dell ECS — Operations<a class="headerlink" href="#dell-ecs-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+</div>
 
 
 

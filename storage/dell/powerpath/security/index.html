@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerPath Security - Chris KB</title>
+        <title>PowerPath — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerPath Security · Chris KB">
+  <meta property="og:title" content="PowerPath — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerPath Security · Chris KB">
+  <meta name="twitter:title" content="PowerPath — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerPath Security
+              PowerPath — Security
             
           </span>
         </div>
@@ -699,69 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compliance
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -780,92 +717,13 @@
 
 
 
-<h1 id="powerpath-security">PowerPath Security<a class="headerlink" href="#powerpath-security" title="Permanent link">&para;</a></h1>
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Install PowerPath only on hosts that have a valid support contract and license; do not run unlicensed instances (paths show as <code>unlic</code> and are unmanaged)</li>
-<li>[ ] Restrict <code>powermt</code> CLI access to root / administrators only — PowerPath configuration changes can cause I/O disruption if misused</li>
-<li>[ ] On Linux, ensure the PowerPath configuration file (<code>/etc/powermt.custom</code> or equivalent) has permissions <code>600</code> owned by root</li>
-<li>[ ] Keep PowerPath version current — outdated versions may have kernel compatibility issues that can cause I/O errors or kernel panics</li>
-<li>[ ] Verify DM-Multipath is blacklisting Dell/EMC devices to prevent dual management of the same path (see Integration section)</li>
-<li>[ ] Include PowerPath host configuration in the host hardening baseline audit; confirm no unauthorised policy changes after maintenance windows</li>
-<li>[ ] Run <code>powermt check_registration</code> after any OS upgrade or license renewal; an expired license causes paths to become <code>unlic</code> and is not automatically alerted</li>
-</ul>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>PowerPath does not have its own RBAC system — access control is delegated entirely to the host OS.</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>OS Mechanism</th>
-<th>PowerPath Access</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Storage Admin</td>
-<td>root (Linux) / Local Administrator (Windows)</td>
-<td>Full <code>powermt</code> access — can change policy, config, save</td>
-</tr>
-<tr>
-<td>Server Admin</td>
-<td>Standard OS admin account</td>
-<td>Read-only view via <code>powermt display</code> (requires root on Linux for most commands)</td>
-</tr>
-<tr>
-<td>Read-only monitoring</td>
-<td>Non-privileged user</td>
-<td>Limited; <code>powermt display</code> may require sudo on Linux</td>
-</tr>
-<tr>
-<td>Automation service account</td>
-<td>Dedicated service account with sudo for <code>powermt</code> commands only</td>
-<td>Configure via <code>/etc/sudoers</code> with specific command allowlist</td>
-</tr>
-</tbody>
-</table>
-<p>Recommended sudoers entry for a monitoring service account on Linux:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>svc-monitoring ALL=(root) NOPASSWD: /usr/sbin/powermt display dev=all, /usr/sbin/powermt display ports class=all, /usr/sbin/powermt check_registration
-</code></pre></div>
-<h2 id="encryption">Encryption<a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
-<p>PowerPath operates at the block I/O layer and does not encrypt data in transit between the host and array. Encryption at this layer is handled by:</p>
-<ul>
-<li><strong>Array-side encryption</strong>: PowerMax, Unity, and PowerStore provide AES-256 encryption at rest on the array; PowerPath is transparent to this</li>
-<li><strong>Host-side encryption</strong>: Use OS-level encryption (dm-crypt/LUKS on Linux, BitLocker on Windows) on top of the PowerPath pseudo device if host-side encryption is required</li>
-<li><strong>FC fabric encryption</strong>: Some FC switch vendors (Brocade, Cisco MDS) offer in-flight FC frame encryption; PowerPath is transparent to this</li>
-</ul>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>PowerPath does not generate its own audit log, but path state changes are written to the OS syslog. Capture these for operational visibility:</p>
-<ul>
-<li><strong>Linux</strong>: Events logged to <code>/var/log/messages</code> or <code>journalctl</code> under the <code>kernel</code> facility; keywords include <code>emcp</code>, <code>PowerPath</code>, <code>dead path</code>, <code>path restored</code></li>
-<li><strong>Windows</strong>: Events logged to the Windows Event Log under the PowerPath source; forward via Windows Event Forwarding to a SIEM</li>
-<li><strong>AIX</strong>: Events logged to <code>/var/adm/ras/errlog</code>; use <code>errpt</code> to review</li>
-</ul>
-<p>Log <code>powermt check_registration</code> and <code>powermt save</code> operations as part of any change management process — these are the two highest-impact administrative actions.</p>
-<h2 id="compliance">Compliance<a class="headerlink" href="#compliance" title="Permanent link">&para;</a></h2>
-<p>PowerPath itself is not a compliance boundary, but as a host-side component it is in scope for:</p>
-<table>
-<thead>
-<tr>
-<th>Framework</th>
-<th>Consideration</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CIS Benchmarks (OS level)</td>
-<td>Ensure PowerPath kernel module and config files have correct permissions per OS hardening guide</td>
-</tr>
-<tr>
-<td>PCI DSS</td>
-<td>PowerPath hosts in the CDE must have access controls, patching (version currency), and audit logging per PCI requirements</td>
-</tr>
-<tr>
-<td>Change management</td>
-<td>Any <code>powermt set policy</code> or <code>powermt config</code> operation should be performed within an approved change window and documented</td>
-</tr>
-</tbody>
-</table>
+<h1 id="powerpath-security">PowerPath — Security<a class="headerlink" href="#powerpath-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>
+<a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>
+<a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>
+<a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
+</div>
 
 
 

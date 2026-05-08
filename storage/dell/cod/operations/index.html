@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>COD — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="COD — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="COD — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#cod-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              COD — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,168 +717,15 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Capacity on Demand</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Review current COD utilization vs licensed capacity using SYMCLI o</td>
-<td></td>
-<td>confirm no unexpected consumption increase</td>
-</tr>
-<tr>
-<td>[ ] Confirm no new COD activations have occurred without an associated</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check system capacity headroom</td>
-<td></td>
-<td>flag if utilized capacity exceeds 80% of licensed capacity</td>
-</tr>
-<tr>
-<td>[ ] Verify Unisphere connectivity to Dell (required for COD activation</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show current array capacity state including licensed vs consumed</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-capacity<span class="w"> </span>-gb
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show COD license entitlement and activation status</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symlmf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show storage resource pool (SRP) utilization — confirms physical capacity consumed</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-srp<span class="w"> </span>-detail
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show total raw, subscribed, and usable capacity</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-tb
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check if COD capacity pools are available and their current state</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-demand<span class="w"> </span>-demand_type<span class="w"> </span>cod
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Current utilization has been reviewed and is approaching the threshold requiring COD activation (typically &gt;80% of licensed capacity)</li>
-<li>[ ] A change ticket has been raised and approved before initiating the COD activation request</li>
-<li>[ ] Unisphere has confirmed connectivity to Dell's licensing backend (check Unisphere &gt; Settings &gt; License)</li>
-<li>[ ] The Dell account team or support portal has been engaged if the activation requires a new entitlement rather than an existing COD pool</li>
-<li>[ ] Post-activation capacity headroom has been calculated to confirm the activation resolves the constraint</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Current utilization reviewed and at threshold</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Change ticket raised and approved</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Unisphere connectivity to Dell confirmed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Dell account/support engaged if new entitlement needed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Post-activation headroom calculated</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p><strong>On alert or issue:</strong>
-1. Log in to Unisphere or connect via SYMCLI to identify the exact utilization and licensing state
-2. Check SYMCLI event log for any licensing-related errors: <code>symelog -sid &lt;sid&gt; list -type license</code>
-3. Confirm the COD activation request was submitted via the correct channel (Unisphere &gt; Settings &gt; License &gt; Activate Capacity)
-4. If activation is rejected, verify the Dell account is current and the COD entitlement has not expired
-5. Open a Dell support case if the activation cannot proceed through Unisphere</p>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Unexpected capacity consumption spike</td>
-<td>Workload growth or new provisioning without capacity planning</td>
-<td>Run <code>symcfg -sid &lt;sid&gt; list -srp -detail</code>, identify which SRP/SG consumed capacity, review provisioning activity</td>
-</tr>
-<tr>
-<td>COD activation rejected in Unisphere</td>
-<td>Entitlement expired or account issue</td>
-<td>Check license entitlement via <code>symlmf -sid &lt;sid&gt; list</code>, contact Dell account team</td>
-</tr>
-<tr>
-<td>Licensing error in SYMCLI</td>
-<td>Expired or invalid license file</td>
-<td>Run <code>symlmf -sid &lt;sid&gt; list</code> to show license state, check expiry, open Dell support case</td>
-</tr>
-<tr>
-<td>COD capacity not visible after activation</td>
-<td>Activation not yet propagated</td>
-<td>Wait up to 15 minutes, then re-run <code>symcfg -sid &lt;sid&gt; show -capacity -gb</code></td>
-</tr>
-<tr>
-<td>Unisphere cannot reach Dell licensing backend</td>
-<td>Proxy or firewall blocking outbound HTTPS</td>
-<td>Check SCG connectivity, verify proxy settings in Unisphere</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm the COD activation is required and the change ticket is approved</li>
-<li>Log in to Unisphere and navigate to Settings &gt; License &gt; Capacity on Demand</li>
-<li>Submit the activation request specifying the number of additional TB required</li>
-<li>Monitor the activation status in Unisphere — expect propagation within 10-15 minutes</li>
-<li>Validate the new capacity is visible via SYMCLI:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>show<span class="w"> </span>-capacity<span class="w"> </span>-gb
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symlmf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list
-</code></pre></div></li>
-<li>Confirm the new capacity is available to the SRP and workloads are not impacted</li>
-<li>Update the change ticket with the post-activation capacity figures</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] New capacity is visible in <code>symcfg -sid &lt;sid&gt; show -capacity -gb</code> output</li>
-<li>[ ] Licensed capacity now reflects the activated COD amount in <code>symlmf -sid &lt;sid&gt; list</code></li>
-<li>[ ] SRP utilization percentage has dropped to reflect the additional capacity</li>
-<li>[ ] No performance or availability impact to existing workloads (check I/O stats in Unisphere)</li>
-<li>[ ] CloudIQ health score for the array is unchanged or improved</li>
-<li>[ ] Change ticket updated and closed with post-activation capacity figures</li>
-</ul>
+<h1 id="cod-operations">COD — Operations<a class="headerlink" href="#cod-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+</div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>FlashBlade Troubleshooting - Chris KB</title>
+        <title>FlashBlade — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FlashBlade Troubleshooting · Chris KB">
+  <meta property="og:title" content="FlashBlade — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FlashBlade Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="FlashBlade — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FlashBlade Troubleshooting
+              FlashBlade — Troubleshooting
             
           </span>
         </div>
@@ -699,58 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Before Calling Support
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -769,165 +717,12 @@
 
 
 
-<h1 id="flashblade-troubleshooting">FlashBlade Troubleshooting<a class="headerlink" href="#flashblade-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Blade in <code>failed</code> or <code>missing</code> state</td>
-<td>Physical blade hardware failure or seating issue</td>
-<td>Run <code>purefb blade list</code>; open a Pure support case immediately — capacity and throughput are reduced until the blade is replaced; do not attempt to reseat the blade without Pure Support guidance</td>
-</tr>
-<tr>
-<td>NFS clients showing stale file handle errors</td>
-<td>Client-side NFS state not cleaned after a FlashBlade event (blade failover or upgrade)</td>
-<td>Unmount and remount the NFS filesystem on affected clients; verify <code>/etc/fstab</code> uses <code>soft</code> or <code>intr</code> NFS mount options to prevent hard-hang on server-side events</td>
-</tr>
-<tr>
-<td>NFS mounts timing out or hanging</td>
-<td>FlashBlade data VIP unreachable due to network issue; NFS export policy blocking the client</td>
-<td>Verify the FlashBlade data VIP is reachable from the client (<code>ping</code>); run <code>purefb network interface list</code> to confirm VIP is <code>up</code>; check NFS export policy source IP rules</td>
-</tr>
-<tr>
-<td>S3 returning 403 Forbidden</td>
-<td>S3 access key expired, suspended, or IAM bucket policy denies the operation</td>
-<td>Run <code>purefb objectstoreuser list</code> to check key status; regenerate the access key; review bucket access policies under <code>purefb bucket list --access-policy</code></td>
-</tr>
-<tr>
-<td>ActiveDR replication lag exceeding RPO</td>
-<td>Replication network bandwidth saturated or replication link down</td>
-<td>Run <code>purefb replication list</code> to check lag and link state; verify network path between sites; check for bandwidth saturation on replication interfaces</td>
-</tr>
-<tr>
-<td>SMB share inaccessible after AD credential change</td>
-<td>FlashBlade machine account password or AD bind credentials have expired</td>
-<td>Rejoin the FlashBlade to Active Directory from the GUI or CLI; update AD bind credentials in the directory service configuration</td>
-</tr>
-<tr>
-<td>Filesystem approaching its provisioned limit</td>
-<td>Organic data growth or backup tool writing more than expected</td>
-<td>Expand the filesystem limit non-disruptively: <code>purefb filesystem update --provisioned &lt;new_size&gt; &lt;fsname&gt;</code>; review backup retention policies to expire older data</td>
-</tr>
-<tr>
-<td>Blade in <code>rebalancing</code> state after blade add</td>
-<td>Normal state during data rebalancing after a new blade is added</td>
-<td>This is expected behaviour — monitor progress with <code>purefb blade list</code>; do not interrupt the rebalancing process; alert if rebalancing is stuck for more than 24 hours</td>
-</tr>
-<tr>
-<td>High NFS latency during AI/ML training</td>
-<td>Clients not using pNFS parallel access; single VIP bottleneck</td>
-<td>Enable pNFS (NFSv4.1 pNFS) on the filesystem and verify client NFS mounts use <code>nfsvers=4.1</code> and <code>proto=tcp</code>; pNFS allows clients to access multiple blades in parallel</td>
-</tr>
-<tr>
-<td>Snapshot schedule not creating snapshots</td>
-<td>Snapshot policy not associated with the filesystem, or policy is paused</td>
-<td>Run <code>purefb policy list</code> to verify the snapshot policy; check <code>purefb snap list</code> to confirm recent snapshots exist; re-associate the policy with the filesystem if needed</td>
-</tr>
-</tbody>
-</table>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Overall FlashBlade status and Purity//FB version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># All blade health and capacity contribution</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Hardware component status (FMs, PSUs, fans)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purefb<span class="w"> </span>hardware<span class="w"> </span>list
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># All active alerts</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>purefb<span class="w"> </span>alert<span class="w"> </span>list
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Filesystem list with provisioned and used capacity</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># S3 bucket list with usage</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Object store accounts and users</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>purefb<span class="w"> </span>objectstoreaccount<span class="w"> </span>list
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>purefb<span class="w"> </span>objectstoreuser<span class="w"> </span>list
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Network interface status (data VIPs and replication)</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Snapshot list</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>purefb<span class="w"> </span>snap<span class="w"> </span>list
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Replication link status and lag</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>purefb<span class="w"> </span>replication<span class="w"> </span>arrayconnection<span class="w"> </span>list
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1"># NFS export policies</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>purefb<span class="w"> </span>policy<span class="w"> </span>list
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="c1"># Active directory and directory service status</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>purefb<span class="w"> </span>directoryservice<span class="w"> </span>list
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="c1"># Collect diagnostic bundle</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>purefb<span class="w"> </span>support<span class="w"> </span>diag<span class="w">         </span><span class="c1"># sends to Pure Support if phone-home is active</span>
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Location / Command</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>System and Purity//FB events</td>
-<td><code>purefb array list --logs</code> or via Pure1 portal &gt; Events</td>
-</tr>
-<tr>
-<td>Alert history</td>
-<td><code>purefb alert list</code> (include resolved alerts with <code>--resolved</code>)</td>
-</tr>
-<tr>
-<td>Audit log (admin actions)</td>
-<td><code>purefb admin list --audit</code></td>
-</tr>
-<tr>
-<td>Replication log</td>
-<td><code>purefb replication list</code></td>
-</tr>
-<tr>
-<td>Diagnostic bundle</td>
-<td><code>purefb support diag</code> — includes system logs, configuration, and metrics</td>
-</tr>
-<tr>
-<td>NFS export policy log</td>
-<td><code>purefb policy list</code> — review policy rules and associations</td>
-</tr>
-<tr>
-<td>Pure1 event timeline</td>
-<td>Pure1 portal &gt; Arrays &gt; select FlashBlade &gt; Events</td>
-</tr>
-</tbody>
-</table>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<p>Collect the following before opening a Pure support case:</p>
-<ul>
-<li>[ ] Array name and serial number: <code>purefb array list</code></li>
-<li>[ ] Purity//FB version: <code>purefb array list</code> (Version field)</li>
-<li>[ ] Blade health status: <code>purefb blade list</code> — copy full output</li>
-<li>[ ] Hardware component status: <code>purefb hardware list</code></li>
-<li>[ ] Active alerts: <code>purefb alert list</code> — copy full output</li>
-<li>[ ] Network interface status: <code>purefb network interface list</code></li>
-<li>[ ] Replication status (if replication is involved): <code>purefb replication list</code></li>
-<li>[ ] Filesystem or bucket details (if data-access related): <code>purefb filesystem list</code> or <code>purefb bucket list</code></li>
-<li>[ ] NFS mount options from affected clients (output of <code>mount | grep nfs</code>)</li>
-<li>[ ] Symptom description: what changed before the issue, when it started, and business impact</li>
-<li>[ ] Diagnostic bundle: <code>purefb support diag</code> and attach to the case</li>
-</ul>
+<h1 id="flashblade-troubleshooting">FlashBlade — Troubleshooting<a class="headerlink" href="#flashblade-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="diagnostics/"><strong>Diagnostics</strong><span>Diagnostic procedures and log analysis.</span></a>
+<a class="kb-card" href="escalation/"><strong>Escalation</strong><span>Vendor escalation procedures and support contacts.</span></a>
+</div>
 
 
 

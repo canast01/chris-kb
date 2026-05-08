@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerScale Security - Chris KB</title>
+        <title>PowerScale — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerScale Security · Chris KB">
+  <meta property="og:title" content="PowerScale — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerScale Security · Chris KB">
+  <meta name="twitter:title" content="PowerScale — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerScale Security
+              PowerScale — Security
             
           </span>
         </div>
@@ -699,69 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compliance-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compliance Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -780,160 +717,30 @@
 
 
 
-<h1 id="powerscale-security">PowerScale Security<a class="headerlink" href="#powerscale-security" title="Permanent link">&para;</a></h1>
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Change the default <code>root</code> and <code>admin</code> passwords immediately after cluster initialisation</li>
-<li>[ ] Disable SSH for non-administrative users; restrict SSH to management VLAN source IPs via firewall rules</li>
-<li>[ ] Enable HTTPS-only access to the OneFS web administration GUI; disable HTTP</li>
-<li>[ ] Configure session timeout on the web UI (recommended: 15 minutes)</li>
-<li>[ ] Enable audit logging for protocol access (NFS, SMB) and configuration changes</li>
-<li>[ ] Forward audit events to a centralised SIEM via syslog</li>
-<li>[ ] Restrict <code>root</code> squash on all NFS exports unless there is a specific technical requirement</li>
-<li>[ ] Apply SmartQuota hard limits to all user-accessible directories to prevent runaway consumption</li>
-<li>[ ] Enable SMB signing (<code>isi smb settings global modify --server-signing required</code>) for all Windows client access</li>
-<li>[ ] Review and restrict access zone IP pool source ranges to the specific client subnets for that zone</li>
-<li>[ ] Enable at-rest encryption (SED drives) if node hardware supports it; configure through Dell factory order</li>
-<li>[ ] Disable unused protocols per access zone (e.g., disable FTP, HDFS, S3 if not in use)</li>
-</ul>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>PowerScale uses role-based administration for cluster management:</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Permissions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SystemAdmin</code></td>
-<td>Full cluster administration including security, users, and hardware</td>
-</tr>
-<tr>
-<td><code>AuditAdmin</code></td>
-<td>Read access to all audit logs and events; cannot change configuration</td>
-</tr>
-<tr>
-<td><code>BackupAdmin</code></td>
-<td>Permission to read all files for backup purposes (NDMP/snapshot) regardless of file ACLs</td>
-</tr>
-<tr>
-<td><code>VMwareAdmin</code></td>
-<td>Access to VMware-related cluster functions (vVols, VAAI)</td>
-</tr>
-<tr>
-<td><code>SecurityAdmin</code></td>
-<td>Manage authentication providers, zones, and user role assignments</td>
-</tr>
-<tr>
-<td><code>ISI_PRIV_AUTH</code></td>
-<td>Privilege to manage authentication configuration (AD, LDAP, NIS)</td>
-</tr>
-<tr>
-<td><code>ISI_PRIV_SNAPSHOT</code></td>
-<td>Privilege to create and manage SnapshotIQ policies</td>
-</tr>
-<tr>
-<td><code>ISI_PRIV_SYNCIQ</code></td>
-<td>Privilege to manage SyncIQ replication policies</td>
-</tr>
-</tbody>
-</table>
-<p>Create custom roles and assign specific privileges:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;Read-only cluster monitoring&quot;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_LOGIN_CONSOLE
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_STATISTICS
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-user<span class="w"> </span>&lt;username&gt;
-</code></pre></div></p>
-<h2 id="encryption">Encryption<a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Mechanism</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Data at Rest</td>
-<td>Self-Encrypting Drives (SED) with AES-256</td>
-<td>Hardware-based; configured at factory order time. Cannot be enabled retroactively on spinning drives.</td>
-</tr>
-<tr>
-<td>Data in Transit (SyncIQ)</td>
-<td>TLS-encrypted SyncIQ replication channel</td>
-<td>Enable with <code>isi sync policies modify &lt;name&gt; --encryption-required true</code></td>
-</tr>
-<tr>
-<td>Management Traffic</td>
-<td>HTTPS (TLS 1.2+) for web UI; SSH for CLI</td>
-<td>Disable TLS 1.0/1.1; restrict cipher suites to strong options</td>
-</tr>
-<tr>
-<td>SMB Encryption</td>
-<td>SMB3 end-to-end encryption</td>
-<td>Enable per-share: <code>isi smb shares modify &lt;share&gt; --encrypt-data true</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable protocol audit logging (NFS, SMB events)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--auditing-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># View audit configuration</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Set syslog forwarding for audit events</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--cee-server-uri<span class="w"> </span>http://siem.example.com:12228/cee
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># View recent audit log entries (protocol access events)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>isi<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>view
-</code></pre></div>
-<ul>
-<li>Audit events cover: file open, read, write, delete, rename, permission change, and authentication events.</li>
-<li>Forward to a syslog receiver or a Dell Common Event Enabler (CEE) API endpoint for SIEM integration.</li>
-<li>Retain audit logs for a minimum of 12 months; 24 months for regulated environments.</li>
-</ul>
-<h2 id="compliance-notes">Compliance Notes<a class="headerlink" href="#compliance-notes" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Framework</th>
-<th>Relevant Control</th>
-<th>PowerScale Capability</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PCI-DSS</td>
-<td>Requirement 3 (data at rest encryption)</td>
-<td>SED-based AES-256 encryption</td>
-</tr>
-<tr>
-<td>PCI-DSS</td>
-<td>Requirement 10 (audit logging)</td>
-<td>Protocol and admin audit logging via CEE</td>
-</tr>
-<tr>
-<td>HIPAA</td>
-<td>§164.312 (access control)</td>
-<td>Access zones, RBAC, and per-share ACLs</td>
-</tr>
-<tr>
-<td>GDPR</td>
-<td>Article 32 (security of processing)</td>
-<td>Encryption in transit (SMB3, SyncIQ TLS) and at rest (SED)</td>
-</tr>
-<tr>
-<td>ISO 27001</td>
-<td>A.9 (access control)</td>
-<td>RBAC roles, AD/LDAP integration, root squash on NFS</td>
-</tr>
-</tbody>
-</table>
+<h1 id="powerscale-security">PowerScale — Security<a class="headerlink" href="#powerscale-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>SSO, LDAP, local accounts, and identity sources.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>Roles, permissions, and least privilege access.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>TLS certificate management and data encryption.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Security baselines and compliance configuration.</span>
+</a>
+
+</div>
 
 
 

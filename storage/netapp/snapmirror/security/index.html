@@ -21,7 +21,7 @@
     
     
       
-        <title>NetApp SnapMirror Security - Chris KB</title>
+        <title>NetApp SnapMirror — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="NetApp SnapMirror Security · Chris KB">
+  <meta property="og:title" content="NetApp SnapMirror — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="NetApp SnapMirror Security · Chris KB">
+  <meta name="twitter:title" content="NetApp SnapMirror — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              NetApp SnapMirror Security
+              NetApp SnapMirror — Security
             
           </span>
         </div>
@@ -699,69 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#intercluster-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Intercluster Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#encryption-in-transit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption in Transit
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#destination-volume-protection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Destination Volume Protection
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -780,41 +717,13 @@
 
 
 
-<h1 id="netapp-snapmirror-security">NetApp SnapMirror Security<a class="headerlink" href="#netapp-snapmirror-security" title="Permanent link">&para;</a></h1>
-<h2 id="intercluster-authentication">Intercluster Authentication<a class="headerlink" href="#intercluster-authentication" title="Permanent link">&para;</a></h2>
-<p>Cluster peering uses a pre-shared passphrase negotiated at peer establishment time. The passphrase is used once to authenticate the relationship; subsequent replication traffic uses TLS-encrypted channels. From ONTAP 9.6 onwards, all intercluster communication is TLS encrypted by default. Cluster peer relationships should be reviewed annually and stale peers removed.</p>
-<h2 id="encryption-in-transit">Encryption in Transit<a class="headerlink" href="#encryption-in-transit" title="Permanent link">&para;</a></h2>
-<p>SnapMirror Transfer Data Encryption (TDE) encrypts replication traffic end-to-end between clusters. Encryption is configured per relationship and does not require IPsec on the network layer.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable encryption on an existing SnapMirror relationship</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>modify<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst<span class="w"> </span>-encryption-algorithm<span class="w"> </span>aes-256
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Verify encryption is enabled</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst<span class="w"> </span>-fields<span class="w"> </span>encryption-algorithm
-</code></pre></div>
-<p>Encryption in transit is mandatory for any replication relationship crossing a network segment that is not fully controlled (e.g., WAN links, third-party interconnects).</p>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<ul>
-<li>SnapMirror operations (<code>update</code>, <code>initialize</code>, <code>resync</code>, <code>show</code>) require <code>vsadmin</code> or cluster admin role</li>
-<li><code>snapmirror break</code> and <code>snapmirror resync</code> must be restricted to designated DR admins — these operations change data access and replication direction</li>
-<li>Create a custom ONTAP role scoped to SnapMirror-only operations for teams that need monitoring access without the ability to break or resync relationships:</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-monitor<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show-history&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
-</code></pre></div>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<ul>
-<li>All SnapMirror relationship changes (create, modify, delete, break, resync) are recorded in the ONTAP audit log</li>
-<li>EMS generates events for all transfer completions, failures, and lag threshold breaches — route these to your SIEM or syslog server</li>
-<li>Review audit logs after any DR test to confirm only authorized operations were performed</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show recent SnapMirror-related EMS events</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-message-name<span class="w"> </span>snapmirror.*
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show security audit log for relationship changes</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>security<span class="w"> </span>audit<span class="w"> </span>log<span class="w"> </span>show
-</code></pre></div>
-<h2 id="destination-volume-protection">Destination Volume Protection<a class="headerlink" href="#destination-volume-protection" title="Permanent link">&para;</a></h2>
-<p>Destination (DP) volumes are read-only by design — the replication engine enforces this at the WAFL layer. No client or user can write to a destination volume while a SnapMirror relationship is active. This eliminates the risk of accidental data modification on the replication target. Access to the destination volume is restricted to the replication engine and cluster admin operations; no data LIFs serve the destination volume until a <code>snapmirror break</code> is explicitly run.</p>
+<h1 id="netapp-snapmirror-security">NetApp SnapMirror — Security<a class="headerlink" href="#netapp-snapmirror-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>
+<a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>
+<a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>
+<a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
+</div>
 
 
 

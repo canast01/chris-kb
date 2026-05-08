@@ -21,7 +21,7 @@
     
     
       
-        <title>ONTAP Architecture - Chris KB</title>
+        <title>ONTAP — Architecture - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ONTAP Architecture · Chris KB">
+  <meta property="og:title" content="ONTAP — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ONTAP Architecture · Chris KB">
+  <meta name="twitter:title" content="ONTAP — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ONTAP Architecture
+              ONTAP — Architecture
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#ha-pair-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Pair Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sizing Guidelines
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,132 +717,13 @@
 
 
 
-<h1 id="ontap-architecture">ONTAP Architecture<a class="headerlink" href="#ontap-architecture" title="Permanent link">&para;</a></h1>
-<h2 id="ha-pair-topology">HA Pair Topology<a class="headerlink" href="#ha-pair-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  N1["Node 1 (Controller)\nSVM-1 · SVM-2"] &lt;--&gt;|"HA interconnect\n100GbE cluster net"| N2["Node 2 (Controller)\n(takeover on failover)"]
-  N1 &amp; N2 --&gt; SHELVES[("Disk Shelves\nNVMe SSD / SAS HDD")]
-  N1 --&gt; NAS["NFS · SMB/CIFS"]
-  N1 --&gt; SAN["iSCSI · FC · NVMe-oF"]
-  N2 --&gt; NAS &amp; SAN
-  NAS --&gt; NC(["NAS Clients"])
-  SAN --&gt; SC(["SAN Hosts"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class N1,N2 ctrl
-  class SHELVES store
-  class NC,SC host</code></pre>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>NetApp ONTAP is a clustered storage operating system that abstracts physical hardware into logical constructs, enabling non-disruptive operations, multi-protocol data access, and built-in data protection. The hierarchy flows from cluster → nodes → aggregates → SVMs → volumes, with data served across NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3 protocols simultaneously from a single cluster.</p>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cluster</td>
-<td>The top-level administrative domain; 2–24 nodes sharing a common namespace and management interface</td>
-</tr>
-<tr>
-<td>Node</td>
-<td>An individual controller (AFF/FAS/ONTAP Select) running ONTAP; each node owns aggregates and serves data</td>
-</tr>
-<tr>
-<td>HA Pair</td>
-<td>Two nodes configured as an active-active pair sharing disk shelves; each node can take over the other's storage</td>
-</tr>
-<tr>
-<td>Aggregate</td>
-<td>A collection of RAID groups built from physical disks or SSDs; the raw storage pool owned by a node</td>
-</tr>
-<tr>
-<td>SVM (Storage VM)</td>
-<td>A logical tenant with its own namespace, network interfaces, protocols, and security domain; equivalent to a vFiler</td>
-</tr>
-<tr>
-<td>Volume</td>
-<td>A FlexVol (or FlexGroup) within an SVM; the unit of storage presented to hosts and clients</td>
-</tr>
-<tr>
-<td>LUN</td>
-<td>A block device within a volume, mapped to hosts via iSCSI or FC using igroups</td>
-</tr>
-<tr>
-<td>LIF (Logical Interface)</td>
-<td>A virtual IP or WWN endpoint on a node port; SVMs have data LIFs, the cluster has a cluster-management LIF</td>
-</tr>
-<tr>
-<td>WAFL</td>
-<td>Write Anywhere File Layout — ONTAP's internal filesystem that handles all I/O, snapshots, and deduplication</td>
-</tr>
-<tr>
-<td>ONTAP Mediator</td>
-<td>An external Linux VM used to provide a quorum witness for SnapMirror Business Continuity (SMBC) automatic failover</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p>ONTAP HA pairs are active-active: both nodes serve I/O simultaneously and each holds a full copy of the partner's NVRAM write log. In the event of a node failure, the surviving node performs an automatic storage failover (takeover) within ~45 seconds. Cluster interconnect links (100GbE or InfiniBand) carry the NVRAM mirroring and heartbeat traffic between HA partners.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                        Cluster                           │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │   ┌─────────────┐  Cluster IC  ┌─────────────┐          │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │   │   Node 01   │◄────────────►│   Node 02   │  HA Pair │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │   │  (AFF A400) │              │  (AFF A400) │          │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │   └──────┬──────┘              └──────┬──────┘          │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │          │                            │                  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │          └────────────┬───────────────┘                  │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │                       │                                  │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │              Shared Disk Shelves                         │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │              (NS224 NVMe or SAS)                         │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  └──────────────────────────────────────────────────────────┘
-</code></pre></div>
-<p>For larger clusters, multiple HA pairs share the same cluster network and management infrastructure but own separate aggregates. A 4-node cluster has two HA pairs; aggregates are not shared across pairs unless SyncMirror is used.</p>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Detail</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cluster network</td>
-<td>10/25/100GbE dedicated switch fabric for intra-cluster traffic (NVRAM sync, HA heartbeat, volume moves)</td>
-</tr>
-<tr>
-<td>Data network</td>
-<td>10/25GbE ports carrying NFS, SMB, iSCSI, and NVMe/TCP LIFs; LIF home ports assigned per node</td>
-</tr>
-<tr>
-<td>FC fabric</td>
-<td>16G/32G FC HBAs with dual-fabric zoning for FC and FCoE SAN; LIFs represented as WWPNs</td>
-</tr>
-<tr>
-<td>Management network</td>
-<td>1GbE dedicated management port per node plus the cluster-management LIF; used for CLI/API/System Manager access</td>
-</tr>
-<tr>
-<td>Intercluster network</td>
-<td>Dedicated intercluster LIFs on 10/25GbE for SnapMirror and cluster peering traffic</td>
-</tr>
-</tbody>
-</table>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Nodes per cluster</strong>: 2–24 nodes; AFF A-series for all-flash, FAS for hybrid; ONTAP Select for software-defined deployments</li>
-<li><strong>Aggregates</strong>: Keep usable capacity below 90% to avoid WAFL metadata overhead and Snapshot spill-over; target 70–80% for production</li>
-<li><strong>Volumes per SVM</strong>: Supported up to several thousand per cluster; practical limit depends on workload mix and management overhead</li>
-<li><strong>HA pair fan-out</strong>: Each HA pair supports up to 12–24 disk shelves depending on platform; consult the NetApp Hardware Universe for exact limits</li>
-<li><strong>Protocols per SVM</strong>: An SVM can serve multiple protocols simultaneously; for security and isolation, dedicated SVMs per protocol are common in regulated environments</li>
-<li><strong>QoS</strong>: Set throughput floors (minimum) and ceilings (maximum) per volume or workload using adaptive QoS policies to prevent noisy-neighbor issues in mixed workload clusters</li>
-</ul>
+<h1 id="ontap-architecture">ONTAP — Architecture<a class="headerlink" href="#ontap-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+</div>
 
 
 

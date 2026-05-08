@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>Evergreen — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="Evergreen — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="Evergreen — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#evergreen-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              Evergreen — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,200 +717,16 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Pure Storage Evergreen</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Apply standard FlashArray daily checks</td>
-<td><code>purealert list</code></td>
-<td>Evergreen is a subscription model; the underlying FlashArray or FlashBlade operations apply</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purearray list --hardware</code></td>
-<td><code>purearray list --hardware</code></td>
-<td>confirm all hardware components are healthy</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purepod list</code></td>
-<td><code>purepod list</code></td>
-<td>confirm ActiveCluster pods are stretched and replicating (if configured)</td>
-</tr>
-<tr>
-<td>[ ] Verify subscription status is current in the Pure1 portal</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm Pure1 phone-home (support tunnel) is active</td>
-<td></td>
-<td>Pure Support visibility depends on continuous telemetry</td>
-</tr>
-<tr>
-<td>[ ] Check Pure Support contract status</td>
-<td></td>
-<td>confirm support is active and the renewal date is tracked</td>
-</tr>
-<tr>
-<td>[ ] Review Pure1 for any proactive recommendations or upgrade eligibil</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] No active hardware alerts in Pure1 or from <code>purealert list</code></li>
-<li>[ ] All drives healthy: <code>puredrive list</code> — no <code>failed</code> or <code>recovering</code> drives</li>
-<li>[ ] Both controllers online and running the same Purity version: <code>purearray list --controller</code></li>
-<li>[ ] ActiveCluster pods are stretched and <code>replicating: true</code>: <code>purepod list --replicating</code></li>
-<li>[ ] Pure1 phone-home is active (Pure1 portal: Arrays → select array → Support → Phone Home)</li>
-<li>[ ] Purity software version is within Pure's supported N-2 release window</li>
-<li>[ ] Subscription expiry date is documented and renewal is tracked with sufficient lead time</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List array hardware status — controllers, chassis, power, fans</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--hardware
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Review all active alerts</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Array capacity, used space, and data reduction</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Verify host and host group path status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>purehost<span class="w"> </span>list
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>purehgroup<span class="w"> </span>list
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Review ActiveCluster pod and replication status</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>purepod<span class="w"> </span>list<span class="w"> </span>--replicating
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Check current Purity software version</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># List snapshot usage (to monitor ahead of controller upgrade)</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] ActiveCluster mediator is reachable and all pods are in sync before entering any upgrade window</li>
-<li>[ ] No outstanding drive rebuilds — <code>puredrive list</code> shows all drives <code>healthy</code></li>
-<li>[ ] All hosts have at least two active paths: <code>purehost list --connection</code> — single-path hosts will see I/O interruption during a controller restart</li>
-<li>[ ] Snapshot count and capacity are within reasonable bounds — clean up stale snapshots before the upgrade window</li>
-<li>[ ] Purity software version is within the compatible range for the target controller generation (verify with Pure's compatibility matrix)</li>
-<li>[ ] Pure Support engaged and upgrade window scheduled at least 30 days before subscription renewal date</li>
-<li>[ ] Host path validation planned: document current host-to-volume connections before the upgrade for post-change comparison</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ActiveCluster mediator reachable</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No active drive rebuilds</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>All hosts have redundant paths</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Stale snapshots cleaned up</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Controller upgrade scheduled with Pure</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>purealert list</code> — active alerts are the primary indicator; check for hardware, drive, or replication events</li>
-<li>[ ] Run <code>puredrive list</code> — identify any drive that failed during or after the controller upgrade</li>
-<li>[ ] Check host path recovery: <code>purehost list --connection</code> — confirm all hosts have their expected path count post-upgrade</li>
-<li>[ ] Check ActiveCluster pod state: <code>purepod list</code> — a pod in <code>unhealthy</code> state after an upgrade may need mediator re-registration</li>
-<li>[ ] Confirm Pure1 phone-home is active — if the support tunnel went offline during maintenance, restore it to ensure Pure proactive support visibility</li>
-<li>[ ] For replication lag after upgrade: monitor <code>purepod list</code> and <code>purearray monitor</code> — lag should self-recover once the controller restart completes</li>
-<li>[ ] If a controller did not come back online after NDU: contact Pure Support immediately with the array serial number and upgrade job reference</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Did the controller upgrade complete cleanly?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are all drives still healthy post-upgrade?</td>
-<td></td>
-</tr>
-<tr>
-<td>Do all hosts have their expected path counts?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the ActiveCluster pod in sync?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is Pure1 phone-home active?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Validate host multipathing before the upgrade window: confirm all hosts have at least two active paths via <code>purehost list --connection</code>; do not proceed with single-path hosts</li>
-<li>Confirm ActiveCluster mediator connectivity and pod sync state: <code>purepod list --replicating</code></li>
-<li>Clean up stale snapshots and eradicated volumes to ensure maximum capacity headroom: <code>puresnap eradicate</code> for expired snaps</li>
-<li>Coordinate with Pure Support to confirm the scheduled controller refresh window — Pure performs the hardware swap</li>
-<li>Monitor <code>purearray monitor</code> during the NDU upgrade to detect any unexpected latency impact</li>
-<li>After each controller upgrade, run <code>purearray list --controller</code> — confirm both controllers are online and running the new hardware generation's Purity version</li>
-<li>Validate pods and replication resume after the upgrade: <code>purepod list --replicating</code> should return <code>true</code></li>
-<li>Confirm all host paths are restored: compare <code>purehost list --connection</code> against the pre-upgrade inventory</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Both controllers are online: <code>purearray list --controller</code> shows both CT0 and CT1 healthy</li>
-<li>[ ] All volumes are accessible: <code>purevol list</code> — no volumes in an unavailable state</li>
-<li>[ ] <code>purepod list --replicating</code> — all ActiveCluster pods stretched and replicating <code>true</code></li>
-<li>[ ] <code>puredrive list</code> — all drives healthy; no drives in <code>recovering</code> state</li>
-<li>[ ] <code>purealert list</code> — no unresolved error alerts; acknowledge any informational alerts from the upgrade activity</li>
-<li>[ ] Host path counts match pre-upgrade inventory: <code>purehost list --connection</code></li>
-<li>[ ] Pure1 phone-home is active and the new hardware is visible in the Pure1 portal</li>
-<li>[ ] Replication to secondary array is current — check pod state or replication link status</li>
-</ul>
+<h1 id="evergreen-operations">Evergreen — Operations<a class="headerlink" href="#evergreen-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+</div>
 
 
 

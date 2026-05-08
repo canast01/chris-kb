@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>Data Domain — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="Data Domain — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="Data Domain — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#data-domain-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              Data Domain — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,227 +717,15 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Dell Data Domain</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>filesys show space</code></td>
-<td><code>filesys show space</code></td>
-<td>check pre- and post-compression capacity; alert if post-compression used exceeds 80% of usable capacity</td>
-</tr>
-<tr>
-<td>[ ] Run <code>filesys show compression</code></td>
-<td><code>filesys show compression</code></td>
-<td>confirm the global dedup ratio is above 10:1 (healthy target is 20:1+); a significant drop compared to the previous day warrants investigation</td>
-</tr>
-<tr>
-<td>[ ] Run <code>alerts show current</code></td>
-<td><code>alerts show current</code></td>
-<td>review all active hardware and software alerts; triage by severity</td>
-</tr>
-<tr>
-<td>[ ] Run <code>replication show</code></td>
-<td><code>replication show</code></td>
-<td>confirm all replication contexts are in <code>Normal</code> or <code>Replicating</code> state; investigate any context in <code>Error</code> or <code>Warning</code> state</td>
-</tr>
-<tr>
-<td>[ ] Run <code>ddboost show clients</code></td>
-<td><code>ddboost show clients</code></td>
-<td>confirm all expected backup servers are connected and authenticated</td>
-</tr>
-<tr>
-<td>[ ] Confirm backup software jobs (Avamar, NetWorker, Veeam, Commvault)</td>
-<td></td>
-<td>check backup application logs if DDBoost clients show unexpected disconnects</td>
-</tr>
-<tr>
-<td>[ ] Run <code>filesys status</code> to confirm the filesystem is <code>Enabled</code> and <code>R |</code>filesys status`</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review ESRS / CloudIQ / Smart Connect for any proactive support al</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<p>Run these checks before any planned change or as first-response steps when investigating backup failures or capacity alerts.</p>
-<ul>
-<li>[ ] <code>filesys status</code> — filesystem is <code>Enabled</code> and <code>Running</code></li>
-<li>[ ] <code>filesys show space</code> — post-compression usage below 80%; at least 10–15% raw capacity free for cleaner operation</li>
-<li>[ ] <code>filesys show compression</code> — global dedup ratio above 10:1; note if it has dropped since the last check</li>
-<li>[ ] <code>alerts show current</code> — no active hardware alerts (disk, fan, PSU, NIC)</li>
-<li>[ ] <code>replication show</code> — all contexts in <code>Normal</code> or <code>Replicating</code> with no lag growing unboundedly</li>
-<li>[ ] <code>ddboost status</code> — DDBoost service is active and all storage units are accessible</li>
-<li>[ ] <code>system show</code> — system hardware health is clean; note firmware version</li>
-<li>[ ] <code>mtree list</code> — all MTrees are accessible; per-MTree quotas are not exhausted</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check filesystem operational status</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>filesys<span class="w"> </span>status
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show pre- and post-compression space usage</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show global deduplication and compression ratio</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show all replication contexts, their state, and lag</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>replication<span class="w"> </span>show
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show per-context replication throughput and detailed status</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>replication<span class="w"> </span>status
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List all MTrees and their individual space usage</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>mtree<span class="w"> </span>list
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Show per-MTree dedup ratio for a specific MTree</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>mtree<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># List DDBoost-connected clients and storage unit status</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show DDBoost service status</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>ddboost<span class="w"> </span>status
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Show all currently active system alerts</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>alerts<span class="w"> </span>show<span class="w"> </span>current
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1"># Show system hardware health and DDOS version</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>system<span class="w"> </span>show
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<p>Verify these items before performing any change on the Data Domain — DDOS upgrades, MTree reconfigurations, replication changes, or hardware expansions.</p>
-<ul>
-<li>[ ] <code>replication show</code> — all contexts in <code>Normal</code> state; do not proceed with a DDOS upgrade while any context is in <code>Error</code> or actively lagging</li>
-<li>[ ] No active backup sessions at the time of the change — confirm with backup software that no jobs are running or scheduled during the window</li>
-<li>[ ] <code>filesys cleaning</code> is not running: run <code>filesys clean status</code> — a cleaning run during a backup window or major change can cause I/O contention</li>
-<li>[ ] <code>alerts show current</code> returns no active alerts that indicate pre-existing hardware faults</li>
-<li>[ ] <code>filesys show space</code> confirms at least 15% raw capacity free — sufficient headroom for the cleaner to operate post-change</li>
-<li>[ ] Confirm a valid backup of the DD configuration: <code>system show</code> — note the current DDOS version; export the configuration backup via System Manager</li>
-<li>[ ] Inform backup application teams of the maintenance window; confirm they will not schedule test restores or new backup jobs during the change</li>
-<li>[ ] Verify ESRS / Smart Connect support connectivity before starting, so Dell support can be reached if needed</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Replication contexts in Normal state</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No active backup sessions</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>filesys cleaning not running</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No active hardware alerts</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>≥15% raw capacity free</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>DD config backup exported</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p>When backup jobs fail, replication falls behind, or DDBoost clients disconnect, work through this sequence first.</p>
-<ul>
-<li>[ ] Run <code>alerts show current</code> — identify any active hardware or software alerts that correspond to the start of the incident</li>
-<li>[ ] Run <code>filesys show space</code> — a filesystem at capacity (post-compression usage approaching 100%) will cause backup writes to fail; this is the most common cause of sudden backup failures</li>
-<li>[ ] Run <code>replication show</code> — check whether any replication context has entered <code>Error</code> state or is accumulating lag; replication errors can signal network issues or a full filesystem on the destination</li>
-<li>[ ] Run <code>ddboost show clients</code> — identify which DDBoost-connected backup servers are disconnected or reporting authentication errors</li>
-<li>[ ] Check <code>filesys status</code> — if the filesystem is not <code>Running</code>, backup writes will fail regardless of capacity</li>
-<li>[ ] Check disk health: <code>disk show state</code> — a faulted or absent disk reduces usable capacity and triggers alerts; do not replace a disk without a Dell support case</li>
-<li>[ ] Review backup application logs for the specific error code reported by the backup job — DDBoost error codes map to specific DD conditions</li>
-<li>[ ] If replication lag is growing: run <code>replication status</code> to confirm available bandwidth; check WAN utilisation and consider a temporary <code>replication throttle</code> adjustment</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>What is the current post-compression usage percentage?</td>
-<td></td>
-</tr>
-<tr>
-<td>Which replication contexts are in Error or lagging?</td>
-<td></td>
-</tr>
-<tr>
-<td>Which DDBoost clients are disconnected or erroring?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the filesystem status Enabled and Running?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are there any faulted or absent disks?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p>Steps for planned maintenance on a Data Domain — schedule outside the backup window whenever possible.</p>
-<ol>
-<li>Confirm the maintenance window does not overlap with the backup window — check backup software schedules and confirm no jobs will run during the change</li>
-<li>Run <code>replication show</code> to note the current state of all contexts; if the change requires a replication pause, run <code>replication sync &lt;context&gt;</code> to bring the context to current before pausing</li>
-<li>Confirm no active backup sessions by checking backup software dashboards; wait for any running jobs to complete before starting</li>
-<li>If this is a DDOS upgrade: run <code>filesys clean start</code> and wait for it to complete before the upgrade to reduce post-upgrade clean time</li>
-<li>Export a configuration backup via System Manager before any upgrade or hardware change</li>
-<li>Perform the change per the approved runbook (DDOS upgrade, shelf expansion, or configuration change)</li>
-<li>After the change, run <code>filesys status</code>, <code>replication show</code>, and <code>alerts show current</code> to confirm all services are healthy</li>
-<li>Run a test DDBoost backup from at least one backup server and confirm the job completes successfully before closing the window</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<p>Run these checks after any change to confirm the Data Domain is healthy and backup services are restored.</p>
-<ul>
-<li>[ ] <code>filesys status</code> — filesystem is <code>Enabled</code> and <code>Running</code></li>
-<li>[ ] <code>alerts show current</code> — no new alerts introduced by the change</li>
-<li>[ ] <code>replication show</code> — all replication contexts back to <code>Normal</code> state; confirm lag has not grown during the change window</li>
-<li>[ ] <code>ddboost show clients</code> — all backup servers reconnected and authenticated</li>
-<li>[ ] <code>filesys show compression</code> — dedup ratio is consistent with the pre-change ratio; a significant drop post-change may indicate a configuration issue</li>
-<li>[ ] Backup job success: confirm at least one DDBoost backup job completes successfully after the change</li>
-<li>[ ] <code>system show</code> — confirms DDOS version (if this was an upgrade) and hardware health is clean</li>
-<li>[ ] ESRS / CloudIQ shows no new proactive alerts after the change</li>
-</ul>
+<h1 id="data-domain-operations">Data Domain — Operations<a class="headerlink" href="#data-domain-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+</div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>NetApp SnapCenter — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="NetApp SnapCenter — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="NetApp SnapCenter — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#netapp-snapcenter-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              NetApp SnapCenter — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,195 +717,16 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">NetApp SnapCenter</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Review backup jobs from the last 24 hours</td>
-<td><code>Get-SmJob -StartTime (Get-Date).AddHours(-24) | Select JobId,JobType,Status,StartDateTime,EndDateTime</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Flag any failed or stuck jobs (Status = <code>Failed</code>, <code>Running</code> for &gt;</td>
-<td><code>Failed</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check plugin host connectivity</td>
-<td><code>Get-SmHost | Select HostName,HostType,PlugInStatus</code></td>
-<td>all hosts should show <code>Running</code></td>
-</tr>
-<tr>
-<td>[ ] Verify secondary (SnapVault/SnapMirror) copies exist for critical resources</td>
-<td><code>Get-SmBackup -ResourceName &lt;resource&gt;</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check SnapCenter Server disk usage</td>
-<td></td>
-<td>review log partition growth (default logs under <code>C:\Program Files\NetApp\SnapCenter\SMCore\logs\</code>)</td>
-</tr>
-<tr>
-<td>[ ] Confirm all resources are within their backup SLA window</td>
-<td></td>
-<td>no resource should be missing a backup beyond the defined retention interval</td>
-</tr>
-<tr>
-<td>[ ] Check certificate expiry on the SnapCenter Server (GUI</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All backup jobs in the last 24 hours completed with <code>Completed</code> status</li>
-<li>[ ] No jobs are currently stuck in <code>Running</code> or <code>Queued</code> state</li>
-<li>[ ] All plugin hosts show <code>PlugInStatus: Running</code></li>
-<li>[ ] SnapVault/SnapMirror relationships on secondary storage are healthy (verify from ONTAP: <code>snapmirror show -fields healthy</code>)</li>
-<li>[ ] SnapCenter Server has sufficient disk space on the log and repository partitions</li>
-<li>[ ] No unprotected resources flagged in the SnapCenter Dashboard</li>
-<li>[ ] Server TLS certificate is valid and not expiring within 30 days</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Connect to SnapCenter (run from a host with SnapCenter PowerShell toolkit installed)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Open-SmConnection<span class="w"> </span>-SMSbaseurl<span class="w"> </span>https://&lt;snapcenter-server&gt;:8146
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all backup jobs from the last 24 hours with status</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-SmJob<span class="w"> </span>-StartTime<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-24<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>JobId,<span class="w"> </span>JobType,<span class="w"> </span>Status,<span class="w"> </span>StartDateTime,<span class="w"> </span>EndDateTime
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all jobs currently in Running or Queued state</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-SmJob<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Status<span class="w"> </span>-in<span class="w"> </span>@<span class="o">(</span><span class="s2">&quot;Running&quot;</span>,<span class="s2">&quot;Queued&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>JobId,<span class="w"> </span>JobType,<span class="w"> </span>Status,<span class="w"> </span>StartDateTime
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check plugin host connectivity and status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-SmHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>HostName,<span class="w"> </span>HostType,<span class="w"> </span>PlugInStatus,<span class="w"> </span>OverallStatus
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List all resource groups and their protection status</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-SmResourceGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>ResourceGroupName,<span class="w"> </span>PluginCode,<span class="w"> </span>Status
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># List available backups for a specific resource</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Get-SmBackup<span class="w"> </span>-ResourceName<span class="w"> </span>&lt;resource_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>BackupName,<span class="w"> </span>BackupTime,<span class="w"> </span>Status
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Check all policies</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Get-SmPolicy<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>PolicyName,<span class="w"> </span>PluginType,<span class="w"> </span>BackupType
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All backup jobs are succeeding — no failures in the last 24 hours before the change window</li>
-<li>[ ] No jobs are currently stuck in <code>Running</code> or <code>Queued</code> state</li>
-<li>[ ] Plugin connectivity is healthy for all hosts involved in the change</li>
-<li>[ ] SnapCenter Server has sufficient disk space — logs and repository should be below 80% full</li>
-<li>[ ] Backup schedules for affected resources are paused or accounted for in the change window timing</li>
-<li>[ ] Application teams are notified if their resource group schedules will be disrupted</li>
-<li>[ ] A manual on-demand backup has been taken for critical resources before the change: <code>Invoke-SmBackup -Resources @{...}</code></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All backup jobs succeeding (last 24h)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No stuck Running or Queued jobs</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Plugin hosts all connected</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SnapCenter Server disk space &lt; 80%</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Pre-change backup taken for critical resources</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Navigate to SnapCenter GUI → Monitor → Jobs — identify the failing job and review the error message in the job detail</li>
-<li>[ ] Check the application plugin on the target host: in Settings → Hosts, select the host and click Refresh to test connectivity</li>
-<li>[ ] If plugin unreachable: log onto the target host and verify the SnapCenter agent service is running (Windows: <code>SnapCenter Plug-in for Windows</code>; Linux: check <code>snapcenter_linux_host_plugin</code> process)</li>
-<li>[ ] Check ONTAP snapshot space on the source volume: <code>snapshot show -vserver &lt;svm&gt; -volume &lt;vol&gt;</code> — ensure the volume has space for new snapshots</li>
-<li>[ ] If a SnapVault update is failing: check the secondary relationship from the destination cluster: <code>snapmirror show -destination-path &lt;svm:vol&gt;</code> — look for <code>broken-off</code> or <code>lag-time</code> issues</li>
-<li>[ ] Review the SnapCenter log files on the server for detailed stack traces: <code>C:\Program Files\NetApp\SnapCenter\SMCore\logs\</code></li>
-<li>[ ] If a restore or clone is failing: check igroup membership and LUN mapping on ONTAP — ensure the target igroup matches the host's WWN/IQN</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which resource group and job failed?</td>
-<td></td>
-</tr>
-<tr>
-<td>What is the error message in the job detail?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the plugin host reachable from SnapCenter?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the ONTAP source volume out of snapshot space?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is the secondary SnapVault relationship healthy?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Disable or pause backup schedules for resource groups affected by the maintenance: in SnapCenter GUI, navigate to Resource Groups → select group → Modify → disable schedule</li>
-<li>Notify application teams that backup jobs will not run during the window and confirm they accept the backup gap</li>
-<li>For SnapCenter Server upgrades: take a full backup of the SnapCenter repository database (MySQL on the SnapCenter server) before beginning</li>
-<li>Complete the planned change (plugin upgrade, ONTAP change, host maintenance, etc.)</li>
-<li>After the change, re-enable resource group schedules and confirm all hosts still show plugin status <code>Running</code>: <code>Get-SmHost</code></li>
-<li>Trigger a manual on-demand backup for critical resource groups to confirm end-to-end backup functionality: GUI → Resource Groups → Back Up Now</li>
-<li>Verify secondary copies replicated successfully by checking SnapVault/SnapMirror transfer on the destination ONTAP cluster</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>Get-SmHost</code> — all plugin hosts show <code>PlugInStatus: Running</code> with no degraded hosts</li>
-<li>[ ] Trigger on-demand backup for at least one representative resource group and confirm it completes with <code>Completed</code> status</li>
-<li>[ ] Verify backup job in the GUI shows successful snapshot creation on ONTAP: <code>snapshot show -vserver &lt;svm&gt; -volume &lt;vol&gt;</code></li>
-<li>[ ] Confirm secondary copies are replicating: check SnapMirror/SnapVault relationship is healthy from the destination cluster</li>
-<li>[ ] Verify resource group schedules are re-enabled and next scheduled run is visible</li>
-<li>[ ] Check SnapCenter Server disk usage — confirm log partition has not grown unexpectedly during the change</li>
-<li>[ ] Perform a test restore from the most recent backup snapshot on at least one non-production resource to validate restore functionality</li>
-</ul>
+<h1 id="netapp-snapcenter-operations">NetApp SnapCenter — Operations<a class="headerlink" href="#netapp-snapcenter-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+</div>
 
 
 

@@ -788,6 +788,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificates-to-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificates to Track
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expiration-tracking-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expiration Tracking Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-replacement-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Replacement Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-after-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation After Replacement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency Escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -843,6 +915,76 @@
 <h2 id="certificate-encryption">Certificate Encryption<a class="headerlink" href="#certificate-encryption" title="Permanent link">&para;</a></h2>
 <p>All vCenter-issued certificates (VMCA) use RSA 2048-bit minimum. Certificate chain of trust is maintained through the VMCA root certificate and STS signing certificate.</p>
 <p>See <a href="../authentication/">Authentication</a> for certificate management procedures.</p>
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<h3 id="certificates-to-track">Certificates to Track<a class="headerlink" href="#certificates-to-track" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Certificate</th>
+<th>Location</th>
+<th>Risk if Expired</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter Machine SSL</td>
+<td>VAMI → Certificate Management</td>
+<td>Browser warnings, API failures</td>
+</tr>
+<tr>
+<td>VMCA Root Certificate</td>
+<td>VAMI → Certificate Management</td>
+<td>Breaks all VMCA-issued certs</td>
+</tr>
+<tr>
+<td>STS Certificate</td>
+<td>vSphere Client → SSO → Certificates</td>
+<td>Login failures platform-wide</td>
+</tr>
+<tr>
+<td>Solution User Certificates</td>
+<td>VAMI → Certificate Management</td>
+<td>Service-to-service auth failures</td>
+</tr>
+<tr>
+<td>NSX Manager Certificate</td>
+<td>NSX Manager → System</td>
+<td>NSX UI and API failures</td>
+</tr>
+<tr>
+<td>Aria Endpoint Certificates</td>
+<td>Aria Suite Lifecycle</td>
+<td>Integration and access failures</td>
+</tr>
+</tbody>
+</table>
+<h3 id="expiration-tracking-schedule">Expiration Tracking Schedule<a class="headerlink" href="#expiration-tracking-schedule" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Review all certificate expiration dates monthly</li>
+<li>Flag certificates expiring within 60 days — plan replacement</li>
+<li>Escalate certificates expiring within 30 days — urgent action required</li>
+<li>Document next renewal date after each replacement</li>
+</ul>
+<h3 id="certificate-replacement-process">Certificate Replacement Process<a class="headerlink" href="#certificate-replacement-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Identify the certificate and replacement method (VMCA, custom CA, or self-signed)</li>
+<li>Confirm backup of vCenter is current</li>
+<li>Schedule a maintenance window</li>
+<li>Replace the certificate using the appropriate method</li>
+<li>Restart affected services</li>
+<li>Validate all integrations and logins</li>
+</ol>
+<h3 id="validation-after-replacement">Validation After Replacement<a class="headerlink" href="#validation-after-replacement" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Browser access to vCenter confirmed with no certificate warning</li>
+<li>All ESXi hosts Connected</li>
+<li>SSO login working for both local and AD accounts</li>
+<li>Aria, NSX, and backup integrations confirmed working</li>
+</ul>
+<h3 id="emergency-escalation">Emergency Escalation<a class="headerlink" href="#emergency-escalation" title="Permanent link">&para;</a></h3>
+<p>If certificate expiry causes a login or service failure:
+- Check if the local administrator account (<code>administrator@vsphere.local</code>) still works
+- Engage VMware support if SSO or STS cannot be recovered in place</p>
 
 
 

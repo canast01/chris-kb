@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerMax Security - Chris KB</title>
+        <title>PowerMax — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerMax Security · Chris KB">
+  <meta property="og:title" content="PowerMax — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerMax Security · Chris KB">
+  <meta name="twitter:title" content="PowerMax — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerMax Security
+              PowerMax — Security
             
           </span>
         </div>
@@ -699,69 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compliance-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compliance Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -780,138 +717,30 @@
 
 
 
-<h1 id="powermax-security">PowerMax Security<a class="headerlink" href="#powermax-security" title="Permanent link">&para;</a></h1>
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Disable the default <code>smc</code> (array admin) local account after configuring LDAP/AD authentication</li>
-<li>[ ] Enforce TLS 1.2 or 1.3 for all Unisphere connections; disable TLS 1.0 and 1.1</li>
-<li>[ ] Replace the default Unisphere self-signed certificate with a CA-signed certificate</li>
-<li>[ ] Configure Unisphere session timeout (recommended: 15 minutes idle)</li>
-<li>[ ] Enable Solutions Enabler network daemon authentication (<code>/var/symapi/config/daemon_users</code>)</li>
-<li>[ ] Restrict SYMAPI daemon access to known management host IPs in <code>/var/symapi/config/netcnfg</code></li>
-<li>[ ] Enable array-level audit logging and forward to a SIEM</li>
-<li>[ ] Ensure SRDF encryption (end-to-end) is configured for any SRDF links traversing untrusted networks</li>
-<li>[ ] Apply D@RE (Data at Rest Encryption) — enabled at factory; confirm encryption key manager is operational</li>
-<li>[ ] Review and remove any unused front-end port groups or masking views</li>
-<li>[ ] Confirm SupportAssist is configured with proxy restrictions to limit outbound data paths</li>
-</ul>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>Unisphere for PowerMax roles:</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Permissions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>StorageAdmin</code></td>
-<td>Full read/write on storage provisioning (storage groups, masking views, pools, SnapVX, SRDF). No access to security or user management.</td>
-</tr>
-<tr>
-<td><code>SecurityAdmin</code></td>
-<td>Manage users, roles, certificates, and LDAP configuration. Cannot provision storage.</td>
-</tr>
-<tr>
-<td><code>Operator</code></td>
-<td>Read/write on routine operations (alert acknowledgement, scheduled tasks). Cannot create or delete storage objects.</td>
-</tr>
-<tr>
-<td><code>Monitor</code></td>
-<td>Read-only across all array objects; can view performance data. No configuration changes.</td>
-</tr>
-<tr>
-<td><code>StorageAdminLocal</code></td>
-<td>Same as StorageAdmin but scoped to a specific SID; used for delegating single-array management.</td>
-</tr>
-</tbody>
-</table>
-<p>Solutions Enabler CLI roles are controlled by the <code>daemon_users</code> file and OS-level permissions on the SE host. Restrict root-level SE access to operations accounts only.</p>
-<h2 id="encryption">Encryption<a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Mechanism</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Data at Rest (D@RE)</td>
-<td>AES-256; hardware-based encryption on NVMe drives</td>
-<td>Enabled by factory default on PowerMax 2000/8000; key management via embedded EKMS or external KMIP server</td>
-</tr>
-<tr>
-<td>Data in Flight (SRDF)</td>
-<td>SRDF Encryption (AES-256 over FC or IP)</td>
-<td>Must be explicitly enabled on RDF group; requires both arrays to be at a compatible code level</td>
-</tr>
-<tr>
-<td>Management Traffic</td>
-<td>TLS 1.2/1.3 for Unisphere REST API and HTTPS</td>
-<td>Enforce strong ciphers; disable legacy TLS via Unisphere security settings</td>
-</tr>
-</tbody>
-</table>
-<p>For KMIP integration (external key manager such as Thales CipherTrust or Vormetric):
-- Configure under Unisphere → Settings → Security → Encryption Key Management.
-- Test key retrieval before placing array into production.</p>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>All configuration changes on PowerMax are logged as audit events:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List recent audit events (last 100)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Filter audit events for a specific user</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;user eq &lt;username&gt;&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Export audit log to file</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/tmp/audit_events.txt
-</code></pre></div>
-<ul>
-<li>Events include: timestamp, user, action, object type, object name, and result.</li>
-<li>Export audit logs to a SIEM (Splunk, QRadar, etc.) via syslog from the Unisphere host.</li>
-<li>Retain audit logs for a minimum of 12 months per most regulatory frameworks.</li>
-</ul>
-<h2 id="compliance-notes">Compliance Notes<a class="headerlink" href="#compliance-notes" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Framework</th>
-<th>Relevant Control</th>
-<th>PowerMax Capability</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PCI-DSS</td>
-<td>Requirement 3 (protect stored data)</td>
-<td>D@RE with AES-256 satisfies encryption at rest requirement</td>
-</tr>
-<tr>
-<td>PCI-DSS</td>
-<td>Requirement 10 (audit logging)</td>
-<td>Array audit events via <code>symevent</code>; forward to SIEM</td>
-</tr>
-<tr>
-<td>ISO 27001</td>
-<td>A.8.2 (information classification)</td>
-<td>Storage group naming and SLO policies align with data classification</td>
-</tr>
-<tr>
-<td>NIST 800-53</td>
-<td>SC-28 (protection of information at rest)</td>
-<td>D@RE covers this control</td>
-</tr>
-<tr>
-<td>HIPAA</td>
-<td>§164.312(a)(2)(iv) encryption</td>
-<td>D@RE and SRDF encryption satisfy encryption obligations</td>
-</tr>
-</tbody>
-</table>
-<p>Engage the Dell Security team for a compliance readiness assessment for specific regulatory programs.</p>
+<h1 id="powermax-security">PowerMax — Security<a class="headerlink" href="#powermax-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Active Directory, LDAP integration, and audit logging.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>RBAC roles and permissions for Unisphere and Solutions Enabler.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>Data at rest, data in flight, and key management.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Security hardening checklist and compliance notes.</span>
+</a>
+
+</div>
 
 
 

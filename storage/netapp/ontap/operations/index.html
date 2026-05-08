@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>ONTAP — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="ONTAP — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="ONTAP — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#ontap-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              ONTAP — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,208 +717,15 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">NetApp ONTAP</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>cluster show</code></td>
-<td><code>cluster show</code></td>
-<td>verify all nodes are healthy and HA pairs are configured</td>
-</tr>
-<tr>
-<td>[ ] Run <code>storage disk show -broken</code></td>
-<td><code>storage disk show -broken</code></td>
-<td>confirm zero broken or failed disks</td>
-</tr>
-<tr>
-<td>[ ] Run <code>storage aggregate show -fields used-percent</code></td>
-<td><code>storage aggregate show -fields used-percent</code></td>
-<td>flag any aggregate above 85% used</td>
-</tr>
-<tr>
-<td>[ ] Run <code>snapmirror show -fields lag-time,healthy</code></td>
-<td><code>snapmirror show -fields lag-time,healthy</code></td>
-<td>confirm all relationships healthy and lag within RPO</td>
-</tr>
-<tr>
-<td>[ ] Run <code>system health alert show</code></td>
-<td><code>system health alert show</code></td>
-<td>review and action any active health alerts</td>
-</tr>
-<tr>
-<td>[ ] Run <code>storage failover show</code></td>
-<td><code>storage failover show</code></td>
-<td>confirm HA takeover state is normal on all nodes</td>
-</tr>
-<tr>
-<td>[ ] Run <code>volume show -fields volume,state,percent-used</code></td>
-<td><code>volume show -fields volume,state,percent-used</code></td>
-<td>confirm all volumes are online and below threshold</td>
-</tr>
-<tr>
-<td>[ ] Run <code>event log show -messagename callhome.*</code></td>
-<td><code>event log show -messagename callhome.*</code></td>
-<td>check for any callhome EMS events since last check</td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Cluster node count and status match expected inventory</li>
-<li>[ ] All HA pairs show <code>true</code> for giveback-capability</li>
-<li>[ ] No aggregates above 85% used (warning) or 90% (critical)</li>
-<li>[ ] All SnapMirror relationships show <code>healthy: true</code></li>
-<li>[ ] No active health alerts with severity <code>error</code> or higher</li>
-<li>[ ] All SVMs are running: <code>svm show -state running</code></li>
-<li>[ ] Network interfaces all online: <code>network interface show -status-oper down</code> returns no results</li>
-<li>[ ] AutoSupport last sent within expected interval: <code>autosupport history show</code></li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cluster node and HA status</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Aggregate capacity — flag anything above 85%</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,used-percent,state
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Volume space usage across all SVMs</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,state,percent-used
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># SnapMirror relationship health and lag time</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Broken or failed disks</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Active health alerts</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Recent callhome EMS events</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>callhome.*
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># SVM and LIF status</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>svm<span class="w"> </span>show
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All aggregates have at least 15% free capacity to absorb workload shifts during the change</li>
-<li>[ ] HA failover is operational on both nodes (<code>storage failover show</code> shows <code>true</code> for takeover-enabled)</li>
-<li>[ ] SnapMirror lag is within RPO on all critical relationships before quiescing</li>
-<li>[ ] No active volume move or aggregate rebalance jobs: <code>volume move show</code> and <code>storage aggregate relocation show</code></li>
-<li>[ ] AutoSupport is working — send a start-of-maintenance message: <code>autosupport invoke -node * -type all -message "Starting maintenance"</code></li>
-<li>[ ] No open disk rebuild operations: <code>storage disk show -broken</code> is clean</li>
-<li>[ ] Snapshots taken of affected volumes before change: <code>snapshot create -volume &lt;vol&gt; -snapshot pre-change</code></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Aggregate free capacity ≥ 15%</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>HA takeover enabled on all nodes</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SnapMirror lag within RPO</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>No active volume moves</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AutoSupport start message sent</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>cluster show</code> first — identify any nodes in degraded or removed state</li>
-<li>[ ] Run <code>system health alert show</code> — review all active alerts for severity and subsystem</li>
-<li>[ ] Run <code>storage disk show -broken</code> — identify any disk failures driving the incident</li>
-<li>[ ] Run <code>storage failover show</code> — check whether any HA takeover has occurred</li>
-<li>[ ] Run <code>snapmirror show -fields lag-time,healthy</code> — check if replication is healthy or contributing to the symptom</li>
-<li>[ ] Check specific protocol: <code>network interface show</code>, <code>iscsi session show</code>, or <code>fcp show initiator</code></li>
-<li>[ ] Review recent EMS events for the affected node: <code>event log show -node &lt;nodename&gt; -severity error</code></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which node or aggregate is affected?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is HA takeover currently active?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are any disks broken or rebuilding?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is SnapMirror lag outside RPO?</td>
-<td></td>
-</tr>
-<tr>
-<td>Which protocol is the workload using?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Send AutoSupport start-of-maintenance: <code>autosupport invoke -node * -type all -message "Maintenance window starting"</code></li>
-<li>Quiesce SnapMirror relationships on volumes involved in the change: <code>snapmirror quiesce -destination-path &lt;svm:vol&gt;</code></li>
-<li>For rolling node upgrade — upgrade the non-epsilon node first; initiate takeover on the partner: <code>storage failover takeover -ofnode &lt;node&gt;</code></li>
-<li>Monitor takeover completion: <code>storage failover show</code> should show <code>In Takeover</code> then the node comes back up</li>
-<li>Run <code>storage failover giveback -ofnode &lt;node&gt;</code> after the upgraded node is back online; confirm <code>Waiting for Giveback</code> transitions to normal</li>
-<li>Validate cluster health after each node: <code>cluster show</code>, <code>system health alert show</code></li>
-<li>Resume SnapMirror relationships after all changes are complete: <code>snapmirror resume -destination-path &lt;svm:vol&gt;</code></li>
-<li>Send AutoSupport close-of-maintenance: <code>autosupport invoke -node * -type all -message "Maintenance window complete"</code></li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <code>cluster show</code> — all nodes healthy, HA pairs intact</li>
-<li>[ ] <code>storage failover show</code> — all nodes show giveback-enabled true, no takeover active</li>
-<li>[ ] <code>storage disk show -broken</code> — no new disk failures introduced during maintenance</li>
-<li>[ ] <code>snapmirror show -fields lag-time,healthy</code> — all relationships resumed and healthy</li>
-<li>[ ] <code>volume show -fields state,percent-used</code> — all volumes online, no state changes</li>
-<li>[ ] <code>network interface show -status-oper down</code> — no LIFs went offline during the change</li>
-<li>[ ] <code>system health alert show</code> — no new alerts generated</li>
-<li>[ ] Confirm storage is serving I/O to applications — verify from host side or application monitoring</li>
-</ul>
+<h1 id="ontap-operations">ONTAP — Operations<a class="headerlink" href="#ontap-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+</div>
 
 
 

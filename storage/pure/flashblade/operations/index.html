@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>FlashBlade — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="FlashBlade — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="FlashBlade — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#flashblade-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              FlashBlade — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,202 +717,16 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Pure FlashBlade</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>purefb alert list</code></td>
-<td><code>purefb alert list</code></td>
-<td>review all active alerts; flag any hardware, capacity, or replication warnings</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purefb blade list</code></td>
-<td><code>purefb blade list</code></td>
-<td>confirm all blades are in <code>healthy</code> state; flag any <code>failed</code> or <code>missing</code> blades</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purefb hardware list</code></td>
-<td><code>purefb hardware list</code></td>
-<td>confirm all hardware components (power supplies, fans, fabric modules) are healthy</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purefb filesystem list</code></td>
-<td><code>purefb filesystem list</code></td>
-<td>review filesystem utilization; flag any filesystem above 80% of provisioned limit</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purefb bucket list</code></td>
-<td><code>purefb bucket list</code></td>
-<td>check S3 bucket count and data growth trends</td>
-</tr>
-<tr>
-<td>[ ] Run <code>purefb replication list</code></td>
-<td><code>purefb replication list</code></td>
-<td>confirm all ActiveDR links are in <code>active</code> status with lag within RPO</td>
-</tr>
-<tr>
-<td>[ ] Check Pure1 portal for capacity growth forecasts, anomalies, and h</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] No active alerts in <code>purefb alert list</code></li>
-<li>[ ] All blades are <code>healthy</code> — no <code>failed</code> or <code>missing</code> blades in <code>purefb blade list</code></li>
-<li>[ ] All hardware components healthy — no PSU, fan, or FM (fabric module) failures</li>
-<li>[ ] No filesystems at or above provisioned limit — clients would receive ENOSPC errors</li>
-<li>[ ] All ActiveDR replication links are <code>active</code> and lag is within RPO</li>
-<li>[ ] All network interfaces are <code>up</code>: <code>purefb network interface list</code></li>
-<li>[ ] Purity//FB version is within Pure's supported N-2 release window</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># FlashBlade array status and Purity//FB version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># All blades and their health state</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purefb<span class="w"> </span>blade<span class="w"> </span>list
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># All hardware components (PSUs, fans, FMs) and status</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purefb<span class="w"> </span>hardware<span class="w"> </span>list
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># All filesystems with provisioned and used capacity</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>list
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># All S3 buckets and usage</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>purefb<span class="w"> </span>bucket<span class="w"> </span>list
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># All active alerts</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>purefb<span class="w"> </span>alert<span class="w"> </span>list
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># ActiveDR replication links and lag</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>purefb<span class="w"> </span>replication<span class="w"> </span>list
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># All snapshots for filesystems and object store</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>purefb<span class="w"> </span>snap<span class="w"> </span>list
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Network interfaces and their operational state</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>purefb<span class="w"> </span>network<span class="w"> </span>interface<span class="w"> </span>list
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] No active blade rebuilds or hardware failures — <code>purefb blade list</code> and <code>purefb hardware list</code> are clean</li>
-<li>[ ] ActiveDR replication is current — lag is within RPO; document baseline lag before the change</li>
-<li>[ ] NFS and SMB clients are informed of the potential brief reconnection event during Purity upgrades</li>
-<li>[ ] S3 clients and applications are notified if the change could cause a brief service interruption</li>
-<li>[ ] Filesystem capacity headroom is sufficient — no filesystems above 70% provisioned limit during the window</li>
-<li>[ ] Pure1 upgrade readiness report reviewed (for Purity//FB upgrades): no blockers flagged</li>
-<li>[ ] Snapshot schedule expiry policy is functioning — no runaway snapshot growth that could fill capacity during the window</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No active blade rebuilds</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>ActiveDR replication current</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>NFS/SMB client impact assessed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Filesystem capacity headroom sufficient</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Pure1 upgrade readiness checked (if upgrading)</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Run <code>purefb alert list</code> first — active alerts identify the failure domain (blade, hardware, replication, capacity)</li>
-<li>[ ] Run <code>purefb blade list</code> — a failed or missing blade is a capacity and performance degradation event; open a Pure support case immediately</li>
-<li>[ ] Run <code>purefb hardware list</code> — check for failed PSU, fan, or fabric module; multiple failures on the same chassis indicate a critical event</li>
-<li>[ ] Check filesystem and bucket accessibility: <code>purefb filesystem list</code> — a filesystem at its provisioned limit causes client write failures</li>
-<li>[ ] Check replication: <code>purefb replication list</code> — an <code>inactive</code> or high-lag replication link requires investigation of the network path between sites</li>
-<li>[ ] For NFS <code>stale file handle</code> errors: the issue is typically client-side after a FlashBlade event — unmount and remount on affected clients</li>
-<li>[ ] For S3 403 errors: run <code>purefb objectstoreaccount list</code> to check access key status and verify bucket policies</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>What does <code>purefb alert list</code> show?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are any blades failed or missing?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is any filesystem at or near its provisioned limit?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are ActiveDR replication links active and within RPO?</td>
-<td></td>
-</tr>
-<tr>
-<td>Is this affecting NFS, SMB, S3, or all protocols?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Notify NFS, SMB, and S3 clients of the maintenance window — Purity//FB upgrades are non-disruptive but protocol sessions may briefly re-establish</li>
-<li>For blade maintenance: use <code>purefb blade maintenance</code> to put the blade in maintenance mode before physical intervention — data rebalances automatically</li>
-<li>For Purity//FB upgrade: confirm <code>purefb blade list</code> shows all blades <code>healthy</code> and no alerts are open before starting</li>
-<li>Download the Purity//FB upgrade image from the Pure Support portal and stage it on the array</li>
-<li>Run the pre-upgrade validation from the GUI or CLI to confirm no blockers</li>
-<li>Execute the upgrade during the window; monitor progress from the Purity//FB GUI or <code>purefb array list</code></li>
-<li>For ActiveDR: pause replication links if required during the change with <code>purefb replication link update --paused true</code>; resume with <code>--paused false</code> after the change</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <code>purefb alert list</code> — no unresolved alerts</li>
-<li>[ ] <code>purefb blade list</code> — all blades <code>healthy</code>; no blades in maintenance or failed state</li>
-<li>[ ] <code>purefb hardware list</code> — all hardware components healthy</li>
-<li>[ ] <code>purefb filesystem list</code> — all filesystems accessible and below provisioned limit</li>
-<li>[ ] Test NFS mount from a representative client: <code>mount -t nfs &lt;fb-data-vip&gt;:/&lt;filesystem&gt; /mnt/test</code></li>
-<li>[ ] Test S3 API response: confirm bucket listing or object operation succeeds from an S3 client or <code>aws s3 ls</code></li>
-<li>[ ] <code>purefb replication list</code> — all ActiveDR links are <code>active</code> and lag is recovering toward RPO</li>
-<li>[ ] Pure1 shows the new Purity//FB version and no new hardware alerts (if this was an upgrade)</li>
-</ul>
+<h1 id="flashblade-operations">FlashBlade — Operations<a class="headerlink" href="#flashblade-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+</div>
 
 
 

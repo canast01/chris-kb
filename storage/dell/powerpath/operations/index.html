@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>PowerPath — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="PowerPath — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="PowerPath — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#powerpath-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              PowerPath — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,201 +717,16 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Dell PowerPath</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>powermt display dev=all</code> on each managed host and scan for an</td>
-<td><code>powermt display dev=all</code></td>
-<td>a dead path requires investigation before the next maintenance window</td>
-</tr>
-<tr>
-<td>[ ] Verify all pseudo devices show the expected number of active paths</td>
-<td></td>
-<td>compare against the site baseline (typically 4 or 8 paths per device depending on array and fabric redundancy)</td>
-</tr>
-<tr>
-<td>[ ] Confirm the load balancing policy is <code>CLAROpt</code> (co) for all Dell/EMC array classes</td>
-<td><code>CLAROpt</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check for devices in <code>pseudo</code> state with no backing paths</td>
-<td><code>pseudo</code></td>
-<td>this indicates a LUN that was removed at the array but not yet cleaned up on the host</td>
-</tr>
-<tr>
-<td>[ ] Review host OS multipath logs for path flaps</td>
-<td><code>/var/log/messages</code></td>
-<td>recurring path flap events indicate a marginal cable, SFP, or switch port</td>
-</tr>
-<tr>
-<td>[ ] Run <code>powermt check_registration</code> on recently upgraded or newly dep</td>
-<td><code>powermt check_registration</code></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<p>Run these checks before any SAN maintenance or as first-response steps when a host reports I/O errors or path loss.</p>
-<ul>
-<li>[ ] <code>powermt display dev=all</code> — all paths for all pseudo devices are in <code>alive</code> state; no <code>dead</code>, <code>unlic</code>, or missing paths</li>
-<li>[ ] Path count per device matches the site baseline — deviations indicate a fabric, zoning, or array-side masking change</li>
-<li>[ ] <code>powermt display ports class=all</code> — all HBA ports show <code>alive</code>; no ports in <code>dead</code> or <code>inactive</code> state</li>
-<li>[ ] <code>powermt display options</code> — Policy is <code>CLAROpt</code> for all Dell/EMC array device classes</li>
-<li>[ ] <code>powermt check_registration</code> — license is valid with a future expiry date</li>
-<li>[ ] <code>powermt version</code> — installed PowerPath version is within the supported matrix for the OS kernel and array firmware versions</li>
-<li>[ ] No recent path flap entries in <code>/var/log/messages</code> or Windows Event Log for the last 24 hours</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Display all PowerPath managed devices and path states</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Display all HBA port states across all device classes</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show current load balancing policy and PowerPath options</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check PowerPath license registration status and expiry</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>powermt<span class="w"> </span>check_registration
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show installed PowerPath version</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>powermt<span class="w"> </span>version
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Retry and restore all paths currently marked dead</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>powermt<span class="w"> </span>restore
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Display detailed path information for a specific pseudo device</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;pseudo-device-name&gt;
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Rescan for new or removed devices after LUN mapping changes</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>powermt<span class="w"> </span>config
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<p>Verify these items before performing any SAN fabric maintenance, array-side masking change, or PowerPath upgrade on a host.</p>
-<ul>
-<li>[ ] <code>powermt display dev=all</code> confirms all paths are alive and path count matches the site baseline — do not start a SAN change with dead paths already present</li>
-<li>[ ] Save current PowerPath configuration before any change: <code>powermt save</code> — this persists the policy and path state so it can be reviewed or restored if the change causes issues</li>
-<li>[ ] <code>powermt check_registration</code> confirms the license is valid — an expired license will degrade paths to <code>unlic</code> state after a reboot</li>
-<li>[ ] Confirm the expected post-change path count per device — for a single SAN port maintenance event, each device should retain at least half its paths</li>
-<li>[ ] If this is a PowerPath version upgrade: confirm OS and kernel version compatibility against the Dell PowerPath support matrix before installing</li>
-<li>[ ] Quiesce or verify host I/O is healthy before the change — confirm the application is not in a high-latency state that would be worsened by temporarily reduced path count</li>
-<li>[ ] Notify the application team that SAN maintenance will temporarily reduce available paths; confirm their application can tolerate this</li>
-<li>[ ] Document the current <code>powermt display dev=all</code> output as the pre-change baseline for post-change comparison</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All paths alive, count matches baseline</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>powermt save completed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>License valid (check_registration)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Post-change minimum path count acceptable</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>OS/kernel compatibility verified (if upgrade)</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p>When a host reports I/O errors, elevated latency, or a block device is inaccessible, work through this sequence first.</p>
-<ul>
-<li>[ ] Run <code>powermt display dev=all</code> on the affected host immediately — identify which pseudo devices have dead paths and how many paths remain alive for each</li>
-<li>[ ] Check the PowerPath policy: <code>powermt display options</code> — if policy shows <code>BasicFailover</code> instead of <code>CLAROpt</code>, load balancing is degraded; investigate license and run <code>powermt config</code></li>
-<li>[ ] Run <code>powermt restore</code> to instruct PowerPath to retry all paths currently marked dead — this alone resolves transient path losses caused by brief fabric events</li>
-<li>[ ] Check HBA port states: <code>powermt display ports class=all</code> — a port in <code>dead</code> state indicates the HBA itself has lost fabric connectivity, not just individual paths</li>
-<li>[ ] Review host OS logs for the path failure timestamp: <code>grep -i "powermt\|path\|dead" /var/log/messages</code> — correlate with fabric switch events</li>
-<li>[ ] Check the SAN fabric switch: confirm the affected HBA WWN and storage array port are still zoned and active; look for CRC errors or port login/logout events on the switch</li>
-<li>[ ] If paths are dead and <code>powermt restore</code> does not recover them, confirm the array-side LUN masking is intact — check the masking view or storage view on the array</li>
-<li>[ ] Run <code>powermt check_registration</code> if paths show <code>unlic</code> state — a license issue will cause PowerPath to drop management of devices after a license check failure</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Which pseudo devices have dead paths?</td>
-<td></td>
-</tr>
-<tr>
-<td>How many paths remain alive per device?</td>
-<td></td>
-</tr>
-<tr>
-<td>What is the current load balancing policy?</td>
-<td></td>
-</tr>
-<tr>
-<td>Are any HBA ports in dead state?</td>
-<td></td>
-</tr>
-<tr>
-<td>Did powermt restore recover any dead paths?</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p>Steps for SAN port or fabric maintenance that will temporarily reduce the active path count on PowerPath hosts.</p>
-<ol>
-<li>Identify all hosts with paths through the port or fabric component being maintained — run <code>powermt display dev=all</code> on each host and record the pre-change path count per device</li>
-<li>Run <code>powermt save</code> on each affected host to persist the current policy and path configuration</li>
-<li>Confirm each device will retain at least half its active paths during the maintenance — do not proceed if a device would drop to a single path or zero paths</li>
-<li>Notify application owners that path count will be temporarily reduced; confirm applications can tolerate the reduced redundancy</li>
-<li>Remove or disable the target SAN port or fabric component per the approved runbook</li>
-<li>On affected hosts, run <code>powermt display dev=all</code> to confirm remaining paths are alive and I/O is continuing via the surviving paths</li>
-<li>Complete the maintenance on the SAN port or fabric component; restore the port to service</li>
-<li>Run <code>powermt restore</code> on each affected host to bring the returned paths back online, then run <code>powermt display dev=all</code> to confirm the original path count has been restored</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<p>Run these checks after any SAN, fabric, or PowerPath change to confirm multipath health is fully restored.</p>
-<ul>
-<li>[ ] <code>powermt display dev=all</code> — all paths are alive and path count per device matches the pre-change baseline; no dead paths remain</li>
-<li>[ ] <code>powermt display ports class=all</code> — all HBA ports show <code>alive</code>; no ports stuck in <code>dead</code> state</li>
-<li>[ ] <code>powermt display options</code> — Policy is <code>CLAROpt</code> for all device classes; no policy drift occurred during the change</li>
-<li>[ ] <code>powermt check_registration</code> — license remains valid post-change</li>
-<li>[ ] No path flap entries in host OS logs in the 30 minutes following the maintenance window</li>
-<li>[ ] Application owners confirm I/O has resumed normally and no elevated latency is observed</li>
-<li>[ ] <code>powermt save</code> run after the change to persist the restored configuration state</li>
-</ul>
+<h1 id="powerpath-operations">PowerPath — Operations<a class="headerlink" href="#powerpath-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
+<a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>
+<a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
+<a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+</div>
 
 
 

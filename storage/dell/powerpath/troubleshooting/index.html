@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerPath Troubleshooting - Chris KB</title>
+        <title>PowerPath — Troubleshooting - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerPath Troubleshooting · Chris KB">
+  <meta property="og:title" content="PowerPath — Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerPath Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="PowerPath — Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerPath Troubleshooting
+              PowerPath — Troubleshooting
             
           </span>
         </div>
@@ -699,91 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#dead-paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dead Paths
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#all-paths-dead-to-a-device" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        All Paths Dead to a Device
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#device-not-visible" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Device Not Visible
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incorrect-path-count" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incorrect Path Count
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#wrong-load-balance-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Wrong Load Balance Policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#powerpath-not-starting-after-reboot" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PowerPath Not Starting After Reboot
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -802,97 +717,12 @@
 
 
 
-<h1 id="powerpath-troubleshooting">PowerPath Troubleshooting<a class="headerlink" href="#powerpath-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="dead-paths">Dead Paths<a class="headerlink" href="#dead-paths" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Identify dead paths</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>dead
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Attempt automatic path restore</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>restore
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Force re-check of all paths</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>powermt<span class="w"> </span>check_registration
-</code></pre></div>
-<p>If paths remain dead after <code>powermt restore</code>:
-1. Check HBA port state on the host (<code>systool -c fc_host -v</code> on Linux)
-2. Check SAN switch port state (Cisco: <code>show interface fc x/x</code>, Brocade: <code>portshow x</code>)
-3. Check array port state on the storage array console</p>
-<h2 id="all-paths-dead-to-a-device">All Paths Dead to a Device<a class="headerlink" href="#all-paths-dead-to-a-device" title="Permanent link">&para;</a></h2>
-<p>If all paths to a device are dead:</p>
-<ol>
-<li>Confirm LUN masking is still in place on the array</li>
-<li>Confirm host HBA WWNs still match the masking configuration</li>
-<li>Check SAN fabric for zoning changes</li>
-<li>Reboot HBA driver if needed: <code>echo 1 &gt; /sys/class/fc_host/hostX/issue_lip</code></li>
-</ol>
-<h2 id="device-not-visible">Device Not Visible<a class="headerlink" href="#device-not-visible" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Rescan after new LUN provisioned</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>powermt<span class="w"> </span>config
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># If still missing, rescan HBA</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/hostX/scan
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Confirm array has presented the LUN to this host</span>
-</code></pre></div>
-<h2 id="incorrect-path-count">Incorrect Path Count<a class="headerlink" href="#incorrect-path-count" title="Permanent link">&para;</a></h2>
-<p>Expected 4 paths, seeing 2:
-- Check both SAN fabrics are connected (dual-fabric design)
-- Verify both HBA ports are online
-- Verify zoning includes both initiator ports on both fabrics</p>
-<h2 id="wrong-load-balance-policy">Wrong Load Balance Policy<a class="headerlink" href="#wrong-load-balance-policy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Reset policy to CLAROpt (Active/Optimized)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>policy
-</code></pre></div>
-<h2 id="powerpath-not-starting-after-reboot">PowerPath Not Starting After Reboot<a class="headerlink" href="#powerpath-not-starting-after-reboot" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check service status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check kernel module loaded</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>emcp
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Re-load module manually</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>modprobe<span class="w"> </span>emcp
-</code></pre></div>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Dead paths after reboot</td>
-<td>HBA driver load order</td>
-<td>Run <code>powermt restore</code> after boot</td>
-</tr>
-<tr>
-<td>Device missing</td>
-<td>LUN not presented or rescan needed</td>
-<td><code>powermt config</code></td>
-</tr>
-<tr>
-<td>Performance issues</td>
-<td>Suboptimal path policy</td>
-<td><code>powermt set policy=co dev=all</code></td>
-</tr>
-<tr>
-<td>Path flapping</td>
-<td>SAN fabric instability</td>
-<td>Check switch and cable</td>
-</tr>
-<tr>
-<td>multipathd conflict</td>
-<td>Both multipath stacks active</td>
-<td>Disable <code>multipathd</code></td>
-</tr>
-</tbody>
-</table>
+<h1 id="powerpath-troubleshooting">PowerPath — Troubleshooting<a class="headerlink" href="#powerpath-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
+<a class="kb-card" href="diagnostics/"><strong>Diagnostics</strong><span>Diagnostic procedures and log analysis.</span></a>
+<a class="kb-card" href="escalation/"><strong>Escalation</strong><span>Vendor escalation procedures and support contacts.</span></a>
+</div>
 
 
 

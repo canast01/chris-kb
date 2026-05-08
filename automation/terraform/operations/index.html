@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>Terraform — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="Terraform — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="Terraform — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#terraform-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              Terraform — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,198 +717,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Terraform</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Review <code>terraform plan</code> output in CI pipeline for any unexpected o</td>
-<td><code>terraform plan</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm remote backend (S3, Azure Blob, or Terraform Cloud) is acc</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review active workspace</td>
-<td><code>terraform workspace list</code></td>
-<td>confirm correct workspace is selected</td>
-</tr>
-<tr>
-<td>[ ] Check <code>.terraform.lock.hcl</code> for expired provider versions or depre</td>
-<td><code>.terraform.lock.hcl</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review open pull requests that modify Terraform code for pending u</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Check for stale state lock files that may indicate a stuck or aban</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm sensitive variable sources (Vault, SSM Parameter Store, en</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Remote backend is reachable and state file is present and valid</li>
-<li>[ ] State is not locked: no <code>terraform.tfstate.lock.info</code> file or backend lock active</li>
-<li>[ ] <code>terraform validate</code> passes with no errors</li>
-<li>[ ] <code>terraform plan</code> produces expected output — no unintended resource changes</li>
-<li>[ ] All provider plugins are initialized: <code>.terraform/</code> directory present</li>
-<li>[ ] Workspace is set to the correct environment: <code>terraform workspace show</code></li>
-<li>[ ] Sensitive variables are resolvable (Vault token valid, SSM accessible)</li>
-<li>[ ] CI pipeline last run passed for the target workspace</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Validate configuration syntax</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>validate
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show current workspace</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all workspaces</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check plan for drift (no changes expected in steady state)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show current state summary</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>terraform<span class="w"> </span>show
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check if state is locked (S3 backend example)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>aws<span class="w"> </span>s3api<span class="w"> </span>head-object<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;state-bucket&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--key<span class="w"> </span>&lt;path/to/terraform.tfstate&gt;
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <code>terraform plan</code> output reviewed and all proposed changes are intentional and approved</li>
-<li>[ ] State is not currently locked by another operation</li>
-<li>[ ] Correct workspace is selected for the target environment</li>
-<li>[ ] Sensitive variables (Vault/SSM/env) are accessible and not expired</li>
-<li>[ ] Remote backend is accessible and state file is current</li>
-<li>[ ] State file snapshot or manual backup taken before destructive operations</li>
-<li>[ ] Rollback plan documented (previous state file version identified in backend)</li>
-<li>[ ] CI pipeline passing on the branch to be applied</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>terraform plan</code> reviewed</td>
-<td></td>
-<td>Approver name</td>
-</tr>
-<tr>
-<td>State not locked</td>
-<td></td>
-<td>Confirmed / Lock ID if present</td>
-</tr>
-<tr>
-<td>Correct workspace</td>
-<td></td>
-<td>Workspace name</td>
-</tr>
-<tr>
-<td>State backup</td>
-<td></td>
-<td>Backend version ID or manual copy</td>
-</tr>
-<tr>
-<td>Rollback plan</td>
-<td></td>
-<td>Previous state version reference</td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Check if state is locked — identify the lock holder and determine if it is stale</li>
-<li>[ ] Run <code>terraform plan</code> to detect drift between state and actual infrastructure</li>
-<li>[ ] Run <code>terraform show</code> to inspect the current recorded state for the affected resource</li>
-<li>[ ] Check provider API connectivity (AWS, Azure, GCP CLI auth working)</li>
-<li>[ ] Review recent <code>terraform apply</code> logs in CI for the last successful and failed runs</li>
-<li>[ ] If state is corrupt or inconsistent, restore from the last known-good state backup</li>
-<li>[ ] Use <code>terraform state list</code> and <code>terraform state show &lt;resource&gt;</code> to inspect specific resources</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Question</th>
-<th>Answer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Is state locked?</td>
-<td><code>terraform force-unlock &lt;lock-id&gt;</code> if stale</td>
-</tr>
-<tr>
-<td>Is there drift?</td>
-<td><code>terraform plan</code> output</td>
-</tr>
-<tr>
-<td>Which resource is affected?</td>
-<td><code>terraform state show &lt;resource&gt;</code></td>
-</tr>
-<tr>
-<td>Is the provider API reachable?</td>
-<td>Test with AWS/Azure/GCP CLI</td>
-</tr>
-<tr>
-<td>Was a recent apply the cause?</td>
-<td>Check CI apply logs</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Notify team of the planned Terraform change and scope (workspace, resources affected).</li>
-<li>Back up the state file — record the current backend version ID or copy state locally.</li>
-<li>Confirm the state is not locked before starting.</li>
-<li>Run <code>terraform plan -out=tfplan</code> and review the output one final time.</li>
-<li>Execute <code>terraform apply tfplan</code>; monitor output for errors.</li>
-<li>For destructive operations (<code>terraform state rm</code>, <code>terraform destroy</code>), pause after each resource and validate.</li>
-<li>Use <code>terraform import</code> for any resources created out-of-band that must be brought under management.</li>
-<li>Run <code>terraform plan</code> after apply to confirm zero changes remain.</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] <code>terraform plan</code> shows zero changes after apply — state is consistent with infrastructure</li>
-<li>[ ] Resources are accessible and healthy in the provider console (AWS/Azure/GCP)</li>
-<li>[ ] State is not locked</li>
-<li>[ ] CI pipeline is passing on the applied branch</li>
-<li>[ ] Remote backend state file updated timestamp reflects the apply</li>
-<li>[ ] No deprecated resource warnings in <code>terraform validate</code> output</li>
-<li>[ ] Sensitive variable sources still accessible after the change</li>
-<li>[ ] Rollback state backup retained until the change is confirmed stable</li>
-</ul>
+<h1 id="terraform-operations">Terraform — Operations<a class="headerlink" href="#terraform-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>init, plan, apply, destroy, state, workspace, import, and output commands.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Drift detection, state validation, and resource health.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Plan review, apply workflows, and operational procedures.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>Terraform version management and provider upgrades.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>State file backup and disaster recovery procedures.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for Terraform operations.</span>
+</a>
+
+</div>
 
 
 
