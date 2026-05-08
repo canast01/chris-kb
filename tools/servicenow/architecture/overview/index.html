@@ -21,7 +21,7 @@
     
     
       
-        <title>ServiceNow — Overview - Chris KB</title>
+        <title>ServiceNow — Architecture Overview - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ServiceNow — Overview · Chris KB">
+  <meta property="og:title" content="ServiceNow — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ServiceNow — Overview · Chris KB">
+  <meta name="twitter:title" content="ServiceNow — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#servicenow-overview" class="md-skip">
+        <a href="#servicenow-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ServiceNow — Overview
+              ServiceNow — Architecture Overview
             
           </span>
         </div>
@@ -699,6 +699,147 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#multi-instance-cloud-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Instance Cloud Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instance-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance Hierarchy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instance Hierarchy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#promotion-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Promotion Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-zoning-and-node-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Zoning and Node Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-platform-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Platform Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Platform Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#now-platform-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Now Platform (Core)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#itsm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ITSM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cmdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orchestration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -717,8 +858,261 @@
 
 
 
-<h1 id="servicenow-overview">ServiceNow — Overview<a class="headerlink" href="#servicenow-overview" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h1 id="servicenow-architecture-overview">ServiceNow — Architecture Overview<a class="headerlink" href="#servicenow-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>ServiceNow is delivered as a multi-instance SaaS platform running on dedicated infrastructure per customer. Each customer receives isolated database, application, and storage layers — there is no shared compute between tenants. Understanding the platform architecture is essential for capacity planning, integration design, and change management.</p>
+<hr />
+<h2 id="multi-instance-cloud-model">Multi-Instance Cloud Model<a class="headerlink" href="#multi-instance-cloud-model" title="Permanent link">&para;</a></h2>
+<p>ServiceNow runs customer instances in geographically distributed data centers. Each instance is a full stack: dedicated VMs (or containers), a MariaDB-compatible database cluster, and a Java-based application server (Jetty/Tomcat). Customer data never co-mingles with other tenants.</p>
+<table>
+<thead>
+<tr>
+<th>Characteristic</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Database engine</td>
+<td>MariaDB (MySQL-compatible)</td>
+</tr>
+<tr>
+<td>App server</td>
+<td>Java / Jetty</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>SAN-backed, encrypted at rest</td>
+</tr>
+<tr>
+<td>Redundancy</td>
+<td>Active-active within a data center zone</td>
+</tr>
+<tr>
+<td>Regions</td>
+<td>Americas, EMEA, AP-Southeast, GovCloud</td>
+</tr>
+<tr>
+<td>SLA</td>
+<td>99.8% uptime (standard), 99.95% (Hi)</td>
+</tr>
+</tbody>
+</table>
+<p>Each instance receives a URL in the form <code>https://&lt;instance-name&gt;.service-now.com</code>. Sub-production instances typically follow a naming convention such as <code>&lt;instance-name&gt;dev</code>, <code>&lt;instance-name&gt;test</code>, and <code>&lt;instance-name&gt;uat</code>.</p>
+<hr />
+<h2 id="instance-hierarchy">Instance Hierarchy<a class="headerlink" href="#instance-hierarchy" title="Permanent link">&para;</a></h2>
+<p>Most enterprise deployments maintain a minimum of three instances arranged in a promotion pipeline:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Sub-Production (Dev) → Sub-Production (Test/UAT) → Production
+</code></pre></div>
+<p>Changes are developed in Dev, validated in Test/UAT, then promoted to Production via Update Sets or CI/CD pipelines (ServiceNow DevOps or GitHub Actions via the ServiceNow CLI).</p>
+<pre class="mermaid"><code>flowchart LR
+    DEV["Dev Instance\n(sub-production)"]
+    TEST["Test / UAT Instance\n(sub-production)"]
+    PROD["Production Instance"]
+
+    DEV -- "Update Set export" --&gt; TEST
+    TEST -- "Update Set export" --&gt; PROD
+
+    subgraph Sub-Production
+        DEV
+        TEST
+    end</code></pre>
+<h3 id="promotion-rules">Promotion Rules<a class="headerlink" href="#promotion-rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li>No direct change to production without prior UAT validation</li>
+<li>Update Sets must be in <strong>Complete</strong> state before export</li>
+<li>Peer review required before marking an Update Set complete</li>
+<li>Emergency fixes follow a separate Fast-Track CAB process (see <a href="../standards/">Standards</a>)</li>
+</ul>
+<hr />
+<h2 id="platform-zoning-and-node-topology">Platform Zoning and Node Topology<a class="headerlink" href="#platform-zoning-and-node-topology" title="Permanent link">&para;</a></h2>
+<p>Within a production instance, ServiceNow runs multiple application nodes behind a load balancer. Nodes are categorized by role:</p>
+<pre class="mermaid"><code>graph TD
+    LB["Load Balancer\n(customer-transparent)"]
+
+    subgraph App Tier
+        N1["App Node 1\n(web + scheduler)"]
+        N2["App Node 2\n(web + scheduler)"]
+        N3["App Node 3\n(web only)"]
+    end
+
+    subgraph DB Tier
+        PRI["Primary DB Node"]
+        REP["Replica DB Node"]
+    end
+
+    subgraph MID Tier
+        MID1["MID Server 1\n(on-prem DC-A)"]
+        MID2["MID Server 2\n(on-prem DC-B)"]
+    end
+
+    LB --&gt; N1
+    LB --&gt; N2
+    LB --&gt; N3
+
+    N1 --&gt; PRI
+    N2 --&gt; PRI
+    N3 --&gt; PRI
+    PRI -- replication --&gt; REP
+
+    N1 &lt;--&gt;|"HTTPS/ECC\noutbound only"| MID1
+    N1 &lt;--&gt;|"HTTPS/ECC\noutbound only"| MID2</code></pre>
+<p><strong>Key points:</strong></p>
+<ul>
+<li>App nodes communicate with the DB tier over an internal private network</li>
+<li>MID Servers are customer-managed Java agents deployed on-premises; all communication is <strong>outbound from MID Server to the instance</strong> (port 443), eliminating inbound firewall requirements</li>
+<li>The load balancer is fully managed by ServiceNow; customers do not configure it</li>
+</ul>
+<hr />
+<h2 id="key-platform-components">Key Platform Components<a class="headerlink" href="#key-platform-components" title="Permanent link">&para;</a></h2>
+<h3 id="now-platform-core">Now Platform (Core)<a class="headerlink" href="#now-platform-core" title="Permanent link">&para;</a></h3>
+<p>The foundational layer all applications share:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workflow Engine</td>
+<td>Visual process automation (Flow Designer / Legacy WF)</td>
+</tr>
+<tr>
+<td>Service Catalog</td>
+<td>Self-service request portal</td>
+</tr>
+<tr>
+<td>Notification Engine</td>
+<td>Email, SMS, push via notification rules</td>
+</tr>
+<tr>
+<td>Scripting Runtime</td>
+<td>Server-side JavaScript (Rhino/GraalVM)</td>
+</tr>
+<tr>
+<td>Update Set Manager</td>
+<td>Change packaging and instance promotion</td>
+</tr>
+<tr>
+<td>Scheduled Jobs</td>
+<td>Background execution framework</td>
+</tr>
+</tbody>
+</table>
+<h3 id="itsm">ITSM<a class="headerlink" href="#itsm" title="Permanent link">&para;</a></h3>
+<p>Covers Incident, Problem, Change, Request, and Knowledge Management. The ITSM suite is the baseline for most enterprise deployments:</p>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>Key Table</th>
+<th>SLA Driven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incident Management</td>
+<td><code>incident</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Problem Management</td>
+<td><code>problem</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Change Management</td>
+<td><code>change_request</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Service Request</td>
+<td><code>sc_request</code> / <code>sc_req_item</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Knowledge Base</td>
+<td><code>kb_knowledge</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cmdb">CMDB<a class="headerlink" href="#cmdb" title="Permanent link">&para;</a></h3>
+<p>The Configuration Management Database stores Configuration Items (CIs) and their relationships. Discovery populates and reconciles CI data automatically.</p>
+<ul>
+<li>Base CI class: <code>cmdb_ci</code></li>
+<li>Relationship table: <code>cmdb_rel_ci</code></li>
+<li>Service maps built from CI relationships</li>
+<li>Identification and Reconciliation Engine (IRE) deduplicates data from multiple discovery sources</li>
+</ul>
+<h3 id="discovery">Discovery<a class="headerlink" href="#discovery" title="Permanent link">&para;</a></h3>
+<p>Automated infrastructure discovery using MID Servers:</p>
+<ol>
+<li>Scheduled probes run against IP ranges or cloud accounts</li>
+<li>MID Server executes discovery scripts (SSH, WMI, SNMP, APIs)</li>
+<li>Payload data is parsed and mapped to CMDB CI classes via IRE</li>
+<li>Reconciliation order enforced by source ranking (authoritative source wins)</li>
+</ol>
+<h3 id="orchestration">Orchestration<a class="headerlink" href="#orchestration" title="Permanent link">&para;</a></h3>
+<p>Extends Flow Designer and Workflow Engine to execute remote operations via MID Server (run scripts, call APIs, invoke PowerShell on Windows hosts). Used for automated remediation, provisioning, and CI/CD integration.</p>
+<hr />
+<h2 id="upgrade-lifecycle">Upgrade Lifecycle<a class="headerlink" href="#upgrade-lifecycle" title="Permanent link">&para;</a></h2>
+<p>ServiceNow releases two major versions per year (Washington DC, Xanadu, Yokohama…). Cloud instances are auto-upgraded by ServiceNow on a schedule negotiated with the customer.</p>
+<pre class="mermaid"><code>flowchart TD
+    A["Upgrade Announcement\n(~3 months lead)"]
+    B["Review Release Notes\n&amp; Upgrade Planner"]
+    C["Upgrade Sub-Production\n(Dev first)"]
+    D["Regression Testing\n(ATF automated + manual)"]
+    E["Upgrade UAT"]
+    F["UAT Sign-off"]
+    G["Schedule Production Upgrade\nwith ServiceNow"]
+    H["Production Upgrade\n(maintenance window)"]
+    I["Post-Upgrade Validation"]
+
+    A --&gt; B --&gt; C --&gt; D --&gt; D --&gt; E --&gt; F --&gt; G --&gt; H --&gt; I</code></pre>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Owner</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Release notes review</td>
+<td>Platform team</td>
+<td>1 week</td>
+</tr>
+<tr>
+<td>Dev upgrade + testing</td>
+<td>Platform team + developers</td>
+<td>2–3 weeks</td>
+</tr>
+<tr>
+<td>UAT upgrade + sign-off</td>
+<td>Business stakeholders</td>
+<td>1–2 weeks</td>
+</tr>
+<tr>
+<td>Production upgrade scheduling</td>
+<td>ServiceNow + customer</td>
+<td>1 week</td>
+</tr>
+<tr>
+<td>Production upgrade window</td>
+<td>ServiceNow (automated)</td>
+<td>2–4 hours</td>
+</tr>
+<tr>
+<td>Post-upgrade validation</td>
+<td>Platform team</td>
+<td>1 day</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Skipped versions policy:</strong> ServiceNow supports upgrading across one or more versions. However, skipping more than two major releases is not recommended — see <a href="../../operations/install-upgrade/">Install &amp; Upgrade</a> for detailed guidance.</p>
 
 
 

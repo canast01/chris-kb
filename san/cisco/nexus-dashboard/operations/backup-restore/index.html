@@ -699,6 +699,197 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-remote-backup-destination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Remote Backup Destination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schedule-automated-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schedule Automated Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-backup-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Backup (GUI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-backup-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Backup (CLI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Restore Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restore-to-same-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore to Same Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-to-a-new-cluster-dr-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore to a New Cluster (DR Recovery)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-restore-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Restore Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ndfc-zone-database-export-standalone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDFC Zone Database Export (Standalone)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NDFC Zone Database Export (Standalone)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gui-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GUI Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-api-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-retention-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Retention Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +909,280 @@
 
 
 <h1 id="nexus-dashboard-backup-restore">Nexus Dashboard — Backup &amp; Restore<a class="headerlink" href="#nexus-dashboard-backup-restore" title="Permanent link">&para;</a></h1>
-<p>Backup configuration, restore procedures, and validation.</p>
+<blockquote>
+<p>Part of the <a href="../../">Nexus Dashboard</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Nexus Dashboard backup captures the full cluster state:
+- Platform configuration (users, LDAP, certificates, site registrations)
+- NDFC database (fabrics, zones, device aliases, inventory, events)
+- NDI configuration and anomaly history (optional — large)
+- Application configuration and state</p>
+<p>Backups are critical for cluster recovery after node failure and as pre-upgrade snapshots. ND backup uses an external SCP or SFTP target — local-only backups are insufficient for DR.</p>
+<hr />
+<h2 id="backup-configuration">Backup Configuration<a class="headerlink" href="#backup-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="configure-remote-backup-destination">Configure Remote Backup Destination<a class="headerlink" href="#configure-remote-backup-destination" title="Permanent link">&para;</a></h3>
+<p>Navigate to <strong>Admin Console &gt; Operations &gt; Backup &amp; Restore &gt; Settings</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Recommended Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup type</td>
+<td>SCP or SFTP</td>
+</tr>
+<tr>
+<td>Remote host</td>
+<td><code>backup-server.corp.example.com</code></td>
+</tr>
+<tr>
+<td>Remote path</td>
+<td><code>/backups/nexus-dashboard/dc1/</code></td>
+</tr>
+<tr>
+<td>Username</td>
+<td><code>nd-bkp</code> (write permission on target path)</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>SSH key (preferred) or password</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>Enabled — set a strong passphrase (store in vault)</td>
+</tr>
+<tr>
+<td>Retention count</td>
+<td>4 (keep last 4 backups)</td>
+</tr>
+</tbody>
+</table>
+<p>Test the remote destination by clicking <strong>Test Connection</strong> before relying on it.</p>
+<h3 id="schedule-automated-backups">Schedule Automated Backups<a class="headerlink" href="#schedule-automated-backups" title="Permanent link">&para;</a></h3>
+<p>Navigate to <strong>Admin Console &gt; Operations &gt; Backup &amp; Restore &gt; Schedule</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frequency</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Day</td>
+<td>Sunday</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>02:00 (local appliance time)</td>
+</tr>
+<tr>
+<td>Include app data</td>
+<td>Yes for NDFC; optional for NDI (large)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="manual-backup-gui">Manual Backup (GUI)<a class="headerlink" href="#manual-backup-gui" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Admin Console &gt; Operations &gt; Backup &amp; Restore</strong>.</li>
+<li>Click <strong>Backup Now</strong>.</li>
+<li>Select: include or exclude NDI telemetry data (exclude for faster backup unless telemetry history is required).</li>
+<li>Click <strong>Start Backup</strong>.</li>
+<li>Monitor progress — backup status updates in the UI. Completion time depends on data size: 10-30 minutes typical.</li>
+</ol>
+<h3 id="manual-backup-cli">Manual Backup (CLI)<a class="headerlink" href="#manual-backup-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Trigger manual backup to remote SCP target</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>acs<span class="w"> </span>backup<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--remote-server<span class="w"> </span>backup-server.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--remote-path<span class="w"> </span>/backups/nexus-dashboard/dc1/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--remote-user<span class="w"> </span>nd-bkp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--encryption-passphrase-file<span class="w"> </span>/home/ndadmin/.nd-backup-pass
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check backup status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>acs<span class="w"> </span>backup<span class="w"> </span>status
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List available backups</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>acs<span class="w"> </span>backup<span class="w"> </span>list
+</code></pre></div>
+<hr />
+<h2 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h2>
+<h3 id="restore-to-same-cluster">Restore to Same Cluster<a class="headerlink" href="#restore-to-same-cluster" title="Permanent link">&para;</a></h3>
+<p>Use when the cluster is functional but data needs recovery (e.g., accidental zone deletion, NDFC misconfiguration).</p>
+<ol>
+<li>Navigate to <strong>Admin Console &gt; Operations &gt; Backup &amp; Restore &gt; Restore</strong>.</li>
+<li>Select the backup to restore from (either from the remote target list or upload a file).</li>
+<li>Click <strong>Restore</strong>. The cluster restarts its application services during restore.</li>
+<li>After restore completes (10-30 minutes), validate:</li>
+<li>NDFC fabric inventory and zone databases</li>
+<li>ND user accounts and LDAP settings</li>
+<li>Site registrations</li>
+</ol>
+<p><strong>Warning:</strong> Restore overwrites all current state. Any changes made after the backup point are lost. Always export zone databases immediately before triggering a restore.</p>
+<h3 id="restore-to-a-new-cluster-dr-recovery">Restore to a New Cluster (DR Recovery)<a class="headerlink" href="#restore-to-a-new-cluster-dr-recovery" title="Permanent link">&para;</a></h3>
+<p>Use when the original ND cluster is unrecoverable (all nodes lost).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Step 1: Deploy a fresh 3-node ND cluster (same version as the backup)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Follow the install procedure in Install &amp; Upgrade</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Step 2: On the new cluster, configure the remote backup destination</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--server<span class="w"> </span>backup-server.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--path<span class="w"> </span>/backups/nexus-dashboard/dc1/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--user<span class="w"> </span>nd-bkp
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Step 3: List available backups</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>acs<span class="w"> </span>backup<span class="w"> </span>list<span class="w"> </span>--remote
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Step 4: Restore from the remote backup</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>acs<span class="w"> </span>restore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--backup-id<span class="w"> </span>&lt;backup-id-from-list&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--encryption-passphrase-file<span class="w"> </span>/home/ndadmin/.nd-backup-pass
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Step 5: Monitor restore</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>acs<span class="w"> </span>restore<span class="w"> </span>status
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Step 6: After restore, validate</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>acs<span class="w"> </span>health
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>acs<span class="w"> </span>apps<span class="w"> </span>status
+</code></pre></div>
+<p><strong>If the ND management IP changed (new hardware):</strong>
+- Update DNS records for the cluster management FQDN
+- Update any switch-side SNMP trap destinations that send traps to ND</p>
+<h3 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All ND nodes healthy</td>
+<td><code>acs health</code> or Admin Console &gt; Nodes</td>
+</tr>
+<tr>
+<td>NDFC fabrics populated</td>
+<td>NDFC &gt; Fabrics — all switches visible</td>
+</tr>
+<tr>
+<td>Zone sets intact</td>
+<td>NDFC &gt; Zoning — all zone sets present</td>
+</tr>
+<tr>
+<td>Device aliases intact</td>
+<td>NDFC &gt; Device Alias</td>
+</tr>
+<tr>
+<td>LDAP authentication working</td>
+<td>Login with an AD account</td>
+</tr>
+<tr>
+<td>NDI anomalies visible (if NDI installed)</td>
+<td>NDI &gt; Dashboard</td>
+</tr>
+<tr>
+<td>Site registrations present</td>
+<td>Admin Console &gt; Infrastructure &gt; Sites</td>
+</tr>
+<tr>
+<td>TLS certificate valid</td>
+<td>Browser — no cert warning</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ndfc-zone-database-export-standalone">NDFC Zone Database Export (Standalone)<a class="headerlink" href="#ndfc-zone-database-export-standalone" title="Permanent link">&para;</a></h2>
+<p>In addition to cluster-level backups, export NDFC zone databases before every zone change:</p>
+<h3 id="gui-export">GUI Export<a class="headerlink" href="#gui-export" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>NDFC &gt; Fabrics &gt; [Fabric Name] &gt; Actions &gt; Export</strong>.</li>
+<li>Select export format: <strong>JSON</strong> (native NDFC format).</li>
+<li>Save with a timestamp: <code>DC1-FABRIC-A-zones-20260508.json</code>.</li>
+<li>Attach to the change management ticket.</li>
+</ol>
+<h3 id="rest-api-export">REST API Export<a class="headerlink" href="#rest-api-export" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate to ND</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd-dc1.corp.example.com/login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;userName&quot;:&quot;svc-automation&quot;,&quot;userPasswd&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;local&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Get fabric list</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">FABRICS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="s2">&quot;https://nd-dc1.corp.example.com/appcenter/cisco/ndfc/api/v1/san/fabrics&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(f[&#39;fabricName&#39;]) for f in json.load(sys.stdin)[&#39;DATA&#39;]]&quot;</span><span class="k">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Export zone database per fabric</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">for</span><span class="w"> </span>FABRIC<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="si">${</span><span class="nv">FABRICS</span><span class="si">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="s2">&quot;https://nd-dc1.corp.example.com/appcenter/cisco/ndfc/api/v1/san/zoning?fabricName=</span><span class="si">${</span><span class="nv">FABRIC</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FABRIC</span><span class="si">}</span><span class="s2">-zones-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.json&quot;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Exported: </span><span class="si">${</span><span class="nv">FABRIC</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="k">done</span>
+</code></pre></div>
+<hr />
+<h2 id="backup-retention-policy">Backup Retention Policy<a class="headerlink" href="#backup-retention-policy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Backup Type</th>
+<th>Frequency</th>
+<th>Retention</th>
+<th>Storage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ND cluster full backup</td>
+<td>Weekly</td>
+<td>4 copies</td>
+<td>Remote SCP/SFTP</td>
+</tr>
+<tr>
+<td>Pre-upgrade ND backup</td>
+<td>Before every upgrade</td>
+<td>Indefinite</td>
+<td>Remote SCP/SFTP</td>
+</tr>
+<tr>
+<td>NDFC zone export</td>
+<td>Before every zone change</td>
+<td>90 days</td>
+<td>Change management system</td>
+</tr>
+<tr>
+<td>VM snapshots</td>
+<td>Before each upgrade</td>
+<td>Delete within 48h post-upgrade</td>
+<td>vCenter datastore</td>
+</tr>
+</tbody>
+</table>
+<p>Do not rely on VM snapshots as the primary recovery mechanism. Snapshots held longer than 48 hours degrade VM I/O performance and should be deleted after confirming the upgrade is stable.</p>
+<hr />
+<h2 id="backup-verification">Backup Verification<a class="headerlink" href="#backup-verification" title="Permanent link">&para;</a></h2>
+<p>Test the backup restore procedure at least annually:</p>
+<ol>
+<li>Deploy a temporary ND cluster (in a test environment or a dedicated DR environment).</li>
+<li>Restore the most recent production backup.</li>
+<li>Validate NDFC fabric inventory, zone databases, and user accounts.</li>
+<li>Document the test results (time to restore, any issues encountered).</li>
+<li>Delete the test cluster after validation.</li>
+</ol>
+<p>A restore that has never been tested in practice is not a reliable recovery plan.</p>
 
 
 

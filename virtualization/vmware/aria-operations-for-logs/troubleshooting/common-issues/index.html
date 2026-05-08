@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#common-search-examples" class="md-nav__link">
+  <a href="#log-ingestion-stopped-or-dropped-to-zero" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Search Examples
+        Log Ingestion Stopped or Dropped to Zero
       
     </span>
   </a>
@@ -738,6 +738,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#agent-not-delivering-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Not Delivering Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-analytics-queries-time-out-or-are-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Analytics Queries Time Out or Are Slow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-node-not-joining-worker-fails-to-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Node Not Joining (Worker Fails to Join)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-notifications-not-firing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Notifications Not Firing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-full-cluster-stops-ingesting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Full — Cluster Stops Ingesting
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -759,60 +825,303 @@
 
 
 <h1 id="aria-ops-for-logs-common-issues">Aria Ops for Logs — Common Issues<a class="headerlink" href="#aria-ops-for-logs-common-issues" title="Permanent link">&para;</a></h1>
-<h2 id="common-search-examples">Common Search Examples<a class="headerlink" href="#common-search-examples" title="Permanent link">&para;</a></h2>
+<h2 id="log-ingestion-stopped-or-dropped-to-zero">Log Ingestion Stopped or Dropped to Zero<a class="headerlink" href="#log-ingestion-stopped-or-dropped-to-zero" title="Permanent link">&para;</a></h2>
+<p>Symptoms: the ingestion rate in Administration → Cluster shows 0 events/sec; dashboards show no recent events; log sources are still active.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check ingestion stats from master node</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/cluster/stats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{eventsPerSecond: .eventsIngested, diskPct: .diskUsagePercent}&#39;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Verify syslog listeners are running</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ss<span class="w"> </span>-tulnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;514|1514|9543&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Expected: UDP 514, TCP 1514, TCP 9543 all listening</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># If any port is not listening: restart the loginsight service</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>loginsight
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Test syslog reception from a source</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>logger<span class="w"> </span>-n<span class="w"> </span>vrli-prod-01.corp.local<span class="w"> </span>-P<span class="w"> </span><span class="m">514</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;test ingestion check&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Then check Interactive Analytics for &quot;test ingestion check&quot; within 30 seconds</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check ingestion log for parse failures or drops</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;drop\|overflow\|parse error\|reject&quot;</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Use Case</th>
-<th>Search Term</th>
+<th>Cause</th>
+<th>Symptom</th>
+<th>Resolution</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Login failures</td>
-<td><code>Failed to authenticate</code></td>
+<td>Disk &gt; 90% full</td>
+<td>Cluster stops accepting events; no syslog listener response</td>
+<td>Free disk space or add a worker node</td>
 </tr>
 <tr>
-<td>Host disconnects</td>
-<td><code>lost connectivity</code> or <code>not responding</code></td>
+<td>All cluster nodes offline</td>
+<td>Syslog sources connect but events not indexed</td>
+<td>Restore from snapshot; restart loginsight service</td>
 </tr>
 <tr>
-<td>Certificate errors</td>
-<td><code>certificate</code> or <code>SSL</code> or <code>handshake</code></td>
+<td>Ingestion filter too broad</td>
+<td>Events matching the filter are silently dropped</td>
+<td>Review Administration → Ingestion Filters</td>
 </tr>
 <tr>
-<td>vMotion errors</td>
-<td><code>vmotion</code> and <code>error</code></td>
-</tr>
-<tr>
-<td>NTP issues</td>
-<td><code>NTP</code> or <code>time</code> and <code>drift</code></td>
-</tr>
-<tr>
-<td>Storage errors</td>
-<td><code>SCSI</code> or <code>datastore</code> and <code>error</code></td>
-</tr>
-<tr>
-<td>Service restarts</td>
-<td><code>hostd restarted</code> or <code>vpxa restarted</code></td>
+<td>Network firewall blocking ports</td>
+<td>Sources sending but nothing arriving</td>
+<td>Check firewall rules for UDP 514, TCP 1514, TCP 9543</td>
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="searching-esxi-host-logs">Searching ESXi Host Logs<a class="headerlink" href="#searching-esxi-host-logs" title="Permanent link">&para;</a></h2>
-<p>Search for a specific host by name or IP and filter by log source:</p>
-<ul>
-<li><code>hostd</code> — VM and host operations</li>
-<li><code>vpxa</code> — vCenter agent on the host</li>
-<li><code>vmkernel</code> — kernel-level events</li>
-<li><code>vobd</code> — hardware and storage events</li>
-</ul>
+<p>Search for a specific host by name or IP and filter by log source appname:</p>
+<table>
+<thead>
+<tr>
+<th><code>appname</code> value</th>
+<th>Log Source</th>
+<th>Common Searches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hostd</code></td>
+<td>VM and host operation daemon</td>
+<td><code>hostd AND (error OR failed)</code></td>
+</tr>
+<tr>
+<td><code>vpxa</code></td>
+<td>vCenter agent on the host</td>
+<td><code>vpxa AND disconnect</code></td>
+</tr>
+<tr>
+<td><code>vmkernel</code></td>
+<td>Kernel-level events</td>
+<td><code>vmkernel AND (SCSI OR NFS OR warning)</code></td>
+</tr>
+<tr>
+<td><code>vobd</code></td>
+<td>Hardware and storage observer</td>
+<td><code>vobd AND (APD OR PDL OR disk)</code></td>
+</tr>
+<tr>
+<td><code>vmkwarning</code></td>
+<td>Kernel warning messages</td>
+<td><code>vmkwarning</code></td>
+</tr>
+</tbody>
+</table>
+<p>Quick searches for common ESXi problems:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Host connectivity lost
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>text contains &quot;lost connectivity&quot; AND appname = &quot;vpxa&quot;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># SCSI or storage errors
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>(appname = &quot;vmkernel&quot; OR appname = &quot;vobd&quot;) AND (text contains &quot;SCSI&quot; OR text contains &quot;APD&quot; OR text contains &quot;PDL&quot;)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># vMotion failures
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>text contains &quot;VMotionFailed&quot; OR (text contains &quot;vmotion&quot; AND text contains &quot;error&quot;)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># HA failover events
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>text contains &quot;ha.vm.restart&quot; OR text contains &quot;HA failover&quot;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Certificate or SSO errors
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>text contains &quot;certificate&quot; AND text contains &quot;invalid&quot;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>text contains &quot;STS&quot; AND text contains &quot;error&quot;
+</code></pre></div>
+<hr />
 <h2 id="searching-vcenter-events">Searching vCenter Events<a class="headerlink" href="#searching-vcenter-events" title="Permanent link">&para;</a></h2>
 <p>Use the vCenter log source and filter by event type or keyword:</p>
-<ul>
-<li>Login events: search <code>SessionManager</code></li>
-<li>Task failures: search <code>TaskManager</code> or <code>error</code></li>
-<li>Certificate events: search <code>certificate</code> or <code>STS</code></li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Search Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login events</td>
+<td><code>appname = "vpxd" AND text contains "SessionManager"</code></td>
+</tr>
+<tr>
+<td>Task failures</td>
+<td><code>appname = "vpxd" AND text contains "TaskManager" AND text contains "error"</code></td>
+</tr>
+<tr>
+<td>Certificate events</td>
+<td><code>appname = "vpxd" AND text contains "STS"</code></td>
+</tr>
+<tr>
+<td>Permission changes</td>
+<td><code>appname = "vpxd" AND text contains "Permission"</code></td>
+</tr>
+<tr>
+<td>Snapshot operations</td>
+<td><code>appname = "vpxd" AND text contains "snapshot"</code></td>
+</tr>
+<tr>
+<td>VM power operations</td>
+<td><code>appname = "vpxd" AND (text contains "PowerOn" OR text contains "PowerOff")</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="agent-not-delivering-logs">Agent Not Delivering Logs<a class="headerlink" href="#agent-not-delivering-logs" title="Permanent link">&para;</a></h2>
+<p>Symptoms: agent shows as stale or offline in Administration → Agents; logs from that host are absent.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check agent service status on the source host (Linux)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>liagentd
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>liagentd<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check agent log for connection errors</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/loginsight-agent/liagent.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|ssl\|connect\|timeout&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Test TCP connectivity from agent to Aria Ops for Logs</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vrli-prod-01.corp.local<span class="w"> </span><span class="m">9543</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Expected: Connection to vrli-prod-01.corp.local 9543 succeeded</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Verify agent configuration is correct</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^#\|^</span>$<span class="s2">&quot;</span><span class="w"> </span>/var/lib/loginsight-agent/liagent.ini
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Check hostname, port (9543), and ssl setting</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Restart the agent</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>liagentd
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>systemctl<span class="w"> </span>status<span class="w"> </span>liagentd
+</code></pre></div>
+<p>For Windows agents:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check agent service status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware Log Insight Agent&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># View agent event log</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-Source</span> <span class="s2">&quot;VMware*&quot;</span> <span class="n">-Newest</span> <span class="n">50</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Restart agent</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Restart-Service</span> <span class="s2">&quot;VMware Log Insight Agent&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="interactive-analytics-queries-time-out-or-are-slow">Interactive Analytics Queries Time Out or Are Slow<a class="headerlink" href="#interactive-analytics-queries-time-out-or-are-slow" title="Permanent link">&para;</a></h2>
+<p>Symptoms: queries over large time windows return a timeout error; dashboards are slow to load.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check Cassandra compaction — long compaction causes slow queries</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@vrli-prod-01.corp.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>nodetool<span class="w"> </span>compactionstats
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check Cassandra heap usage — high heap (&gt;90%) causes query slowness</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>nodetool<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;heap&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check current query load</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/loginsight/query.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;slow\|timeout\|error\|duration&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Reduce query load by narrowing time ranges and adding field filters</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Use: last 1 hour instead of last 7 days when investigating active incidents</span>
+</code></pre></div>
+<p>Best practices for fast queries:
+- Always set a specific time range — avoid querying "All Time"
+- Filter on indexed fields (<code>hostname</code>, <code>appname</code>, <code>source</code>) before free-text search
+- Use <strong>text contains</strong> rather than <strong>text matches</strong> (regex) where possible — regex is slower
+- For very large clusters, add worker nodes to distribute Cassandra read load</p>
+<hr />
+<h2 id="cluster-node-not-joining-worker-fails-to-join">Cluster Node Not Joining (Worker Fails to Join)<a class="headerlink" href="#cluster-node-not-joining-worker-fails-to-join" title="Permanent link">&para;</a></h2>
+<p>Symptoms: a new worker node is powered on and the setup wizard completed, but it does not appear in Administration → Cluster.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check the cluster nodes via API from the master</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state}&#39;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># SSH to the worker node and check the loginsight service</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ssh<span class="w"> </span>admin@vrli-prod-02.corp.local
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>loginsight
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;join\|cluster\|error\|master&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Test connectivity from worker to master on required ports</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vrli-prod-01.corp.local<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>nc<span class="w"> </span>-zv<span class="w"> </span>vrli-prod-01.corp.local<span class="w"> </span><span class="m">16520</span><span class="w">  </span><span class="c1"># cluster internal communication port</span>
+</code></pre></div>
+<p>Common causes:
+- <strong>DNS mismatch</strong>: the worker's FQDN resolves to a different IP than what the master sees — verify forward and reverse DNS for the worker FQDN
+- <strong>NTP drift</strong>: if the worker's clock differs from the master by more than 60 seconds, the join will fail — <code>chronyc tracking</code> on both nodes and force sync: <code>chronyc makestep</code>
+- <strong>Certificate mismatch</strong>: if the master has a CA-signed certificate but the worker has a self-signed certificate, the join TLS handshake may fail — replace the worker certificate first</p>
+<hr />
+<h2 id="alert-notifications-not-firing">Alert Notifications Not Firing<a class="headerlink" href="#alert-notifications-not-firing" title="Permanent link">&para;</a></h2>
+<p>Symptoms: an alert definition is enabled and the query matches events, but no notification is sent.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify alert is enabled</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/alerts/&lt;alert-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{name: .name, enabled: .enabled, numHits: .numHits}&#39;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Test the notification channel</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/notification/&lt;channel-id&gt;/test&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check the runtime log for notification delivery errors</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;notification\|email\|webhook\|smtp\|fail&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alert threshold too high</td>
+<td>Alert count threshold set to 100 events, but query only matches 10 — lower the threshold</td>
+</tr>
+<tr>
+<td>Notification channel disabled</td>
+<td>Administration → Notification Channels → check enabled state</td>
+</tr>
+<tr>
+<td>Webhook URL changed</td>
+<td>Test the webhook manually with <code>curl -X POST &lt;webhook-url&gt;</code></td>
+</tr>
+<tr>
+<td>SMTP relay unreachable</td>
+<td>Test SMTP: <code>curl -v smtp://smtp.corp.local:25</code> from appliance SSH</td>
+</tr>
+<tr>
+<td>Alert recently disabled by operator</td>
+<td>Check runtime.log for a recent disable event</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ntp-diagnostics">NTP Diagnostics<a class="headerlink" href="#ntp-diagnostics" title="Permanent link">&para;</a></h2>
+<p>Certificate operations and log timestamp alignment fail when NTP is not synchronised:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check NTP on the Aria Ops for Logs appliance</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># If NTP is drifting: restart chronyd and check sources</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>chronyd
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>chronyc<span class="w"> </span>sources
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Verify all cluster nodes are synced to the same NTP source</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrli-prod-01<span class="w"> </span>vrli-prod-02<span class="w"> </span>vrli-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.corp.local: &quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="nv">$node</span>.corp.local<span class="w"> </span><span class="s2">&quot;chronyc tracking 2&gt;/dev/null | grep &#39;System time&#39;&quot;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="k">done</span>
+</code></pre></div>
+<hr />
+<h2 id="disk-full-cluster-stops-ingesting">Disk Full — Cluster Stops Ingesting<a class="headerlink" href="#disk-full-cluster-stops-ingesting" title="Permanent link">&para;</a></h2>
+<p>When a node's disk reaches 100%, Aria Ops for Logs stops accepting log events on that node. The cluster continues on remaining nodes until their disk also fills.</p>
+<p>Immediate actions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Confirm disk usage</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log/loginsight
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check if hot retention is set too long for current disk size</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Reduce retention to free space: Administration → General → Retention → reduce days</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Remove old archives from the NFS target if archiving is enabled</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Do NOT manually delete files from /var/log/loginsight — Cassandra manages this path</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># If retention cannot be reduced, add a worker node with additional disk</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Workers can be added without downtime: deploy OVA → setup wizard → Join Cluster</span>
+</code></pre></div>
+<p>After freeing disk space, the cluster automatically resumes ingestion — no manual restart is required. Verify by checking the events/sec counter in Administration → Cluster.</p>
 
 
 

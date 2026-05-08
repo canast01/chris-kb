@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#when-to-escalate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Escalate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#generating-a-support-bundle" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -750,10 +761,43 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-sr-diagnostic-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-SR Diagnostic Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#useful-links" class="md-nav__link">
     <span class="md-ellipsis">
       
         Useful Links
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sr-handoff-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SR Handoff Checklist
       
     </span>
   </a>
@@ -782,19 +826,51 @@
 
 <h1 id="aria-automation-escalation">Aria Automation — Escalation<a class="headerlink" href="#aria-automation-escalation" title="Permanent link">&para;</a></h1>
 <h2 id="support-portal">Support Portal<a class="headerlink" href="#support-portal" title="Permanent link">&para;</a></h2>
-<p><strong>Broadcom Support Portal:</strong> https://support.broadcom.com</p>
+<p><strong>Broadcom Support Portal:</strong> <a href="https://support.broadcom.com">https://support.broadcom.com</a></p>
 <p>Log in with your Broadcom Support account (formerly VMware Customer Connect). Aria Automation support cases are raised under the <strong>VMware Cloud Foundation &gt; Aria Automation</strong> product.</p>
 <hr />
+<h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
+<p>Escalate to Broadcom support when internal troubleshooting has not resolved the issue within 2 hours for P1/P2, or when:</p>
+<ul>
+<li>Kubernetes pods are crash-looping and restarting the deployment does not resolve the issue</li>
+<li>PostgreSQL database is corrupted or not starting after a failed upgrade</li>
+<li>The cluster is split-brain: nodes disagree about cluster membership after a network event</li>
+<li>A deployment is stuck in <code>CREATE_INPROGRESS</code> for more than 2 hours with no log activity</li>
+<li>VIDM/SSO is inaccessible and all users (including admin) cannot log in</li>
+<li>The upgrade has partially applied and the cluster is in an inconsistent version state</li>
+<li>A rollback to snapshot has failed or the snapshot is no longer present</li>
+</ul>
+<p>Do not power cycle Kubernetes pods manually if they are in an unknown state — this can corrupt the PostgreSQL write-ahead log and cause database inconsistency. Restart via <code>kubectl rollout restart</code> or <code>vracli cluster restart</code> and wait 5 minutes for self-healing.</p>
+<hr />
 <h2 id="generating-a-support-bundle">Generating a Support Bundle<a class="headerlink" href="#generating-a-support-bundle" title="Permanent link">&para;</a></h2>
-<p>The Aria Automation support bundle is collected from the appliance CLI:</p>
+<p>The Aria Automation support bundle is required for all support cases.</p>
+<p><strong>Via CLI (preferred — most comprehensive):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to the Aria Automation appliance</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>root@&lt;aria-automation-fqdn&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>root@vra-prod-01.corp.local
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Generate the support bundle</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Generate the support bundle (this takes 5–15 minutes)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vracli<span class="w"> </span>support-bundle
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Bundle is saved to /tmp/ — check the filename</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/tmp/vracli-support-bundle*.tar.gz
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Copy to a local machine for upload</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>scp<span class="w"> </span>root@vra-prod-01.corp.local:/tmp/vracli-support-bundle*.tar.gz<span class="w"> </span>/tmp/
 </code></pre></div>
-<p>The bundle is saved to <code>/tmp/</code> and includes service logs, configuration, and diagnostic output.</p>
-<p>Alternatively, collect logs from <code>/services-logs/</code> on the appliance for targeted troubleshooting.</p>
+<p>The bundle includes: service logs from all Kubernetes namespaces, cluster configuration, pod descriptions, database diagnostics (no data, structure only), networking information, and Kubernetes events.</p>
+<p><strong>Targeted log collection</strong> (when the full bundle cannot be generated):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Collect logs from the prelude namespace (core Aria Automation services)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>assembler<span class="w"> </span>--tail<span class="o">=</span><span class="m">500</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/assembler.log
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">500</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/iaas-gateway.log
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>catalog<span class="w"> </span>--tail<span class="o">=</span><span class="m">500</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/catalog.log
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>postgres<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/postgres.log
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Collect Kubernetes events (shows pod restarts and resource issues)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.metadata.creationTimestamp&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/k8s-events.log
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Collect pod status</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span>wide<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pod-status.log
+</code></pre></div>
 <hr />
 <h2 id="information-to-collect-before-opening-a-case">Information to Collect Before Opening a Case<a class="headerlink" href="#information-to-collect-before-opening-a-case" title="Permanent link">&para;</a></h2>
 <table>
@@ -802,48 +878,79 @@
 <tr>
 <th>Item</th>
 <th>Where to Find</th>
+<th>How to Collect</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Aria Automation version</td>
-<td><code>vracli version</code> or admin UI</td>
+<td><code>vracli version</code> or admin UI → About</td>
+<td>CLI or UI</td>
 </tr>
 <tr>
 <td>vSphere / vCenter version</td>
 <td>vCenter About page</td>
+<td>UI</td>
 </tr>
 <tr>
 <td>NSX version</td>
 <td>NSX Manager About page</td>
+<td>UI</td>
 </tr>
 <tr>
 <td>LCM version</td>
-<td>LCM admin UI</td>
+<td>LCM admin UI → Settings → System Details</td>
+<td>UI</td>
 </tr>
 <tr>
 <td>Support bundle</td>
 <td>Generated via <code>vracli support-bundle</code></td>
+<td>CLI (see above)</td>
 </tr>
 <tr>
 <td>Deployment event logs</td>
-<td>UI: Deployments &gt; \<deployment\> > Events</td>
+<td>UI: Deployments → deployment → History tab</td>
+<td>UI or API</td>
 </tr>
 <tr>
 <td>Kubernetes pod logs</td>
 <td><code>kubectl logs &lt;pod&gt; -n prelude</code></td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Kubernetes pod status</td>
+<td><code>kubectl get pods --all-namespaces</code></td>
+<td>CLI</td>
 </tr>
 <tr>
 <td>Description of the issue with exact timestamps</td>
 <td>—</td>
+<td>Incident notes</td>
 </tr>
 <tr>
-<td>Steps to reproduce</td>
+<td>Steps to reproduce the issue</td>
 <td>—</td>
+<td>Incident notes</td>
 </tr>
 <tr>
 <td>Impact — how many users / deployments affected</td>
 <td>—</td>
+<td>Incident notes</td>
+</tr>
+<tr>
+<td>Timeline: last known good state → first failure</td>
+<td>—</td>
+<td>Incident notes</td>
+</tr>
+<tr>
+<td>Any actions taken so far (pod restarts, config changes)</td>
+<td>—</td>
+<td>Incident notes</td>
+</tr>
+<tr>
+<td>Screenshot or copy of error messages</td>
+<td>UI or API response</td>
+<td>Screenshot / text</td>
 </tr>
 </tbody>
 </table>
@@ -854,40 +961,129 @@
 <tr>
 <th>Priority</th>
 <th>Definition</th>
-<th>Initial Response</th>
+<th>Initial Response SLA</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>P1 — Critical</strong></td>
-<td>Production system down, no workaround</td>
-<td>30 minutes</td>
+<td>Production environment down; no workaround; all provisioning blocked</td>
+<td>30 minutes (24x7)</td>
 </tr>
 <tr>
 <td><strong>P2 — Major</strong></td>
-<td>Significant functionality impacted, workaround available</td>
-<td>2 business hours</td>
+<td>Significant functionality impacted; partial workaround available</td>
+<td>2 business hours (24x7)</td>
 </tr>
 <tr>
 <td><strong>P3 — Minor</strong></td>
-<td>Limited impact, workaround available</td>
+<td>Limited impact; workaround available; non-urgent</td>
 <td>Next business day</td>
 </tr>
 <tr>
 <td><strong>P4 — General</strong></td>
-<td>How-to questions, enhancement requests</td>
+<td>How-to questions, enhancement requests, documentation queries</td>
 <td>2 business days</td>
 </tr>
 </tbody>
 </table>
+<p>For P1 cases:
+1. Open the case via the portal immediately
+2. Call the Broadcom 24x7 support line and reference the case number — do not wait for an email response
+3. Request <strong>duty manager escalation</strong> if no engineer response within the SLA</p>
+<hr />
+<h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Open the SR via <a href="https://support.broadcom.com">https://support.broadcom.com</a> with all information listed above</li>
+<li>Set the correct priority — do not understate impact (P3 for a full production outage will receive next-business-day response)</li>
+<li>If no response within the SLA: use the portal <strong>Escalate</strong> button or call the support line with your case number</li>
+<li>For P1: escalate to duty manager immediately after the SLA window passes</li>
+<li>Engage your internal Broadcom TAM (Technical Account Manager) if available — TAMs can expedite case routing</li>
+</ol>
+<hr />
+<h2 id="pre-sr-diagnostic-checklist">Pre-SR Diagnostic Checklist<a class="headerlink" href="#pre-sr-diagnostic-checklist" title="Permanent link">&para;</a></h2>
+<p>Collect this before opening the SR — support will ask for all of it in the first response if it is not provided upfront:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@vra-prod-01.corp.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># System information</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vracli<span class="w"> </span>version
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vracli<span class="w"> </span>status
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Disk space</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>df<span class="w"> </span>-h<span class="w"> </span>/
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Pod status summary</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 {print $4}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Failing pods</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Recent Kubernetes events (last 50)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.metadata.creationTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># VIDM connectivity (authentication dependency)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.corp.local/SAAS/API/1.0/REST/system/health
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;UP&quot;}</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Cloud account reachability (vCenter)</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter-prod.corp.local/rest/com/vmware/cis/session
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Expected: 401 (reachable — authentication challenge)</span>
+</code></pre></div>
 <hr />
 <h2 id="useful-links">Useful Links<a class="headerlink" href="#useful-links" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Broadcom Support Portal</td>
+<td><a href="https://support.broadcom.com">https://support.broadcom.com</a></td>
+</tr>
+<tr>
+<td>Aria Automation Documentation</td>
+<td><a href="https://docs.vmware.com/en/VMware-Aria-Automation/">https://docs.vmware.com/en/VMware-Aria-Automation/</a></td>
+</tr>
+<tr>
+<td>VMware Product Lifecycle Matrix</td>
+<td><a href="https://lifecycle.vmware.com">https://lifecycle.vmware.com</a></td>
+</tr>
+<tr>
+<td>VMware Interoperability Matrix</td>
+<td><a href="https://interopmatrix.vmware.com">https://interopmatrix.vmware.com</a></td>
+</tr>
+<tr>
+<td>Broadcom Security Advisories</td>
+<td><a href="https://support.broadcom.com/security-advisory">https://support.broadcom.com/security-advisory</a></td>
+</tr>
+<tr>
+<td>VMware Knowledge Base</td>
+<td><a href="https://kb.vmware.com">https://kb.vmware.com</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Useful KB search patterns for Aria Automation:</strong>
+- Deployment failures: <code>site:kb.vmware.com "vRealize Automation" "CREATE_FAILED"</code>
+- Pod CrashLoopBackOff: <code>site:kb.vmware.com "vRealize Automation" CrashLoopBackOff</code>
+- VIDM authentication: <code>site:kb.vmware.com "vRealize Automation" "identity manager"</code>
+- Upgrade failures: <code>site:kb.vmware.com "vRealize Automation" upgrade failed</code>
+- Cloud account errors: <code>site:kb.vmware.com "vRealize Automation" "cloud account" error</code></p>
+<hr />
+<h2 id="sr-handoff-checklist">SR Handoff Checklist<a class="headerlink" href="#sr-handoff-checklist" title="Permanent link">&para;</a></h2>
+<p>Before handing an SR to the next shift or to a specialist:</p>
 <ul>
-<li>Broadcom Support Portal: https://support.broadcom.com</li>
-<li>Aria Automation Documentation: https://docs.vmware.com/en/VMware-Aria-Automation/</li>
-<li>VMware Product Lifecycle Matrix: https://lifecycle.vmware.com</li>
-<li>VMware Interoperability Matrix: https://interopmatrix.vmware.com</li>
-<li>Broadcom Security Advisories: https://support.broadcom.com/security-advisory</li>
+<li>[ ] SR number documented in the incident ticket</li>
+<li>[ ] Support bundle uploaded to the SR (confirm upload completed in the portal)</li>
+<li>[ ] Exact Aria Automation version noted: <code>vracli version</code></li>
+<li>[ ] Number of affected users / deployments documented</li>
+<li>[ ] Timeline: last known good state → first failure → all actions taken, with timestamps</li>
+<li>[ ] Any commands run on the appliance documented (with outputs if relevant)</li>
+<li>[ ] Current state of all VM snapshots: present or absent, age</li>
+<li>[ ] Broadcom support engineer name and direct contact method noted</li>
+<li>[ ] Next expected contact time agreed with support engineer</li>
 </ul>
 
 

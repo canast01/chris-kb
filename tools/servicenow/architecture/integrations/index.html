@@ -21,7 +21,7 @@
     
     
       
-        <title>ServiceNow — Integrations - Chris KB</title>
+        <title>ServiceNow — Integration Patterns - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ServiceNow — Integrations · Chris KB">
+  <meta property="og:title" content="ServiceNow — Integration Patterns · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ServiceNow — Integrations · Chris KB">
+  <meta name="twitter:title" content="ServiceNow — Integration Patterns · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#servicenow-integrations" class="md-skip">
+        <a href="#servicenow-integration-patterns" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ServiceNow — Integrations
+              ServiceNow — Integration Patterns
             
           </span>
         </div>
@@ -699,6 +699,247 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integration-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="REST API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inbound-rest-calls-to-servicenow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inbound REST (calls to ServiceNow)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outbound-rest-servicenow-calls-external" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outbound REST (ServiceNow calls external)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#soap-web-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SOAP Web Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mid-server-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MID Server Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MID Server Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mid-server-communication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MID Server Communication Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecc-queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ECC Queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mid-server-sizing-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MID Server Sizing Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mid-server-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MID Server High Availability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-active-directory-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP / Active Directory Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LDAP / Active Directory Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ldap-import-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Import Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ldap-troubleshooting-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Troubleshooting Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-tool-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Tool Integrations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring Tool Integrations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dynatrace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynatrace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splunk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splunk
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pagerduty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PagerDuty
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -717,8 +958,243 @@
 
 
 
-<h1 id="servicenow-integrations">ServiceNow — Integrations<a class="headerlink" href="#servicenow-integrations" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h1 id="servicenow-integration-patterns">ServiceNow — Integration Patterns<a class="headerlink" href="#servicenow-integration-patterns" title="Permanent link">&para;</a></h1>
+<p>ServiceNow is designed as an integration hub as much as an ITSM platform. Integration patterns range from simple REST API calls to complex bidirectional event streams via MID Servers. This page covers the primary patterns in use.</p>
+<hr />
+<h2 id="integration-architecture-overview">Integration Architecture Overview<a class="headerlink" href="#integration-architecture-overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    subgraph ServiceNow Cloud
+        SNOW["ServiceNow Instance"]
+        REST["REST Message\n/ Scripted REST API"]
+        SOAP["SOAP Web Service"]
+        IMPORT["Import Set API"]
+    end
+
+    subgraph On-Premises Network
+        MID["MID Server\n(Java agent)"]
+        LDAP["Active Directory\n/ LDAP"]
+        DB["On-Prem DB"]
+        MON["Monitoring Tools\n(Dynatrace, Splunk)"]
+    end
+
+    subgraph External SaaS
+        PD["PagerDuty"]
+        DT["Dynatrace"]
+        SPL["Splunk"]
+    end
+
+    SNOW &lt;--&gt;|"HTTPS outbound\n(443)"| MID
+    MID --&gt; LDAP
+    MID --&gt; DB
+    MID --&gt; MON
+
+    SNOW &lt;--&gt;|"REST / Webhook"| PD
+    SNOW &lt;--&gt;|"REST / Webhook"| DT
+    SNOW &lt;--&gt;|"REST / Webhook"| SPL</code></pre>
+<p>All MID Server communication originates <strong>outbound from the MID Server</strong> — no inbound firewall rules are required on the corporate network perimeter.</p>
+<hr />
+<h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
+<p>ServiceNow exposes a comprehensive REST API surface. The primary endpoints are documented in <a href="../../operations/cli-reference/">CLI Reference</a>.</p>
+<h3 id="inbound-rest-calls-to-servicenow">Inbound REST (calls to ServiceNow)<a class="headerlink" href="#inbound-rest-calls-to-servicenow" title="Permanent link">&para;</a></h3>
+<p>External systems push data to ServiceNow via the Table API, Import Set API, or custom Scripted REST APIs.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>POST https://&lt;instance&gt;.service-now.com/api/now/table/incident
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Authorization: Basic &lt;base64&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Content-Type: application/json
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>{
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  &quot;short_description&quot;: &quot;Database unreachable&quot;,
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  &quot;impact&quot;: &quot;1&quot;,
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  &quot;urgency&quot;: &quot;1&quot;,
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  &quot;assignment_group&quot;: &quot;Database Operations&quot;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>}
+</code></pre></div>
+<h3 id="outbound-rest-servicenow-calls-external">Outbound REST (ServiceNow calls external)<a class="headerlink" href="#outbound-rest-servicenow-calls-external" title="Permanent link">&para;</a></h3>
+<p>Configured via <strong>System Web Services &gt; Outbound &gt; REST Message</strong>. Each REST Message defines:
+- Base URL and authentication (Basic, OAuth 2.0, API Key header)
+- HTTP methods (GET / POST / PUT / PATCH / DELETE)
+- Variable substitution in URL and body
+- MID Server routing (for on-prem targets)</p>
+<p>Business Rules, Flow Designer steps, or Script Includes invoke the message:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Server-side script</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">sn_ws</span><span class="p">.</span><span class="nx">RESTMessageV2</span><span class="p">(</span><span class="s1">&#39;PagerDuty_Create_Incident&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;post&#39;</span><span class="p">);</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nx">rm</span><span class="p">.</span><span class="nx">setStringParameterNoEscape</span><span class="p">(</span><span class="s1">&#39;routing_key&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getProperty</span><span class="p">(</span><span class="s1">&#39;pd.routing.key&#39;</span><span class="p">));</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nx">rm</span><span class="p">.</span><span class="nx">setStringParameterNoEscape</span><span class="p">(</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">pdPayload</span><span class="p">));</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kd">var</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">rm</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;PD response: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">getStatusCode</span><span class="p">());</span>
+</code></pre></div>
+<hr />
+<h2 id="soap-web-services">SOAP Web Services<a class="headerlink" href="#soap-web-services" title="Permanent link">&para;</a></h2>
+<p>Legacy integrations often use SOAP. ServiceNow auto-generates WSDL for every table:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>https://&lt;instance&gt;.service-now.com/&lt;table_name&gt;.do?WSDL
+</code></pre></div>
+<p>Inbound SOAP is consumed via <strong>Web Service Import Sets</strong> or direct table SOAP endpoints. Outbound SOAP is configured under <strong>System Web Services &gt; Outbound &gt; SOAP Message</strong>.</p>
+<p>SOAP is considered legacy — prefer REST for new integrations.</p>
+<hr />
+<h2 id="mid-server-architecture">MID Server Architecture<a class="headerlink" href="#mid-server-architecture" title="Permanent link">&para;</a></h2>
+<p>The Management, Instrumentation, and Discovery (MID) Server is a Java application running on a customer-managed host. It bridges the ServiceNow cloud and on-premises resources.</p>
+<h3 id="mid-server-communication-flow">MID Server Communication Flow<a class="headerlink" href="#mid-server-communication-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant SNOW as ServiceNow Cloud
+    participant MID as MID Server (on-prem)
+    participant TGT as Target System
+
+    SNOW-&gt;&gt;MID: ECC Queue record (outbound probe)
+    Note right of MID: MID polls ECC Queue\nover HTTPS every 40ms
+    MID-&gt;&gt;TGT: SSH / WMI / SNMP / HTTP
+    TGT--&gt;&gt;MID: Response payload
+    MID-&gt;&gt;SNOW: ECC Queue record (inbound payload)
+    SNOW-&gt;&gt;SNOW: Process payload / update CMDB</code></pre>
+<h3 id="ecc-queue">ECC Queue<a class="headerlink" href="#ecc-queue" title="Permanent link">&para;</a></h3>
+<p>The External Communication Channel (ECC) Queue is the asynchronous message bus between the instance and MID Servers. MID Servers long-poll the queue rather than listening on an open port.</p>
+<table>
+<thead>
+<tr>
+<th>Queue Direction</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Output</td>
+<td>Instance → MID (commands, probes)</td>
+</tr>
+<tr>
+<td>Input</td>
+<td>MID → Instance (results, payloads)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ECC Queue monitoring:</strong> Navigate to <strong>MID Server &gt; ECC Queue</strong> and filter by <code>state = error</code> to surface failed communication records.</p>
+<h3 id="mid-server-sizing-guidelines">MID Server Sizing Guidelines<a class="headerlink" href="#mid-server-sizing-guidelines" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Workload</th>
+<th>Min RAM</th>
+<th>Min CPU</th>
+<th>Max concurrent probes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Light (Discovery only, &lt;500 CIs)</td>
+<td>4 GB</td>
+<td>2 vCPU</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Medium (&lt;5,000 CIs + Orchestration)</td>
+<td>8 GB</td>
+<td>4 vCPU</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Heavy (&gt;5,000 CIs + Orchestration + JDBC)</td>
+<td>16 GB</td>
+<td>8 vCPU</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mid-server-high-availability">MID Server High Availability<a class="headerlink" href="#mid-server-high-availability" title="Permanent link">&para;</a></h3>
+<p>Deploy a minimum of two MID Servers per on-premises zone. ServiceNow load-balances probes across validated MID Servers in the same cluster. If one MID Server fails, the instance automatically routes work to the remaining healthy MID Servers.</p>
+<p>Configure MID Server clusters under <strong>MID Server &gt; Clusters</strong>.</p>
+<hr />
+<h2 id="ldap-active-directory-integration">LDAP / Active Directory Integration<a class="headerlink" href="#ldap-active-directory-integration" title="Permanent link">&para;</a></h2>
+<p>ServiceNow uses LDAP to import and authenticate users from AD.</p>
+<h3 id="configuration-path">Configuration Path<a class="headerlink" href="#configuration-path" title="Permanent link">&para;</a></h3>
+<p><strong>System LDAP &gt; LDAP Server</strong></p>
+<p>Key fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Example Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server URL</td>
+<td><code>ldaps://dc01.corp.example.com:636</code></td>
+</tr>
+<tr>
+<td>User</td>
+<td><code>CN=svc-snow,OU=Service Accounts,DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Base DN</td>
+<td><code>DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>SSL/TLS (recommended)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ldap-import-schedule">LDAP Import Schedule<a class="headerlink" href="#ldap-import-schedule" title="Permanent link">&para;</a></h3>
+<p>LDAP imports run via a scheduled job. The default interval is once per day; increase frequency if near-real-time user provisioning is required. The import maps LDAP attributes to <code>sys_user</code> table fields via <strong>LDAP OU Definition</strong> field map.</p>
+<h3 id="ldap-troubleshooting-quick-reference">LDAP Troubleshooting Quick Reference<a class="headerlink" href="#ldap-troubleshooting-quick-reference" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Import job errors</td>
+<td><strong>LDAP &gt; LDAP Listener Log</strong></td>
+</tr>
+<tr>
+<td>Users not syncing</td>
+<td>Verify Base DN and filter query</td>
+</tr>
+<tr>
+<td>SSL handshake failures</td>
+<td>Check certificate chain on LDAP server; import CA cert to ServiceNow keystore</td>
+</tr>
+<tr>
+<td>Duplicate users</td>
+<td>IRE deduplication rules on <code>sys_user</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="email-integration">Email Integration<a class="headerlink" href="#email-integration" title="Permanent link">&para;</a></h2>
+<p>ServiceNow sends and receives email natively.</p>
+<p><strong>Inbound:</strong> ServiceNow polls a configured mailbox (IMAP/POP3) and creates or updates records based on email rules. Configure under <strong>System Mailboxes &gt; Incoming</strong>.</p>
+<p><strong>Outbound:</strong> SMTP relay configuration under <strong>System Mailboxes &gt; Outgoing</strong>. For cloud instances, ServiceNow's shared SMTP infrastructure is used by default; a customer SMTP relay can be specified.</p>
+<p><strong>Email Notification Rules</strong> trigger on record insert/update and are filtered by condition, recipients, and email template.</p>
+<hr />
+<h2 id="monitoring-tool-integrations">Monitoring Tool Integrations<a class="headerlink" href="#monitoring-tool-integrations" title="Permanent link">&para;</a></h2>
+<h3 id="dynatrace">Dynatrace<a class="headerlink" href="#dynatrace" title="Permanent link">&para;</a></h3>
+<p>ServiceNow provides a certified Dynatrace integration that pushes Dynatrace problem events as ServiceNow incidents via REST.</p>
+<ul>
+<li>Integration package: <strong>ServiceNow Integration</strong> in Dynatrace Hub</li>
+<li>Creates incidents on problem open; resolves on problem close</li>
+<li>Populates <code>cmdb_ci</code> lookup for affected entities</li>
+<li>Configuration on Dynatrace side: webhook URL = <code>https://&lt;instance&gt;.service-now.com/api/now/table/incident</code></li>
+</ul>
+<h3 id="splunk">Splunk<a class="headerlink" href="#splunk" title="Permanent link">&para;</a></h3>
+<p>Two patterns are common:</p>
+<ol>
+<li><strong>Splunk Phantom / SOAR → ServiceNow:</strong> Create incidents/changes from Splunk playbooks via Table API</li>
+<li><strong>ServiceNow → Splunk:</strong> Outbound REST message sends alert or audit data to Splunk HEC</li>
+</ol>
+<p>Splunk App for ServiceNow (available on Splunkbase) provides pre-built dashboards that query the ServiceNow Table API for incident, change, and CMDB data.</p>
+<h3 id="pagerduty">PagerDuty<a class="headerlink" href="#pagerduty" title="Permanent link">&para;</a></h3>
+<p>Bidirectional integration:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant SNOW as ServiceNow
+    participant PD as PagerDuty
+
+    SNOW-&gt;&gt;PD: Create Incident (via Events API v2)\nOn P1 incident creation
+    PD-&gt;&gt;SNOW: Webhook: acknowledge / resolve
+    SNOW-&gt;&gt;SNOW: Update incident state\nbased on PD webhook payload</code></pre>
+<p>Configure via <strong>PagerDuty</strong> spoke in Flow Designer (ServiceNow Integration Hub) or manually via REST Messages. Required fields:
+- <code>routing_key</code> (PagerDuty Integration Key)
+- <code>dedup_key</code> (ServiceNow <code>sys_id</code> — prevents duplicate PD incidents)</p>
 
 
 

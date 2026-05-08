@@ -699,6 +699,158 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#backup-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-job-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Job Execution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Job Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#via-commcell-console-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Via CommCell Console (GUI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#via-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Via REST API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Restore Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-vm-restore-vmware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full VM Restore (VMware)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-level-recovery-guest-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File-Level Recovery (Guest Files)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-place-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Place Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#out-of-place-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out-of-Place Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dr-copy-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Copy Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-decision-flowchart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Decision Flowchart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-restore-validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Restore Validation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +870,242 @@
 
 
 <h1 id="commvault-backup-restore">Commvault — Backup &amp; Restore<a class="headerlink" href="#commvault-backup-restore" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="backup-types">Backup Types<a class="headerlink" href="#backup-types" title="Permanent link">&para;</a></h2>
+<p>Commvault supports a tiered backup schedule model. Understanding backup types is essential for designing RPO-aligned protection policies.</p>
+<table>
+<thead>
+<tr>
+<th>Backup Type</th>
+<th>Data Written</th>
+<th>Basis</th>
+<th>Typical Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Full</strong></td>
+<td>All data in the subclient</td>
+<td>Independent</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td><strong>Incremental</strong></td>
+<td>Changed since last backup (any type)</td>
+<td>Previous backup</td>
+<td>Daily</td>
+</tr>
+<tr>
+<td><strong>Differential</strong></td>
+<td>Changed since last full</td>
+<td>Last full</td>
+<td>Optional mid-week</td>
+</tr>
+<tr>
+<td><strong>Synthetic Full</strong></td>
+<td>Merged virtual full from existing media</td>
+<td>Previous full + incrementals</td>
+<td>Weekly (replaces full)</td>
+</tr>
+<tr>
+<td><strong>Transaction Log</strong></td>
+<td>DB transaction logs only</td>
+<td>Last log backup</td>
+<td>Every 15–60 min</td>
+</tr>
+</tbody>
+</table>
+<p>Synthetic Full backups avoid reading from the production source — the CommServe reconstructs the full from existing backup streams. Use these to reduce backup window impact.</p>
+<hr />
+<h2 id="backup-job-execution">Backup Job Execution<a class="headerlink" href="#backup-job-execution" title="Permanent link">&para;</a></h2>
+<h3 id="via-commcell-console-gui">Via CommCell Console (GUI)<a class="headerlink" href="#via-commcell-console-gui" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open <strong>CommCell Console</strong> → expand the client tree.</li>
+<li>Navigate to <strong>Client &gt; Agent &gt; Backup Set &gt; Subclient</strong>.</li>
+<li>Right-click the subclient → <strong>Backup</strong>.</li>
+<li>Select backup type and confirm.</li>
+<li>Monitor the job in <strong>Job Controller</strong> (Ctrl+J).</li>
+</ol>
+<p>For a scheduled policy:</p>
+<ol>
+<li>Right-click the subclient → <strong>Properties</strong> → <strong>Schedules</strong> tab.</li>
+<li>Add or modify a schedule → assign backup type, frequency, and storage policy.</li>
+</ol>
+<h3 id="via-rest-api">Via REST API<a class="headerlink" href="#via-rest-api" title="Permanent link">&para;</a></h3>
+<p>Commvault exposes a full REST API (v4 preferred for CV 2024+).</p>
+<p><strong>Authenticate:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://commserve.example.com/webconsole/api/Login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.token&#39;</span>
+</code></pre></div>
+<p><strong>Trigger an immediate backup:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://commserve.example.com/webconsole/api/Subclient/&lt;subclientId&gt;/action/backup&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authtoken: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;backupLevel&quot;:&quot;Incremental&quot;}&#39;</span>
+</code></pre></div>
+<p><strong>Check job status:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://commserve.example.com/webconsole/api/Job/&lt;jobId&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authtoken: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.jobDetail.statusDescription&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="restore-types">Restore Types<a class="headerlink" href="#restore-types" title="Permanent link">&para;</a></h2>
+<h3 id="full-vm-restore-vmware">Full VM Restore (VMware)<a class="headerlink" href="#full-vm-restore-vmware" title="Permanent link">&para;</a></h3>
+<p>Restores the entire VM to a hypervisor — either in-place or to an alternate location.</p>
+<p><strong>Steps (CommCell Console):</strong></p>
+<ol>
+<li><strong>Protected VMs</strong> → right-click VM → <strong>Browse and Restore</strong>.</li>
+<li>Select recovery point (date/time or specific job).</li>
+<li>Choose <strong>Virtual Machine</strong> → <strong>Restore as VM</strong>.</li>
+<li>Select destination host, datastore, and network.</li>
+<li>Optionally power on after restore.</li>
+</ol>
+<p><strong>Via REST API:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://commserve.example.com/webconsole/api/v4/VM/Recover&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authtoken: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    &quot;taskInfo&quot;: {</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">      &quot;task&quot;: {&quot;taskType&quot;: 1},</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      &quot;subTasks&quot;: [{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">        &quot;subTask&quot;: {&quot;subTaskType&quot;: 3, &quot;operationType&quot;: 1001},</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">        &quot;options&quot;: {</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">          &quot;restoreOptions&quot;: {</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">            &quot;virtualServerRestoreOptions&quot;: {</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">              &quot;diskLevelVMRestoreOption&quot;: {</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">                &quot;restoreToDefaultHost&quot;: false,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">                &quot;esxHost&quot;: &quot;esx01.example.com&quot;,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s1">                &quot;dataStore&quot;: &quot;DS_Production&quot;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s1">              }</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s1">            }</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s1">          }</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s1">        }</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s1">      }]</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s1">    }</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="file-level-recovery-guest-files">File-Level Recovery (Guest Files)<a class="headerlink" href="#file-level-recovery-guest-files" title="Permanent link">&para;</a></h3>
+<p>Mounts the backup as a virtual volume and presents individual files.</p>
+<ol>
+<li>Right-click the VM → <strong>Browse and Restore</strong> → <strong>Guest Files and Folders</strong>.</li>
+<li>Browse to the path, select files → <strong>Restore</strong>.</li>
+<li>Choose destination: original location or alternate path/client.</li>
+</ol>
+<h3 id="in-place-restore">In-Place Restore<a class="headerlink" href="#in-place-restore" title="Permanent link">&para;</a></h3>
+<p>Overwrites the existing data at the original location. Requires the production VM/volume to be offline or protected by an exclusion list.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Subclient → Restore → In-Place → Overwrite existing data: Yes
+</code></pre></div>
+<h3 id="out-of-place-restore">Out-of-Place Restore<a class="headerlink" href="#out-of-place-restore" title="Permanent link">&para;</a></h3>
+<p>Restores to an alternate destination — different VM, datastore, or file path.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Subclient → Restore → Out-of-Place → Specify destination client and path
+</code></pre></div>
+<hr />
+<h2 id="dr-copy-verification">DR Copy Verification<a class="headerlink" href="#dr-copy-verification" title="Permanent link">&para;</a></h2>
+<p>Commvault DR copies (secondary/tertiary storage) should be validated regularly.</p>
+<p><strong>Verify a DR copy:</strong></p>
+<ol>
+<li><strong>Storage</strong> → <strong>Storage Policies</strong> → select the policy.</li>
+<li><strong>Copies</strong> tab → right-click the DR copy → <strong>Validate Copy</strong>.</li>
+<li>Select the backup jobs or date range to validate.</li>
+<li>Review the validation report for missing, corrupt, or aged jobs.</li>
+</ol>
+<p><strong>Command line (via <code>qoperation</code>):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_ValidateCopy<span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;StoragePolicyName&quot;</span><span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;CopyName&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="restore-decision-flowchart">Restore Decision Flowchart<a class="headerlink" href="#restore-decision-flowchart" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Recovery Request]) --&gt; B{What needs recovery?}
+    B --&gt; C[Entire VM]
+    B --&gt; D[Specific files/folders]
+    B --&gt; E[Application data\nExchange / SQL / AD]
+
+    C --&gt; F{Target location?}
+    F --&gt; G[Original location\nIn-Place Restore]
+    F --&gt; H[Alternate host/DS\nOut-of-Place Restore]
+
+    D --&gt; I{Source accessible?}
+    I --&gt; |Yes - live agent| J[File-Level Recovery\nvia live browse]
+    I --&gt; |No - offline VM| K[Mount backup as\nvirtual volume\nthen browse]
+
+    E --&gt; L{Application type?}
+    L --&gt; M[Exchange → Mailbox\nor Item Restore]
+    L --&gt; N[SQL → DB Restore\nor Table-level]
+    L --&gt; O[AD → Authoritative\nor Non-authoritative]
+
+    G --&gt; P[Validate services post-restore]
+    H --&gt; P
+    J --&gt; P
+    K --&gt; P
+    M --&gt; P
+    N --&gt; P
+    O --&gt; P
+
+    P --&gt; Q{Validation passed?}
+    Q --&gt; |Yes| R([Recovery Complete])
+    Q --&gt; |No| S[Escalate /\nRestore alternate point]</code></pre>
+<hr />
+<h2 id="post-restore-validation-checklist">Post-Restore Validation Checklist<a class="headerlink" href="#post-restore-validation-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>VM/server powered on and reachable</td>
+<td><code>ping</code> / vCenter console</td>
+</tr>
+<tr>
+<td>2</td>
+<td>OS boots without errors</td>
+<td>Console screenshot</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Services started (application, DB)</td>
+<td><code>Get-Service</code> / <code>systemctl status</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Data integrity verified</td>
+<td>Application-level query / checksums</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Backup agent communicating</td>
+<td>CommCell Console → client status</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Network IP / DNS correct</td>
+<td><code>ipconfig /all</code> / <code>nslookup</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Antivirus / EDR re-enrolled</td>
+<td>AV console check</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Backup job resumed on schedule</td>
+<td>CommCell → Job History next day</td>
+</tr>
+<tr>
+<td>9</td>
+<td>DR copy validated post-restore</td>
+<td>Storage Policy → Validate Copy</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Recovery documented in ITSM</td>
+<td>Incident/change ticket updated</td>
+</tr>
+</tbody>
+</table>
 
 
 
