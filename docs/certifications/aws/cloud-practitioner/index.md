@@ -131,12 +131,15 @@ AWS Outposts:
 > NEW ACRONYM: IT = Information Technology
 > Everything digital: servers, storage, networking, databases.
 > TRADITIONAL IT                    CLOUD (AWS)
-> ┌─────────────────┐               ┌─────────────────┐
-> │  Buy servers     │               │  Request online  │
-> │  Wait weeks      │     vs        │  Ready in mins   │
-> │  Pay upfront     │               │  Pay per use     │
-> │  Guess capacity  │               │  Scale anytime   │
-> └─────────────────┘               └─────────────────┘
+```
+┌─────────────────┐               ┌─────────────────┐
+│  Buy servers     │               │  Request online  │
+│  Wait weeks      │     vs        │  Ready in mins   │
+│  Pay upfront     │               │  Pay per use     │
+│  Guess capacity  │               │  Scale anytime   │
+└─────────────────┘               └─────────────────┘
+```
+
 
 **Q2.** Which cloud advantage eliminates the need to guess how much infrastructure capacity you need?
 
@@ -145,12 +148,15 @@ AWS Outposts:
 > NEW ACRONYM: Auto Scaling = AWS service that automatically
 > adds or removes servers based on real-time demand.
 > TRADITIONAL (guessing)            CLOUD (auto-match)
-> ┌──────────────────┐              ┌──────────────────┐
-> │ Buy too much?    │              │  Auto Scaling    │
-> │  wasted capacity │   vs         │  scales UP/DOWN  │
-> │ Buy too little?  │              │  Always matches  │
-> │  crashes!        │              │  actual demand   │
-> └──────────────────┘              └──────────────────┘
+```
+┌──────────────────┐              ┌──────────────────┐
+│ Buy too much?    │              │  Auto Scaling    │
+│  wasted capacity │   vs         │  scales UP/DOWN  │
+│ Buy too little?  │              │  Always matches  │
+│  crashes!        │              │  actual demand   │
+└──────────────────┘              └──────────────────┘
+```
+
 
 **Q3.** What does "trade fixed expense for variable expense" mean?
 
@@ -161,27 +167,33 @@ AWS Outposts:
 > OpEx  = Operational Expenditure: Ongoing costs
 > Example: paying $50K/month AWS bill
 > CAPEX (Traditional)               OPEX (Cloud)
-> ┌───────────────────┐             ┌───────────────────┐
-> │ Jan: $2,000,000    │             │ Jan:  $45,000      │
-> │ (buy servers)      │    vs       │ Feb:  $48,000      │
-> │ Feb-Dec: maintain  │             │ (matches usage)    │
-> └───────────────────┘             └───────────────────┘
+```
+┌───────────────────┐             ┌───────────────────┐
+│ Jan: $2,000,000    │             │ Jan:  $45,000      │
+│ (buy servers)      │    vs       │ Feb:  $48,000      │
+│ Feb-Dec: maintain  │             │ (matches usage)    │
+└───────────────────┘             └───────────────────┘
+```
+
 
 **Q4.** Which cloud model gives the most control over infrastructure?
 
 > IaaS (Infrastructure as a Service) — you manage OS and above.
 > RESPONSIBILITY STACK
-> ┌──────────────────────────────────────────────┐
-> │           IaaS        PaaS        SaaS       │
-> │        ┌────────┐  ┌────────┐  ┌────────┐   │
-> │  YOU → │  App   │  │  App   │  │        │   │
-> │  YOU → │  Data  │  │  Data  │  │  AWS   │   │
-> │  YOU → │  OS    │  │        │  │manages │   │
-> │  AWS → │  Virt  │  │  AWS   │  │  ALL   │   │
-> │  AWS → │  HW/DC │  │manages │  │        │   │
-> │        └────────┘  └────────┘  └────────┘   │
-> │  Control: HIGH         MID          LOW      │
-> └──────────────────────────────────────────────┘
+```
+┌──────────────────────────────────────────────┐
+│           IaaS        PaaS        SaaS       │
+│        ┌────────┐  ┌────────┐  ┌────────┐   │
+│  YOU → │  App   │  │  App   │  │        │   │
+│  YOU → │  Data  │  │  Data  │  │  AWS   │   │
+│  YOU → │  OS    │  │        │  │manages │   │
+│  AWS → │  Virt  │  │  AWS   │  │  ALL   │   │
+│  AWS → │  HW/DC │  │manages │  │        │   │
+│        └────────┘  └────────┘  └────────┘   │
+│  Control: HIGH         MID          LOW      │
+└──────────────────────────────────────────────┘
+```
+
 
 **Q5.** EC2 is an example of which cloud model?
 
@@ -190,23 +202,29 @@ AWS Outposts:
 > Elastic = can grow/shrink. Compute = CPU+RAM. Cloud = hosted on AWS.
 > = Virtual servers you rent on AWS. Like a VM on your VMware cluster
 > except AWS owns the physical hardware.
-> ┌──────────────────────────────────┐
-> │  EC2 (Elastic Compute Cloud)     │
-> │  YOU manage: OS, apps, data, SGs │
-> │  AWS manages: hardware, hypervisor│
-> └──────────────────────────────────┘
+```
+┌──────────────────────────────────┐
+│  EC2 (Elastic Compute Cloud)     │
+│  YOU manage: OS, apps, data, SGs │
+│  AWS manages: hardware, hypervisor│
+└──────────────────────────────────┘
+```
+
 
 **Q6.** Elastic Beanstalk is an example of which model?
 
 > PaaS — you deploy code, AWS manages everything else.
 > NEW ACRONYM: PaaS = Platform as a Service
 > AWS provides complete platform. You bring the code.
-> ┌──────────────────────────────────────┐
-> │  Elastic Beanstalk (PaaS)            │
-> │  YOU → Upload your code              │
-> │  AWS → Provisions EC2, OS, LB, ASG   │
-> │  App is running! (you did nothing)   │
-> └──────────────────────────────────────┘
+```
+┌──────────────────────────────────────┐
+│  Elastic Beanstalk (PaaS)            │
+│  YOU → Upload your code              │
+│  AWS → Provisions EC2, OS, LB, ASG   │
+│  App is running! (you did nothing)   │
+└──────────────────────────────────────┘
+```
+
 
 **Q7.** Which cloud model requires managing the least infrastructure?
 
@@ -214,32 +232,41 @@ AWS Outposts:
 > NEW ACRONYM: SaaS = Software as a Service
 > Like a streaming service for software. Just log in and use it.
 > Examples: Gmail, Salesforce, ServiceNow (T. Rowe uses this!), Jira
-> ┌──────────────────────────────────────┐
-> │  SaaS: Open browser → Log in → Use  │
-> │  Provider manages: code, DB, servers │
-> │  You manage: NOTHING                 │
-> └──────────────────────────────────────┘
+```
+┌──────────────────────────────────────┐
+│  SaaS: Open browser → Log in → Use  │
+│  Provider manages: code, DB, servers │
+│  You manage: NOTHING                 │
+└──────────────────────────────────────┘
+```
+
 
 **Q8.** A company wants to keep sensitive data on-premises while using AWS for other workloads. Which deployment model?
 
 > Hybrid cloud — mix of on-premises and cloud.
 > YOUR DATA CENTER          AWS CLOUD
-> ┌──────────────┐          ┌──────────────┐
-> │  Sensitive   │◄────────►│  Web servers │
-> │  financial   │  VPN /   │  Dev/test    │
-> │  records     │  Direct  │  Analytics   │
-> │  (on-prem)   │  Connect │  Backups     │
-> └──────────────┘          └──────────────┘
-> THIS IS EXACTLY T. Rowe Price today.
+```
+┌──────────────┐          ┌──────────────┐
+│  Sensitive   │◄────────►│  Web servers │
+│  financial   │  VPN /   │  Dev/test    │
+│  records     │  Direct  │  Analytics   │
+│  (on-prem)   │  Connect │  Backups     │
+└──────────────┘          └──────────────┘
+THIS IS EXACTLY T. Rowe Price today.
+```
+
 
 **Q9.** Which deployment model uses only AWS with no on-premises?
 
 > Public cloud (all-in cloud).
-> ┌────────────────────────────────────┐
-> │  INTERNET → AWS Region             │
-> │  EC2, S3, RDS, Lambda — 100% cloud │
-> │  No servers you own anywhere       │
-> └────────────────────────────────────┘
+```
+┌────────────────────────────────────┐
+│  INTERNET → AWS Region             │
+│  EC2, S3, RDS, Lambda — 100% cloud │
+│  No servers you own anywhere       │
+└────────────────────────────────────┘
+```
+
 
 **Q10.** What is an AWS Region?
 
@@ -247,43 +274,52 @@ AWS Outposts:
 > NEW ACRONYM: AZ = Availability Zone
 > Physically separate data center(s) within a Region with
 > independent power, cooling, and networking.
-> ┌──────────────────────────────────────┐
-> │  30+ Regions worldwide               │
-> │  Examples: us-east-1 (N. Virginia)   │
-> │            eu-west-1 (Ireland)       │
-> │  Data stays IN region unless you     │
-> │  explicitly move it                  │
-> └──────────────────────────────────────┘
+```
+┌──────────────────────────────────────┐
+│  30+ Regions worldwide               │
+│  Examples: us-east-1 (N. Virginia)   │
+│            eu-west-1 (Ireland)       │
+│  Data stays IN region unless you     │
+│  explicitly move it                  │
+└──────────────────────────────────────┘
+```
+
 
 **Q11.** How many AZs does each AWS Region have at minimum?
 
 > At least two. Most have three or more.
 > AWS REGION (e.g. us-east-1)
-> ┌─────────────────────────────────────┐
-> │  ┌─────────┐  ┌─────────┐  ┌─────┐  │
-> │  │   AZ-1  │  │   AZ-2  │  │AZ-3 │  │
-> │  │(min req)│  │(min req)│  │     │  │
-> │  └─────────┘  └─────────┘  └─────┘  │
-> │       └────────────┴────────────┘    │
-> │         High-bandwidth private fiber  │
-> └─────────────────────────────────────┘
+```
+┌─────────────────────────────────────┐
+│  ┌─────────┐  ┌─────────┐  ┌─────┐  │
+│  │   AZ-1  │  │   AZ-2  │  │AZ-3 │  │
+│  │(min req)│  │(min req)│  │     │  │
+│  └─────────┘  └─────────┘  └─────┘  │
+│       └────────────┴────────────┘    │
+│         High-bandwidth private fiber  │
+└─────────────────────────────────────┘
+```
+
 
 **Q12.** What is an Availability Zone?
 
 > One or more discrete data centers with redundant power,
 > networking, and connectivity within a region.
 > AVAILABILITY ZONE
-> ┌──────────────────────────────────┐
-> │  ┌──────────┐  ┌──────────┐      │
-> │  │  Data    │  │  Data    │      │
-> │  │ Center A │  │ Center B │      │
-> │  └──────────┘  └──────────┘      │
-> │  Independent power and cooling    │
-> │  Connected to other AZs via       │
-> │  private high-bandwidth fiber     │
-> └──────────────────────────────────┘
-> Like a separate building in your DC campus
-> with its own power feed.
+```
+┌──────────────────────────────────┐
+│  ┌──────────┐  ┌──────────┐      │
+│  │  Data    │  │  Data    │      │
+│  │ Center A │  │ Center B │      │
+│  └──────────┘  └──────────┘      │
+│  Independent power and cooling    │
+│  Connected to other AZs via       │
+│  private high-bandwidth fiber     │
+└──────────────────────────────────┘
+Like a separate building in your DC campus
+with its own power feed.
+```
+
 
 **Q13.** Why deploy applications across multiple AZs?
 
@@ -291,14 +327,17 @@ AWS Outposts:
 > NEW ACRONYM: HA = High Availability
 > Like your dual-fabric SAN — if Fabric A fails, Fabric B runs.
 > SINGLE AZ (bad)          MULTI-AZ (good)
-> ┌─────────────┐          ┌─────────────────────┐
-> │     AZ-1    │          │  AZ-1    │  AZ-2    │
-> │  ┌────────┐ │          │ ┌──────┐ │ ┌──────┐ │
-> │  │  App   │ │          │ │ App  │ │ │ App  │ │
-> │  └────────┘ │          │ └──────┘ │ └──────┘ │
-> │  AZ fails   │          │ AZ fails │ Still UP!│
-> │  OUTAGE!    │          │          │    ✓     │
-> └─────────────┘          └─────────────────────┘
+```
+┌─────────────┐          ┌─────────────────────┐
+│     AZ-1    │          │  AZ-1    │  AZ-2    │
+│  ┌────────┐ │          │ ┌──────┐ │ ┌──────┐ │
+│  │  App   │ │          │ │ App  │ │ │ App  │ │
+│  └────────┘ │          │ └──────┘ │ └──────┘ │
+│  AZ fails   │          │ AZ fails │ Still UP!│
+│  OUTAGE!    │          │          │    ✓     │
+└─────────────┘          └─────────────────────┘
+```
+
 
 **Q14.** What are Edge Locations used for?
 
@@ -312,18 +351,24 @@ AWS Outposts:
 **Q15.** Which has more locations — Regions or Edge Locations?
 
 > Edge Locations (400+) vs Regions (30+).
-> Regions:         ██  30+
-> AZs:             █████  90+
-> Edge Locations:  ████████████████  400+
-> Rule: Edge > AZs > Regions
+```
+Regions:         ██  30+
+AZs:             █████  90+
+Edge Locations:  ████████████████  400+
+Rule: Edge > AZs > Regions
+```
+
 
 **Q16.** What is an AWS Local Zone?
 
 > An extension of an AWS Region placed closer to large
 > population centers for single-digit millisecond latency.
 > NEW ACRONYM: ms = milliseconds (1/1000 of a second)
-> REGION (N. Virginia) ──extends──► [LA Local Zone]
-> User in LA: ~20ms to VA vs ~1ms to Local Zone
+```
+REGION (N. Virginia) ──extends──► [LA Local Zone]
+User in LA: ~20ms to VA vs ~1ms to Local Zone
+```
+
 
 **Q17.** What is AWS Wavelength?
 
@@ -339,13 +384,16 @@ AWS Outposts:
 > AWS-managed hardware installed in YOUR data center to run
 > AWS services on-premises.
 > YOUR DATA CENTER
-> ┌──────────────────────────────────┐
-> │  AWS Outposts Rack:              │
-> │  EC2 | EBS | RDS | ECS           │
-> │  AWS hardware in YOUR building   │
-> │  Connects to AWS via Direct Connect│
-> └──────────────────────────────────┘
-> Relevant to T. Rowe — extend on-prem to AWS.
+```
+┌──────────────────────────────────┐
+│  AWS Outposts Rack:              │
+│  EC2 | EBS | RDS | ECS           │
+│  AWS hardware in YOUR building   │
+│  Connects to AWS via Direct Connect│
+└──────────────────────────────────┘
+Relevant to T. Rowe — extend on-prem to AWS.
+```
+
 
 **Q19.** Which AWS service runs AWS infrastructure in your own DC?
 
@@ -592,21 +640,27 @@ DENY ALWAYS OVERRIDES ALLOW — the golden IAM rule.
 > AWS = Security OF the cloud (physical infra, hardware, hypervisor).
 > Customer = Security IN the cloud (data, IAM, OS, apps, network config).
 > CUSTOMER: Your data, IAM, OS patching, app code, security groups
-> ═══════════════════════════════════ THE LINE
-> AWS: Physical facilities, hardware, hypervisor, global network
+```
+═══════════════════════════════════ THE LINE
+AWS: Physical facilities, hardware, hypervisor, global network
+```
+
 
 **Q2.** Who patches the OS on an EC2 instance?
 
 > The CUSTOMER. On EC2 you manage the guest OS including patching.
 > Guest OS = OS running INSIDE your VM (Windows/Linux you installed).
 > Host OS = AWS hypervisor layer (Nitro/Xen — AWS manages this).
-> ┌──────────────────────────────────────────┐
-> │  EC2 Instance                            │
-> │  GUEST OS (Windows/Linux) ← YOU patch   │
-> │  ─────────────────────────────────────   │
-> │  HYPERVISOR (Nitro)       ← AWS patches  │
-> │  PHYSICAL SERVER          ← AWS manages  │
-> └──────────────────────────────────────────┘
+```
+┌──────────────────────────────────────────┐
+│  EC2 Instance                            │
+│  GUEST OS (Windows/Linux) ← YOU patch   │
+│  ─────────────────────────────────────   │
+│  HYPERVISOR (Nitro)       ← AWS patches  │
+│  PHYSICAL SERVER          ← AWS manages  │
+└──────────────────────────────────────────┘
+```
+
 
 **Q3.** Who patches the database engine on RDS?
 
@@ -999,12 +1053,15 @@ Lightsail: Simple VPS, fixed pricing, beginners
 > Automatically adjusts EC2 instance count based on demand.
 > Scale out (add instances) when demand rises.
 > Scale in (remove instances) when demand drops.
-> ┌──────────────────────────────────────────┐
-> │  ASG: Min=2, Max=10, Desired=2           │
-> │  CPU > 70%: launch more instances        │
-> │  CPU < 30%: terminate some instances     │
-> │  Always right-sized, never over-paying   │
-> └──────────────────────────────────────────┘
+```
+┌──────────────────────────────────────────┐
+│  ASG: Min=2, Max=10, Desired=2           │
+│  CPU > 70%: launch more instances        │
+│  CPU < 30%: terminate some instances     │
+│  Always right-sized, never over-paying   │
+└──────────────────────────────────────────┘
+```
+
 
 **Q12.** Difference between scaling out and scaling up?
 
