@@ -736,6 +736,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="MediaAgent and Deduplication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deduplication-data-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deduplication Data Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -817,6 +834,33 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">qlist</span> <span class="n">job</span> <span class="n">-j</span> <span class="n">CommServeDB_Backup</span> <span class="n">-detail</span>
 </code></pre></div></p>
 <h2 id="mediaagent-and-deduplication">MediaAgent and Deduplication<a class="headerlink" href="#mediaagent-and-deduplication" title="Permanent link">&para;</a></h2>
+<h3 id="deduplication-data-path">Deduplication Data Path<a class="headerlink" href="#deduplication-data-path" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    client(["Client Agent\n(VM / DB / File)"])
+    client --&gt;|"raw data stream\nTCP 8403"| ma["MediaAgent"]
+
+    subgraph maBlock [MediaAgent Processing]
+        direction TB
+        chunk["Chunk data into\nvariable blocks"]
+        hash["Hash each block\n(SHA-256)"]
+        ddb[("DDB\nDeduplication DB\nSSD-backed")]
+        chunk --&gt; hash
+        hash --&gt;|"block seen before?"| ddb
+    end
+
+    ma --&gt; maBlock
+
+    ddb --&gt;|"New block\nwrite to library"| diskLib[("Disk Library\nPrimary copy")]
+    ddb --&gt;|"Duplicate block\nskip write"| dedupSave["Dedup saving\n(reference only)"]
+
+    diskLib --&gt;|"Aux copy"| secondary[("Secondary copy\nOffsite / Cloud / Tape")]
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    class ma,chunk,hash ctrl
+    class ddb,diskLib,secondary store
+    class client host</code></pre>
 <p>MediaAgents perform data movement and host the Deduplication Database (DDB):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>MediaAgent placement best practices:
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  - Deploy one MediaAgent per site for local backups

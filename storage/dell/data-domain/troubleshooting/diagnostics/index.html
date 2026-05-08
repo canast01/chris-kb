@@ -1110,6 +1110,20 @@
 
 <h1 id="data-domain-diagnostics">Data Domain — Diagnostics<a class="headerlink" href="#data-domain-diagnostics" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Incident Start]) --&gt; B["alerts show current\nfilesys status\nfilesys show space"]
+    B --&gt; C{"Hardware alert\nactive?"}
+    C --&gt;|Yes| D["disk show state\nenclosure show hardware\nOpen Dell support case"]
+    C --&gt;|No| E{"Filesystem\nnot Running?"}
+    E --&gt;|Yes| F["filesys enable\nMonitor: filesys status"]
+    E --&gt;|No| G{"Replication\nin Error?"}
+    G --&gt;|Yes| H["replication show errors\nnet ping dst\nreplication disable + enable"]
+    G --&gt;|No| I{"DDBoost auth\nfailure?"}
+    I --&gt;|Yes| J["ddboost user list\nReset password\nUpdate backup app"]
+    I --&gt;|No| K{"Capacity\n&gt; 80%?"}
+    K --&gt;|Yes| L["filesys clean start\nExpire old backups"]
+    K --&gt;|No| M["support bundle generate\nEscalate to Dell"]
+    D &amp; F &amp; H &amp; J &amp; L &amp; M --&gt; Z([Resolution])</code></pre>
 <p>This page provides structured diagnostic procedures for the most common Data Domain failure scenarios. The approach is to gather evidence first, then act — avoid making configuration changes before understanding the root cause.</p>
 <hr />
 <h2 id="first-response-command-set">First-Response Command Set<a class="headerlink" href="#first-response-command-set" title="Permanent link">&para;</a></h2>

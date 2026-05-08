@@ -877,6 +877,21 @@
 
 <h1 id="dell-vplex-standards">Dell VPLEX — Standards<a class="headerlink" href="#dell-vplex-standards" title="Permanent link">&para;</a></h1>
 <p>Design standards, sizing guidelines, naming conventions, and configuration baselines for VPLEX deployments.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph "Naming Convention"
+        vv["Virtual Volume\nvv-oracle-prod-01"]
+        ld["Local Device\nld-oracle-prod-01"]
+        dd["Distributed Device\ndd-vv-oracle-prod-01"]
+        cg["Consistency Group\ncg-oracle-prod"]
+        sv["Storage View\nsv-db-prod-01"]
+        init["Initiator Port\ndb-prod-01-hba0"]
+    end
+
+    init --&gt; sv
+    sv --&gt; vv
+    vv --&gt; dd
+    dd --&gt; ld
+    cg --&gt;|"member volumes"| vv</code></pre>
 <h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1016,6 +1031,27 @@
 - Sequence numbers: zero-padded two digits (<code>01</code>, <code>02</code>, ... <code>10</code>).</p>
 <h2 id="metro-configuration-standards">Metro Configuration Standards<a class="headerlink" href="#metro-configuration-standards" title="Permanent link">&para;</a></h2>
 <p>Every production VPLEX Metro deployment must meet these requirements before go-live:</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph "Site A"
+        hostA["vSphere Cluster A\nESXi hosts"]
+        dirA["VPLEX Cluster-1\nDirectors — engine-1-1"]
+        arrA["PowerMax Array A"]
+        fabricA["SAN Fabric A"]
+    end
+    subgraph "Site B"
+        hostB["vSphere Cluster B\nESXi hosts"]
+        dirB["VPLEX Cluster-2\nDirectors — engine-2-1"]
+        arrB["PowerMax Array B"]
+        fabricB["SAN Fabric B"]
+    end
+    witness["Witness VM\n3rd failure domain\n2 vCPU / 4 GB RAM"]
+    iclLink["ICL — 2x 25GbE\nindependent paths\nRTT ≤5ms"]
+
+    hostA --&gt; fabricA --&gt; dirA --&gt; arrA
+    hostB --&gt; fabricB --&gt; dirB --&gt; arrB
+    dirA &lt;--&gt; iclLink &lt;--&gt; dirB
+    witness -. "quorum heartbeat" .- dirA
+    witness -. "quorum heartbeat" .- dirB</code></pre>
 <table>
 <thead>
 <tr>

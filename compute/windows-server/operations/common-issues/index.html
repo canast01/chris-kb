@@ -824,6 +824,25 @@
 <li><strong>What is the resource state?</strong> — CPU, memory, disk, network</li>
 <li><strong>Which service or application is affected?</strong> — Event logs, Get-Service</li>
 </ol>
+<pre class="mermaid"><code>flowchart TD
+    incident["Incident / Alert"]
+    reachable{"Ping / RDP\nreachable?"}
+    rebooted{"Event 6008 or 41?\nUnexpected reboot?"}
+    changed{"Recent Windows Update\nor GPO change?"}
+    resourceOk{"CPU · Memory · Disk\nwithin thresholds?"}
+    svcOk{"Get-Service shows\nno stopped auto svcs?"}
+    escalate["Escalate\nL3 / Microsoft Support"]
+    resolve["Root cause found\nResolve and document"]
+
+    incident --&gt; reachable
+    reachable -- No --&gt; escalate
+    reachable -- Yes --&gt; rebooted
+    rebooted -- Yes --&gt; changed
+    rebooted -- No --&gt; resourceOk
+    changed --&gt; resolve
+    resourceOk -- No --&gt; resolve
+    resourceOk -- Yes --&gt; svcOk
+    svcOk --&gt; resolve</code></pre>
 <h2 id="unexpected-reboots">Unexpected Reboots<a class="headerlink" href="#unexpected-reboots" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check for unexpected shutdown (Event ID 6008)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">6008</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">5</span> <span class="p">|</span>

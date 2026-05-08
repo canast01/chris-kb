@@ -854,24 +854,23 @@
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>          └──── Shared SAS Disk Shelves ─────┘
 </code></pre></div>
 <h2 id="data-path">Data Path<a class="headerlink" href="#data-path" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Backup Client
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    │
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    │  (DDBoost: client-side dedup filter)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    ▼
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>DD Boost Receiver / NFS / CIFS handler
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    │
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    ▼
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>SISL Engine (segment fingerprinting + locality filter)
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    │  unique segments only
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    ▼
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>NVRAM write cache
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    │
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    ▼
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>DDFS Container Store (on disk)
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    │
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    ▼ (async)
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>Replication engine → Remote DD
-</code></pre></div>
+<pre class="mermaid"><code>graph TD
+    client(["Backup Client\n(Veeam / NetBackup / CommVault)"])
+    dsp["DDBoost Client Library\n(DSP: source-side dedup filter)\n~50% traffic reduction"]
+    recv["DD Boost Receiver\n(NFS / CIFS handler)"]
+    sisl["SISL Engine\n(segment fingerprinting\n+ locality filter)"]
+    nvram["NVRAM Write Cache\n(power-safe)"]
+    ddfsStore["[(DDFS Container Store)]\n(deduplicated + compressed)"]
+    replEngine["Replication Engine\n(async delta sync)"]
+    remoteDd["Remote Data Domain\n(DR site)"]
+
+    client --&gt;|"DDBoost over IP"| dsp
+    dsp --&gt;|"unique segments only"| recv
+    recv --&gt; sisl
+    sisl --&gt;|"new unique segments"| nvram
+    nvram --&gt; ddfsStore
+    ddfsStore --&gt;|"async replication\nTCP 2051"| replEngine
+    replEngine --&gt; remoteDd</code></pre>
 
 
 

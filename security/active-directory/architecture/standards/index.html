@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ou-and-gpo-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OU and GPO Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ou-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -828,6 +839,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#tiered-administration-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiered Administration Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#privileged-access-model-tiering" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -861,6 +883,24 @@
 <h1 id="active-directory-standards">Active Directory Standards<a class="headerlink" href="#active-directory-standards" title="Permanent link">&para;</a></h1>
 <p>Organisational standards for OU structure, naming conventions, group policy design, and privileged access. Consistent standards reduce delegation complexity, enable scoped GPO application, and simplify access reviews.</p>
 <hr />
+<h2 id="ou-and-gpo-hierarchy">OU and GPO Hierarchy<a class="headerlink" href="#ou-and-gpo-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    domain["DC=corp,DC=example,DC=com\n(domain root)"]
+    domain --&gt;|"linked: ALL-USERS-PasswordPolicy"| ouServers["OU=Servers"]
+    domain --&gt; ouWorkstations["OU=Workstations"]
+    domain --&gt; ouUsers["OU=Users"]
+    domain --&gt; ouGroups["OU=Groups"]
+    domain --&gt; ouSvcAccts["OU=Service Accounts"]
+    domain --&gt; ouAdmin["OU=Admin"]
+
+    ouServers --&gt;|"linked: PROD-SERVERS-SecBaseline"| ouEMEA["OU=EMEA"]
+    ouServers --&gt; ouAPAC["OU=APAC"]
+    ouServers --&gt; ouAMER["OU=AMER"]
+    ouUsers --&gt; ouStaff["OU=Staff"]
+    ouUsers --&gt; ouContractors["OU=Contractors"]
+    ouAdmin --&gt;|"Tier 0 only — PAW access"| ouTier0["OU=Tier0"]
+    ouAdmin --&gt; ouTier1["OU=Tier1"]
+    ouAdmin --&gt; ouPAW["OU=PAW"]</code></pre>
 <h2 id="ou-structure">OU Structure<a class="headerlink" href="#ou-structure" title="Permanent link">&para;</a></h2>
 <p>Top-level OUs are functional (Servers, Workstations, Users, Groups, Service Accounts). Geographic sub-OUs are used where region-specific GPO or delegation is required.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DC=corp,DC=example,DC=com
@@ -1090,6 +1130,21 @@
 </table>
 <p>Disable RC4 via GPO: <strong>Computer Config &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; Security Options &gt; Network security: Configure encryption types allowed for Kerberos</strong>.</p>
 <hr />
+<h2 id="tiered-administration-model">Tiered Administration Model<a class="headerlink" href="#tiered-administration-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    tier0["Tier 0 — Identity Infrastructure\nDCs · ADCS · AAD Connect · CyberArk Vault · DNS"]
+    tier1["Tier 1 — Servers and Services\nApp servers · SQL · ESXi hypervisors · Storage"]
+    tier2["Tier 2 — Workstations and End-user Devices\nDesktops · Laptops · VDI"]
+
+    admTier0["adm0-* accounts\n(Tier 0 admin)"] --&gt;|"access only from\nTier 0 PAW"| tier0
+    admTier1["adm1-* accounts\n(Tier 1 admin)"] --&gt;|"access from\njump server / Tier 1 PAW"| tier1
+    admTier2["Helpdesk accounts"] --&gt;|"standard workstation"| tier2
+
+    paw0["Tier 0 PAW\n(air-gapped, hardened)"] --&gt; tier0
+    paw1["Jump Server / Tier 1 PAW"] --&gt; tier1
+
+    tier0 -. "Tier 0 accounts must NOT\nlog on to Tier 1 or 2" .-&gt; tier1
+    tier1 -. "Tier 1 accounts must NOT\nlog on to Tier 2" .-&gt; tier2</code></pre>
 <h2 id="privileged-access-model-tiering">Privileged Access Model (Tiering)<a class="headerlink" href="#privileged-access-model-tiering" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

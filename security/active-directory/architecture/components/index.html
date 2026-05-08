@@ -714,7 +714,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Domain Controllers">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fsmo-role-placement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FSMO Role Placement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FSMO Role Placement">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -880,7 +891,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Groups">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agdlp-group-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AGDLP Group Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AGDLP Group Model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -952,7 +974,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GPOs">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpo-processing-order-sdou" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPO Processing Order (SDOU)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GPO Processing Order (SDOU)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1121,6 +1154,20 @@
 <h1 id="active-directory-components">Active Directory — Components<a class="headerlink" href="#active-directory-components" title="Permanent link">&para;</a></h1>
 <h2 id="domain-controllers">Domain Controllers<a class="headerlink" href="#domain-controllers" title="Permanent link">&para;</a></h2>
 <p>Domain Controllers host the AD DS database (ntds.dit), authenticate users, and hold FSMO roles. Understanding DC roles and how to manage them is essential for AD operations.</p>
+<h2 id="fsmo-role-placement">FSMO Role Placement<a class="headerlink" href="#fsmo-role-placement" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    forest["AD Forest\ncorp.example.com"]
+    forest --&gt;|"forest-wide"| schemaMaster["Schema Master\n(DC-01 — forest root)"]
+    forest --&gt;|"forest-wide"| domainNaming["Domain Naming Master\n(DC-01 — forest root)"]
+    domain["Domain\ncorp.example.com"]
+    domain --&gt;|"per-domain"| pdcEmulator["PDC Emulator\n(DC-01 — time source, password sync)"]
+    domain --&gt;|"per-domain"| ridMaster["RID Master\n(DC-01 — SID pool allocation)"]
+    domain --&gt;|"per-domain"| infraMaster["Infrastructure Master\n(DC-02 — cross-domain refs)"]
+    dc01["DC-01\n(Schema / Naming / PDC / RID)"] -.-&gt; schemaMaster
+    dc01 -.-&gt; domainNaming
+    dc01 -.-&gt; pdcEmulator
+    dc01 -.-&gt; ridMaster
+    dc02["DC-02\n(Infrastructure Master)"] -.-&gt; infraMaster</code></pre>
 <h3 id="fsmo-roles">FSMO Roles<a class="headerlink" href="#fsmo-roles" title="Permanent link">&para;</a></h3>
 <p>Five Flexible Single Master Operations roles exist across forest and domain levels. Only one DC holds each role at a time.</p>
 <table>
@@ -1347,6 +1394,14 @@
 <hr />
 <h2 id="groups">Groups<a class="headerlink" href="#groups" title="Permanent link">&para;</a></h2>
 <p>AD groups control access to resources and distribution of email. Choosing the correct type and scope prevents replication overhead and simplifies permission management.</p>
+<h2 id="agdlp-group-model">AGDLP Group Model<a class="headerlink" href="#agdlp-group-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    userAcct["User Account\n(jsmith)"]
+    userAcct --&gt;|"member of"| globalGrp["Global Group\nGG_Server_Admins\n(role-based — same domain)"]
+    globalGrp --&gt;|"nested in"| domLocalGrp["Domain Local Group\nDL_FileShare_Finance_RW\n(resource access — any domain)"]
+    domLocalGrp --&gt;|"permission assigned"| resource["File Share / Resource\n(NTFS ACL permission)"]
+
+    note1["A — Accounts\nin G — Global groups\nin DL — Domain Local groups\nassigned P — Permissions"]</code></pre>
 <h3 id="group-types-and-scopes">Group Types and Scopes<a class="headerlink" href="#group-types-and-scopes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1454,6 +1509,22 @@
 <hr />
 <h2 id="gpos">GPOs<a class="headerlink" href="#gpos" title="Permanent link">&para;</a></h2>
 <p>GPOs apply configuration to computers and users in AD. They are linked to Sites, Domains, or OUs and processed in that order (SDOU). Understanding GPO inheritance, filtering, and result sets is essential for managing policy reliably.</p>
+<h2 id="gpo-processing-order-sdou">GPO Processing Order (SDOU)<a class="headerlink" href="#gpo-processing-order-sdou" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    local["1. Local Policy\n(machine-local, lowest priority)"]
+    site["2. Site GPOs\n(physical site — rarely used)"]
+    domain["3. Domain GPOs\n(domain-wide defaults)"]
+    ou["4. OU GPOs\n(parent OU — inherited)"]
+    childOU["5. Child OU GPOs\n(closest OU — highest priority)"]
+
+    local --&gt;|"overridden by"| site
+    site --&gt;|"overridden by"| domain
+    domain --&gt;|"overridden by"| ou
+    ou --&gt;|"overridden by"| childOU
+
+    enforced["Enforced GPO\n(No Override — cannot be blocked)"]
+    blockInherit["Block Inheritance OU\n(blocks parent GPOs except Enforced)"]
+    enforced -. "bypasses block" .-&gt; blockInherit</code></pre>
 <h3 id="gpo-processing-order">GPO Processing Order<a class="headerlink" href="#gpo-processing-order" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

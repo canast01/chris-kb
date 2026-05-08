@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#srm-integration-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Integration Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vmware-site-recovery-manager-srm" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -796,6 +807,30 @@
 <p>Part of the <a href="../../">SRDF/A</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="srm-integration-topology">SRM Integration Topology<a class="headerlink" href="#srm-integration-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph prodSite ["Production Site"]
+        srmProd["SRM Server\n(Protected Site)"]
+        sra1["Dell SRA\n(SRM Plugin)"]
+        unisphere1["Unisphere for PowerMax"]
+        r1array["PowerMax R1"]
+        srmProd --- sra1
+        sra1 --&gt; unisphere1
+        unisphere1 --&gt; r1array
+    end
+
+    subgraph drSite ["DR Site"]
+        srmDr["SRM Server\n(Recovery Site)"]
+        sra2["Dell SRA\n(SRM Plugin)"]
+        unisphere2["Unisphere for PowerMax"]
+        r2array["PowerMax R2"]
+        srmDr --- sra2
+        sra2 --&gt; unisphere2
+        unisphere2 --&gt; r2array
+    end
+
+    r1array --&gt;|"SRDF/A async replication"| r2array
+    srmProd &lt;--&gt;|"SRM pairing channel"| srmDr</code></pre>
 <h2 id="vmware-site-recovery-manager-srm">VMware Site Recovery Manager (SRM)<a class="headerlink" href="#vmware-site-recovery-manager-srm" title="Permanent link">&para;</a></h2>
 <p>SRDF/A integrates with VMware SRM via the <strong>Dell EMC Storage Replication Adapter (SRA)</strong>, enabling automated orchestration of SRDF failover as part of SRM Recovery Plans.</p>
 <p><strong>Setup steps:</strong></p>

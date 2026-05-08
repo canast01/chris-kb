@@ -949,6 +949,21 @@
 <h1 id="dell-vplex-procedures">Dell VPLEX — Procedures<a class="headerlink" href="#dell-vplex-procedures" title="Permanent link">&para;</a></h1>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <p>Verify these items before performing any VPLEX change — GeoSynchrony upgrades, director replacements, back-end storage changes, or storage view modifications.</p>
+<pre class="mermaid"><code>flowchart TD
+    startChange(["Maintenance window requested"])
+    ddCheck["ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices health-state: ok?"]
+    witnessChk["ll /metro-node/*/witness/\nWitness connected from both clusters?"]
+    cgChk["ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?"]
+    hostPathChk["powermt display dev=all\nmultipath -ll\nHost path counts match baseline?"]
+    arrayChk["Back-end array health check\nPowerMax / Unity"]
+    vmsBackup["VMS VM backup\ncurrent snapshot taken?"]
+    proceed{All checks pass?}
+    holdChange["Do not proceed\nResolve issues first"]
+    doChange(["Execute maintenance\nprocedure"])
+
+    startChange --&gt; ddCheck --&gt; witnessChk --&gt; cgChk --&gt; hostPathChk --&gt; arrayChk --&gt; vmsBackup --&gt; proceed
+    proceed --&gt;|No| holdChange
+    proceed --&gt;|Yes| doChange</code></pre>
 <ul>
 <li>[ ] <code>ll /distributed-storage/distributed-devices/*/health-indications/</code> — all distributed devices show <code>health-state: ok</code>; do not start a change with any device out-of-sync</li>
 <li>[ ] Witness is reachable from both Metro clusters: <code>ll /metro-node/*/witness/</code> — loss of Witness during a change that takes a cluster offline will suspend I/O on consistency group volumes</li>
@@ -1075,6 +1090,26 @@
 <li><strong>Distributed Devices</strong> — virtual volumes that span both clusters</li>
 <li><strong>Witness</strong> — third-party tiebreaker for split-brain scenarios</li>
 </ul>
+<pre class="mermaid"><code>flowchart TD
+    iclFails(["ICL failure detected"])
+    witnessChk["Does Witness contact\nboth clusters?"]
+    witnessGrants["Witness grants quorum\nto first requesting cluster"]
+    survivorIo["Surviving cluster\ncontinues I/O normally"]
+    otherSuspend["Other cluster distributed\ndevice legs suspended"]
+    iclRestore["ICL restored"]
+    autoResync["VPLEX auto-resync\nrebuild-progress → 100%"]
+    inSync(["Distributed device\nin-sync — Metro restored"])
+    noWitness["Both clusters unsure\nof each other's state"]
+    ioSuspend["I/O suspended on\nall CG volumes"]
+    manualRecover["Manual recovery\nidentify active leg\ndevice resume"]
+
+    iclFails --&gt; witnessChk
+    witnessChk --&gt;|"Witness reachable"| witnessGrants
+    witnessGrants --&gt; survivorIo
+    witnessGrants --&gt; otherSuspend
+    survivorIo --&gt; iclRestore --&gt; autoResync --&gt; inSync
+    witnessChk --&gt;|"Witness also unreachable"| noWitness
+    noWitness --&gt; ioSuspend --&gt; manualRecover</code></pre>
 <h3 id="check-distributed-device-status">Check Distributed Device Status<a class="headerlink" href="#check-distributed-device-status" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>VPlexcli:/&gt;<span class="w"> </span>ll<span class="w"> </span>/distributed-storage/distributed-devices/&lt;device_name&gt;/

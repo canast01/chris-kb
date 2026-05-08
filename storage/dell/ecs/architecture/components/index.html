@@ -920,6 +920,33 @@
 </table>
 <h2 id="software-stack">Software Stack<a class="headerlink" href="#software-stack" title="Permanent link">&para;</a></h2>
 <p>ECS runs a purpose-built distributed software stack on each node. Key internal components include:</p>
+<pre class="mermaid"><code>graph TD
+  subgraph "ECS Node (per node)"
+    CASPIAN["Fabric Agent (caspian)\nNode lifecycle and upgrade management"]
+    STOR["Data Service (storageos)\nS3/Swift/CAS protocol · EC · geo-replication"]
+    CASS["Metadata Store (Cassandra)\nObject metadata · IAM · namespace config"]
+    ZK["Coordination (ZooKeeper)\nLeader election · distributed locks"]
+    MGMT["Management Plane\nECS Portal · REST API (port 4443)"]
+    ES["Metadata Search (Elasticsearch)\nOptional — query API index"]
+    CASPIAN --&gt; STOR
+    STOR --&gt; CASS &amp; ZK
+    MGMT --&gt; STOR &amp; CASS
+    STOR -.-&gt;|optional| ES
+  end
+  subgraph "External"
+    CLIENTS(["S3 / Swift Clients"])
+    ADMINS(["Administrators\nECS Portal / REST API"])
+    KMS["External KMIP KMS\n(optional)"]
+  end
+  CLIENTS --&gt; STOR
+  ADMINS --&gt; MGMT
+  STOR &lt;--&gt;|"key ops"| KMS
+  classDef svc fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef ext fill:#15803d,stroke:#166534,color:#fff
+  classDef opt fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class CASPIAN,STOR,CASS,ZK,MGMT svc
+  class CLIENTS,ADMINS,KMS ext
+  class ES opt</code></pre>
 <table>
 <thead>
 <tr>
@@ -1156,6 +1183,28 @@
 </table>
 <h2 id="iam-and-user-model">IAM and User Model<a class="headerlink" href="#iam-and-user-model" title="Permanent link">&para;</a></h2>
 <p>ECS uses two distinct user types: management users (portal/API) and object users (S3/Swift data access).</p>
+<pre class="mermaid"><code>graph TD
+  subgraph "Management Plane Users"
+    SYSADMIN["System Admin\n(global)"]
+    SYSMON["System Monitor\n(global, read-only)"]
+    NSADMIN["Namespace Admin\n(per namespace)"]
+    NSUSER["Namespace User\n(per namespace, read-only)"]
+    LDAP["AD / LDAP Groups"] --&gt; SYSADMIN &amp; SYSMON &amp; NSADMIN &amp; NSUSER
+  end
+  subgraph "Data Plane Users (per namespace)"
+    OBJUSER["Object User\n(IAM identity)"]
+    KEY1["Access Key 1"]
+    KEY2["Access Key 2\n(for zero-downtime rotation)"]
+    OBJUSER --&gt; KEY1 &amp; KEY2
+    BPOL["Bucket Policy\n(s3:GetObject etc)"] --&gt; OBJUSER
+  end
+  NSADMIN --&gt;|"creates"| OBJUSER
+  classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef data fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef src fill:#15803d,stroke:#166534,color:#fff
+  class SYSADMIN,SYSMON,NSADMIN,NSUSER mgmt
+  class OBJUSER,KEY1,KEY2,BPOL data
+  class LDAP src</code></pre>
 <table>
 <thead>
 <tr>

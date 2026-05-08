@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#backup-infrastructure-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Infrastructure Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#connection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -803,6 +814,44 @@
 
 
 <h1 id="veeam-cli-reference">Veeam — CLI Reference<a class="headerlink" href="#veeam-cli-reference" title="Permanent link">&para;</a></h1>
+<h2 id="backup-infrastructure-topology">Backup Infrastructure Topology<a class="headerlink" href="#backup-infrastructure-topology" title="Permanent link">&para;</a></h2>
+<p>The Veeam component hierarchy governs how jobs are routed, where data lands, and which components need to be healthy for a job to succeed.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph controlPlane [Control Plane]
+        vbr["Veeam Backup &amp;\nReplication Server\n(job orchestration + config DB)"]
+        vone["Veeam ONE\n(monitoring + reporting)"]
+        vbr --&gt; vone
+    end
+
+    subgraph dataPath [Data Path — Site A]
+        proxy1["Backup Proxy 1\n(hot-add / SAN)"]
+        proxy2["Backup Proxy 2\n(NBD fallback)"]
+        sobr[("SOBR\nScale-Out Backup Repo\n(performance tier — fast disk)")]
+        proxy1 --&gt; sobr
+        proxy2 --&gt; sobr
+    end
+
+    subgraph offsite [Offsite / Cloud Tier]
+        obj[("Object Storage\nS3 / Azure Blob\n(capacity tier — immutable)")]
+        tape[("Tape Library\n(archival)")]
+    end
+
+    vcenter(["VMware vCenter\nSource VMs"])
+    vcenter --&gt; proxy1
+    vcenter --&gt; proxy2
+    vbr --&gt; proxy1
+    vbr --&gt; proxy2
+    sobr --&gt;|"capacity tier offload\n(after retention threshold)"| obj
+    sobr --&gt;|"tape offload"| tape
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+    class vbr,vone,proxy1,proxy2 ctrl
+    class sobr,tape store
+    class vcenter host
+    class obj cloud</code></pre>
 <p>Veeam is managed via the <code>Veeam.Backup.PowerShell</code> module, loaded automatically in the Veeam PowerShell Console on the Backup Server. For remote execution, load it with <code>Add-PSSnapin VeeamPSSnapIn</code> then <code>Connect-VBRServer -Server &lt;backup_server&gt;</code>.</p>
 <hr />
 <h2 id="connection">Connection<a class="headerlink" href="#connection" title="Permanent link">&para;</a></h2>

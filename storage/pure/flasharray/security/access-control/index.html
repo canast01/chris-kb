@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#rbac-and-access-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC and Access Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#built-in-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -854,6 +865,42 @@
 
 <h1 id="flasharray-access-control">FlashArray — Access Control<a class="headerlink" href="#flasharray-access-control" title="Permanent link">&para;</a></h1>
 <p>FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported. All human admin accounts should be mapped through directory service groups (AD or LDAP); individual named local accounts should be limited to break-glass scenarios and service accounts.</p>
+<hr />
+<h2 id="rbac-and-access-model">RBAC and Access Model<a class="headerlink" href="#rbac-and-access-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+  subgraph "Identity Sources"
+    AD["Active Directory\n(AD group → role mapping)"]
+    SAML["SAML SSO IdP\n(Okta / Azure AD / ADFS)"]
+    LOCAL["Local Accounts\n(pureuser — break-glass only)"]
+    API["API Tokens\n(service accounts)"]
+  end
+
+  subgraph "Purity Roles"
+    AADR["array_admin\n(full control)"]
+    STOR["storage_admin\n(volumes / hosts / PGs)"]
+    OPS["ops_admin\n(alerts / diagnostics / replication)"]
+    RO["readonly\n(monitoring / audit)"]
+  end
+
+  subgraph "Audit"
+    AUDIT["pureaudit list\n(all actions logged)"]
+    SIEM["SIEM via TLS syslog"]
+  end
+
+  AD --&gt;|"group membership"| AADR &amp; STOR &amp; OPS &amp; RO
+  SAML --&gt;|"group claims"| AADR &amp; STOR &amp; OPS &amp; RO
+  LOCAL --&gt; AADR
+  API --&gt;|"inherits account role"| STOR &amp; RO
+
+  AADR &amp; STOR &amp; OPS &amp; RO --&gt; AUDIT
+  AUDIT --&gt; SIEM
+
+  classDef idp fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef role fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef audit fill:#b45309,stroke:#92400e,color:#fff
+  class AD,SAML,LOCAL,API idp
+  class AADR,STOR,OPS,RO role
+  class AUDIT,SIEM audit</code></pre>
 <hr />
 <h2 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h2>
 <table>

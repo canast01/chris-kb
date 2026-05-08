@@ -699,6 +699,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-the-backup-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring the Backup Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-backup-via-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Backup via CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-via-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup via REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-and-is-not-backed-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Is and Is Not Backed Up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-level-backup-disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM-Level Backup (Disaster Recovery)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +792,154 @@
 
 
 <h1 id="aria-operations-backup-restore">Aria Operations — Backup &amp; Restore<a class="headerlink" href="#aria-operations-backup-restore" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<p>Aria Operations provides a built-in <strong>file-based backup</strong> mechanism that writes backups to an NFS or SFTP target. The backup includes the configuration database (policies, alert definitions, dashboards, user accounts, adapter configurations) but not the metric time-series data. Metric history is not restorable from backup — only configuration state is.</p>
+<hr />
+<h2 id="configuring-the-backup-schedule">Configuring the Backup Schedule<a class="headerlink" href="#configuring-the-backup-schedule" title="Permanent link">&para;</a></h2>
+<p><strong>Via UI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Backup/Restore → External Location → Add Location
+</code></pre></div>
+<p>Provide:
+- Location type: NFS or SFTP
+- NFS: <code>&lt;nfs-server&gt;:&lt;export-path&gt;</code> (e.g., <code>nas-01.corp.local:/aria-ops-backups</code>)
+- SFTP: hostname, port (22), username, password or SSH key
+- Folder path on the target (auto-created if NFS)</p>
+<p><strong>Schedule:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → Backup/Restore → Backup → Enable Scheduled Backup
+</code></pre></div>
+<p>Recommended settings:
+- Frequency: Daily
+- Retention: 14 copies
+- Notification: enable email alert on backup failure (requires SMTP configured under <strong>Administration → SMTP Settings</strong>)</p>
+<hr />
+<h2 id="manual-backup-via-cli">Manual Backup via CLI<a class="headerlink" href="#manual-backup-via-cli" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.corp.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Trigger an immediate backup using the vracli tool</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vracli<span class="w"> </span>backup<span class="w"> </span>--location<span class="w"> </span>&lt;backup-id&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># &lt;backup-id&gt; is the ID of the configured external location (visible in UI)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List configured backup locations</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vracli<span class="w"> </span>backup<span class="w"> </span>list-locations
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check backup status</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vracli<span class="w"> </span>backup<span class="w"> </span>status
+</code></pre></div>
+<hr />
+<h2 id="backup-via-rest-api">Backup via REST API<a class="headerlink" href="#backup-via-rest-api" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;Local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List backup configurations</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/backups&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Trigger an immediate backup</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/backups/&lt;backup-config-id&gt;/actions/backup&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="what-is-and-is-not-backed-up">What Is and Is Not Backed Up<a class="headerlink" href="#what-is-and-is-not-backed-up" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Backed Up</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alert definitions and symptoms</td>
+<td>Yes</td>
+<td>All custom and policy-based alerts</td>
+</tr>
+<tr>
+<td>Dashboard definitions</td>
+<td>Yes</td>
+<td>All custom dashboards and views</td>
+</tr>
+<tr>
+<td>User accounts and roles</td>
+<td>Yes</td>
+<td>Local accounts and LDAP group mappings</td>
+</tr>
+<tr>
+<td>Adapter/cloud account configurations</td>
+<td>Yes</td>
+<td>Credentials are <strong>not</strong> included — must be re-entered after restore</td>
+</tr>
+<tr>
+<td>Policies and compliance packs</td>
+<td>Yes</td>
+<td>Custom and built-in policy assignments</td>
+</tr>
+<tr>
+<td>Report schedules</td>
+<td>Yes</td>
+<td>Scheduled report definitions</td>
+</tr>
+<tr>
+<td>Metric time-series data</td>
+<td><strong>No</strong></td>
+<td>Historical metrics are not restorable from backup</td>
+</tr>
+<tr>
+<td>Alert history</td>
+<td><strong>No</strong></td>
+<td>Existing alert history is lost after restore</td>
+</tr>
+<tr>
+<td>Log data (if integrated with Aria Ops for Logs)</td>
+<td><strong>No</strong></td>
+<td>Logs are stored in Aria Ops for Logs, not here</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h2>
+<p>Restore replaces the current cluster configuration with the backup. This is a destructive operation — all configuration changes made after the backup point are lost.</p>
+<p><strong>Prerequisites:</strong>
+- Aria Operations cluster is running and accessible
+- Backup file is accessible from the configured NFS/SFTP location
+- All adapter credentials are documented (they must be re-entered after restore)</p>
+<p><strong>Via UI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Administration → Backup/Restore → Restore → select backup → Restore
+</code></pre></div>
+<p>The UI shows a list of available backups by timestamp. Select the desired restore point and confirm. The cluster restarts services during restore — expect 10–20 minutes of unavailability.</p>
+<p><strong>Via CLI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.corp.local
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vracli<span class="w"> </span>restore<span class="w"> </span>--backup-id<span class="w"> </span>&lt;backup-timestamp-id&gt;
+</code></pre></div>
+<p><strong>Post-restore validation:</strong></p>
+<ol>
+<li>Log into the Aria Operations UI — confirm the login works</li>
+<li>Navigate to <strong>Administration → Solutions</strong> — confirm all adapters are listed</li>
+<li>Re-enter credentials for all cloud accounts and adapters:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Administration → Solutions → select adapter → Edit Instance → update credentials → Test Connection
+</code></pre></div>
+<ol>
+<li>Confirm collection is running: <strong>Administration → Cluster Management</strong> — all nodes Online, adapter instances Collecting</li>
+<li>Review dashboards — confirm custom dashboards are present</li>
+<li>Send a test alert to confirm alerting pipeline (email/SNMP) is functional</li>
+</ol>
+<hr />
+<h2 id="vm-level-backup-disaster-recovery">VM-Level Backup (Disaster Recovery)<a class="headerlink" href="#vm-level-backup-disaster-recovery" title="Permanent link">&para;</a></h2>
+<p>For full disaster recovery (including metric data), use a VM-level backup of all Aria Operations nodes:</p>
+<ul>
+<li>Use VADP-compatible backup (Veeam, Commvault) with quiesce enabled</li>
+<li>Back up all nodes: Primary, Replica, and Data nodes — they must be backed up from the same crash-consistent snapshot point</li>
+<li>Recovery from VM backup restores metric history but may require Cassandra consistency repair:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># After restoring all nodes from VM backup, run Cassandra repair on the primary node</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.corp.local
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>cassandra<span class="w"> </span>repair
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># This can take hours on large deployments — monitor progress in /storage/log/cassandra.log</span>
+</code></pre></div>
 
 
 

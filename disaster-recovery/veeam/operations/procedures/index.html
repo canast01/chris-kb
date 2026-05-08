@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#instant-vm-recovery-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant VM Recovery Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#verifying-a-backup-is-restorable" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -844,6 +855,30 @@
 
 <h1 id="veeam-procedures">Veeam — Procedures<a class="headerlink" href="#veeam-procedures" title="Permanent link">&para;</a></h1>
 <p>Operational procedures covering backup job creation, copy job setup, SOBR management, and restore testing.</p>
+<h2 id="instant-vm-recovery-flow">Instant VM Recovery Flow<a class="headerlink" href="#instant-vm-recovery-flow" title="Permanent link">&para;</a></h2>
+<p>The Instant VM Recovery (IVR) sequence mounts the backup file directly as an NFS datastore — the VM starts from the backup without waiting for a full restore.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Admin
+    participant VBR as VBR Server
+    participant Proxy as Backup Proxy
+    participant Repo as Backup Repository
+    participant ESXi as Recovery ESXi Host
+    participant vCenter as vCenter
+
+    Admin-&gt;&gt;VBR: Start Instant VM Recovery
+    VBR-&gt;&gt;Proxy: Mount backup file as vPower NFS datastore
+    Proxy-&gt;&gt;Repo: Access latest restore point (.vbk / .vib)
+    Repo--&gt;&gt;Proxy: Backup file accessible
+    Proxy-&gt;&gt;ESXi: Publish NFS datastore (vPower NFS service)
+    ESXi--&gt;&gt;Proxy: NFS datastore mounted
+    VBR-&gt;&gt;vCenter: Register VM from NFS datastore
+    vCenter--&gt;&gt;VBR: VM registered
+    VBR-&gt;&gt;ESXi: Power on VM (isolated network)
+    ESXi--&gt;&gt;Admin: VM online — validate services
+    note over Admin,ESXi: Test OK — choose: Undo IVR (discard)\nor Migrate to production storage (commit)
+    Admin-&gt;&gt;VBR: Undo Instant Recovery
+    VBR-&gt;&gt;vCenter: Unregister IVR VM
+    VBR-&gt;&gt;Proxy: Unmount vPower NFS datastore</code></pre>
 <hr />
 <h2 id="verifying-a-backup-is-restorable">Verifying a Backup is Restorable<a class="headerlink" href="#verifying-a-backup-is-restorable" title="Permanent link">&para;</a></h2>
 <h3 id="instant-vm-recovery-test">Instant VM Recovery Test<a class="headerlink" href="#instant-vm-recovery-test" title="Permanent link">&para;</a></h3>

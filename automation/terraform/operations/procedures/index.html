@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#standard-apply-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Apply Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#apply-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -718,7 +729,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#standard-apply-workflow" class="md-nav__link">
+  <a href="#standard-apply-workflow_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Standard Apply Workflow
@@ -936,8 +947,27 @@
 
 
 <h1 id="terraform-procedures">Terraform — Procedures<a class="headerlink" href="#terraform-procedures" title="Permanent link">&para;</a></h1>
+<h2 id="standard-apply-workflow">Standard Apply Workflow<a class="headerlink" href="#standard-apply-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    writeCode["Write / Edit\nHCL code"]
+    fmt["terraform fmt\n-recursive"]
+    validate["terraform validate"]
+    plan["terraform plan\n-out=tfplan"]
+    reviewPlan["Review Plan\n(human / PR approval)"]
+    apply["terraform apply tfplan"]
+    postPlan["Post-apply plan\n(zero changes expected)"]
+    stateBackup["State backed up\nin remote backend"]
+
+    writeCode --&gt; fmt
+    fmt --&gt; validate
+    validate --&gt; plan
+    plan --&gt; reviewPlan
+    reviewPlan --&gt;|Approved| apply
+    reviewPlan --&gt;|Changes needed| writeCode
+    apply --&gt; postPlan
+    apply --&gt; stateBackup</code></pre>
 <h2 id="apply-operations">Apply Operations<a class="headerlink" href="#apply-operations" title="Permanent link">&para;</a></h2>
-<h3 id="standard-apply-workflow">Standard Apply Workflow<a class="headerlink" href="#standard-apply-workflow" title="Permanent link">&para;</a></h3>
+<h3 id="standard-apply-workflow_1">Standard Apply Workflow<a class="headerlink" href="#standard-apply-workflow_1" title="Permanent link">&para;</a></h3>
 <p>The normal workflow is init → plan → review → apply.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Initialise the working directory</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>init

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#integration-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vmware-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -781,6 +792,44 @@
 
 
 <h1 id="flasharray-integrations">FlashArray — Integrations<a class="headerlink" href="#flasharray-integrations" title="Permanent link">&para;</a></h1>
+<h2 id="integration-architecture-overview">Integration Architecture Overview<a class="headerlink" href="#integration-architecture-overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+  subgraph "FlashArray"
+    FA["FlashArray\nCT0 / CT1"]
+    MGMT["Management Port\n(HTTPS 443 / SSH 22)"]
+    REPL["Replication Port\n(TLS inter-array)"]
+    HOST["FC / iSCSI / NVMe Ports\n(host I/O)"]
+    FA --- MGMT &amp; REPL &amp; HOST
+  end
+
+  subgraph "Management Integrations"
+    PURE1["Pure1 Cloud\n(phone-home HTTPS)"]
+    VCENTER["VMware vCenter\n(VASA / vSphere Plugin)"]
+    VEEAM["Veeam B&amp;R\n(FlashArray Plugin)"]
+    ANSIBLE["Ansible / Terraform\n(REST API — api-token)"]
+    SNMP["SNMP NMS\n(SNMPv3 polls + traps)"]
+    SIEM["SIEM\n(TLS syslog)"]
+  end
+
+  subgraph "Host Layer"
+    ESX["ESXi Hosts\n(FC / iSCSI)"]
+    DB["Database Hosts\n(FC / NVMe-oF)"]
+  end
+
+  MGMT --&gt;|"HTTPS"| PURE1
+  MGMT --&gt;|"HTTPS / VASA"| VCENTER
+  MGMT --&gt;|"REST API"| VEEAM &amp; ANSIBLE
+  MGMT --&gt;|"SNMP"| SNMP
+  MGMT --&gt;|"syslog"| SIEM
+  REPL --&gt;|"sync / async replication"| REMOTE["Remote FlashArray\n(ActiveCluster / ActiveDR)"]
+  HOST --&gt; ESX &amp; DB
+
+  classDef fa fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmtInt fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class FA,MGMT,REPL,HOST fa
+  class PURE1,VCENTER,VEEAM,ANSIBLE,SNMP,SIEM mgmtInt
+  class ESX,DB host</code></pre>
 <h2 id="vmware-integration">VMware Integration<a class="headerlink" href="#vmware-integration" title="Permanent link">&para;</a></h2>
 <p>Pure Storage provides a native vSphere integration stack for FlashArray:</p>
 <p><strong>Pure Storage Plugin for VMware vSphere (vSphere Plugin / PSO):</strong></p>

@@ -699,6 +699,186 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#incident-triage-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controller-upgrade-issues-in-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controller Upgrade Issues in Detail
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Controller Upgrade Issues in Detail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-upgrade-validation-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Validation Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-recovery-after-controller-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Recovery After Controller Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-management-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Management Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Capacity Management Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identifying-top-capacity-consumers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifying Top Capacity Consumers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#freeing-capacity-before-a-true-forward-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Freeing Capacity Before a True Forward Review
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confirming-the-data-reduction-guarantee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confirming the Data Reduction Guarantee
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subscription-and-lifecycle-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subscription and Lifecycle Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Subscription and Lifecycle Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scheduling-a-missed-ever-modern-controller-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduling a Missed Ever Modern Controller Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-subscription-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Subscription Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-commands-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Commands Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-calling-pure-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before Calling Pure Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -722,9 +902,308 @@
 <p>Part of the <a href="../">Evergreen Operations</a> reference.</p>
 </blockquote>
 <hr />
-<blockquote>
-<p>This page is a stub. Common issues and resolutions for Evergreen FlashArray will be documented here.</p>
-</blockquote>
+<p>This page covers the most common operational issues encountered with arrays running under an Evergreen subscription — covering controller upgrade problems, host path failures, capacity concerns, subscription management issues, and replication incidents.</p>
+<hr />
+<h2 id="incident-triage-checklist">Incident Triage Checklist<a class="headerlink" href="#incident-triage-checklist" title="Permanent link">&para;</a></h2>
+<p>Before diving into specific issues, run the following sequence to establish the failure domain:</p>
+<ul>
+<li>[ ] Check Pure1 for any open hardware or software alerts — Pure1 often has context on incidents before the customer is aware</li>
+<li>[ ] Run <code>purealert list</code> on the affected array — identify whether the alert is hardware, software, or capacity</li>
+<li>[ ] Run <code>purearray list --controller</code> — confirm both controllers are online and running the same Purity version</li>
+<li>[ ] Run <code>puredrive list</code> — check for failed or evacuating drives</li>
+<li>[ ] Run <code>purepod list</code> — check ActiveCluster pod status if replication is involved</li>
+<li>[ ] Run <code>purehostconnection list</code> — confirm host path states; single-path hosts are a risk factor</li>
+<li>[ ] Check the Pure1 subscription dashboard — confirm capacity consumed vs. entitled and that phonehome is active</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Where to Find the Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Is this a hardware or software failure?</td>
+<td><code>purealert list</code> and Pure1 &gt; Arrays</td>
+</tr>
+<tr>
+<td>Are both controllers healthy?</td>
+<td><code>purearray list --controller</code></td>
+</tr>
+<tr>
+<td>Are any drives failed?</td>
+<td><code>puredrive list</code></td>
+</tr>
+<tr>
+<td>Is this capacity-related?</td>
+<td><code>purearray list --space</code></td>
+</tr>
+<tr>
+<td>Is this replication-related?</td>
+<td><code>purepod list</code></td>
+</tr>
+<tr>
+<td>Is phonehome active?</td>
+<td>Pure1 &gt; Arrays &gt; select array &gt; Support &gt; Phone Home</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="common-issues-reference">Common Issues Reference<a class="headerlink" href="#common-issues-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controller upgrade window missed</td>
+<td>Subscription renewal not tracked with sufficient lead time</td>
+<td>Contact Pure account team immediately — operating past the controller support window risks voiding the Ever Modern guarantee; the Pure account team can assess options for rescheduling</td>
+</tr>
+<tr>
+<td>Host path goes offline during controller upgrade</td>
+<td>Host multipathing not validated before upgrade; single-path hosts</td>
+<td>Identify affected hosts with <code>purehostconnection list</code>; rescan HBAs or iSCSI initiators on affected hosts; contact Pure Support for guidance on path recovery</td>
+</tr>
+<tr>
+<td>ActiveCluster mediator unreachable during upgrade</td>
+<td>Network change or mediator misconfiguration; mediator IP changed</td>
+<td>Verify mediator connectivity: <code>curl -sk https://&lt;mediator-ip&gt;/mediator/version</code>; update mediator IP in pod configuration if it has changed</td>
+</tr>
+<tr>
+<td>Replication pod not replicating after upgrade</td>
+<td>Network interruption during upgrade; pod paused or lag too high</td>
+<td>Run <code>purepod list</code> to identify pod status; resume a paused pod: <code>purepod resume --name &lt;pod_name&gt;</code>; allow time for the pod to re-sync — lag reduces as replication catches up</td>
+</tr>
+<tr>
+<td>Pure1 phonehome offline</td>
+<td>Proxy change, firewall rule update, or network reconfiguration</td>
+<td>Confirm outbound HTTPS port 443 to <code>*.purestorage.com</code> from the management interface; check proxy settings in the array GUI under System &gt; Support</td>
+</tr>
+<tr>
+<td>Capacity alert at upgrade time</td>
+<td>Snapshot growth or volume provisioning without corresponding cleanup</td>
+<td>Review snapshot space with <code>puresnap list --space</code>; eradicate old destroyed snapshots: <code>purevol eradicate --destroyed</code>; review and clean protection group snapshots before the upgrade</td>
+</tr>
+<tr>
+<td>Purity software version outside supported range</td>
+<td>Upgrade deferred too long; now outside N-2 support window</td>
+<td>Contact Pure account team and support to plan an expedited upgrade path; some version gaps require intermediate upgrades — do not attempt to skip without guidance</td>
+</tr>
+<tr>
+<td>Data reduction ratio below contracted guarantee</td>
+<td>Workload mix changed; incompressible data (video, encrypted files) now dominant</td>
+<td>Run <code>purearray list --space</code> to confirm the current effective data reduction ratio; contact Pure account team — if the ratio is below the contracted guarantee, Pure should provide additional capacity at no charge</td>
+</tr>
+<tr>
+<td>Volume not visible to host after provisioning</td>
+<td>Host group membership not configured; HBA not logged in; fabric zoning missing</td>
+<td>Confirm the volume is connected to the correct host group: <code>purevol list --connection</code>; verify the host IQN or WWPN is registered in Purity: <code>purehost list</code>; check SAN fabric zoning</td>
+</tr>
+<tr>
+<td>Snapshot retention growing unexpectedly</td>
+<td>Protection group schedule creating more snapshots than the retention policy expires</td>
+<td>Audit protection group schedules: <code>purepgroup list --schedule</code>; confirm retention policy settings match intent; eradicate accumulated expired snapshots</td>
+</tr>
+<tr>
+<td>Performance below SLA for specific volumes</td>
+<td>QoS limit not set; wrong array series for workload type; noisy neighbour</td>
+<td>Review QoS settings on the affected volumes: <code>purevol list --space</code>; run a Pure1 workload assessment; engage the Pure account team to assess whether the array series (//X vs //C) is appropriate</td>
+</tr>
+<tr>
+<td>ActiveCluster pod in <code>degraded</code> state</td>
+<td>One array of the pair is unreachable from the pod perspective</td>
+<td>Run <code>purepod list</code> on both arrays; verify network connectivity between the two arrays and to the mediator; Pure Support should be engaged for pod degraded events on production</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="controller-upgrade-issues-in-detail">Controller Upgrade Issues in Detail<a class="headerlink" href="#controller-upgrade-issues-in-detail" title="Permanent link">&para;</a></h2>
+<h3 id="pre-upgrade-validation-failures">Pre-Upgrade Validation Failures<a class="headerlink" href="#pre-upgrade-validation-failures" title="Permanent link">&para;</a></h3>
+<p>Run the following before any controller upgrade window to identify blockers early:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Confirm all drives are healthy — no rebuilding or failed drives</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;status!=&#39;healthy&#39;&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Confirm both controllers are online</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Confirm no active critical alerts</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>purealert<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>error
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Confirm all pods are online (if ActiveCluster is deployed)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Confirm all hosts have redundant paths (no single-path hosts)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>purehostconnection<span class="w"> </span>list
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Look for any host with only 1 path shown</span>
+</code></pre></div>
+<p><strong>Common blockers and resolutions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Blocker</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drive rebuild in progress</td>
+<td>Wait for the rebuild to complete before starting the upgrade window — <code>puredrive list</code> shows progress</td>
+</tr>
+<tr>
+<td>Single-path host detected</td>
+<td>Add a second path to the host before proceeding — do not upgrade with single-path hosts</td>
+</tr>
+<tr>
+<td>Pod not online</td>
+<td>Investigate and resolve pod health before upgrade — a degraded pod during upgrade may result in an extended outage</td>
+</tr>
+<tr>
+<td>Snapshot count very high</td>
+<td>Eradicate old destroyed snapshots to reduce upgrade duration: <code>puresnap eradicate --destroyed</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="path-recovery-after-controller-upgrade">Path Recovery After Controller Upgrade<a class="headerlink" href="#path-recovery-after-controller-upgrade" title="Permanent link">&para;</a></h3>
+<p>If host paths do not recover automatically after a controller swap:</p>
+<p><strong>Linux (multipath):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the affected Linux host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Rescan the SCSI bus to detect new paths</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="nv">$host</span>/scan<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Reload multipath to pick up new paths</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>multipathd<span class="w"> </span>reconfigure
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Confirm all expected paths are visible</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>multipath<span class="w"> </span>-ll
+</code></pre></div>
+<p><strong>VMware ESXi:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Rescan storage adapters in ESXi</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm paths are active for each device</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span>&lt;device_naa&gt;
+</code></pre></div>
+<p><strong>Windows (MPIO):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Rescan MPIO paths in PowerShell</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">mpclaim</span> <span class="n">-r</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Confirm path state</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span>
+</code></pre></div>
+<hr />
+<h2 id="capacity-management-issues">Capacity Management Issues<a class="headerlink" href="#capacity-management-issues" title="Permanent link">&para;</a></h2>
+<h3 id="identifying-top-capacity-consumers">Identifying Top Capacity Consumers<a class="headerlink" href="#identifying-top-capacity-consumers" title="Permanent link">&para;</a></h3>
+<p>When capacity alerts fire or the subscription True Forward review is approaching:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Overall capacity summary</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Volume-level space usage — identify top consumers</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">2</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Snapshot space usage — identify snapshots consuming unexpected space</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">3</span><span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Protection group snapshot totals</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Show space used by destroyed but not yet eradicated volumes</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>purevol<span class="w"> </span>list<span class="w"> </span>--destroyed<span class="w"> </span>--space
+</code></pre></div>
+<h3 id="freeing-capacity-before-a-true-forward-review">Freeing Capacity Before a True Forward Review<a class="headerlink" href="#freeing-capacity-before-a-true-forward-review" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Eradicate destroyed volumes that are past the eradication timer</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Eradicate old destroyed snapshots</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>puresnap<span class="w"> </span>eradicate<span class="w"> </span>--destroyed
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Review and trim snapshot retention on protection groups that have excessive history</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Use the GUI or CLI to reduce the retention period for non-critical protection groups</span>
+</code></pre></div>
+<h3 id="confirming-the-data-reduction-guarantee">Confirming the Data Reduction Guarantee<a class="headerlink" href="#confirming-the-data-reduction-guarantee" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check current effective data reduction ratio</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Look for &#39;data_reduction&#39; field — this is the current achieved ratio</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># If the ratio is below the contracted guarantee:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># 1. Note the current ratio and contracted ratio</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 2. Contact the Pure account team — Pure should provide additional capacity at no charge</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 3. Identify the cause: incompressible data types, deduplication disabled on volumes</span>
+</code></pre></div>
+<hr />
+<h2 id="subscription-and-lifecycle-issues">Subscription and Lifecycle Issues<a class="headerlink" href="#subscription-and-lifecycle-issues" title="Permanent link">&para;</a></h2>
+<h3 id="scheduling-a-missed-ever-modern-controller-upgrade">Scheduling a Missed Ever Modern Controller Upgrade<a class="headerlink" href="#scheduling-a-missed-ever-modern-controller-upgrade" title="Permanent link">&para;</a></h3>
+<p>If the controller upgrade window has been missed or is approaching its deadline:</p>
+<ol>
+<li>Log into Pure1 and navigate to <strong>Subscription &gt; Lifecycle</strong> to see the current controller generation and upgrade window status</li>
+<li>Contact the Pure account team directly — do not wait for Pure to initiate contact</li>
+<li>Provide the Pure account team with available maintenance windows (at least 3 options, 4+ hours each)</li>
+<li>Confirm Purity software version is within the supported range for the new controller generation before scheduling — Pure will validate, but confirm independently using the compatibility matrix</li>
+</ol>
+<h3 id="checking-subscription-status">Checking Subscription Status<a class="headerlink" href="#checking-subscription-status" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm phonehome is active (prerequisite for subscription monitoring)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>--status
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Confirm the array is registered in Pure1 (array must appear in Pure1 portal)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Pure1 &gt; Arrays — the array should appear with a green health score</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Subscription tier, renewal date, and controller generation</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Pure1 &gt; Subscription &gt; Dashboard</span>
+</code></pre></div>
+<hr />
+<h2 id="diagnostic-commands-summary">Diagnostic Commands Summary<a class="headerlink" href="#diagnostic-commands-summary" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Array health and version</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--hardware
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># All alerts</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>purealert<span class="w"> </span>list<span class="w"> </span>--severity<span class="w"> </span>error
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Drive status</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;status!=&#39;healthy&#39;&quot;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Replication</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>purepod<span class="w"> </span>list<span class="w"> </span>--replicating
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Host paths</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>purehostconnection<span class="w"> </span>list
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>purehost<span class="w"> </span>list
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># Snapshot space</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>puresnap<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="c1"># Diagnostic bundle for Pure Support</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>purediag
+</code></pre></div>
+<hr />
+<h2 id="before-calling-pure-support">Before Calling Pure Support<a class="headerlink" href="#before-calling-pure-support" title="Permanent link">&para;</a></h2>
+<p>Gather the following before opening a case to reduce time to resolution:</p>
+<ol>
+<li><strong>Array serial number and Purity version</strong> — <code>purearray list</code></li>
+<li><strong>Full alert output</strong> — <code>purealert list</code>; copy the complete output</li>
+<li><strong>Drive status</strong> — <code>puredrive list</code>; copy the complete output</li>
+<li><strong>Controller status</strong> — <code>purearray list --controller</code></li>
+<li><strong>Pod status</strong> (if replication is involved) — <code>purepod list</code></li>
+<li><strong>Host connection status</strong> (if host I/O is affected) — <code>purehostconnection list</code></li>
+<li><strong>Diagnostic bundle</strong> — <code>purediag</code>; Pure Support can pull this via phonehome if the support tunnel is active</li>
+<li><strong>Symptom description</strong> — what changed before the issue, when it started, and business impact</li>
+<li><strong>Pure1 health score screenshot</strong> — captures the fleet view context at time of incident</li>
+</ol>
+<p>For controller upgrade or subscription issues, also have the Pure1 subscription dashboard available and the CSM contact details ready.</p>
 
 
 

@@ -739,6 +739,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#provisioning-flow-namespace-bucket-iam-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provisioning Flow: Namespace → Bucket → IAM User
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-a-namespace" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -958,6 +969,27 @@
 <li>[ ] ECS Portal → Hardware → Disks — no new <code>FAILED</code> or <code>SUSPECT</code> disks after the change</li>
 <li>[ ] Application teams confirm S3 workloads are running normally with no authentication or connectivity errors</li>
 </ul>
+<h2 id="provisioning-flow-namespace-bucket-iam-user">Provisioning Flow: Namespace → Bucket → IAM User<a class="headerlink" href="#provisioning-flow-namespace-bucket-iam-user" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+  START([New application storage request]) --&gt; NS["Create Namespace\necscli namespace create\n+ replication group + hard quota"]
+  NS --&gt; BKT["Create Bucket\nS3 name rules · versioning off by default"]
+  BKT --&gt; LOCK{Compliance\nor WORM?}
+  LOCK --&gt;|Yes| OBJ["Enable Object Lock at\nbucket creation (cannot add later)"]
+  LOCK --&gt;|No| USR
+  OBJ --&gt; USR["Create Object User\necscli user create\n--namespace --name svc-&lt;app&gt;-&lt;env&gt;"]
+  USR --&gt; KEY["Generate Access Key + Secret Key\n(shown once — store in vault immediately)"]
+  KEY --&gt; POL["Apply Bucket Policy\nleast-privilege s3 actions only"]
+  POL --&gt; LC{Versioning\nenabled?}
+  LC --&gt;|Yes| LCP["Add lifecycle policy\nNoncurrentVersionExpiration + MPU abort"]
+  LC --&gt;|No| TEST
+  LCP --&gt; TEST["Functional test:\naws s3 ls s3://bucket --endpoint-url ..."]
+  TEST --&gt; DONE([Bucket ready for application])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class LOCK,LC decision
+  class NS,BKT,OBJ,USR,KEY,POL,LCP,TEST action
+  class START,DONE term</code></pre>
 <h2 id="creating-a-namespace">Creating a Namespace<a class="headerlink" href="#creating-a-namespace" title="Permanent link">&para;</a></h2>
 <p>Namespaces are the top-level multi-tenancy boundary in ECS. Create a separate namespace per team or application workload.</p>
 <p><strong>Via ECS Portal:</strong>
@@ -1112,6 +1144,19 @@
 </table>
 <h2 id="creating-iam-object-users-and-access-keys">Creating IAM Object Users and Access Keys<a class="headerlink" href="#creating-iam-object-users-and-access-keys" title="Permanent link">&para;</a></h2>
 <p>Object users are per-namespace IAM identities. Each application or service should have a dedicated object user.</p>
+<pre class="mermaid"><code>graph LR
+  subgraph "Key Rotation (zero downtime)"
+    NEWKEY["1. Create new key\necscli user secret-key create"]
+    DEPLOY["2. Deploy new key\nto app / secrets manager"]
+    VERIFY["3. Verify app is using\nnew key (access logs)"]
+    DELOLD["4. Delete old key\necscli user secret-key delete"]
+    NEWKEY --&gt; DEPLOY --&gt; VERIFY --&gt; DELOLD
+  end
+  note1(["ECS allows up to 2 active keys per user\nenabling zero-downtime rotation"])
+  classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef note fill:#b45309,stroke:#92400e,color:#fff
+  class NEWKEY,DEPLOY,VERIFY,DELOLD step
+  class note1 note</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an object user in a namespace</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ecscli<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span><span class="se">\</span>

@@ -714,6 +714,106 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="TLS and Certificate Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-the-self-signed-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace the Self-Signed Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-version-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Version Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-of-stored-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption of Stored Credentials
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encryption of Stored Credentials">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snapcenter-repository-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SnapCenter Repository Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-in-snapcenter-to-ontap-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption in SnapCenter-to-ONTAP Communication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-of-snapcenter-agent-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption of SnapCenter Agent Communication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Summary
+      
+    </span>
+  </a>
+  
 </li>
       
     </ul>
@@ -742,14 +842,204 @@
 </blockquote>
 <hr />
 <h2 id="tls-and-certificate-management">TLS and Certificate Management<a class="headerlink" href="#tls-and-certificate-management" title="Permanent link">&para;</a></h2>
+<p>SnapCenter exposes its web GUI and REST API on port 8146 over HTTPS. The underlying web server is IIS (Internet Information Services) on Windows Server. By default, SnapCenter installs with a self-signed certificate — this must be replaced with a CA-signed certificate before production use.</p>
+<h3 id="replace-the-self-signed-certificate">Replace the Self-Signed Certificate<a class="headerlink" href="#replace-the-self-signed-certificate" title="Permanent link">&para;</a></h3>
+<p><strong>Step 1 — Generate a Certificate Signing Request (CSR)</strong></p>
+<ol>
+<li>Open <strong>IIS Manager</strong> on the SnapCenter Server</li>
+<li>Click the server node → <strong>Server Certificates</strong> → <strong>Create Certificate Request</strong></li>
+<li>Fill in the Common Name (FQDN of the SnapCenter Server, e.g., <code>snapcenter01.corp.example.com</code>)</li>
+<li>Add Subject Alternative Names (SANs) for any additional DNS names or IPs used to access SnapCenter</li>
+<li>Select <strong>2048-bit</strong> or <strong>4096-bit</strong> key length; RSA-2048 minimum</li>
+<li>Save the CSR file</li>
+</ol>
+<p><strong>Step 2 — Submit the CSR to Your CA</strong></p>
 <ul>
-<li>SnapCenter web server uses TLS 1.2 minimum; configure in IIS → SSL Settings</li>
-<li>Replace the default self-signed certificate with a CA-signed certificate for production deployments:</li>
-<li>Generate a CSR from IIS on the SnapCenter Server</li>
-<li>Submit to internal CA or public CA</li>
-<li>Import signed certificate and update the IIS HTTPS binding on port 8146</li>
-<li>Verify the certificate is trusted by all automation hosts and browsers used to access the GUI</li>
+<li>Submit the CSR to your internal CA (Active Directory Certificate Services) or a public CA</li>
+<li>Request a server authentication certificate (EKU: Server Authentication, 1.3.6.1.5.5.7.3.1)</li>
+<li>Obtain the signed certificate in PFX format (certificate + private key) or as a separate CRT + PEM key pair</li>
 </ul>
+<p><strong>Step 3 — Import and Bind the Certificate</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Import the PFX certificate to the Windows certificate store (on SnapCenter Server)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Run in PowerShell as Administrator</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">$pfxPath</span>  <span class="p">=</span> <span class="s2">&quot;C:\certs\snapcenter01.pfx&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$pfxPass</span>  <span class="p">=</span> <span class="p">(</span><span class="nb">Read-Host</span> <span class="s2">&quot;PFX password&quot;</span> <span class="n">-AsSecureString</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">$certStore</span> <span class="p">=</span> <span class="s2">&quot;Cert:\LocalMachine\My&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="nv">$pfxPath</span> <span class="n">-CertStoreLocation</span> <span class="nv">$certStore</span> <span class="n">-Password</span> <span class="nv">$pfxPass</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Certificate thumbprint: </span><span class="p">$(</span><span class="nv">$cert</span><span class="p">.</span><span class="n">Thumbprint</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Bind the certificate to IIS port 8146</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># In IIS Manager: Sites → SnapCenter_WebApp → Bindings → Edit → Select new certificate</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Or via PowerShell:</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Import-Module</span> <span class="n">WebAdministration</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nv">$binding</span> <span class="p">=</span> <span class="nb">Get-WebBinding</span> <span class="n">-Name</span> <span class="s2">&quot;SnapCenter_WebApp&quot;</span> <span class="n">-Protocol</span> <span class="n">https</span> <span class="n">-Port</span> <span class="n">8146</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nv">$binding</span><span class="p">.</span><span class="n">AddSslCertificate</span><span class="p">(</span><span class="nv">$cert</span><span class="p">.</span><span class="n">Thumbprint</span><span class="p">,</span> <span class="s2">&quot;My&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c"># Restart IIS to apply the new certificate</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">iisreset</span> <span class="p">/</span><span class="n">noforce</span>
+</code></pre></div>
+<p><strong>Step 4 — Verify the Certificate</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify the certificate is bound to port 8146</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">netsh</span> <span class="n">http</span> <span class="n">show</span> <span class="n">sslcert</span> <span class="n">ipport</span><span class="p">=</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">:</span><span class="n">8146</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Test the certificate from a client</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># In a browser: navigate to https://snapcenter01.corp.example.com:8146</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Certificate should show as trusted (green padlock) with the correct FQDN</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Command-line check</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[System.Net.ServicePointManager]</span><span class="p">::</span><span class="n">SecurityProtocol</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://snapcenter01.corp.example.com:8146&quot;</span> <span class="n">-UseBasicParsing</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">StatusCode</span>
+</code></pre></div>
+<h3 id="tls-version-enforcement">TLS Version Enforcement<a class="headerlink" href="#tls-version-enforcement" title="Permanent link">&para;</a></h3>
+<p>Enforce TLS 1.2 minimum in IIS — disable TLS 1.0 and 1.1 on the SnapCenter Server.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Disable TLS 1.0 in Windows registry (run as Administrator)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$tls10</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$tls10</span> <span class="n">-Force</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">New-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tls10</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-PropertyType</span> <span class="n">DWORD</span> <span class="n">-Force</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">New-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tls10</span> <span class="n">-Name</span> <span class="s2">&quot;DisabledByDefault&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-PropertyType</span> <span class="n">DWORD</span> <span class="n">-Force</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Disable TLS 1.1</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">$tls11</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$tls11</span> <span class="n">-Force</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">New-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tls11</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-PropertyType</span> <span class="n">DWORD</span> <span class="n">-Force</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">New-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tls11</span> <span class="n">-Name</span> <span class="s2">&quot;DisabledByDefault&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-PropertyType</span> <span class="n">DWORD</span> <span class="n">-Force</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Confirm TLS 1.2 is enabled (should be by default on Windows Server 2019+)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">$tls12</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tls12</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c"># Reboot required for SCHANNEL registry changes to take effect</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c"># Restart-Computer -Force</span>
+</code></pre></div>
+<h3 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check the SnapCenter Server certificate expiry date</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="s2">&quot;Cert:\LocalMachine\My&quot;</span> <span class="p">|</span> 
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-like</span> <span class="s2">&quot;*snapcenter*&quot;</span> <span class="p">}</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">$cert</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Alert if certificate expires within 30 days</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">$daysUntilExpiry</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$cert</span><span class="p">.</span><span class="n">NotAfter</span> <span class="p">-</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">)).</span><span class="n">Days</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$daysUntilExpiry</span> <span class="o">-lt</span> <span class="n">30</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">Write-Warning</span> <span class="s2">&quot;SnapCenter certificate expires in $daysUntilExpiry days — renew immediately&quot;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Certificate valid for $daysUntilExpiry more days&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>Include certificate expiry monitoring in weekly operational checks — a SnapCenter certificate expiry causes browser warnings and can block automation scripts that validate TLS certificates.</p>
+<hr />
+<h2 id="encryption-of-stored-credentials">Encryption of Stored Credentials<a class="headerlink" href="#encryption-of-stored-credentials" title="Permanent link">&para;</a></h2>
+<p>SnapCenter encrypts credentials stored in its repository database using Windows DPAPI (Data Protection API) on the SnapCenter Server host. The encryption key is tied to the SnapCenter Server Windows machine account. Key implications:</p>
+<ul>
+<li>Moving the SnapCenter repository database to a different server requires re-entering all credentials — the DPAPI encryption is not portable</li>
+<li>The SnapCenter Server VM must be backed up as a whole (including the Windows machine state) to preserve credential decryptability</li>
+<li>Do not clone the SnapCenter Server VM without also re-initialising credentials — cloned VMs with the same SID can create decryption conflicts</li>
+</ul>
+<h3 id="snapcenter-repository-backup">SnapCenter Repository Backup<a class="headerlink" href="#snapcenter-repository-backup" title="Permanent link">&para;</a></h3>
+<p>The repository database (MySQL) should be backed up separately from the SnapCenter Server VM. A corrupted or inaccessible repository causes SnapCenter to lose all job history, policies, resource groups, and RBAC configuration.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Back up the MySQL repository via SnapCenter built-in backup</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># In SnapCenter GUI: Settings → Repository → Backup</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># Or via PowerShell:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Stop MySQL temporarily for a clean backup (brief service interruption)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Stop-Service</span> <span class="n">-Name</span> <span class="s2">&quot;MySQL80&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Copy the MySQL data directory to backup location</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">$mysqlData</span>   <span class="p">=</span> <span class="s2">&quot;C:\Program Files\NetApp\SnapCenter\MySQL Data&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">$backupDest</span>  <span class="p">=</span> <span class="s2">&quot;\\backup-server\snapcenter-repo\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Copy-Item</span> <span class="n">-Path</span> <span class="nv">$mysqlData</span> <span class="n">-Destination</span> <span class="nv">$backupDest</span> <span class="n">-Recurse</span> <span class="n">-Force</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Restart MySQL</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Start-Service</span> <span class="n">-Name</span> <span class="s2">&quot;MySQL80&quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c"># Verify MySQL is running after backup</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;MySQL80&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
+</code></pre></div>
+<hr />
+<h2 id="encryption-in-snapcenter-to-ontap-communication">Encryption in SnapCenter-to-ONTAP Communication<a class="headerlink" href="#encryption-in-snapcenter-to-ontap-communication" title="Permanent link">&para;</a></h2>
+<p>SnapCenter communicates with ONTAP via HTTPS (port 443 using ONTAP REST API for SnapCenter 6.x, or ONTAP ZAPI/HTTP for older versions). The ONTAP management LIF must have a valid TLS certificate.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Verify ONTAP storage connection is using HTTPS</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-SmStorageConnection</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">StorageName</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Port</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c"># Protocol should be: HTTPS</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Port should be: 443</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Update a storage connection to use HTTPS if it is using HTTP</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Set-SmStorageConnection</span> <span class="p">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">-StorageName</span> <span class="s2">&quot;lon-affa400-cl01&quot;</span> <span class="p">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">-Protocol</span> <span class="n">HTTPS</span> <span class="p">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">-Port</span> <span class="n">443</span> <span class="p">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+</code></pre></div>
+<p>For SnapCenter 6.x, the REST API connection to ONTAP uses TLS 1.2 minimum, enforced by the ONTAP cluster TLS configuration. Verify on the ONTAP cluster:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify ONTAP HTTPS TLS configuration (run on ONTAP cluster)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>security<span class="w"> </span>config<span class="w"> </span>show
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Check: Is FIPS Enabled: false (or true if FIPS mode)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check: Supported Protocols: TLSv1.2,TLSv1.3 (not TLSv1.0 or TLSv1.1)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Enforce TLS 1.2 minimum</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>security<span class="w"> </span>config<span class="w"> </span>modify<span class="w"> </span>-interface<span class="w"> </span>HTTPS<span class="w"> </span>-min-protocol-version<span class="w"> </span>TLSv1.2
+</code></pre></div>
+<hr />
+<h2 id="encryption-of-snapcenter-agent-communication">Encryption of SnapCenter Agent Communication<a class="headerlink" href="#encryption-of-snapcenter-agent-communication" title="Permanent link">&para;</a></h2>
+<p>The SnapCenter Server communicates with plugin agents on TCP port 8145. This channel uses TLS encryption. The certificate used for the agent channel is the same server certificate configured on port 8146.</p>
+<ul>
+<li>Plugin agents validate the SnapCenter Server certificate on connection — if the certificate changes (e.g., renewal), agents may require a re-registration or refresh via Settings → Hosts → Refresh</li>
+<li>On Linux plugin hosts, the SnapCenter Linux plug-in service stores a copy of the SnapCenter Server's public certificate to validate the connection</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># After certificate renewal, refresh all plugin hosts to re-establish trust</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-SmHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Refreshing host: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">HostName</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nb">Invoke-SmHostRefresh</span> <span class="n">-HostName</span> <span class="nv">$_</span><span class="p">.</span><span class="n">HostName</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">}</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># Verify all hosts reconnected successfully after refresh</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">Get-SmHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">HostName</span><span class="p">,</span> <span class="n">PlugInStatus</span><span class="p">,</span> <span class="n">OverallStatus</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># All hosts should show PlugInStatus: Running</span>
+</code></pre></div>
+<hr />
+<h2 id="compliance-summary">Compliance Summary<a class="headerlink" href="#compliance-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>SnapCenter Feature</th>
+<th>How to Verify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Encryption in transit — GUI/API</td>
+<td>TLS 1.2+ on IIS port 8146</td>
+<td><code>netsh http show sslcert ipport=0.0.0.0:8146</code></td>
+</tr>
+<tr>
+<td>Encryption in transit — ONTAP</td>
+<td>HTTPS on port 443</td>
+<td><code>Get-SmStorageConnection \| Select Protocol</code></td>
+</tr>
+<tr>
+<td>Encryption in transit — agent</td>
+<td>TLS on port 8145 (same cert as 8146)</td>
+<td><code>Get-SmHost \| Select HostName, PlugInStatus</code></td>
+</tr>
+<tr>
+<td>Encryption of stored credentials</td>
+<td>Windows DPAPI on SnapCenter Server</td>
+<td>Repository backup validates decryptability</td>
+</tr>
+<tr>
+<td>Certificate management</td>
+<td>CA-signed cert on IIS</td>
+<td>Certificate expiry check weekly</td>
+</tr>
+<tr>
+<td>TLS version enforcement</td>
+<td>SCHANNEL registry (Windows) + IIS</td>
+<td>Registry check; <code>netsh</code> SSL cert binding</td>
+</tr>
+</tbody>
+</table>
 
 
 

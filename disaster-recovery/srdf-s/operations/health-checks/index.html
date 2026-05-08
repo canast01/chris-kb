@@ -880,6 +880,41 @@
 </blockquote>
 <p>Regular health checks on SRDF/S replication confirm that all device pairs are synchronized, RDF directors and links are operational, and no track backlogs exist. These checks should run daily as part of infrastructure monitoring and immediately before any planned failover or maintenance activity.</p>
 <p>Health checks cover four layers: pair state, link/director status, performance metrics, and array-level configuration consistency.</p>
+<pre class="mermaid"><code>flowchart TD
+    dailyStart["Daily Health Check"]
+    pairState["Check Pair State\nsymrdf query -g dgname"]
+    allSynced{"All Pairs\nSynchronized?"}
+    checkRTT["Check WAN RTT\nping -c 20 dr-site-ip"]
+    rttOk{"RTT ≤ 5ms?"}
+    checkDirector["Check RDF Director\nsymcfg list -dir all -rdf"]
+    dirOnline{"Directors\nOnline?"}
+    checkLink["Check Link Utilization\nsymstat -rdf -dir RF-1F -i 5 -c 3"]
+    linkOk{"Utilization\n&lt; 80%?"}
+    healthy["Health Check PASSED\nDocument results"]
+    investigatePairs["Investigate Pair State\nCheck invalid tracks"]
+    investigateRTT["Report to Network Team\nRTT exceeds SRDF/S budget"]
+    investigateDir["Check Director Port\nPhysical link and configuration"]
+    investigateLink["Investigate Link Saturation\nEngage network team"]
+
+    dailyStart --&gt; pairState
+    pairState --&gt; allSynced
+    allSynced --&gt;|"Yes"| checkRTT
+    allSynced --&gt;|"No"| investigatePairs
+    checkRTT --&gt; rttOk
+    rttOk --&gt;|"Yes"| checkDirector
+    rttOk --&gt;|"No"| investigateRTT
+    checkDirector --&gt; dirOnline
+    dirOnline --&gt;|"Yes"| checkLink
+    dirOnline --&gt;|"No"| investigateDir
+    checkLink --&gt; linkOk
+    linkOk --&gt;|"Yes"| healthy
+    linkOk --&gt;|"No"| investigateLink
+
+    style healthy fill:#15803d,color:#fff
+    style investigatePairs fill:#be123c,color:#fff
+    style investigateRTT fill:#be123c,color:#fff
+    style investigateDir fill:#be123c,color:#fff
+    style investigateLink fill:#b45309,color:#fff</code></pre>
 <hr />
 <h2 id="daily-pair-state-check">Daily Pair State Check<a class="headerlink" href="#daily-pair-state-check" title="Permanent link">&para;</a></h2>
 <p>Run these checks at the start of each shift and before any planned changes. All commands are executed from a Solutions Enabler (SE) host with gatekeeper access to the R1 array unless noted.</p>
@@ -1006,6 +1041,7 @@
 <th>Normal</th>
 <th>Investigate</th>
 <th>Escalate</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
@@ -1014,18 +1050,21 @@
 <td>≤5 ms</td>
 <td>5–10 ms</td>
 <td>&gt;10 ms</td>
+<td>Every 1ms of RTT adds ~2ms to host write latency</td>
 </tr>
 <tr>
 <td>Write response time vs baseline</td>
 <td>±10%</td>
 <td>+10–25%</td>
 <td>&gt;25% or application SLA breach</td>
+<td>SRDF/S latency penalty is directly visible to application users</td>
 </tr>
 <tr>
 <td>SRDF link utilisation</td>
 <td>&lt;70%</td>
 <td>70–85%</td>
 <td>&gt;85%</td>
+<td>Saturation causes write pending buildup and possible Write Disabled state</td>
 </tr>
 </tbody>
 </table>

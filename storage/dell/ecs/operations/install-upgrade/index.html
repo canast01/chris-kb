@@ -879,6 +879,25 @@
 </code></pre></div>
 <h2 id="upgrade-and-update-paths">Upgrade and Update Paths<a class="headerlink" href="#upgrade-and-update-paths" title="Permanent link">&para;</a></h2>
 <p>ECS upgrades are rolling — the cluster remains online throughout. The ECS Portal handles upgrade orchestration; each node is upgraded sequentially with automatic health validation between each node.</p>
+<pre class="mermaid"><code>graph TD
+  PRE([Pre-upgrade checks pass]) --&gt; UPLOAD["Upload bundle to\nECS Portal → Software Update"]
+  UPLOAD --&gt; START["Start Upgrade\n(portal orchestrates)"]
+  START --&gt; NODE1["Upgrade Node 1\n(~15–30 min reboot)"]
+  NODE1 --&gt; CHK1{Node 1\nback GOOD?}
+  CHK1 --&gt;|No| HALT["STOP — do not\ncontinue; investigate\ncall Dell support"]
+  CHK1 --&gt;|Yes| NEXT["Upgrade next node\n(repeat per node)"]
+  NEXT --&gt; ALLDONE{All nodes\nupgraded?}
+  ALLDONE --&gt;|No| NEXT
+  ALLDONE --&gt;|Yes| POSTVAL["Post-upgrade validation:\nGET /vdc/nodes · /vdc/version\ngeo-rep lag at zero\nS3 functional test"]
+  POSTVAL --&gt; DONE([Change record closed])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class CHK1,ALLDONE decision
+  class UPLOAD,START,NODE1,NEXT,POSTVAL action
+  class HALT warn
+  class PRE,DONE term</code></pre>
 <p><strong>Upgrade procedure:</strong></p>
 <ol>
 <li>Confirm all pre-upgrade checks pass (see above)</li>
@@ -964,6 +983,24 @@
 </table>
 <h2 id="disk-replacement">Disk Replacement<a class="headerlink" href="#disk-replacement" title="Permanent link">&para;</a></h2>
 <p>When a disk fails, ECS marks it as <code>FAILED</code> and begins automatic rebuild. The disk should be physically replaced promptly to restore full redundancy.</p>
+<pre class="mermaid"><code>graph TD
+  DISK_FAIL(["Disk shows FAILED\nin ECS Portal"]) --&gt; IDENT["Portal → Hardware → Disks\nNote: node + slot + LED indicator"]
+  IDENT --&gt; BEGIN["Begin Replacement\n(portal guided procedure)"]
+  BEGIN --&gt; SWAP["Hot-swap disk\n(supported hardware)"]
+  SWAP --&gt; AUTO["ECS auto-detects new disk\nRebuild begins: REBUILDING"]
+  AUTO --&gt; PROG["Monitor progress:\nPortal → Hardware → Disks"]
+  PROG --&gt; REBUILT{Status =\nGOOD?}
+  REBUILT --&gt;|No| WAIT["Continue monitoring\nDo not replace additional\ndisks during rebuild"]
+  WAIT --&gt; PROG
+  REBUILT --&gt;|Yes| CLEAR(["Redundancy restored"])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class REBUILT decision
+  class IDENT,BEGIN,SWAP,AUTO,PROG action
+  class WAIT warn
+  class DISK_FAIL,CLEAR term</code></pre>
 <p><strong>Procedure:</strong></p>
 <ol>
 <li>Identify the failed disk in ECS Portal → Hardware → Disks — note the node and slot position</li>

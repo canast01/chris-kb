@@ -1009,6 +1009,26 @@
 - Rotate local account passwords on a 90-day schedule or per your organisation's password policy.</p>
 <h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
 <p>Unisphere for PowerMax supports LDAP (including Active Directory via LDAP) for centrally-managed authentication. Users authenticate with their AD credentials; Unisphere maps AD group membership to internal roles.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant User as Admin Browser
+    participant UNI as Unisphere :8443
+    participant AD as Active Directory\n(LDAPS :636)
+    participant ARRAY as PowerMax Array
+
+    User-&gt;&gt;UNI: HTTPS login (username + password)
+    UNI-&gt;&gt;AD: LDAP bind (svc-powermax + bind_pw)
+    AD--&gt;&gt;UNI: bind success
+    UNI-&gt;&gt;AD: search user (sAMAccountName=username)
+    AD--&gt;&gt;UNI: user DN + group memberships
+    UNI-&gt;&gt;AD: verify password (bind as user DN)
+    AD--&gt;&gt;UNI: authentication OK
+    UNI-&gt;&gt;UNI: map AD group → Unisphere role\n(StorageAdmin / SecurityAdmin / etc.)
+    UNI--&gt;&gt;User: session cookie + dashboard
+    User-&gt;&gt;UNI: API call (GET /storagegroup)
+    UNI-&gt;&gt;UNI: RBAC check — role has permission?
+    UNI-&gt;&gt;ARRAY: SYMAPI / internal query
+    ARRAY--&gt;&gt;UNI: data
+    UNI--&gt;&gt;User: 200 OK + storage group list</code></pre>
 <h3 id="configuration-steps">Configuration Steps<a class="headerlink" href="#configuration-steps" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Unisphere → Settings → Security → LDAP Configuration</strong>.</li>

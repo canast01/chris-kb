@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#management-plane-encryption-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Plane Encryption Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -936,6 +947,28 @@
 <p>Part of the <a href="../">Security</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="management-plane-encryption-stack">Management Plane Encryption Stack<a class="headerlink" href="#management-plane-encryption-stack" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "Management Access"
+        ssh["SSH\nECDSA / RSA host key\nAES-256 transport"]
+        https["HTTPS — Web Tools / REST API\nTLS 1.2+\nCA-signed certificate"]
+        snmp3["SNMP v3\nSHA authentication\nAES-128 privacy"]
+    end
+
+    subgraph "Config Transfer"
+        scp["SCP (configupload)\nencrypted file transfer"]
+    end
+
+    subgraph "Disabled (Plaintext Protocols)"
+        telnet["Telnet — DISABLED"]
+        http["HTTP — DISABLED"]
+        snmp12["SNMPv1/v2c — DISABLED\n(no community strings)"]
+        ftp["FTP — DISABLED\n(use SCP only)"]
+    end
+
+    adminUser["Administrators"] --&gt; ssh &amp; https &amp; snmp3
+    backupServer["Backup Server"] --&gt; scp
+    monSystem["Monitoring Platform"] --&gt; snmp3</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Encryption in Brocade FabricOS applies to the management plane — protecting switch management traffic (SSH, HTTPS, SNMP v3) and ensuring data confidentiality for audit logs in transit to a SIEM. FC data frames in the SAN fabric itself are not encrypted at the switch level (fabric-layer FC encryption is handled by inline encryption appliances or host-based encryption).</p>
 <p>Key areas:</p>

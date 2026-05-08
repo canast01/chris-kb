@@ -718,6 +718,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#separation-of-duties-vsan-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separation of Duties — vSAN Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#objects-and-permission-propagation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -940,6 +951,30 @@
 <p>vSAN access control is implemented through vCenter's Role-Based Access Control (RBAC) system. There is no separate vSAN permission model — all vSAN management actions require vCenter permissions on the cluster or datacenter objects.</p>
 <hr />
 <h2 id="vcenter-rbac-model">vCenter RBAC Model<a class="headerlink" href="#vcenter-rbac-model" title="Permanent link">&para;</a></h2>
+<h3 id="separation-of-duties-vsan-roles">Separation of Duties — vSAN Roles<a class="headerlink" href="#separation-of-duties-vsan-roles" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph LR
+    subgraph "Identity (who)"
+        adGroup["AD Group\n(e.g. vSAN-Operators)"]
+        svcAcct["Service Account\n(e.g. svc-aria-vcenter)"]
+    end
+
+    subgraph "Role (what)"
+        adminRole["Administrator\n(full access)"]
+        opRole["vSAN-StorageOperator\n(disk groups, health, policies)"]
+        roRole["vSAN-Monitor-RO\n(read-only health / perf)"]
+        policyRole["vSAN-PolicyAdmin\n(storage policies only)"]
+    end
+
+    subgraph "Scope (where)"
+        rootVC["vCenter Root\n(KMS config)"]
+        cluster["Cluster\n(vSAN operations)"]
+        datastore["vSAN Datastore\n(VM placement)"]
+    end
+
+    adGroup --&gt; opRole --&gt; cluster
+    svcAcct --&gt; roRole --&gt; cluster
+    adGroup --&gt; policyRole --&gt; rootVC
+    cluster --&gt;|"propagates to"| datastore</code></pre>
 <h3 id="objects-and-permission-propagation">Objects and Permission Propagation<a class="headerlink" href="#objects-and-permission-propagation" title="Permanent link">&para;</a></h3>
 <p>vCenter permissions are assigned to inventory objects (datacenter, cluster, host, VM, datastore) and optionally propagated to child objects.</p>
 <p><strong>vSAN-relevant objects:</strong></p>

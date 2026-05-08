@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#dual-fabric-design-with-isl-trunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dual-Fabric Design with ISL Trunking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#principal-switch-and-domain-id" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -809,6 +820,17 @@
     <span class="md-ellipsis">
       
         MAPS — Monitoring and Alerting Policy Suite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-fabrics-logical-switch-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Fabrics — Logical Switch Partitioning
       
     </span>
   </a>
@@ -922,6 +944,26 @@
 <p>Each fabric is independent. ISLs form trunk groups between switches within a fabric — not between Fabric A and Fabric B.</p>
 <p><strong>Trunk groups:</strong> Brocade ISL trunks group multiple physical ISL links into a single logical ISL for bandwidth aggregation and resilience. All links in a trunk must be same speed and between the same pair of switches.</p>
 <hr />
+<h2 id="dual-fabric-design-with-isl-trunking">Dual-Fabric Design with ISL Trunking<a class="headerlink" href="#dual-fabric-design-with-isl-trunking" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "Fabric A"
+        swA1["G620-SW01\nDomain 1\n(edge)"]
+        swA2["G720-Core-A\nDomain 2\n(core / principal)"]
+        swA1 &lt;--&gt;|"ISL trunk\n2×32G"| swA2
+    end
+
+    subgraph "Fabric B"
+        swB1["G620-SW02\nDomain 21\n(edge)"]
+        swB2["G720-Core-B\nDomain 22\n(core / principal)"]
+        swB1 &lt;--&gt;|"ISL trunk\n2×32G"| swB2
+    end
+
+    hostA0(["ESXi HBA0"]) --&gt;|"F_Port"| swA1
+    hostB0(["ESXi HBA1"]) --&gt;|"F_Port"| swB1
+    swA2 --&gt;|"F_Port"| stgA(["Storage CT0"])
+    swB2 --&gt;|"F_Port"| stgB(["Storage CT1"])
+
+    note["Fabric A and Fabric B\nare completely isolated\n(no cross-fabric cables)"]</code></pre>
 <h2 id="principal-switch-and-domain-id">Principal Switch and Domain ID<a class="headerlink" href="#principal-switch-and-domain-id" title="Permanent link">&para;</a></h2>
 <p>One switch per fabric is the principal switch, elected by lowest WWN (by default) or by priority setting.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show current principal switch</span>
@@ -1061,6 +1103,22 @@
 </code></pre></div>
 <p>MAPS policies are pre-defined by Broadcom (defaulted to <code>dflt_conservative_policy</code> or <code>dflt_aggressive_policy</code>) and can be customised with site-specific thresholds. The policy is configured per logical switch.</p>
 <hr />
+<h2 id="virtual-fabrics-logical-switch-partitioning">Virtual Fabrics — Logical Switch Partitioning<a class="headerlink" href="#virtual-fabrics-logical-switch-partitioning" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "Physical X7-8 Director"
+        subgraph "Logical Switch FID 1 — Fabric A Production"
+            ports1["Ports 0–23\nHost + Storage F_Ports\nE_Ports to Fabric A switches"]
+        end
+        subgraph "Logical Switch FID 2 — Fabric B Production"
+            ports2["Ports 24–47\nHost + Storage F_Ports\nE_Ports to Fabric B switches"]
+        end
+        subgraph "Logical Switch FID 10 — Replication Fabric"
+            ports3["Ports 48–55\nSRDF / RecoverPoint\nreplication ports"]
+        end
+        hw["Shared hardware:\npower · cooling · backplane\nCP blades"]
+    end
+    ports1 -.-&gt;|"isolated namespace\nseparate zone DB"| ports2
+    ports2 -.-&gt;|"isolated namespace"| ports3</code></pre>
 <h2 id="fcip-fibre-channel-over-ip">FCIP — Fibre Channel over IP<a class="headerlink" href="#fcip-fibre-channel-over-ip" title="Permanent link">&para;</a></h2>
 <p>FCIP extends a Fibre Channel fabric over an IP WAN connection. It is used for long-distance replication (SRDF, RecoverPoint) where a direct ISL is not possible. Brocade 7810/7840 extension platforms provide FCIP gateway functionality.</p>
 <p>FCIP tunnels encapsulate FC frames in TCP/IP packets. The IP network must provide adequate bandwidth and latency — FCIP is sensitive to packet loss and high latency (target: &lt;5ms one-way for synchronous replication).</p>

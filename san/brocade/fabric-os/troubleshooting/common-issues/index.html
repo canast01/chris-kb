@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#incident-triage-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#triage-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -862,6 +873,24 @@
 <p>Part of the <a href="../">Troubleshooting</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="incident-triage-decision-tree">Incident Triage Decision Tree<a class="headerlink" href="#incident-triage-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    incident([Incident Reported]) --&gt; baseline["Fast baseline:\nswitchstatusshow · switchshow\nfabricshow · islshow · porterrshow"]
+    baseline --&gt; healthy{"switchstatusshow\nHEALTHY?"}
+    healthy --&gt;|No| hwCheck["sensorshow · fanshow · psshow\nEnvironmental failure?"]
+    hwCheck --&gt;|Yes| hwAction["Replace fan / PSU\nEscalate to Broadcom TAC"]
+    hwCheck --&gt;|No| portFaulty["porttest suspect port\nHW fault?"]
+    healthy --&gt;|Yes| hostSee{"Host sees storage?"}
+    hostSee --&gt;|No| nsCheck["nsshow — HBA in name server?"]
+    nsCheck --&gt;|No| flogiCheck["portlogshow — FLOGI events?\nCheck cable · SFP · HBA driver"]
+    nsCheck --&gt;|Yes| zoneCheck["zoneshow — WWPN in active zone?"]
+    zoneCheck --&gt;|No| addZone["Create/fix zone\ncfgenable · cfgsave"]
+    zoneCheck --&gt;|Yes| arrayMask["Check array-side LUN masking\n(Pure / PowerMax / ONTAP)"]
+    hostSee --&gt;|Yes| errCheck{"porterrshow\nHigh error counters?"}
+    errCheck --&gt;|Yes| sfpCheck["sfpshow — SFP optical levels\nReplace SFP first"]
+    errCheck --&gt;|No| maps["mapsdb --show\nActive MAPS alerts?"]
+    maps --&gt;|"BB credit zero"| slowDrain["bottleneckmon --show\nDisable slow drain port"]
+    maps --&gt;|"ISL util high"| islAdd["Add ISL capacity\ncheck trunk group"]</code></pre>
 <h2 id="triage-approach">Triage Approach<a class="headerlink" href="#triage-approach" title="Permanent link">&para;</a></h2>
 <p>Start every investigation with a fast baseline capture. Run all commands before making any changes — the state you see now is evidence.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Fast baseline — run immediately on opening an incident</span>

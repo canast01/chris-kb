@@ -1014,6 +1014,24 @@
 <li>Register all ECS nodes in the Dell Support portal under the active support contract before go-live</li>
 </ul>
 <h2 id="replication-group-design">Replication Group Design<a class="headerlink" href="#replication-group-design" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  subgraph "Site A — lon01-ecs-vdc1"
+    NS_A["Namespace: analytics-prod\nBuckets + IAM users"]
+    NODES_A["ECS Nodes (N≥4)\n12+4 EC within VDC"]
+    NS_A --- NODES_A
+  end
+  subgraph "Site B — ams01-ecs-vdc1"
+    NS_B["Namespace: analytics-prod\n(replica)"]
+    NODES_B["ECS Nodes (N≥4)\n12+4 EC within VDC"]
+    NS_B --- NODES_B
+  end
+  RG["Replication Group\nlon01-ams01-rg1\n(async · 15 min RPO)"]
+  NS_A --&gt; RG --&gt; NS_B
+  WAN(["WAN link · port 9100\nSize for 110% of peak ingest"]) -. "geo-replication" .- RG
+  classDef vdc fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef rg fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class NODES_A,NODES_B,NS_A,NS_B vdc
+  class RG rg</code></pre>
 <table>
 <thead>
 <tr>

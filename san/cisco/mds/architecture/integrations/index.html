@@ -803,6 +803,25 @@
 <hr />
 <h2 id="vmware-fc-connectivity">VMware FC Connectivity<a class="headerlink" href="#vmware-fc-connectivity" title="Permanent link">&para;</a></h2>
 <p>ESXi hosts connect to storage via FC HBAs, which log into the MDS fabric and are zoned to storage target ports.</p>
+<pre class="mermaid"><code>sequenceDiagram
+  participant ESXi as ESXi Host
+  participant MDSA as MDS Fabric A
+  participant MDSB as MDS Fabric B
+  participant FA as FlashArray
+
+  ESXi-&gt;&gt;MDSA: HBA0 FLOGI (Fabric A, VSAN 10)
+  MDSA--&gt;&gt;ESXi: FCID assigned
+  ESXi-&gt;&gt;MDSB: HBA1 FLOGI (Fabric B, VSAN 11)
+  MDSB--&gt;&gt;ESXi: FCID assigned
+
+  Note over MDSA,FA: Admin creates device aliases and zones
+
+  MDSA-&gt;&gt;MDSA: device-alias commit&lt;br/&gt;zone create + zoneset activate (VSAN 10)
+  MDSB-&gt;&gt;MDSB: device-alias commit&lt;br/&gt;zone create + zoneset activate (VSAN 11)
+
+  ESXi-&gt;&gt;FA: PLOGI + PRLI to CT0 via Fabric A
+  ESXi-&gt;&gt;FA: PLOGI + PRLI to CT1 via Fabric B
+  FA--&gt;&gt;ESXi: Volumes visible via both paths (ALUA)</code></pre>
 <p><strong>Zone a new ESXi host:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Step 1 — Find the host HBA WWPN after it logs in
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show flogi database vsan 10 | grep &lt;host-ip-or-note&gt;

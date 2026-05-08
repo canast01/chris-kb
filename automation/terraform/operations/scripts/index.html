@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#multi-workspace-deploy-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Workspace Deploy Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -906,6 +917,43 @@
 <h1 id="terraform-scripts">Terraform — Scripts<a class="headerlink" href="#terraform-scripts" title="Permanent link">&para;</a></h1>
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
 <p>Use this page for practical Terraform scripts, field-tested commands, known issues, and operational notes.</p>
+<h2 id="multi-workspace-deploy-pipeline">Multi-Workspace Deploy Pipeline<a class="headerlink" href="#multi-workspace-deploy-pipeline" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    trigger["Trigger\n(TF_DIR + workspaces)"]
+    selectDev["Select workspace:\ndev"]
+    initDev["terraform init\n-reconfigure"]
+    planDev["terraform plan\n-detailed-exitcode"]
+    approvalDev{"Auto-approve\ndev?"}
+    applyDev["terraform apply"]
+    selectStaging["Select workspace:\nstaging"]
+    planStaging["terraform plan"]
+    approvalStaging{"Operator\napproval?"}
+    applyStaging["terraform apply"]
+    selectProd["Select workspace:\nprod"]
+    planProd["terraform plan"]
+    approvalProd{"Operator\napproval?"}
+    applyProd["terraform apply"]
+    done["All workspaces\ndeployed"]
+    abort["ABORT:\nAlert + stop"]
+
+    trigger --&gt; selectDev
+    selectDev --&gt; initDev
+    initDev --&gt; planDev
+    planDev --&gt; approvalDev
+    approvalDev --&gt;|Yes| applyDev
+    approvalDev --&gt;|No| approvalDev
+    applyDev --&gt;|OK| selectStaging
+    applyDev --&gt;|Fail| abort
+    selectStaging --&gt; planStaging
+    planStaging --&gt; approvalStaging
+    approvalStaging --&gt;|yes| applyStaging
+    applyStaging --&gt;|OK| selectProd
+    applyStaging --&gt;|Fail| abort
+    selectProd --&gt; planProd
+    planProd --&gt; approvalProd
+    approvalProd --&gt;|yes| applyProd
+    applyProd --&gt;|OK| done
+    applyProd --&gt;|Fail| abort</code></pre>
 <h2 id="common-checks">Common Checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Confirm current health</li>

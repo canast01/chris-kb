@@ -1064,6 +1064,18 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This page covers the most frequent operational issues encountered on Dell Data Domain appliances during day-to-day backup operations. For deeper diagnostic procedures see the <a href="../../troubleshooting/diagnostics/">Diagnostics</a> page. For a structured symptom table see <a href="../../troubleshooting/common-issues/">Troubleshooting Common Issues</a>.</p>
 <h2 id="incident-triage-first-response">Incident Triage — First Response<a class="headerlink" href="#incident-triage-first-response" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Backup failure / replication lag / DDBoost disconnect]) --&gt; B["alerts show current\nfilesys show space"]
+    B --&gt; C{"filesys post-comp\n&gt; 90%?"}
+    C --&gt;|Yes| D["filesys clean start\nCoordinate backup expiry"]
+    C --&gt;|No| E{"filesys status\nEnabled + Running?"}
+    E --&gt;|No| F["disk show state\nalerts show current\nfilesys enable (if no HW alerts)"]
+    E --&gt;|Yes| G{"Replication context\nin Error?"}
+    G --&gt;|Yes| H["replication show errors\nnet ping destination\nCheck destination capacity"]
+    G --&gt;|No| I{"DDBoost client\ndisconnected?"}
+    I --&gt;|Yes| J["ddboost show clients\nReset DD Boost password\nUpdate backup app credentials"]
+    I --&gt;|No| K["Check backup app logs\nfor specific error code"]
+    D &amp; F &amp; H &amp; J &amp; K --&gt; L(["Open Dell support case\nif unresolved"])</code></pre>
 <p>When backup jobs fail, replication falls behind, or DDBoost clients disconnect, work through this sequence first before diving into specific issues.</p>
 <ul>
 <li>[ ] Run <code>alerts show current</code> — identify any active hardware or software alerts that correspond to the start of the incident</li>

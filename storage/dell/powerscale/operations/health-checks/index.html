@@ -843,6 +843,21 @@
 
 <h1 id="powerscale-health-checks">PowerScale — Health Checks<a class="headerlink" href="#powerscale-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Daily Health Check]) --&gt; B["isi status\nAll nodes ONLINE?"]
+    B --&gt; C{"SMARTFAIL\nor DOWN node?"}
+    C --&gt;|Yes| D["Do NOT remove manually\nMonitor Restripe job\nOpen Dell support case"]
+    C --&gt;|No| E["isi storagepool list\nCapacity &lt; 80%?"]
+    E --&gt; F{"Pool &gt; 80%?"}
+    F --&gt;|Yes| G["Identify top consumers\nisi quota quotas list\nPlan expansion or cleanup"]
+    F --&gt;|No| H["isi sync policies list\nSyncIQ all SUCCESS?"]
+    H --&gt; I{"Policy FAILED\nor OVERDUE?"}
+    I --&gt;|Yes| J["isi sync reports list\nInvestigate error\nRestart if needed"]
+    I --&gt;|No| K["isi event list --limit 20\nCRITICAL events?"]
+    K --&gt; L{"Unack'd CRITICAL\nevents?"}
+    L --&gt;|Yes| M["Triage event code\nEscalate if hardware"]
+    L --&gt;|No| N([Checks passed])
+    D &amp; G &amp; J &amp; M --&gt; N</code></pre>
 <table>
 <thead>
 <tr>

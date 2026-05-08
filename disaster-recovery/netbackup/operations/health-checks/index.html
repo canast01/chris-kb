@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#daily-check-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Check Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -881,6 +892,30 @@
 
 
 <h1 id="netbackup-health-checks">NetBackup — Health Checks<a class="headerlink" href="#netbackup-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="daily-check-flow">Daily Check Flow<a class="headerlink" href="#daily-check-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start(["Start daily\nhealth check"])
+    start --&gt; jobSummary["bpjobs -summary\nReview totals\n(target: 0 failed)"]
+    jobSummary --&gt; failedJobs{"Any\nfailures?"}
+    failedJobs --&gt;|Yes| investigate["bpdbjobs -report -failed -hoursago 24\nInvestigate each failure\nNote error status code"]
+    failedJobs --&gt;|No| catalog["Verify catalog backup\nbplist -S &lt;master&gt; -policy NBU_Catalog\nMust have completed in last 6 hours"]
+    investigate --&gt; catalog
+    catalog --&gt; catalogOK{"Catalog backup\nOK?"}
+    catalogOK --&gt;|No| catAlert["CRITICAL: trigger manual\ncatalog backup immediately\nbpbackup -p NBU_Catalog_Backup"]
+    catalogOK --&gt;|Yes| storage["bpstulist — check all STUs\nTotal Capacity vs Free Space\nFlag STUs below 15% free"]
+    catAlert --&gt; storage
+    storage --&gt; mediaServers["nbemmcmd -listhosts -machinetype mediaserver\nVerify all media servers registered"]
+    mediaServers --&gt; alerts["Review OpsCenter\n/ Admin Console alerts"]
+    alerts --&gt; done(["Daily check complete\nDocument findings"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef warn fill:#be123c,stroke:#9f1239,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class jobSummary,investigate,catalog,storage,mediaServers,alerts action
+    class failedJobs,catalogOK decision
+    class catAlert warn
+    class start,done terminal</code></pre>
 <h2 id="daily-checklist">Daily Checklist<a class="headerlink" href="#daily-checklist" title="Permanent link">&para;</a></h2>
 <p>Run these checks each morning to confirm a healthy NetBackup environment.</p>
 <ul>

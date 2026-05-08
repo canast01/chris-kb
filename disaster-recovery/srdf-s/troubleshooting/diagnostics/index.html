@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#srdfs-triage-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF/S Triage Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#initial-data-collection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -785,6 +796,36 @@
 <p>Part of the <a href="../">SRDF/S Troubleshooting</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="srdfs-triage-flow">SRDF/S Triage Flow<a class="headerlink" href="#srdfs-triage-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    alert["Alert or Issue Reported"]
+    collectState["Collect Pair State\nsymrdf query -g group -v"]
+    pairOk{"Pairs\nSynchronized?"}
+    collectEvents["Collect Array Events\nsymevent list -sid SID -type rdf -last 100"]
+    collectRTT["Measure WAN RTT\nping -c 20 dr-site-ip"]
+    rttOk{"RTT ≤ 5ms?"}
+    collectLinkStats["Collect Link Stats\nsymstat -sid sid -type rdf -v"]
+    notifyNetwork["Notify Network Team\nRTT exceeds SRDF/S budget"]
+    bundleDiags["Bundle Diagnostics\nsymrdf query &gt; diag.txt"]
+    openSupport["Open Dell SR if\nno clear root cause"]
+    resolved["Resolved\nDocument in incident ticket"]
+
+    alert --&gt; collectState
+    collectState --&gt; pairOk
+    pairOk --&gt;|"No"| collectEvents
+    pairOk --&gt;|"Yes — latency issue"| collectRTT
+    collectEvents --&gt; collectRTT
+    collectRTT --&gt; rttOk
+    rttOk --&gt;|"No"| notifyNetwork
+    rttOk --&gt;|"Yes"| collectLinkStats
+    collectLinkStats --&gt; bundleDiags
+    notifyNetwork --&gt; bundleDiags
+    bundleDiags --&gt; openSupport
+    openSupport --&gt; resolved
+
+    style alert fill:#be123c,color:#fff
+    style resolved fill:#15803d,color:#fff
+    style notifyNetwork fill:#b45309,color:#fff</code></pre>
 <h2 id="initial-data-collection">Initial Data Collection<a class="headerlink" href="#initial-data-collection" title="Permanent link">&para;</a></h2>
 <p>Always collect these before engaging Dell support or escalating:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Pair state — verbose</span>

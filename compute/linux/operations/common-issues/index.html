@@ -846,6 +846,22 @@
 <li><strong>What is the resource state?</strong> — CPU, memory, disk, network</li>
 <li><strong>Which services/processes are involved?</strong> — systemctl, ps, journalctl</li>
 </ol>
+<pre class="mermaid"><code>flowchart TD
+    alert["Alert / Issue Reported"]
+    reachable{"Host\nreachable?\npingSSH"}
+    hardware{"dmesg errors?\nIPMI SEL?"}
+    changed{"Recent\nchanges?\ndnf history"}
+    resources{"CPU · Memory\nDisk &gt; 80%?"}
+    services{"Failed services?\nsystemctl --failed"}
+    escalate["Escalate to\nvendor / L3"]
+    resolve["Identify root cause\nand resolve"]
+
+    alert --&gt; reachable
+    reachable -- No --&gt; escalate
+    reachable -- Yes --&gt; hardware
+    hardware -- Yes --&gt; escalate
+    hardware -- No --&gt; changed
+    changed --&gt; resources --&gt; services --&gt; resolve</code></pre>
 <h2 id="high-cpu">High CPU<a class="headerlink" href="#high-cpu" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Which processes are consuming CPU?</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-15

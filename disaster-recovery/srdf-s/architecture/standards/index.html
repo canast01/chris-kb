@@ -804,6 +804,7 @@
 <th>Site Distance</th>
 <th>Typical RTT</th>
 <th>Max Acceptable</th>
+<th>Why</th>
 <th>Notes</th>
 </tr>
 </thead>
@@ -812,28 +813,52 @@
 <td>Campus / same campus</td>
 <td>&lt; 1ms</td>
 <td>2ms</td>
+<td>Negligible WAN penalty on host write latency</td>
 <td>Ideal for SRDF/S</td>
 </tr>
 <tr>
 <td>Metro (≤ 100km dark fibre)</td>
 <td>1–5ms</td>
 <td>5ms</td>
+<td>RTT within application tolerance for most workloads</td>
 <td>Within spec</td>
 </tr>
 <tr>
 <td>Metro (&gt; 100km)</td>
 <td>5–10ms</td>
 <td>≤ 10ms</td>
+<td>Latency penalty becomes noticeable on high-IOPS workloads</td>
 <td>Borderline — test under peak load</td>
 </tr>
 <tr>
 <td>WAN (&gt; 200km)</td>
 <td>&gt; 10ms</td>
 <td>Not recommended</td>
+<td>Synchronous commit would add &gt; 20ms to every write — use SRDF/A</td>
 <td>Use SRDF/A instead</td>
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>graph LR
+    subgraph siteA ["Site A — Production"]
+        hostA["Production Hosts"]
+        r1["PowerMax R1"]
+        hostA --&gt;|"write I/O"| r1
+    end
+
+    subgraph fabric ["Dark Fibre / FCIP — Metro"]
+        linkLabel["RTT ≤ 10ms\nSynchronous"]
+    end
+
+    subgraph siteB ["Site B — Metro DR"]
+        r2["PowerMax R2"]
+        hostB["Standby Hosts\n(inactive)"]
+        r2 -.-&gt;|"at failover only"| hostB
+    end
+
+    r1 --&gt;|"sync write commit"| linkLabel
+    linkLabel --&gt;|"ack to R1"| r1
+    linkLabel --&gt; r2</code></pre>
 <p>Validate RTT from each PowerMax director port:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RTT|Latency&quot;</span>
 </code></pre></div></p>
@@ -878,24 +903,29 @@
 <tr>
 <th>Test Type</th>
 <th>Minimum Frequency</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Non-disruptive pair state verification</td>
 <td>Monthly</td>
+<td>Confirms Synchronized state and zero invalid tracks without impacting production</td>
 </tr>
 <tr>
 <td>SRM recovery plan test (non-production)</td>
 <td>Quarterly</td>
+<td>Validates SRA discovery, protection group integrity, and recovery plan steps</td>
 </tr>
 <tr>
 <td>Full failover test (maintenance window)</td>
 <td>Annually</td>
+<td>Confirms end-to-end RTO including host masking, VM startup, and application validation</td>
 </tr>
 <tr>
 <td>RTT re-validation after WAN changes</td>
 <td>After every network change affecting SRDF links</td>
+<td>WAN routing changes can silently increase RTT beyond the SRDF/S tolerance</td>
 </tr>
 </tbody>
 </table>

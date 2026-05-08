@@ -1027,6 +1027,31 @@
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                    └── Data Encryption Key (DEK) — per disk group
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                            └── Encrypted data on disk
 </code></pre></div>
+<pre class="mermaid"><code>graph TD
+    kms["KMS Server\n(KMIP 1.1+)\nThales / Entrust / Vault"]
+    vc["vCenter Server\n(KMIP client — requests KEKs\nat cluster startup)"]
+    esxi["ESXi Host\n(receives KEK, generates DEK)"]
+    kek["KEK — Key Encryption Key\nper host, held in host memory"]
+    dek["DEK — Data Encryption Key\nper disk group, encrypted by KEK\nstored locally on host"]
+    dg["Disk Group\n(capacity disks)\nAES-256-XTS encrypted"]
+
+    kms --&gt;|"provides KEK (KMIP/TLS port 5696)"| vc
+    vc --&gt;|"delivers KEK to host"| esxi
+    esxi --&gt; kek
+    kek --&gt;|"wraps"| dek
+    dek --&gt;|"encrypts writes"| dg
+
+    classDef kmsNode fill:#dc2626,stroke:#b91c1c,color:#fff
+    classDef vcNode fill:#b45309,stroke:#92400e,color:#fff
+    classDef hostNode fill:#15803d,stroke:#166534,color:#fff
+    classDef keyNode fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef diskNode fill:#1d4ed8,stroke:#1e40af,color:#fff
+
+    class kms kmsNode
+    class vc vcNode
+    class esxi hostNode
+    class kek,dek keyNode
+    class dg diskNode</code></pre>
 <ul>
 <li><strong>KMS (Key Management Service):</strong> External server holding the KEKs. vCenter connects to the KMS to retrieve keys at startup.</li>
 <li><strong>KEK:</strong> Host-level key provided by KMS. Used to encrypt the DEK stored locally on the host.</li>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#master-media-client-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Master → Media → Client Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#netbackup-cli-commands-run-on-the-primary-server-as-root-linux-or-administrator-windows-the-bp-family-covers-backup-and-restore-operations-nb-and-tp-commands-cover-emm-media-and-device-management-commands-are-in-usropenvnetbackupbinadmincmd-on-linux-or-cprogram-filesveritasnetbackupbinadmincmd-on-windows" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -746,6 +757,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Restore Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#catalog-restore-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catalog Restore Sequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -803,6 +831,53 @@
 
 
 <h1 id="netbackup-cli-reference">NetBackup CLI Reference<a class="headerlink" href="#netbackup-cli-reference" title="Permanent link">&para;</a></h1>
+<h2 id="master-media-client-topology">Master → Media → Client Topology<a class="headerlink" href="#master-media-client-topology" title="Permanent link">&para;</a></h2>
+<p>Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph masterTier [Primary / Master Server]
+        master["Primary Server\n(catalog, policy DB,\njob scheduler, EMM)"]
+        catalog[("NetBackup Catalog\nbpdbm — image metadata")]
+        master --&gt; catalog
+    end
+
+    subgraph mediaTier [Media Servers]
+        ms1["Media Server 1\nSite A — OST/Data Domain"]
+        ms2["Media Server 2\nSite B / DR — MSDP pool"]
+        ms3["Media Server 3\nCloud gateway — S3"]
+    end
+
+    subgraph clientTier [Clients]
+        vmHost(["VMware backup host\nVADP proxy"])
+        dbHost(["Oracle / MSSQL host\nbpcd agent"])
+        nasHost(["NAS — NDMP\ndirect connect"])
+    end
+
+    subgraph storageTier [Storage Units]
+        dd[("Data Domain\nOST dedup pool")]
+        msdp[("MSDP\nMedia Server\nDedup Pool")]
+        s3[("AWS S3 / Cloud\nlong-term archive")]
+    end
+
+    master --&gt;|"policy / job control\nTCP 1556"| ms1
+    master --&gt;|"policy / job control"| ms2
+    master --&gt;|"policy / job control"| ms3
+
+    ms1 --&gt; dd
+    ms2 --&gt; msdp
+    ms3 --&gt; s3
+
+    vmHost --&gt;|"TCP 13724 bpcd"| ms1
+    dbHost --&gt;|"TCP 13724 bpcd"| ms1
+    nasHost --&gt;|"NDMP port 10000"| ms1
+
+    classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef media fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef client fill:#15803d,stroke:#166534,color:#fff
+    classDef storage fill:#b45309,stroke:#92400e,color:#fff
+    class master,catalog master
+    class ms1,ms2,ms3 media
+    class vmHost,dbHost,nasHost client
+    class dd,msdp,s3 storage</code></pre>
 <h2 id="netbackup-cli-commands-run-on-the-primary-server-as-root-linux-or-administrator-windows-the-bp-family-covers-backup-and-restore-operations-nb-and-tp-commands-cover-emm-media-and-device-management-commands-are-in-usropenvnetbackupbinadmincmd-on-linux-or-cprogram-filesveritasnetbackupbinadmincmd-on-windows">NetBackup CLI commands run on the Primary Server as root (Linux) or Administrator (Windows). The <code>bp*</code> family covers backup and restore operations; <code>nb*</code> and <code>tp*</code> commands cover EMM, media, and device management. Commands are in <code>/usr/openv/netbackup/bin/admincmd/</code> on Linux or <code>C:\Program Files\Veritas\NetBackup\bin\admincmd\</code> on Windows.<a class="headerlink" href="#netbackup-cli-commands-run-on-the-primary-server-as-root-linux-or-administrator-windows-the-bp-family-covers-backup-and-restore-operations-nb-and-tp-commands-cover-emm-media-and-device-management-commands-are-in-usropenvnetbackupbinadmincmd-on-linux-or-cprogram-filesveritasnetbackupbinadmincmd-on-windows" title="Permanent link">&para;</a></h2>
 <h2 id="job-monitoring">Job Monitoring<a class="headerlink" href="#job-monitoring" title="Permanent link">&para;</a></h2>
 <p>Monitor backup and restore jobs in real time or review recent history.</p>
@@ -844,6 +919,24 @@
 </code></pre></div>
 <hr />
 <h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
+<h3 id="catalog-restore-sequence">Catalog Restore Sequence<a class="headerlink" href="#catalog-restore-sequence" title="Permanent link">&para;</a></h3>
+<p>When the catalog is lost, recovery must happen before any other restore is possible.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Admin
+    participant Master as Primary Server
+    participant Catalog as Catalog Backup (offline copy)
+    participant Media as Media Server
+
+    Admin-&gt;&gt;Master: Install / reinstall NetBackup\n(matching version)
+    Admin-&gt;&gt;Master: Run bprecover or\nbpcatarc -r (recover from catalog backup)
+    Master-&gt;&gt;Catalog: Locate catalog backup\n(separate STU or cold copy)
+    Catalog--&gt;&gt;Master: Catalog images transferred
+    Master-&gt;&gt;Master: Rebuild EMM database\nnbemmcmd -machinealias
+    Master-&gt;&gt;Media: Reconnect media servers\nbpclntcmd -hn &lt;media&gt; -chk
+    Media--&gt;&gt;Master: Media servers re-registered
+    Admin-&gt;&gt;Master: Run bpdbjobs -summary\nverify catalog integrity
+    Admin-&gt;&gt;Master: Resume backup policies\nbpbackup -p &lt;policy&gt;
+    note over Admin,Media: Catalog recovery enables\nall image restores to resume</code></pre>
 <p>Run restores from the CLI. Always verify client name, backup time, and policy before executing.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restore files for a client</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bprestore<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;policy_type&gt;<span class="w"> </span>-L<span class="w"> </span>/tmp/restore.log<span class="w"> </span>&lt;file_path&gt;

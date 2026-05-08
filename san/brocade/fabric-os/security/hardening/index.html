@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hardening-sequence-new-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Sequence — New Switch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -935,6 +946,25 @@
 <p>Part of the <a href="../">Security</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="hardening-sequence-new-switch">Hardening Sequence — New Switch<a class="headerlink" href="#hardening-sequence-new-switch" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start([New switch deployed]) --&gt; proto["Disable Telnet + HTTP\nEnable HTTPS only"]
+    proto --&gt; snmpHarden["Remove SNMPv1/v2c\nConfigure SNMPv3 SHA+AES"]
+    snmpHarden --&gt; aaa["Configure RADIUS / TACACS+\nauthorder RADIUS;LOCAL"]
+    aaa --&gt; rbac["Assign RBAC roles\nswitchadmin · zoneadmin · operator"]
+    rbac --&gt; ipf["Apply IPfilter policy\nmanagement subnet only"]
+    ipf --&gt; ntp["Configure NTP\n2 internal servers"]
+    ntp --&gt; syslog["Forward syslog to SIEM\nsyslogadmin --add"]
+    syslog --&gt; audit["Enable audit logging\nauditcfg --class 1,2,3,4"]
+    audit --&gt; domainId["Set static domain ID\ninsistDomainId=1"]
+    domainId --&gt; fabricBinding["Enable fabric binding\nfabricbinding --enable"]
+    fabricBinding --&gt; defZone["Disable default zone\ndefzone --noaccess"]
+    defZone --&gt; backup["configupload post-hardening\nto backup server"]
+    backup --&gt; cmdb["Update CMDB\nhostname · serial · domain ID"]
+    cmdb --&gt; done([Switch production-ready])
+
+    style done fill:#15803d,color:#fff
+    style start fill:#2563eb,color:#fff</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Hardening a Brocade FabricOS switch closes the attack surface on both the management plane (who can connect and how) and the fabric plane (which devices can join and communicate). Apply hardening immediately after initial switch configuration, before connecting to the production network.</p>
 <p>The hardening steps are grouped into three categories:</p>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#diagnostic-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#log-locations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -759,6 +770,28 @@
 
 
 <h1 id="commvault-diagnostics">Commvault — Diagnostics<a class="headerlink" href="#commvault-diagnostics" title="Permanent link">&para;</a></h1>
+<h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    alert(["Job failure or alert\nreceived"])
+    alert --&gt; jobId["Identify Job ID\nfrom Job Controller\nor email alert"]
+    jobId --&gt; jobDetail["qlist jobs -j &lt;jobid&gt;\nor Command Center\nJob detail view"]
+    jobDetail --&gt; errCode["Note error code\nand affected client"]
+    errCode --&gt; q1{Error category}
+
+    q1 --&gt;|"Client\nconnectivity"| clientLog["Check client log\nclBackup.log on client\nor CVMA.log"]
+    q1 --&gt;|"Storage / DDB\nissue"| ddbCheck["qlist ddb\ncheck DDB space\n+ CVMA.log on MA"]
+    q1 --&gt;|"Unknown /\ncomplex"| bundle["Collect support bundle\nqsystem log export\n-path C:\\cv_support_bundle"]
+
+    clientLog --&gt; ready["qoperation execscript\n-sn QS_CheckReadiness"]
+    ddbCheck --&gt; ddbVerify["qoperation execscript\n-sn QS_DDBVerify"]
+    bundle --&gt; escalate["Open support case\nwith bundle + job ID"]
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class jobId,jobDetail,errCode,clientLog,ddbCheck,bundle,ready,ddbVerify,escalate action
+    class q1 decision
+    class alert terminal</code></pre>
 <h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <p>Client logs reside on the client under <code>C:\Program Files\CommVault\ContentStore\Log Files\</code> (Windows) or <code>/var/log/commvault/Log_Files/</code> (Linux). CommServe logs are at the same path on the CommServe host.</p>
 <ul>

@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cyberarks-primary-programmatic-interface-is-the-pvwa-rest-api-v2-the-pspas-powershell-module-wraps-the-rest-api-with-native-cmdlets-the-legacy-pacli-client-provides-direct-vault-operations-outside-of-pvwa" class="md-nav__link">
+  <a href="#api-interface-hierarchy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CyberArk's primary programmatic interface is the PVWA REST API v2. The psPAS PowerShell module wraps the REST API with native cmdlets. The legacy PACLI client provides direct Vault operations outside of PVWA.
+        API Interface Hierarchy
       
     </span>
   </a>
@@ -792,7 +792,18 @@
 
 
 <h1 id="cyberark-cli-reference">CyberArk CLI Reference<a class="headerlink" href="#cyberark-cli-reference" title="Permanent link">&para;</a></h1>
-<h2 id="cyberarks-primary-programmatic-interface-is-the-pvwa-rest-api-v2-the-pspas-powershell-module-wraps-the-rest-api-with-native-cmdlets-the-legacy-pacli-client-provides-direct-vault-operations-outside-of-pvwa">CyberArk's primary programmatic interface is the PVWA REST API v2. The <code>psPAS</code> PowerShell module wraps the REST API with native cmdlets. The legacy PACLI client provides direct Vault operations outside of PVWA.<a class="headerlink" href="#cyberarks-primary-programmatic-interface-is-the-pvwa-rest-api-v2-the-pspas-powershell-module-wraps-the-rest-api-with-native-cmdlets-the-legacy-pacli-client-provides-direct-vault-operations-outside-of-pvwa" title="Permanent link">&para;</a></h2>
+<p>CyberArk's primary programmatic interface is the PVWA REST API v2. The <code>psPAS</code> PowerShell module wraps the REST API with native cmdlets. The legacy PACLI client provides direct Vault operations outside of PVWA.</p>
+<h2 id="api-interface-hierarchy">API Interface Hierarchy<a class="headerlink" href="#api-interface-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    operator["Operator / Script\n(automation or admin)"]
+    operator --&gt;|"PowerShell"| psPAS["psPAS Module\n(REST wrapper)"]
+    operator --&gt;|"curl / HTTP client"| restAPI["PVWA REST API v2\nhttps://pvwa/PasswordVault/api"]
+    operator --&gt;|"direct Vault (emergency)"| pacli["PACLI\n(legacy Vault CLI)"]
+    psPAS --&gt; restAPI
+    restAPI --&gt; pvwa["PVWA\n(IIS application)"]
+    pvwa --&gt;|"SDK port 1858"| vault["Digital Vault"]
+    pacli --&gt;|"port 1858"| vault</code></pre>
+<hr />
 <h2 id="rest-api-authentication">REST API — Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
 <p>The PVWA REST API base URL is <code>https://&lt;pvwa&gt;/PasswordVault/api</code>. Always end sessions with a Logoff call.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate with CyberArk auth</span>

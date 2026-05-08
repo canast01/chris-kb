@@ -714,6 +714,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Release Cadence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-component-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Component Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -844,6 +861,28 @@
 <h1 id="veeam-install-upgrade">Veeam — Install &amp; Upgrade<a class="headerlink" href="#veeam-install-upgrade" title="Permanent link">&para;</a></h1>
 <h2 id="release-cadence">Release Cadence<a class="headerlink" href="#release-cadence" title="Permanent link">&para;</a></h2>
 <p>Veeam releases major versions (VBR 12, 12.1, 12.2) annually with cumulative patches (P-releases) throughout the year.</p>
+<h3 id="upgrade-component-order">Upgrade Component Order<a class="headerlink" href="#upgrade-component-order" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    start(["Start upgrade\nmaintenance window"])
+    start --&gt; configBackup["Export VBR configuration backup\nExport-VBRConfiguration\nVerify backup off-server"]
+    configBackup --&gt; snapshot["Take VM snapshot of\nVBR Server (if virtualised)"]
+    snapshot --&gt; jobCheck{"Any active\njobs running?"}
+    jobCheck --&gt;|Yes| wait["Wait for jobs to\ncomplete or suspend"]
+    wait --&gt; jobCheck
+    jobCheck --&gt;|No| vbrUpgrade["Upgrade VBR Backup Server\n(installer auto-backs up config DB)"]
+    vbrUpgrade --&gt; voneUpgrade["Upgrade Veeam ONE\n(must match VBR major version)"]
+    voneUpgrade --&gt; proxyUpgrade["Push proxy upgrades\nVBR console → Proxies → Upgrade"]
+    proxyUpgrade --&gt; repoUpgrade["Update Linux repository agents\nVBR console → Repositories → Upgrade"]
+    repoUpgrade --&gt; validate["Post-upgrade validation:\nGet-VBRJob — all jobs visible\nRun non-critical backup test"]
+    validate --&gt; cleanup["Delete VM snapshot\nafter 48h stable operation"]
+    cleanup --&gt; done(["Upgrade complete"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class configBackup,snapshot,wait,vbrUpgrade,voneUpgrade,proxyUpgrade,repoUpgrade,validate,cleanup action
+    class jobCheck decision
+    class start,done terminal</code></pre>
 <table>
 <thead>
 <tr>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#secrets-and-encryption-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets and Encryption Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#encrypted-state-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,6 +781,25 @@
 
 
 <h1 id="terraform-encryption">Terraform — Encryption<a class="headerlink" href="#terraform-encryption" title="Permanent link">&para;</a></h1>
+<h2 id="secrets-and-encryption-architecture">Secrets and Encryption Architecture<a class="headerlink" href="#secrets-and-encryption-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    tfConfig[".tf configuration\n(no secrets in code)"]
+    sensitiveVar["variable marked\nsensitive = true"]
+    ssmParam["AWS SSM Parameter Store\n(SecureString / KMS)"]
+    secretsMgr["AWS Secrets Manager\n(JSON secret)"]
+    dataSource["data source block\n(read at plan/apply time)"]
+    tfApply["terraform apply\n(secret resolved at runtime)"]
+    stateFile["State File\n(may contain sensitive values)"]
+    s3Encrypted["S3 Bucket\n(SSE-S3 / SSE-KMS\nencrypt=true)"]
+    logs["Plan logs\n(sensitive values redacted)"]
+
+    tfConfig --&gt; sensitiveVar
+    sensitiveVar --&gt; logs
+    ssmParam --&gt; dataSource
+    secretsMgr --&gt; dataSource
+    dataSource --&gt; tfApply
+    tfApply --&gt; stateFile
+    stateFile --&gt; s3Encrypted</code></pre>
 <h2 id="encrypted-state-storage">Encrypted State Storage<a class="headerlink" href="#encrypted-state-storage" title="Permanent link">&para;</a></h2>
 <p>State files can contain sensitive values. Always enable encryption at rest for remote backends.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># S3 backend with server-side encryption</span>

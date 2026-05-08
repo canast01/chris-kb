@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#terraform-diagnostics-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Diagnostics Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#debug-logging" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -781,6 +792,31 @@
 
 
 <h1 id="terraform-diagnostics">Terraform — Diagnostics<a class="headerlink" href="#terraform-diagnostics" title="Permanent link">&para;</a></h1>
+<h2 id="terraform-diagnostics-workflow">Terraform Diagnostics Workflow<a class="headerlink" href="#terraform-diagnostics-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    symptom["Symptom /\nUnexpected Output"]
+    validate["terraform validate\n(syntax check)"]
+    fmtCheck["terraform fmt -check\n(formatting)"]
+    planJSON["terraform plan -out=tfplan\nterraform show -json tfplan"]
+    jqFilter["jq filter:\nresource_changes"]
+    graph["terraform graph\n| dot -Tsvg"]
+    stateList["terraform state list"]
+    stateShow["terraform state show\n&lt;resource&gt;"]
+    debugLog["TF_LOG=TRACE\nTF_LOG_PATH=debug.log"]
+    resolved["Root cause\nidentified"]
+
+    symptom --&gt; validate
+    validate --&gt; fmtCheck
+    fmtCheck --&gt; planJSON
+    planJSON --&gt; jqFilter
+    jqFilter --&gt; resolved
+    symptom --&gt; stateList
+    stateList --&gt; stateShow
+    stateShow --&gt; resolved
+    symptom --&gt; graph
+    graph --&gt; resolved
+    symptom --&gt; debugLog
+    debugLog --&gt; resolved</code></pre>
 <h2 id="debug-logging">Debug Logging<a class="headerlink" href="#debug-logging" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable debug logging</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>DEBUG

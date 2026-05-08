@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hardening-control-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Control Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#esxi-host-hardening" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1005,6 +1016,30 @@
 <h1 id="vsan-hardening">vSAN — Hardening<a class="headerlink" href="#vsan-hardening" title="Permanent link">&para;</a></h1>
 <p>vSAN hardening covers the security baseline configuration applied to the ESXi hosts that form the vSAN cluster, the vCenter managing the cluster, and the vSAN-specific settings. References: VMware vSphere Security Configuration Guide (Broadcom), DISA STIG for vSphere ESXi.</p>
 <hr />
+<h2 id="hardening-control-layers">Hardening Control Layers<a class="headerlink" href="#hardening-control-layers" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph "Network Layer"
+        fw["ESXi Host Firewall\n(restrict SSH, VSAN ports)"]
+        nioc["NIOC — vSAN traffic\nbandwidth reservation"]
+    end
+
+    subgraph "Authentication Layer"
+        lockdown["Lockdown Mode\n(Normal or Strict)"]
+        pwd["Password complexity\n&amp; account lockout"]
+        ntp["NTP — clock sync\n(500 ms max drift for vSAN)"]
+    end
+
+    subgraph "Encryption Layer"
+        dit["Data-in-Transit\nEncryption (AES-256-GCM)"]
+        dar["Data-at-Rest\nEncryption (D@RE via KMS)"]
+    end
+
+    subgraph "Audit Layer"
+        syslog["Syslog to SIEM\n(SSH login, disk events)"]
+        hostProf["Host Profiles\n(enforce baseline; detect drift)"]
+    end
+
+    fw &amp; nioc --&gt; lockdown &amp; pwd &amp; ntp --&gt; dit &amp; dar --&gt; syslog &amp; hostProf</code></pre>
 <h2 id="esxi-host-hardening">ESXi Host Hardening<a class="headerlink" href="#esxi-host-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="disable-unnecessary-services">Disable Unnecessary Services<a class="headerlink" href="#disable-unnecessary-services" title="Permanent link">&para;</a></h3>
 <p>The following services are disabled by default. Verify they remain disabled on all vSAN cluster hosts.</p>

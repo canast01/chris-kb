@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#rbac-scope-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Scope Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rbac" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,6 +781,20 @@
 
 
 <h1 id="ontap-access-control">ONTAP — Access Control<a class="headerlink" href="#ontap-access-control" title="Permanent link">&para;</a></h1>
+<h2 id="rbac-scope-model">RBAC Scope Model<a class="headerlink" href="#rbac-scope-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    cluster["Cluster\n(admin SVM)"] --&gt;|"role: admin"| clusterAdmin["Full cluster\nadministration"]
+    cluster --&gt;|"role: readonly"| clusterRO["Read-only\ncluster view"]
+
+    svm1["SVM: prod-nas"] --&gt;|"role: vsadmin"| svmFull["Full SVM admin\n(protocols, volumes, LIFs)"]
+    svm1 --&gt;|"role: vsadmin-backup"| svmBackup["Snapshot + SnapMirror\nonly"]
+    svm1 --&gt;|"role: vsadmin-readonly"| svmRO["Read-only\nSVM view"]
+
+    svm2["SVM: prod-san"] --&gt;|"custom role"| customRole["Minimum privilege\nservice account\n(monitoring, backup)"]
+
+    user1["admin account"] --&gt; cluster
+    user2["vsadmin / svc account"] --&gt; svm1 &amp; svm2
+    note["Custom roles override built-in roles\nAlways apply least-privilege principle"]</code></pre>
 <h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
 <p>ONTAP has two RBAC scopes: <strong>cluster-level</strong> (managed by the <code>admin</code> account) and <strong>SVM-level</strong> (managed by <code>vsadmin</code> accounts within a specific SVM). Built-in roles:</p>
 <table>

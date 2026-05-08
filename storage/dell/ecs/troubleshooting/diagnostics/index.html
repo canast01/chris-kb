@@ -844,6 +844,30 @@
 <h1 id="dell-ecs-diagnostics">Dell ECS — Diagnostics<a class="headerlink" href="#dell-ecs-diagnostics" title="Permanent link">&para;</a></h1>
 <h2 id="diagnostic-overview">Diagnostic Overview<a class="headerlink" href="#diagnostic-overview" title="Permanent link">&para;</a></h2>
 <p>ECS diagnostics span three layers: the Management REST API (cluster-level health and configuration), node-level SSH access (OS and service health), and the S3 API (data path functional testing). Start with the REST API — it provides the fastest cluster-wide view — then drill into SSH-level diagnostics for specific node or service issues.</p>
+<pre class="mermaid"><code>graph TD
+  START(["Incident reported"]) --&gt; REST["REST API Layer\nGET /vdc/nodes · /vdc/alerts\n/vdc/capacity · /vdc/geo-replication/status"]
+  REST --&gt; NODE_OK{All nodes\nGOOD?}
+  NODE_OK --&gt;|No| SSH["SSH to affected node\nsystemctl status storageos\ndf -h /data/ · lsblk"]
+  SSH --&gt; DISK_F{Disk\nFAILED?}
+  DISK_F --&gt;|Yes| REPLACE["Initiate disk replacement\nvia Portal guided procedure"]
+  DISK_F --&gt;|No| SRVC{Service\nrunning?}
+  SRVC --&gt;|No| RESTART["Investigate service logs\n/var/log/ecs/\nOpen Dell case if unresolved"]
+  SRVC --&gt;|Yes| CASS["Check Cassandra\nnodetool status (all UN?)"]
+  NODE_OK --&gt;|Yes| S3TEST["S3 API test\naws s3api head-bucket"]
+  S3TEST --&gt; S3OK{200 OK?}
+  S3OK --&gt;|No| AUTH["S3 Access Denied?\nCheck: IAM user · bucket policy\naddressing style · namespace"]
+  S3OK --&gt;|Yes| GEOREP["Check geo-replication lag\nGET /vdc/geo-replication/status"]
+  GEOREP --&gt; LAG{Lag\ngrowing?}
+  LAG --&gt;|Yes| WAN["Check WAN bandwidth :9100\nConfirm remote VDC health\nAdjust replication throttle"]
+  LAG --&gt;|No| BUNDLE["Collect support bundle\nOpen Dell case"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class NODE_OK,DISK_F,SRVC,S3OK,LAG decision
+  class REST,SSH,CASS,S3TEST,AUTH,GEOREP,BUNDLE action
+  class REPLACE,RESTART,WAN warn
+  class START term</code></pre>
 <h2 id="management-api-diagnostics">Management API Diagnostics<a class="headerlink" href="#management-api-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># --- Authenticate to the ECS Management REST API ---</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;sysadmin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>

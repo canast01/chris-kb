@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#daily-health-check-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Health Check Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -777,6 +788,19 @@
 
 <h1 id="venafi-health-checks">Venafi — Health Checks<a class="headerlink" href="#venafi-health-checks" title="Permanent link">&para;</a></h1>
 <p>Daily operations centre on the Venafi Policy Server dashboard: review certificates expiring within 30, 60, and 90-day buckets, check for failed renewal jobs, review discovery scan results for newly found unmanaged certificates, confirm no policy violations exist, and verify CA connectivity health for each integrated CA. Certificate counts by state (active, expiring, expired, revoked) should be trended over time.</p>
+<h2 id="daily-health-check-flow">Daily Health Check Flow<a class="headerlink" href="#daily-health-check-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start["Daily Venafi Health Check"]
+    start --&gt; expiryReview["Review expiry dashboard\n(30 / 60 / 90-day buckets)"]
+    expiryReview --&gt; failedJobs{"Failed renewal\njobs?"}
+    failedJobs --&gt;|"yes"| investigate["Investigate CA connector\nor policy violation"]
+    failedJobs --&gt;|"no"| discoveryScan["Review discovery scan results\nfor new unmanaged certs"]
+    investigate --&gt; discoveryScan
+    discoveryScan --&gt; policyViolations{"Active policy\nviolations?"}
+    policyViolations --&gt;|"yes"| resolveViolation["Resolve violation\nor escalate to owner"]
+    policyViolations --&gt;|"no"| caHealth["Verify CA connectivity\n(ADCS / DigiCert / Entrust)"]
+    resolveViolation --&gt; caHealth
+    caHealth --&gt; done["Health check complete\nLog to ops log"]</code></pre>
 <p>Weekly tasks include reviewing orphaned or unmanaged certificates surfaced by Edge Proxy discovery scans and assigning them to appropriate policy folders or scheduling revocation.</p>
 <h2 id="daily-checklist">Daily Checklist<a class="headerlink" href="#daily-checklist" title="Permanent link">&para;</a></h2>
 <ul>

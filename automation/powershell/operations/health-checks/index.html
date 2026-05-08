@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#powershell-environment-health-check-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Environment Health Check Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -748,6 +759,34 @@
 
 
 <h1 id="powershell-health-checks">PowerShell — Health Checks<a class="headerlink" href="#powershell-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="powershell-environment-health-check-flow">PowerShell Environment Health Check Flow<a class="headerlink" href="#powershell-environment-health-check-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start["Start Health Check"]
+    checkVersion["$PSVersionTable\nExpected PS version?"]
+    checkPolicy["Get-ExecutionPolicy\nRemoteSigned or better?"]
+    checkModules["Required modules\ninstalled at expected versions?"]
+    checkWinRM["Test-WSMan target hosts\nWinRM reachable?"]
+    checkTasks["Get-ScheduledTask\nAny Disabled that should run?"]
+    checkLogs["Get-WinEvent PowerShell/Operational\nErrors in last 24h?"]
+    healthy["Status: HEALTHY"]
+    alertVersion["Alert: Update\nPowerShell version"]
+    alertPolicy["Alert: Fix\nexecution policy"]
+    alertModules["Alert: Update-Module\nor Install-Module"]
+    alertWinRM["Alert: Enable-PSRemoting\non target hosts"]
+    alertLogs["Alert: Review\nPS operational log"]
+
+    start --&gt; checkVersion
+    checkVersion --&gt;|OK| checkPolicy
+    checkVersion --&gt;|Fail| alertVersion
+    checkPolicy --&gt;|OK| checkModules
+    checkPolicy --&gt;|Fail| alertPolicy
+    checkModules --&gt;|OK| checkWinRM
+    checkModules --&gt;|Fail| alertModules
+    checkWinRM --&gt;|OK| checkTasks
+    checkWinRM --&gt;|Fail| alertWinRM
+    checkTasks --&gt; checkLogs
+    checkLogs --&gt;|None| healthy
+    checkLogs --&gt;|Errors| alertLogs</code></pre>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

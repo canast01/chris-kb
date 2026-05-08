@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#powershell-error-handling-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Error Handling Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reports" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -940,6 +951,29 @@
 <li>[ ] Service account credentials still valid and not expiring within 14 days</li>
 <li>[ ] Module versions on target hosts match the expected baseline</li>
 </ul>
+<h2 id="powershell-error-handling-flow">PowerShell Error Handling Flow<a class="headerlink" href="#powershell-error-handling-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    scriptStart["Script Execution\n($ErrorActionPreference = Stop)"]
+    tryBlock["try { ... }"]
+    cmdRun["Cmdlet / Command\nExecutes"]
+    success["Command succeeds\n(continue)"]
+    termErr["Terminating Error\nthrown"]
+    catchBlock["catch { ... }\n(inspect $_.Exception)"]
+    logError["Write-Error / Out-File\n(log error to file)"]
+    sendAlert["Send-MailMessage\nor webhook alert"]
+    finallyBlock["finally { ... }\n(cleanup / Stop-Transcript)"]
+    exitCode["exit 1\n(non-zero signals failure)"]
+
+    scriptStart --&gt; tryBlock
+    tryBlock --&gt; cmdRun
+    cmdRun --&gt;|OK| success
+    cmdRun --&gt;|Error| termErr
+    termErr --&gt; catchBlock
+    catchBlock --&gt; logError
+    logError --&gt; sendAlert
+    sendAlert --&gt; finallyBlock
+    success --&gt; finallyBlock
+    finallyBlock --&gt; exitCode</code></pre>
 <h2 id="reports">Reports<a class="headerlink" href="#reports" title="Permanent link">&para;</a></h2>
 <p>CSV exports are the simplest way to produce shareable tabular data.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Export service status to CSV</span>

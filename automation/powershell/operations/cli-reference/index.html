@@ -706,6 +706,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#script-execution-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Execution Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powershell-remoting-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Remoting Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#core" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -818,6 +840,37 @@
 <blockquote>
 <p>Works on Windows, macOS, and Linux (PowerShell 7+). VMware PowerCLI requires <code>Install-Module VMware.PowerCLI</code>.</p>
 </blockquote>
+<h2 id="script-execution-pipeline">Script Execution Pipeline<a class="headerlink" href="#script-execution-pipeline" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    readHost["Read-Host / param()\n(user input / args)"]
+    processLogic["Process Logic\n(filter / transform / query)"]
+    exportCsv["Export-Csv\n(or ConvertTo-Json)"]
+    sendEmail["Send-MailMessage\n(email report)"]
+    logResult["Out-File / Add-Content\n(log file)"]
+
+    readHost --&gt; processLogic
+    processLogic --&gt; exportCsv
+    exportCsv --&gt; sendEmail
+    processLogic --&gt; logResult</code></pre>
+<h2 id="powershell-remoting-topology">PowerShell Remoting Topology<a class="headerlink" href="#powershell-remoting-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    controlHost["Control Host\n(Invoke-Command)"]
+    winrm["WinRM\n(port 5985 HTTP\n/ 5986 HTTPS)"]
+    remoteHost1["Remote Host 1\n(srv1)"]
+    remoteHost2["Remote Host 2\n(srv2)"]
+    remoteHost3["Remote Host 3\n(srv3)"]
+    psSession["PSSession\n(persistent)"]
+    scriptBlock["ScriptBlock\n(runs remotely)"]
+
+    controlHost --&gt;|Invoke-Command -ComputerName| winrm
+    controlHost --&gt;|New-PSSession| psSession
+    psSession --&gt; winrm
+    winrm --&gt; remoteHost1
+    winrm --&gt; remoteHost2
+    winrm --&gt; remoteHost3
+    scriptBlock --&gt;|executes on| remoteHost1
+    scriptBlock --&gt;|executes on| remoteHost2
+    scriptBlock --&gt;|executes on| remoteHost3</code></pre>
 <hr />
 <h2 id="core">Core<a class="headerlink" href="#core" title="Permanent link">&para;</a></h2>
 <p>The basics of working in a PowerShell session — checking the version, getting help for any cmdlet, discovering what commands are available, and loading modules. Start here when you're on an unfamiliar system.</p>

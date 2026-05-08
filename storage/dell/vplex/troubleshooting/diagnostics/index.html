@@ -899,6 +899,32 @@
 
 <h1 id="dell-vplex-diagnostics">Dell VPLEX — Diagnostics<a class="headerlink" href="#dell-vplex-diagnostics" title="Permanent link">&para;</a></h1>
 <p>Systematic diagnostic procedures for VPLEX faults. Work through the relevant section based on the reported symptom. Collect all outputs before calling Dell Support — they will ask for this data.</p>
+<pre class="mermaid"><code>flowchart TD
+    symptom(["Reported symptom\nor alert"]) --&gt; hcFull
+
+    hcFull["health-check --full\nIdentify faulted components"]
+    hcFull --&gt; clusterHI
+
+    clusterHI["ll /clusters/*/health-indications/\nWhich cluster is non-ok?"]
+    clusterHI --&gt; distDevHI
+
+    distDevHI["ll /distributed-storage/distributed-devices/*/health-indications/\nAny device out-of-sync?"]
+    distDevHI --&gt; dirHW
+
+    dirHW["ll /engines/*/directors/*/hardware/\nDirector hardware fault?"]
+    dirHW --&gt; witnessChk
+
+    witnessChk["ll /clusters/*/cluster-witness/\nWitness connected?"]
+    witnessChk --&gt; cgChk
+
+    cgChk["ll /distributed-storage/consistency-groups/\nAny CG suspended?"]
+    cgChk --&gt; svChk
+
+    svChk["ll /clusters/*/exports/storage-views/\nStorage views intact?"]
+    svChk --&gt; collect
+
+    collect["Collect support bundle\ncollect-support-log"]
+    collect --&gt; dellSupport(["Open Dell Support case\nwith all data"])</code></pre>
 <h2 id="initial-triage-sequence">Initial Triage Sequence<a class="headerlink" href="#initial-triage-sequence" title="Permanent link">&para;</a></h2>
 <p>Run these commands in order at the start of any VPLEX investigation:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Overall system health — quickest way to identify faulted components</span>
@@ -946,6 +972,21 @@
 <li>Confirm the ICL is healthy (see ICL Diagnostics below).</li>
 <li>Once the ICL is restored, VPLEX begins automatic resync — monitor with:</li>
 </ol>
+<pre class="mermaid"><code>flowchart TD
+    outOfSync["Distributed device\nout-of-sync detected"]
+    checkICL["Check ICL status\nll /clusters/*/communication/inter-cluster-links/"]
+    iclUp{ICL healthy?}
+    fixICL["Engage network team\nRestore WAN / dark fibre circuit"]
+    waitResync["Monitor auto-resync\nll /distributed-storage/distributed-devices/name/\nrebuild-progress: 0% → 100%"]
+    resyncOk{Resync started\nautomatically?}
+    manualRebuild["device rebuild\n--device /distributed-storage/..."]
+    inSync(["Device in-sync\nFull Metro redundancy restored"])
+
+    outOfSync --&gt; checkICL --&gt; iclUp
+    iclUp --&gt;|No| fixICL --&gt; checkICL
+    iclUp --&gt;|Yes| waitResync --&gt; resyncOk
+    resyncOk --&gt;|Yes| inSync
+    resyncOk --&gt;|"No (after 10 min)"| manualRebuild --&gt; inSync</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Monitor resync progress (repeat until rebuild-progress: 100%)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health-state\|rebuild-progress\|service-status&quot;</span>

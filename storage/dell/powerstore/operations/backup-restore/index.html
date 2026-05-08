@@ -699,6 +699,186 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#protection-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#native-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Snapshots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Native Snapshots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snapshot-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-snapshot-retention-by-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Snapshot Retention by Tier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restoring-a-volume-from-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restoring a Volume from Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-system-snapshot-restore-nfssmb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File System Snapshot Restore (NFS/SMB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#veeam-backup-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veeam Backup &amp; Replication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dell-powerprotect-data-manager-ppdm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell PowerProtect Data Manager (PPDM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commvault-intellisnap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commvault (IntelliSnap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-restore-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Restore Procedures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Restore Procedures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vm-restore-from-veeam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Restore from Veeam
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-restore-from-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Restore from Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Objectives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +898,312 @@
 
 
 <h1 id="powerstore-backup-restore">PowerStore — Backup &amp; Restore<a class="headerlink" href="#powerstore-backup-restore" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="protection-architecture-overview">Protection Architecture Overview<a class="headerlink" href="#protection-architecture-overview" title="Permanent link">&para;</a></h2>
+<p>PowerStore data protection is layered: native snapshots and replication provide first-line protection; external backup tools provide secondary copies. Use both — snapshots enable fast local restores; backup copies provide offsite protection and long-term retention.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protection Layers (outer to inner)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── 1. External Backup (Veeam / PPDM / Commvault)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│      Offsite copy; long-term retention; covers volume + data
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── 2. Async Replication
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│      DR site copy; RPO-based; recovers from site failure
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── 3. Metro Volume (if deployed)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│      Synchronous copy; zero RPO; covers node/site failure
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└── 4. Native Snapshots
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>       Local; fastest restore; covers logical corruption / accidental deletion
+</code></pre></div>
+<h2 id="native-snapshots">Native Snapshots<a class="headerlink" href="#native-snapshots" title="Permanent link">&para;</a></h2>
+<h3 id="snapshot-policies">Snapshot Policies<a class="headerlink" href="#snapshot-policies" title="Permanent link">&para;</a></h3>
+<p>PowerStore schedules snapshots via Protection Policies, which combine:</p>
+<ul>
+<li><strong>Snapshot Rules</strong>: define frequency and retention</li>
+<li><strong>Replication Rules</strong>: define RPO interval and target</li>
+<li><strong>Protection Policy</strong>: bundles one or more rules; assigned to a volume group</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a snapshot rule (hourly, keep 7 days)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/snapshot_rule&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;name&quot;: &quot;hourly-7d&quot;,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;interval&quot;: &quot;One_Hour&quot;,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;desired_retention&quot;: 168,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;access_type&quot;: &quot;Creation&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Create a snapshot rule (daily at 21:00, keep 30 days)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/snapshot_rule&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">    &quot;name&quot;: &quot;daily-21h-30d&quot;,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">    &quot;time_of_day&quot;: &quot;21:00&quot;,</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s1">    &quot;days_of_week&quot;: [&quot;Sunday&quot;,&quot;Monday&quot;,&quot;Tuesday&quot;,&quot;Wednesday&quot;,&quot;Thursday&quot;,&quot;Friday&quot;,&quot;Saturday&quot;],</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="s1">    &quot;desired_retention&quot;: 720,</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s1">    &quot;access_type&quot;: &quot;Creation&quot;</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Create a protection policy combining hourly + daily snapshot rules</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/policy&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="s1">    &quot;name&quot;: &quot;tier2-1h&quot;,</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="s1">    &quot;description&quot;: &quot;Hourly snapshots 7d + daily 30d&quot;,</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="s1">    &quot;snapshot_rules&quot;: [&quot;&lt;hourly-rule-id&gt;&quot;, &quot;&lt;daily-rule-id&gt;&quot;]</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1"># Assign the policy to a volume group</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/volume_group/&lt;vg-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;policy_id&quot;: &quot;&lt;policy-id&gt;&quot;}&#39;</span>
+</code></pre></div>
+<h3 id="recommended-snapshot-retention-by-tier">Recommended Snapshot Retention by Tier<a class="headerlink" href="#recommended-snapshot-retention-by-tier" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Workload Type</th>
+<th>Snapshot Frequency</th>
+<th>Local Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 1</td>
+<td>Databases, critical apps</td>
+<td>15-minute or hourly</td>
+<td>7 days</td>
+</tr>
+<tr>
+<td>Tier 2</td>
+<td>Application servers, ERP</td>
+<td>Hourly</td>
+<td>14 days</td>
+</tr>
+<tr>
+<td>Tier 3</td>
+<td>File servers, home directories</td>
+<td>Every 4 hours + daily</td>
+<td>30 days</td>
+</tr>
+<tr>
+<td>Archive</td>
+<td>Backup targets, NAS archives</td>
+<td>Daily</td>
+<td>90 days</td>
+</tr>
+</tbody>
+</table>
+<h3 id="restoring-a-volume-from-snapshot">Restoring a Volume from Snapshot<a class="headerlink" href="#restoring-a-volume-from-snapshot" title="Permanent link">&para;</a></h3>
+<p>Snapshots can be restored in place (replacing the current volume) or cloned to a new volume for validation before committing to production.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Option A: Clone the snapshot to a new volume (safe — production is untouched)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/volume_snapshot/&lt;snap-id&gt;/clone&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;name&quot;: &quot;oradb-prod-data-001-snap-restore-validation&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;description&quot;: &quot;Clone for restore validation&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Map the clone to a test host; verify data integrity; then either:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">#   a) Promote the clone to production (rename) if it&#39;s correct</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">#   b) Delete the clone if the data was the wrong recovery point</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Option B: Restore in place (destructive — replaces current volume content)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Ensure the volume is unmounted on all hosts before proceeding</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/volume_snapshot/&lt;snap-id&gt;/restore&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;backup_snap_name&quot;: &quot;before-restore-20260507&quot;}&#39;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># PowerStore creates a backup snapshot of the current state before restoring</span>
+</code></pre></div>
+<h3 id="file-system-snapshot-restore-nfssmb">File System Snapshot Restore (NFS/SMB)<a class="headerlink" href="#file-system-snapshot-restore-nfssmb" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List snapshots for a file system</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/filesystem_snapshot?filesystem_id=&lt;fs-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Restore the file system from a snapshot (in-place)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/filesystem_snapshot/&lt;snap-id&gt;/restore&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;backup_snap_name&quot;: &quot;pre-restore-fs-20260507&quot;}&#39;</span>
+</code></pre></div>
+<p><strong>SMB Previous Versions (Shadow Copies):</strong> PowerStore NAS supports Windows Shadow Copies via the NAS server. When snapshots are scheduled, Windows clients can access previous versions of files directly from the share via right-click → Properties → Previous Versions. Enable this in PowerStore Manager → NAS server → SMB configuration → Enable Shadow Access Copies.</p>
+<h2 id="backup-integration">Backup Integration<a class="headerlink" href="#backup-integration" title="Permanent link">&para;</a></h2>
+<h3 id="veeam-backup-replication">Veeam Backup &amp; Replication<a class="headerlink" href="#veeam-backup-replication" title="Permanent link">&para;</a></h3>
+<p>Veeam integrates with PowerStore in two modes:</p>
+<p><strong>Mode 1: vSphere VADP (standard VMware backup)</strong></p>
+<ul>
+<li>Veeam connects to vCenter and uses vStorage APIs to quiesce and snapshot VMs</li>
+<li>PowerStore is transparent — Veeam reads data from the VMFS/NFS datastore via the ESXi host</li>
+<li>No PowerStore-specific configuration required</li>
+<li>Works with all PowerStore models and protocols</li>
+</ul>
+<p><strong>Mode 2: Veeam Storage Integration Plugin for PowerStore</strong></p>
+<ul>
+<li>Veeam uses PowerStore snapshots as backup proxy — offloads backup I/O from production hosts</li>
+<li>Requires the Veeam Storage Integration Plugin installed on the Veeam backup server</li>
+<li>Veeam creates a PowerStore snapshot, mounts it to a proxy host, and reads data from the snapshot</li>
+<li>PowerStore REST API credentials required in Veeam configuration</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Veeam PowerStore plugin configuration:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Veeam Backup Console → Storage Infrastructure → Add Storage → Dell PowerStore</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Enter:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#   Management IP: &lt;powerstore-mgmt-ip&gt;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#   Protocol: HTTPS</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">#   Username: veeam-svc (dedicated account with StorageOperator role)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">#   Password: &lt;password&gt;</span>
+</code></pre></div>
+<p>Recommended service account for Veeam:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Username</td>
+<td><code>veeam-svc</code></td>
+</tr>
+<tr>
+<td>PowerStore role</td>
+<td>StorageOperator</td>
+</tr>
+<tr>
+<td>Permissions</td>
+<td>Read volumes, create/delete snapshots, read NAS</td>
+</tr>
+<tr>
+<td>Location</td>
+<td>PowerStore Manager → Settings → Security → Users</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dell-powerprotect-data-manager-ppdm">Dell PowerProtect Data Manager (PPDM)<a class="headerlink" href="#dell-powerprotect-data-manager-ppdm" title="Permanent link">&para;</a></h3>
+<p>PPDM provides application-aware protection for VMs and databases on PowerStore:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>PPDM Workflow:
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>1. PPDM discovers VMs via vCenter API
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>2. PPDM coordinates application quiesce (VMware Tools or pre/post scripts)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>3. PPDM triggers a PowerStore snapshot via REST API (crash-consistent or app-consistent)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>4. PPDM reads the snapshot and writes to the Data Domain (PowerProtect DD) backup target
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>5. Snapshot is released after backup completes
+</code></pre></div>
+<p>PPDM configuration for PowerStore:</p>
+<ul>
+<li>PPDM → Infrastructure → Storage Systems → Add → Dell PowerStore</li>
+<li>Enter the PowerStore management IP and a service account with StorageOperator role</li>
+<li>PPDM will discover all volumes and associate them with protected VMs</li>
+</ul>
+<h3 id="commvault-intellisnap">Commvault (IntelliSnap)<a class="headerlink" href="#commvault-intellisnap" title="Permanent link">&para;</a></h3>
+<p>Commvault IntelliSnap uses the PowerStore REST API to create application-consistent snapshots via snap engines:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Commvault Snap Engine for Dell PowerStore:
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>1. CommServe coordinates application quiesce (SQL Agent, Oracle Agent, etc.)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>2. Snap Engine calls PowerStore REST API to create a volume snapshot
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>3. Commvault catalogues the snapshot as an IntelliSnap restore point
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>4. Optional: Commvault mounts the snapshot to an access node for secondary copy to tape/object
+</code></pre></div>
+<h2 id="backup-restore-procedures">Backup Restore Procedures<a class="headerlink" href="#backup-restore-procedures" title="Permanent link">&para;</a></h2>
+<h3 id="vm-restore-from-veeam">VM Restore from Veeam<a class="headerlink" href="#vm-restore-from-veeam" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Veeam Restore Options (in order of speed):
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>1. Instant VM Recovery — starts VM directly from Veeam repository; fastest
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2. Restore to Original Location — overwrites current VM; data consistency depends on backup type
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>3. Restore to New Location — creates a new VM from backup; safest validation option
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>4. File-Level Restore — extracts individual files from a VM backup without full VM restore
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>5. Application Item Recovery — Exchange, SQL, SharePoint, Oracle item-level restore
+</code></pre></div>
+<h3 id="database-restore-from-snapshot">Database Restore from Snapshot<a class="headerlink" href="#database-restore-from-snapshot" title="Permanent link">&para;</a></h3>
+<p>Example: Oracle database restore from a PowerStore volume snapshot.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Step 1: Identify the target snapshot (from the snapshot schedule)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/volume_snapshot?volume_id=&lt;ora-data-vol-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Step 2: Clone the snapshot to a test volume for validation</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/volume_snapshot/&lt;snap-id&gt;/clone&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;: &quot;ora-restore-validation-20260507&quot;}&#39;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Step 3: Map the clone to a test/restore host</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/host_volume_mapping&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="s1">    &quot;volume_id&quot;: &quot;&lt;clone-id&gt;&quot;,</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="s1">    &quot;host_id&quot;: &quot;&lt;restore-host-id&gt;&quot;,</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="s1">    &quot;logical_unit_number&quot;: 10</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Step 4: On the restore host — mount the LUN and start Oracle in read-only mode to validate</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1"># oracle$ sqlplus / as sysdba</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># SQL&gt; startup mount;</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># SQL&gt; alter database open resetlogs;   (if recovering from an older snapshot)</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="c1"># Validate data; confirm correct restore point</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="c1"># Step 5: If validated — detach from restore host; attach to production host</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="c1"># Or restore in place on production host (schedule downtime)</span>
+</code></pre></div>
+<h2 id="recovery-objectives">Recovery Objectives<a class="headerlink" href="#recovery-objectives" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Recovery Scenario</th>
+<th>Method</th>
+<th>Typical RTO</th>
+<th>RPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single file/object deleted</td>
+<td>NAS snapshot (Previous Versions / NFS snapshot)</td>
+<td>&lt; 5 minutes</td>
+<td>Last snapshot (hourly)</td>
+</tr>
+<tr>
+<td>VM corrupted (logical)</td>
+<td>Veeam Instant Recovery or snapshot clone</td>
+<td>&lt; 15 minutes</td>
+<td>Last backup or snapshot</td>
+</tr>
+<tr>
+<td>Volume corrupted (logical)</td>
+<td>PowerStore snapshot restore or clone</td>
+<td>10–30 minutes</td>
+<td>Last snapshot (hourly)</td>
+</tr>
+<tr>
+<td>Drive failure</td>
+<td>Automatic (RAID reconstruct); no downtime</td>
+<td>0 minutes (transparent)</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Node failure</td>
+<td>Automatic peer node takeover</td>
+<td>&lt; 60 seconds</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Site failure (async replication)</td>
+<td>Replication failover; bring up at DR</td>
+<td>1–4 hours</td>
+<td>Last RPO cycle (e.g., 1 hour)</td>
+</tr>
+<tr>
+<td>Site failure (Metro Volume)</td>
+<td>Automatic promotion via mediator</td>
+<td>&lt; 5 minutes</td>
+<td>0 (synchronous)</td>
+</tr>
+<tr>
+<td>Full array loss</td>
+<td>Restore from Veeam / PPDM backup to new array</td>
+<td>4–24 hours</td>
+<td>Last backup</td>
+</tr>
+</tbody>
+</table>
 
 
 

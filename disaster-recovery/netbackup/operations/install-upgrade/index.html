@@ -725,6 +725,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Upgrade Order">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-dependency-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Dependency Chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -844,6 +861,28 @@
 </table>
 <p>Check lifecycle dates at: <a href="https://sort.veritas.com">sort.veritas.com</a> → EOL dates.</p>
 <h2 id="upgrade-order">Upgrade Order<a class="headerlink" href="#upgrade-order" title="Permanent link">&para;</a></h2>
+<h3 id="upgrade-dependency-chain">Upgrade Dependency Chain<a class="headerlink" href="#upgrade-dependency-chain" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    start(["Start upgrade window"])
+    start --&gt; catBackup["Force catalog backup\nbpbackup -i -h &lt;master&gt; -p NBU_Catalog_Backup\nVerify completion"]
+    catBackup --&gt; catOK{"Catalog backup\ncomplete?"}
+    catOK --&gt;|No| halt["STOP — catalog must be\nbacked up before proceeding"]
+    catOK --&gt;|Yes| eebReview["Review EEB register\nNote which EEBs\nsuperseded by this upgrade"]
+    eebReview --&gt; masterUpgrade["Upgrade Primary Server\nAll media servers can still backup\nduring master upgrade (N-1 supported)"]
+    masterUpgrade --&gt; masterVerify["bpclntcmd -self\nVerify master server version"]
+    masterVerify --&gt; mediaUpgrade["Upgrade Media Servers\none at a time\nbpclntcmd -hn &lt;ms&gt; -chk after each"]
+    mediaUpgrade --&gt; clientUpgrade["Upgrade Clients\npush from Admin Console\nor manual per client"]
+    clientUpgrade --&gt; postValid["Post-upgrade validation:\nbpdbm -consistency_check\nbpbackup test run"]
+    postValid --&gt; done(["Upgrade complete"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef warn fill:#be123c,stroke:#9f1239,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class catBackup,eebReview,masterUpgrade,masterVerify,mediaUpgrade,clientUpgrade,postValid action
+    class catOK decision
+    class halt warn
+    class start,done terminal</code></pre>
 <p><strong>Critical: always upgrade Master Server first.</strong></p>
 <ol>
 <li>

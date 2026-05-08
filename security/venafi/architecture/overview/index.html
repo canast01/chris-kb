@@ -739,10 +739,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ca-integration-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CA Integration Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ca-connectors" class="md-nav__link">
     <span class="md-ellipsis">
       
         CA Connectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-lifecycle-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Lifecycle Flow
       
     </span>
   </a>
@@ -889,6 +911,21 @@
 - Approval workflow (auto-issue vs. manual approval)
 - Notification contacts for expiry alerts</p>
 <hr />
+<h2 id="ca-integration-hierarchy">CA Integration Hierarchy<a class="headerlink" href="#ca-integration-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    tpp["Venafi Trust Protection Platform"]
+    tpp --&gt; adcs["CA Connector: ADCS\n(Microsoft Active Directory CS)"]
+    tpp --&gt; digicert["CA Connector: DigiCert\n(public OV / EV / DV)"]
+    tpp --&gt; entrust["CA Connector: Entrust\n(public / OV)"]
+    tpp --&gt; acme["ACME Connector\n(Let's Encrypt)"]
+    tpp --&gt; vault["HashiCorp Vault PKI\n(short-lived / service mesh)"]
+
+    adcs --&gt;|"DCOM / CES"| adcsServer["ADCS Issuing CA Server"]
+    digicert --&gt;|"REST API"| digicertCloud["DigiCert API Cloud"]
+    entrust --&gt;|"REST API"| entrustCloud["Entrust API Cloud"]
+    acme --&gt;|"ACME RFC 8555"| leCloud["Let's Encrypt"]
+    vault --&gt;|"Vault REST API"| vaultPKI["Vault PKI Engine"]</code></pre>
+<hr />
 <h2 id="ca-connectors">CA Connectors<a class="headerlink" href="#ca-connectors" title="Permanent link">&para;</a></h2>
 <p>Venafi integrates with multiple CA backends. Each connector is configured once at the Policy Server level and referenced by policy folders.</p>
 <table>
@@ -933,6 +970,22 @@
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-Headers</span> <span class="nv">$headers</span> <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="p">`</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="n">-Body</span> <span class="s1">&#39;{&quot;PolicyDN&quot;:&quot;\\VED\\Policy\\Internal\\Production&quot;}&#39;</span>
 </code></pre></div>
+<hr />
+<h2 id="certificate-lifecycle-flow">Certificate Lifecycle Flow<a class="headerlink" href="#certificate-lifecycle-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    request["Certificate Request\n(UI / API / vcert CLI / CI-CD)"]
+    request --&gt; policyCheck{"Policy engine\nvalidation"}
+    policyCheck --&gt;|"SAN missing / key too small\npolicy violation"| reject["Reject with\nviolation message"]
+    policyCheck --&gt;|"internal auto-issue"| submitCA["Submit CSR to\nconfigured CA connector"]
+    policyCheck --&gt;|"external / approval required"| approvalQ["Enter Approval Queue\n(Security team review)"]
+    approvalQ --&gt;|"approved"| submitCA
+    approvalQ --&gt;|"rejected"| reject
+    submitCA --&gt; caIssue["CA issues certificate"]
+    caIssue --&gt; tppStore["Venafi stores certificate\n+ notifies owner"]
+    tppStore --&gt; monitor["Expiry monitoring begins\n(30-day alert window)"]
+    monitor --&gt;|"within renewal window"| autoRenew["Auto-renew triggered\n(new CSR generated)"]
+    autoRenew --&gt; submitCA
+    monitor --&gt;|"key compromise / decommission"| revoke["Revoke via CA connector\n+ update CRL / OCSP"]</code></pre>
 <hr />
 <h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
 <p>Venafi TPP is deployed as a primary + secondary pair sharing a common Microsoft SQL Server backend.</p>

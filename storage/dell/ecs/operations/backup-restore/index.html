@@ -868,6 +868,25 @@
 </ul>
 <p>ECS does not have a traditional backup agent. Configuration backup covers the management layer; data is protected by replication and erasure coding.</p>
 <h2 id="data-durability-model">Data Durability Model<a class="headerlink" href="#data-durability-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+  subgraph "VDC-Level Protection"
+    VDC1[("VDC 1 — Site A\n(primary)")]
+    VDC2[("VDC 2 — Site B\n(replica)")]
+    VDC1 --&gt;|"geo-replication\nasync or sync"| VDC2
+  end
+  subgraph "Within-VDC Protection"
+    FRAG["Object split into\nEC fragments"]
+    N1["Node 1"] &amp; N2["Node 2"] &amp; N3["Node 3"] &amp; N4["Node 4+"]
+    FRAG --&gt; N1 &amp; N2 &amp; N3 &amp; N4
+  end
+  WORM["Object Lock (WORM)\nper-object retention"]
+  VER["Bucket Versioning\npoint-in-time recovery"]
+  classDef vdc fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef node fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef protect fill:#15803d,stroke:#166534,color:#fff
+  class VDC1,VDC2 vdc
+  class N1,N2,N3,N4,FRAG node
+  class WORM,VER protect</code></pre>
 <table>
 <thead>
 <tr>
@@ -1008,6 +1027,22 @@
 <p>Object data restore depends on the failure scenario.</p>
 <h3 id="node-failure-within-a-vdc">Node Failure (Within a VDC)<a class="headerlink" href="#node-failure-within-a-vdc" title="Permanent link">&para;</a></h3>
 <p>ECS automatically rebuilds erasure coding stripes to surviving nodes when a node or disk fails.</p>
+<pre class="mermaid"><code>graph TD
+  FAIL(["Node or disk marked FAILED"]) --&gt; AUTO["ECS auto-rebuild begins\nEC fragments reconstructed\nfrom surviving nodes"]
+  AUTO --&gt; MON["Monitor: ECS Portal →\nHardware → Disks\nStatus: REBUILDING → GOOD"]
+  MON --&gt; DONE{Rebuild\ncomplete?}
+  DONE --&gt;|No| WAIT["Wait — rebuild time:\n8–24 h for dense node\nDo NOT run upgrades or\nnode additions during rebuild"]
+  WAIT --&gt; MON
+  DONE --&gt;|Yes| CHK["Confirm node/disk shows GOOD\nCheck cluster capacity headroom"]
+  CHK --&gt; CLEAR(["Cluster redundancy restored"])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class DONE decision
+  class AUTO,MON,CHK action
+  class WAIT warn
+  class FAIL,CLEAR term</code></pre>
 <ul>
 <li>No manual restore required</li>
 <li>Monitor rebuild progress: ECS Portal → Hardware → Disks — <code>REBUILDING</code> state progresses to <code>GOOD</code> when complete</li>

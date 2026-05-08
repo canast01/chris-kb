@@ -725,6 +725,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Upgrade Order">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commvault-upgrade-dependency-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CommVault Upgrade Dependency Chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -822,6 +839,26 @@
 </table>
 <p>Check current version EOL: <a href="https://documentation.commvault.com">documentation.commvault.com</a> → Product Lifecycle.</p>
 <h2 id="upgrade-order">Upgrade Order<a class="headerlink" href="#upgrade-order" title="Permanent link">&para;</a></h2>
+<h3 id="commvault-upgrade-dependency-chain">CommVault Upgrade Dependency Chain<a class="headerlink" href="#commvault-upgrade-dependency-chain" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    start(["Start upgrade window"])
+    start --&gt; backup["Back up CommServe SQL DB\nverify backup completes"]
+    backup --&gt; dbCheck{"DB backup\ncomplete?"}
+    dbCheck --&gt;|No| halt["STOP — do not proceed\nuntil backup confirmed"]
+    dbCheck --&gt;|Yes| csUpgrade["Upgrade CommServe\nSQL DB upgraded automatically"]
+    csUpgrade --&gt; maUpgrade["Upgrade MediaAgents\nrolling — one pool at a time"]
+    maUpgrade --&gt; clientUpgrade["Upgrade Clients\npush via client group or individual"]
+    clientUpgrade --&gt; validate["Validate:\n- All services running\n- No jobs queued/failed\n- Test backup on non-critical client"]
+    validate --&gt; done(["Upgrade complete"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    classDef warn fill:#be123c,stroke:#9f1239,color:#fff
+    class backup,csUpgrade,maUpgrade,clientUpgrade,validate action
+    class dbCheck decision
+    class start,done terminal
+    class halt warn</code></pre>
 <p><strong>Critical: always upgrade CommServe first.</strong></p>
 <ol>
 <li>

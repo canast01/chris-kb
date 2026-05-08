@@ -761,6 +761,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#replication-topology-kcc-generated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Topology (KCC-Generated)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sites-and-replication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -787,6 +798,17 @@
     <span class="md-ellipsis">
       
         Active Directory Database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kerberos-authentication-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kerberos Authentication Sequence
       
     </span>
   </a>
@@ -1028,6 +1050,33 @@
 </tr>
 </tbody>
 </table>
+<h2 id="replication-topology-kcc-generated">Replication Topology (KCC-Generated)<a class="headerlink" href="#replication-topology-kcc-generated" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    siteA["Site A — London"]
+    siteB["Site B — New York"]
+    siteC["Site C — Singapore"]
+
+    dc01["DC-01\nPDC Emulator\nRID Master"]
+    dc02["DC-02\nGlobal Catalog"]
+    dc03["DC-03\nSite A replica"]
+    dc04["DC-04\nGlobal Catalog"]
+    dc05["DC-05\nSite B replica"]
+    dc06["DC-06\nSite C GC"]
+
+    siteA --&gt; dc01
+    siteA --&gt; dc02
+    siteA --&gt; dc03
+    siteB --&gt; dc04
+    siteB --&gt; dc05
+    siteC --&gt; dc06
+
+    dc01 &lt;--&gt;|"intra-site\nRPC — frequent"| dc02
+    dc01 &lt;--&gt;|"intra-site\nRPC — frequent"| dc03
+    dc04 &lt;--&gt;|"intra-site"| dc05
+
+    dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc04
+    dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc06
+    dc04 &lt;--&gt;|"inter-site link"| dc06</code></pre>
 <h2 id="sites-and-replication">Sites and Replication<a class="headerlink" href="#sites-and-replication" title="Permanent link">&para;</a></h2>
 <p>Sites define physical network boundaries for efficient replication and logon:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># List sites</span>
@@ -1058,6 +1107,20 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># System State backup includes NTDS.DIT</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">wbadmin</span> <span class="nb">start </span><span class="n">systemstatebackup</span> <span class="n">-backupTarget</span><span class="p">:</span><span class="n">D</span><span class="p">:</span>
 </code></pre></div></p>
+<h2 id="kerberos-authentication-sequence">Kerberos Authentication Sequence<a class="headerlink" href="#kerberos-authentication-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant client as Client
+    participant kdc as KDC (Domain Controller)
+    participant svc as Application Server
+
+    client-&gt;&gt;kdc: AS-REQ (username + encrypted timestamp)
+    kdc--&gt;&gt;client: AS-REP — TGT (encrypted with krbtgt key)
+    note over client: Client caches TGT (valid 10 hours)
+    client-&gt;&gt;kdc: TGS-REQ (TGT + service SPN)
+    kdc--&gt;&gt;client: TGS-REP — Service Ticket (encrypted with service key)
+    client-&gt;&gt;svc: AP-REQ (Service Ticket + authenticator)
+    svc--&gt;&gt;client: AP-REP (mutual auth confirmation)
+    note over client,svc: Secure session established</code></pre>
 <h2 id="kerberos-authentication-flow">Kerberos Authentication Flow<a class="headerlink" href="#kerberos-authentication-flow" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>  Client                  KDC (DC)                  Application Server
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    │                        │                               │

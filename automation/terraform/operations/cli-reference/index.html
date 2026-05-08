@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-with-brew-install-terraform-macos-apt-install-terraform-debian-or-download-from-terraformio-run-terraform-init-in-any-new-working-directory-before-other-commands" class="md-nav__link">
+  <a href="#state-backend-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        &gt; Install with brew install terraform (macOS), apt install terraform (Debian), or download from terraform.io. Run terraform init in any new working directory before other commands.
+        State Backend Topology
       
     </span>
   </a>
@@ -815,7 +815,40 @@
 
 <h1 id="terraform-cli-reference">Terraform CLI Reference<a class="headerlink" href="#terraform-cli-reference" title="Permanent link">&para;</a></h1>
 <p>Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired infrastructure in <code>.tf</code> files, and Terraform figures out what to create, change, or delete to reach that state. State is stored in a <code>.tfstate</code> file — it's Terraform's record of what it has actually deployed.</p>
-<h2 id="install-with-brew-install-terraform-macos-apt-install-terraform-debian-or-download-from-terraformio-run-terraform-init-in-any-new-working-directory-before-other-commands">&gt; Install with <code>brew install terraform</code> (macOS), <code>apt install terraform</code> (Debian), or download from terraform.io. Run <code>terraform init</code> in any new working directory before other commands.<a class="headerlink" href="#install-with-brew-install-terraform-macos-apt-install-terraform-debian-or-download-from-terraformio-run-terraform-init-in-any-new-working-directory-before-other-commands" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>Install with <code>brew install terraform</code> (macOS), <code>apt install terraform</code> (Debian), or download from terraform.io. Run <code>terraform init</code> in any new working directory before other commands.</p>
+</blockquote>
+<h2 id="state-backend-topology">State Backend Topology<a class="headerlink" href="#state-backend-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    tfClient["Terraform Client\n(local / CI runner)"]
+
+    subgraph localBackend["Local Backend"]
+        localState["terraform.tfstate\n(local disk)"]
+    end
+
+    subgraph remoteBackendAWS["Remote Backend — AWS"]
+        s3Bucket["S3 Bucket\n(state file)"]
+        dynamoLock["DynamoDB Table\n(state lock)"]
+    end
+
+    subgraph remoteBackendAzure["Remote Backend — Azure"]
+        blobStorage["Azure Blob\n(state file)"]
+        blobLease["Blob Lease\n(state lock)"]
+    end
+
+    subgraph tfc["Terraform Cloud / Enterprise"]
+        tfcState["TFC Workspace\n(state + lock)"]
+        tfcRuns["Managed Runs\n(plan + apply)"]
+    end
+
+    tfClient --&gt;|local| localState
+    tfClient --&gt;|backend s3| s3Bucket
+    s3Bucket --&gt; dynamoLock
+    tfClient --&gt;|backend azurerm| blobStorage
+    blobStorage --&gt; blobLease
+    tfClient --&gt;|backend remote| tfcState
+    tfcState --&gt; tfcRuns</code></pre>
+<hr />
 <h2 id="init-setup">Init &amp; Setup<a class="headerlink" href="#init-setup" title="Permanent link">&para;</a></h2>
 <p>Initialize a Terraform working directory — downloads providers, configures the backend (where state is stored), and prepares modules. Always run this first in a new directory or after changing provider/backend configuration.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Initialize working directory</span>

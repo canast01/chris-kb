@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#renewal-and-reporting-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renewal and Reporting Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#renewal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -844,6 +855,20 @@
 
 <h1 id="venafi-procedures">Venafi — Procedures<a class="headerlink" href="#venafi-procedures" title="Permanent link">&para;</a></h1>
 <p>Operational procedures for certificate renewal, automation, and reporting.</p>
+<h2 id="renewal-and-reporting-workflow">Renewal and Reporting Workflow<a class="headerlink" href="#renewal-and-reporting-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    expiryAlert["Expiry alert triggered\n(30 / 14 / 7 days)"]
+    expiryAlert --&gt; checkAuto{"Automated renewal\nconfigured?"}
+    checkAuto --&gt;|"yes — Venafi driver"| autoRenew["Venafi auto-renews\nand deploys to target"]
+    checkAuto --&gt;|"no — manual"| manualRenew["Certificate owner notified\nManual renewal required"]
+    manualRenew --&gt; genCSR["Generate new CSR\non target host"]
+    genCSR --&gt; submitVenafi["Submit via vcert / UI / API\nto Venafi policy folder"]
+    submitVenafi --&gt; policyCheck["Policy validation"]
+    policyCheck --&gt; caIssue["CA issues new cert"]
+    caIssue --&gt; install["Install on target service\n+ validate TLS"]
+    install --&gt; closeAlert["Close alert — update\ncert inventory"]
+    autoRenew --&gt; closeAlert</code></pre>
+<hr />
 <h2 id="renewal">Renewal<a class="headerlink" href="#renewal" title="Permanent link">&para;</a></h2>
 <p>Use this section for certificate renewal procedures and field references.</p>
 <h3 id="common-checks">Common Checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h3>

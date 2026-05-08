@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#lag-alert-triage-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lag Alert Triage Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#srdfa-link-down" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -785,6 +796,55 @@
 <p>Part of the <a href="../../">SRDF/A</a> reference.</p>
 </blockquote>
 <p>Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support. Correlate with network monitoring timestamps to distinguish storage-side from WAN-side causes.</p>
+<h2 id="lag-alert-triage-decision-tree">Lag Alert Triage Decision Tree<a class="headerlink" href="#lag-alert-triage-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    lagAlert["Lag Alert Fires\n(RPO threshold breached)"]
+    checkPairState["Check Pair State\nsymrdf -g grp -sid sid query"]
+    pairState{"Pair State?"}
+    transmitIdle["Transmit Idle\n→ Link saturation"]
+    suspended["Suspended\n→ Manual or auto-suspend"]
+    inconsistent["Inconsistent\n→ Data consistency issue"]
+    transmitting["Transmitting / Awaiting Cycle\n→ Transient or write burst"]
+
+    checkDSE["Check DSE Utilization\nsymrdf -g 20 -type A query -detail | grep DSE"]
+    dseHigh{"DSE &gt; 70%?"}
+    checkLinkBW["Check Link Bandwidth\nsymstat -rdf -dir RF-2F -i 5 -c 3"]
+    linkSaturated{"Link &gt; 80%\nUtilization?"}
+    checkNetOps["Check Network with Network Team\nFCIP tunnel state, WAN QoS"]
+    throttleIO["Throttle R1 Write I/O\nIdentify high-write workload"]
+    checkSuspendReason["Check Suspend Reason\nsymevent -sid sid list -last 30 | grep SRDF"]
+    resumeReplication["Resume Replication\nsymrdf -g grp -sid sid resume -noprompt"]
+    doNotActivateR2["Do NOT Activate R2\nEngage Dell Support"]
+    monitorRecovery["Monitor Lag Recovery\nevery 5 minutes"]
+
+    lagAlert --&gt; checkPairState
+    checkPairState --&gt; pairState
+    pairState --&gt;|"Transmit Idle"| transmitIdle
+    pairState --&gt;|"Suspended"| suspended
+    pairState --&gt;|"Inconsistent"| inconsistent
+    pairState --&gt;|"Transmitting"| transmitting
+
+    transmitIdle --&gt; checkDSE
+    checkDSE --&gt; dseHigh
+    dseHigh --&gt;|"Yes"| throttleIO
+    dseHigh --&gt;|"No"| checkLinkBW
+    checkLinkBW --&gt; linkSaturated
+    linkSaturated --&gt;|"Yes"| checkNetOps
+    linkSaturated --&gt;|"No"| monitorRecovery
+
+    suspended --&gt; checkSuspendReason
+    checkSuspendReason --&gt; resumeReplication
+    resumeReplication --&gt; monitorRecovery
+
+    inconsistent --&gt; doNotActivateR2
+
+    transmitting --&gt; monitorRecovery
+
+    style lagAlert fill:#be123c,color:#fff
+    style doNotActivateR2 fill:#be123c,color:#fff
+    style monitorRecovery fill:#15803d,color:#fff
+    style throttleIO fill:#b45309,color:#fff
+    style checkNetOps fill:#b45309,color:#fff</code></pre>
 <hr />
 <h2 id="srdfa-link-down">SRDF/A Link Down<a class="headerlink" href="#srdfa-link-down" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Pairs move to <code>Transmit Idle</code> or <code>Suspended</code>; no delta sets completing.</p>
@@ -826,6 +886,7 @@
 <tr>
 <th>Cause</th>
 <th>Indicator</th>
+<th>Why it happens</th>
 <th>Remediation</th>
 </tr>
 </thead>
@@ -833,21 +894,25 @@
 <tr>
 <td>WAN bandwidth saturation</td>
 <td>Delta set queue growing; utilisation at 100%</td>
+<td>Write rate exceeds provisioned FCIP bandwidth</td>
 <td>Contact network team to increase WAN bandwidth or implement QoS</td>
 </tr>
 <tr>
 <td>Write I/O spike</td>
 <td>Delta set size abnormally large</td>
+<td>Batch jobs or backups generating burst writes</td>
 <td>Identify the high-write workload; schedule heavy batch jobs for off-peak</td>
 </tr>
 <tr>
 <td>Array backend congestion</td>
 <td>R1 or R2 performance counters showing latency</td>
+<td>Backend storage pool or disk group under pressure</td>
 <td>Check array Unisphere performance; review storage pool or disk group health</td>
 </tr>
 <tr>
 <td>FCIP GRE overhead miscalculation</td>
 <td>MTU issues causing fragmentation</td>
+<td>FCIP MTU not accounting for GRE/IPsec encapsulation overhead</td>
 <td>Verify FCIP MTU settings on switches; test with <code>ping -M do -s 1400</code></td>
 </tr>
 </tbody>

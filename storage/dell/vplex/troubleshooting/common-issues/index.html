@@ -855,6 +855,26 @@
 <h1 id="dell-vplex-common-issues">Dell VPLEX — Common Issues<a class="headerlink" href="#dell-vplex-common-issues" title="Permanent link">&para;</a></h1>
 <h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
 <p>When hosts report I/O suspension, a distributed device is out-of-sync, or a director is unreachable, work through this sequence first.</p>
+<pre class="mermaid"><code>flowchart TD
+    alert(["Host I/O issue /\nAlert received"])
+    clHealth["ll /clusters/*/health-indications/\nCluster non-ok?"]
+    ddHealth["ll /distributed-storage/distributed-devices/*/health-indications/\nDevice out-of-sync?"]
+    witnessHlth["ll /clusters/*/cluster-witness/\nWitness unreachable?"]
+    iclHlth["Check ICL\nll /clusters/*/communication/inter-cluster-links/"]
+    dirHealth["ll /engines/*/directors/*/hardware/\nDirector faulted?"]
+    svCheck["ll /clusters/*/exports/storage-views/\nStorage view intact?"]
+    hcFull["health-check --full\nCapture full output"]
+
+    alert --&gt; clHealth --&gt; ddHealth --&gt; witnessHlth --&gt; iclHlth --&gt; dirHealth --&gt; svCheck --&gt; hcFull
+
+    iclDown["Restore ICL\nNetwork team"]
+    iclHlth --&gt;|"ICL down"| iclDown
+
+    dirFault["Open Dell Sev-2 case\nDo not reseat without guidance"]
+    dirHealth --&gt;|"Director faulted"| dirFault
+
+    svFix["Add initiator / volume\nback to storage view"]
+    svCheck --&gt;|"View missing objects"| svFix</code></pre>
 <ul>
 <li>[ ] Run <code>ll /clusters/*/health-indications/</code> immediately — identify which cluster has entered a non-ok health state and note when the state change occurred</li>
 <li>[ ] Check distributed device sync state: <code>ll /distributed-storage/distributed-devices/*/health-indications/</code> — an <code>out-of-sync</code> device means one leg of the distributed device is not being written to; identify which cluster leg is affected</li>

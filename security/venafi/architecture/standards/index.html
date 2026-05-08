@@ -773,6 +773,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#certificate-request-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Request Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#internal-production-auto-issue" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1091,6 +1102,20 @@
 4. Approved wildcards must be onboarded to CyberArk for private key protection.</p>
 <hr />
 <h2 id="certificate-request-workflow">Certificate Request Workflow<a class="headerlink" href="#certificate-request-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="certificate-request-decision-flow">Certificate Request Decision Flow<a class="headerlink" href="#certificate-request-decision-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    csrSubmit["Requestor submits CSR\n(UI / vcert / REST API)"]
+    csrSubmit --&gt; folderPolicy{"Venafi policy\nvalidation"}
+    folderPolicy --&gt;|"key size below minimum\nSHA-1 / no SAN"| policyFail["Reject — policy violation\nMessage returned to requestor"]
+    folderPolicy --&gt;|"internal production folder"| autoIssue{"Auto-issue\nenabled?"}
+    folderPolicy --&gt;|"external public folder"| manualApproval["Enter Approval Queue"]
+    autoIssue --&gt;|"yes"| caConnector["Submit to CA connector\n(ADCS / DigiCert)"]
+    autoIssue --&gt;|"no"| manualApproval
+    manualApproval --&gt; secReview{"Security team\nreview"}
+    secReview --&gt;|"approve"| caConnector
+    secReview --&gt;|"reject"| policyFail
+    caConnector --&gt; caIssues["CA issues certificate"]
+    caIssues --&gt; tppStores["Venafi stores + notifies requestor"]</code></pre>
 <h3 id="internal-production-auto-issue">Internal Production (Auto-Issue)<a class="headerlink" href="#internal-production-auto-issue" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Requestor submits CSR via Venafi UI or API
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>         |

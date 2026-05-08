@@ -783,6 +783,24 @@
 <h1 id="dell-ecs-authentication">Dell ECS — Authentication<a class="headerlink" href="#dell-ecs-authentication" title="Permanent link">&para;</a></h1>
 <h2 id="user-model-overview">User Model Overview<a class="headerlink" href="#user-model-overview" title="Permanent link">&para;</a></h2>
 <p>ECS has two distinct authentication contexts: <strong>management plane</strong> (portal/API administration) and <strong>data plane</strong> (S3/Swift/CAS object access). These use different identity sources and credential types.</p>
+<pre class="mermaid"><code>graph LR
+  subgraph "Management Plane"
+    PORTAL["ECS Portal\nREST API :4443"]
+    PORTAL --&gt; MAUTH{Auth}
+    MAUTH --&gt;|Local| MLOCAL["Local ECS account\n(sysadmin / svc-ecs-mgmt)"]
+    MAUTH --&gt;|LDAP| LDAPGRP["AD Group\n→ ECS role mapping\n(per namespace)"]
+  end
+  subgraph "Data Plane"
+    S3["S3 / Swift\nAPI :443 / :9021"]
+    S3 --&gt;|"Access Key + Secret Key\n(SigV4)"| OBJUSR["Object User\n(namespace-scoped)"]
+    OBJUSR --&gt; BPOL["Bucket Policy\n(least-privilege actions)"]
+  end
+  classDef mplane fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dplane fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef cred fill:#15803d,stroke:#166534,color:#fff
+  class PORTAL,MAUTH mplane
+  class S3,OBJUSR,BPOL dplane
+  class MLOCAL,LDAPGRP cred</code></pre>
 <table>
 <thead>
 <tr>

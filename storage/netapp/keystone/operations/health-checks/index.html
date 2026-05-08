@@ -699,6 +699,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collector-health-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collector Health Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ontap-health-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ONTAP Health Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-and-burst-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity and Burst Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#burst-threshold-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Burst Threshold Escalation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weekly-health-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weekly Health Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-output-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Output Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -722,8 +818,242 @@
 <p>Part of the <a href="../">Keystone Operations</a> reference.</p>
 </blockquote>
 <hr />
-<p>This page is a stub. Content will be added in a future update.</p>
-<p>For immediate health check guidance, refer to the <a href="../procedures/">Procedures</a> page which includes the daily check list and change readiness checklist from the operations reference.</p>
+<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verify Keystone Collector service is running</td>
+<td><code>systemctl status keystone-collector</code></td>
+<td>Service must show <code>active (running)</code></td>
+</tr>
+<tr>
+<td>Check last successful telemetry timestamp</td>
+<td><code>journalctl -u keystone-collector -n 50 \| grep -i "collection\|reported\|error"</code></td>
+<td>Timestamp should be within the last hour</td>
+</tr>
+<tr>
+<td>Review BlueXP Keystone dashboard</td>
+<td>Navigate to BlueXP → Digital Wallet → Keystone Subscriptions</td>
+<td>Check consumed vs. committed per tier</td>
+</tr>
+<tr>
+<td>Check burst usage</td>
+<td>Review BlueXP dashboard burst panel</td>
+<td>Flag if burst &gt; 10% above committed on any tier</td>
+</tr>
+<tr>
+<td>Verify AQoS policy assignments</td>
+<td><code>volume show -fields qos-policy-group</code> on ONTAP cluster</td>
+<td>No blank QoS policy groups on Keystone volumes</td>
+</tr>
+<tr>
+<td>Confirm API endpoint reachability from Collector</td>
+<td><code>curl -sk https://keystone.netapp.com</code> from Collector VM</td>
+<td>Must receive HTTP 200 or 401 (reachable)</td>
+</tr>
+<tr>
+<td>Review Collector error log</td>
+<td><code>sudo tail -50 /var/log/keystone-collector/keystone-collector.log</code></td>
+<td>Look for <code>ERROR</code> or <code>WARN</code> entries</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="health-check-criteria">Health Check Criteria<a class="headerlink" href="#health-check-criteria" title="Permanent link">&para;</a></h2>
+<p>A healthy Keystone environment meets all of the following:</p>
+<ul>
+<li>[ ] Keystone Collector service is <code>active (running)</code> — not failed, activating, or stopped</li>
+<li>[ ] Last successful telemetry collection is within the past 1 hour (or within the expected polling interval for your configuration)</li>
+<li>[ ] No <code>ERROR</code>-level entries in the Collector log in the last 24 hours</li>
+<li>[ ] BlueXP Keystone dashboard data is current — not stale from a previous day</li>
+<li>[ ] No service-level SLA breach notifications active (availability, latency, IOPS/TB)</li>
+<li>[ ] All Keystone-managed volumes have an AQoS adaptive policy-group assigned — no unclassified volumes</li>
+<li>[ ] Burst usage across all tiers is within acceptable range — not approaching the burst limit defined in the subscription</li>
+<li>[ ] No open Keystone support incidents with P1 or P2 severity</li>
+</ul>
+<hr />
+<h2 id="collector-health-commands">Collector Health Commands<a class="headerlink" href="#collector-health-commands" title="Permanent link">&para;</a></h2>
+<p>Run these commands on the Keystone Collector VM (SSH access required):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check Keystone Collector service status (systemd)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>keystone-collector
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: Active: active (running) since &lt;timestamp&gt;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Uptime should reflect continuous operation without recent restarts</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># View recent Collector logs — look for successful collection timestamps</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>keystone-collector<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Look for lines containing: &quot;collection complete&quot;, &quot;data reported&quot;, &quot;telemetry sent&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Tail the Collector log file directly</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/keystone-collector/keystone-collector.log
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check for ERROR or WARN entries in the last 24 hours</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>keystone-collector<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;24 hours ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;ERROR|WARN|FAIL|exception&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Test Collector connectivity to NetApp Keystone endpoint</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;HTTP %{http_code}\n&quot;</span><span class="w"> </span>https://keystone.netapp.com
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Expected: HTTP 200 or HTTP 401 (reachable; 401 is auth-required, which confirms network path is open)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Check if a proxy is configured for the Collector (if your environment requires one)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>sudo<span class="w"> </span>cat<span class="w"> </span>/etc/keystone-collector/config.conf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>proxy
+</code></pre></div>
+<hr />
+<h2 id="ontap-health-commands">ONTAP Health Commands<a class="headerlink" href="#ontap-health-commands" title="Permanent link">&para;</a></h2>
+<p>Run these commands on the ONTAP cluster backing the Keystone subscription:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify AQoS adaptive policy-groups exist for all Keystone service levels</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>qos<span class="w"> </span>adaptive-policy-group<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check all volumes and their QoS policy-group assignments</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,qos-policy-group
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Identify volumes with no QoS policy-group (unclassified — billing risk)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,qos-policy-group<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; - &quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Any volume showing &quot;-&quot; in the qos-policy-group column is unclassified</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Confirm ONTAP cluster is reachable from the Collector VM</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># (run from the Collector VM)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;cluster-mgmt-lif&gt;/api/cluster<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Verify cluster name and ONTAP version in the response</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Review logical used capacity per volume (what Keystone measures for billing)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,logical-used,percent-used
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Check aggregate-level free space (must remain adequate for Keystone provisioning)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># View QoS workload statistics for Keystone service level tiers</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show
+</code></pre></div>
+<hr />
+<h2 id="capacity-and-burst-health">Capacity and Burst Health<a class="headerlink" href="#capacity-and-burst-health" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current consumed vs. committed via the Keystone REST API</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># (replace with your actual subscription ID and token)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">SUBSCRIPTION_ID</span><span class="o">=</span><span class="s2">&quot;KS-XXXXX&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-api-token&gt;&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/</span><span class="si">${</span><span class="nv">SUBSCRIPTION_ID</span><span class="si">}</span><span class="s2">/usage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">for tier in data.get(&#39;service_levels&#39;, data.get(&#39;tiers&#39;, [])):</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">    name      = tier.get(&#39;name&#39;, &#39;unknown&#39;)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">    committed = float(tier.get(&#39;committed_tib&#39;, tier.get(&#39;committed&#39;, 0)))</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">    consumed  = float(tier.get(&#39;consumed_tib&#39;,  tier.get(&#39;consumed&#39;,  0)))</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">    burst     = float(tier.get(&#39;burst_tib&#39;,     tier.get(&#39;burst&#39;,     0)))</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">    pct       = (consumed / committed * 100) if committed &gt; 0 else 0</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">    status    = &#39;BURST&#39; if consumed &gt; committed else (&#39;WARN&#39; if pct &gt;= 90 else &#39;OK&#39;)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">    print(f&#39;{status:6s}  {name:20s}  {consumed:8.2f} / {committed:8.2f} TiB  ({pct:.1f}%  burst={burst:.2f} TiB)&#39;)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="burst-threshold-escalation">Burst Threshold Escalation<a class="headerlink" href="#burst-threshold-escalation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Consumed vs. Committed</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 80% of committed</td>
+<td>Normal</td>
+<td>No action</td>
+</tr>
+<tr>
+<td>80–89% of committed</td>
+<td>Warning</td>
+<td>Review growth trend; consider capacity amendment request</td>
+</tr>
+<tr>
+<td>90–99% of committed</td>
+<td>Near-burst</td>
+<td>Initiate capacity amendment process; notify KSM</td>
+</tr>
+<tr>
+<td>&gt; 100% of committed (burst active)</td>
+<td>Burst billing active</td>
+<td>Identify source of overconsumption; decommission unused volumes; expedite amendment</td>
+</tr>
+<tr>
+<td>Approaching burst limit</td>
+<td>Critical</td>
+<td>Emergency amendment required; contact KSM immediately</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="weekly-health-review">Weekly Health Review<a class="headerlink" href="#weekly-health-review" title="Permanent link">&para;</a></h2>
+<p>Beyond the daily checks, perform these weekly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Compare ONTAP volume logical usage vs. Keystone billing report</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># to identify any discrepancy between what ONTAP reports and what is billed</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>*<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,logical-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check snapshot usage on Keystone volumes — excessive snapshots consume committed capacity</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>*<span class="w"> </span>-volume<span class="w"> </span>*<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,size<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Review QoS throttling events — volumes being throttled may indicate workloads</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># exceeding their service level IOPS ceiling</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;0 IOPS&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Verify no new volumes were created without a QoS policy-group</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,qos-policy-group<span class="w"> </span>-state<span class="w"> </span>online<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; - &quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="health-check-output-reference">Health Check Output Reference<a class="headerlink" href="#health-check-output-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Healthy Value</th>
+<th>Investigate If</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Collector systemd status</td>
+<td><code>active (running)</code></td>
+<td><code>failed</code>, <code>inactive</code>, or recent restarts</td>
+</tr>
+<tr>
+<td>Last collection timestamp</td>
+<td>&lt; 1 hour ago</td>
+<td>&gt; 2 hours without a successful collection</td>
+</tr>
+<tr>
+<td>Collector log ERROR entries</td>
+<td>0 in last 24h</td>
+<td>Any ERROR in last 24h</td>
+</tr>
+<tr>
+<td>BlueXP data freshness</td>
+<td>Current day</td>
+<td>Shows yesterday's data or older</td>
+</tr>
+<tr>
+<td>Volumes with no QoS policy</td>
+<td>0</td>
+<td>Any online Keystone volume without a policy</td>
+</tr>
+<tr>
+<td>Burst status</td>
+<td>0% on all tiers</td>
+<td>Any tier &gt; 90% consumed</td>
+</tr>
+<tr>
+<td>ONTAP cluster reachable from Collector</td>
+<td>HTTP 200/401</td>
+<td>HTTP 000 (connection failure) or HTTP 500</td>
+</tr>
+</tbody>
+</table>
 
 
 

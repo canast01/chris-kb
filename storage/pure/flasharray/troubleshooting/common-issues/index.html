@@ -1223,6 +1223,27 @@
 <li><code>purealert list</code> shows a drive failure alert with severity <code>error</code></li>
 <li><code>puredrive list</code> shows a drive in <code>failed</code>, <code>recovering</code>, or <code>unhealthy</code> state</li>
 </ul>
+<pre class="mermaid"><code>flowchart TD
+  A["purealert list shows\ndrive error alert"] --&gt; B["puredrive list\n(identify bay and state)"]
+  B --&gt; C{"Drive state?"}
+  C --&gt;|"recovering"| D["Automatic rebuild in progress\nDo NOT pull the drive\nMonitor: puredrive list --progress"]
+  C --&gt;|"failed"| E{"Second drive\nalso failed?"}
+  E --&gt;|"Yes"| F["P1 case immediately\nDo NOT pull any drive\nAwait Pure Support guidance"]
+  E --&gt;|"No"| G["Open P2 case\nSchedule drive replacement\nArray degraded but protected"]
+  C --&gt;|"unhealthy"| H["Open P2 case — drive may fail soon\nMonitor closely\nPurity may proactively evict"]
+  C --&gt;|"missing"| I["Check physical seating\nOpen support case if drive present\nbut not detected"]
+  D --&gt; J{"Rebuild complete\n(state = healthy)?"}
+  J --&gt;|"Yes"| K["Array back to full redundancy\nOpen case to schedule physical replacement"]
+  J --&gt;|"Stalled &gt; 1 hour"| L["Open support case\nDo not manually intervene"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
+  classDef good fill:#15803d,stroke:#166534,color:#fff
+  classDef info fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  class C,E,J decision
+  class F,L warn
+  class K good
+  class D,G,H,I info</code></pre>
 <h3 id="diagnosis">Diagnosis<a class="headerlink" href="#diagnosis" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Identify the failed drive and its bay location</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>puredrive<span class="w"> </span>list
@@ -1437,6 +1458,25 @@
 <li><code>purealert list</code> shows replication error alert</li>
 <li>Hosts at one site may be serving I/O on stale data</li>
 </ul>
+<pre class="mermaid"><code>flowchart TD
+  A["purepod list shows\npod paused / unhealthy"] --&gt; B["Check inter-array\nreplication link\npurenetwork list"]
+  B --&gt; C{"Replication\nlink up?"}
+  C --&gt;|"No"| D["Restore network path\n(routing / VLAN / firewall)\nPod resyncs automatically"]
+  C --&gt;|"Yes"| E["Check mediator\npurepod list --mediator"]
+  E --&gt; F{"Mediator\nreachable?"}
+  F --&gt;|"No"| G["Verify HTTPS outbound port 443\nto mediator IP from both arrays\nCheck proxy: purearray list --proxy"]
+  G --&gt; H["Note: replication continues\nwithout mediator if inter-array\nlink is healthy"]
+  F --&gt;|"Yes"| I{"Pod paused\non both arrays?"}
+  I --&gt;|"Yes — split-brain"| J["Do NOT force-promote\nwithout Pure Support\nContact Pure Support P1"]
+  I --&gt;|"No"| K["Check replica-link state\npurepod replica-link list"]
+  K --&gt; L["Resume if manually paused\npurepod replica-link resume\n--remote array --remote-pod pod"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
+  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  class C,F,I decision
+  class J warn
+  class D,G,H,K,L fix</code></pre>
 <h3 id="diagnosis_4">Diagnosis<a class="headerlink" href="#diagnosis_4" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check pod status and member arrays</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purepod<span class="w"> </span>list<span class="w"> </span>oracle-pod

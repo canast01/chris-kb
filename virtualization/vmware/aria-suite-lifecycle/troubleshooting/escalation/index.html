@@ -699,6 +699,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-escalate-to-broadcom-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Escalate to Broadcom Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opening-a-broadcom-support-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening a Broadcom Support Request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-to-collect-before-opening-an-sr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data to Collect Before Opening an SR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sr-handoff-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SR Handoff Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-by-broadcom-knowledge-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware by Broadcom Knowledge Base
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,21 +781,127 @@
 
 
 <h1 id="aria-suite-lifecycle-escalation">Aria Suite Lifecycle — Escalation<a class="headerlink" href="#aria-suite-lifecycle-escalation" title="Permanent link">&para;</a></h1>
-<p>VMware/Broadcom support for LCM is accessed via the <a href="https://support.broadcom.com">Broadcom Support Portal</a>. When opening a Support Request (SR), the product to select is "VMware Aria Suite Lifecycle" under the VMware Cloud Foundation portfolio. Log bundles for LCM SRs should be collected with <code>vracli support-bundle generate</code>, which packages LCM application logs, service logs, deployment history, and system diagnostics into a single archive under <code>/data/support-bundles/</code>.</p>
-<p><strong>Information to collect before opening an SR:</strong>
-- LCM version: Settings &gt; System Details &gt; Version
-- Affected product name and version
-- LCM log bundle: <code>vracli support-bundle generate</code>
-- Browser HAR file if issue is UI-related
-- Description of last successful operation and first observed failure
-- Screenshot of LCM dashboard Environment Health at time of issue</p>
-<p><strong>Support tiers:</strong>
-| Severity | Description | Response SLA (Production) |
-|---|---|---|
-| S1 | Production down, no workaround | 30 minutes |
-| S2 | Major feature unavailable | 4 hours |
-| S3 | Partial degradation, workaround exists | Next business day |
-| S4 | General question or enhancement request | Next business day |</p>
+<h2 id="when-to-escalate-to-broadcom-support">When to Escalate to Broadcom Support<a class="headerlink" href="#when-to-escalate-to-broadcom-support" title="Permanent link">&para;</a></h2>
+<p>Escalate when the following conditions are met and internal troubleshooting has not resolved the issue:</p>
+<ul>
+<li>Upgrade workflow is stuck and <strong>Retry</strong> does not clear it</li>
+<li>LCM application cannot be started after a failed upgrade</li>
+<li>Locker data is inaccessible (lost Master Password requires SR-guided recovery)</li>
+<li>Product appliance VMs are in an unknown state following an LCM rollback that failed partway through</li>
+<li>LCM API returns 500 errors persistently with no clear cause in logs</li>
+<li>Certificate replacement via LCM causes a product outage and re-apply does not recover it</li>
+</ul>
+<p>Do not power cycle product VMs without SR guidance if they are in a partially upgraded state — this can cause split-brain or unrecoverable database corruption.</p>
+<hr />
+<h2 id="opening-a-broadcom-support-request">Opening a Broadcom Support Request<a class="headerlink" href="#opening-a-broadcom-support-request" title="Permanent link">&para;</a></h2>
+<p>Broadcom support for LCM is accessed via the <a href="https://support.broadcom.com">Broadcom Support Portal</a>.</p>
+<p><strong>Product to select:</strong> VMware Aria Suite Lifecycle (under the VMware Cloud Foundation portfolio)</p>
+<p><strong>Severity definitions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Description</th>
+<th>Target Initial Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>Production environment down, no workaround</td>
+<td>30 minutes (24x7)</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>Major feature unavailable, significant business impact</td>
+<td>4 hours (24x7)</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>Partial degradation, workaround available</td>
+<td>Next business day</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>General question, documentation request, or enhancement</td>
+<td>Next business day</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="data-to-collect-before-opening-an-sr">Data to Collect Before Opening an SR<a class="headerlink" href="#data-to-collect-before-opening-an-sr" title="Permanent link">&para;</a></h2>
+<p>Collect all of the following before opening the SR — providing this upfront avoids the first support response being a data collection request.</p>
+<p><strong>LCM system details:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># LCM version — note output</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/system/details&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Or via UI: LCM → Settings → System Details → Version</span>
+</code></pre></div>
+<p><strong>Log bundle (required for all SRs):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate support bundle from LCM appliance SSH</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@lcm-prod-01.corp.local
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vracli<span class="w"> </span>support-bundle<span class="w"> </span>generate
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Bundle location — typically /data/support-bundles/&lt;timestamp&gt;.tar.gz</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/data/support-bundles/
+</code></pre></div>
+<p>The bundle includes: LCM application logs, service logs, deployment history, Locker metadata (no passwords), system diagnostics, and recent request audit trail.</p>
+<p><strong>Additional data for specific issues:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Issue Type</th>
+<th>Additional Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Upgrade failure</td>
+<td>Request ID from LCM UI; upgrade-specific log from <code>/var/log/vmware/vrlcm/upgrade/</code></td>
+</tr>
+<tr>
+<td>VIDM/authentication failure</td>
+<td>VIDM appliance log bundle; browser HAR file of the failed login flow</td>
+</tr>
+<tr>
+<td>Certificate failure</td>
+<td><code>openssl x509 -text</code> output for the failing certificate; trust chain verification output</td>
+</tr>
+<tr>
+<td>UI issue</td>
+<td>Browser console errors (F12 → Console); browser HAR file of the failing page load</td>
+</tr>
+<tr>
+<td>Network/connectivity issue</td>
+<td><code>traceroute</code>, <code>curl -v</code> output between LCM and affected endpoint</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sr-handoff-checklist">SR Handoff Checklist<a class="headerlink" href="#sr-handoff-checklist" title="Permanent link">&para;</a></h2>
+<p>Before handing an SR to the next shift or to a specialist:</p>
+<ul>
+<li>[ ] SR number documented in the incident ticket</li>
+<li>[ ] Support bundle uploaded to the SR (confirm upload complete in the portal)</li>
+<li>[ ] Exact LCM version and affected product versions noted</li>
+<li>[ ] Timeline of events: last known good state → first observed failure → actions taken</li>
+<li>[ ] Any commands run on the LCM appliance or product VMs documented</li>
+<li>[ ] Current state of the product VMs (powered on/off, snapshot present/absent)</li>
+<li>[ ] Broadcom support contact name and case manager noted</li>
+</ul>
+<hr />
+<h2 id="vmware-by-broadcom-knowledge-base">VMware by Broadcom Knowledge Base<a class="headerlink" href="#vmware-by-broadcom-knowledge-base" title="Permanent link">&para;</a></h2>
+<p>Before opening an SR, search the Broadcom knowledge base for known issues:</p>
+<ul>
+<li>Search: <code>site:kb.vmware.com aria suite lifecycle &lt;error message&gt;</code></li>
+<li>LCM release notes list known issues for each version — review before upgrades</li>
+<li>The VMware by Broadcom communities forum often has workarounds for common LCM errors</li>
+</ul>
+<p><strong>Useful KB categories for LCM:</strong>
+- Upgrade failures: search <code>vRealize Suite Lifecycle upgrade fails</code>
+- Certificate errors: search <code>LCM locker certificate import</code>
+- VIDM integration: search <code>LCM identity manager</code></p>
 
 
 

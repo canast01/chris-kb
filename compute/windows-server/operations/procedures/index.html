@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#key-infrastructure-service-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Infrastructure Service Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#change-readiness-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -873,6 +884,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#patch-management-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patch Management Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pre-patch-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -965,6 +987,21 @@
 
 <h1 id="windows-server-procedures">Windows Server — Procedures<a class="headerlink" href="#windows-server-procedures" title="Permanent link">&para;</a></h1>
 <p>Day-to-day operational tasks and how-to guides.</p>
+<h2 id="key-infrastructure-service-dependencies">Key Infrastructure Service Dependencies<a class="headerlink" href="#key-infrastructure-service-dependencies" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    bfe["BFE\nBase Filtering Engine"]
+    mpssvc["mpssvc\nWindows Firewall"]
+    netlogon["Netlogon\nAD secure channel"]
+    w32time["W32Time\nNTP sync"]
+    winrm["WinRM\nPS Remoting"]
+    ntds["NTDS\nAD Database (DC only)"]
+    dns["DNS Server\n(DC only)"]
+
+    bfe --&gt; mpssvc
+    netlogon --&gt; ntds
+    ntds --&gt; dns
+    w32time --&gt; netlogon
+    bfe --&gt; winrm</code></pre>
 <h2 id="change-readiness-checks">Change Readiness Checks<a class="headerlink" href="#change-readiness-checks" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># 1. Confirm system health before any change</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
@@ -1173,6 +1210,18 @@
 </code></pre></div>
 <h2 id="patching">Patching<a class="headerlink" href="#patching" title="Permanent link">&para;</a></h2>
 <p>Patch management for Windows Server using Windows Update, WSUS, and SCCM/Intune.</p>
+<h3 id="patch-management-flow">Patch Management Flow<a class="headerlink" href="#patch-management-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    wsus["WSUS Server\nPatch approval"]
+    gpo["GPO / WU Policy\nWUServer registry"]
+    clientWU["Client Windows Update\nwuauclt · UsoClient"]
+    download["Download\npatches"]
+    install["Install\npatches"]
+    reboot["Reboot\n(maintenance window)"]
+    report["Report\ncompliance status"]
+
+    wsus --&gt;|"approves updates"| gpo --&gt; clientWU --&gt; download --&gt; install --&gt; reboot --&gt; report
+    report --&gt;|"compliance data"| wsus</code></pre>
 <h3 id="pre-patch-checklist">Pre-Patch Checklist<a class="headerlink" href="#pre-patch-checklist" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># 1. Confirm system health</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>

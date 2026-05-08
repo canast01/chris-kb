@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#link-down-recovery-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Link-Down Recovery Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#high-host-write-latency" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -797,6 +808,55 @@
 </blockquote>
 <p>SRDF/S issues typically manifest as pair state transitions away from <code>Synchronized</code>, elevated host write latency, or unexpected failover splits. Because SRDF/S is synchronous, any WAN degradation <strong>directly impacts production write latency</strong> — treat RTT increases above 5ms as a storage incident, not purely a network event.</p>
 <p>Always collect <code>symrdf query -g &lt;group&gt; -v</code> and array event logs before engaging Dell support.</p>
+<h2 id="link-down-recovery-decision-tree">Link-Down Recovery Decision Tree<a class="headerlink" href="#link-down-recovery-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    linkAlert["Alert: SRDF/S Link Down\nor Pairs not Synchronized"]
+    checkPairState["Check Pair State\nsymrdf -g dgname -sid sid query"]
+    pairStateVal{"Pair State?"}
+    writeDisabled["Write Disabled\n→ Array stopped writes\nto protect consistency"]
+    invalidState["Invalid State\n→ Possible data divergence"]
+    suspended["Suspended\n→ Link dropped or manual suspend"]
+    partitioned["Partitioned\n→ Link interrupted mid-transfer"]
+
+    checkPhysLink["Check Physical Link\nFCIP tunnel / dark fibre state"]
+    linkUp{"Link\nRestored?"}
+    checkRTT["Check RTT\nping -c 20 dr-site-ip"]
+    rttNormal{"RTT ≤ 5ms?"}
+    resumePair["Resume Pair\nsymrdf -g dgname -sid sid resume -noprompt"]
+    resyncPair["Resync Pair\nsymrdf -g dgname -sid sid resync -noprompt"]
+    monitorSync["Monitor SyncInProg\nuntil Synchronized"]
+    checkDataAuth["Identify Authoritative Side\nDo NOT resync without confirming"]
+    engageSupport["Engage Dell Support\nData consistency risk"]
+    escalateNet["Escalate to Network Team\nRTT still elevated"]
+
+    linkAlert --&gt; checkPairState
+    checkPairState --&gt; pairStateVal
+    pairStateVal --&gt;|"Write Disabled"| writeDisabled
+    pairStateVal --&gt;|"Invalid"| invalidState
+    pairStateVal --&gt;|"Suspended"| suspended
+    pairStateVal --&gt;|"Partitioned"| partitioned
+
+    writeDisabled --&gt; checkPhysLink
+    suspended --&gt; checkPhysLink
+    partitioned --&gt; checkPhysLink
+
+    checkPhysLink --&gt; linkUp
+    linkUp --&gt;|"Yes"| checkRTT
+    linkUp --&gt;|"No"| escalateNet
+    checkRTT --&gt; rttNormal
+    rttNormal --&gt;|"Yes — Write Disabled / Suspended"| resyncPair
+    rttNormal --&gt;|"Yes — Partitioned"| resumePair
+    rttNormal --&gt;|"No"| escalateNet
+    resyncPair --&gt; monitorSync
+    resumePair --&gt; monitorSync
+    invalidState --&gt; checkDataAuth
+    checkDataAuth --&gt; engageSupport
+
+    style linkAlert fill:#be123c,color:#fff
+    style monitorSync fill:#15803d,color:#fff
+    style engageSupport fill:#be123c,color:#fff
+    style escalateNet fill:#b45309,color:#fff
+    style checkDataAuth fill:#be123c,color:#fff</code></pre>
 <hr />
 <h2 id="high-host-write-latency">High Host Write Latency<a class="headerlink" href="#high-host-write-latency" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Applications report write slowness; storage latency exceeds baseline; no hardware alerts.</p>

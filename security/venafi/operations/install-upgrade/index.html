@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#machine-identity-discovery-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine Identity Discovery Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#certificate-discovery" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -749,6 +760,17 @@
     <span class="md-ellipsis">
       
         Policy Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automated-renewal-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Renewal Sequence
       
     </span>
   </a>
@@ -878,6 +900,25 @@
 <h1 id="venafi-lifecycle">Venafi Lifecycle<a class="headerlink" href="#venafi-lifecycle" title="Permanent link">&para;</a></h1>
 <p>Venafi TPP manages the full certificate lifecycle — discovery, policy enforcement, issuance, renewal automation, and expiry alerting. This page covers operational lifecycle procedures including upgrades and migration to TLS Protect Cloud (VaaS).</p>
 <hr />
+<h2 id="machine-identity-discovery-topology">Machine Identity Discovery Topology<a class="headerlink" href="#machine-identity-discovery-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    tpp["Venafi Trust Protection Platform"]
+    tpp --&gt;|"schedule scan job"| netDisc["Network Discovery Engine\n(IP range / CIDR scan)"]
+    tpp --&gt;|"agent or agentless WMI"| winDisc["Windows Certificate Store\nDiscovery"]
+    tpp --&gt;|"Edge Proxy"| segNets["Segmented / DMZ Networks\n(via Proxy relay)"]
+
+    netDisc --&gt;|"scan ports 443 8443 636 3389"| tlsEndpoints["TLS Endpoints\n(servers / load balancers)"]
+    winDisc --&gt;|"LocalMachine store"| winHosts["Windows Hosts\n(IIS / app servers)"]
+    segNets --&gt;|"proxy-relayed scan"| segHosts["Isolated Network Hosts"]
+
+    tlsEndpoints --&gt;|"discovered certs"| tpp
+    winHosts --&gt;|"cert inventory"| tpp
+    segHosts --&gt;|"cert inventory"| tpp
+
+    tpp --&gt; certInventory["Certificate Inventory\n(discovered / unmanaged certs)"]
+    certInventory --&gt;|"assign to policy folder"| managed["Managed Certificate\n(lifecycle enforced)"]
+    certInventory --&gt;|"no action"| unmanaged["Unmanaged — weekly\norphan report"]</code></pre>
+<hr />
 <h2 id="certificate-discovery">Certificate Discovery<a class="headerlink" href="#certificate-discovery" title="Permanent link">&para;</a></h2>
 <p>Venafi Discovery scans the network for certificates on well-known TLS endpoints, Windows certificate stores, and F5/network devices. Discovery is the first step in bringing unmanaged certificates under Venafi control.</p>
 <h3 id="network-discovery">Network Discovery<a class="headerlink" href="#network-discovery" title="Permanent link">&para;</a></h3>
@@ -942,6 +983,24 @@
 </tbody>
 </table>
 <p>Policy violations are surfaced in the Venafi UI and via API. Non-compliant certificates generate alerts and block automated renewal until the violation is resolved.</p>
+<hr />
+<h2 id="automated-renewal-sequence">Automated Renewal Sequence<a class="headerlink" href="#automated-renewal-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant monitor as Venafi Monitor
+    participant tpp as TPP Policy Server
+    participant ca as CA Connector
+    participant caServer as CA Backend
+    participant target as Target System
+
+    monitor-&gt;&gt;tpp: Detect cert within renewal window (30 days)
+    tpp-&gt;&gt;tpp: Generate new CSR using stored key policy
+    tpp-&gt;&gt;ca: Submit CSR to configured CA connector
+    ca-&gt;&gt;caServer: Forward CSR (ADCS / DigiCert / Entrust)
+    caServer--&gt;&gt;ca: Issue new certificate
+    ca--&gt;&gt;tpp: Return issued certificate
+    tpp-&gt;&gt;tpp: Store new certificate in inventory
+    tpp-&gt;&gt;target: Push certificate to target (if driver configured)
+    tpp--&gt;&gt;monitor: Notify certificate owner (email / SNMP)</code></pre>
 <hr />
 <h2 id="renewal-automation">Renewal Automation<a class="headerlink" href="#renewal-automation" title="Permanent link">&para;</a></h2>
 <p>Venafi TPP monitors certificate validity and triggers renewal at the configured renewal window (typically 30 days before expiry). Renewal can be fully automated or require approval.</p>

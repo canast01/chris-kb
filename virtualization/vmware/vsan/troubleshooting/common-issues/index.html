@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#degraded-object-recovery-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Degraded Object Recovery Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#object-degraded-or-absent" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -916,6 +927,43 @@
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">}</span>
 </code></pre></div>
 <hr />
+<h2 id="degraded-object-recovery-flow">Degraded Object Recovery Flow<a class="headerlink" href="#degraded-object-recovery-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    alert(["Object degraded or absent\n(vSAN health alarm)"])
+    checkHost{"Is a host\noffline?"}
+    restoreHost["Restore host connectivity\nor power on host"]
+    checkDisk{"Is a disk group\noffline / failed?"}
+    checkNet{"Does network test\nshow packet loss?"}
+    fixNet["Fix network:\nMTU, VLAN, NIC, switch port"]
+    diskReplace["Proceed to disk replacement\n(Procedures → Disk Groups)"]
+    waitResync["Wait for vSAN resync\n(clomRepairDelay = 60 min default)"]
+    monResync["Monitor:\nesxcli vsan debug resync summary get"]
+    checkResync{"Resync completing\nwithin 24 hours?"}
+    checkCap{"Cluster capacity\n&gt; 70%?"}
+    freeCap["Free capacity:\nremove snapshots,\nlower FTT temporarily"]
+    escalate["Escalate to VMware Support\nwith state capture bundle"]
+    resolved(["Objects healthy"])
+
+    alert --&gt; checkHost
+    checkHost --&gt;|"Yes"| restoreHost --&gt; waitResync
+    checkHost --&gt;|"No"| checkDisk
+    checkDisk --&gt;|"Yes"| diskReplace --&gt; waitResync
+    checkDisk --&gt;|"No"| checkNet
+    checkNet --&gt;|"Yes"| fixNet --&gt; waitResync
+    checkNet --&gt;|"No"| waitResync
+    waitResync --&gt; monResync --&gt; checkResync
+    checkResync --&gt;|"Yes"| resolved
+    checkResync --&gt;|"Stalled"| checkCap
+    checkCap --&gt;|"Yes"| freeCap --&gt; monResync
+    checkCap --&gt;|"No"| escalate
+
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+
+    class checkHost,checkDisk,checkNet,checkResync,checkCap decision
+    class restoreHost,fixNet,diskReplace,waitResync,monResync,freeCap,escalate action
+    class alert,resolved terminal</code></pre>
 <h2 id="object-degraded-or-absent">Object Degraded or Absent<a class="headerlink" href="#object-degraded-or-absent" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong>
 - vSAN health shows "Object health issues"
@@ -1066,6 +1114,40 @@
 - VM I/O latency above normal baseline
 - Application timeouts or slowness
 - vCenter performance charts show high vSAN read or write latency</p>
+<pre class="mermaid"><code>graph TD
+    highLat(["High vSAN latency detected\n(&gt; 10 ms read / &gt; 20 ms write)"])
+    checkNet{"vmkping -d -s 8972\npeer succeeds?"}
+    fixMTU["Fix MTU end-to-end\n(switch, vDS, vmk adapter = 9000)"]
+    checkResync{"Active resync\nin progress?"}
+    throttle["Throttle resync during\nbusiness hours:\nesxcli vsan debug resync\nthrottle set --throttle 500"]
+    checkCap{"Cluster capacity\n&gt; 80%?"}
+    freeCap["Free capacity:\ndelete snapshots,\nexpand cluster"]
+    checkDisk{"Disk group\nhealthy?"}
+    replaceDisk["Replace failed\nhardware"]
+    checkCPU{"Host CPU\ncongestion?"}
+    vMotion["vMotion high-IOPS\nVMs to less-loaded hosts"]
+    openCase["Escalate to VMware\nSupport"]
+    resolved(["Latency normal"])
+
+    highLat --&gt; checkNet
+    checkNet --&gt;|"No / packet loss"| fixMTU --&gt; resolved
+    checkNet --&gt;|"Yes"| checkResync
+    checkResync --&gt;|"Yes"| throttle --&gt; resolved
+    checkResync --&gt;|"No"| checkCap
+    checkCap --&gt;|"Yes"| freeCap --&gt; resolved
+    checkCap --&gt;|"No"| checkDisk
+    checkDisk --&gt;|"Degraded"| replaceDisk --&gt; resolved
+    checkDisk --&gt;|"Healthy"| checkCPU
+    checkCPU --&gt;|"Yes"| vMotion --&gt; resolved
+    checkCPU --&gt;|"No"| openCase
+
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+
+    class checkNet,checkResync,checkCap,checkDisk,checkCPU decision
+    class fixMTU,throttle,freeCap,replaceDisk,vMotion,openCase action
+    class highLat,resolved terminal</code></pre>
 <p><strong>Diagnosis:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Per-disk I/O stats (IOPS, latency)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>stats<span class="w"> </span>get

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#surebackup-verification-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SureBackup Verification Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-check-routine" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -849,6 +860,28 @@
 
 <h1 id="veeam-health-checks">Veeam — Health Checks<a class="headerlink" href="#veeam-health-checks" title="Permanent link">&para;</a></h1>
 <p>The primary review surface is the <strong>Home</strong> view in the VBR console, which shows job counts grouped by status (Running, Success, Warning, Failed). Work through this list top-to-bottom every morning.</p>
+<h2 id="surebackup-verification-sequence">SureBackup Verification Sequence<a class="headerlink" href="#surebackup-verification-sequence" title="Permanent link">&para;</a></h2>
+<p>SureBackup starts VMs in an isolated virtual lab and runs application-level tests — it is the only way to confirm a backup is truly restorable.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant VBR as VBR Server
+    participant VLab as Virtual Lab
+    participant IsolatedProxy as Isolated Proxy VM
+    participant RecoveredVM as Recovered VM (from backup)
+    participant TestScript as Test Script / Heartbeat
+
+    VBR-&gt;&gt;VLab: Start SureBackup job
+    VLab-&gt;&gt;VLab: Publish isolated network (bubble)
+    VBR-&gt;&gt;IsolatedProxy: Mount backup restore point as NFS
+    IsolatedProxy-&gt;&gt;RecoveredVM: Power on VM in isolated lab
+    RecoveredVM--&gt;&gt;IsolatedProxy: VM heartbeat received
+    IsolatedProxy-&gt;&gt;RecoveredVM: Run ping test
+    IsolatedProxy-&gt;&gt;RecoveredVM: Run application test script\n(SQL port check / Exchange health)
+    RecoveredVM--&gt;&gt;IsolatedProxy: Test results returned
+    IsolatedProxy--&gt;&gt;VBR: Report: Pass / Fail per VM
+    VBR-&gt;&gt;RecoveredVM: Power off test VM
+    VBR-&gt;&gt;VLab: Tear down virtual lab
+    VBR--&gt;&gt;VBR: Record verification result in job session
+    note over VBR: Failure = backup not confirmed restorable\nEscalate immediately</code></pre>
 <hr />
 <h2 id="daily-check-routine">Daily Check Routine<a class="headerlink" href="#daily-check-routine" title="Permanent link">&para;</a></h2>
 <h3 id="job-controller-review">Job Controller Review<a class="headerlink" href="#job-controller-review" title="Permanent link">&para;</a></h3>

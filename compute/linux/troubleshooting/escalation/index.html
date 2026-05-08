@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#escalation-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#red-hat-rhel" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -860,6 +871,24 @@
 
 <h1 id="linux-escalation">Linux — Escalation<a class="headerlink" href="#linux-escalation" title="Permanent link">&para;</a></h1>
 <p>Vendor escalation procedures and support contacts.</p>
+<h2 id="escalation-decision-flow">Escalation Decision Flow<a class="headerlink" href="#escalation-decision-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue["Issue identified\ncannot resolve internally"]
+    severity{"Severity?"}
+    sev1["Sev 1\nKernel panic / data loss"]
+    sev2["Sev 2\nService outage"]
+    sev3["Sev 3\nDegraded / non-urgent"]
+    collectSos["Collect sosreport\nkdump if crash"]
+    openSR["Open Support Request\naccess.redhat.com\nubuntu.com/advantage"]
+    monitor["Monitor SR\nrespond within SLA"]
+    escalateAccount["Escalate to\nAccount Team"]
+
+    issue --&gt; severity
+    severity -- Critical --&gt; sev1 --&gt; collectSos --&gt; openSR
+    severity -- Major --&gt; sev2 --&gt; collectSos --&gt; openSR
+    severity -- Minor --&gt; sev3 --&gt; openSR
+    openSR --&gt; monitor
+    monitor --&gt;|"No progress 24h"| escalateAccount</code></pre>
 <h2 id="red-hat-rhel">Red Hat (RHEL)<a class="headerlink" href="#red-hat-rhel" title="Permanent link">&para;</a></h2>
 <h3 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h3>
 <p>Support portal: <a href="https://access.redhat.com">access.redhat.com</a></p>

@@ -761,6 +761,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#firmware-upgrade-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware Upgrade Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#srdfa-to-srdfs-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -863,29 +874,59 @@
 <tr>
 <th>Platform</th>
 <th>Status</th>
+<th>Why it matters</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>VMAX3 (950F/850F)</td>
 <td>End of Service Life — no new SRDF features; firmware-only support</td>
+<td>No new SRDF/A features; plan migration before security support ends</td>
 </tr>
 <tr>
 <td>PowerMax 2000</td>
 <td>Current — supported with latest HYPERMAX OS</td>
+<td>Full feature set including SRDF/A adaptive copy and Metro</td>
 </tr>
 <tr>
 <td>PowerMax 8000</td>
 <td>Current — supported with latest HYPERMAX OS</td>
+<td>Full feature set; higher throughput for large SRDF groups</td>
 </tr>
 <tr>
 <td>PowerMax 9500</td>
 <td>Current — newest generation</td>
+<td>Latest microcode features; recommended for new SRDF/A deployments</td>
 </tr>
 </tbody>
 </table>
 <p>Track array firmware versions and SRDF license expiry dates in the CMDB. SRDF licenses are array-bound (node-locked to serial number); a controller board replacement requires license re-application via Dell Support.</p>
 <hr />
+<h2 id="firmware-upgrade-sequence">Firmware Upgrade Sequence<a class="headerlink" href="#firmware-upgrade-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    preCheck["Pre-Check: All Pairs Consistent\nsymrdf -g dgname -sid sid query"]
+    suspend["Suspend SRDF/A\nsymrdf -g dgname -sid sid suspend -noprompt"]
+    verifySuspended["Verify Suspended State\nsymrdf -g dgname -sid sid query"]
+    nduSource["NDU on Source Array\n(Non-Disruptive — host I/O unaffected)"]
+    nduTarget["NDU on Target Array"]
+    resume["Resume SRDF/A\nsymrdf -g dgname -sid sid resume -noprompt"]
+    monitorResync["Monitor Delta Set Backlog\n(Burst transmission expected)"]
+    verifyConsistent["Verify Consistent State\nsymrdf -g dgname -sid sid query"]
+    closeWindow["Close Change Window"]
+
+    preCheck --&gt; suspend
+    suspend --&gt; verifySuspended
+    verifySuspended --&gt; nduSource
+    nduSource --&gt; nduTarget
+    nduTarget --&gt; resume
+    resume --&gt; monitorResync
+    monitorResync --&gt; verifyConsistent
+    verifyConsistent --&gt; closeWindow
+
+    style preCheck fill:#2563eb,color:#fff
+    style closeWindow fill:#15803d,color:#fff
+    style suspend fill:#b45309,color:#fff
+    style resume fill:#b45309,color:#fff</code></pre>
 <h2 id="srdfa-to-srdfs-migration">SRDF/A to SRDF/S Migration<a class="headerlink" href="#srdfa-to-srdfs-migration" title="Permanent link">&para;</a></h2>
 <p>Migrating an existing SRDF/A group to synchronous (SRDF/S) requires:</p>
 <ol>

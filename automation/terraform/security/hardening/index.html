@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#security-scanning-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Scanning Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#security-scanning" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,6 +781,28 @@
 
 
 <h1 id="terraform-hardening">Terraform — Hardening<a class="headerlink" href="#terraform-hardening" title="Permanent link">&para;</a></h1>
+<h2 id="security-scanning-pipeline">Security Scanning Pipeline<a class="headerlink" href="#security-scanning-pipeline" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    prOpen["Pull Request\nopened"]
+    tfFmt["terraform fmt -check\n(formatting)"]
+    tfValidate["terraform validate\n(syntax)"]
+    tfsec["tfsec .\n(misconfig scan)"]
+    checkov["checkov -d .\n(policy-as-code)"]
+    tfPlan["terraform plan\n-out=tfplan"]
+    sentinel["Sentinel / OPA\npolicy evaluation"]
+    reviewGate["Human Review\n(plan output in PR)"]
+    tfApply["terraform apply\n(main branch only)"]
+
+    prOpen --&gt; tfFmt
+    tfFmt --&gt; tfValidate
+    tfValidate --&gt; tfsec
+    tfsec --&gt; checkov
+    checkov --&gt; tfPlan
+    tfPlan --&gt; sentinel
+    sentinel --&gt;|Pass| reviewGate
+    sentinel --&gt;|Fail| prOpen
+    reviewGate --&gt;|Approved| tfApply
+    reviewGate --&gt;|Changes| prOpen</code></pre>
 <h2 id="security-scanning">Security Scanning<a class="headerlink" href="#security-scanning" title="Permanent link">&para;</a></h2>
 <p>Scan Terraform configuration before applying to catch misconfigurations early.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># tfsec — static analysis for Terraform</span>

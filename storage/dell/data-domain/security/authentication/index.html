@@ -943,6 +943,31 @@
 
 <h1 id="data-domain-authentication">Data Domain — Authentication<a class="headerlink" href="#data-domain-authentication" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    adminUser(["Admin or Service Account"])
+
+    subgraph "Management Plane"
+        ldap["LDAP / Active Directory\n(primary — group → role mapping)"]
+        localFallback["Local Accounts\n(break-glass fallback)"]
+        ldap --&gt;|"role: admin"| ddCLI["DDOS CLI / System Manager"]
+        localFallback --&gt;|"break-glass only"| ddCLI
+    end
+
+    subgraph "DD Boost Plane"
+        ddboostUser["DD Boost User\nddboost-veeam / ddboost-netbackup"]
+        storageUnit["Storage Unit\n(su-veeam-prod)"]
+        ddboostUser --&gt; storageUnit
+    end
+
+    subgraph "Audit"
+        auditLog["log view audit\n(all CLI actions logged)"]
+        syslog["Syslog → SIEM\n(12-month retention)"]
+        auditLog --&gt; syslog
+    end
+
+    adminUser --&gt; ldap &amp; localFallback
+    adminUser --&gt; ddboostUser
+    ddCLI --&gt; auditLog</code></pre>
 <p>DDOS 7.x supports local user accounts, LDAP directory integration, and Active Directory for management plane authentication. Service accounts for DD Boost use a separate credential mechanism (DD Boost users) that does not participate in AD/LDAP. This page covers all authentication configuration, session management, SSH key setup, and password policy.</p>
 <hr />
 <h2 id="authentication-methods">Authentication Methods<a class="headerlink" href="#authentication-methods" title="Permanent link">&para;</a></h2>

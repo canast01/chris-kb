@@ -1000,6 +1000,53 @@
 <h1 id="powermax-hardening">PowerMax — Hardening<a class="headerlink" href="#powermax-hardening" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>PowerMax hardening focuses on three areas: securing the management interfaces (Unisphere and Solutions Enabler), securing replication and host connectivity, and reducing the attack surface through configuration discipline. PowerMax is a closed, purpose-built appliance — the hardening surface is primarily the management plane, not the array OS itself which is not directly user-accessible.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph "Network Perimeter"
+        FW["Firewall\nAllow :8443 from mgmt VLAN only\nDeny all other inbound"]
+        SRS["SRS-VE Gateway\n(DMZ — Dell remote support)"]
+    end
+    subgraph "Management Plane"
+        UNI["Unisphere :8443\nTLS 1.2+ only\nCA-signed cert\n15-min idle timeout"]
+        AD["Active Directory\nLDAPS :636\nGroup-to-role mapping"]
+        LDAP_MAP["Role Mapping\nStorageAdmin / SecurityAdmin\nOperator / Monitor"]
+        SE_HOST["SE Host\ndaemon_users restrict by IP\nSYMCLI binaries chmod 750\nauditd enabled"]
+    end
+    subgraph "Data Plane"
+        MV["Masking Views\nOne IG per host\nSeparate prod / dev PGs\nNo shared IGs"]
+        ZONE["SAN Fabric Zoning\nOne initiator + one target\nper zone (single-initiator)"]
+    end
+    subgraph "Encryption Layer"
+        DARE["D@RE\nAES-256 per drive\nFactory enabled"]
+        SRDF_ENC["SRDF Encryption\nAES-256 in-flight\nRequired for WAN/IP links"]
+        TLS["TLS 1.2/1.3\nManagement traffic\nSYMAPI SECURE flag"]
+    end
+    subgraph "Audit and Compliance"
+        SYMAUDIT["symaudit / symevent\nAll config changes logged"]
+        SIEM["SIEM Forwarding\nSyslog + SNMP\n12-month retention"]
+    end
+
+    FW --&gt; UNI
+    SRS --&gt; UNI
+    AD --&gt;|"LDAPS"| UNI
+    UNI --&gt; LDAP_MAP
+    UNI --&gt; SE_HOST
+    SE_HOST --&gt; MV
+    MV --&gt; ZONE
+    DARE --&gt; UNI
+    SRDF_ENC --&gt; UNI
+    TLS --&gt; UNI
+    UNI --&gt; SYMAUDIT --&gt; SIEM
+
+    classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+    classDef mgmt fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef data fill:#0f766e,stroke:#0d9488,color:#fff
+    classDef enc fill:#be123c,stroke:#9f1239,color:#fff
+    classDef audit fill:#92400e,stroke:#78350f,color:#fff
+    class FW,SRS net
+    class UNI,AD,LDAP_MAP,SE_HOST mgmt
+    class MV,ZONE data
+    class DARE,SRDF_ENC,TLS enc
+    class SYMAUDIT,SIEM audit</code></pre>
 <h2 id="unisphere-hardening">Unisphere Hardening<a class="headerlink" href="#unisphere-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="authentication-hardening">Authentication Hardening<a class="headerlink" href="#authentication-hardening" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Disable the default local &#39;smc&#39; admin account after LDAP is configured</span>
@@ -1265,10 +1312,22 @@
 </table>
 <h3 id="secure-remote-services-srs-ve">Secure Remote Services (SRS-VE)<a class="headerlink" href="#secure-remote-services-srs-ve" title="Permanent link">&para;</a></h3>
 <p>SRS Virtual Edition is a gateway appliance that proxies Dell remote support sessions through your DMZ, avoiding direct inbound internet access to the Unisphere management network:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Internet → Dell Support Portal → SRS Cloud Gateway
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>                                        ↓
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>SRS-VE (DMZ) → Unisphere/SE host (management network)
-</code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    DELL_ENG["Dell Support\nEngineer"]
+    DELL_CLOUD["Dell SRS\nCloud Gateway"]
+    SRS_VE["SRS-VE\n(DMZ VM)"]
+    UNI_HOST["Unisphere / SE Host\n(management network)"]
+
+    DELL_ENG --&gt;|"authenticated\nsession"| DELL_CLOUD
+    DELL_CLOUD --&gt;|"outbound TLS\n(SRS-VE initiates)"| SRS_VE
+    SRS_VE --&gt;|"proxied session\nto mgmt network"| UNI_HOST
+
+    classDef internet fill:#be123c,stroke:#9f1239,color:#fff
+    classDef dmz fill:#b45309,stroke:#92400e,color:#fff
+    classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
+    class DELL_ENG,DELL_CLOUD internet
+    class SRS_VE dmz
+    class UNI_HOST mgmt</code></pre>
 <p>Deploy SRS-VE on a dedicated VM in the DMZ. The SRS-VE makes outbound connections to the Dell SRS cloud and allows inbound sessions only from authenticated Dell support engineers.</p>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <h3 id="critical-must-complete-before-production">Critical (Must Complete Before Production)<a class="headerlink" href="#critical-must-complete-before-production" title="Permanent link">&para;</a></h3>

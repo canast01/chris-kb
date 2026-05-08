@@ -955,6 +955,33 @@
 
 <h1 id="dell-vplex-integrations">Dell VPLEX — Integrations<a class="headerlink" href="#dell-vplex-integrations" title="Permanent link">&para;</a></h1>
 <p>Integration with back-end storage arrays, hypervisors, replication systems, and monitoring platforms.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph "Site A"
+        hostA["ESXi / Linux Hosts\nSite A"]
+        dirA["VPLEX Cluster-1\nDirectors"]
+        arrA["PowerMax / Unity\nArray A"]
+    end
+    subgraph "Site B"
+        hostB["ESXi / Linux Hosts\nSite B"]
+        dirB["VPLEX Cluster-2\nDirectors"]
+        arrB["PowerMax / Unity\nArray B"]
+    end
+    witness["Witness VM\n(3rd failure domain)"]
+    vms["VMS\nUnisphere + vplexcli"]
+    cloudiq["Dell CloudIQ\nAIOps / health telemetry"]
+    siem["SIEM\nSyslog / SNMP traps"]
+
+    hostA --&gt;|"FC front-end\nSAN fabric A"| dirA
+    dirA --&gt;|"FC back-end\nzoning + masking"| arrA
+    hostB --&gt;|"FC front-end\nSAN fabric B"| dirB
+    dirB --&gt;|"FC back-end\nzoning + masking"| arrB
+    dirA &lt;--&gt;|"ICL — 10/25GbE\nsynchronous Metro"| dirB
+    witness -. "quorum" .- dirA
+    witness -. "quorum" .- dirB
+    vms --&gt;|"management"| dirA
+    vms --&gt;|"management"| dirB
+    vms --&gt;|"telemetry"| cloudiq
+    vms --&gt;|"syslog"| siem</code></pre>
 <h2 id="back-end-storage-arrays">Back-End Storage Arrays<a class="headerlink" href="#back-end-storage-arrays" title="Permanent link">&para;</a></h2>
 <p>VPLEX presents a virtualisation layer over heterogeneous back-end arrays. The back-end ports on each VPLEX director zone to the target ports on the back-end array, then VPLEX discovers and claims the LUNs exposed to those ports.</p>
 <h3 id="supported-back-end-arrays">Supported Back-End Arrays<a class="headerlink" href="#supported-back-end-arrays" title="Permanent link">&para;</a></h3>
@@ -1094,6 +1121,25 @@
 <li>RecoverPoint bookmarks enable point-in-time consistency for crash-consistent or application-consistent recovery.</li>
 <li>VPLEX Geo is typically used when Site A and Site B are separated by &gt;5ms RTT (city-to-city, region-to-region).</li>
 </ul>
+<pre class="mermaid"><code>flowchart LR
+    subgraph "Site A — Active"
+        hostA["Hosts — Active I/O"]
+        dirA["VPLEX Cluster-1"]
+        rpSplitter["RecoverPoint Splitter\nembedded in VPLEX"]
+        rpA["RecoverPoint\nCluster A"]
+    end
+    subgraph "Site B — DR Standby"
+        rpB["RecoverPoint\nCluster B"]
+        dirB["VPLEX Cluster-2"]
+        hostB["Hosts\nInactive until failover"]
+    end
+
+    hostA --&gt;|"FC I/O"| dirA
+    dirA --&gt; rpSplitter
+    rpSplitter --&gt;|"async journal\nWAN — any distance"| rpA
+    rpA --&gt;|"journal replication"| rpB
+    rpB --&gt; dirB
+    dirB -.-&gt;|"volumes activated\nafter RP failover"| hostB</code></pre>
 <h3 id="failover-procedure-geo">Failover Procedure (Geo)<a class="headerlink" href="#failover-procedure-geo" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Initiate RecoverPoint failover for the target consistency group (from RecoverPoint management interface).</li>

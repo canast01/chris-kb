@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#synchronous-write-commit-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synchronous Write Commit Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -784,6 +795,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pair-state-transition-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair State Transition Diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#known-issues-and-field-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -844,6 +866,21 @@
 </tbody>
 </table>
 <p>SRDF director ports on both arrays handle the inter-site replication traffic over FC or FCIP links.</p>
+<h2 id="synchronous-write-commit-sequence">Synchronous Write Commit Sequence<a class="headerlink" href="#synchronous-write-commit-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant host as Production Host
+    participant r1 as PowerMax R1&lt;br/&gt;(Site A)
+    participant link as SRDF Link&lt;br/&gt;(FCIP / FC)
+    participant r2 as PowerMax R2&lt;br/&gt;(Site B)
+
+    host-&gt;&gt;r1: Write I/O request
+    r1-&gt;&gt;link: Forward write to R2 (synchronous)
+    link-&gt;&gt;r2: Deliver write
+    r2--&gt;&gt;r1: Acknowledge write committed
+    r1--&gt;&gt;host: Acknowledge I/O complete
+
+    Note over r1,r2: Both arrays commit before host ACK
+    Note over link: WAN RTT directly adds to host write latency</code></pre>
 <hr />
 <h2 id="key-components">Key Components<a class="headerlink" href="#key-components" title="Permanent link">&para;</a></h2>
 <ul>
@@ -956,6 +993,35 @@
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>0A1      RW           WD           Synchronized   0
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>0A2      RW           WD           Synchronized   0
 </code></pre></div>
+<h3 id="pair-state-transition-diagram">Pair State Transition Diagram<a class="headerlink" href="#pair-state-transition-diagram" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    synced["Synchronized\n(RPO = 0, full protection)"]
+    syncInProg["SyncInProg\n(initial or resync copy in progress)"]
+    suspended["Suspended\n(R1 accepts writes, R2 stale)"]
+    failedOver["Failed Over\n(R2 is production)"]
+    splitState["Split\n(both R1 and R2 are R/W)"]
+    partitioned["Partitioned\n(link interrupted)"]
+    transmitIdle["Transmit Idle\n(link up, no tracks to send)"]
+
+    synced --&gt;|"suspend"| suspended
+    synced --&gt;|"split"| splitState
+    synced --&gt;|"link drops"| partitioned
+    synced --&gt;|"no pending writes"| transmitIdle
+    transmitIdle --&gt;|"new write arrives"| synced
+    suspended --&gt;|"resume"| syncInProg
+    splitState --&gt;|"establish"| syncInProg
+    syncInProg --&gt;|"copy complete"| synced
+    partitioned --&gt;|"link restored"| syncInProg
+    synced --&gt;|"failover"| failedOver
+    failedOver --&gt;|"restore"| syncInProg
+
+    style synced fill:#15803d,color:#fff
+    style failedOver fill:#be123c,color:#fff
+    style splitState fill:#be123c,color:#fff
+    style partitioned fill:#b45309,color:#fff
+    style suspended fill:#6b7280,color:#fff
+    style syncInProg fill:#2563eb,color:#fff
+    style transmitIdle fill:#7c3aed,color:#fff</code></pre>
 <h3 id="known-issues-and-field-notes">Known Issues and Field Notes<a class="headerlink" href="#known-issues-and-field-notes" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Pairs stuck in SyncInProg</strong>: Usually caused by heavy host I/O overwhelming the RDF link. Check link utilization with <code>symstat -rdf</code> and consider suspending non-critical pairs during peak hours.</li>

@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#path-failover-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Failover Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#port-and-connectivity-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1037,6 +1048,26 @@
 <p><strong>Multiple drive failures:</strong></p>
 <p>If two or more drives are in <code>failed</code> state simultaneously, the array may be at risk of data loss depending on the protection scheme. Open a P1 case immediately. Do not pull any drives until a Pure Support engineer authorises the replacement sequence.</p>
 <hr />
+<h2 id="path-failover-decision-tree">Path Failover Decision Tree<a class="headerlink" href="#path-failover-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+  A["Host reports missing\nor degraded paths"] --&gt; B["purehost list --connection\n(check path count per host)"]
+  B --&gt; C{"Path count\nas expected?"}
+  C --&gt;|"Zero paths"| D["Check FC zoning on switches\nor iSCSI network reachability"]
+  C --&gt;|"One path missing"| E["pureport list --type fc\n(identify which port is down)"]
+  E --&gt; F{"Array port\nstate?"}
+  F --&gt;|"down"| G["Check SFP and cable\non array port\nOpen support case if port stays down"]
+  F --&gt;|"up"| H["pureport list --initiator\n(is host initiator WWN visible?)"]
+  H --&gt; I{"Initiator\nvisible?"}
+  I --&gt;|"No"| J["FC zone issue — initiator\nnot presented to target port\nFix zone on FC switch"]
+  I --&gt;|"Yes"| K["Check host HBA state\nand driver on host side"]
+  C --&gt;|"All paths present"| L["Issue is host-side\nCheck MPIO driver config\nand ALUA settings"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef good fill:#15803d,stroke:#166534,color:#fff
+  class C,F,I decision
+  class D,G,J,K fix
+  class L good</code></pre>
 <h2 id="port-and-connectivity-diagnostics">Port and Connectivity Diagnostics<a class="headerlink" href="#port-and-connectivity-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all ports (FC, Ethernet, NVMe-oF)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pureport<span class="w"> </span>list

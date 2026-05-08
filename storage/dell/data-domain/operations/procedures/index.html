@@ -1001,6 +1001,24 @@
 </tbody>
 </table>
 <h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Start Maintenance]) --&gt; B["Confirm window does not\noverlap backup schedule"]
+    B --&gt; C["replication show\nNote context states"]
+    C --&gt; D{"Any context\nin Error?"}
+    D --&gt;|Yes| E["Resolve replication issue\nbefore proceeding"]
+    E --&gt; D
+    D --&gt;|No| F["Confirm no active backup sessions\nin backup software"]
+    F --&gt; G{"DDOS upgrade?"}
+    G --&gt;|Yes| H["filesys clean start\nWait for completion"]
+    G --&gt;|No| I["Export config backup\nvia System Manager"]
+    H --&gt; I
+    I --&gt; J["Perform change\nper approved runbook"]
+    J --&gt; K["filesys status\nreplication show\nalerts show current"]
+    K --&gt; L{"All healthy?"}
+    L --&gt;|No| M["Investigate and resolve"]
+    M --&gt; K
+    L --&gt;|Yes| N["Run test DDBoost backup\nConfirm job success"]
+    N --&gt; O([Close Window])</code></pre>
 <p>Steps for planned maintenance on a Data Domain — schedule outside the backup window whenever possible.</p>
 <ol>
 <li>Confirm the maintenance window does not overlap with the backup window — check backup software schedules and confirm no jobs will run during the change</li>

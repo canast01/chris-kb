@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#windows-event-log-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Event Log Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-event-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -876,6 +887,30 @@
 
 <h1 id="windows-server-diagnostics">Windows Server — Diagnostics<a class="headerlink" href="#windows-server-diagnostics" title="Permanent link">&para;</a></h1>
 <p>Diagnostic procedures and log analysis.</p>
+<h2 id="windows-event-log-pipeline">Windows Event Log Pipeline<a class="headerlink" href="#windows-event-log-pipeline" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    kernel["Kernel / Drivers"]
+    apps["Applications\n.NET · SQL · IIS"]
+    svcEvents["Services\nstart · stop · crash"]
+    security["Security Subsystem\nauth · privilege · object access"]
+
+    sysLog["System Event Log"]
+    appLog["Application Event Log"]
+    secLog["Security Event Log"]
+    psLog["PowerShell Log"]
+
+    siem["SIEM\nEvent Hub · Splunk"]
+    wef["WEF Collector\nWindows Event Forwarding"]
+
+    kernel --&gt; sysLog
+    svcEvents --&gt; sysLog
+    apps --&gt; appLog
+    security --&gt; secLog
+    sysLog --&gt; wef
+    appLog --&gt; wef
+    secLog --&gt; wef
+    psLog --&gt; wef
+    wef --&gt; siem</code></pre>
 <h2 id="key-event-logs">Key Event Logs<a class="headerlink" href="#key-event-logs" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

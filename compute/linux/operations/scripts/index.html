@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#script-deployment-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Deployment Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#system-health-checksh" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -794,6 +805,16 @@
 <h1 id="linux-scripts">Linux — Scripts<a class="headerlink" href="#linux-scripts" title="Permanent link">&para;</a></h1>
 <p>Automation scripts and reusable code.</p>
 <p>Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to <code>/var/log/ops/</code> and forwarded to the central logging platform.</p>
+<h2 id="script-deployment-flow">Script Deployment Flow<a class="headerlink" href="#script-deployment-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    gitRepo["Git Repository\nscripts/linux/"]
+    ansible["Ansible Playbook\ndeploy-scripts.yml"]
+    copy["Copy to servers\n/usr/local/bin/"]
+    cron["Cron Schedule\ncrontab · systemd timer"]
+    output["Output\n/var/log/ops/ · logger"]
+    siem["SIEM / Log Platform\ncentralised logging"]
+
+    gitRepo --&gt; ansible --&gt; copy --&gt; cron --&gt; output --&gt; siem</code></pre>
 <h2 id="system-health-checksh">system-health-check.sh<a class="headerlink" href="#system-health-checksh" title="Permanent link">&para;</a></h2>
 <p>Checks disk, memory, load, failed services, and recent auth failures:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>

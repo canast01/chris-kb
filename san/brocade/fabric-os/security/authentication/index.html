@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#authentication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -941,6 +952,23 @@
 <p>Part of the <a href="../">Security</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="authentication-flow">Authentication Flow<a class="headerlink" href="#authentication-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    loginAttempt["SSH / HTTPS login attempt"] --&gt; ipCheck{"IPfilter\nsource IP permitted?"}
+    ipCheck --&gt;|Denied| reject["Connection refused"]
+    ipCheck --&gt;|Permitted| authOrder{"Auth order\nRADIUS first?"}
+    authOrder --&gt;|Yes| radiusReach{"RADIUS server\nreachable?"}
+    radiusReach --&gt;|No| localFallback["Fallback to LOCAL\naccounts on switch"]
+    radiusReach --&gt;|Yes| radiusAuth{"RADIUS\nauthentication?"}
+    radiusAuth --&gt;|Fail| reject2["Login denied\n(no local fallback if\nLOCAL not in authorder)"]
+    radiusAuth --&gt;|Success| vsaRole["Map VSA attribute\nto FabricOS role"]
+    authOrder --&gt;|"TACACS+"| tacacsAuth{"TACACS+\nauthentication?"}
+    tacacsAuth --&gt;|Success| tacacsRole["Role from TACACS+\nper-command authz available"]
+    tacacsAuth --&gt;|Fail| localFallback
+    localFallback --&gt; localAuth{"Local account\nvalid credentials?"}
+    localAuth --&gt;|Yes| localRole["Assign local role"]
+    localAuth --&gt;|No| reject3["Login denied"]
+    vsaRole &amp; tacacsRole &amp; localRole --&gt; session["CLI / Web session\nopened with assigned role"]</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Brocade FabricOS supports three authentication methods for management access:</p>
 <ol>

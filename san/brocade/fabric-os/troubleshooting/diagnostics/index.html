@@ -706,10 +706,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#maps-policy-alert-action-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAPS Policy → Alert → Action Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
         Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-scope-port-fabric-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Scope: Port → Fabric → Performance
       
     </span>
   </a>
@@ -985,9 +1007,52 @@
 <p>Part of the <a href="../">Troubleshooting</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="maps-policy-alert-action-flow">MAPS Policy → Alert → Action Flow<a class="headerlink" href="#maps-policy-alert-action-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph "MAPS Policy"
+        policy["dflt_conservative_policy\nor custom policy"]
+        rules["Rules:\nCRC threshold\nITW threshold\nBB credit zero\nISL util %\nTemp / Fan / PSU"]
+        policy --&gt; rules
+    end
+
+    subgraph "Monitoring"
+        counters["Port error counters\nSFP optical levels\nEnvironmental sensors\nISL throughput"]
+        rules --&gt;|"compare"| counters
+    end
+
+    subgraph "Alert Actions"
+        alert["MAPS Alert triggered"]
+        snmpTrap["SNMP Trap → SANnav\n/ Monitoring platform"]
+        syslog["Syslog event → SIEM"]
+        raslog["RAS log entry\nerrshow output"]
+        email["Email notification\n(if configured)"]
+        alert --&gt; snmpTrap &amp; syslog &amp; raslog &amp; email
+    end
+
+    counters --&gt;|"threshold exceeded"| alert</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Diagnostic data collection is the first priority when a switch or fabric problem is reported. Capture state before making changes — the evidence may be transient. Use <code>supportshow</code> or <code>supportsave</code> for TAC case submissions. Individual commands (<code>errshow</code>, <code>portlogshow</code>, <code>sfpshow</code>) provide targeted diagnostic information for specific port or fabric issues.</p>
 <hr />
+<h2 id="diagnostic-scope-port-fabric-performance">Diagnostic Scope: Port → Fabric → Performance<a class="headerlink" href="#diagnostic-scope-port-fabric-performance" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    symptom(["Symptom reported"]) --&gt; scope{"Scope?"}
+
+    scope --&gt;|"Port / Device"| portDiag["portshow slot/port\nsfpshow slot/port\nportstatsshow slot/port\nportlogshow slot/port"]
+    portDiag --&gt; portTest{"porttest PASS?"}
+    portTest --&gt;|No| tacEsc["Escalate to Broadcom TAC\nblade / ASIC fault"]
+    portTest --&gt;|Yes| sfpReplace["Replace SFP / cable\nRe-enable port"]
+
+    scope --&gt;|"Fabric"| fabricDiag["fabricshow\ntopologyshow\nislshow · trunkshow\nnslookup WWPN"]
+    fabricDiag --&gt; segmented{"Segmented?"}
+    segmented --&gt;|Yes| domainId["Check domain ID conflict\nCheck SCC policy\nportlogshow E_Port"]
+    segmented --&gt;|No| zoneDiag["cfgshow · zoneshow\nalishow · nsallshow"]
+
+    scope --&gt;|"Performance"| perfDiag["portperfshow\nbottleneckmon --show\nportbufshow slot/port\nporterrshow disc_c3"]
+    perfDiag --&gt; slowDrain{"BB credits\nzero?"}
+    slowDrain --&gt;|Yes| isolate["portdisable slow drain port\nmapsdb check credit alerts"]
+    slowDrain --&gt;|No| ispUtil["islshow — ISL utilization\nAdd ISL capacity if &gt; 70%"]
+
+    scope --&gt;|"TAC Case"| supportsave["supportsave -h server\nUpload to TAC SR immediately"]</code></pre>
 <h2 id="switch-level-diagnostics">Switch-Level Diagnostics<a class="headerlink" href="#switch-level-diagnostics" title="Permanent link">&para;</a></h2>
 <h3 id="overall-health">Overall Health<a class="headerlink" href="#overall-health" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Overall switch health status — expected: HEALTHY</span>

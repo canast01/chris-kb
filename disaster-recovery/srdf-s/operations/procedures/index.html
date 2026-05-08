@@ -740,6 +740,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#planned-failover-flowchart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Failover Flowchart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pre-failover-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -796,6 +807,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suspend-and-resume-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suspend and Resume Sequence
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1057,6 +1079,33 @@
 <h2 id="failover">Failover<a class="headerlink" href="#failover" title="Permanent link">&para;</a></h2>
 <h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
 <p>SRDF/S failover transfers I/O ownership from the R1 (source) volume to the R2 (target) volume on the remote PowerMax array. Because SRDF/S is synchronous, every write acknowledged to the host has already been committed on both sides, so RPO at the moment of failover is zero. Failover is invoked when the primary site is unavailable or during a planned DR test.</p>
+<h3 id="planned-failover-flowchart">Planned Failover Flowchart<a class="headerlink" href="#planned-failover-flowchart" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    start["Planned Failover Initiated\n(maintenance, DR test, or migration)"]
+    quiesceApps["Quiesce Applications at Primary Site\n(application owner confirms)"]
+    verifySynced["Verify All Pairs Synchronized\nsymrdf -sid r1sid -rdfg rdfg verify -synchronized"]
+    captureBaseline["Capture Pre-Failover Baseline\nsymrdf query -g dgname &gt; /tmp/prestate.txt"]
+    initiateFailover["Initiate Failover\nsymrdf -sid r1sid -rdfg rdfg -g dgname failover"]
+    confirmFailedOver["Confirm Failed Over State\nsymrdf query -g dgname"]
+    presentR2["Present R2 LUNs to DR Hosts\n(storage masking / zoning)"]
+    startApps["Start Applications at DR Site\n(DR application team)"]
+    validate["Validate Application Connectivity\nand Data Integrity"]
+    complete["Failover Complete\nDocument RTO in change ticket"]
+
+    start --&gt; quiesceApps
+    quiesceApps --&gt; verifySynced
+    verifySynced --&gt; captureBaseline
+    captureBaseline --&gt; initiateFailover
+    initiateFailover --&gt; confirmFailedOver
+    confirmFailedOver --&gt; presentR2
+    presentR2 --&gt; startApps
+    startApps --&gt; validate
+    validate --&gt; complete
+
+    style start fill:#2563eb,color:#fff
+    style complete fill:#15803d,color:#fff
+    style initiateFailover fill:#b45309,color:#fff
+    style verifySynced fill:#7c3aed,color:#fff</code></pre>
 <p>Two modes exist: <strong>failover</strong> (splits the pair and makes R2 read/write) and <strong>failover -establish</strong> (for a planned switch where the primary site remains available and replication is immediately reversed).</p>
 <h3 id="pre-failover-checklist">Pre-Failover Checklist<a class="headerlink" href="#pre-failover-checklist" title="Permanent link">&para;</a></h3>
 <p>Before initiating failover confirm the following on the R1 (source) array:</p>
@@ -1191,6 +1240,25 @@
 <li><strong>Split-brain risk</strong>: Never fail over while R1 is still accessible to production hosts without first quiescing I/O and confirming the R1 host is offline.</li>
 </ul>
 <hr />
+<h2 id="suspend-and-resume-sequence">Suspend and Resume Sequence<a class="headerlink" href="#suspend-and-resume-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant ops as Operations Team
+    participant r1 as PowerMax R1
+    participant r2 as PowerMax R2
+    participant app as Application
+
+    ops-&gt;&gt;r1: verify -synchronized (confirm zero tracks)
+    r1--&gt;&gt;ops: All pairs Synchronized
+    ops-&gt;&gt;r1: symrdf suspend (pause replication)
+    r1--&gt;&gt;r2: Replication suspended
+    r2--&gt;&gt;ops: State: Suspended
+    Note over r1,r2: Maintenance window — R1 accepts writes, R2 is stale
+    ops-&gt;&gt;r1: symrdf resume (restart replication)
+    r1-&gt;&gt;r2: Send dirty tracks (incremental resync)
+    Note over r1,r2: SyncInProg — tracks flushing to R2
+    r2--&gt;&gt;r1: All tracks applied
+    r1--&gt;&gt;ops: State: Synchronized
+    ops-&gt;&gt;app: Maintenance window closed</code></pre>
 <h2 id="resync">Resync<a class="headerlink" href="#resync" title="Permanent link">&para;</a></h2>
 <h3 id="overview_1">Overview<a class="headerlink" href="#overview_1" title="Permanent link">&para;</a></h3>
 <p>Resynchronization restores a fully synchronized SRDF/S pair after the pair has been suspended, split, or failed over. The resync process copies changed tracks from one volume back to the other, making both sides identical again. The direction of the copy depends on which operation preceded the resync.</p>
@@ -1456,6 +1524,7 @@
 <th>Mode</th>
 <th>SRDF/S Impact</th>
 <th>R1 Data Impact</th>
+<th>When to use</th>
 </tr>
 </thead>
 <tbody>
@@ -1463,16 +1532,19 @@
 <td>SRM test failover</td>
 <td>R2 snapshot presented; no SRDF/S pair state change</td>
 <td>None — production continues unaffected</td>
+<td>Quarterly DR testing; non-disruptive validation</td>
 </tr>
 <tr>
 <td>SRM planned migration</td>
 <td>Clean failover; pairs transition to <code>Failed Over</code></td>
 <td>R1 suspended; R2 becomes active</td>
+<td>Planned site maintenance, site power work</td>
 </tr>
 <tr>
 <td>SRM disaster recovery</td>
 <td>Force failover; pairs transition from <code>Invalid</code> to <code>Failed Over</code></td>
 <td>R1 offline; R2 becomes active</td>
+<td>Declared DR event; primary site unreachable</td>
 </tr>
 </tbody>
 </table>

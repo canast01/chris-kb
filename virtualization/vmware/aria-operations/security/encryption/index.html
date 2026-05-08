@@ -716,6 +716,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cluster-internal-tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster-Internal TLS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-at-rest-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data at Rest Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credential-encryption-in-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Encryption in Adapters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fips-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FIPS Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -738,14 +793,78 @@
 
 <h1 id="aria-operations-encryption">Aria Operations — Encryption<a class="headerlink" href="#aria-operations-encryption" title="Permanent link">&para;</a></h1>
 <h2 id="tls-certificate-replacement">TLS Certificate Replacement<a class="headerlink" href="#tls-certificate-replacement" title="Permanent link">&para;</a></h2>
-<p>Aria Operations ships with a self-signed certificate. Replace with a CA-signed certificate for production.</p>
+<p>Aria Operations ships with a self-signed certificate. Replace with a CA-signed certificate for production to avoid browser warnings, API trust failures, and integration issues with other Aria products.</p>
 <p><strong>Via UI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration &gt; Certificates &gt; Replace Certificate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Certificates → Replace Certificate
 </code></pre></div>
 <p>Upload:
-- Certificate (PEM)
-- Private key (PEM, no passphrase)
-- CA chain / intermediate (PEM)</p>
+- <strong>Certificate (PEM)</strong>: the signed leaf certificate
+- <strong>Private Key (PEM)</strong>: must be unencrypted (no passphrase)
+- <strong>CA Chain (PEM)</strong>: intermediate(s) and root CA concatenated in order (leaf → intermediate → root)</p>
+<p>After upload, Aria Operations restarts the web services. Expect 2–5 minutes of UI unavailability.</p>
+<p><strong>Via CLI (preferred for LCM-managed deployments):</strong></p>
+<p>Use LCM Locker to manage certificates. For standalone deployments:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.corp.local
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Import certificate via vracli</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--cert<span class="w"> </span>/tmp/vrops-prod-01.pem<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--key<span class="w"> </span>/tmp/vrops-prod-01.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--ca<span class="w"> </span>/tmp/chain.pem
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify the certificate was applied</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrops-prod-01.corp.local:443<span class="w"> </span>-servername<span class="w"> </span>vrops-prod-01.corp.local<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
+</code></pre></div>
+<hr />
+<h2 id="cluster-internal-tls">Cluster-Internal TLS<a class="headerlink" href="#cluster-internal-tls" title="Permanent link">&para;</a></h2>
+<p>All inter-node communication within the Aria Operations cluster is encrypted using TLS. The cluster uses internally generated certificates for node-to-node communication — these are managed automatically and do not require manual replacement.</p>
+<p>To verify cluster nodes are communicating over TLS:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From primary node — check Cassandra inter-node encryption</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ssl\|tls\|encrypt&quot;</span><span class="w"> </span>/storage/db/cassandra/cassandra.yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;#&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="data-at-rest-encryption">Data at Rest Encryption<a class="headerlink" href="#data-at-rest-encryption" title="Permanent link">&para;</a></h2>
+<p>Aria Operations does not natively encrypt metric data at rest. Apply encryption at the storage layer:</p>
+<ul>
+<li><strong>vSAN</strong>: enable vSAN Data-at-Rest Encryption on the datastore hosting Aria Operations VMs</li>
+<li><strong>External storage (SAN/NAS)</strong>: enable volume-level encryption on the LUN or NFS export</li>
+<li><strong>VM-level encryption</strong>: vSphere VM Encryption can encrypt the VM's virtual disks independently of the storage layer</li>
+</ul>
+<p>Verify VM encryption status:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI — check if Aria Operations VMs have encrypted disks</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vrops-prod-01&quot;</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">StorageFormat</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Encrypted&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Backing</span><span class="p">.</span><span class="n">KeyId</span> <span class="o">-ne</span> <span class="nv">$null</span><span class="p">}}</span>
+</code></pre></div>
+<hr />
+<h2 id="credential-encryption-in-adapters">Credential Encryption in Adapters<a class="headerlink" href="#credential-encryption-in-adapters" title="Permanent link">&para;</a></h2>
+<p>Adapter credentials (vCenter, NSX, storage) are stored encrypted in the Aria Operations Postgres database. The encryption key is derived from the node's unique identifier.</p>
+<ul>
+<li>Do not move adapter credentials between cluster deployments by copying the database directly</li>
+<li>After a restore, re-enter all adapter credentials via the UI — they cannot be decrypted on a different cluster instance</li>
+</ul>
+<hr />
+<h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
+<p>Check certificate expiry from the command line or via API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check expiry of the current UI certificate</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrops-prod-01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check expiry of each cluster node&#39;s certificate</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrops-prod-01<span class="w"> </span>vrops-prod-02<span class="w"> </span>vrops-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.corp.local: &quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.corp.local:443&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="k">done</span>
+</code></pre></div>
+<p>Set a monitoring alert in Aria Operations itself for the synthetic metric <code>ssl_certificate_days_until_expiry</code> on the self-monitoring adapter.</p>
+<hr />
+<h2 id="fips-mode">FIPS Mode<a class="headerlink" href="#fips-mode" title="Permanent link">&para;</a></h2>
+<p>Aria Operations 8.x supports FIPS 140-2 compliant cryptography. Enable FIPS only at deployment time — it cannot be enabled on an existing cluster without redeployment.</p>
+<p>If FIPS is required:
+- Deploy a new cluster with FIPS mode selected in the OVA deployment wizard
+- All management pack integrations must also support FIPS — verify compatibility before enabling
+- Note: FIPS mode disables some cipher suites and hash algorithms — test all adapter connections after deployment</p>
 
 
 

@@ -1015,6 +1015,34 @@
 <h2 id="backup-integration">Backup Integration<a class="headerlink" href="#backup-integration" title="Permanent link">&para;</a></h2>
 <h3 id="vadp-vsphere-apis-for-data-protection">VADP (vSphere APIs for Data Protection)<a class="headerlink" href="#vadp-vsphere-apis-for-data-protection" title="Permanent link">&para;</a></h3>
 <p>VADP is the standard backup API. Backup solutions use VADP to take crash-consistent or application-consistent snapshots without requiring an agent inside each VM.</p>
+<pre class="mermaid"><code>graph TD
+    backupSrv["Backup Server\n(Veeam / Commvault)"]
+    vcenter["vCenter\n(VADP API)"]
+    proxy["Backup Proxy VM\n(on same cluster)"]
+    targetVM["Protected VM\n(snapshot via CBT)"]
+    backupRepo["Backup Repository\n(SFTP / S3 / disk)"]
+
+    subgraph "Hot-Add (preferred)"
+        proxy --&gt;|"mount VMDK directly"| targetVM
+    end
+
+    subgraph "NBD / NBDSSL (fallback)"
+        proxy2["Backup Proxy"] --&gt;|"network transfer\nover management LAN"| targetVM2["Protected VM"]
+    end
+
+    backupSrv --&gt; vcenter
+    vcenter --&gt; proxy
+    proxy --&gt; backupRepo
+
+    classDef server fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef proxy fill:#15803d,stroke:#166534,color:#fff
+    classDef vm fill:#b45309,stroke:#92400e,color:#fff
+    classDef repo fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class backupSrv,vcenter server
+    class proxy,proxy2 proxy
+    class targetVM,targetVM2 vm
+    class backupRepo repo</code></pre>
 <p><strong>Supported backup proxy modes:</strong>
 - <strong>Hot-add</strong> (preferred) — backup proxy VM mounts target VM disks directly; highest performance
 - <strong>NBD/NBDSSL</strong> — network-based transfer over LAN; fallback mode

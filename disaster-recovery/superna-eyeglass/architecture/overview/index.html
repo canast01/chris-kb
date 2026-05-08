@@ -830,6 +830,23 @@
 <li>Notifies operations via email/SNMP</li>
 </ol>
 <p>RTO: typically 5–15 minutes for file services, depending on share count.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor Admin
+    participant EG as Eyeglass DR Assistant
+    participant ProdPS as Production PowerScale
+    participant DRPS as DR PowerScale
+    participant DNS as DNS Server
+
+    Admin-&gt;&gt;EG: egcli drfailover --policy POL-NAS-PROD --confirm
+    EG-&gt;&gt;ProdPS: Pause / break SyncIQ replication
+    ProdPS--&gt;&gt;EG: SyncIQ stopped
+    EG-&gt;&gt;DRPS: Activate access zones
+    EG-&gt;&gt;DRPS: Apply NFS exports + SMB shares
+    EG-&gt;&gt;DRPS: Apply quota policies
+    EG-&gt;&gt;DNS: Update SmartConnect zone delegation → DR VIPs
+    DNS--&gt;&gt;EG: DNS updated
+    EG--&gt;&gt;Admin: Failover complete — notify via SNMP/email
+    Note over DRPS: Clients now resolve to DR cluster</code></pre>
 <h2 id="appliance-sizing">Appliance Sizing<a class="headerlink" href="#appliance-sizing" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

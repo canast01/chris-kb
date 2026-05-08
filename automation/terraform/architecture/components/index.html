@@ -706,6 +706,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#iac-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IaC Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-dependency-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Dependency Graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#modules" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -881,6 +903,39 @@
 
 
 <h1 id="terraform-components">Terraform — Components<a class="headerlink" href="#terraform-components" title="Permanent link">&para;</a></h1>
+<h2 id="iac-workflow">IaC Workflow<a class="headerlink" href="#iac-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    writeHCL["Write HCL\n(.tf files)"]
+    tfInit["terraform init\n(download providers\n&amp; modules)"]
+    tfPlan["terraform plan\n(preview changes)"]
+    reviewPlan["Review Plan\n(human approval)"]
+    tfApply["terraform apply\n(create / update\n/ destroy)"]
+    stateFile["State File\n(terraform.tfstate)"]
+    validate["terraform validate\n&amp; fmt -check"]
+
+    writeHCL --&gt; validate
+    validate --&gt; tfInit
+    tfInit --&gt; tfPlan
+    tfPlan --&gt; reviewPlan
+    reviewPlan --&gt;|Approved| tfApply
+    reviewPlan --&gt;|Rejected| writeHCL
+    tfApply --&gt; stateFile
+    stateFile --&gt;|Next change| tfPlan</code></pre>
+<h2 id="module-dependency-graph">Module Dependency Graph<a class="headerlink" href="#module-dependency-graph" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    root["Root Module\n(main.tf)"]
+    modNetwork["module: network\n(VPC, subnets, SGs)"]
+    modCompute["module: compute\n(EC2 / VMs)"]
+    modDatabase["module: database\n(RDS / PostgreSQL)"]
+    modDns["module: dns\n(Route53 / Azure DNS)"]
+
+    root --&gt; modNetwork
+    root --&gt; modCompute
+    root --&gt; modDatabase
+    root --&gt; modDns
+    modCompute --&gt;|subnet_id\nvpc_id| modNetwork
+    modDatabase --&gt;|db_subnet_group\nsg_id| modNetwork
+    modDns --&gt;|lb_dns_name| modCompute</code></pre>
 <h2 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">&para;</a></h2>
 <h3 id="module-directory-structure">Module Directory Structure<a class="headerlink" href="#module-directory-structure" title="Permanent link">&para;</a></h3>
 <p>A module is any directory containing <code>.tf</code> files. The convention for reusable modules:</p>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#automation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automation Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +815,19 @@
 
 <h1 id="cyberark-scripts">CyberArk Scripts<a class="headerlink" href="#cyberark-scripts" title="Permanent link">&para;</a></h1>
 <p>PowerShell automation using the <code>psPAS</code> module and the PVWA REST API. All automation uses a dedicated PVWA service account with the minimum required safe-level and administrative permissions. Never use a personal admin account for scheduled automation.</p>
+<h2 id="automation-workflow">Automation Workflow<a class="headerlink" href="#automation-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    schedTask["Scheduled Task / CI-CD pipeline"] --&gt; authPVWA["New-PASSession\n(svc-cyberark-api)"]
+    authPVWA --&gt; doWork{"Task type"}
+    doWork --&gt;|"onboarding"| onboard["Add-PASAccount\n(from CSV or IaC)"]
+    doWork --&gt;|"rotation report"| rotReport["Get-PASAccount\nfilter failed CPM status"]
+    doWork --&gt;|"safe audit"| safeAudit["Get-PASSafe + Get-PASSafeMember\nexport to CSV"]
+    doWork --&gt;|"session inventory"| sessionInv["Get-PASRecording\ndate-range export"]
+    onboard --&gt; closeSess["Close-PASSession"]
+    rotReport --&gt; alertEmail["Send-MailMessage\n(failure alert)"]
+    alertEmail --&gt; closeSess
+    safeAudit --&gt; closeSess
+    sessionInv --&gt; closeSess</code></pre>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install psPAS module</span>

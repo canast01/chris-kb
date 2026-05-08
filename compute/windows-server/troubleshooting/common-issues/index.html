@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#rdp-connectivity-triage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDP Connectivity Triage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#triage-order" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -816,6 +827,26 @@
 <h1 id="windows-server-common-issues">Windows Server — Common Issues<a class="headerlink" href="#windows-server-common-issues" title="Permanent link">&para;</a></h1>
 <p>Quick reference for common problems and resolutions.</p>
 <p>Structured approach to diagnosing common Windows Server issues.</p>
+<h2 id="rdp-connectivity-triage">RDP Connectivity Triage<a class="headerlink" href="#rdp-connectivity-triage" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    rdpFail["RDP Connection Fails"]
+    pingOk{"Ping\nsucceeds?"}
+    termSvc{"TermService\nRunning?"}
+    fwAllow{"Firewall rule\n3389 allowed?"}
+    authOk{"Account\nnot locked?"}
+    sessionLimit{"Session limit\nreached?"}
+    resolved["Connected\nsuccessfully"]
+
+    rdpFail --&gt; pingOk
+    pingOk -- No --&gt; resolved
+    pingOk -- Yes --&gt; termSvc
+    termSvc -- No --&gt; resolved
+    termSvc -- Yes --&gt; fwAllow
+    fwAllow -- No --&gt; resolved
+    fwAllow -- Yes --&gt; authOk
+    authOk -- No --&gt; resolved
+    authOk -- Yes --&gt; sessionLimit
+    sessionLimit --&gt; resolved</code></pre>
 <h2 id="triage-order">Triage Order<a class="headerlink" href="#triage-order" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Is the host reachable?</strong> — ping, RDP, WinRM, iDRAC/iLO console</li>

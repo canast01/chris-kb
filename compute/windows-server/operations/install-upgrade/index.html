@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#patch-deployment-ring-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patch Deployment Ring Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#version-support-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -876,6 +887,17 @@
 
 <h1 id="windows-server-install-upgrade">Windows Server — Install &amp; Upgrade<a class="headerlink" href="#windows-server-install-upgrade" title="Permanent link">&para;</a></h1>
 <p>Installation, upgrade, patching, and decommission.</p>
+<h2 id="patch-deployment-ring-flow">Patch Deployment Ring Flow<a class="headerlink" href="#patch-deployment-ring-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    patchTuesday["Patch Tuesday\nMicrosoft releases CU"]
+    devRing["Dev / Test Ring\nApply within 48h"]
+    preRing["Pre-Production Ring\n+7 days after dev validation"]
+    prodRing["Production Ring\n+14–21 days after pre-prod"]
+    dcRing["Domain Controllers\nStagger — one DC at a time"]
+    report["Compliance Report\nWSUS / Azure Update Manager"]
+
+    patchTuesday --&gt; devRing --&gt; preRing --&gt; prodRing --&gt; report
+    preRing --&gt; dcRing --&gt; report</code></pre>
 <h2 id="version-support-matrix">Version Support Matrix<a class="headerlink" href="#version-support-matrix" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

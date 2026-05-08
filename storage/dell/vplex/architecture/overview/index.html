@@ -918,6 +918,16 @@
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>            └── Distributed Device (RAID-1 across two clusters — Metro only)
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                └── Virtual Volume (the object presented to hosts)
 </code></pre></div>
+<pre class="mermaid"><code>flowchart TD
+    arrayLUN["Back-end Array LUN\n(PowerMax / Unity)"]
+    storageVol["Storage Volume\nVPLEX discovers and claims LUN"]
+    extent["Extent\nVPLEX claim on storage volume"]
+    localDev["Local Device\nRAID-0 or RAID-1 within cluster"]
+    distDev["Distributed Device\nRAID-1 across two clusters — Metro only"]
+    virtVol["Virtual Volume\nPresented to hosts via storage views"]
+    storageView["Storage View\nHost HBA → FE port → virtual volume"]
+
+    arrayLUN --&gt; storageVol --&gt; extent --&gt; localDev --&gt; distDev --&gt; virtVol --&gt; storageView</code></pre>
 <p>Each layer maps to a vplexcli path:</p>
 <table>
 <thead>
@@ -1214,6 +1224,22 @@
 <li>Both clusters destage the write to their local back-end arrays independently</li>
 </ol>
 <p>Host write latency = local VPLEX cache latency + ICL round-trip latency + any back-pressure from cache destage.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Host as Host
+    participant Dir1 as VPLEX Director\nCluster-1 (Site A)
+    participant Dir2 as VPLEX Director\nCluster-2 (Site B)
+    participant Arr1 as Array A\n(Site A)
+    participant Arr2 as Array B\n(Site B)
+
+    Host-&gt;&gt;Dir1: Write I/O via FC front-end port
+    Dir1-&gt;&gt;Dir1: Write to local NVRAM write cache
+    Dir1-&gt;&gt;Dir2: Synchronous replication over ICL
+    Dir2-&gt;&gt;Dir2: Write to Cluster-2 NVRAM write cache
+    Dir2--&gt;&gt;Dir1: Acknowledge write received
+    Dir1--&gt;&gt;Host: Write complete (acknowledged to host)
+    Note over Dir1,Dir2: Both directors now destage independently
+    Dir1-)Arr1: Destage write to Array A
+    Dir2-)Arr2: Destage write to Array B</code></pre>
 <h2 id="vplex-local-vs-metro-feature-comparison">VPLEX Local vs. Metro — Feature Comparison<a class="headerlink" href="#vplex-local-vs-metro-feature-comparison" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

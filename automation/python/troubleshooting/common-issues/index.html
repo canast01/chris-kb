@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#python-error-triage-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Error Triage Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#virtualenv-and-environment-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,6 +781,21 @@
 
 
 <h1 id="python-automation-common-issues">Python Automation — Common Issues<a class="headerlink" href="#python-automation-common-issues" title="Permanent link">&para;</a></h1>
+<h2 id="python-error-triage-flow">Python Error Triage Flow<a class="headerlink" href="#python-error-triage-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    error["Script Error / Failure"]
+    error --&gt; errType{"Error type?"}
+    errType --&gt;|ModuleNotFoundError| checkVenv["Is correct venv\nactivated?"]
+    checkVenv --&gt;|No| activateVenv["source venv/bin/activate\nthen pip install"]
+    checkVenv --&gt;|Yes| reinstall["pip install &lt;package&gt;\nin active venv"]
+    errType --&gt;|401 Unauthorized| checkToken["API token\nexpired or revoked?"]
+    checkToken --&gt;|Yes| rotateToken["Regenerate token\nin target system"]
+    errType --&gt;|ConnectionError\nTimeout| checkNetwork["curl -v &lt;api_url&gt;\nfrom automation host"]
+    checkNetwork --&gt;|Blocked| fixFW["Fix firewall /\nproxy settings"]
+    errType --&gt;|JSONDecodeError| checkResp["print(resp.text)\ncheck content-type"]
+    checkResp --&gt; updateParsing["Update parsing logic\nto match new schema"]
+    errType --&gt;|PermissionError| checkPath["ls -la on output\ndirectory"]
+    checkPath --&gt; fixPerms["chmod / chown\noutput directory"]</code></pre>
 <h2 id="virtualenv-and-environment-issues">Virtualenv and Environment Issues<a class="headerlink" href="#virtualenv-and-environment-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a virtual environment</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv

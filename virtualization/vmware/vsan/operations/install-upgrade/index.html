@@ -811,6 +811,27 @@
 <p>Check the current Broadcom Product Lifecycle page at https://support.broadcom.com for up-to-date EOL dates. Do not operate clusters on end-of-general-support versions.</p>
 <h2 id="upgrade-procedure">Upgrade Procedure<a class="headerlink" href="#upgrade-procedure" title="Permanent link">&para;</a></h2>
 <p>vSAN upgrades are performed through the vSphere Lifecycle Manager (vLCM) cluster image workflow. Never upgrade ESXi hosts manually on a vSAN cluster — always use vLCM to ensure vSAN health is validated at each step.</p>
+<pre class="mermaid"><code>graph TD
+    pre["Pre-upgrade checks:\nHealth green, no degraded objects,\nresync queue empty, backup current"]
+    vcUpgrade["1. Upgrade vCenter Server\n(always first)"]
+    vLCMImage["2. Update vLCM cluster image\nto target ESXi version"]
+    hostLoop["3. Remediate one host at a time\n(vLCM puts host in maintenance mode)"]
+    healthCheck["4. Verify vSAN health\nafter each host"]
+    allDone{"All hosts\nremediated?"}
+    postCheck["5. Post-upgrade validation:\nbuild numbers, health, object compliance"]
+    done(["Upgrade complete"])
+
+    pre --&gt; vcUpgrade --&gt; vLCMImage --&gt; hostLoop --&gt; healthCheck --&gt; allDone
+    allDone --&gt;|"No — next host"| hostLoop
+    allDone --&gt;|"Yes"| postCheck --&gt; done
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+
+    class pre,vcUpgrade,vLCMImage,hostLoop,healthCheck,postCheck step
+    class allDone decision
+    class done terminal</code></pre>
 <p><strong>Pre-upgrade checks:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify cluster health (from any ESXi host in the cluster)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>health<span class="w"> </span>cluster<span class="w"> </span>list

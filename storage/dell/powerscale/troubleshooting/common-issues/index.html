@@ -801,6 +801,20 @@
 </tbody>
 </table>
 <h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Client reports NFS/SMB error\nor node unreachable]) --&gt; B["isi status\nisi event list --limit 20"]
+    B --&gt; C{"SMARTFAIL\nor DOWN node?"}
+    C --&gt;|Yes| D["Monitor Restripe\nDo NOT manually remove\nOpen Dell support case"]
+    C --&gt;|No| E{"Write failure\non quota directory?"}
+    E --&gt;|Yes| F["isi quota quotas list\nRaise hard limit or free space"]
+    E --&gt;|No| G{"SmartConnect DNS\nnot resolving?"}
+    G --&gt;|Yes| H["Verify NS delegation\nisi network pools list\nnslookup SmartConnect zone"]
+    G --&gt;|No| I{"NFS stale file\nhandle?"}
+    I --&gt;|Yes| J["Remount from client\nUse SmartConnect DNS name\nnot a node IP"]
+    I --&gt;|No| K{"SMB access denied\ndespite correct perms?"}
+    K --&gt;|Yes| L["isi auth users view\nCheck AD provider join\nReview share + dir ACL"]
+    K --&gt;|No| M["isi statistics query current\nisi job list\nCapacity or performance path"]
+    D &amp; F &amp; H &amp; J &amp; L &amp; M --&gt; Z([Escalate if unresolved])</code></pre>
 <p>When clients report NFS/SMB errors, SyncIQ failures, or a node is unreachable, work through this sequence first.</p>
 <ul>
 <li>[ ] Run <code>isi status</code> immediately — confirm which nodes and drives are in a fault state; note SMARTFAIL nodes, DOWN nodes, and drive error counts</li>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#triage-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triage Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snapshot-failure-vmware" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +815,29 @@
 
 <h1 id="veeam-common-issues">Veeam — Common Issues<a class="headerlink" href="#veeam-common-issues" title="Permanent link">&para;</a></h1>
 <p>Most Veeam job failures fall into a small set of categories: VMware snapshot issues, repository space problems, proxy connectivity timeouts, and Veeam service instability. The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files.</p>
+<h2 id="triage-decision-tree">Triage Decision Tree<a class="headerlink" href="#triage-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    fail(["Job failure or warning\ndetected"])
+    fail --&gt; openStats["Open Job Statistics\nExpand failed task\nRead Reason field"]
+    openStats --&gt; q1{Error category}
+
+    q1 --&gt;|"Snapshot / VSS\nerror"| snapQ{"Creating or\ncommitting?"}
+    q1 --&gt;|"Network /\nconnection\nerror"| netQ["Proxy Timeout\n/ Network Error"]
+    q1 --&gt;|"No space /\nquota"| spaceQ["Repository\nOut of Space"]
+    q1 --&gt;|"IVR VM\nnot booting"| ivrQ["Instant VM Recovery\nVM Not Starting"]
+    q1 --&gt;|"VBR service\ncrash"| svcQ["VBR Service\nCrash / Instability"]
+    q1 --&gt;|"Copy job\nnever finishes"| copyQ["Backup Copy Job\nNever Completes"]
+    q1 --&gt;|"SureBackup\nfailed"| sbQ["SureBackup Fails"]
+
+    snapQ --&gt;|"Creating"| snapCreate["Check VMware Tools\nDisable app-aware\nto isolate quiesce issue"]
+    snapQ --&gt;|"Committing"| snapCommit["Check vCenter for\nstuck snapshot\nVerify datastore space"]
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class openStats,netQ,spaceQ,ivrQ,svcQ,copyQ,sbQ,snapCreate,snapCommit action
+    class q1,snapQ decision
+    class fail terminal</code></pre>
 <hr />
 <h2 id="snapshot-failure-vmware">Snapshot Failure (VMware)<a class="headerlink" href="#snapshot-failure-vmware" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Job fails at "Creating snapshot" or "Committing snapshot."</p>

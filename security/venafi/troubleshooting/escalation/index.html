@@ -799,6 +799,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#escalation-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -948,6 +959,22 @@
 <li>If no response within SLA: request escalation to Senior Support Engineer via portal.</li>
 <li>If business-critical escalation needed beyond support: contact your Venafi Technical Account Manager (TAM) or Customer Success Manager (CSM).</li>
 </ol>
+<h2 id="escalation-decision-flow">Escalation Decision Flow<a class="headerlink" href="#escalation-decision-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue["Venafi issue detected"]
+    issue --&gt; severity{"Severity\nassessment"}
+    severity --&gt;|"production TPP down\nno certs can issue"| sev1["Sev 1 — Critical"]
+    severity --&gt;|"major feature degraded\nworkaround available"| sev2["Sev 2 — High"]
+    severity --&gt;|"non-critical feature\nimpaired"| sev3["Sev 3 — Medium"]
+    sev1 --&gt; preCollect["Run pre-collection\nchecklist (TPP version, logs, CA diag)"]
+    sev2 --&gt; preCollect
+    sev3 --&gt; openPortal["Open portal ticket\nsupport.venafi.com"]
+    preCollect --&gt; openPortal
+    openPortal --&gt;|"Sev 1"| callHotline["Call Venafi support hotline\nsimultaneously"]
+    callHotline --&gt; slaCheck{"Response within SLA?"}
+    slaCheck --&gt;|"no"| escalateSSE["Request escalation to\nSenior Support Engineer"]
+    escalateSSE --&gt; tamEscalate["Contact TAM / CSM\nfor business-critical escalation"]
+    slaCheck --&gt;|"yes"| workWithSupport["Work with support engineer\nto resolution"]</code></pre>
 
 
 

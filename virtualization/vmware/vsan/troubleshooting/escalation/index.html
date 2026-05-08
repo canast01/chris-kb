@@ -1186,6 +1186,34 @@
 <hr />
 <h2 id="internal-escalation-path">Internal Escalation Path<a class="headerlink" href="#internal-escalation-path" title="Permanent link">&para;</a></h2>
 <p>Define your internal escalation path before an incident occurs:</p>
+<pre class="mermaid"><code>graph TD
+    incident(["vSAN incident detected"])
+    l1["L1 — On-call storage engineer\nInitial investigation\n(first 30 minutes)"]
+    l1check{"Resolved\nwithin 1 hour?"}
+    l2["L2 — Storage team lead\nSenior engineer\nDeeper diagnosis"]
+    l2check{"Inaccessible objects\nor P1 confirmed?"}
+    l3["L3 — Platform / Infra Manager\nBusiness impact confirmed\nStakeholders notified"]
+    vendor["VMware Support\n(Broadcom)\nP1: &lt; 4 hours\nP2: &lt; 24 hours"]
+    resolved(["Incident resolved"])
+
+    incident --&gt; l1
+    l1 --&gt; l1check
+    l1check --&gt;|"Yes"| resolved
+    l1check --&gt;|"No"| l2
+    l2 --&gt; l2check
+    l2check --&gt;|"Yes"| l3 --&gt; vendor
+    l2check --&gt;|"No — P2/P3"| vendor
+    vendor --&gt; resolved
+
+    classDef level fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    classDef vendor fill:#dc2626,stroke:#b91c1c,color:#fff
+
+    class l1,l2,l3 level
+    class l1check,l2check decision
+    class incident,resolved terminal
+    class vendor vendor</code></pre>
 <table>
 <thead>
 <tr>

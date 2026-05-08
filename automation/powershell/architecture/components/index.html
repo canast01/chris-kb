@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#powershell-module-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Module Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#modules" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -781,6 +792,28 @@
 
 
 <h1 id="powershell-components">PowerShell — Components<a class="headerlink" href="#powershell-components" title="Permanent link">&para;</a></h1>
+<h2 id="powershell-module-structure">PowerShell Module Structure<a class="headerlink" href="#powershell-module-structure" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    psGallery["PowerShell Gallery\n(PSGallery)"]
+    privateRepo["Private Repository\n(Nexus / Artifactory)"]
+    installModule["Install-Module\n(Install-Module -Scope CurrentUser)"]
+    moduleDir["$PSModulePath\n(module search paths)"]
+    manifest["MyModule.psd1\n(manifest / metadata)"]
+    rootModule["MyModule.psm1\n(root script)"]
+    publicFuncs["Public/\n(exported functions)"]
+    privateFuncs["Private/\n(internal helpers)"]
+    importSession["Import-Module\n(current session)"]
+    cmdlets["Exported Cmdlets\n(Get-Something, Set-Something)"]
+
+    psGallery --&gt; installModule
+    privateRepo --&gt; installModule
+    installModule --&gt; moduleDir
+    moduleDir --&gt; manifest
+    manifest --&gt; rootModule
+    rootModule --&gt; publicFuncs
+    rootModule --&gt; privateFuncs
+    publicFuncs --&gt; importSession
+    importSession --&gt; cmdlets</code></pre>
 <h2 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">&para;</a></h2>
 <p>PowerShell Gallery is the central repository for PowerShell modules.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Find a module before installing</span>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#provider-credential-flow-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider Credential Flow — CI/CD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#provider-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -798,6 +809,23 @@
 
 
 <h1 id="terraform-authentication">Terraform — Authentication<a class="headerlink" href="#terraform-authentication" title="Permanent link">&para;</a></h1>
+<h2 id="provider-credential-flow-cicd">Provider Credential Flow — CI/CD<a class="headerlink" href="#provider-credential-flow-cicd" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    ciPipeline["CI/CD Pipeline\n(GitHub Actions / GitLab)"]
+    ciSecrets["CI/CD Secrets\n(repository secrets)"]
+    oidcToken["OIDC Token\n(short-lived)"]
+    iamRole["Cloud IAM Role\n(assume via OIDC)"]
+    envVars["Environment Variables\n(AWS_ / ARM_ / GOOGLE_)"]
+    tfProvider["Terraform Provider\n(aws / azurerm / google)"]
+    cloudAPI["Cloud API\n(EC2 / ARM / GCP)"]
+
+    ciPipeline --&gt; ciSecrets
+    ciPipeline --&gt; oidcToken
+    oidcToken --&gt;|Preferred: keyless| iamRole
+    ciSecrets --&gt;|Fallback: static keys| envVars
+    iamRole --&gt; envVars
+    envVars --&gt; tfProvider
+    tfProvider --&gt; cloudAPI</code></pre>
 <h2 id="provider-authentication">Provider Authentication<a class="headerlink" href="#provider-authentication" title="Permanent link">&para;</a></h2>
 <p>Terraform providers authenticate to cloud APIs using credentials supplied via environment variables or provider configuration blocks. Never hardcode credentials in <code>.tf</code> files.</p>
 <h3 id="aws">AWS<a class="headerlink" href="#aws" title="Permanent link">&para;</a></h3>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#python-diagnostics-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Diagnostics Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#debugging-with-pdb" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -781,6 +792,28 @@
 
 
 <h1 id="python-automation-diagnostics">Python Automation — Diagnostics<a class="headerlink" href="#python-automation-diagnostics" title="Permanent link">&para;</a></h1>
+<h2 id="python-diagnostics-workflow">Python Diagnostics Workflow<a class="headerlink" href="#python-diagnostics-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    symptom["Symptom or\nUnexpected Output"]
+    enableDebug["Enable DEBUG logging\n(logging.basicConfig)"]
+    checkLogs["Inspect log file\nfor traceback"]
+    pdbBreak["Add breakpoint()\nor python3 -m pdb"]
+    inspectVars["Inspect variables\n(p var in pdb)"]
+    verboseImport["python3 -v script.py\n(trace imports)"]
+    checkSysPath["python3 -c \"import sys;\nprint(sys.path)\""]
+    devMode["python3 -X dev\n(extra warnings)"]
+    resolved["Root cause\nidentified"]
+
+    symptom --&gt; enableDebug
+    enableDebug --&gt; checkLogs
+    checkLogs --&gt;|Traceback found| pdbBreak
+    pdbBreak --&gt; inspectVars
+    inspectVars --&gt; resolved
+    checkLogs --&gt;|Import error| verboseImport
+    verboseImport --&gt; checkSysPath
+    checkSysPath --&gt; resolved
+    checkLogs --&gt;|Warnings| devMode
+    devMode --&gt; resolved</code></pre>
 <h2 id="debugging-with-pdb">Debugging with pdb<a class="headerlink" href="#debugging-with-pdb" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Drop into the interactive debugger at a specific line</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>

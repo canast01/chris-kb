@@ -725,6 +725,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Retention Schedule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backup-job-types-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Job Types Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -889,6 +906,36 @@
 </tbody>
 </table>
 <p>SOBR capacity tier offload: configure automatic offload after 14 days → moves monthly/yearly points to object storage.</p>
+<h3 id="backup-job-types-comparison">Backup Job Types Comparison<a class="headerlink" href="#backup-job-types-comparison" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    subgraph fullBackup [Full Backup]
+        direction TB
+        afull["Active Full\n(reads all blocks\nfrom source)"]
+        sfull["Synthetic Full\n(reads from existing\nbackup chain —\nno source reads)"]
+    end
+
+    subgraph incrementalBackup [Incremental Backup]
+        direction TB
+        fwdIncr["Forward Incremental\n(CBT — changed blocks only\nneeds full chain to restore)"]
+        revIncr["Reverse Incremental\n(CBT — transforms oldest\nincremental into new full\nrolling restore point)"]
+    end
+
+    decide{Choose\nbackup type} --&gt; afull
+    decide --&gt; sfull
+    decide --&gt; fwdIncr
+    decide --&gt; revIncr
+
+    afull --&gt; pros1["Pros: self-contained\nCons: source I/O\nevery run"]
+    sfull --&gt; pros2["Pros: no source I/O\nCons: needs working\nbackup chain"]
+    fwdIncr --&gt; pros3["Pros: minimal daily\nI/O and storage\nCons: longer restore\nchain dependency"]
+    revIncr --&gt; pros4["Pros: always one full\n+ recent changes\nCons: more repo I/O\nduring transform"]
+
+    classDef backupType fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef pros fill:#15803d,stroke:#166534,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    class afull,sfull,fwdIncr,revIncr backupType
+    class pros1,pros2,pros3,pros4 pros
+    class decide decision</code></pre>
 <h2 id="backup-job-configuration-standards">Backup Job Configuration Standards<a class="headerlink" href="#backup-job-configuration-standards" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Backup window</strong>: 22:00–06:00 (default); set hard stop to prevent daytime impact</li>

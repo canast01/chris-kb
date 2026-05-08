@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#secure-script-development-checklist-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Script Development Checklist Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#secure-coding-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,6 +781,28 @@
 
 
 <h1 id="python-automation-hardening">Python Automation — Hardening<a class="headerlink" href="#python-automation-hardening" title="Permanent link">&para;</a></h1>
+<h2 id="secure-script-development-checklist-flow">Secure Script Development Checklist Flow<a class="headerlink" href="#secure-script-development-checklist-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    code["Write Script Code"]
+    inputVal["Validate all external\ninputs (regex / type)"]
+    noEval["Avoid eval() / exec()\nwith external data"]
+    subproc["Use subprocess with\nlist args (no shell=True)"]
+    secrets["Load secrets from\nenv / secrets manager"]
+    pinDeps["Pin dependencies\n(pip freeze)"]
+    audit["pip-audit:\ncheck for CVEs"]
+    filePerms["Set file permissions\n(chmod 600 for secrets)"]
+    noLogs["Never log secrets\nor stack traces externally"]
+    ready["Script ready\nfor production"]
+
+    code --&gt; inputVal
+    inputVal --&gt; noEval
+    noEval --&gt; subproc
+    subproc --&gt; secrets
+    secrets --&gt; pinDeps
+    pinDeps --&gt; audit
+    audit --&gt; filePerms
+    filePerms --&gt; noLogs
+    noLogs --&gt; ready</code></pre>
 <h2 id="secure-coding-practices">Secure Coding Practices<a class="headerlink" href="#secure-coding-practices" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Use subprocess safely — avoid shell=True with user-controlled input</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>

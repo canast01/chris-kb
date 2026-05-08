@@ -822,6 +822,31 @@
 <h1 id="dell-ecs-access-control">Dell ECS — Access Control<a class="headerlink" href="#dell-ecs-access-control" title="Permanent link">&para;</a></h1>
 <h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
 <p>ECS implements role-based access at two levels: system management and object (data) access.</p>
+<pre class="mermaid"><code>graph TD
+  subgraph "Management Plane (portal/API)"
+    SYSADMIN["System Admin\n(global — all VDCs)"]
+    SYSMON["System Monitor\n(global, read-only)"]
+    NSADMIN["Namespace Admin\n(per namespace)"]
+    NSUSER["Namespace User\n(per namespace, read-only)"]
+  end
+  subgraph "Data Plane (S3/Swift)"
+    OBJ["Object User\n(per namespace, IAM identity)"]
+    BPOL["Bucket Policy\n(s3:GetObject, s3:PutObject…)"]
+    OBJ --&gt; BPOL
+  end
+  subgraph "Scope"
+    NS1["Namespace: analytics-prod\n(isolated boundary)"]
+    NS2["Namespace: finance-prod\n(isolated boundary)"]
+  end
+  NSADMIN --&gt;|"creates"| OBJ
+  OBJ -.-&gt;|"cannot cross\nnamespace boundary"| NS2
+  OBJ --&gt;|"accesses"| NS1
+  classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef data fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef ns fill:#15803d,stroke:#166534,color:#fff
+  class SYSADMIN,SYSMON,NSADMIN,NSUSER mgmt
+  class OBJ,BPOL data
+  class NS1,NS2 ns</code></pre>
 <h3 id="system-management-roles">System Management Roles<a class="headerlink" href="#system-management-roles" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#drift-detection-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drift Detection Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#health-check" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -831,6 +842,28 @@
 
 
 <h1 id="terraform-health-checks">Terraform — Health Checks<a class="headerlink" href="#terraform-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="drift-detection-flow">Drift Detection Flow<a class="headerlink" href="#drift-detection-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    schedule["Scheduled Trigger\n(cron / CI weekday 08:00)"]
+    tfInit["terraform init\n-reconfigure"]
+    tfPlan["terraform plan\n-detailed-exitcode\n-refresh=true"]
+    checkExit{"Exit code?"}
+    noDrift["Exit 0: No drift\nInfrastructure matches config"]
+    planError["Exit 1: Error\nCheck provider auth\n&amp; config syntax"]
+    driftFound["Exit 2: Drift detected\nChanges exist"]
+    parsePlan["terraform show -json\nParse resource_changes"]
+    alertOps["Alert Ops Team\n(Slack / email / ticket)"]
+    remediate["Remediate:\nterraform apply\nor update code"]
+
+    schedule --&gt; tfInit
+    tfInit --&gt; tfPlan
+    tfPlan --&gt; checkExit
+    checkExit --&gt;|0| noDrift
+    checkExit --&gt;|1| planError
+    checkExit --&gt;|2| driftFound
+    driftFound --&gt; parsePlan
+    parsePlan --&gt; alertOps
+    alertOps --&gt; remediate</code></pre>
 <h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Remote backend is reachable and state file is present and valid</li>

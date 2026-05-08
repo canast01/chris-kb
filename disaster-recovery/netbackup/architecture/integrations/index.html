@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#integration-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dell-data-domain-ost" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -803,6 +814,44 @@
 
 
 <h1 id="netbackup-integration">NetBackup Integration<a class="headerlink" href="#netbackup-integration" title="Permanent link">&para;</a></h1>
+<h2 id="integration-architecture">Integration Architecture<a class="headerlink" href="#integration-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    master["NetBackup\nPrimary Server"]
+
+    subgraph storageIntegrations [Storage Integrations]
+        ostDD["Dell Data Domain\nOST / DD Boost\n(inline dedup)"]
+        msdpPool["MSDP Pool\nMedia Server Dedup\n(native dedup)"]
+        pureSnap["Pure FlashArray\nSnapshot Client\n(near-zero RPO)"]
+        s3Cloud["AWS S3\nCloud Storage Unit\n(Glacier archival)"]
+    end
+
+    subgraph sourceIntegrations [Source / Client Integrations]
+        vadp["VMware VADP\nbpvmutil — agentless VM backup"]
+        cyberark["CyberArk AAM\nruntime credential retrieval"]
+    end
+
+    subgraph operationsIntegrations [Operations Integrations]
+        opscenter["OpsCenter\ncentralised reporting + alerts"]
+        siem["SIEM\nsyslog audit log forwarding"]
+    end
+
+    master --&gt; ostDD
+    master --&gt; msdpPool
+    master --&gt; pureSnap
+    master --&gt; s3Cloud
+    master --&gt; vadp
+    master --&gt; cyberark
+    master --&gt; opscenter
+    master --&gt; siem
+
+    classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef source fill:#15803d,stroke:#166534,color:#fff
+    classDef ops fill:#b45309,stroke:#92400e,color:#fff
+    class master master
+    class ostDD,msdpPool,pureSnap,s3Cloud storage
+    class vadp,cyberark source
+    class opscenter,siem ops</code></pre>
 <h2 id="dell-data-domain-ost">Dell Data Domain (OST)<a class="headerlink" href="#dell-data-domain-ost" title="Permanent link">&para;</a></h2>
 <p>The OpenStorage Technology (OST) plugin enables inline deduplication and DD Boost protocol between NetBackup media servers and Data Domain appliances:</p>
 <ol>

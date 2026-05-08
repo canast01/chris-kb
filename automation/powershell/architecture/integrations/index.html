@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#powercli-vm-management-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerCLI VM Management Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vmware" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -870,6 +881,33 @@
 
 
 <h1 id="powershell-integrations">PowerShell — Integrations<a class="headerlink" href="#powershell-integrations" title="Permanent link">&para;</a></h1>
+<h2 id="powercli-vm-management-flow">PowerCLI VM Management Flow<a class="headerlink" href="#powercli-vm-management-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    connectVC["Connect-VIServer\n(vCenter)"]
+    getVM["Get-VM\n(filter by name / state)"]
+    vmAction{"VM Action"}
+    powerOn["Start-VM"]
+    powerOff["Stop-VM"]
+    snapshot["New-Snapshot\n(pre-patch)"]
+    configure["Set-VM\n(CPU / Memory)"]
+    revert["Set-VM -Snapshot\n(revert)"]
+    removeSnap["Remove-Snapshot\n(post-patch)"]
+    migrateDS["Move-VM -Datastore\n(Storage vMotion)"]
+    disconnect["Disconnect-VIServer"]
+
+    connectVC --&gt; getVM
+    getVM --&gt; vmAction
+    vmAction --&gt; powerOn
+    vmAction --&gt; powerOff
+    vmAction --&gt; snapshot
+    vmAction --&gt; configure
+    snapshot --&gt; revert
+    snapshot --&gt; removeSnap
+    vmAction --&gt; migrateDS
+    powerOn --&gt; disconnect
+    powerOff --&gt; disconnect
+    configure --&gt; disconnect
+    migrateDS --&gt; disconnect</code></pre>
 <h2 id="vmware">VMware<a class="headerlink" href="#vmware" title="Permanent link">&para;</a></h2>
 <p>VMware PowerCLI is a set of PowerShell modules for managing vSphere, NSX, and vSAN.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install PowerCLI (current user, no admin required)</span>

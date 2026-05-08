@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#least-privilege-access-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least Privilege Access Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#least-privilege" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,6 +781,21 @@
 
 
 <h1 id="python-automation-access-control">Python Automation — Access Control<a class="headerlink" href="#python-automation-access-control" title="Permanent link">&para;</a></h1>
+<h2 id="least-privilege-access-model">Least Privilege Access Model<a class="headerlink" href="#least-privilege-access-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    script["Python Script\n(automation job)"]
+    svcAccount["Dedicated Service Account\n(linux: automation user)"]
+    iamRole["IAM Role / API Token\n(scoped to task)"]
+    readOnly["Read-Only Permissions\n(for reporting scripts)"]
+    writePerms["Write Permissions\n(only for change scripts)"]
+    auditLog["Audit Log\n(quarterly review)"]
+
+    script --&gt; svcAccount
+    svcAccount --&gt; iamRole
+    iamRole --&gt; readOnly
+    iamRole --&gt; writePerms
+    svcAccount --&gt; auditLog
+    iamRole --&gt; auditLog</code></pre>
 <h2 id="least-privilege">Least Privilege<a class="headerlink" href="#least-privilege" title="Permanent link">&para;</a></h2>
 <p>Automation scripts should run with the minimum permissions required to complete their task.</p>
 <ul>

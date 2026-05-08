@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#terraform-troubleshooting-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Troubleshooting Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#provider-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -781,6 +792,20 @@
 
 
 <h1 id="terraform-common-issues">Terraform — Common Issues<a class="headerlink" href="#terraform-common-issues" title="Permanent link">&para;</a></h1>
+<h2 id="terraform-troubleshooting-decision-flow">Terraform Troubleshooting Decision Flow<a class="headerlink" href="#terraform-troubleshooting-decision-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    failure["Terraform Error\nor Unexpected Behaviour"]
+    failure --&gt; errType{"Error category?"}
+    errType --&gt;|Provider auth| checkCreds["Check cloud credentials\naws sts get-caller-identity"]
+    checkCreds --&gt;|Invalid| fixCreds["Set AWS_ / ARM_\nenvironment variables"]
+    errType --&gt;|State locked| checkLock["Identify lock holder\n(error message shows lock ID)"]
+    checkLock --&gt;|Stale lock| forceUnlock["terraform force-unlock\n&lt;LOCK_ID&gt;"]
+    errType --&gt;|Resource exists in\nanother state| rmImport["terraform state rm\nthen terraform import"]
+    errType --&gt;|Provider version\nmismatch| initUpgrade["terraform init -upgrade\nupdate lock file"]
+    errType --&gt;|Cycle / dependency| graphCmd["terraform graph | dot\nvisualise dependency tree"]
+    errType --&gt;|Drift after apply| refreshOnly["terraform apply\n-refresh-only"]
+    errType --&gt;|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
+    enableDebug --&gt; reviewLog["Review provider\nAPI call trace"]</code></pre>
 <h2 id="provider-errors">Provider Errors<a class="headerlink" href="#provider-errors" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable detailed provider logging</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>DEBUG

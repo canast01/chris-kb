@@ -1023,6 +1023,28 @@
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                └── Distributed Device  (RAID-1 across two cluster legs — Metro only)
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                    └── Virtual Volume  (presented to hosts via storage views)
 </code></pre></div>
+<pre class="mermaid"><code>flowchart TD
+    subgraph "Site A — Cluster-1"
+        arrA["Array A LUN\n(PowerMax / Unity)"]
+        svA["Storage Volume\nVPLEX claims LUN"]
+        extA["Extent\nClaim on storage volume"]
+        ldA["Local Device\nRAID-0 (single extent)"]
+    end
+    subgraph "Site B — Cluster-2"
+        arrB["Array B LUN\n(PowerMax / Unity)"]
+        svB["Storage Volume"]
+        extB["Extent"]
+        ldB["Local Device"]
+    end
+    subgraph "Distributed Layer — Metro"
+        dd["Distributed Device\nRAID-1 across both legs"]
+        vv["Virtual Volume\nPresented to hosts"]
+        sv["Storage View\nHost HBA → FE port → vv"]
+    end
+
+    arrA --&gt; svA --&gt; extA --&gt; ldA --&gt; dd
+    arrB --&gt; svB --&gt; extB --&gt; ldB --&gt; dd
+    dd --&gt; vv --&gt; sv</code></pre>
 <h3 id="storage-volumes">Storage Volumes<a class="headerlink" href="#storage-volumes" title="Permanent link">&para;</a></h3>
 <p>Storage volumes are unclaimed back-end array LUNs visible to VPLEX back-end ports. VPLEX discovers them when zoning and array masking are correctly configured.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List back-end arrays visible to VPLEX</span>
@@ -1120,6 +1142,21 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart TD
+    inSync["in-sync\nBoth legs mirrored\nFull Metro redundancy"]
+    rebuilding["rebuilding\nResyncing after interruption\nI/O continues on both legs"]
+    degraded["degraded\nOne leg unreachable\nI/O on surviving leg only"]
+    detached["detached\nBoth legs disconnected\nI/O suspended"]
+    paused["paused\nAdmin-initiated pause"]
+
+    inSync --&gt;|"ICL interruption"| degraded
+    inSync --&gt;|"ICL + Witness both down"| detached
+    inSync --&gt;|"admin pause"| paused
+    degraded --&gt;|"ICL restored\nauto-resync"| rebuilding
+    degraded --&gt;|"Witness also lost"| detached
+    rebuilding --&gt;|"resync complete"| inSync
+    paused --&gt;|"admin resume"| inSync
+    detached --&gt;|"restore ICL + Witness\nmanual resume"| rebuilding</code></pre>
 <h3 id="virtual-volumes">Virtual Volumes<a class="headerlink" href="#virtual-volumes" title="Permanent link">&para;</a></h3>
 <p>Virtual volumes are the objects presented to hosts. They are created on top of a local device (for VPLEX Local) or a distributed device (for VPLEX Metro).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all virtual volumes</span>
@@ -1208,6 +1245,20 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart TD
+    arrayLUN["Back-end Array LUN"]
+    sv1["Storage Volume"]
+    ext1["Extent"]
+    ld1["Local Device"]
+    dd1["Distributed Device\n(Metro RAID-1)"]
+    vv1["Virtual Volume"]
+    storView["Storage View\nsv-db-prod-01"]
+    fabricZone["SAN Fabric Zone\nHost HBA ↔ VPLEX FE port"]
+    hostHBA["Host HBA WWN\nRegistered initiator port"]
+
+    arrayLUN --&gt; sv1 --&gt; ext1 --&gt; ld1 --&gt; dd1 --&gt; vv1 --&gt; storView
+    hostHBA --&gt; fabricZone --&gt; storView
+    storView --&gt;|"presents volume\nto host"| hostHBA</code></pre>
 <h3 id="storage-view-operations">Storage View Operations<a class="headerlink" href="#storage-view-operations" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List storage views on a cluster</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/storage-views&quot;</span>

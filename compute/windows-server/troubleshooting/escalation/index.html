@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#escalation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#opening-a-support-case" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,22 @@
 
 <h1 id="windows-server-escalation">Windows Server — Escalation<a class="headerlink" href="#windows-server-escalation" title="Permanent link">&para;</a></h1>
 <p>What to collect before opening a support case and how to engage vendor support.</p>
+<h2 id="escalation-flow">Escalation Flow<a class="headerlink" href="#escalation-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue["Issue cannot be\nresolved internally"]
+    sevA{"Production\ndown (Sev A)?"}
+    collectDiag["Collect diagnostics\nmsinfo32 · Event logs · ProcDump"]
+    phone["Call Microsoft\nUnified Support hotline"]
+    portal["Open case via portal\nsupport.microsoft.com"]
+    submit["Attach diagnostic data\nand submit"]
+    monitor["Monitor case\nrespond within SLA"]
+    escalateTAM["Escalate to TAM\nif no response"]
+
+    issue --&gt; sevA
+    sevA -- Yes --&gt; collectDiag --&gt; phone --&gt; submit
+    sevA -- No --&gt; collectDiag --&gt; portal --&gt; submit
+    submit --&gt; monitor
+    monitor --&gt;|"SLA breach"| escalateTAM</code></pre>
 <h2 id="opening-a-support-case">Opening a Support Case<a class="headerlink" href="#opening-a-support-case" title="Permanent link">&para;</a></h2>
 <p>Microsoft support portal: <a href="https://support.microsoft.com">support.microsoft.com</a></p>
 <p>For enterprise customers with Unified/Premier support: <a href="https://admin.microsoft.com">admin.microsoft.com</a> → Support → New Service Request</p>

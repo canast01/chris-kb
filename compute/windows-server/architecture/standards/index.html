@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#group-policy-processing-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group Policy Processing Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hostname-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -772,6 +783,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#windows-storage-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Storage Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#group-policy-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +826,16 @@
 
 <h1 id="windows-server-standards">Windows Server — Standards<a class="headerlink" href="#windows-server-standards" title="Permanent link">&para;</a></h1>
 <p>Sizing guidelines, design standards, and best practices.</p>
+<h2 id="group-policy-processing-order">Group Policy Processing Order<a class="headerlink" href="#group-policy-processing-order" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    localGPO["Local GPO\n(computer-level)"]
+    siteGPO["Site GPO\n(AD site-linked)"]
+    domainGPO["Domain GPO\n(domain-wide)"]
+    ouParentGPO["Parent OU GPO\nServers OU"]
+    ouChildGPO["Child OU GPO\nProduction\\SQL OU"]
+    applied["Final Applied\nEffective Policy\n(last writer wins)"]
+
+    localGPO --&gt; siteGPO --&gt; domainGPO --&gt; ouParentGPO --&gt; ouChildGPO --&gt; applied</code></pre>
 <h2 id="hostname-convention">Hostname Convention<a class="headerlink" href="#hostname-convention" title="Permanent link">&para;</a></h2>
 <p>Format: <code>&lt;env&gt;-&lt;function&gt;-&lt;nn&gt;</code></p>
 <table>
@@ -968,6 +1000,17 @@
 <li>[ ] Page file: system-managed or fixed on dedicated volume</li>
 <li>[ ] Server documented in CMDB</li>
 </ul>
+<h2 id="windows-storage-stack">Windows Storage Stack<a class="headerlink" href="#windows-storage-stack" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    appLayer["Application\nWin32 / .NET"]
+    win32api["Win32 API\nCreateFile · ReadFile"]
+    ntfs["NTFS\nfile system driver"]
+    partMgr["Partition Manager\ndisk.sys"]
+    storport["Storport\nstorage driver model"]
+    hba["HBA Driver\nFC / iSCSI / NVMe"]
+    storage["Storage\nSAN / Local Disk"]
+
+    appLayer --&gt; win32api --&gt; ntfs --&gt; partMgr --&gt; storport --&gt; hba --&gt; storage</code></pre>
 <h2 id="group-policy-baseline">Group Policy Baseline<a class="headerlink" href="#group-policy-baseline" title="Permanent link">&para;</a></h2>
 <p>All servers must receive the following GPO categories at minimum:</p>
 <table>

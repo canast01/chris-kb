@@ -699,6 +699,181 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-In Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-group-scoping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Group Scoping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resource Group Scoping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assign-a-user-to-a-resource-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assign a User to a Resource Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-resource-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Resource Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Accounts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Accounts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Service Account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#least-privilege-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least Privilege Guidance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-log-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log Review
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audit Log Review">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#access-review-procedure-quarterly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Review Procedure (Quarterly)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disabling-and-removing-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disabling and Removing Accounts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Disabling and Removing Accounts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disable-temporary-eg-leave-of-absence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable (Temporary, e.g. Leave of Absence)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-permanent-eg-offboarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete (Permanent, e.g. Offboarding)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +893,203 @@
 
 
 <h1 id="sannav-access-control">SANnav — Access Control<a class="headerlink" href="#sannav-access-control" title="Permanent link">&para;</a></h1>
-<p>Roles, permissions, and least privilege access.</p>
+<blockquote>
+<p>Part of the <a href="../../">SANnav</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SANnav RBAC is built around roles, resource groups, and optional scope restrictions. A user's effective access is the intersection of their role (what operations they can perform) and their resource group assignment (which fabrics and switches they can see).</p>
+<hr />
+<h2 id="built-in-roles">Built-In Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Description</th>
+<th>Typical Assignee</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SAN Admin</strong></td>
+<td>Full read/write access to all operations: zoning, firmware, user management, system settings</td>
+<td>SAN infrastructure lead</td>
+</tr>
+<tr>
+<td><strong>SAN Operator</strong></td>
+<td>Read/write for fabric operations (zoning, port config, firmware) but no user management or system settings</td>
+<td>SAN operations team</td>
+</tr>
+<tr>
+<td><strong>SAN Viewer</strong></td>
+<td>Read-only access to inventory, events, and dashboards</td>
+<td>Capacity team, helpdesk, audit</td>
+</tr>
+<tr>
+<td><strong>Security Admin</strong></td>
+<td>Manage users, roles, LDAP, and security settings; no fabric operations</td>
+<td>IT security team</td>
+</tr>
+<tr>
+<td><strong>Report Admin</strong></td>
+<td>Create, schedule, and download reports; no configuration access</td>
+<td>Reporting / management</td>
+</tr>
+</tbody>
+</table>
+<p>Custom roles are not supported in the base SANnav release; the built-in roles above cover most operational needs.</p>
+<hr />
+<h2 id="resource-group-scoping">Resource Group Scoping<a class="headerlink" href="#resource-group-scoping" title="Permanent link">&para;</a></h2>
+<p>SANnav organises switches and fabrics into resource groups. Users can be scoped to specific resource groups, restricting their visibility and operations to only the fabrics in their group.</p>
+<h3 id="assign-a-user-to-a-resource-group">Assign a User to a Resource Group<a class="headerlink" href="#assign-a-user-to-a-resource-group" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Administration &gt; User Management &gt; [Username]</strong>.</li>
+<li>Under <strong>Resource Group Access</strong>, click <strong>Add</strong>.</li>
+<li>Select the resource group (fabric) and the role to apply within it.</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<p>Example: a remote site operator can be given SAN Operator role on <code>SITE-B-FABRIC-A</code> only, with no visibility into other fabrics.</p>
+<h3 id="create-a-resource-group">Create a Resource Group<a class="headerlink" href="#create-a-resource-group" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Administration &gt; Resource Groups &gt; New Group</strong>.</li>
+<li>Name the group: <code>DC2-FABRIC-A</code>.</li>
+<li>Add switches to the group from the switch inventory.</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<hr />
+<h2 id="service-accounts">Service Accounts<a class="headerlink" href="#service-accounts" title="Permanent link">&para;</a></h2>
+<p>Service accounts are local accounts used by automation scripts, monitoring tools, and integrations. Follow these standards:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Naming</td>
+<td><code>svc-&lt;purpose&gt;</code> (e.g., <code>svc-monitor</code>, <code>svc-automation</code>)</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>Minimum required: <code>SAN Viewer</code> for read-only; <code>SAN Operator</code> for config pushes</td>
+</tr>
+<tr>
+<td>Password</td>
+<td>Stored in vault only; never in scripts or configuration files</td>
+</tr>
+<tr>
+<td>Password rotation</td>
+<td>Every 90 days; coordinated with automation owners</td>
+</tr>
+<tr>
+<td>Session tokens</td>
+<td>Scripts must call <code>/rest/logout</code> at completion to release sessions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="creating-a-service-account">Creating a Service Account<a class="headerlink" href="#creating-a-service-account" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Administration &gt; User Management &gt; Local Users &gt; New User</strong>.</li>
+<li>Username: <code>svc-monitor</code>.</li>
+<li>Role: <code>SAN Viewer</code>.</li>
+<li>Email: SAN team distribution list.</li>
+<li>Assign to required resource groups.</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<hr />
+<h2 id="least-privilege-guidance">Least Privilege Guidance<a class="headerlink" href="#least-privilege-guidance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Minimum Role</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View dashboards and inventory</td>
+<td>SAN Viewer</td>
+<td>Most helpdesk and capacity tasks</td>
+</tr>
+<tr>
+<td>Acknowledge / clear alerts</td>
+<td>SAN Operator</td>
+<td></td>
+</tr>
+<tr>
+<td>Create/modify/activate zones</td>
+<td>SAN Operator</td>
+<td>Two-person review recommended</td>
+</tr>
+<tr>
+<td>Firmware upgrade</td>
+<td>SAN Operator</td>
+<td>Requires change approval</td>
+</tr>
+<tr>
+<td>Add/remove switches</td>
+<td>SAN Admin</td>
+<td>Discovery operations</td>
+</tr>
+<tr>
+<td>Manage user accounts</td>
+<td>Security Admin</td>
+<td></td>
+</tr>
+<tr>
+<td>Configure LDAP / SSO</td>
+<td>Security Admin</td>
+<td></td>
+</tr>
+<tr>
+<td>Configure backup settings</td>
+<td>SAN Admin</td>
+<td></td>
+</tr>
+<tr>
+<td>View audit log</td>
+<td>SAN Admin or Security Admin</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="audit-log-review">Audit Log Review<a class="headerlink" href="#audit-log-review" title="Permanent link">&para;</a></h2>
+<p>All RBAC-relevant actions are logged:
+- User created / deleted / modified
+- Role assigned / removed
+- Resource group changed
+- Permission used (zone change, firmware push)</p>
+<p>Access audit log: <strong>Administration &gt; Audit Log</strong>. Filter by event category <strong>Authorization</strong> or <strong>User Management</strong>. Export to CSV for quarterly access reviews.</p>
+<h3 id="access-review-procedure-quarterly">Access Review Procedure (Quarterly)<a class="headerlink" href="#access-review-procedure-quarterly" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Export the user list: <strong>Administration &gt; User Management &gt; Export</strong>.</li>
+<li>Export the audit log for the past 90 days: <strong>Administration &gt; Audit Log &gt; Export</strong>.</li>
+<li>For each user:</li>
+<li>Confirm the user is still employed and in the correct role</li>
+<li>Confirm the user has logged in within the past 90 days (inactive accounts should be disabled)</li>
+<li>Confirm service accounts are still in use by active integrations</li>
+<li>Disable any accounts that no longer require access.</li>
+<li>Document the review results in the change management system.</li>
+</ol>
+<hr />
+<h2 id="disabling-and-removing-accounts">Disabling and Removing Accounts<a class="headerlink" href="#disabling-and-removing-accounts" title="Permanent link">&para;</a></h2>
+<h3 id="disable-temporary-eg-leave-of-absence">Disable (Temporary, e.g. Leave of Absence)<a class="headerlink" href="#disable-temporary-eg-leave-of-absence" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Administration &gt; User Management &gt; [Username]</strong>.</li>
+<li>Toggle <strong>Account Status</strong> to <strong>Disabled</strong>.</li>
+<li>Click <strong>Save</strong>. The user cannot log in but the account and its configuration remain.</li>
+</ol>
+<h3 id="delete-permanent-eg-offboarding">Delete (Permanent, e.g. Offboarding)<a class="headerlink" href="#delete-permanent-eg-offboarding" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Administration &gt; User Management &gt; [Username]</strong>.</li>
+<li>Click <strong>Delete</strong>.</li>
+<li>Confirm deletion. Any scheduled reports owned by this user will need to be reassigned.</li>
+</ol>
+<p>For LDAP-authenticated users: removing the user from the AD group is sufficient to prevent access. SANnav does not cache group membership; the next login attempt will fail. No SANnav-side deletion is required unless the account was also created locally.</p>
 
 
 

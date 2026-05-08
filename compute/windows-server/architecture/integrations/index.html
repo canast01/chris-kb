@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ad-dns-dependency-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AD / DNS Dependency Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#active-directory-domain-join" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -743,6 +754,17 @@
     <span class="md-ellipsis">
       
         Backup Agent Deployment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rdp-winrm-session-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDP / WinRM Session Flow
       
     </span>
   </a>
@@ -804,6 +826,22 @@
 
 <h1 id="windows-server-integrations">Windows Server — Integrations<a class="headerlink" href="#windows-server-integrations" title="Permanent link">&para;</a></h1>
 <p>Integration with other platforms and external systems.</p>
+<h2 id="ad-dns-dependency-diagram">AD / DNS Dependency Diagram<a class="headerlink" href="#ad-dns-dependency-diagram" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    client["Windows Client / Server"]
+    dns["DNS Server\n(DC-hosted)"]
+    dc["Domain Controller\nAD DS · Kerberos KDC · LDAP"]
+    gc["Global Catalog\nforest-wide object search"]
+    netlogon["Netlogon Service\nDC locator · secure channel"]
+    sysvol["SYSVOL Share\nGPO files · scripts"]
+
+    client --&gt;|"DNS query for DC SRV"| dns
+    dns --&gt;|"returns DC address"| client
+    client --&gt;|"Kerberos / LDAP"| dc
+    dc --- gc
+    dc --- netlogon
+    dc --- sysvol
+    client --&gt;|"GPO download"| sysvol</code></pre>
 <h2 id="active-directory-domain-join">Active Directory Domain Join<a class="headerlink" href="#active-directory-domain-join" title="Permanent link">&para;</a></h2>
 <p>All Windows Server systems are domain-joined during provisioning:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Domain join with OU placement</span>
@@ -856,6 +894,21 @@
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;NetBackup Client Service&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files\Veritas\NetBackup\bin\bpclntcmd.exe&quot;</span> <span class="n">-self</span>   <span class="c"># Show NBU version</span>
 </code></pre></div></p>
+<h2 id="rdp-winrm-session-flow">RDP / WinRM Session Flow<a class="headerlink" href="#rdp-winrm-session-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant admin as Admin Workstation
+    participant jump as Jump Server
+    participant target as Target Server
+    participant ad as Active Directory
+
+    admin-&gt;&gt;jump: RDP to jump server (port 3389)
+    jump-&gt;&gt;ad: Kerberos authentication
+    ad--&gt;&gt;jump: TGT issued
+    jump-&gt;&gt;target: RDP session (port 3389)
+    target-&gt;&gt;ad: Validate Kerberos ticket
+    ad--&gt;&gt;target: Ticket valid
+    target--&gt;&gt;jump: Desktop session granted
+    jump--&gt;&gt;admin: Proxied session</code></pre>
 <h2 id="iscsi-mpio-configuration">iSCSI / MPIO Configuration<a class="headerlink" href="#iscsi-mpio-configuration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># iSCSI Initiator — add target portal and connect</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$iqn</span> <span class="p">=</span> <span class="s2">&quot;iqn.1992-04.com.emc:storage.powermax01&quot;</span>

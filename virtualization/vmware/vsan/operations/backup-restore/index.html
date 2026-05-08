@@ -897,6 +897,26 @@
 <h2 id="backup-strategy-for-vsan">Backup Strategy for vSAN<a class="headerlink" href="#backup-strategy-for-vsan" title="Permanent link">&para;</a></h2>
 <p>vSAN provides resiliency (FTT policy, RAID-1/5/6) but resiliency is not backup. A storage policy with FTT=1 protects against a single host or disk failure — it does not protect against accidental deletion, VM corruption, ransomware, or a full cluster failure.</p>
 <p><strong>Required protection layers:</strong></p>
+<pre class="mermaid"><code>graph TD
+    workload["VM Workloads\non vSAN"]
+
+    ftt["vSAN FTT Policy\n(RAID-1/5/6)\nProtects: hardware failure"]
+    backup["External Backup\n(Veeam / Commvault / VADP)\nProtects: deletion, corruption,\nransomware"]
+    dr["DR / Stretched Cluster\nor vSAN HCI Mesh\nProtects: site-level failure"]
+    snap["vSphere Snapshot\n(short-term only)\nNOT a substitute for backup"]
+
+    workload --&gt; ftt
+    workload --&gt; backup
+    workload --&gt; dr
+    workload -.-&gt;|"limited scope"| snap
+
+    classDef good fill:#15803d,stroke:#166534,color:#fff
+    classDef limited fill:#b45309,stroke:#92400e,color:#fff
+    classDef vm fill:#2563eb,stroke:#1d4ed8,color:#fff
+
+    class ftt,backup,dr good
+    class snap limited
+    class workload vm</code></pre>
 <table>
 <thead>
 <tr>
