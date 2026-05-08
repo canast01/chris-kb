@@ -19,36 +19,121 @@ vCenter uses a privilege-based permission model. Permissions are assigned as: **
 
 ### Permission Scopes
 
-- **Global Permission**: Applies across all vCenter instances in the SSO domain; use sparingly
+- **Global Permission**: Applies across all vCenter instances in the SSO domain; use sparingly — it overrides all inventory-level restrictions
 - **Inventory Permission**: Applied at datacenter, cluster, folder, or individual object level
-- **Propagation**: Check "Propagate to children" to apply down the hierarchy
+- **Propagation**: "Propagate to children" applies the permission to all objects in that subtree; uncheck only when you need to isolate a specific object
 
-### Custom Roles
+### Permission Evaluation Order
+
+vCenter evaluates permissions from the most specific object upward. A `No Access` role on a VM overrides an `Administrator` role on the parent cluster. Global permissions are evaluated last and can override inventory permissions if the user has no other permission set.
+
+---
+
+## Custom Roles
 
 Create custom roles for least-privilege: **Administration → Roles → New**
 
-Common custom role patterns:
-- **Backup Operator**: Snapshot + datastore browse + VM config (VADP minimum)
-- **VM Operator**: Power operations + console + snapshot; no host/network/storage access
-- **Monitoring Reader**: Read-only + performance counters
-- **NSX Integration Service Account**: Specific host/network privileges for NSX compute manager
+### Common Custom Role Patterns
+
+**Backup Operator** — minimum privileges for VADP-based backup:
+```
+VirtualMachine.Interact.CreateScreenshot
+VirtualMachine.State.CreateSnapshot
+VirtualMachine.State.RemoveSnapshot
+VirtualMachine.State.RevertToSnapshot
+VirtualMachine.Config.DiskLease
+Datastore.Browse
+Datastore.FileManagement
+Global.DisableMethods
+Global.EnableMethods
+```
+
+**VM Operator** — day-to-day VM management without storage or host access:
+```
+VirtualMachine.Interact.PowerOn
+VirtualMachine.Interact.PowerOff
+VirtualMachine.Interact.Reset
+VirtualMachine.Interact.ConsoleInteract
+VirtualMachine.GuestOperations.*
+VirtualMachine.State.CreateSnapshot
+VirtualMachine.State.RemoveSnapshot
+```
+
+**Read-Only + Performance** — monitoring access including performance counters:
+```
+System.Read
+System.Anonymous
+System.View
+Performance.ModifyIntervals (optional, for custom stat intervals)
+```
+
+**NSX Integration Service Account**:
+```
+Host.Config.Network
+Host.Config.Patch
+Host.Inventory.EditCluster
+Network.*
+VirtualMachine.Config.Network
+```
+
+---
 
 ## SSO Domain and Identity Sources
 
-vCenter ships with a local `vsphere.local` SSO domain. The `administrator@vsphere.local` account is the bootstrap admin. In production:
+vCenter ships with a local `vsphere.local` SSO domain. The `administrator@vsphere.local` account is the bootstrap admin.
 
-- Add AD as an identity source
-- Grant required AD groups vSphere roles
-- Do not use `administrator@vsphere.local` for day-to-day operations
-- Rotate `administrator@vsphere.local` password per policy; document in password vault
+### Production Identity Source Configuration
+
+Navigate to **Administration → Single Sign On → Configuration → Identity Sources → Add**:
+
+| Field | Value |
+|---|---|
+| Type | Active Directory (Integrated Windows Authentication) or LDAP |
+| Domain name | `corp.example.com` |
+| Domain alias | `CORP` |
+| LDAP URL | `ldaps://dc01.corp.example.com:636` |
+| Base DN (users) | `DC=corp,DC=example,DC=com` |
+| Base DN (groups) | `DC=corp,DC=example,DC=com` |
+| Username | `svc-vcenter-ldap@corp.example.com` |
+| Password | (service account password) |
+
+Always use LDAPS (port 636) rather than LDAP (port 389) to encrypt credentials and directory queries in transit.
+
+### Service Account Best Practices
+
+The LDAP bind account needs only read-only access to AD:
+```powershell
+# Create a restricted service account in AD (PowerShell on DC)
+New-ADUser -Name "svc-vcenter-ldap" -SamAccountName "svc-vcenter-ldap" `
+    -UserPrincipalName "svc-vcenter-ldap@corp.example.com" `
+    -Path "OU=Service Accounts,DC=corp,DC=example,DC=com" `
+    -AccountPassword (ConvertTo-SecureString "P@ssw0rd123!" -AsPlainText -Force) `
+    -Enabled $true -PasswordNeverExpires $true
+
+# Deny all group memberships except Domain Users
+# Delegate only Read to the Users OU
+```
+
+### Administrator@vsphere.local
+
+- Do **not** use for day-to-day operations — use named AD accounts
+- Rotate the password quarterly; store in password vault with break-glass procedure
+- Monitor for any logins using this account (set SIEM alert on principal = `administrator@vsphere.local`)
+- The account cannot be deleted; it is the last-resort access when AD integration fails
+
+---
 
 ## Audit Logging — Access Events
 
 ### vCenter Events and Tasks
 
-All configuration changes in vCenter generate events viewable at **Monitor → Events**. Events are stored in the PostgreSQL database. Default retention: 30 days for tasks, 30 days for events. Adjust at **Administration → vCenter Server Settings → Statistics**.
+All configuration changes in vCenter generate events viewable at **Monitor → Events**. Events are stored in the PostgreSQL database. Default retention: 30 days for tasks, 30 days for events.
 
-### Syslog Forwarding
+Adjust retention at **Administration → vCenter Server Settings → Statistics**:
+- Maximum event age: 90 days (recommended for audit purposes)
+- Maximum task age: 90 days
+
+### Syslog Forwarding to SIEM
 
 Forward vCenter audit events to SIEM/syslog aggregator:
 
@@ -58,7 +143,20 @@ Protocol: TLS (preferred) / UDP / TCP
 Port: 514 (UDP), 6514 (TLS)
 ```
 
-Events forwarded include: login/logout, permission changes, VM creation/deletion, host add/remove.
+Events forwarded include: login/logout, permission changes, VM creation/deletion, host add/remove, task success/failure.
+
+Key event types for SIEM alerting:
+
+| Event | Description |
+|---|---|
+| `com.vmware.sso.LoginFailure` | Failed SSO login attempt |
+| `com.vmware.sso.LoginSuccess` | Successful login |
+| `vim.event.UserLoginSessionEvent` | User session established |
+| `vim.event.PermissionAddedEvent` | Permission granted |
+| `vim.event.PermissionRemovedEvent` | Permission revoked |
+| `vim.event.RoleAddedEvent` | New role created |
+| `vim.event.VMPoweredOffEvent` | VM powered off |
+| `vim.event.HostRemovedEvent` | Host removed from inventory |
 
 ### Alarms for Security Events
 
@@ -68,103 +166,122 @@ Create vCenter alarms for:
 - Certificate expiry (< 30 days)
 - SSH enabled on ESXi host
 
+---
+
 ## PowerCLI — Permission Management
 
 ```powershell
-# List all permissions
+# List all permissions in the environment
 Get-VIPermission
 
-# Permissions for a specific user
-Get-VIPermission | Where-Object { $_.Principal -eq "<domain>\<user>" }
+# Permissions for a specific user or group
+Get-VIPermission | Where-Object { $_.Principal -eq "CORP\jsmith" }
+Get-VIPermission | Where-Object { $_.Principal -match "vsphere.local" }
 
-# Assign a role
+# Assign a role to a user at the datacenter level (propagates to all children)
 New-VIPermission `
-    -Entity (Get-Datacenter "<dc_name>") `
-    -Principal "<domain>\<user>" `
-    -Role (Get-VIRole "ReadOnly") `
+    -Entity (Get-Datacenter "DC-LON") `
+    -Principal "CORP\grp-vcenter-ops" `
+    -Role (Get-VIRole "VM Operator") `
+    -Propagate:$true
+
+# Assign a role to a group at cluster scope only
+New-VIPermission `
+    -Entity (Get-Cluster "CL-LON-PROD") `
+    -Principal "CORP\grp-app-team" `
+    -Role (Get-VIRole "Virtual Machine User") `
     -Propagate:$true
 
 # Remove a permission
-Get-VIPermission -Entity (Get-VM "<vm_name>") |
-    Where-Object { $_.Principal -eq "<domain>\<user>" } |
+Get-VIPermission -Entity (Get-Datacenter "DC-LON") |
+    Where-Object { $_.Principal -eq "CORP\jsmith" } |
     Remove-VIPermission -Confirm:$false
+
+# Create a custom role with specific privileges
+$privs = Get-VIPrivilege -Id "VirtualMachine.Interact.PowerOn",
+    "VirtualMachine.Interact.PowerOff",
+    "VirtualMachine.State.CreateSnapshot",
+    "VirtualMachine.State.RemoveSnapshot"
+New-VIRole -Name "VM-Operator-Custom" -Privilege $privs
 
 # Audit: export all permissions to CSV
 Get-VIPermission | Select-Object Entity, Principal, Role, IsGroup, Propagate |
-    Export-Csv -Path vcenter_permissions.csv -NoTypeInformation
+    Export-Csv -Path vcenter_permissions_$(Get-Date -Format yyyyMMdd).csv -NoTypeInformation
 
-# Identify users with Administrator role
+# Identify all principals with Administrator role
 Get-VIPermission | Where-Object { $_.Role -eq "Admin" } |
-    Select-Object Entity, Principal, Propagate
+    Select-Object Entity, Principal, IsGroup, Propagate |
+    Format-Table -AutoSize
+
+# Identify users with global permissions
+Get-VIPermission -Global | Select-Object Principal, Role, IsGroup
 ```
 
-## vCenter Roles RBAC Reference (from roles-permissions)
+---
 
-vCenter RBAC, roles, groups, permissions, access reviews, and least privilege cleanup.
+## Service Account Inventory
 
-### Access Review Checklist
+Maintain a registry of all service accounts that have vCenter permissions:
 
-| Check | Notes |
+| Account | Purpose | Role | Scope | Owner | Review Date |
+|---|---|---|---|---|---|
+| `svc-vcenter-ldap` | AD identity source bind | None (read-only AD) | AD only | Platform team | Quarterly |
+| `svc-veeam-backup` | Veeam VADP backup | Backup Operator (custom) | Datacenter | Backup team | Quarterly |
+| `svc-nsx-compute` | NSX compute manager | NSX Integration (custom) | Datacenter | Network team | Quarterly |
+| `svc-aria-ops` | Aria Operations adapter | Read-Only | Root | Platform team | Quarterly |
+| `svc-ansible` | Automation | VM Operator (custom) | Specific clusters | Automation team | Quarterly |
+
+Review service account access quarterly. Disable accounts for decommissioned services immediately.
+
+---
+
+## Access Review Procedure
+
+Run quarterly or after any team change, project completion, or security incident.
+
+```powershell
+# Export current permission state
+Get-VIPermission | Select-Object Entity, Principal, Role, IsGroup, Propagate |
+    Export-Csv -Path vcenter_permissions_review_$(Get-Date -Format yyyyMMdd).csv -NoTypeInformation
+
+# Find any non-group (individual user) permissions — should be rare in production
+Get-VIPermission | Where-Object { -not $_.IsGroup } |
+    Select-Object Entity, Principal, Role, Propagate
+
+# Find permissions at VM level (overly specific, usually a mistake)
+Get-VM | ForEach-Object {
+    Get-VIPermission -Entity $_ | Where-Object { $_.Principal -notmatch "SYSTEM" }
+} | Select-Object Entity, Principal, Role
+
+# Check for stale permissions from deprovisioned accounts
+# Compare against current AD group members
+```
+
+Access review checklist:
+
+| Check | Action |
 |---|---|
-| Review active alarms | Identify anomalous activity |
-| Check recent failed tasks | Flag permission-related failures |
-| Confirm service health | Verify no unauthorised changes |
-| Review recent permission or inventory changes | Monitor → Events → filter on permission events |
-| Confirm ownership and support notes | Ensure accounts have owners documented |
-| Validate dependencies | Confirm service accounts still valid |
+| All Administrator-role holders | Verify each is still current staff and still needs admin |
+| Service accounts | Verify each account is active and used by its documented system |
+| Global permissions | Verify none added without approval; remove any that can be scoped |
+| No Access roles | Verify intent — remove if no longer needed |
+| Permissions on individual VMs | Consolidate to folder or cluster level |
+| AD groups | Verify group membership is current; remove departed staff |
 
-## Roles and Permissions
+---
 
-vCenter RBAC, roles, groups, permissions, access reviews, and least privilege cleanup.
+## Lockout and Break-Glass
 
-### Daily Checks
-
-| Check | Command | Notes |
-|---|---|---|
-| Review active alarms. |  |  |
-| Check recent failed tasks. |  |  |
-| Confirm service health. |  |  |
-| Confirm capacity and performance are normal. |  |  |
-| Check recent changes. |  |  |
-
-### Health Commands
+If `administrator@vsphere.local` is locked out:
 
 ```bash
-# Add environment-specific commands here
+# SSH to VCSA as root
+/usr/lib/vmware-vmafd/bin/dir-cli user unlock \
+    --account administrator \
+    --domain vsphere.local \
+    --password <vmdir-admin-password>
 ```
 
-### Common Issues
+If the root password is unknown, use the VCSA VM console (via ESXi DCUI) to boot into single-user mode and reset it — documented in VMware KB 2069041.
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
-
-### Operational Tasks
-
-| Task | Command |
-|---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
-
-### Upgrade Notes
-
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
-
-### Best Practices
-
-| Recommendation | Detail |
-|---|---|
-| Keep naming consistent. | Keep naming consistent. |
-| Keep versions aligned. | Keep versions aligned. |
-| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
-| Document exceptions. | Document exceptions. |
-| Validate after every change. | Validate after every change. |
+Store the break-glass password for `administrator@vsphere.local` in an offline vault (e.g., printed and sealed, or HSM-backed secrets manager) separate from the primary password manager. The break-glass procedure must be documented and tested annually.

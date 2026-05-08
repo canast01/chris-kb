@@ -300,56 +300,59 @@ df -h
 
 ## Alarms and Events
 
-Alarm review, event history, alert tuning, noise reduction, and useful operational signals.
+### Finding the Right Alarm or Event
 
-### Daily Checks
+vCenter alarms are visible under the **Alarms** tab on any inventory object (datacenter, cluster, host, VM). Triggered alarms surface the affected object, the alarm definition, and the time of the trigger.
 
-| Check | Command | Notes |
-|---|---|---|
-| Review active alarms. |  |  |
-| Check recent failed tasks. |  |  |
-| Confirm service health. |  |  |
-| Confirm capacity and performance are normal. |  |  |
-| Check recent changes. |  |  |
+```powershell
+# List all VMs with active triggered alarms
+Get-VM | Where-Object { $_.ExtensionData.TriggeredAlarmState.Count -gt 0 } |
+    Select-Object Name, @{N="AlarmCount";E={$_.ExtensionData.TriggeredAlarmState.Count}}
 
-### Health Commands
+# Get alarm details for a specific VM
+$vm = Get-VM "app-server-01"
+$vm.ExtensionData.TriggeredAlarmState | ForEach-Object {
+    [PSCustomObject]@{
+        Alarm = $_.Alarm.ToString()
+        Status = $_.OverallStatus
+        Time = $_.Time
+    }
+}
 
-```bash
-# Add environment-specific commands here
+# Acknowledge all alarms on a specific host
+$host = Get-VMHost "esxi-01.corp.local"
+$host.ExtensionData.TriggeredAlarmState | ForEach-Object {
+    $alarmMgr = Get-View AlarmManager
+    $alarmMgr.AcknowledgeAlarm($_.Alarm, $host.ExtensionData.MoRef)
+}
 ```
 
-### Common Issues
+### Filtering Events by Type and Time
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+```powershell
+# All error-level events in the last 24 hours
+Get-VIEvent -Start (Get-Date).AddHours(-24) |
+    Where-Object { $_.GetType().Name -match "Error|Fault" } |
+    Select-Object CreatedTime, UserName, FullFormattedMessage |
+    Sort-Object CreatedTime -Descending
 
-### Operational Tasks
+# Events for a specific cluster
+Get-VIEvent -Entity (Get-Cluster "CL-LON-PROD") -MaxSamples 200 |
+    Select-Object CreatedTime, UserName, FullFormattedMessage
 
-| Task | Command |
-|---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
+# Login/logout events
+Get-VIEvent -MaxSamples 500 |
+    Where-Object { $_.GetType().Name -match "Login|Logout" } |
+    Select-Object CreatedTime, UserName, FullFormattedMessage
+```
 
-### Upgrade Notes
+### Common Alarm Noise and Tuning
 
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
+| Alarm | Common False Positive Cause | Tuning Action |
+|---|---|---|
+| Host memory usage > threshold | Memory balloon during low activity | Raise threshold to 85% or add host-level override |
+| Datastore disk usage > threshold | Snapshot growth or thin-provisioning | Set threshold to 80%; alert on trend not point-in-time |
+| Virtual machine CPU ready > threshold | Low-vCPU-count VMs in high-density clusters | Tune threshold per workload type |
+| SSH enabled on host | Break-glass or maintenance | Add suppression or use alarm action to auto-disable SSH after X hours |
 
-### Best Practices
-
-| Recommendation | Detail |
-|---|---|
-| Keep naming consistent. | Keep naming consistent. |
-| Keep versions aligned. | Keep versions aligned. |
-| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
-| Document exceptions. | Document exceptions. |
-| Validate after every change. | Validate after every change. |
+Alarm definitions are managed at **vCenter → Configure → Alarm Definitions**. Each alarm has configurable thresholds, trigger conditions, and actions (send email, run script, send SNMP trap).

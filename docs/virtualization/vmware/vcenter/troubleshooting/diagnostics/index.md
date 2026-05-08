@@ -2,356 +2,321 @@
 
 ## Service Health
 
-### Appliance Management Interface
+### Appliance Management Interface (VAMI)
 
-- Log into the VCSA Appliance Management Interface (VAMI) at `https://<vcenter>:5480`
-- Check CPU, memory, and disk usage
-- Confirm all services are shown as healthy
+Log into `https://<vcenter>:5480` to get an immediate overview:
+- **Summary** tab — CPU, memory, disk usage per partition
+- **Services** tab — status of every vCenter service (started/stopped)
+- **Monitor** tab — resource utilisation graphs
+- **Networking** tab — confirm IP, DNS, and hostname
 
-### Checking Service Status
+### Service Status from Shell
 
 ```bash
-# SSH to vCenter, then:
-service-control --status
+# SSH to VCSA as root or as a user with shell access
+
+# Summary of all services
+service-control --status --all
+
+# Individual service checks
+service-control --status vpxd              # core vCenter daemon
+service-control --status vmware-vpostgres  # embedded PostgreSQL
+service-control --status vmware-stsd       # SSO token service
+service-control --status vmware-sts-idmd   # SSO identity management daemon
+service-control --status vmware-lookupsvc  # service registry / lookup service
+service-control --status applmgmt          # VAMI (port 5480)
+service-control --status vsphere-ui        # vSphere Client (HTML5 UI)
+service-control --status vmware-eam        # ESX Agent Manager
+
+# Alternative — vmon-cli (more granular)
+vmon-cli --list
+vmon-cli --status vpxd
 ```
 
 ### Disk Partition Usage
+
+Full partitions are the most common cause of cascading vCenter failures. Check before and after any service restart.
 
 ```bash
 df -h
 ```
 
-Key partitions to monitor:
-- `/storage/log` — fills quickly during issues
-- `/storage/db` — vCenter database
-- `/storage/core` — core appliance data
+Key partitions:
 
-### SSO and Lookup Service Health
-
-- Confirm SSO is running: `service-control --status vmware-sts`
-- Confirm Lookup Service: `service-control --status vmware-lookupsvc`
-- Confirm Identity Management: `service-control --status vmware-eam`
-
-### Certificate-Related Failures
-
-- Browser certificate warning usually means the machine SSL cert is expired
-- Login failures with SSO errors often point to the STS certificate
-- Check certificate expiration in VAMI → Certificate Management
-
-### DNS and NTP Validation
-
-```bash
-# Check DNS from vCenter appliance shell
-nslookup <vcenter-fqdn>
-dig <vcenter-fqdn>
-
-# Check NTP status
-timedatectl
-```
-
-### Restarting Services Safely
-
-Only restart services after checking disk space and reviewing recent changes.
-
-```bash
-service-control --restart --all
-```
-
-> Restart one service at a time where possible. A full restart causes brief vCenter unavailability.
-
-### When to Restore from Backup
-
-- Corrupt database
-- STS certificate failure that cannot be resolved in place
-- Multi-service failure with no clear root cause
-- Disk partition full with no recovery path
-
-### Evidence to Collect Before Escalation
-
-- `df -h` output
-- `service-control --status` output
-- Screenshots of VAMI health
-- Recent vCenter events and tasks
-- Support bundle from VAMI
-
-## Tasks and Failures
-
-### Overview
-
-Failed tasks, stuck tasks, event review, job ownership, and first-pass triage.
-
-### Daily Checks
-
-| Check | Command | Notes |
+| Partition | Purpose | Alert Threshold |
 |---|---|---|
-| Review active alarms. |  |  |
-| Check recent failed tasks. |  |  |
-| Confirm service health. |  |  |
-| Confirm capacity and performance are normal. |  |  |
-| Check recent changes. |  |  |
+| `/storage/log` | vCenter and service logs | 80% |
+| `/storage/db` | vCenter PostgreSQL database | 80% |
+| `/storage/core` | Core appliance data, config | 80% |
+| `/storage/seat` | Stats, events, alarms, and tasks DB | 80% |
+| `/` | Root filesystem | 85% |
 
-### Health Commands
-
+Clearing `/storage/log`:
 ```bash
-# Add environment-specific commands here
+# Find large log files
+du -sh /var/log/vmware/*/
+du -sh /storage/log/*/
+
+# Remove compressed old logs (safe to delete)
+find /var/log/vmware -name "*.gz" -mtime +30 -delete
+find /storage/log -name "*.gz" -mtime +30 -delete
+
+# Do NOT delete active .log files — truncate if critically full
+> /var/log/vmware/vpxd/vpxd.log   # last resort; only if vpxd is stopped
 ```
 
-### Common Issues
+---
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+## Log Locations
 
-### Operational Tasks
+All logs are on the VCSA appliance at `/var/log/vmware/` or in `/storage/log/vmware/`.
 
-| Task | Command |
+| Component | Primary Log Path |
 |---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
+| vpxd (core vCenter) | `/var/log/vmware/vpxd/vpxd.log` |
+| vpxd-profiler | `/var/log/vmware/vpxd/vpxd-profiler.log` |
+| vSphere Client | `/var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log` |
+| SSO identity daemon | `/var/log/vmware/sso/vmware-sts-idmd.log` |
+| SSO admin server | `/var/log/vmware/sso/ssoAdminServer.log` |
+| vAPI endpoint | `/var/log/vmware/vapi/endpoint.log` |
+| Appliance mgmt (VAMI) | `/var/log/vmware/applmgmt/applmgmt.log` |
+| Upgrade / patching | `/var/log/vmware/applmgmt/software-packages.log` |
+| Certificate manager | `/var/log/vmware/vmcad/certificate-manager.log` |
+| PostgreSQL | `/var/log/vmware/vpostgres/postgresql-*.log` |
+| vmdird (LDAP/vmdir) | `/var/log/vmware/vmdird/vmdird-syslog.log` |
+| Lookup service | `/var/log/vmware/lookupsvc/lookup-service.log` |
+| ESX Agent Manager | `/var/log/vmware/eam/eam.log` |
+| rhttpproxy (reverse proxy) | `/var/log/vmware/rhttpproxy/rhttpproxy.log` |
 
-### Upgrade Notes
+### Tailing Logs in Real Time
 
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
+```bash
+# Watch vpxd for errors during a service restart or incident
+tail -f /var/log/vmware/vpxd/vpxd.log
 
-### Best Practices
+# Filter for error-level messages only
+tail -f /var/log/vmware/vpxd/vpxd.log | grep -i "error\|fatal\|panic"
 
-| Recommendation | Detail |
-|---|---|
-| Keep naming consistent. | Keep naming consistent. |
-| Keep versions aligned. | Keep versions aligned. |
-| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
-| Document exceptions. | Document exceptions. |
-| Validate after every change. | Validate after every change. |
+# SSO login failures
+tail -f /var/log/vmware/sso/vmware-sts-idmd.log | grep -i "fail\|error\|bind"
+
+# Certificate operations
+tail -f /var/log/vmware/vmcad/certificate-manager.log
+```
+
+---
+
+## DNS and NTP Validation
+
+DNS and NTP failures cascade into certificate, SSO, and agent failures. Validate these first during any incident.
+
+```bash
+# Forward DNS — vCenter must resolve its own FQDN
+nslookup vcenter.corp.local
+dig vcenter.corp.local
+
+# Reverse DNS — must resolve back to the FQDN
+nslookup <vcenter-ip>
+
+# Test ESXi host resolution from vCenter
+nslookup esxi-01.corp.local
+
+# NTP status on the appliance
+timedatectl
+chronyc sources -v    # if chrony is the NTP client
+chronyc tracking
+
+# Check time offset against NTP servers
+chronyc makestep      # force immediate sync (use carefully in production)
+```
+
+NTP drift over 5 minutes breaks Kerberos authentication, causing SSO login failures for AD-backed accounts. If clocks are skewed, fix NTP and allow time to resync before investigating SSO issues.
+
+---
 
 ## Certificate Checks
 
-### Overview
+```bash
+# Check Machine SSL certificate expiry from outside the VCSA
+echo | openssl s_client -connect vcenter.corp.local:443 \
+    -servername vcenter.corp.local 2>/dev/null \
+    | openssl x509 -noout -dates
 
-Use this section to check vCenter certificate health, expiration risk, and renewal readiness.
+# Check VAMI certificate
+echo | openssl s_client -connect vcenter.corp.local:5480 2>/dev/null \
+    | openssl x509 -noout -dates
 
-### Pre-Checks
+# List all certificate stores on VCSA
+/usr/lib/vmware-vmafd/bin/vecs-cli store list
 
-- Confirm scope.
-- Confirm maintenance window if changes are planned.
-- Confirm current health.
-- Check recent alerts and tasks.
-- Confirm access to management tools.
-- Confirm rollback path if configuration changes are made.
+# List certificates in the Machine SSL store with expiry
+/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT --text \
+    | grep -E "Alias|Subject|Not After"
 
-### Steps
+# List VMCA root certificate
+/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS --text \
+    | grep -E "Alias|Subject|Not After"
 
-1. Identify the affected object.
-2. Capture current state.
-3. Review alarms, logs, and recent changes.
-4. Apply the planned action.
-5. Validate service health.
-6. Record notes and follow-up items.
+# List solution user certificates
+/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store vpxd-extension --text \
+    | grep -E "Alias|Not After"
+```
 
-### Validation
+Check certificate expiry in VAMI: **`https://<vcenter>:5480` → Certificate Management**. The UI shows all certificates with expiry dates and a renewal button.
 
-- Confirm the object is healthy.
-- Confirm no new critical alarms.
-- Confirm monitoring reflects the expected state.
-- Confirm related systems still have access.
-- Document the result.
+---
 
-### Rollback
+## SSO and Identity Source Diagnostics
 
-- Revert the changed setting if possible.
-- Restore prior configuration from documented state.
-- Escalate if rollback requires vendor support.
+```bash
+# SSO service health
+service-control --status vmware-stsd
+service-control --status vmware-sts-idmd
 
-### Notes
+# SSO domain info
+/usr/lib/vmware-vmafd/bin/vmafd-cli get-domain-name --server-name localhost
 
-Keep screenshots, task IDs, error messages, and timestamps with the change or incident record.
+# Lookup service endpoint
+/usr/lib/vmware-vmafd/bin/vmafd-cli get-ls-location --server-name localhost
 
-## Service Health Checks
+# Test LDAP connectivity to AD domain controller from VCSA
+ldapsearch -x \
+    -H ldaps://dc01.corp.local:636 \
+    -b "DC=corp,DC=local" \
+    -D "svc-vcenter-ldap@corp.local" \
+    -W \
+    "(objectClass=*)" dn
 
-### Overview
+# Check vmdir (embedded LDAP for vsphere.local) health
+/usr/lib/vmware-vmafd/bin/dir-cli ssogroup list --login administrator@vsphere.local
+```
 
-Use this section to review core vCenter service health, task failures, and management plane availability.
+---
 
-### Pre-Checks
+## vCenter API Health Check
 
-- Confirm scope.
-- Confirm maintenance window if changes are planned.
-- Confirm current health.
-- Check recent alerts and tasks.
-- Confirm access to management tools.
-- Confirm rollback path if configuration changes are made.
+```bash
+# Authenticate and get a session token
+TOKEN=$(curl -sk -u 'administrator@vsphere.local:<password>' \
+    -X POST https://vcenter.corp.local/api/session | tr -d '"')
 
-### Steps
+# Get system health
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    https://vcenter.corp.local/api/vcenter/health/system
 
-1. Identify the affected object.
-2. Capture current state.
-3. Review alarms, logs, and recent changes.
-4. Apply the planned action.
-5. Validate service health.
-6. Record notes and follow-up items.
+# List all hosts via API
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    https://vcenter.corp.local/api/vcenter/host | python3 -m json.tool
 
-### Validation
+# List all VMs via API
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    https://vcenter.corp.local/api/vcenter/vm | python3 -m json.tool
 
-- Confirm the object is healthy.
-- Confirm no new critical alarms.
-- Confirm monitoring reflects the expected state.
-- Confirm related systems still have access.
-- Document the result.
+# Delete the session when done
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    -X DELETE https://vcenter.corp.local/api/session
+```
 
-### Rollback
+---
 
-- Revert the changed setting if possible.
-- Restore prior configuration from documented state.
-- Escalate if rollback requires vendor support.
+## PowerCLI Diagnostics
 
-### Notes
+```powershell
+# Connect
+Connect-VIServer -Server vcenter.corp.local
 
-Keep screenshots, task IDs, error messages, and timestamps with the change or incident record.
+# Host connection states — result should be empty in a healthy environment
+Get-VMHost | Where-Object { $_.ConnectionState -ne "Connected" } |
+    Select-Object Name, ConnectionState, PowerState
 
-## Field Reference
+# Cluster HA and DRS state
+Get-Cluster | Select-Object Name, HAEnabled, DrsEnabled, DrsAutomationLevel, HAAdmissionControlEnabled
 
-### Overview
+# Datastore accessibility and capacity
+Get-Datastore | Select-Object Name,
+    @{N="Accessible";E={$_.ExtensionData.Summary.Accessible}},
+    @{N="CapGB";E={[math]::Round($_.CapacityGB,1)}},
+    @{N="FreeGB";E={[math]::Round($_.FreeSpaceGB,1)}},
+    @{N="FreePct";E={[math]::Round($_.FreeSpaceGB/$_.CapacityGB*100,1)}} |
+    Sort-Object FreePct
 
-vCenter is the main VMware management plane for clusters, hosts, VMs, datastores, networks, permissions, alarms, tasks, and events.
+# Recent error-level events (last 6 hours)
+Get-VIEvent -Start (Get-Date).AddHours(-6) |
+    Where-Object { $_.GetType().Name -match "Error|Fault|Warning" } |
+    Select-Object CreatedTime, UserName, FullFormattedMessage |
+    Format-Table -Wrap
 
-### Where It Fits
+# Recent tasks with failures
+Get-Task -Status Error | Select-Object -First 20 |
+    Select-Object Name, State, StartTime, FinishTime, Description
 
-This sits in the virtualization stack with compute, storage, networking, monitoring, backup, automation, and security controls. Treat it as a Tier 1 infrastructure area when workloads depend on it.
+# Active alarms across all objects
+Get-VM | Where-Object { $_.ExtensionData.TriggeredAlarmState.Count -gt 0 } |
+    Select-Object Name, @{N="Alarms";E={$_.ExtensionData.TriggeredAlarmState.Count}}
 
-### Architecture and Components
+# vCenter version and build
+$global:DefaultVIServer | Select-Object Name, Version, Build, IsConnected
+```
 
-- vCenter Server Appliance
-- vPostgres database
-- vSphere Client
-- SSO and identity services
-- Inventory service
-- Task and event system
-- Alarm and monitoring framework
-- API and automation interfaces
+---
 
-### Dependencies
+## Support Bundle Collection
 
-Common dependencies:
+Collect before escalating to Broadcom/VMware Support. The bundle includes all logs, configuration state, and diagnostic data.
 
-- DNS
-- NTP
-- Active Directory or LDAP
-- Network connectivity
-- Storage availability
-- Licensing
-- Monitoring
-- Backup or recovery tooling
-- Vendor support access
+### From VAMI (Recommended)
 
-### Ports and Protocols
+```
+https://<vcenter>:5480 → Support → Create Support Bundle
+```
 
-| Function | Protocol | Typical Port |
-|----------|----------|--------------|
-| Management | HTTPS | 443 |
-| Monitoring | SNMP | 161 |
-| Logging | Syslog | 514 |
-| API | HTTPS | 443 |
+Wait for the bundle to generate (5–20 minutes depending on environment size), then download via the provided link.
 
-### Daily Operations
+### From VCSA Shell
 
-- Review vCenter alarms.
-- Check failed or stuck tasks.
-- Confirm vCenter services are healthy.
-- Review backup status.
-- Confirm certificate status.
-- Validate connectivity to ESXi hosts.
-- Review recent permission or inventory changes.
+```bash
+# Generate vm-support bundle
+/usr/bin/vm-support -n vcenter.corp.local
 
-### Health Checks
+# Output is in /var/core/ — copy to a transfer location
+ls -lh /var/core/esx-*.tgz
 
-- vCenter service status
-- Appliance CPU and memory
-- Appliance disk usage
-- Database health
-- Certificate expiration
-- Host connection state
-- Backup job status
-- Recent task failures
+# SCP the bundle off the appliance
+scp /var/core/esx-<timestamp>.tgz user@transfer-host:/path/
+```
 
-### Upgrade Workflow
+### From vSphere Client
 
-1. Verify compatibility.
-2. Confirm backups or recovery point.
-3. Validate maintenance window.
-4. Check current platform health.
-5. Apply the upgrade or patch.
-6. Monitor logs and tasks.
-7. Validate health after the change.
-8. Record results and follow-up items.
+**Administration → Deployment → System Configuration → Export System Logs**
 
-### Backup and Recovery Considerations
+Select the components to include. For a full incident, include all vCenter server logs and optionally ESXi host logs for affected hosts.
 
-- Confirm configuration backup coverage.
-- Confirm appliance or platform backup status where supported.
-- Confirm snapshots are used only when appropriate.
-- Confirm restore steps are documented.
-- Test recovery periodically.
-- Keep backup evidence with change records.
+### ESXi Host Log Bundle
 
-### Common Issues
+```bash
+# SSH to ESXi host or use DCUI → Troubleshooting Options → ESXi Shell
+vm-support
+# Bundle created in /var/core/
+```
 
-- vCenter login failure
-- Host disconnected
-- Certificate expiration
-- Failed appliance backup
-- Appliance disk full
-- Slow inventory loading
-- Failed tasks or stuck tasks
-- SSO or identity source issue
+---
 
-### Troubleshooting Steps
+## Evidence to Collect Before Escalation
 
-1. Confirm scope.
-2. Review recent changes.
-3. Check alarms and events.
-4. Review system logs.
-5. Validate DNS, NTP, authentication, network, and storage.
-6. Check resource utilization.
-7. Escalate with timestamps, errors, screenshots, and support bundle if unresolved.
+Before opening a support case or handing off to another team:
 
-### Root Cause Examples
-
-| Symptom | Possible Cause | Resolution |
-|--------|----------------|------------|
-| Cannot log in | SSO or identity source issue | Validate identity source and local administrator access |
-| Host disconnected | Network, DNS, or host agent issue | Validate management network and host services |
-| Appliance warning | Disk or service issue | Check VAMI, service status, and appliance partitions |
-| Backup failed | Backup target or credential issue | Validate target path, account, and backup schedule |
-
-### Best Practices
-
-| Recommendation | Detail |
+| Evidence Item | How to Collect |
 |---|---|
-| Maintain consistent patch levels. | Maintain consistent patch levels. |
-| Monitor capacity trends. | Monitor capacity trends. |
-| Document configuration changes. | Document configuration changes. |
-| Perform routine health checks. | Perform routine health checks. |
-| Test recovery procedures. | Test recovery procedures. |
-| Keep support contracts current. | Keep support contracts current. |
-| Keep naming and ownership clean. | Keep naming and ownership clean. |
-| Validate changes after implementation. | Validate changes after implementation. |
+| VCSA disk usage | `df -h` output |
+| Service status | `service-control --status --all` output |
+| VAMI screenshot | Browser screenshot of VAMI → Summary and Services |
+| vpxd.log excerpt | `tail -500 /var/log/vmware/vpxd/vpxd.log` |
+| SSO log excerpt | `tail -200 /var/log/vmware/sso/vmware-sts-idmd.log` |
+| Certificate expiry | VAMI → Certificate Management screenshot |
+| Recent events | vCenter → Monitor → Events, last 24 hours, exported |
+| Recent tasks | vCenter → Monitor → Tasks, filter by Error state |
+| VM-support bundle | `/usr/bin/vm-support` output |
+| vCenter build number | `https://<vcenter>/ui` → Help → About |
+| Change log | Recent changes from CMDB or change management system |
 
-### Certification Relevance
-
-Useful certification study areas:
-
-- Architecture design
-- High availability
-- Performance optimization
-- Troubleshooting workflows
-- Security controls
-- Backup and recovery
-- Lifecycle management
+Timestamp all evidence with the collection time. Upload support bundles directly to the Broadcom case — do not email large files.

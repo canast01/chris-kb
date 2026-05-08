@@ -1,30 +1,25 @@
 # ServiceNow
 
-<div class="kb-summary">
-ServiceNow knowledge base articles, operational procedures, troubleshooting notes, and command references.
-</div>
-
-## Articles
-
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="changes/">
-  <strong>Changes</strong>
-  <span>Changes notes, procedures, checks, and references.</span>
+
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Overview, CMDB structure, integrations, and standards.</span>
 </a>
-<a class="kb-card" href="cmdb/">
-  <strong>Cmdb</strong>
-  <span>Cmdb notes, procedures, checks, and references.</span>
+
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Incident, change, request, and work note procedures.</span>
 </a>
-<a class="kb-card" href="incidents/">
-  <strong>Incidents</strong>
-  <span>Incidents notes, procedures, checks, and references.</span>
+
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>Authentication, permissions, and hardening.</span>
 </a>
-<a class="kb-card" href="requests/">
-  <strong>Requests</strong>
-  <span>Requests notes, procedures, checks, and references.</span>
+
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostics, and escalation.</span>
 </a>
-<a class="kb-card" href="work-notes/">
-  <strong>Work Notes</strong>
-  <span>Work Notes notes, procedures, checks, and references.</span>
-</a>
+
 </div>

@@ -1,86 +1,322 @@
 # Data Domain — Backup & Restore
 
+## Overview
+
+The Data Domain plays a passive role in backup and restore operations — it is the target that backup software writes to and reads from. Restore operations are always initiated from the backup application (Veeam, NetBackup, CommVault, etc.) or directly from an NFS/CIFS mount. This page covers: restore readiness validation, per-protocol restore procedures, performance expectations, configuration backup and recovery, and disaster recovery failover for backup data.
+
+---
+
 ## Restore Methods
 
-| Method | Protocol | When Used |
-|---|---|---|
-| DDBoost restore | DDBoost | NetBackup, Networker, Veeam using boost protocol |
-| NFS restore | NFS | Direct file access to MTree from backup server |
-| CIFS restore | SMB | Direct file access from Windows backup server |
+| Method | Protocol | Initiated From | When Used |
+|---|---|---|---|
+| DDBoost restore | DD Boost (IP or FC) | Backup application | NetBackup, Veeam, CommVault — fastest; application-aware |
+| NFS direct restore | NFS v3/v4 | Backup server or client | Any Linux/Unix client with NFS mount; granular file recovery |
+| CIFS direct restore | SMB | Windows client | Windows backup servers; granular file recovery from CIFS share |
+| VTL restore | Fibre Channel (emulated tape) | Backup media server | Tape-based backup software; NetBackup with VTL configuration |
+| FastCopy | DDOS internal | DD CLI | Efficient data movement within or between MTrees on the same DD |
 
-## Validating Restore Readiness
+---
 
-Before a restore, confirm:
+## Restore Readiness Validation
+
+Run these checks before initiating any restore. A restore against a degraded DD results in poor performance, incomplete data, or a failed recovery.
 
 ```bash
 # 1. Filesystem is healthy and enabled
 filesys status
 
-# 2. MTree has data and correct quota
-mtree list --verbose | grep <mtree_name>
+# 2. No active hardware alerts
+alerts show current
 
-# 3. NFS/CIFS export or DDBoost storage unit accessible
-nfs show exports | grep <mtree_path>
-ddboost storage-unit list
+# 3. Confirm the target MTree has data and is accessible
+mtree list --verbose | grep <mtree-name>
 
-# 4. No active cleaning cycle (cleaning can slow restore I/O)
+# 4. Check MTree quota — ensure quota is not exhausted
+mtree quota show | grep <mtree-name>
+
+# 5. Confirm NFS export or DDBoost storage unit is accessible
+nfs show exports | grep /data/col1/<mtree-name>
+ddboost storage-unit list | grep <storage-unit-name>
+
+# 6. Cleaning is not actively running during restore window
 filesys clean status
+
+# 7. Available bandwidth to the restore destination
+# (assess from backup server using iperf or review replication stats as a proxy)
 ```
+
+**Note on filesystem cleaning during restores:** `filesys clean` is I/O intensive and competes with restore read traffic. If a major restore is scheduled, stop cleaning first:
+
+```bash
+filesys clean stop
+filesys clean status  # confirm it has stopped
+```
+
+Resume after the restore completes:
+
+```bash
+filesys clean start
+```
+
+---
 
 ## DDBoost Restore (Backup Application)
 
-Restores are initiated from the backup application (NetBackup, Networker, Veeam). The Data Domain role is passive — it serves data to the backup server.
+DDBoost restores are initiated entirely from the backup application. The Data Domain's role is passive — it serves deduplicated data to the backup server, which rehydrates it on the fly.
 
 ```bash
-# Monitor DDBoost active connections during restore
+# Monitor DD Boost connections during an active restore
 ddboost show clients
+ddboost show clients --verbose  # includes per-client read throughput
+
+# Monitor read throughput from the DD side
 ddboost show stats | grep -i read
+
+# Check if multiple restore streams are active
+ddboost show clients | grep -c connected
 ```
 
-## NFS Restore (Direct File Copy)
+### Per-Application Restore Initiation
+
+| Backup Software | Restore Entry Point | Notes |
+|---|---|---|
+| Veeam Backup & Replication | Veeam Console → Restore → Entire VM or Files | Instant VM Recovery reads directly from DD via DD Boost |
+| NetBackup | bprestore CLI or NetBackup Administration Console | OST plugin routes reads through DD Boost storage unit |
+| CommVault | CommCell Console → Restore → Browse and Restore | MediaAgent reads from DD via DD Boost; no DD CLI steps required |
+| Avamar | Avamar Administrator → Restore | Avamar validates restore job against DD and restores deduped data |
+| IBM Spectrum Protect (TSM) | TSM restore session via VTL or NFS | No DD Boost; data served via VTL emulation or NFS mount |
+
+### Validate DDBoost Restore Throughput
+
+During a restore, monitor that throughput is meeting expectations:
 
 ```bash
-# Mount the MTree on the backup server
-mount <dd_ip>:/data/col1/<mtree_name> /mnt/dd_restore
+# DD-side read throughput
+ddboost show stats
 
-# Navigate to backup data
-ls /mnt/dd_restore/
-
-# Restore-specific files or directories
-cp -r /mnt/dd_restore/<backup_path>/ /target/restore/path/
+# System I/O load during restore
+system show stats | grep -i throughput
 ```
+
+If throughput is below expected, check for:
+- Active cleaning cycle (`filesys clean status`)
+- Disk errors (`disk show state`)
+- Network saturation (`net show stats`)
+
+---
+
+## NFS Direct Restore
+
+For backup software using NFS mounts, or for granular file recovery, mount the MTree directly on the target server.
+
+### Mount the MTree
+
+```bash
+# On the Data Domain — confirm the NFS export exists
+nfs show exports | grep /data/col1/<mtree-name>
+
+# If the export does not exist, add it
+nfs add export /data/col1/<mtree-name> clients <target-server-ip>
+
+# On the target/restore server — mount the MTree
+mount -t nfs <dd-hostname>:/data/col1/<mtree-name> /mnt/dd-restore
+
+# Verify the mount is accessible
+ls -la /mnt/dd-restore/
+```
+
+### Restore Files from NFS Mount
+
+```bash
+# Navigate to the backup data directory
+ls /mnt/dd-restore/<backup-job-directory>/
+
+# Restore a specific directory
+cp -a /mnt/dd-restore/<backup-path>/ /target/restore/path/
+
+# For large restores, use rsync for progress visibility and error handling
+rsync -avP /mnt/dd-restore/<backup-path>/ /target/restore/path/
+
+# After restore, unmount
+umount /mnt/dd-restore
+```
+
+### NFS Restore — Common Issues
+
+| Issue | Cause | Fix |
+|---|---|---|
+| Mount fails | Export does not exist or client IP not permitted | `nfs show exports`; add client IP to export |
+| Permission denied | `root-squash` set; backup data owned by root | `nfs modify export /data/col1/<name> clients <ip> options rw,no-root-squash` |
+| Slow NFS read speed | `sync` option set (safe but slower) | Use `async` option for restore; revert to `sync` after |
+| Mount hangs | NFS service issue on DD | `nfs status`; check `alerts show current` |
+
+---
+
+## CIFS/SMB Direct Restore
+
+For Windows-based restores without a DD Boost–capable backup application.
+
+```bash
+# On the Data Domain — confirm the CIFS share exists
+cifs share show | grep <share-name>
+
+# If the share does not exist, create it
+cifs share add /data/col1/<mtree-name>
+
+# On the Windows restore server — map the share
+# net use Z: \\<dd-hostname>\<share-name> /user:<domain>\<username>
+
+# Or access via UNC path in File Explorer:
+# \\<dd-hostname>\<share-name>\
+```
+
+---
+
+## VTL Restore
+
+VTL (Virtual Tape Library) restores are managed entirely by the backup media server. The DD emulates a physical tape library with drives and slots.
+
+```bash
+# Verify VTL is operational
+vtl status
+
+# List available virtual slots and their contents
+vtl show slots
+
+# List virtual drives
+vtl show drives
+
+# If a tape is not visible to the backup software, confirm the slot is loaded
+vtl show libraries
+```
+
+The backup media server must be FC-zoned to the DD VTL FC ports. Confirm zoning is correct if tapes are not visible to the backup application.
+
+---
+
+## Data Domain Configuration Backup and Recovery
+
+### Configuration Backup
+
+The DD configuration backup captures system settings, user accounts, network configuration, MTree definitions, replication context definitions, and DDOS licensing. It does **not** contain backup data — it only contains the DD system configuration.
+
+```bash
+# Create a manual configuration backup
+config backup create
+
+# List available configuration backups
+config backup list
+
+# Show configuration backup details
+config backup show
+
+# Export a configuration backup to a remote server
+config backup export scp://user@<jump-host>:/path/backups/dd01-config-$(date +%Y%m%d).bak
+```
+
+**Best practice:** Create a configuration backup before every planned change. Export the configuration backup off-appliance to a management server so it is available even if the DD is unavailable.
+
+### Configuration Restore
+
+```bash
+# Restore from a specific named backup
+config backup restore <backup-name>
+
+# List available backups if the name is unknown
+config backup list
+```
+
+Configuration restore replaces the current DD configuration with the saved snapshot. It does not affect backup data in the DDFS.
+
+---
+
+## MTree Replication as a Restore Source (DR Scenario)
+
+In a DR scenario where the primary DD is unavailable, backup data can be restored directly from the DR (destination) DD.
+
+### Failover Procedure
+
+```bash
+# Step 1 — on the destination DD, break the replication context
+# This makes the destination MTree writable
+replication failover <context-id>
+
+# Step 2 — verify the MTree is accessible on the destination DD
+mtree list | grep <mtree-name>
+filesys status
+
+# Step 3 — redirect backup software to the destination DD
+# (update repository/storage unit configuration in backup application)
+
+# Step 4 — validate backup software can read data
+ddboost show clients  # verify backup server connects successfully
+```
+
+### Failback After Primary Recovery
+
+```bash
+# Step 1 — re-establish replication in the original direction
+replication resync <context-id>
+
+# Step 2 — wait for resync to complete (lag = 0)
+replication show stats | grep lag
+replication status
+
+# Step 3 — redirect backup software back to the primary DD
+# Step 4 — confirm backup jobs succeed on the primary
+```
+
+---
+
+## FastCopy — Efficient Intra-DD Data Movement
+
+FastCopy performs efficient data movement within the same DD filesystem. Because it operates at the dedup segment level, it does not transfer duplicate data — it updates pointers. Useful for seeding a new MTree from an existing one, or creating a local copy for testing.
+
+```bash
+# Copy data from one MTree path to another (same DD)
+fastcopy copy source /data/col1/<source-mtree>/<path> \
+    destination /data/col1/<destination-mtree>/<path>
+
+# Check FastCopy status
+fastcopy status
+```
+
+FastCopy is not a substitute for replication — it creates a local copy on the same array, which does not protect against array-level failure.
+
+---
 
 ## Performance Expectations
 
-| Scenario | Expected Throughput |
-|---|---|
-| DDBoost restore (with DSP) | 200–500 MB/s per stream |
-| NFS restore | 100–300 MB/s (network and disk I/O bound) |
-| Multiple concurrent restores | Shared bandwidth — plan accordingly |
+| Scenario | Expected Throughput | Notes |
+|---|---|---|
+| DDBoost restore (DSP enabled) | 200–500 MB/s per stream | DSP must be enabled on the backup client |
+| DDBoost restore (multiple streams) | Scales to array limit (model-dependent) | DD9900: up to 68 TB/hr aggregate |
+| NFS restore (10GbE) | 100–300 MB/s | Bound by network MTU and NFS block size |
+| NFS restore (jumbo frames, 9000 MTU) | 200–500 MB/s | Requires jumbo frame support on all network devices |
+| CIFS restore | 50–200 MB/s | SMB protocol overhead; lower than NFS |
+| VTL restore (FC) | Up to 32 Gb/s FC link speed | Bound by FC zoning and drive count |
 
-## Troubleshooting Slow Restores
+### Restore Performance Tuning
 
-```bash
-# Check DD CPU and I/O during restore
-system show stats
+- Enable DD Boost DSP: `ddboost option set distributed-segment-processing enabled`
+- Use multiple concurrent restore streams from the backup application
+- Set NFS MTU to 9000 (jumbo frames) on both the DD and the backup server for NFS restores
+- Stop filesystem cleaning during large restore windows: `filesys clean stop`
+- For very large restores, check that the LACP bond is active and both links are healthy: `net config bond show`
 
-# Check if cleaning is running (impacts read performance)
-filesys clean status
+---
 
-# Check active restore clients
-ddboost show clients --verbose
-nfs show clients
+## Restore Validation Checklist
 
-# Network bandwidth to restore destination
-# (Check on the backup server with iperf or similar)
-```
-
-## Tape-Out / CIFS Restores
-
-If backup data was originally written via CIFS:
-
-```bash
-# Confirm CIFS share is accessible
-cifs share show | grep <mtree_name>
-cifs show clients
-```
+| Step | Action | Status |
+|---|---|---|
+| 1 | Confirm `filesys status` shows Enabled and Running | |
+| 2 | Confirm no active hardware alerts (`alerts show current`) | |
+| 3 | Confirm cleaning is stopped or not running (`filesys clean status`) | |
+| 4 | Confirm NFS export or DDBoost storage unit is accessible | |
+| 5 | Initiate restore from backup application | |
+| 6 | Monitor DD throughput during restore (`ddboost show stats` or `ddboost show clients`) | |
+| 7 | Confirm all restored files/VMs are accessible at the destination | |
+| 8 | Restart cleaning if it was stopped (`filesys clean start`) | |
+| 9 | Document restore completion time and throughput for future SLA planning | |

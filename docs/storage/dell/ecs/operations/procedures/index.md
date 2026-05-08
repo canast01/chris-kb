@@ -47,58 +47,291 @@ Run these checks after any change to confirm the ECS cluster is healthy and obje
 - [ ] ECS Portal → Hardware → Disks — no new `FAILED` or `SUSPECT` disks after the change
 - [ ] Application teams confirm S3 workloads are running normally with no authentication or connectivity errors
 
+## Creating a Namespace
+
+Namespaces are the top-level multi-tenancy boundary in ECS. Create a separate namespace per team or application workload.
+
+**Via ECS Portal:**
+1. Navigate to ECS Portal → Manage → Namespaces → New Namespace
+2. Enter a name (lowercase, hyphen-separated; e.g., `analytics-prod`)
+3. Select the Replication Group that spans the required VDCs
+4. Set a hard quota (recommended; prevents unbounded capacity growth)
+5. Configure encryption at rest if the namespace holds regulated data
+6. Enable metadata search if object-level search is required (adds indexer overhead)
+7. Save; the namespace becomes immediately available for bucket creation
+
+**Via Management REST API:**
+
+```bash
+# Create a namespace
+curl -s -k -X POST \
+  -H "X-SDS-AUTH-TOKEN: $TOKEN" \
+  -H "Content-Type: application/json" \
+  "https://<ecs-node>:4443/object/namespaces/namespace" \
+  -d '{
+    "id": "analytics-prod",
+    "default_data_services_vpool": "<replication-group-id>",
+    "is_stale_allowed": true,
+    "is_compliance_enabled": false,
+    "namespace_quota": {
+      "blockSize": 10240,
+      "notificationSize": 9216
+    }
+  }' | python3 -m json.tool
+
+# Verify the namespace was created
+ecscli namespace get --name analytics-prod
+```
+
+**Namespace configuration parameters:**
+
+| Parameter | Description | Recommendation |
+|---|---|---|
+| `default_data_services_vpool` | The replication group ID assigned to this namespace | Always specify; do not use the system default |
+| `is_stale_allowed` | Allow reads from a VDC that may have stale data during TSF | `true` for HA; `false` for strong consistency |
+| `is_compliance_enabled` | Enable CAS compliance mode (immutable write-once) | Enable only for compliance/WORM namespaces |
+| `namespace_quota.blockSize` | Hard quota in GB — writes fail when exceeded | Set to expected monthly data volume + 20% buffer |
+| `namespace_quota.notificationSize` | Soft quota in GB — alerts are raised when exceeded | Set ~10% below the hard quota |
+
+## Creating a Bucket
+
+Buckets are the S3-visible object containers within a namespace.
+
+**Via ECS Portal:**
+1. Navigate to ECS Portal → Manage → Buckets → New Bucket
+2. Enter a bucket name (must be S3-compatible: lowercase, 3–63 characters, no dots)
+3. Select the parent namespace
+4. Choose the replication group (inherits from namespace by default)
+5. Configure versioning (default: disabled — enable only if application recovery requirements demand it)
+6. Set a bucket quota if finer-grained control than namespace quota is needed
+7. Enable Object Lock (WORM) only at bucket creation — cannot be enabled after creation
+
+**Via S3 API or ecscli:**
+
+```bash
+# Create a bucket (ecscli)
+ecscli bucket create \
+  --namespace analytics-prod \
+  --name analytics-prod-raw \
+  --replication-group <rg-id> \
+  --versioning-enabled false
+
+# Create a bucket (S3 API via AWS CLI)
+aws s3api create-bucket \
+  --bucket analytics-prod-raw \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
+
+# Enable Object Lock at creation (cannot be enabled post-creation)
+aws s3api create-bucket \
+  --bucket compliance-immutable \
+  --object-lock-enabled-for-bucket \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
+
+# Set a bucket quota (ecscli)
+ecscli bucket update \
+  --namespace analytics-prod \
+  --name analytics-prod-raw \
+  --quota 5000
+
+# Verify bucket configuration
+ecscli bucket get --namespace analytics-prod --name analytics-prod-raw
+```
+
+**Bucket configuration parameters:**
+
+| Parameter | Description | Default | Recommendation |
+|---|---|---|---|
+| Versioning | Retain multiple versions of each object key | Disabled | Enable only with a corresponding lifecycle policy to expire non-current versions |
+| Object Lock | WORM — objects cannot be deleted or overwritten within retention period | Disabled | Enable at creation for compliance or immutable backup buckets |
+| Quota | Hard capacity limit on this bucket in GB | None (namespace quota applies) | Set per bucket for large or fast-growing workloads |
+| Replication Group | Which VDCs store this bucket's data | Inherits namespace default | Override only if this bucket has different geo-replication requirements |
+| Access Logging | Write access log records to a designated audit bucket | Disabled | Enable for buckets holding regulated or auditable data |
+
+## Creating IAM Object Users and Access Keys
+
+Object users are per-namespace IAM identities. Each application or service should have a dedicated object user.
+
+```bash
+# Create an object user in a namespace
+ecscli user create \
+  --namespace analytics-prod \
+  --name svc-spark-prod
+
+# Generate a new S3 access key / secret key pair for the user
+# NOTE: The secret key is returned once and cannot be retrieved again — store it immediately
+ecscli user secret-key create \
+  --namespace analytics-prod \
+  --name svc-spark-prod
+
+# List object users in a namespace
+ecscli user list-object-users --namespace analytics-prod
+
+# List access keys for a user (key IDs only — not the secret values)
+ecscli user secret-key list \
+  --namespace analytics-prod \
+  --name svc-spark-prod
+
+# Key rotation: create new key, deploy it, then delete old key
+# 1. Create new key
+ecscli user secret-key create --namespace analytics-prod --name svc-spark-prod
+# 2. Deploy new key to the application (configuration or secrets manager)
+# 3. Confirm application is using new key
+# 4. Delete old key
+ecscli user secret-key delete \
+  --namespace analytics-prod \
+  --name svc-spark-prod \
+  --secret-key <old-key-id>
+```
+
+## Configuring Bucket Lifecycle Policies
+
+Lifecycle policies automate object expiration and version cleanup. Always attach a lifecycle policy to versioned buckets.
+
+```bash
+# Apply a lifecycle policy: expire non-current versions after 90 days,
+# abort incomplete multipart uploads after 7 days
+aws s3api put-bucket-lifecycle-configuration \
+  --bucket analytics-prod-raw \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs \
+  --lifecycle-configuration '{
+    "Rules": [
+      {
+        "ID": "expire-noncurrent-versions",
+        "Status": "Enabled",
+        "Filter": {"Prefix": ""},
+        "NoncurrentVersionExpiration": {"NoncurrentDays": 90}
+      },
+      {
+        "ID": "abort-incomplete-mpu",
+        "Status": "Enabled",
+        "Filter": {"Prefix": ""},
+        "AbortIncompleteMultipartUpload": {"DaysAfterInitiation": 7}
+      }
+    ]
+  }'
+
+# Verify the lifecycle policy was applied
+aws s3api get-bucket-lifecycle-configuration \
+  --bucket analytics-prod-raw \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
+```
+
+## Applying Bucket Policies (S3 IAM)
+
+Bucket policies restrict which object users can perform which S3 actions on a bucket.
+
+```bash
+# Apply a read-write policy scoped to a specific object user
+cat > /tmp/bucket-policy.json << 'EOF'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAppRW",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "urn:ecs:iam::analytics-prod:user/svc-spark-prod"
+      },
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::analytics-prod-raw",
+        "arn:aws:s3:::analytics-prod-raw/*"
+      ]
+    }
+  ]
+}
+EOF
+
+aws s3api put-bucket-policy \
+  --bucket analytics-prod-raw \
+  --policy file:///tmp/bucket-policy.json \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
+
+# View current bucket policy
+aws s3api get-bucket-policy \
+  --bucket analytics-prod-raw \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
+```
+
+## Cleaning Up Incomplete Multipart Uploads
+
+Incomplete multipart uploads (MPUs) consume capacity without contributing accessible objects. Clean them up regularly on buckets with high-throughput upload workloads.
+
+```bash
+# List incomplete multipart uploads
+aws s3api list-multipart-uploads \
+  --bucket analytics-prod-raw \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
+
+# Abort a specific incomplete MPU
+aws s3api abort-multipart-upload \
+  --bucket analytics-prod-raw \
+  --key path/to/large-object.tar.gz \
+  --upload-id <UploadId> \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
+```
+
+A lifecycle policy rule with `AbortIncompleteMultipartUpload` (7 days) is the preferred long-term solution over manual cleanup.
+
 ## Bucket Management
 
-Dell ECS (Elastic Cloud Storage) uses S3-compatible buckets as the fundamental storage object. Buckets contain objects and have associated policies, retention settings, and replication configuration.
+Dell ECS uses S3-compatible buckets as the fundamental storage object. Buckets contain objects and have associated policies, retention settings, and replication configuration.
 
-### Bucket Operations
+### Common Bucket Operations
 
 ```bash
-# List all buckets (using AWS CLI against ECS S3 endpoint)
-aws s3 ls s3:// --endpoint-url https://<ecs_s3_endpoint>
-
-# Create a bucket
-aws s3 mb s3://<bucket_name> --endpoint-url https://<ecs_s3_endpoint>
+# List all buckets accessible to the configured object user
+aws s3 ls \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
 
 # Delete a bucket (must be empty)
-aws s3 rb s3://<bucket_name> --endpoint-url https://<ecs_s3_endpoint>
-```
+aws s3 rb s3://<bucket-name> \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
 
-### Bucket Policies
+# Force-delete a bucket and all its objects (use with caution)
+aws s3 rb s3://<bucket-name> --force \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
 
-ECS supports S3-compatible bucket policies for access control:
-
-```bash
-# View a bucket policy
-aws s3api get-bucket-policy \
-    --bucket <bucket_name> \
-    --endpoint-url https://<ecs_s3_endpoint>
-
-# Apply a bucket policy
-aws s3api put-bucket-policy \
-    --bucket <bucket_name> \
-    --policy file://bucket_policy.json \
-    --endpoint-url https://<ecs_s3_endpoint>
-```
-
-### Object Retention (Compliance)
-
-ECS supports WORM (Write Once, Read Many) object lock for compliance use cases:
-
-```bash
-# Check object lock configuration on a bucket
-aws s3api get-object-lock-configuration \
-    --bucket <bucket_name> \
-    --endpoint-url https://<ecs_s3_endpoint>
-```
-
-### Bucket ACLs
-
-```bash
 # View bucket ACL
 aws s3api get-bucket-acl \
-    --bucket <bucket_name> \
-    --endpoint-url https://<ecs_s3_endpoint>
+  --bucket <bucket-name> \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
+
+# Check Object Lock configuration
+aws s3api get-object-lock-configuration \
+  --bucket <bucket-name> \
+  --endpoint-url https://<ecs-s3-endpoint>:9021 \
+  --no-verify-ssl \
+  --profile ecs
 ```
 
 ### Capacity Monitoring
@@ -109,101 +342,22 @@ aws s3api get-bucket-acl \
 | Cluster utilisation | ECS Management Console → Dashboard |
 | Replication lag | ECS Management Console → Replication Groups |
 
-### Common Operations
+### Common Object Operations
 
 | Task | Command |
 |---|---|
 | List bucket contents | `aws s3 ls s3://<bucket> --endpoint-url ...` |
 | Copy object to bucket | `aws s3 cp <file> s3://<bucket>/ --endpoint-url ...` |
 | Delete object | `aws s3 rm s3://<bucket>/<key> --endpoint-url ...` |
-| Sync local to bucket | `aws s3 sync <local_dir> s3://<bucket>/ --endpoint-url ...` |
+| Sync local to bucket | `aws s3 sync <local-dir> s3://<bucket>/ --endpoint-url ...` |
 
-## S3 Access
-
-ECS exposes an S3-compatible API endpoint. Any S3-compatible client (AWS CLI, boto3, s3cmd, rclone) can access ECS using its S3 endpoint.
-
-### Connection Details
-
-| Parameter | Value |
-|---|---|
-| S3 Endpoint | `https://<ecs_s3_vip>` or `https://<ecs_node_ip>` |
-| Auth | Access Key / Secret Key (managed in ECS UI or API) |
-| TLS | Self-signed cert by default — clients need `--no-verify-ssl` or trusted CA |
-| Port | 9020 (HTTP), 9021 (HTTPS) |
-
-### AWS CLI Configuration
-
-```bash
-# Configure AWS CLI profile for ECS
-aws configure --profile ecs
-# AWS Access Key ID: <ecs_access_key>
-# AWS Secret Access Key: <ecs_secret_key>
-# Default region: us-east-1 (ECS ignores region — use any value)
-
-# Test connectivity
-aws s3 ls --profile ecs --endpoint-url https://<ecs_endpoint> --no-verify-ssl
-```
-
-### Common S3 Operations
-
-```bash
-# List buckets
-aws s3 ls \
-    --profile ecs \
-    --endpoint-url https://<ecs_endpoint> \
-    --no-verify-ssl
-
-# List objects in a bucket
-aws s3 ls s3://<bucket_name>/ \
-    --profile ecs \
-    --endpoint-url https://<ecs_endpoint> \
-    --no-verify-ssl
-
-# Upload a file
-aws s3 cp /local/file s3://<bucket_name>/key \
-    --profile ecs \
-    --endpoint-url https://<ecs_endpoint> \
-    --no-verify-ssl
-
-# Download a file
-aws s3 cp s3://<bucket_name>/key /local/destination \
-    --profile ecs \
-    --endpoint-url https://<ecs_endpoint> \
-    --no-verify-ssl
-
-# Sync a directory
-aws s3 sync /local/dir s3://<bucket_name>/ \
-    --profile ecs \
-    --endpoint-url https://<ecs_endpoint> \
-    --no-verify-ssl
-```
-
-### Access Keys Management
-
-Access keys are created in the ECS Management Console:
-
-- **Manage** → **Users** → select user → **Generate Secret Key**
-- Keys can also be created via the ECS REST API
-
-### Namespace and Bucket Paths
-
-ECS organises data into namespaces. Buckets belong to a namespace. The S3 endpoint path style is:
-
-```
-https://<ecs_endpoint>/<bucket_name>/<object_key>
-```
-
-Some clients support virtual-hosted style:
-```
-https://<bucket_name>.<ecs_endpoint>/<object_key>
-```
-
-### Troubleshooting Access
+## Troubleshooting Access
 
 | Error | Likely Cause | Fix |
 |---|---|---|
 | `Connection refused` | S3 endpoint down or wrong port | Check port 9021 (HTTPS) or 9020 (HTTP) |
-| `SSL certificate error` | Self-signed cert | Use `--no-verify-ssl` or install ECS CA cert |
-| `Access Denied` | Wrong access key or bucket policy | Verify key and bucket policy |
-| `NoSuchBucket` | Bucket doesn't exist or wrong namespace | Check bucket name and namespace |
-| `403 Forbidden` | Bucket policy denies access | Review bucket policy in ECS console |
+| `SSL certificate error` | Self-signed cert not trusted | Use `--no-verify-ssl` or install ECS CA cert on clients |
+| `Access Denied` | Wrong access key or bucket policy | Verify key and check bucket policy in ECS console |
+| `NoSuchBucket` | Bucket does not exist or wrong namespace | Check bucket name and namespace assignment |
+| `403 Forbidden` | Bucket policy denies access | Review bucket policy: `aws s3api get-bucket-policy ...` |
+| `QuotaExceeded` | Bucket or namespace quota reached | Increase quota in ECS Portal or expire old objects |

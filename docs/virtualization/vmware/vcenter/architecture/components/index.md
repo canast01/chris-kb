@@ -96,120 +96,113 @@ df -h
 /usr/lib/vmware-vmafd/bin/vmafd-cli get-domain-name --server-name localhost
 ```
 
-## Technical Reference
+## Service Interdependencies
 
-vCenter is part of the virtualization platform. This section covers technical operations, troubleshooting, upgrade planning, and support handoff details.
+Understanding service startup dependencies matters during recovery. Services must start in the correct order or vpxd will fail to initialise.
 
-### Platform Role
-
-vCenter is the central management plane for VMware environments. It manages inventory, clusters, hosts, VMs, datastores, networks, permissions, alarms, tasks, events, and automation APIs.
-
-### Core Components
-
-- vCenter Server Appliance
-- vSphere Client
-- SSO domain
-- vPostgres database
-- Inventory service
-- vpxd service
-- vAPI endpoint
-- Certificate authority services
-- Task and event subsystem
-- Backup scheduler
-
-### Main Dependencies
-
-- DNS resolution
-- NTP/time sync
-- Authentication source
-- Management network
-- Storage access
-- Certificate trust
-- Monitoring
-- Backup/recovery process
-- Vendor support access
-
-### Ports and Protocols
-
-| Use | Protocol | Port |
-|-----|----------|------|
-| vSphere Client / API | HTTPS | 443 |
-| ESXi host management | HTTPS | 443 |
-| Syslog | UDP/TCP | 514 |
-| LDAP / LDAPS | TCP | 389 / 636 |
-| DNS | TCP/UDP | 53 |
-| NTP | UDP | 123 |
-
-### Key Logs
-
-- `/var/log/vmware/vpxd/vpxd.log`
-- `/var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log`
-- `/var/log/vmware/sso/`
-- `/var/log/vmware/vapi/`
-- `/var/log/vmware/applmgmt/`
-
-### Health Checks
-
-- Confirm management access.
-- Review current alarms.
-- Review recent failed tasks.
-- Validate DNS and NTP.
-- Confirm certificate status.
-- Check service health.
-- Check capacity and performance.
-- Confirm monitoring data is current.
-- Review recent changes.
-
-### Useful Commands
-
-```bash
-service-control --status
-service-control --status --all
-vmon-cli --list
-df -h
-/usr/lib/applmgmt/backup_restore/py/vmware/appliance/backup_restore.py
+```
+vmware-vpostgres      ← must start first (database)
+  └── vmware-stsd     ← SSO token service (depends on vmdir)
+        └── vmware-sts-idmd   ← identity management
+              └── vpxd        ← core vCenter daemon
+                    └── vsphere-ui     ← HTML5 client
+                    └── vmware-eam     ← ESX Agent Manager
 ```
 
-### Common Failure Points
+If a manual restart is required:
+```bash
+# Stop all cleanly
+service-control --stop --all
 
-- Expired certificates
-- SSO or identity source failure
-- Appliance partition full
-- vCenter service failure
-- Host communication issue
-- Backup target failure
-- DNS or NTP drift
-- Permission drift
+# Start in dependency order
+service-control --start vmware-vpostgres
+service-control --start vmware-stsd
+service-control --start vmware-sts-idmd
+service-control --start vpxd
+service-control --start --all   # start remaining services
 
-### Troubleshooting Workflow
+# Verify final state
+service-control --status --all
+```
 
-1. Confirm the impact and scope.
-2. Check recent changes.
-3. Review alerts, tasks, and events.
-4. Validate DNS, NTP, authentication, and certificates.
-5. Check service status.
-6. Check storage and network dependencies.
-7. Review logs.
-8. Capture screenshots, timestamps, errors, and task IDs.
-9. Escalate with clean evidence if needed.
+## vCenter Processes on Photon OS
 
-### Upgrade and Compatibility Notes
+The VCSA runs Photon OS (a VMware-maintained minimal Linux distribution). Key system-level tools:
 
-- Check product interoperability before upgrades.
-- Confirm supported version path.
-- Confirm backup or rollback method.
-- Confirm maintenance window.
-- Run pre-checks before change work.
-- Validate health after the change.
-- Document version before and after.
+```bash
+# List running processes
+ps aux | grep -E "vpxd|postgres|java"
 
-### Best Practices
+# Monitor system resource usage
+top
+vmstat 1 5
 
-| Recommendation | Detail |
-|---|---|
-| Keep versions aligned. | Keep versions aligned. |
-| Keep certificates tracked. | Keep certificates tracked. |
-| Keep DNS and NTP clean. | Keep DNS and NTP clean. |
-| Keep alerting actionable. | Keep alerting actionable. |
-| Document support ownership. | Document support ownership. |
-| Avoid undocumented changes. | Avoid undocumented changes. |
+# Check Photon OS version
+cat /etc/photon-release
+
+# Check systemd service status (alternative to service-control)
+systemctl status vmware-vpxd
+systemctl status vmware-vpostgres
+
+# Network connectivity
+ss -tlnp                     # open listening ports
+ip addr                      # interface and IP config
+ping -c 4 <esxi-host-ip>    # basic reachability to ESXi
+```
+
+## Database (vPostgres) Operations
+
+The embedded PostgreSQL instance stores all vCenter inventory, configuration, events, and tasks. Direct manipulation is rarely needed but useful during recovery diagnostics.
+
+```bash
+# Connect to the embedded database (VCSA shell)
+/opt/vmware/vpostgres/current/bin/psql -U postgres -d VCDB
+
+# Inside psql — list tables
+\dt
+
+# Check DB size
+SELECT pg_size_pretty(pg_database_size('VCDB'));
+
+# Count events (verify DB is intact)
+SELECT COUNT(*) FROM vc_event;
+
+# Exit
+\q
+```
+
+Do not modify the vCenter database directly unless directed by VMware Support. The database schema is internal and subject to change between versions.
+
+## vCenter REST API — Quick Reference
+
+```bash
+# Authenticate (returns session token)
+TOKEN=$(curl -sk -u 'administrator@vsphere.local:<password>' \
+    -X POST https://vcenter.corp.local/api/session | tr -d '"')
+
+# Host inventory
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    "https://vcenter.corp.local/api/vcenter/host" | python3 -m json.tool
+
+# VM inventory
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    "https://vcenter.corp.local/api/vcenter/vm" | python3 -m json.tool
+
+# Cluster inventory
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    "https://vcenter.corp.local/api/vcenter/cluster" | python3 -m json.tool
+
+# Power on a VM (replace <vm-id> with the VM moRef, e.g. vm-42)
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    -X POST "https://vcenter.corp.local/api/vcenter/vm/<vm-id>/power?action=start"
+
+# System health
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    "https://vcenter.corp.local/api/vcenter/health/system"
+
+# Delete session
+curl -sk -H "vmware-api-session-id: $TOKEN" \
+    -X DELETE https://vcenter.corp.local/api/session
+```
+
+The Swagger/OpenAPI UI is available at `https://<vcenter>/apiexplorer` for interactive exploration of all endpoints.

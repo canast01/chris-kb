@@ -4,69 +4,263 @@
 
 ---
 
-## AAA Configuration (TACACS+)
+## Overview
 
+Authentication on Cisco MDS covers two distinct planes:
+
+- **Management plane authentication**: who can log into the switch CLI or GUI (SSH, HTTPS, NDFC). This is handled by AAA (Authentication, Authorization, and Accounting) via TACACS+ or RADIUS.
+- **Fabric authentication**: which FC devices (hosts, storage arrays) are permitted to log into the SAN fabric. This is handled by FC-SP (Fibre Channel Security Protocol), also known as DHCHAP.
+
+Both layers should be configured in enterprise environments. Management plane AAA is mandatory; FC-SP is strongly recommended for high-security fabrics.
+
+---
+
+## Management Plane: TACACS+
+
+TACACS+ is the preferred AAA protocol for MDS switches. It separates authentication, authorization, and accounting — providing granular command-level auditing.
+
+### Basic TACACS+ Setup
+
+```bash
+# Define TACACS+ servers with encrypted shared key
+tacacs-server host 10.10.1.10 key 7 <encrypted-key>
+tacacs-server host 10.10.1.11 key 7 <encrypted-key>
+
+# (Optional) Set per-server timeout and retries
+tacacs-server host 10.10.1.10 timeout 5
+tacacs-server host 10.10.1.10 port 49
+
+# Group the servers
+aaa group server tacacs+ TACACS-SERVERS
+  server 10.10.1.10
+  server 10.10.1.11
+
+# Authentication: TACACS+ primary, local fallback for break-glass
+aaa authentication login default group TACACS-SERVERS local
+
+# Authorization: enforce per-command authorization
+aaa authorization commands default group TACACS-SERVERS local
+
+# Accounting: record all exec and configuration commands
+aaa accounting default group TACACS-SERVERS
+
+# Save
+copy running-config startup-config
 ```
-# Add TACACS+ server
-tacacs-server host <tacacs-server-ip> key <shared-secret>
 
-# Configure AAA to use TACACS+ for authentication, authorisation, and accounting
-aaa authentication login default group tacacs+ local
-aaa authorization commands default group tacacs+ local
-aaa accounting default group tacacs+
+### Testing and Verification
 
-# Keep local fallback in case TACACS+ is unreachable
-username admin password <strong-password> role network-admin
+```bash
+# Test authentication for a known user
+test aaa group TACACS-SERVERS <username> <test-password>
+# Expected: server responds with authentication success
+
+# Check server reachability status
+show tacacs-server
+
+# Check per-server statistics
+show tacacs-server statistics
+
+# Check AAA configuration
+show aaa
+show aaa authentication
+show aaa authorization
+show aaa accounting
 ```
 
-**Verify AAA is working:**
+### TACACS+ Key Encryption
 
+Shared keys must be stored encrypted in the configuration. NX-OS uses type-7 encryption by default — use `key 7` to store pre-encrypted keys, or use `key 0` when entering plaintext (NX-OS will encrypt automatically):
+
+```bash
+# NX-OS encrypts the key automatically if entered as plaintext
+tacacs-server host 10.10.1.10 key 0 <plaintext-key>
+
+# To verify the stored (encrypted) form
+show tacacs-server | include key
 ```
-test aaa group tacacs+ <test-username> <test-password>
+
+---
+
+## Management Plane: RADIUS (Fallback)
+
+RADIUS can be used as a fallback if TACACS+ is unavailable. RADIUS is also used by some NDFC deployments.
+
+```bash
+# Define RADIUS servers
+radius-server host 10.10.1.20 key 7 <encrypted-key>
+radius-server host 10.10.1.21 key 7 <encrypted-key>
+
+# Group RADIUS servers
+aaa group server radius RADIUS-SERVERS
+  server 10.10.1.20
+  server 10.10.1.21
+
+# Authentication chain: TACACS+ first, RADIUS second, local fallback
+aaa authentication login default group TACACS-SERVERS RADIUS-SERVERS local
+
+# Check RADIUS server status
+show radius-server
+show radius-server statistics
 ```
 
 ---
 
 ## Local Accounts
 
-- Local `admin` account password stored in vault; used for break-glass only
-- One local admin per fabric
-- All other access via TACACS+/RADIUS
+Local accounts must exist for break-glass access — when both TACACS+ and RADIUS are unreachable. Local accounts must not be used for routine operational access.
+
+### Break-Glass Account Standards
+
+| Requirement | Configuration |
+|---|---|
+| One local `admin` account per fabric | `username admin password <strong-pass> role network-admin` |
+| Password stored in vault | HashiCorp Vault / CyberArk — not in config files |
+| Password rotation | Quarterly, under change control |
+| Account usage logged | Vault access log + syslog `%LOGIN-5-LOGIN_SUCCESS` event |
 
 ```bash
-# Show all local users
+# Create break-glass local admin
+username admin password 0 <strong-plaintext-password> role network-admin
+# NX-OS encrypts the password in the config
+
+# Verify account
+show user-account admin
+
+# Check currently active sessions
 show users
+```
 
-# Create a local user
-username <user> password <pass> role <role>
+### Hardening Local Accounts
 
-# Delete a user
-no username <user>
+```bash
+# Enforce minimum password length and complexity
+password strength-check
+username admin password-prompt
+
+# Set maximum login retries before lockout
+aaa authentication login error-enable
+
+# View login failures in accounting log
+show accounting log | grep FAIL
 ```
 
 ---
 
-## Standards
+## SSH Key-Based Authentication
 
-| Control | Standard |
-|---|---|
-| AAA | TACACS+ primary, RADIUS fallback |
-| Local accounts | Break-glass only; one local admin per fabric |
-| Role | `network-admin` for infrastructure team; `network-operator` for read-only |
-| TACACS+ encryption | Enable key encryption: `tacacs-server key 7 <encrypted>` |
+SSH key authentication is more secure than password authentication for automated access (scripts, Ansible).
+
+```bash
+# Generate RSA keys on the switch (required for SSH server)
+crypto key generate rsa
+# Select key size: 2048 bits minimum
+
+# Display the switch's public key
+show crypto key mypubkey rsa
+
+# Verify SSH server is enabled and using the generated key
+show ssh server
+show feature | include ssh
+# Expected: ssh enabled
+```
+
+### Importing a User's SSH Public Key
+
+To allow a user to authenticate via SSH public key:
+
+```bash
+# In username config mode, specify the user's public key
+username netauto sshkey ssh-rsa AAAA...
+# The key string is the full RSA public key from the user's ~/.ssh/id_rsa.pub
+
+# Verify
+show user-account netauto
+```
 
 ---
 
-## Audit Logging
+## FC-SP: Fabric-Layer Device Authentication
 
+FC-SP (DHCHAP — Diffie-Hellman Challenge Handshake Authentication Protocol) authenticates FC devices before they are permitted to log into the fabric. Without FC-SP, any device with a fibre connection to an F_Port can log in.
+
+FC-SP is particularly relevant for high-security fabrics where rogue device insertion is a concern.
+
+### Enabling FC-SP
+
+```bash
+# Enable FC-SP on the switch
+feature fcsp
+
+# Configure authentication mode per interface
+interface fc1/1
+  fcsp dhchap mode on   # enforce authentication
+  # or
+  fcsp dhchap mode auto  # negotiate, accept unauthenticated if peer doesn't support
+
+# Configure a shared DHCHAP secret for a specific peer WWPN
+fcsp dhchap devicename-password pwwn 21:00:00:24:ff:a1:b2:c3 password 0 <secret>
 ```
-# Enable accounting for all exec and config commands
-aaa accounting default group tacacs+
 
-# Configure local syslog with accounting detail
-logging level aaa 6
-logging server <siem-ip> 5 facility local7
+### Verification
 
-# Verify accounting is capturing config changes
-show accounting log
+```bash
+# Check FC-SP status on all interfaces
+show fcsp interface
+
+# Check DHCHAP authentication state for a VSAN
+show fcsp dhchap vsan 10
+
+# Check authentication success / failure in log
+show logging | grep -i fcsp
 ```
+
+---
+
+## NTP (Required for AAA and Certificate Validity)
+
+Authentication mechanisms — TACACS+ accounting, certificate-based auth, Kerberos — rely on synchronized time. NTP is a prerequisite.
+
+```bash
+# Configure NTP servers
+ntp server 10.10.0.10 prefer
+ntp server 10.10.0.11
+
+# Verify NTP sync status
+show ntp status
+show ntp peer-status
+
+# Expected output: Clock is synchronized, stratum 3 (or lower)
+```
+
+All switches in the fabric must be synchronized to the same NTP source. Time drift between switches causes TACACS+ accounting log correlation to fail and may break certificate authentication.
+
+---
+
+## Banner and Login Warning
+
+Configure a login banner to satisfy legal and compliance requirements:
+
+```bash
+# Set a warning banner displayed before login
+banner motd #
+AUTHORIZED ACCESS ONLY. All activity is monitored and logged.
+Unauthorized access is prohibited and will be prosecuted.
+#
+```
+
+---
+
+## Authentication Checklist
+
+- [ ] TACACS+ configured with encrypted shared key; at least two server addresses for redundancy
+- [ ] RADIUS configured as fallback (or local-only as secondary fallback)
+- [ ] AAA authentication, authorization, and accounting all enabled
+- [ ] Local `admin` break-glass account password stored in vault
+- [ ] No personal named local accounts — all access via TACACS+
+- [ ] SSH key generated: `show crypto key mypubkey rsa` returns a valid key
+- [ ] Telnet disabled: `show feature | include telnet` returns disabled
+- [ ] NTP synchronized: `show ntp status` shows synchronized
+- [ ] Login banner configured
+- [ ] TACACS+ test: `test aaa group TACACS-SERVERS <user> <pass>` passes
+- [ ] AAA accounting events appearing in SIEM / syslog receiver

@@ -1,51 +1,221 @@
 # FlashArray — Access Control
 
-> Roles, permissions, and least privilege access.
+FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported. All human admin accounts should be mapped through directory service groups (AD or LDAP); individual named local accounts should be limited to break-glass scenarios and service accounts.
 
-## RBAC
+---
 
-Purity//FA uses a fixed set of built-in roles. Custom roles are not supported — map AD groups to these roles based on the principle of least privilege.
+## Built-in Roles
 
-| Role | Permissions | Use Case |
-|---|---|---|
-| `array_admin` | Full read/write access to all array configuration, user management, and data operations | Storage team leads; break-glass admin accounts |
-| `storage_admin` | Read/write access to volumes, hosts, host groups, protection groups, and snapshots; cannot modify array-level configuration or user accounts | Storage administrators performing day-to-day provisioning |
-| `ops_admin` | Read/write access to operational tasks (start/stop replication, acknowledge alerts, run diagnostics); cannot modify provisioning or array config | Operations team; on-call engineers |
-| `readonly` | Read-only access to all array data and configuration; no ability to make changes | Monitoring integrations; audit accounts; read-only access for application teams |
+| Role | Write Access | Restrictions | Recommended For |
+|---|---|---|---|
+| `array_admin` | Full array configuration, user management, all data operations | None — full control including account creation, SafeMode, and array-level settings | Storage team leads; break-glass admin accounts; Purity upgrade operators |
+| `storage_admin` | Volumes, hosts, host groups, protection groups, snapshots, replication | Cannot modify array-level configuration (network, NTP, DNS, alerts); cannot manage user accounts | Storage admins performing day-to-day provisioning and data management |
+| `ops_admin` | Start/stop replication, acknowledge alerts, run diagnostics, view all configuration | Cannot provision volumes; cannot modify array config; cannot manage user accounts | Operations team; on-call engineers who respond to alerts |
+| `readonly` | None — read-only access to all array data and configuration | Cannot make any changes | Monitoring integrations; SIEM accounts; read-only access for application teams and auditors |
 
-## Assigning Roles
+---
+
+## Assigning Roles to Local Accounts
 
 ```bash
-# Assign a local account to a role
-pureadmin setattr --role storage_admin <username>
+# Create a local account with a specific role
+pureadmin create --role storage_admin jsmith
 
-# Map an AD group to a role
-pureadmin setattr --role ops_admin --group "CN=pure-ops,OU=Groups,DC=example,DC=com"
+# Change an existing account's role
+pureadmin setattr jsmith --role ops_admin
 
-# List all admin accounts and their roles
+# Downgrade to read-only
+pureadmin setattr jsmith --role readonly
+
+# List all accounts and their current roles
 pureadmin list
 ```
 
-## API Tokens
+---
+
+## Assigning Roles to Directory Service Groups
+
+Groups in Active Directory or LDAP are mapped to Purity roles. When a user logs in, Purity checks which AD groups they are a member of and applies the highest-privilege role from the mapped groups.
 
 ```bash
-# Create a service account with API token
-pureadmin create --role array_admin svc-monitoring
-pureadmin apitoken create svc-monitoring
-# Copy the token and store in a secrets manager
+# Map an AD group to array_admin role
+pureadmin setattr --role array_admin \
+    --group "CN=pure-array-admins,OU=Groups,DC=example,DC=com"
 
-# List API tokens
-pureadmin list --api-token
+# Map an AD group to storage_admin role
+pureadmin setattr --role storage_admin \
+    --group "CN=pure-storage-admins,OU=Groups,DC=example,DC=com"
 
-# Delete an API token
-pureadmin delete svc-monitoring --api-token
+# Map an AD group to ops_admin role
+pureadmin setattr --role ops_admin \
+    --group "CN=pure-ops,OU=Groups,DC=example,DC=com"
+
+# Map an AD group to read-only role
+pureadmin setattr --role readonly \
+    --group "CN=pure-readonly,OU=Groups,DC=example,DC=com"
+
+# List all mapped groups and their roles
+pureadmin list
 ```
 
-## Least Privilege Guidelines
+**Group design guidance:**
 
-- Use `storage_admin` for day-to-day provisioning tasks — avoid using `array_admin` for routine work
-- Use `readonly` for monitoring integrations (SNMP, Pure1, SIEM integrations)
-- Use `ops_admin` for on-call engineers who need to acknowledge alerts and run diagnostics but should not make configuration changes
-- Create named accounts for individuals — no shared `pureuser` credentials in production
-- Disable the default `pureuser` account after AD/LDAP authentication is validated
-- Review and rotate API tokens quarterly; disable tokens for decommissioned service accounts
+- Use one AD group per Purity role — do not add the same user to multiple role groups; Purity grants the highest role if a user is in more than one mapped group
+- Nest the Purity role groups under a parent OU for easy ACL reporting and audit
+- Apply AD group membership reviews quarterly — remove members who have changed roles or left the organisation
+
+---
+
+## API Token Access Control
+
+API tokens provide programmatic access without interactive authentication. They inherit the role of the account they belong to.
+
+```bash
+# Create a monitoring service account (read-only)
+pureadmin create --role readonly svc-monitoring
+pureadmin apitoken create svc-monitoring
+
+# Create a provisioning service account for Terraform / Ansible
+pureadmin create --role storage_admin svc-automation
+pureadmin apitoken create svc-automation
+
+# Create an account for Veeam FlashArray integration
+pureadmin create --role storage_admin svc-veeam
+pureadmin apitoken create svc-veeam
+
+# List all accounts and whether they have API tokens
+pureadmin list --api-token
+
+# Revoke a token without deleting the account
+pureadmin delete svc-old --api-token
+```
+
+**Token access matrix:**
+
+| Integration | Recommended Role | Rationale |
+|---|---|---|
+| Pure1 phone-home (built-in) | Managed by Purity | No token needed — automatic |
+| Veeam / Commvault backup | `storage_admin` | Needs to create/delete snapshots and protection groups |
+| Terraform provider | `storage_admin` | Needs to create volumes, hosts, protection groups |
+| Ansible `purefa_info` module | `readonly` | Read-only inventory collection |
+| Monitoring (SNMP, Prometheus) | `readonly` | No write access required |
+| vCenter VASA provider | `storage_admin` | Needs to create and manage vVols |
+| Custom automation (provisioning) | `storage_admin` | Apply scope restriction at the application layer |
+| Audit/compliance tool | `readonly` | Read-only audit collection |
+
+---
+
+## Least Privilege Implementation
+
+Purity does not support resource-level access control (i.e., limiting a `storage_admin` to specific volumes or protection groups). The role grants access to all objects of that type. Compensate for this limitation through:
+
+1. **Process controls:** require change requests for all provisioning; ops team approves requests before storage admins execute
+2. **Audit log review:** forward audit logs to SIEM and alert on unexpected destructive operations (volume destroy, protection group delete, snapshot eradication)
+3. **Separate environments:** use separate FlashArrays (or separate Pure1 organisations) for production and non-production if strict separation is required
+4. **Named accounts only:** never share a `pureuser` credential for routine work — every admin action must be attributable to a named user in the audit log
+
+```bash
+# Audit all admin actions in the last 24 hours
+pureaudit list --sort time- | head -50
+
+# Find all volume delete (destroy) operations
+pureaudit list --filter 'command="purevol" and subcommand="destroy"'
+
+# Find all snapshot eradication operations
+pureaudit list --filter 'command="puresnap" and subcommand="eradicate"'
+
+# Find all protection group schedule changes
+pureaudit list --filter 'command="purepgroup" and subcommand="schedule"'
+```
+
+---
+
+## Account Lifecycle Management
+
+### Onboarding a New Admin
+
+1. Add the new admin's account to the appropriate AD security group for their role
+2. Verify they can log into the array with their domain account
+3. Confirm their role is correct: `pureadmin list` and check the role column
+4. If they need API access, create a named service account or provide them a personal API token tied to their account
+
+### Offboarding an Admin
+
+```bash
+# If using AD: remove the user from the relevant AD group — their next login attempt will fail
+# Invalidate any active sessions immediately:
+pureadmin refresh <username>
+
+# If they had a local account, delete it:
+pureadmin delete jsmith
+
+# If they had a personal API token:
+pureadmin delete jsmith --api-token
+```
+
+If the departing admin had access to any shared credentials (e.g., the vaulted `pureuser` password), rotate those credentials immediately after their departure.
+
+### Periodic Access Review
+
+Run quarterly:
+
+```bash
+# Export all admin accounts and roles to CSV for access review
+ssh pureuser@<array_ip> "pureadmin list --csv" > admin_review_$(date +%Y%m%d).csv
+
+# Export API token inventory
+ssh pureuser@<array_ip> "pureadmin list --api-token --csv" >> admin_review_$(date +%Y%m%d).csv
+```
+
+Review output and action:
+
+- Remove AD group memberships for any accounts that should no longer have access
+- Revoke API tokens for decommissioned service accounts or integrations
+- Confirm that no accounts have `array_admin` that should be `storage_admin`
+
+---
+
+## SNMP Access Control
+
+FlashArray supports SNMPv3 for monitoring integrations. Always use SNMPv3 — never SNMPv1 or SNMPv2c in production.
+
+```bash
+# Configure SNMPv3 community (authPriv — SHA auth + AES encryption)
+puresnmp create --version v3 \
+    --auth-protocol SHA \
+    --auth-passphrase "<auth_password>" \
+    --privacy-protocol AES \
+    --privacy-passphrase "<priv_password>" \
+    --user monitoring-user \
+    siem-snmp
+
+# List SNMP configuration
+puresnmp list
+
+# Configure SNMP trap destination
+puresnmptrap create --version v3 \
+    --auth-protocol SHA \
+    --auth-passphrase "<auth_password>" \
+    --privacy-protocol AES \
+    --privacy-passphrase "<priv_password>" \
+    --user monitoring-user \
+    --host <trap_receiver_ip> \
+    nms-trap
+```
+
+SNMPv3 is read-only by design on FlashArray — it cannot be used to make configuration changes.
+
+---
+
+## Management Network Access Restriction
+
+FlashArray does not provide built-in IP-based ACLs for management plane access. Restrict access at the network layer:
+
+| Control | Implementation |
+|---|---|
+| Firewall / ACL on management VLAN | Allow SSH (22) and HTTPS (443) only from admin jump hosts and monitoring systems; deny all other inbound |
+| Dedicated management VLAN | Place the array management interface on a VLAN separate from data traffic; apply the ACL at the access layer switch |
+| Jump host requirement | Require all admin access to originate from a bastion/jump host; the jump host should enforce MFA at the host level |
+| SSH key restriction | If using local accounts for CLI access, use SSH key authentication and disable password-based SSH on the jump host (not on the array itself — Purity does not support SSH key auth natively) |
+
+Document the allowed source IP ranges in the firewall change log and review them annually.

@@ -1,370 +1,450 @@
 # vSAN — Procedures
 
+Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.
+
+---
+
 ## Disk Groups
 
-Disk group health, cache/capacity devices, failures, and replacement notes.
+### Add a Disk Group to an Existing Host
 
-### Daily Checks
+Adding a disk group increases per-host storage capacity and I/O parallelism.
 
-| Check | Command | Notes |
-|---|---|---|
-| Review active alarms. |  |  |
-| Check recent failed tasks. |  |  |
-| Confirm service health. |  |  |
-| Confirm capacity and performance are normal. |  |  |
-| Check recent changes. |  |  |
-
-### Health Commands
+**Prerequisites:**
+- Physical disks are installed and visible to the ESXi host.
+- Disks are on the vSAN HCL for the installed ESXi version.
+- No active resync in progress on the cluster.
 
 ```bash
-# Add environment-specific commands here
+# 1. Identify unclaimed disks on the host
+esxcli storage core device list | grep -v "Is Local SAS Disk"
+esxcli vsan storage list          # compare — unclaimed disks won't appear here
+
+# 2. Identify device NAA IDs for new disks
+esxcli storage core device list | grep -E "Display Name|naa\."
+
+# 3. Create the disk group (cache SSD + one or more capacity disks)
+esxcli vsan storage add -s <cache_ssd_naa> -d <capacity_naa1> -d <capacity_naa2>
+
+# 4. Verify the disk group was created
+esxcli vsan storage list
+
+# 5. Check health — new disk group should appear healthy
+esxcli vsan health cluster list
 ```
 
-### Common Issues
+**From vCenter UI:**
+vSphere Client → Cluster → Configure → vSAN → Disk Management → Claim Disks
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+### Replace a Failed Capacity Disk
 
-### Operational Tasks
+A capacity disk failure causes components on that disk to go absent. vSAN waits for the `clomRepairDelay` timer (default 60 minutes) before rebuilding.
 
-| Task | Command |
+```bash
+# 1. Identify the failed disk
+esxcli vsan storage list | grep -E "naa\.|Health|State"
+
+# 2. Check which objects are degraded
+esxcli vsan debug object list | grep -v healthy
+
+# 3. Remove the failed capacity disk from its disk group
+esxcli vsan storage remove -d <failed_capacity_naa>
+
+# 4. Physically replace the disk in the server chassis
+# (Follow vendor hardware replacement procedure)
+
+# 5. Verify the new disk is visible
+esxcli storage core device list
+
+# 6. Add the new disk to the existing disk group
+esxcli vsan storage add -s <existing_cache_ssd_naa> -d <new_capacity_naa>
+
+# 7. Monitor resync — data rebuilds onto the new disk
+esxcli vsan debug resync summary get
+```
+
+Expected resync time: several hours for a multi-TB disk. Monitor throughput and do not remove additional disks during the rebuild.
+
+### Replace a Failed Cache SSD
+
+A failed cache SSD takes the entire disk group offline. All components on all capacity disks in that group become absent simultaneously.
+
+```bash
+# 1. Identify the failed disk group and cache SSD
+esxcli vsan storage list | grep -E "Is SSD|Disk Group UUID|naa\."
+
+# 2. Remove the failed disk group (removing the cache SSD removes the whole group)
+esxcli vsan storage remove -s <failed_cache_ssd_naa>
+
+# 3. Physically replace the cache SSD
+
+# 4. Verify the new SSD is visible
+esxcli storage core device list
+
+# 5. Recreate the disk group with the new cache SSD and the existing capacity disks
+esxcli vsan storage add -s <new_cache_ssd_naa> -d <capacity_naa1> -d <capacity_naa2>
+
+# 6. Monitor resync — all objects that were on this disk group rebuild
+esxcli vsan debug resync summary get
+watch -n 30 "esxcli vsan debug resync summary get"
+```
+
+**Note:** Cache SSD failure on a single-disk-group host puts all data on that host at risk. With FTT=1, all affected objects are degraded (one component is absent). No data loss occurs unless a second failure happens before rebuild completes. Treat cache SSD replacement as a P1 task.
+
+### Put a Host in Maintenance Mode
+
+Always put vSAN hosts into maintenance mode through vCenter, not via the ESXi shell, so vSAN health validation runs automatically.
+
+**From vCenter UI:**
+Right-click host → Maintenance Mode → Enter Maintenance Mode
+
+**Select the correct data migration option:**
+
+| Option | When to use |
 |---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
+| Full data migration | Hardware repair, OS reinstall, decommission. Moves all data off the host before maintenance begins. Requires sufficient capacity on remaining hosts. |
+| Ensure Accessibility | Short maintenance (driver update, reboot). Keeps one component accessible — faster but leaves the cluster at reduced protection during maintenance. |
+| No data migration | Not recommended except for very short, non-disruptive reboots on large clusters. Data remains unprotected during downtime. |
 
-### Upgrade Notes
+```powershell
+# PowerCLI — enter maintenance mode with full data migration
+$host = Get-VMHost esxi-01.example.com
+Set-VMHost -VMHost $host -State Maintenance -VsanDataMigrationMode Full
+```
 
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
+**Verify maintenance mode entry completes successfully:**
 
-### Best Practices
+```bash
+# From any other host in the cluster
+esxcli vsan debug resync summary get
+# All resync must complete before performing any further changes
+```
 
-| Recommendation | Detail |
-|---|---|
-| Keep naming consistent. | Keep naming consistent. |
-| Keep versions aligned. | Keep versions aligned. |
-| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
-| Document exceptions. | Document exceptions. |
-| Validate after every change. | Validate after every change. |
+**Exit maintenance mode after work is complete:**
+
+```powershell
+Set-VMHost -VMHost $host -State Connected
+```
 
 ---
 
 ## Storage Policies
 
-Policy design, compliance checks, failures to tolerate, and object placement.
+### Create a Storage Policy
 
-### Daily Checks
+Storage policies are created in vCenter and applied to VMs at provisioning time or changed on running VMs.
 
-| Check | Command | Notes |
-|---|---|---|
-| Review active alarms. |  |  |
-| Check recent failed tasks. |  |  |
-| Confirm service health. |  |  |
-| Confirm capacity and performance are normal. |  |  |
-| Check recent changes. |  |  |
+**From vCenter UI:**
+vSphere Client → Menu → Policies and Profiles → VM Storage Policies → Create
 
-### Health Commands
+```powershell
+# PowerCLI — create a Tier-1 FTT=2 RAID-6 policy
+Connect-VIServer <vcenter>
 
-```bash
-# Add environment-specific commands here
+New-SpbmStoragePolicy -Name "VSAN-T1-FTT2-RAID6" `
+    -Description "Tier-1 databases: FTT=2 RAID-6 (6+ node cluster)" `
+    -AnyOfRuleSets @(
+        New-SpbmRuleSet -AllOfRules @(
+            New-SpbmRule -AnyOfCapabilities @(
+                New-SpbmCapability -Name "VSAN.hostFailuresToTolerate" -Value 2
+            ),
+            New-SpbmRule -AnyOfCapabilities @(
+                New-SpbmCapability -Name "VSAN.replicaPreference" -Value "RAID-6"
+            ),
+            New-SpbmRule -AnyOfCapabilities @(
+                New-SpbmCapability -Name "VSAN.checksumDisabled" -Value $false
+            )
+        )
+    )
 ```
 
-### Common Issues
+**Standard policy set:**
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+| Policy Name | FTT | Method | Min Hosts | Use Case |
+|---|---|---|---|---|
+| `VSAN-T1-FTT2-RAID6` | 2 | RAID-6 | 6 | Tier-1 databases |
+| `VSAN-T2-FTT1-RAID5` | 1 | RAID-5 | 4 | General workloads |
+| `VSAN-DEV-FTT1-RAID1` | 1 | RAID-1 | 3 | Dev/Test |
+| `VSAN-STRETCH-FTT1-SITE` | 1 per site | RAID-1 | 2+2+witness | Stretched cluster |
 
-### Operational Tasks
+### Apply a Storage Policy to a VM
 
-| Task | Command |
-|---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
+```powershell
+# Apply policy to all disks of a VM
+$vm = Get-VM "my-vm"
+$policy = Get-SpbmStoragePolicy "VSAN-T1-FTT2-RAID6"
 
-### Upgrade Notes
+# Apply to VM home directory
+Set-SpbmEntityConfiguration -StoragePolicy $policy -Entity $vm
 
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
+# Apply to each virtual disk
+Get-HardDisk -VM $vm | Set-SpbmEntityConfiguration -StoragePolicy $policy
+```
 
-### Best Practices
+Policy changes on running VMs trigger a resync — existing object components are rebuilt to meet the new policy. Monitor resync after applying policy changes:
 
-| Recommendation | Detail |
-|---|---|
-| Keep naming consistent. | Keep naming consistent. |
-| Keep versions aligned. | Keep versions aligned. |
-| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
-| Document exceptions. | Document exceptions. |
-| Validate after every change. | Validate after every change. |
+```bash
+esxcli vsan debug resync summary get
+```
+
+### Check Policy Compliance
+
+```powershell
+# Check compliance for all VMs
+Get-SpbmEntityConfiguration | Where-Object { $_.ComplianceStatus -ne "compliant" } |
+    Select Entity, StoragePolicy, ComplianceStatus
+
+# Check compliance for a specific VM
+Get-SpbmEntityConfiguration -Entity (Get-VM "my-vm") |
+    Select Entity, StoragePolicy, ComplianceStatus, ComplianceTaskStatus
+```
+
+**From vCenter UI:**
+Cluster → Monitor → vSAN → Virtual Objects → filter by Non-compliant
+
+Non-compliant objects mean the current storage policy cannot be satisfied — typically due to insufficient hosts, disk group failures, or capacity pressure.
 
 ---
 
 ## Resync and Object Health
 
-### Checking Resync Status
+### Check Resync Status
 
 ```bash
-# From an ESXi host in the cluster
+# Summary — bytes remaining and operation count
 esxcli vsan debug resync summary get
+
+# Detailed list — per-object resync operations
+esxcli vsan debug resync list
 ```
-
-Or in vCenter: **vSAN** → **Skyline Health** → **Data** → **vSAN Object Health**
-
-### Understanding Resync Types
-
-| Type | Meaning |
-|---|---|
-| Repair | Rebuilding a component after a failure |
-| Rebalance | Redistributing data after capacity or host changes |
-| Evacuation | Migrating data for maintenance mode |
-| Policy change | Applying a new storage policy |
-
-### When Resync Is Expected
-
-- Host just returned from maintenance mode
-- Disk replacement completed
-- Capacity added to the cluster
-- Storage policy changed on VMs
-
-### When Resync Is Concerning
-
-- Resync active for more than 24 hours without progress
-- Object health showing Degraded with no active resync
-- Resync blocked due to capacity or network issues
-
-### Checking Object Health
-
-In vCenter: **vSAN** → **Virtual Objects**
-
-- Filter by health status — investigate Degraded, Non-compliant, or Absent objects
-- Note the VM name, object type, and storage policy
-
-### Common Causes of Degraded Objects
-
-- Host removed from cluster without full evacuation
-- Disk group failure
-- Network partition between hosts
-- Capacity too low to meet the FTT policy
-
-### Support Bundle Collection
-
-If resync or object issues do not resolve after the expected timeframe:
-
-1. Collect a vSAN support bundle from the vCenter support bundle tool
-2. Include ESXi host logs from affected nodes
-3. Open a VMware support case with the bundle and a timeline of events
-
----
-
-## Resync and Rebuild
-
-### What Is Resync?
-
-Resync is the process by which vSAN redistributes data across the cluster to satisfy the active storage policy (PFTT — Primary Failures to Tolerate, or SFTT — Secondary Failures to Tolerate). It is triggered by events such as:
-
-- A host returning from maintenance mode
-- A disk group being added or replaced
-- A storage policy change applied to existing VMs
-- A capacity rebalance after adding new capacity to the cluster
-
-During a resync, vSAN copies object components from one disk or host to another. This is normal, expected behaviour and does not by itself indicate a problem.
-
-### What Is Rebuild?
-
-Rebuild is a specific type of resync triggered when a component enters an **Absent** or **Degraded** state — typically because a host is down, a disk has failed, or a disk group is offline. vSAN tracks how long the component has been absent before initiating a full rebuild to a healthy location.
-
-**Default absent timer: 60 minutes.** After a host or disk has been absent for 60 minutes, vSAN automatically begins rebuilding the affected object components onto remaining healthy capacity. This timer exists to avoid unnecessary data movement for brief maintenance events.
-
-You can view and adjust the absent timer in vSAN Advanced Configuration:
-
-- **vCenter** → **Cluster** → **Configure** → **vSAN** → **Advanced Options** → `clomRepairDelay`
-- Default is `60` (minutes). Increase this if you routinely have short maintenance windows to reduce unnecessary rebuilds.
-
-### Checking Resync Progress
-
-#### ESXi CLI (run on any host in the cluster)
-
-```bash
-esxcli vsan debug resync summary get
-```
-
-This returns a summary of active resync operations including bytes remaining and estimated completion time.
-
-#### PowerCLI
 
 ```powershell
-# Connect to vCenter first
-Connect-VIServer -Server vcsa-prod-01.example.com
-
-# Get resync throttle status
-Get-VsanResyncThrottle -Cluster (Get-Cluster "cl-prod-compute-01")
+# PowerCLI resync status
+Get-VsanResyncStatus -Cluster (Get-Cluster "VSAN-LON-01")
 ```
 
-#### vCenter UI
+**From vCenter UI:**
+Cluster → Monitor → vSAN → Resyncing Objects
 
-Navigate to: **Cluster** → **Monitor** → **vSAN** → **Resyncing Objects**
-
-This view shows all objects currently resyncing, broken down by type (repair, rebalance, evacuation, policy change) along with bytes remaining.
-
-### Resync Throttle
-
-During peak production hours, resync can consume significant I/O bandwidth. vSAN allows you to throttle resync to protect workload performance.
-
-#### Check current throttle
+### Throttle Resync During Production Hours
 
 ```bash
+# Check current throttle (0 = unlimited)
 esxcli vsan debug resync throttle get
+
+# Limit resync to 500 IOPS per host during business hours
+esxcli vsan debug resync throttle set --throttle 500
+
+# Remove throttle during maintenance window (unlimited)
+esxcli vsan debug resync throttle set --throttle 0
 ```
-
-#### Set throttle (IOPS cap)
-
-```bash
-# Set resync throughput limit to 1000 IOPS (per host)
-esxcli vsan debug resync throttle set --throttle 1000
-```
-
-A value of `0` means no throttle (unlimited). During business hours, setting a limit of `500`–`2000` IOPS is typical depending on workload sensitivity. Remove the throttle during off-hours maintenance windows to allow faster completion.
-
-#### PowerCLI throttle
 
 ```powershell
-# Set resync throttle (IopsForResync) for the cluster
-Set-VsanResyncThrottle -Cluster (Get-Cluster "cl-prod-compute-01") -IopsForResync 1000
+# PowerCLI throttle management
+Set-VsanResyncThrottle -Cluster (Get-Cluster "VSAN-LON-01") -IopsForResync 500
 ```
 
-### Performance Impact During Rebuild
+### Adjust the Absent Component Timer
 
-Rebuild generates significant back-end I/O between hosts. Expect:
+The default timer is 60 minutes — vSAN waits this long before starting a rebuild on absent components. Increasing this value reduces unnecessary rebuilds during short maintenance.
 
-- **Increased disk latency** on hosts involved in the rebuild, particularly for VMs on the same disk groups
-- **Increased network utilisation** on vSAN VMkernel adapters (10/25 GbE traffic between hosts)
-- **Reduced effective cluster IOPS** proportional to how much capacity is being rebuilt
+**From vCenter UI:**
+Cluster → Configure → vSAN → Advanced Options → `clomRepairDelay`
 
-Monitor `vSAN Backend Read Latency` and `vSAN Backend Write Latency` counters in vCenter performance charts during active rebuilds. Latency above 20 ms sustained warrants investigation or throttle adjustment.
+Recommended values:
+- Standard production: `60` minutes
+- Frequent short maintenance (rolling reboots): `180` minutes
+- Never increase above 240 minutes — leaves data unprotected for too long
 
-### How Long Should Resync Take?
+### Force a Policy Recalculation
 
-| Scenario | Expected Duration |
-|---|---|
-| Single VM policy change | Minutes to hours depending on VM size |
-| Host returning from short maintenance (< 1 hour) | 30 minutes – 4 hours |
-| Full disk group replacement (e.g. 8 TB) | Several hours to overnight |
-| Full host replacement (large capacity) | 12–48 hours |
-| Cluster rebalance after adding capacity | Hours to days |
+If objects are non-compliant after a cluster change (host added, disk replaced):
 
-If resync has been running for more than **24 hours without measurable progress**, investigate blocked components.
-
-### Key Commands Reference
-
-| Command | Purpose |
-|---|---|
-| `esxcli vsan debug resync summary get` | Show active resync summary |
-| `esxcli vsan debug resync throttle get` | Show current throttle setting |
-| `esxcli vsan debug resync throttle set --throttle <n>` | Set throttle in IOPS (0 = unlimited) |
-| `esxcli vsan debug object list` | List all vSAN objects and health states |
-| `esxcli vsan debug disk list` | List disks and their health |
-| `Get-VsanResyncThrottle` | PowerCLI: get throttle for a cluster |
-| `Set-VsanResyncThrottle -IopsForResync <n>` | PowerCLI: set throttle for a cluster |
-
-### Checking Object Health
-
-In vCenter: **Cluster** → **Monitor** → **vSAN** → **Virtual Objects**
-
-Filter by status:
-- **Healthy** — all components present and compliant
-- **Non-compliant** — policy cannot be met (often capacity or host count issue)
-- **Degraded** — one or more components are absent or failed
-- **Inaccessible** — object cannot be read (critical — immediate action required)
-
-For inaccessible objects, check that all hosts in the cluster are connected and that vSAN network connectivity between hosts is healthy.
-
-### When to Call VMware Support
-
-Open a VMware (Broadcom) support case if:
-
-- Objects remain in **Inaccessible** state after verifying host and network connectivity
-- Resync has been running for more than **48 hours** with no forward progress
-- `esxcli vsan debug resync summary get` shows errors or reports a stalled operation
-- vSAN health in Skyline Health shows **red** for Data Integrity or Object Health even after expected completion
-- A disk group enters a **Degraded** state unexpectedly (hardware failure suspected)
-
-When opening a support case, collect:
-1. vSAN support bundle from vCenter (Support → Generate Support Bundle, include vSAN data)
-2. ESXi host logs from affected nodes (`/var/log/vmkernel.log`, `/var/log/vsanmgmt.log`)
-3. Timeline of events (when host went down, when rebuild started, current status)
-4. Output of `esxcli vsan debug resync summary get` and `esxcli vsan debug object list`
+```bash
+# From any ESXi host — trigger CLOM rescan
+esxcli vsan debug object list | grep non-compliant
+# Non-compliant objects resync automatically — allow 15-30 minutes
+# If no progress, check capacity and policy eligibility
+```
 
 ---
 
-## Capacity
+## Capacity Management
 
-Capacity planning, slack space, thin provisioning, growth trends, and alert thresholds.
-
-### Daily Checks
-
-| Check | Command | Notes |
-|---|---|---|
-| Review active alarms. |  |  |
-| Check recent failed tasks. |  |  |
-| Confirm service health. |  |  |
-| Confirm capacity and performance are normal. |  |  |
-| Check recent changes. |  |  |
-
-### Health Commands
+### Check Current Capacity
 
 ```bash
-# Add environment-specific commands here
+# Per-host disk summary
+esxcli vsan storage list
+
+# Cluster-level summary
+esxcli vsan cluster get
 ```
 
-### Common Issues
+```powershell
+# Capacity overview per cluster
+Get-VsanSpaceUsage -Cluster (Get-Cluster "VSAN-LON-01") |
+    Select TotalCapacityGB, FreeCapacityGB, UsedCapacityGB,
+           @{N='UsedPct';E={[Math]::Round($_.UsedCapacityGB/$_.TotalCapacityGB*100,1)}}
+```
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+**From vCenter UI:**
+Cluster → Monitor → vSAN → Capacity
 
-### Operational Tasks
+### Identify Large Snapshot Consumers
 
-| Task | Command |
-|---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
+Snapshots are a common cause of unexpected capacity consumption on vSAN. Each snapshot creates a delta disk that grows with every write.
 
-### Upgrade Notes
+```powershell
+# Find VMs with snapshots sorted by snapshot size
+Get-VM | Get-Snapshot | Select VM, Name, SizeGB, Created |
+    Sort-Object SizeGB -Descending | Format-Table -AutoSize
+```
 
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
+**Remove orphaned snapshots:**
 
-### Best Practices
+```powershell
+# Consolidate a VM (removes orphaned delta disks)
+Get-VM "my-vm" | % { $_.ExtensionData.ConsolidateVMDisks() }
+```
 
-| Recommendation | Detail |
-|---|---|
-| Keep naming consistent. | Keep naming consistent. |
-| Keep versions aligned. | Keep versions aligned. |
-| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
-| Document exceptions. | Document exceptions. |
-| Validate after every change. | Validate after every change. |
+### Add Capacity to an Existing Cluster
+
+**Add a new host to the cluster:**
+
+1. Ensure new host meets hardware requirements and is on the vSAN HCL.
+2. Add host to vCenter and the vSAN cluster.
+3. Claim disks for vSAN via Cluster → Configure → vSAN → Disk Management.
+4. vSAN automatically rebalances data across the new host over time.
+
+```bash
+# Trigger manual rebalance (optional — vSAN rebalances automatically over time)
+esxcli vsan cluster rebalance start
+```
+
+**Add disks to an existing host:**
+
+```bash
+# Add capacity disks to an existing disk group
+esxcli vsan storage add -s <existing_cache_ssd_naa> -d <new_capacity_naa>
+```
+
+---
+
+## Stretched Cluster Operations
+
+### Validate Stretched Cluster Health
+
+```bash
+# Check fault domain configuration
+esxcli vsan cluster get
+
+# Verify witness host connectivity
+esxcli vsan debug network test
+```
+
+```powershell
+# PowerCLI — fault domain and witness status
+Get-VsanFaultDomainConfiguration -Cluster (Get-Cluster "VSAN-LON-01")
+```
+
+**From vCenter UI:**
+Cluster → Configure → vSAN → Fault Domains
+
+Both data sites and the witness site must show as connected. A partition between a data site and the witness will cause that data site's VMs to become read-only to prevent split-brain.
+
+### Site Failover Test (Planned)
+
+**Planned failover procedure (test or maintenance):**
+
+1. Confirm cluster health — all objects healthy, no active resync.
+2. Isolate Site A (or Site B) by taking those hosts into maintenance mode with Full Data Migration.
+3. Verify VMs on the isolated site migrate to the surviving site.
+4. Confirm witness is reachable from the surviving site.
+5. Verify VM access on the surviving site is uninterrupted.
+6. Return isolated hosts from maintenance mode and confirm resync.
+
+**Never take both data sites offline simultaneously** — the witness cannot serve data and all VMs become inaccessible.
+
+---
+
+## Performance Service
+
+### Enable vSAN Performance Service
+
+The Performance Service must be enabled to collect per-VM and per-disk-group metrics visible in the vSphere Client performance charts.
+
+**From vCenter UI:**
+Cluster → Configure → vSAN → Services → Performance Service → Enable
+
+```powershell
+# Enable via PowerCLI
+$cluster = Get-Cluster "VSAN-LON-01"
+$vsanConfig = Get-VsanClusterConfiguration -Cluster $cluster
+Set-VsanClusterConfiguration -Configuration $vsanConfig -PerformanceServiceEnabled $true
+```
+
+### View Performance Metrics
+
+**From vCenter UI:**
+Cluster → Monitor → vSAN → Performance → select a view (Cluster, Host, Disk Group, or VM)
+
+Key metrics to review:
+
+| Metric | Normal Range | Investigate If |
+|---|---|---|
+| Read latency | < 2 ms (all-flash) | > 10 ms sustained |
+| Write latency | < 5 ms (all-flash) | > 20 ms sustained |
+| Congestion | 0 | > 0 sustained |
+| Throughput | Varies by workload | Consistently at NIC cap |
+| Resync throughput | 0 (idle) | High for > 24h (blocked?) |
+
+### Collect Performance Counters via CLI
+
+```bash
+# vSAN performance stats from ESXi host
+esxcli vsan debug vmdk list
+
+# Disk-level stats (IOPS, latency, errors)
+esxcli vsan storage stats get
+```
+
+---
+
+## vSAN Witness (2-Node and Stretched Clusters)
+
+### Deploy Witness Appliance
+
+1. Download the vSAN Witness Appliance OVA from the Broadcom portal.
+2. Deploy to a separate ESXi host at the witness site (vSphere Client → Actions → Deploy OVF Template).
+3. Select the appropriate appliance size (Tiny/Small/Medium) based on VM count.
+4. Assign a management IP and DNS name.
+5. Register the witness with the vCenter managing the 2-node or stretched cluster.
+
+**Witness appliance sizing:**
+
+| Size | Max VMs | vCPU | vRAM |
+|---|---|---|---|
+| Tiny | 10 | 2 | 8 GB |
+| Small | 500 | 2 | 16 GB |
+| Medium | 15,000 | 4 | 32 GB |
+
+### Validate Witness Connectivity
+
+```bash
+# From a data site host — ping witness vmkernel IP
+vmkping -I vmk2 <witness_vsan_vmk_ip>
+
+# Check unicast agent list — witness should appear
+esxcli vsan network ipconfig list
+```
+
+Witness RTT must be < 200 ms from both data sites. Test during peak hours, not only during lab conditions.
+
+### Replace a Failed Witness
+
+1. Deploy a new witness appliance.
+2. In vCenter: Cluster → Configure → vSAN → Fault Domains → Edit.
+3. Select the witness site and replace the witness host with the new appliance.
+4. Verify fault domain configuration is valid.
+5. Test connectivity from both data sites.
