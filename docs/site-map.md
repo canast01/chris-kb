@@ -42,6 +42,10 @@ Use this page as a quick jump list for the main KB areas.
   <strong>Disaster Recovery</strong>
   <span>DR tools, replication, restore, and validation.</span>
 </a>
+<a class="kb-card" href="backup/">
+  <strong>Backup</strong>
+  <span>Veeam, Commvault, and NetBackup — architecture, operations, and troubleshooting.</span>
+</a>
 <a class="kb-card" href="data-protection/">
   <strong>Data Protection</strong>
   <span>Backup validation, encryption, retention, and recovery testing.</span>
@@ -87,10 +91,6 @@ Use this page as a quick jump list for the main KB areas.
 <a class="kb-card" href="security/">
   <strong>Security</strong>
   <span>AD, certificates, CyberArk, and Venafi.</span>
-</a>
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Build standards, naming conventions, security baselines, and SAN zoning.</span>
 </a>
 <a class="kb-card" href="certifications/">
   <strong>Certifications</strong>
