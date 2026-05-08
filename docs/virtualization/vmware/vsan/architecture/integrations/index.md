@@ -4,6 +4,39 @@
 
 vSAN is exclusively managed through vCenter Server. There is no standalone vSAN management interface — all cluster configuration, storage policy management, health monitoring, and capacity reporting is done through the vSphere Client connected to vCenter.
 
+```mermaid
+graph TD
+    vc["vCenter Server\n(management plane)"]
+
+    subgraph "vSAN Management Functions"
+        clusterMgmt["Cluster & disk group\ncreation"]
+        policyMgmt["Storage Policy\nmanagement (SPBM)"]
+        health["Skyline Health\nmonitoring"]
+        capacity["Capacity reporting\n& alerts"]
+        encMgmt["Encryption & KMS\nconfiguration"]
+        vlcm["vLCM upgrade\norchestration"]
+    end
+
+    subgraph "vSAN Data Plane (ESXi — independent of vCenter)"
+        dom["DOM — Distributed\nObject Manager"]
+        clom["CLOM — Cluster Level\nObject Manager"]
+        cmmds["CMMDS — Cluster\nMembership Service"]
+        lsom["LSOM — Local Storage\nObject Manager"]
+    end
+
+    vc --> clusterMgmt & policyMgmt & health & capacity & encMgmt & vlcm
+    dom <--> clom <--> cmmds
+    clom --> lsom
+
+    classDef vcNode fill:#b45309,stroke:#92400e,color:#fff
+    classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef dp fill:#15803d,stroke:#166534,color:#fff
+
+    class vc vcNode
+    class clusterMgmt,policyMgmt,health,capacity,encMgmt,vlcm mgmt
+    class dom,clom,cmmds,lsom dp
+```
+
 Key vCenter-managed vSAN functions:
 
 - Cluster creation and disk group claim

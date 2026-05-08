@@ -4,6 +4,28 @@
 
 ---
 
+## PowerShell Hardening Layers
+
+```mermaid
+graph TD
+    execPolicy["Execution Policy\n(RemoteSigned / AllSigned)"]
+    scriptSigning["Script Signing\n(Set-AuthenticodeSignature)"]
+    clm["Constrained Language Mode\n(WDAC / AppLocker)"]
+    transcripts["Transcript Logging\n(Start-Transcript → \\\\server\\pslogs)"]
+    scriptBlock["Script Block Logging\n(Event ID 4104)"]
+    jea["JEA\n(Just Enough Administration)"]
+    moduleAllow["Module Allow-listing\n(WDAC approved modules)"]
+    siem["SIEM / Log Analysis\n(alert on suspicious blocks)"]
+
+    execPolicy --> scriptSigning
+    scriptSigning --> clm
+    clm --> jea
+    jea --> moduleAllow
+    transcripts --> siem
+    scriptBlock --> siem
+    moduleAllow --> siem
+```
+
 ## Constrained Language Mode
 
 Constrained Language Mode limits PowerShell to a safe subset of the language, blocking arbitrary .NET access.

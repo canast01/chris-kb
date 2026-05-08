@@ -1,5 +1,19 @@
 # Active Directory — Procedures
 
+## AGDLP Group Design Flow
+
+```mermaid
+graph TD
+    userAccts["User Accounts\n(A — Accounts)"]
+    globalGrp["Global Group\nGG_Server_Admins\n(G — role grouping, same domain)"]
+    domLocalGrp["Domain Local Group\nDL_Servers_RDP_Access\n(DL — resource permission)"]
+    resource["Resource / Server\n(P — NTFS / ACL permission)"]
+
+    userAccts -->|"member of"| globalGrp
+    globalGrp -->|"nested in"| domLocalGrp
+    domLocalGrp -->|"assigned to"| resource
+```
+
 ## Groups
 
 AD groups control access to resources and distribution of email. Choosing the correct type and scope prevents replication overhead and simplifies permission management.

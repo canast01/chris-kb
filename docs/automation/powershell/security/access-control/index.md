@@ -4,6 +4,28 @@
 
 ---
 
+## PowerShell Access Control Architecture
+
+```mermaid
+graph TD
+    user["User / Script\n(caller)"]
+    execPolicy["Execution Policy\n(RemoteSigned / AllSigned)"]
+    jea["JEA Endpoint\n(Register-PSSessionConfiguration)"]
+    roleCapability["Role Capability File\n(.psrc — allowed cmdlets)"]
+    sessionConfig["Session Configuration\n(.pssc — restricted)"]
+    adGroup["AD Group Membership\n(RBAC check in code)"]
+    transcript["Start-Transcript\n(audit log)"]
+    svcAccount["Service Account\n(least privilege)"]
+
+    user --> execPolicy
+    execPolicy -->|Pass| jea
+    jea --> sessionConfig
+    sessionConfig --> roleCapability
+    user --> adGroup
+    adGroup -->|Member| svcAccount
+    svcAccount --> transcript
+```
+
 ## Execution Policy
 
 Execution policy controls which scripts PowerShell will run. It is not a security boundary — it can be bypassed — but it prevents accidental script execution.

@@ -1,5 +1,19 @@
 # Active Directory — Authentication
 
+## Privileged Access and Kerberos Security Flow
+
+```mermaid
+flowchart TD
+    userTier0["Tier 0 Admin\n(adm0-jsmith)"] -->|"logs in from"| paw["Tier 0 PAW\n(AppLocker + BitLocker + no internet)"]
+    paw -->|"Kerberos AS-REQ\n(AES-256 only — RC4 disabled)"| kdc["KDC\n(Domain Controller)"]
+    kdc -->|"TGT issued\n(Protected Users — no NTLM cached)"| paw
+    paw -->|"TGS-REQ for DC admin SPN"| kdc
+    kdc -->|"Service Ticket"| paw
+    paw -->|"Admin session\nto DC / ADCS / CyberArk"| tier0Sys["Tier 0 Systems"]
+
+    protUsers["Protected Users Group\n(members cannot use NTLM / DES / RC4\nor have credentials cached)"] -. "applied to" .-> userTier0
+```
+
 ## Privileged Access Workstations (PAWs)
 
 PAWs are hardened, dedicated hosts:

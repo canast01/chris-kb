@@ -4,6 +4,25 @@
 
 ---
 
+## PowerShell Troubleshooting Decision Flow
+
+```mermaid
+flowchart TD
+    failure["Script Error\nor Unexpected Behaviour"]
+    failure --> errType{"Error type?"}
+    errType -->|Execution policy\nblocked| checkPolicy["Get-ExecutionPolicy -List\ncheck all scopes"]
+    checkPolicy --> setPolicy["Set-ExecutionPolicy RemoteSigned\n-Scope CurrentUser"]
+    errType -->|Module not found| checkModPath["$env:PSModulePath\nmodule path correct?"]
+    checkModPath -->|No| addPath["Add module directory\nto PSModulePath"]
+    checkModPath -->|Yes| reinstallMod["Install-Module -Force\n-AllowClobber"]
+    errType -->|WinRM /\nRemoting failure| testWSMan["Test-WSMan -ComputerName host\nTest-NetConnection port 5985"]
+    testWSMan -->|No response| enableRemoting["Enable-PSRemoting -Force\non target (as admin)"]
+    errType -->|Credential /\nauth failure| checkCred["$Error[0] | Format-List *\ninspect exception"]
+    checkCred --> refreshCred["Get-Credential again\nor Import-Clixml new file"]
+    errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
+    strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
+```
+
 ## Execution Policy
 
 Execution policy errors are the most common first-run obstacle on Windows.

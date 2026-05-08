@@ -4,6 +4,30 @@
 
 When S3 writes fail, geo-replication falls behind, or a node goes offline, work through this sequence first.
 
+```mermaid
+graph TD
+  REPORT(["Incident reported"]) --> NODE{Any node\nDEGRADED?}
+  NODE -->|Yes| DISK_CHK["Check Portal → Hardware → Disks\nFAILED or SUSPECT disks?"]
+  DISK_CHK --> DISK_REPL["Initiate disk replacement\nMonitor rebuild"]
+  NODE -->|No| S3TEST{"S3 API\nresponding?"}
+  S3TEST -->|No| SVC["SSH to node\nsystemctl status storageos\nReview /var/log/ecs/"]
+  S3TEST -->|Yes| AUTH_ERR{S3\nAccessDenied?}
+  AUTH_ERR -->|Yes| IAM["Check: IAM user namespace\nBucket policy · addressing style\necscli bucket get --namespace ..."]
+  AUTH_ERR -->|No| GEOREP{Geo-rep lag\ngrowing?}
+  GEOREP -->|Yes| WAN["Check WAN link :9100\nRemote VDC health\nReplication throttle"]
+  GEOREP -->|No| CAP{Quota\nexceeded?}
+  CAP -->|Yes| QUOTA["Increase quota in portal\nor expire old objects"]
+  CAP -->|No| BUNDLE["Collect support bundle\nOpen Dell case"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class NODE,S3TEST,AUTH_ERR,GEOREP,CAP decision
+  class DISK_CHK,DISK_REPL,SVC,IAM,WAN,QUOTA,BUNDLE action
+  class START term
+  class REPORT term
+```
+
 - [ ] Check ECS Portal → Hardware → Nodes immediately — identify any node that has moved to `DEGRADED` or offline state; note when the state change occurred
 - [ ] Query `GET /vdc/alerts` — retrieve the active alert list and identify alerts timestamped near the start of the incident
 - [ ] Check geo-replication lag: ECS Portal → Geo Monitoring — growing lag between VDCs can indicate a WAN link issue or a remote VDC node problem

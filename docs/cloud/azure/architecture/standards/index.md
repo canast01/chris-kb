@@ -68,6 +68,26 @@ az role assignment list --scope /subscriptions/<sub-id> \
 | Encryption | All disks CMK or PMK (minimum); storage SSE with Microsoft-managed keys minimum |
 | NSG rules | Description field mandatory; inbound ANY:ANY from internet denied by default |
 
+## RBAC Inheritance Model
+
+```mermaid
+flowchart TD
+    mgRoot["Tenant Root\nManagement Group"]
+    mgPlatform["mg-platform\nManagement Group"]
+    mgLandingZones["mg-landingzones\nManagement Group"]
+    mgProd["mg-production\nManagement Group"]
+    subProd["Production\nSubscription"]
+    rg["Resource Group\nrg-prod-euw-app"]
+    resource["Resource\nVM · Storage · Key Vault"]
+
+    mgRoot -->|"RBAC inherited"| mgPlatform
+    mgRoot -->|"RBAC inherited"| mgLandingZones
+    mgLandingZones -->|"RBAC inherited"| mgProd
+    mgProd -->|"RBAC inherited"| subProd
+    subProd -->|"RBAC inherited"| rg
+    rg -->|"RBAC inherited"| resource
+```
+
 ## Resource Lock Standards
 
 Apply locks to prevent accidental deletion of production infrastructure:

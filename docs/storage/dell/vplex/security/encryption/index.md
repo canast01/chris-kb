@@ -2,6 +2,22 @@
 
 VPLEX itself is a virtualisation and federation layer and does not natively encrypt data in transit between hosts and the directors (Fibre Channel does not provide encryption at the SAN layer). Encryption at rest is delegated to the back-end arrays. Management traffic encryption is handled via TLS and SSH on the management plane.
 
+```mermaid
+flowchart LR
+    host["Host\nESXi / Linux"]
+    vplex["VPLEX Directors"]
+    arrays["Back-end Arrays\nPowerMax D@RE\nUnity Encryption"]
+    vms["VMS\nUnisphere / vplexcli"]
+    iclLink["ICL\nMetro cluster-to-cluster"]
+
+    host -->|"FC — not encrypted at VPLEX layer\nEnforce via SAN encryption switch if required"| vplex
+    vplex -->|"FC back-end — not encrypted\nEnforce via SAN encryption switch"| arrays
+    arrays -->|"AES-256 Data at Rest\nArray-managed D@RE"| arrays
+    vplex <-->|"ICL — not encrypted at VPLEX\nMACsec / IPsec at network layer"| iclLink
+    vms -->|"SSH TLS — encrypted"| vplex
+    host -->|"HTTPS TLS — encrypted"| vms
+```
+
 ## Encryption Scope Summary
 
 | Data Path | Encryption | Responsibility |

@@ -1,6 +1,26 @@
 # Active Directory CLI Reference
 
 Active Directory management uses native tools (`repadmin`, `dcdiag`, `nltest`, `netdom`, `dsquery`) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.
+
+## Replication Health Triage Flow
+
+```mermaid
+flowchart TD
+    issue["Suspected replication issue"] --> replSummary["repadmin /replsummary\n(high-level success/failure)"]
+    replSummary --> errorsFound{"Errors\nfound?"}
+    errorsFound -->|"yes"| showRepl["repadmin /showrepl *\n(identify failing partner)"]
+    errorsFound -->|"no"| done["Replication healthy"]
+    showRepl --> errorCode{"Error code"}
+    errorCode -->|"1722 RPC unavailable"| checkFw["Check firewall / DNS\nbetween DCs"]
+    errorCode -->|"8453 access denied"| checkPerms["Check replication\npermissions on NC head"]
+    errorCode -->|"8614 quarantine"| checkTombstone["DC offline too long\nCheck tombstone lifetime"]
+    errorCode -->|"-2146893022 SPN error"| checkTime["Check time skew\nw32tm /stripchart"]
+    checkFw --> forceSync["repadmin /syncall /AdeP\n(force full sync after fix)"]
+    checkPerms --> forceSync
+    checkTombstone --> dcdiag["dcdiag /test:replications /v"]
+    checkTime --> forceSync
+```
+
 ---
 
 ## Replication Health

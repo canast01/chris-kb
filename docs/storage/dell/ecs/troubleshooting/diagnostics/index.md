@@ -311,6 +311,29 @@ curl -s -k -X POST \
 
 ### Workflow: Geo-Replication Lag Growing
 
+```mermaid
+graph TD
+  LAG_START(["Geo-replication lag growing"]) --> IDENT["Portal → Geo Monitoring\nIdentify: which RG + which VDC behind"]
+  IDENT --> REMOTE["Check remote VDC health\nGET /vdc/nodes (remote endpoint)"]
+  REMOTE --> REMOTE_OK{Remote VDC\nnodes GOOD?}
+  REMOTE_OK -->|No| REMOTE_FIX["Restore remote VDC\nCheck power / network / services"]
+  REMOTE_OK -->|Yes| PORT["nc -zv remote-vdc-node 9100\nPort reachable?"]
+  PORT -->|No| FIREWALL["Check firewall rules\nAllow port 9100 between sites"]
+  PORT -->|Yes| BW["Check WAN bandwidth utilisation\nSustained > 80% = saturation"]
+  BW --> SAT{WAN\nsaturated?}
+  SAT -->|Yes| THROTTLE["Adjust replication throttle\nPortal → Replication → Bandwidth Mgmt"]
+  SAT -->|No| LOGS["Review ECS data service logs\ngrep replication /var/log/ecs/"]
+  LOGS --> CASE["Open Dell support case\nif logs show errors"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class REMOTE_OK,SAT,PORT decision
+  class IDENT,REMOTE,PORT,BW,THROTTLE,LOGS,CASE action
+  class REMOTE_FIX,FIREWALL warn
+  class LAG_START term
+```
+
 1. ECS Portal → Geo Monitoring — identify which replication group has growing lag and which VDC is behind
 2. Confirm the remote VDC is healthy: `GET /vdc/nodes` against the remote VDC endpoint
 3. Check WAN bandwidth utilisation on the inter-site link at the time lag started growing

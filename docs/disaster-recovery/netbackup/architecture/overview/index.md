@@ -2,29 +2,52 @@
 
 ## Three-Tier Topology
 
-```
-  ┌──────────────────────────────────────────────────────────────────────────┐
-  │                     NetBackup Architecture                               │
-  │                                                                          │
-  │  ┌─────────────────────────────────────────────────────────────────┐    │
-  │  │  Primary Server (Master Server)                                 │    │
-  │  │  NetBackup catalogue  Policy DB  Job scheduler  EMM DB          │    │
-  │  └──────────────────────────────┬──────────────────────────────────┘    │
-  │                                 │  policy / job control                 │
-  │         ┌───────────────────────┼────────────────────────┐              │
-  │         │                       │                        │              │
-  │  ┌──────▼──────┐        ┌───────▼──────┐        ┌───────▼──────┐       │
-  │  │  Media Svr 1│        │  Media Svr 2 │        │  Media Svr 3 │       │
-  │  │  (Site A)   │        │  (Site B/DR) │        │  (Cloud gate)│       │
-  │  └──────┬──────┘        └───────┬──────┘        └───────┬──────┘       │
-  │         │  data                 │                       │              │
-  │  ┌──────▼──────┐        ┌───────▼──────┐        ┌───────▼──────┐       │
-  │  │ Disk / MSDP │        │ Disk / MSDP  │        │  Cloud (S3)  │       │
-  │  │ (dedup pool)│        │  (DR copy)   │        │  (long-term) │       │
-  │  └─────────────┘        └──────────────┘        └──────────────┘       │
-  │                                                                          │
-  │  Clients: NBU agents on VMs, DB hosts, NAS NDMP, VMware backup host     │
-  └──────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph masterTier [Primary Server]
+        master["Primary Server\nCatalog DB · Policy DB\nJob Scheduler · EMM DB"]
+    end
+
+    subgraph mediaTier [Media Servers]
+        ms1["Media Server 1\nSite A"]
+        ms2["Media Server 2\nSite B / DR"]
+        ms3["Media Server 3\nCloud Gateway"]
+    end
+
+    subgraph storageTier [Storage Units]
+        msdp1[("Disk / MSDP\ndedup pool\nSite A")]
+        msdp2[("Disk / MSDP\nDR copy\nSite B")]
+        cloud[("Cloud — S3\nlong-term archive")]
+    end
+
+    subgraph clientTier [Clients]
+        vmHost(["VMware backup host\nVADP"])
+        dbHost(["Oracle / MSSQL\nagent"])
+        nasHost(["NAS — NDMP"])
+    end
+
+    master -->|"policy / job control\nTCP 1556"| ms1
+    master -->|"policy / job control"| ms2
+    master -->|"policy / job control"| ms3
+
+    ms1 --> msdp1
+    ms2 --> msdp2
+    ms3 --> cloud
+
+    vmHost -->|"TCP 13724 bpcd"| ms1
+    dbHost -->|"TCP 13724 bpcd"| ms1
+    nasHost -->|"NDMP"| ms1
+
+    msdp1 -->|"AIR image replication"| msdp2
+
+    classDef masterNode fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef mediaNode fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef storageNode fill:#b45309,stroke:#92400e,color:#fff
+    classDef clientNode fill:#15803d,stroke:#166534,color:#fff
+    class master masterNode
+    class ms1,ms2,ms3 mediaNode
+    class msdp1,msdp2,cloud storageNode
+    class vmHost,dbHost,nasHost clientNode
 ```
 
 ## Data Flow

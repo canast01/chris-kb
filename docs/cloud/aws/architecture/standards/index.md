@@ -53,6 +53,29 @@ Region abbreviations: `euw1` = eu-west-1, `use1` = us-east-1, `apse1` = ap-south
 | Lifecycle rules | Transition to S3-IA after 30 days, Glacier after 90 days (for archival buckets) |
 | Bucket policy | Deny HTTP (require HTTPS); deny cross-account unless explicitly required |
 
+## IAM Policy Evaluation Logic
+
+```mermaid
+flowchart TD
+    request["API Request"]
+    explicitDeny{"Explicit Deny\nin any policy?"}
+    scpAllow{"SCP allows\nthe action?"}
+    iamAllow{"IAM policy\nexplicitly allows?"}
+    resourcePolicy{"Resource-based policy\nallows?"}
+    defaultDeny["Default DENY\nAccess denied"]
+    allow["ALLOW\nRequest proceeds"]
+
+    request --> explicitDeny
+    explicitDeny -- Yes --> defaultDeny
+    explicitDeny -- No --> scpAllow
+    scpAllow -- No --> defaultDeny
+    scpAllow -- Yes --> iamAllow
+    iamAllow -- Yes --> allow
+    iamAllow -- No --> resourcePolicy
+    resourcePolicy -- Yes --> allow
+    resourcePolicy -- No --> defaultDeny
+```
+
 ## Security Standards
 
 | Control | Standard |
@@ -72,6 +95,34 @@ AWS resources may only be deployed in approved regions (enforced via SCP):
 - `us-east-1` — if required for global AWS services
 
 Deploying to other regions requires an exception approved by InfoSec.
+
+## VPC Architecture
+
+```mermaid
+flowchart TD
+    subgraph vpc["VPC — 10.x.0.0/16"]
+        subgraph az1["Availability Zone A"]
+            pubSubA["Public Subnet /24\nALB · NAT GW"]
+            privSubA["Private Subnet /24\nEC2 · ECS · Lambda"]
+            isoSubA["Isolated Subnet /24\nRDS · ElastiCache"]
+        end
+        subgraph az2["Availability Zone B"]
+            pubSubB["Public Subnet /24"]
+            privSubB["Private Subnet /24"]
+            isoSubB["Isolated Subnet /24"]
+        end
+        igw["Internet Gateway"]
+        natGw["NAT Gateway"]
+        sg["Security Groups\nstateful · deny-all default"]
+    end
+    internet["Internet"]
+    onprem["On-Premises\nvia Transit Gateway"]
+
+    internet <--> igw <--> pubSubA & pubSubB
+    pubSubA --> natGw --> privSubA --> isoSubA
+    pubSubB --> privSubB --> isoSubB
+    onprem <--> privSubA & privSubB
+```
 
 ## Network Standards
 

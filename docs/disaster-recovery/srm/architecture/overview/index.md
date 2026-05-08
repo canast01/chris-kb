@@ -57,14 +57,30 @@ Each site pair maps a vCenter on the protected side to a vCenter on the recovery
 
 vSphere Replication does not use an SRA. The replication engine is embedded in the vSphere Replication appliance (one per site).
 
-```
-Protected VM (ESXi)
-      ↓ [vSphere Replication agent in hypervisor]
-vSphere Replication Appliance (source site)
-      ↓ [TCP 44046 — replication traffic]
-vSphere Replication Appliance (recovery site)
-      ↓
-Replicated datastore (recovery site)
+```mermaid
+flowchart TD
+    subgraph protectedSite [Protected Site]
+        vm(["Protected VM\n(ESXi hypervisor)"])
+        vrAgent["vSphere Replication\nagent — embedded in\nhypervisor kernel"]
+        vra1["vSphere Replication\nAppliance — Source"]
+        vm --> vrAgent
+        vrAgent --> vra1
+    end
+
+    subgraph recoverySite [Recovery Site]
+        vra2["vSphere Replication\nAppliance — Target"]
+        replicaDS[("Replicated Datastore\nrecovery site")]
+        vra2 --> replicaDS
+    end
+
+    vra1 -->|"TCP 44046\nreplication traffic\n(compressed + deduped)"| vra2
+
+    classDef appliance fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    class vrAgent,vra1,vra2 appliance
+    class replicaDS store
+    class vm host
 ```
 
 - RPO: 5 minutes minimum

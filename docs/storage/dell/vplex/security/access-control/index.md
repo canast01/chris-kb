@@ -2,6 +2,26 @@
 
 VPLEX access control operates at two layers: management plane access (who can change configuration) and data plane access (which hosts can access which volumes).
 
+```mermaid
+flowchart LR
+    subgraph "Management Plane"
+        adminRole["Administrator\nFull read/write\nProvisioning + config"]
+        monitorRole["Monitor\nRead-only\nHealth + inventory"]
+        svcRole["Service\nvplexcli SSH access\nAutomation accounts"]
+    end
+    subgraph "Data Plane — Host Access"
+        sanZone["SAN Fabric Zone\nHost HBA → VPLEX FE port"]
+        storView["Storage View\nInitiator + FE port + virtual volume"]
+        virtVol["Virtual Volume\nPresented to host"]
+    end
+
+    adminRole -->|"Unisphere / vplexcli"| storView
+    monitorRole -->|"read-only\nUnisphere"| storView
+    svcRole -->|"SSH vplexcli"| storView
+    sanZone -->|"enforcement at\nSAN switch"| storView
+    storView --> virtVol
+```
+
 ## Management Plane Roles
 
 VPLEX management roles govern what operations each user can perform through Unisphere for VPLEX and `vplexcli`.
@@ -43,6 +63,22 @@ Host HBA (WWN)
         → VPLEX Front-End Port
             → Storage View
                 → Virtual Volume(s) presented to this host
+```
+
+```mermaid
+flowchart LR
+    hostHBA["Host HBA\n10:00:00:00:c9:ab:cd:ef"]
+    fcZone["FC Zone\nSAN fabric switch"]
+    vplexFE["VPLEX Front-End Port\nA0-FC00 / B0-FC00"]
+    storageView["Storage View\nsv-db-prod-01"]
+    virtualVol1["Virtual Volume\nvv-oracle-prod-01"]
+    virtualVol2["Virtual Volume\nvv-oracle-prod-02"]
+
+    hostHBA -->|"FC zone enforced\nat SAN switch"| fcZone
+    fcZone --> vplexFE
+    vplexFE --> storageView
+    storageView --> virtualVol1
+    storageView --> virtualVol2
 ```
 
 All three layers must be aligned for a host to access a volume. Missing any layer results in the host not seeing the volume.

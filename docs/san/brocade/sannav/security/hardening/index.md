@@ -1,3 +1,253 @@
 # SANnav — Hardening
 
-Security baselines and compliance configuration.
+> Part of the [SANnav](../../) reference.
+
+---
+
+## Overview
+
+Hardening the SANnav appliance reduces the attack surface of the management plane. Apply this baseline during initial deployment and validate quarterly. The SANnav appliance is a Linux VM — hardening applies both to SANnav application configuration and to the underlying OS.
+
+---
+
+## 1. Replace Default Credentials
+
+```bash
+# SSH to SANnav appliance
+ssh admin@sannav-dc1.corp.example.com
+
+# Change default admin password immediately after deployment
+passwd admin
+# Use a password that meets the corporate complexity policy (20+ characters)
+# Store in vault; treat as break-glass
+
+# Change default OS root password (if accessible)
+sudo passwd root
+```
+
+---
+
+## 2. Restrict Management Network Access
+
+SANnav should be accessible only from authorised management subnets. Use a host-based firewall (firewalld) on the SANnav appliance to restrict inbound access:
+
+```bash
+# Check current firewalld status
+sudo systemctl status firewalld
+sudo firewall-cmd --list-all
+
+# Allow HTTPS only from the management subnet
+sudo firewall-cmd --permanent --remove-service=https
+sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.10.0.0/24" service name="https" accept'
+
+# Allow SNMP traps only from managed switch subnets
+sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.20.0.0/16" port port="162" protocol="udp" accept'
+
+# Allow SSH only from jump host / management subnet
+sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.10.0.0/24" service name="ssh" accept'
+sudo firewall-cmd --permanent --remove-service=ssh  # remove the default any-source SSH rule
+
+# Block all other inbound
+sudo firewall-cmd --permanent --set-default-zone=drop
+
+# Apply
+sudo firewall-cmd --reload
+
+# Verify
+sudo firewall-cmd --list-all
+```
+
+---
+
+## 3. Disable Unused OS Services
+
+The SANnav appliance OS may have services enabled that are not required:
+
+```bash
+# List all active services
+sudo systemctl list-units --type=service --state=active
+
+# Disable services not needed for SANnav operation:
+sudo systemctl disable --now avahi-daemon    # mDNS — not needed
+sudo systemctl disable --now cups            # printing — not needed
+sudo systemctl disable --now bluetooth       # not applicable to VMs
+sudo systemctl disable --now postfix         # use SMTP relay; local MTA not needed
+
+# Verify SANnav services are still running after disabling
+sannav status
+```
+
+---
+
+## 4. SSH Hardening
+
+```bash
+sudo vi /etc/ssh/sshd_config
+
+# Recommended settings:
+Protocol 2
+PermitRootLogin no
+PasswordAuthentication yes     # or 'no' if using SSH key auth
+PubkeyAuthentication yes
+PermitEmptyPasswords no
+MaxAuthTries 3
+LoginGraceTime 30
+ClientAliveInterval 300        # disconnect idle sessions after 5 minutes
+ClientAliveCountMax 2
+X11Forwarding no
+AllowTcpForwarding no
+AllowUsers admin sannav        # restrict SSH to specific local accounts
+
+sudo systemctl restart sshd
+
+# Verify
+sudo sshd -T | grep -E "permitrootlogin|passwordauthentication|protocol|maxauthtries"
+```
+
+---
+
+## 5. OS Patching
+
+The SANnav appliance OS (CentOS/RHEL based) requires security patching independently of SANnav application upgrades:
+
+```bash
+# Check for available security updates
+sudo yum updateinfo list security
+
+# Apply security patches only (does not touch SANnav application packages)
+sudo yum update --security -y
+
+# Verify SANnav services still running after OS update
+sannav status
+```
+
+Patch the OS quarterly at minimum. Critical OS CVEs (CVSS 9.0+) should be patched within 30 days of publication.
+
+---
+
+## 6. NTP Synchronization
+
+Correct time is essential for log correlation, event timestamps, and certificate validity:
+
+```bash
+# Check NTP synchronization
+timedatectl status
+# Expected: "synchronized: yes", NTP service active
+
+# If not synchronized, configure NTP
+sudo vi /etc/chrony.conf
+# Add: server 10.10.0.10 prefer
+#       server 10.10.0.11
+
+sudo systemctl enable --now chronyd
+chronyc tracking
+# Expected: Reference ID should match your NTP server, offset < 1ms
+```
+
+---
+
+## 7. SANnav Application Hardening
+
+### Disable Unused Authentication Methods
+
+If LDAP is configured and working, disable local account login for all accounts except break-glass:
+
+1. Navigate to **Administration > Security Settings > Authentication**.
+2. Set primary authentication method to **LDAP**.
+3. Set fallback to **Local** (required for break-glass when LDAP is unavailable).
+
+### Session Hardening
+
+Navigate to **Administration > Security Settings > Session**:
+- Idle timeout: 15 minutes
+- Absolute timeout: 8 hours
+- Concurrent sessions per user: 2
+
+### API Token Controls
+
+REST API tokens inherit the session idle timeout. For automation accounts:
+- Use dedicated service accounts (`svc-monitor`, `svc-automation`)
+- Ensure scripts always call `/rest/logout` — uncleaned sessions count against the concurrent session limit
+- Monitor for long-lived sessions in **Administration > Audit Log** (filter: LOGIN events without corresponding LOGOUT)
+
+---
+
+## 8. Login Banner
+
+Configure a legal warning banner for the SANnav web UI:
+
+1. Navigate to **Administration > Security Settings > Login Banner**.
+2. Enter the banner text:
+
+```
+WARNING: This system is for authorized use only.
+All connections are monitored and recorded.
+Unauthorized access or use is prohibited and may be subject to legal action.
+```
+
+3. Click **Save**. The banner appears on the SANnav login page.
+
+For SSH access, configure the OS banner:
+
+```bash
+sudo vi /etc/issue.net
+# Add:
+# WARNING: Authorized access only. All activities are monitored and logged.
+
+sudo vi /etc/ssh/sshd_config
+# Banner /etc/issue.net
+sudo systemctl restart sshd
+```
+
+---
+
+## Hardening Checklist
+
+### Appliance Access
+
+- [ ] Default admin password changed; stored in vault
+- [ ] SSH restricted to management subnet via firewalld rich rule
+- [ ] PermitRootLogin no in sshd_config
+- [ ] SSH banner configured
+- [ ] Unused OS services disabled
+
+### Application Security
+
+- [ ] LDAP configured; LDAP role mappings applied
+- [ ] Local accounts limited to break-glass only
+- [ ] Password policy enforced (12+ chars, complexity, 90-day rotation)
+- [ ] Account lockout configured (5 attempts, 30-minute lockout)
+- [ ] Session idle timeout: 15 minutes
+- [ ] Login banner visible on SANnav login page
+
+### Encryption
+
+- [ ] TLS certificate from corporate CA (not self-signed)
+- [ ] TLS 1.0 and 1.1 disabled; TLS 1.2/1.3 only
+- [ ] LDAPS (port 636) used; not plain LDAP
+- [ ] Backup encryption enabled; passphrase in vault
+
+### Patching
+
+- [ ] SANnav application at latest minor/patch release
+- [ ] OS security patches applied within last 90 days
+- [ ] NTP synchronized; clock offset < 100ms
+
+### Monitoring
+
+- [ ] Syslog forwarding configured to SIEM
+- [ ] SANnav audit log reviewed quarterly
+- [ ] Failed login alerting configured in SIEM
+
+---
+
+## Periodic Review Schedule
+
+| Review | Frequency |
+|---|---|
+| Hardening checklist | Quarterly |
+| Break-glass password rotation | Quarterly |
+| OS security patching | Monthly (critical CVEs within 30 days) |
+| TLS certificate expiry check | Monthly |
+| User access review | Quarterly |
+| SANnav application upgrade | Align with Broadcom release cycle |

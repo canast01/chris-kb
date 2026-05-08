@@ -2,6 +2,25 @@
 
 Active Directory domain and forest functional levels determine which features are available and which DC OS versions are supported. Raising functional levels is a one-way operation and requires all DCs to run at least the corresponding Windows Server version. SYSVOL replication must be migrated from FRS to DFSR before the domain functional level can be raised to Windows Server 2008 R2 or higher.
 
+## Domain Functional Level Upgrade Flow
+
+```mermaid
+flowchart TD
+    start["Plan DFL / FFL upgrade"]
+    start --> inventoryDCs["Inventory all DCs\nGet-ADDomainController -Filter *"]
+    inventoryDCs --> checkOS{"All DCs running\ntarget OS version?"}
+    checkOS -->|"no"| upgradeOldDCs["Promote new DCs at target OS\nDecommission old DCs first"]
+    checkOS -->|"yes"| checkSysvol{"SYSVOL using\nDFSR?"}
+    upgradeOldDCs --> checkSysvol
+    checkSysvol -->|"no — still FRS"| migrateDFSR["Run dfsrmig migration\nPrepared → Redirected → Eliminated"]
+    checkSysvol -->|"yes"| runAdprep["Run adprep /forestprep\nthen /domainprep"]
+    migrateDFSR --> runAdprep
+    runAdprep --> raiseDFL["Set-ADDomainMode\n(raise DFL)"]
+    raiseDFL --> raiseFFL["Set-ADForestMode\n(raise FFL — after DFL)"]
+    raiseFFL --> validate["Validate:\ndcdiag /test:all + repadmin /replsummary"]
+```
+
+
 ---
 ## Domain and Forest Functional Levels
 

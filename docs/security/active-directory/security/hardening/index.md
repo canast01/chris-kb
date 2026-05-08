@@ -1,5 +1,23 @@
 # Active Directory — Hardening
 
+## AD Hardening Controls Flow
+
+```mermaid
+flowchart TD
+    adEnv["Active Directory Environment"]
+
+    adEnv --> protUsers["Protected Users Group\n(disable NTLM / RC4 / delegation\nfor privileged accounts)"]
+    adEnv --> ldapSign["LDAP Signing = Require\nChannel Binding = Always\n(Event 2889 for violations)"]
+    adEnv --> kerbEnc["Kerberos AES-256 only\n(RC4 disabled via GPO)"]
+    adEnv --> adminSDHolder["AdminSDHolder\n(propagates ACL every 60 min\nto all privileged accounts)"]
+    adEnv --> mdi["Defender for Identity\n(sensor on all DCs)"]
+    adEnv --> paw["PAW Policy\n(AppLocker / BitLocker / no internet)"]
+
+    mdi -->|"alerts on"| dcsync["DCSync attack\n(Event 4662 — repl directory changes)"]
+    mdi -->|"alerts on"| passHash["Pass-the-Hash /\nPass-the-Ticket"]
+    mdi -->|"alerts on"| lateralMove["Lateral movement\nrecon patterns"]
+```
+
 ## DCSync Attack Detection
 
 ```powershell

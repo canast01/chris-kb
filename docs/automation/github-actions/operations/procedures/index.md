@@ -6,6 +6,25 @@
 
 ## Workflows
 
+```mermaid
+flowchart TD
+    trigger(["Trigger Event\npush / pull_request\nschedule / workflow_dispatch"])
+    runner["Runner\nubuntu-24.04\nself-hosted"]
+    jobA["Job: build\nCheckout → Install → Test → Build"]
+    jobB["Job: test\nmatrix: OS × Python version"]
+    artifacts["Artifacts\ndist/ packages\ntest reports"]
+    jobC["Job: publish\nneeds: build\nenvironment: pypi"]
+    deploy["Deploy\n./deploy.sh\nor OIDC cloud publish"]
+
+    trigger --> runner
+    runner --> jobA
+    runner --> jobB
+    jobA --> artifacts
+    artifacts --> jobC
+    jobB -->|"all matrix legs pass"| jobC
+    jobC --> deploy
+```
+
 Workflows live in `.github/workflows/` and are YAML files with a defined structure.
 
 ```yaml

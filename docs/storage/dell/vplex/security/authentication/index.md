@@ -2,6 +2,26 @@
 
 Authentication for VPLEX management is split across two interfaces: SSH-based `vplexcli` access (local VMS accounts only) and the Unisphere for VPLEX web GUI (local accounts or LDAP/AD-integrated accounts).
 
+```mermaid
+flowchart LR
+    subgraph "CLI Access"
+        operator(["Operator"])
+        jumpHost["Jump Host\nSSH key auth"]
+        vms["VMS\nservice@VMS_IP"]
+        vplexcli["vplexcli shell"]
+    end
+    subgraph "Web GUI Access"
+        browser(["Admin Browser"])
+        unisphere["Unisphere for VPLEX\nhttps://VMS_IP"]
+        ldap["Active Directory\nLDAP / LDAPS"]
+    end
+
+    operator --> jumpHost
+    jumpHost -->|"SSH key\ned25519"| vms --> vplexcli
+    browser --> unisphere
+    unisphere -->|"LDAP bind\ngroup-to-role mapping"| ldap
+```
+
 ## Local Accounts
 
 VPLEX management access is provided through local accounts on the VPLEX Management Server (VMS).

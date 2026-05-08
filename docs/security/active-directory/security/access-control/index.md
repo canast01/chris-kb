@@ -4,6 +4,28 @@
 
 Active Directory security is built around the three-tier admin model:
 
+```mermaid
+graph TD
+    tier0["Tier 0\nDCs · ADCS · AAD Connect · CyberArk\n(highest sensitivity — forest boundary)"]
+    tier1["Tier 1\nApp servers · SQL · ESXi · Storage"]
+    tier2["Tier 2\nWorkstations · End-user devices"]
+
+    paw0["Tier 0 PAW\n(dedicated — no internet/email)"]
+    jump1["Jump Server / Tier 1 PAW"]
+    stdWs["Standard Workstation"]
+
+    admTier0["adm0-* accounts"] --> paw0
+    paw0 -->|"only allowed path"| tier0
+    admTier1["adm1-* accounts"] --> jump1
+    jump1 -->|"only allowed path"| tier1
+    helpdesk["Helpdesk accounts"] --> stdWs
+    stdWs --> tier2
+
+    tier0 -. "GPO: Deny log on locally to Tier 1/2" .-> tier1
+    tier1 -. "GPO: Deny log on locally to Tier 2" .-> tier2
+```
+
+
 | Tier | Scope | Examples | Access Restriction |
 |---|---|---|---|
 | Tier 0 | Identity infrastructure | DCs, ADCS, AAD Connect, CyberArk | Only from Tier 0 PAW |

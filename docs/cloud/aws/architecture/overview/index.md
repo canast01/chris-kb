@@ -73,6 +73,22 @@ Subnet tiers per VPC:
 | RDS automated backups | RDS automated backup to secondary region | < 1 hour RPO |
 | Route 53 health-check failover | Route 53 + secondary ALB | < 5 minutes RTO |
 
+## EC2 Launch Flow
+
+```mermaid
+flowchart LR
+    request["Launch Request\nConsole / CLI / ASG"]
+    iamCheck["IAM Authorization\niam:RunInstances check"]
+    amiSelect["AMI Selection\nAMI ID + EBS snapshot"]
+    networkPlace["Network Placement\nVPC · Subnet · AZ"]
+    sgApply["Security Group\napply inbound/outbound rules"]
+    instanceProfile["Instance Profile\nIAM role attached"]
+    userData["User Data\ncloud-init / bootstrap"]
+    running["Instance Running\nEC2 metadata available"]
+
+    request --> iamCheck --> amiSelect --> networkPlace --> sgApply --> instanceProfile --> userData --> running
+```
+
 ## IAM Structure
 
 ```

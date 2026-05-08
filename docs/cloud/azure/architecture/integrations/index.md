@@ -1,4 +1,21 @@
 # Azure Integration
+## Azure VM Deployment Flow
+
+```mermaid
+flowchart LR
+    request["Deployment Request\nPortal / CLI / Terraform"]
+    rbacCheck["RBAC Check\nMicrosoft.Compute/virtualMachines/write"]
+    policyCheck["Azure Policy Evaluation\nallowed SKUs · allowed regions"]
+    resourceGroup["Resource Group\nrg-prod-euw-app"]
+    vnetPlace["VNet / Subnet Placement\nsnet-prod-euw-app"]
+    nsgApply["NSG Applied\ndefault rules + custom"]
+    diskAttach["Managed Disk\nOS + data disks attached"]
+    extensions["Extensions Applied\nMonitor Agent · Defender · Custom Script"]
+    running["VM Running\nProvisioning State: Succeeded"]
+
+    request --> rbacCheck --> policyCheck --> resourceGroup --> vnetPlace --> nsgApply --> diskAttach --> extensions --> running
+```
+
 ## ExpressRoute + VPN Gateway
 
 ```bash

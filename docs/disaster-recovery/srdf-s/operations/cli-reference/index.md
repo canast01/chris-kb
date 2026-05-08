@@ -4,6 +4,40 @@
 
 All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array. Always specify `-g <group>` to scope operations to the correct SRDF group and `-sid <sid>` to target the correct array.
 
+## SRDF/S Operation Decision Map
+
+```mermaid
+flowchart TD
+    goal["What do you need to do?"]
+    monitor["Monitor pair health\nand link state"]
+    maintenance["Planned maintenance\n(suspend replication)"]
+    drTest["DR test\n(non-disruptive)"]
+    failover["Actual failover\n(production use of R2)"]
+    failback["Return to normal\nafter failover"]
+
+    cmdQuery["symrdf -sid sid -g grp query\nsymcfg -sid sid list -rdfg\nsymstat -rdf"]
+    cmdSuspend["symrdf -sid sid -g grp suspend -noprompt\n(then resume after maintenance)"]
+    cmdSplit["symrdf -sid sid -g grp split -noprompt\n(R2 accessible for testing)"]
+    cmdFailover["symrdf -sid sid -g grp failover -noprompt"]
+    cmdFailback["symrdf -sid sid -g grp failback -noprompt\nor: restore → establish"]
+
+    goal --> monitor
+    goal --> maintenance
+    goal --> drTest
+    goal --> failover
+    goal --> failback
+
+    monitor --> cmdQuery
+    maintenance --> cmdSuspend
+    drTest --> cmdSplit
+    failover --> cmdFailover
+    failback --> cmdFailback
+
+    style goal fill:#2563eb,color:#fff
+    style cmdFailover fill:#be123c,color:#fff
+    style cmdFailback fill:#7c3aed,color:#fff
+```
+
 ---
 
 ## Pair State & Health

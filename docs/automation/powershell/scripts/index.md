@@ -3,6 +3,33 @@
 > Part of the [PowerShell](../) reference.
 
 ---
+
+## Remote Health Check Topology
+
+```mermaid
+graph TD
+    controlHost["Control Host\n(runs the script)"]
+    invokeCmd["Invoke-Command\n(parallel remote execution)"]
+    srv1["Server 1\nWinRM → ScriptBlock"]
+    srv2["Server 2\nWinRM → ScriptBlock"]
+    srv3["Server N\nWinRM → ScriptBlock"]
+    collectResults["Collect Results\n(PSObject list)"]
+    formatTable["Format-Table\n(console output)"]
+    exportCsv["Export-Csv\n(health-report.csv)"]
+    flagIssues["Flag Issues\n(CPU / Memory / Disk\n/ Services / Reboot)"]
+
+    controlHost --> invokeCmd
+    invokeCmd --> srv1
+    invokeCmd --> srv2
+    invokeCmd --> srv3
+    srv1 --> collectResults
+    srv2 --> collectResults
+    srv3 --> collectResults
+    collectResults --> formatTable
+    collectResults --> exportCsv
+    collectResults --> flagIssues
+```
+
 ## Windows Server Health Check (PowerShell)
 
 Connect to remote servers via `Invoke-Command`, collect disk, memory, CPU, top processes, stopped automatic services, last boot time, and pending reboot status, then export results to CSV.

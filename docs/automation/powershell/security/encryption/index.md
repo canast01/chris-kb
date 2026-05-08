@@ -4,6 +4,28 @@
 
 ---
 
+## PowerShell Encryption and Secure Communication
+
+```mermaid
+graph TD
+    plainText["Plaintext Password\n/ API Key"]
+    secureString["SecureString\n(in-memory, encrypted)"]
+    dpapi["ConvertFrom-SecureString\n(DPAPI encrypted string)"]
+    diskFile["Encrypted file\n(api-key.txt)"]
+    clixml["Export-Clixml\n(PSCredential .xml)"]
+    winrmHTTPS["WinRM HTTPS\n(port 5986)"]
+    remoteSession["Remote PSSession\n(encrypted channel)"]
+
+    plainText -->|ConvertTo-SecureString| secureString
+    secureString -->|ConvertFrom-SecureString| dpapi
+    dpapi --> diskFile
+    diskFile -->|ConvertTo-SecureString| secureString
+    secureString --> clixml
+    clixml -->|Import-Clixml| secureString
+    secureString -->|New-PSSession -UseSSL| winrmHTTPS
+    winrmHTTPS --> remoteSession
+```
+
 ## SecureString
 
 `SecureString` stores a string in memory as an encrypted value. It prevents the password from appearing in plain text in variables, logs, or memory dumps.

@@ -21,6 +21,35 @@
 
 Compliance requirements may extend yearly retention to 10 years for regulated data.
 
+## Backup Policy to Job Flow
+
+```mermaid
+flowchart TD
+    policy["Backup Policy\n(application type,\nclient list, schedules)"]
+    policy --> schedule["Schedule\n(full-14d, incr-7d, weekly-8w)"]
+    schedule --> trigger{Schedule\ntrigger}
+    trigger -->|"Window opens"| jm["Job Manager\n(allocate media server + STU)"]
+    jm --> clientConn["Connect to client\nbpcd TCP 13724"]
+    clientConn --> dataStream["Stream data to media server\nbpbrm TCP 13782"]
+    dataStream --> dedup{Storage\ntype?}
+    dedup -->|"OST / Data Domain"| ddDedup["DD Boost\ninline dedup on media server"]
+    dedup -->|"MSDP"| msdpDedup["MSDP\ndedup on media server"]
+    dedup -->|"BasicDisk"| basicDisk["Write directly\nno dedup"]
+    ddDedup --> catalog["Catalog image in\nNetBackup DB\nbpdbm"]
+    msdpDedup --> catalog
+    basicDisk --> catalog
+    catalog --> done(["Job complete\nlog in bpdbjobs"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+    class jm,clientConn,dataStream,ddDedup,msdpDedup,basicDisk,catalog action
+    class trigger,dedup decision
+    class policy,schedule terminal
+    class done terminal
+```
+
 ## Policy Design Rules
 
 - **Client list**: Always use an explicitly named client list — wildcard client patterns are not permitted in production

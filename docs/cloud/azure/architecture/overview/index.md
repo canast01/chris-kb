@@ -65,6 +65,26 @@ Azure Firewall in the hub VNet controls all east-west and internet-bound traffic
 | Azure SQL Failover Groups | Active geo-replication | < 30 seconds RPO |
 | Azure Backup cross-region restore | Recovery Services Vault | 12–24 hours RTO |
 
+## Azure AD Auth Flow
+
+```mermaid
+sequenceDiagram
+    participant user as User
+    participant browser as Browser / Client
+    participant aad as Azure AD (Entra ID)
+    participant ca as Conditional Access
+    participant resource as Azure Resource / App
+
+    user->>browser: Sign-in request
+    browser->>aad: Authentication request (OAuth2 / OIDC)
+    aad->>aad: Validate credentials + MFA
+    aad->>ca: Evaluate Conditional Access policies
+    ca-->>aad: Allow / Block / Require MFA
+    aad-->>browser: Access token (JWT)
+    browser->>resource: Request with Bearer token
+    resource-->>browser: Response granted
+```
+
 ## Identity Architecture
 
 ```

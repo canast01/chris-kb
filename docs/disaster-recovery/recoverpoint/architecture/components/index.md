@@ -16,6 +16,31 @@
 
 ---
 
+## Component Hierarchy
+
+```mermaid
+graph TD
+    subgraph prodSite ["Production Site"]
+        prodHosts["Production Hosts"]
+        splitter["Splitter\n(PowerMax HW or ESXi SW)"]
+        rpaClusterA["RPA Cluster Site A\n(2+ appliances)"]
+        prodStorage["Production Storage\n(Protected LUNs)"]
+        prodHosts -->|"I/O"| splitter
+        splitter -->|"split write"| prodStorage
+        splitter -->|"capture write"| rpaClusterA
+    end
+
+    subgraph drSite ["DR Site"]
+        rpaClusterB["RPA Cluster Site B\n(2+ appliances)"]
+        journal["Journal Volumes\n(rolling delta store)"]
+        drStorage["DR Storage\n(Replica LUNs)"]
+        rpaClusterB --> journal
+        journal -->|"drain"| drStorage
+    end
+
+    rpaClusterA <-->|"WAN — compressed\nreplication traffic"| rpaClusterB
+```
+
 ## Consistency Groups
 
 A Consistency Group (CG) is the primary replication unit in RecoverPoint. Each CG groups one or more volumes that must be recovered together as a consistent set — for example, all data and log LUNs for an Oracle database. RecoverPoint guarantees write-order consistency across all volumes in a CG.

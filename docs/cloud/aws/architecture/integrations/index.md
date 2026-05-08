@@ -4,6 +4,19 @@
 
 ---
 
+## S3 Object Lifecycle
+
+```mermaid
+flowchart LR
+    upload["Object Upload\nS3 Standard"]
+    ia["S3 Standard-IA\nafter 30 days"]
+    glacier["S3 Glacier\nafter 90 days"]
+    deepArchive["S3 Glacier Deep Archive\nafter 180 days (optional)"]
+    expire["Expiration\ndelete after retention period"]
+
+    upload -->|"Lifecycle rule"| ia -->|"Lifecycle rule"| glacier -->|"Lifecycle rule"| deepArchive -->|"Lifecycle rule"| expire
+```
+
 ## Direct Connect + VPN
 
 On-premises to AWS connectivity:
@@ -83,6 +96,25 @@ aws backup create-backup-plan --backup-plan '{
 
 # Enable cross-account backup (to log-archive account)
 aws backup put-backup-vault-access-policy --backup-vault-name prod-vault --policy file://vault-policy.json
+```
+
+## CloudFormation Stack Lifecycle
+
+```mermaid
+flowchart LR
+    template["Template\nJSON / YAML"]
+    validate["Validate\naws cloudformation validate-template"]
+    createStack["CREATE_IN_PROGRESS\nresource provisioning"]
+    complete["CREATE_COMPLETE\nstack outputs available"]
+    update["UPDATE_IN_PROGRESS\nchange set execution"]
+    rollback["ROLLBACK_IN_PROGRESS\nfailure detected"]
+    deleteStack["DELETE_IN_PROGRESS\nresource teardown"]
+
+    template --> validate --> createStack --> complete
+    complete --> update --> complete
+    createStack -->|"error"| rollback
+    update -->|"error"| rollback
+    complete --> deleteStack
 ```
 
 ## GitHub Actions + OIDC

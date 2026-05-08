@@ -67,6 +67,28 @@ ProSupport (standard, without Plus) carries P1 = 4-hour response, P2 = next busi
 
 ## Escalation Path
 
+```mermaid
+flowchart TD
+    INCIDENT([P1 Incident — Production Impact]) --> L1["L1 — Front-line Support Engineer\nInitial triage + remote diagnostics\nTarget: 2h engagement (ProSupport Plus)"]
+    L1 --> RESOLVE1{Resolved\nwithin SLA?}
+    RESOLVE1 -->|"Yes"| CLOSE([Case Closed — Document RCA])
+    RESOLVE1 -->|"No — defect suspected\nor resolution blocked"| TAM["TAM — Technical Account Manager\n(ProSupport Plus)\nPriority escalation + proactive planning"]
+    TAM --> PE["PE — Product Engineering Escalation\nHot fix / workaround if product defect\nRequest via TAM or case owner"]
+    PE --> RESOLVE2{Resolved?}
+    RESOLVE2 -->|"Yes"| CLOSE
+    RESOLVE2 -->|"No — 4+ hours, no path"| EXEC["Executive Escalation\nVia TAM or account team\nParallel: call ProSupport hotline\n+1-800-945-3355"]
+    EXEC --> CLOSE
+
+    classDef start fill:#be123c,stroke:#9f1239,color:#fff
+    classDef tier fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef done fill:#15803d,stroke:#166534,color:#fff
+    class INCIDENT start
+    class L1,TAM,PE,EXEC tier
+    class RESOLVE1,RESOLVE2 decision
+    class CLOSE done
+```
+
 1. **Front-line support engineer**: Initial case triage and remote diagnostics.
 2. **Technical Account Manager (TAM)**: Assigned under ProSupport Plus. Use for proactive planning, upgrade guidance, and priority case escalation.
 3. **Product Engineering (PE) escalation**: Request via the TAM or case owner when a suspected product defect is involved. PE can issue hot fixes and workarounds.
