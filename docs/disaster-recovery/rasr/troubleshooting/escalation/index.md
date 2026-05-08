@@ -163,7 +163,7 @@ Use this checklist to systematically diagnose RASR failures before escalating.
 | 5 | Share credentials valid? | `net use \\nas01\rasr-images\SERVER01 /user:...` |
 | 6 | Sufficient share space? | `Get-PSDrive` / check NAS capacity |
 | 7 | RASR binary intact? | `Get-Item "C:\Program Files\Dell\RASR\rasrutil.exe"` |
-| 8 | RASR version supported for OS? | See [version matrix](../install-upgrade/index.md) |
+| 8 | RASR version supported for OS? | See [version matrix](../../operations/install-upgrade/index.md) |
 | 9 | Windows ADK installed? | Check if needed for media creation failures |
 | 10 | Existing image integrity? | `rasrutil.exe /verify /source <image>` |
 | 11 | Boot media up to date? | Check media creation date vs RASR install date |

@@ -46,7 +46,7 @@ Under Evergreen//Forever, controllers are refreshed when new generations are ava
 - Pure performs non-disruptive controller swap
 - Data remains in place (no migration required)
 
-See [Controller Upgrades](controller-upgrades/index.md) for procedures.
+See the Pure Storage Evergreen//Forever documentation for controller upgrade procedures.
 
 ## End-of-Life Considerations
 
