@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#powershell-credential-storage-and-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Credential Storage and Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#get-credential" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -774,6 +785,32 @@
 <p>Part of the <a href="../">PowerShell Security</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="powershell-credential-storage-and-flow">PowerShell Credential Storage and Flow<a class="headerlink" href="#powershell-credential-storage-and-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    interactiveUser["Interactive Session\n(user present)"]
+    scheduledJob["Scheduled Task\n(unattended)"]
+    prodScript["Production Script\n(enterprise)"]
+
+    getCredential["Get-Credential\n(prompt user)"]
+    exportClixml["Export-Clixml\n(DPAPI encrypted .xml)"]
+    importClixml["Import-Clixml\n(decrypt on same machine)"]
+    secretMgmt["SecretManagement\n(Set-Secret / Get-Secret)"]
+    azKeyVault["Azure Key Vault\n(cross-machine)"]
+
+    psCred["PSCredential object\n($cred)"]
+    cmdlet["Cmdlet\n(Connect-VIServer,\nInvoke-Command...)"]
+
+    interactiveUser --&gt; getCredential
+    scheduledJob --&gt; importClixml
+    exportClixml --&gt; importClixml
+    prodScript --&gt; secretMgmt
+    prodScript --&gt; azKeyVault
+
+    getCredential --&gt; psCred
+    importClixml --&gt; psCred
+    secretMgmt --&gt; psCred
+    azKeyVault --&gt; psCred
+    psCred --&gt; cmdlet</code></pre>
 <h2 id="get-credential">Get-Credential<a class="headerlink" href="#get-credential" title="Permanent link">&para;</a></h2>
 <p><code>Get-Credential</code> prompts for a username and password and returns a <code>PSCredential</code> object. This is the standard way to pass credentials to cmdlets without storing them in plain text.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Prompt for credentials interactively</span>

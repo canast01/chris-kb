@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#privileged-access-and-kerberos-security-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privileged Access and Kerberos Security Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#privileged-access-workstations-paws" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -759,6 +770,16 @@
 
 
 <h1 id="active-directory-authentication">Active Directory — Authentication<a class="headerlink" href="#active-directory-authentication" title="Permanent link">&para;</a></h1>
+<h2 id="privileged-access-and-kerberos-security-flow">Privileged Access and Kerberos Security Flow<a class="headerlink" href="#privileged-access-and-kerberos-security-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    userTier0["Tier 0 Admin\n(adm0-jsmith)"] --&gt;|"logs in from"| paw["Tier 0 PAW\n(AppLocker + BitLocker + no internet)"]
+    paw --&gt;|"Kerberos AS-REQ\n(AES-256 only — RC4 disabled)"| kdc["KDC\n(Domain Controller)"]
+    kdc --&gt;|"TGT issued\n(Protected Users — no NTLM cached)"| paw
+    paw --&gt;|"TGS-REQ for DC admin SPN"| kdc
+    kdc --&gt;|"Service Ticket"| paw
+    paw --&gt;|"Admin session\nto DC / ADCS / CyberArk"| tier0Sys["Tier 0 Systems"]
+
+    protUsers["Protected Users Group\n(members cannot use NTLM / DES / RC4\nor have credentials cached)"] -. "applied to" .-&gt; userTier0</code></pre>
 <h2 id="privileged-access-workstations-paws">Privileged Access Workstations (PAWs)<a class="headerlink" href="#privileged-access-workstations-paws" title="Permanent link">&para;</a></h2>
 <p>PAWs are hardened, dedicated hosts:
 - No internet browsing, email, or productivity apps

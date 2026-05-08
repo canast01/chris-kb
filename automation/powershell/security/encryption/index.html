@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#powershell-encryption-and-secure-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Encryption and Secure Communication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#securestring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -774,6 +785,24 @@
 <p>Part of the <a href="../">PowerShell Security</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="powershell-encryption-and-secure-communication">PowerShell Encryption and Secure Communication<a class="headerlink" href="#powershell-encryption-and-secure-communication" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    plainText["Plaintext Password\n/ API Key"]
+    secureString["SecureString\n(in-memory, encrypted)"]
+    dpapi["ConvertFrom-SecureString\n(DPAPI encrypted string)"]
+    diskFile["Encrypted file\n(api-key.txt)"]
+    clixml["Export-Clixml\n(PSCredential .xml)"]
+    winrmHTTPS["WinRM HTTPS\n(port 5986)"]
+    remoteSession["Remote PSSession\n(encrypted channel)"]
+
+    plainText --&gt;|ConvertTo-SecureString| secureString
+    secureString --&gt;|ConvertFrom-SecureString| dpapi
+    dpapi --&gt; diskFile
+    diskFile --&gt;|ConvertTo-SecureString| secureString
+    secureString --&gt; clixml
+    clixml --&gt;|Import-Clixml| secureString
+    secureString --&gt;|New-PSSession -UseSSL| winrmHTTPS
+    winrmHTTPS --&gt; remoteSession</code></pre>
 <h2 id="securestring">SecureString<a class="headerlink" href="#securestring" title="Permanent link">&para;</a></h2>
 <p><code>SecureString</code> stores a string in memory as an encrypted value. It prevents the password from appearing in plain text in variables, logs, or memory dumps.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Convert plain text to SecureString</span>

@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#iam-policy-evaluation-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Policy Evaluation Logic
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#security-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -765,6 +776,17 @@
     <span class="md-ellipsis">
       
         Approved Regions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Architecture
       
     </span>
   </a>
@@ -944,6 +966,25 @@
 </tr>
 </tbody>
 </table>
+<h2 id="iam-policy-evaluation-logic">IAM Policy Evaluation Logic<a class="headerlink" href="#iam-policy-evaluation-logic" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    request["API Request"]
+    explicitDeny{"Explicit Deny\nin any policy?"}
+    scpAllow{"SCP allows\nthe action?"}
+    iamAllow{"IAM policy\nexplicitly allows?"}
+    resourcePolicy{"Resource-based policy\nallows?"}
+    defaultDeny["Default DENY\nAccess denied"]
+    allow["ALLOW\nRequest proceeds"]
+
+    request --&gt; explicitDeny
+    explicitDeny -- Yes --&gt; defaultDeny
+    explicitDeny -- No --&gt; scpAllow
+    scpAllow -- No --&gt; defaultDeny
+    scpAllow -- Yes --&gt; iamAllow
+    iamAllow -- Yes --&gt; allow
+    iamAllow -- No --&gt; resourcePolicy
+    resourcePolicy -- Yes --&gt; allow
+    resourcePolicy -- No --&gt; defaultDeny</code></pre>
 <h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -985,6 +1026,30 @@
 - <code>eu-west-2</code> (London) — secondary
 - <code>us-east-1</code> — if required for global AWS services</p>
 <p>Deploying to other regions requires an exception approved by InfoSec.</p>
+<h2 id="vpc-architecture">VPC Architecture<a class="headerlink" href="#vpc-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph vpc["VPC — 10.x.0.0/16"]
+        subgraph az1["Availability Zone A"]
+            pubSubA["Public Subnet /24\nALB · NAT GW"]
+            privSubA["Private Subnet /24\nEC2 · ECS · Lambda"]
+            isoSubA["Isolated Subnet /24\nRDS · ElastiCache"]
+        end
+        subgraph az2["Availability Zone B"]
+            pubSubB["Public Subnet /24"]
+            privSubB["Private Subnet /24"]
+            isoSubB["Isolated Subnet /24"]
+        end
+        igw["Internet Gateway"]
+        natGw["NAT Gateway"]
+        sg["Security Groups\nstateful · deny-all default"]
+    end
+    internet["Internet"]
+    onprem["On-Premises\nvia Transit Gateway"]
+
+    internet &lt;--&gt; igw &lt;--&gt; pubSubA &amp; pubSubB
+    pubSubA --&gt; natGw --&gt; privSubA --&gt; isoSubA
+    pubSubB --&gt; privSubB --&gt; isoSubB
+    onprem &lt;--&gt; privSubA &amp; privSubB</code></pre>
 <h2 id="network-standards">Network Standards<a class="headerlink" href="#network-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

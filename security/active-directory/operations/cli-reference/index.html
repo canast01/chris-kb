@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#active-directory-management-uses-native-tools-repadmin-dcdiag-nltest-netdom-dsquery-and-the-activedirectory-powershell-module-all-commands-assume-rsat-ad-powershell-is-installed-or-the-command-is-run-on-a-domain-controller" class="md-nav__link">
+  <a href="#replication-health-triage-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Active Directory management uses native tools (repadmin, dcdiag, nltest, netdom, dsquery) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.
+        Replication Health Triage Flow
       
     </span>
   </a>
@@ -814,7 +814,23 @@
 
 
 <h1 id="active-directory-cli-reference">Active Directory CLI Reference<a class="headerlink" href="#active-directory-cli-reference" title="Permanent link">&para;</a></h1>
-<h2 id="active-directory-management-uses-native-tools-repadmin-dcdiag-nltest-netdom-dsquery-and-the-activedirectory-powershell-module-all-commands-assume-rsat-ad-powershell-is-installed-or-the-command-is-run-on-a-domain-controller">Active Directory management uses native tools (<code>repadmin</code>, <code>dcdiag</code>, <code>nltest</code>, <code>netdom</code>, <code>dsquery</code>) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.<a class="headerlink" href="#active-directory-management-uses-native-tools-repadmin-dcdiag-nltest-netdom-dsquery-and-the-activedirectory-powershell-module-all-commands-assume-rsat-ad-powershell-is-installed-or-the-command-is-run-on-a-domain-controller" title="Permanent link">&para;</a></h2>
+<p>Active Directory management uses native tools (<code>repadmin</code>, <code>dcdiag</code>, <code>nltest</code>, <code>netdom</code>, <code>dsquery</code>) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.</p>
+<h2 id="replication-health-triage-flow">Replication Health Triage Flow<a class="headerlink" href="#replication-health-triage-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue["Suspected replication issue"] --&gt; replSummary["repadmin /replsummary\n(high-level success/failure)"]
+    replSummary --&gt; errorsFound{"Errors\nfound?"}
+    errorsFound --&gt;|"yes"| showRepl["repadmin /showrepl *\n(identify failing partner)"]
+    errorsFound --&gt;|"no"| done["Replication healthy"]
+    showRepl --&gt; errorCode{"Error code"}
+    errorCode --&gt;|"1722 RPC unavailable"| checkFw["Check firewall / DNS\nbetween DCs"]
+    errorCode --&gt;|"8453 access denied"| checkPerms["Check replication\npermissions on NC head"]
+    errorCode --&gt;|"8614 quarantine"| checkTombstone["DC offline too long\nCheck tombstone lifetime"]
+    errorCode --&gt;|"-2146893022 SPN error"| checkTime["Check time skew\nw32tm /stripchart"]
+    checkFw --&gt; forceSync["repadmin /syncall /AdeP\n(force full sync after fix)"]
+    checkPerms --&gt; forceSync
+    checkTombstone --&gt; dcdiag["dcdiag /test:replications /v"]
+    checkTime --&gt; forceSync</code></pre>
+<hr />
 <h2 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h2>
 <p>Replication issues cause authentication failures and stale data. Check replication before and after any DC change.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># High-level replication health across all DCs</span>

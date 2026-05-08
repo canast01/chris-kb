@@ -793,7 +793,21 @@
 <hr />
 <p>Content to be added.</p>
 <h2 id="secrets-management">Secrets Management<a class="headerlink" href="#secrets-management" title="Permanent link">&para;</a></h2>
-<p>Secrets are encrypted environment variables stored in GitHub and injected into workflow runs.</p>
+<pre class="mermaid"><code>flowchart TD
+    wfTrigger(["Workflow triggered\non: push / pull_request"])
+    jobCtx["Job context\nruns-on: ubuntu-24.04\nenvironment: production"]
+    secretCtx["Secrets context\n${{ secrets.PROD_DB_PASSWORD }}"]
+    envSecret["Environment secret\nRepo Settings → Environments → production\nRequired reviewers enforced"]
+    repoSecret["Repository secret\nRepo Settings → Secrets\nAll workflows in repo"]
+    orgSecret["Organisation secret\nOrg Settings → Secrets\nGranted repos only"]
+    step["Step execution\nenv: VAR=${{ secrets.X }}\nmasked in logs as ***"]
+
+    wfTrigger --&gt; jobCtx
+    jobCtx --&gt; secretCtx
+    envSecret --&gt; secretCtx
+    repoSecret --&gt; secretCtx
+    orgSecret --&gt; secretCtx
+    secretCtx --&gt; step</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Reference a secret in a workflow step</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to server</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>

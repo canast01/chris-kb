@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ad-hardening-controls-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AD Hardening Controls Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dcsync-attack-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -759,6 +770,20 @@
 
 
 <h1 id="active-directory-hardening">Active Directory — Hardening<a class="headerlink" href="#active-directory-hardening" title="Permanent link">&para;</a></h1>
+<h2 id="ad-hardening-controls-flow">AD Hardening Controls Flow<a class="headerlink" href="#ad-hardening-controls-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    adEnv["Active Directory Environment"]
+
+    adEnv --&gt; protUsers["Protected Users Group\n(disable NTLM / RC4 / delegation\nfor privileged accounts)"]
+    adEnv --&gt; ldapSign["LDAP Signing = Require\nChannel Binding = Always\n(Event 2889 for violations)"]
+    adEnv --&gt; kerbEnc["Kerberos AES-256 only\n(RC4 disabled via GPO)"]
+    adEnv --&gt; adminSDHolder["AdminSDHolder\n(propagates ACL every 60 min\nto all privileged accounts)"]
+    adEnv --&gt; mdi["Defender for Identity\n(sensor on all DCs)"]
+    adEnv --&gt; paw["PAW Policy\n(AppLocker / BitLocker / no internet)"]
+
+    mdi --&gt;|"alerts on"| dcsync["DCSync attack\n(Event 4662 — repl directory changes)"]
+    mdi --&gt;|"alerts on"| passHash["Pass-the-Hash /\nPass-the-Ticket"]
+    mdi --&gt;|"alerts on"| lateralMove["Lateral movement\nrecon patterns"]</code></pre>
 <h2 id="dcsync-attack-detection">DCSync Attack Detection<a class="headerlink" href="#dcsync-attack-detection" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Defender for Identity alert: &quot;Directory Services Replication Request&quot;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Also: Event ID 4662 with access mask 0x100 (Replicating Directory Changes)</span>

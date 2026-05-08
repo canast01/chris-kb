@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#powershell-access-control-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Access Control Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#execution-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -774,6 +785,24 @@
 <p>Part of the <a href="../">PowerShell Security</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="powershell-access-control-architecture">PowerShell Access Control Architecture<a class="headerlink" href="#powershell-access-control-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    user["User / Script\n(caller)"]
+    execPolicy["Execution Policy\n(RemoteSigned / AllSigned)"]
+    jea["JEA Endpoint\n(Register-PSSessionConfiguration)"]
+    roleCapability["Role Capability File\n(.psrc — allowed cmdlets)"]
+    sessionConfig["Session Configuration\n(.pssc — restricted)"]
+    adGroup["AD Group Membership\n(RBAC check in code)"]
+    transcript["Start-Transcript\n(audit log)"]
+    svcAccount["Service Account\n(least privilege)"]
+
+    user --&gt; execPolicy
+    execPolicy --&gt;|Pass| jea
+    jea --&gt; sessionConfig
+    sessionConfig --&gt; roleCapability
+    user --&gt; adGroup
+    adGroup --&gt;|Member| svcAccount
+    svcAccount --&gt; transcript</code></pre>
 <h2 id="execution-policy">Execution Policy<a class="headerlink" href="#execution-policy" title="Permanent link">&para;</a></h2>
 <p>Execution policy controls which scripts PowerShell will run. It is not a security boundary — it can be bypassed — but it prevents accidental script execution.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check the current effective execution policy</span>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hub-and-spoke-vnet-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hub-and-Spoke VNet Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vnet-creation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +815,18 @@
 
 <h1 id="virtual-network">Virtual Network<a class="headerlink" href="#virtual-network" title="Permanent link">&para;</a></h1>
 <p>An Azure Virtual Network (VNet) is the fundamental building block for private networking in Azure. Resources in a VNet can communicate with each other, with on-premises networks, and with the internet, all controlled by routing and security policies.</p>
+<h2 id="hub-and-spoke-vnet-topology">Hub-and-Spoke VNet Topology<a class="headerlink" href="#hub-and-spoke-vnet-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    onprem["On-Premises\nExpressRoute / VPN"]
+    hub["Hub VNet\nAzure Firewall · Bastion · VPN GW · DNS"]
+    spoke1["Spoke VNet 1\nWorkload A — app · db"]
+    spoke2["Spoke VNet 2\nWorkload B — app · db"]
+    spoke3["Spoke VNet 3\nShared Services"]
+
+    onprem &lt;--&gt;|"ER / VPN"| hub
+    hub &lt;--&gt;|"VNet Peering"| spoke1
+    hub &lt;--&gt;|"VNet Peering"| spoke2
+    hub &lt;--&gt;|"VNet Peering"| spoke3</code></pre>
 <h2 id="vnet-creation">VNet Creation<a class="headerlink" href="#vnet-creation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a VNet with a default subnet</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

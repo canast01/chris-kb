@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#escalation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#when-to-escalate" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,6 +781,16 @@
 
 
 <h1 id="python-automation-escalation">Python Automation — Escalation<a class="headerlink" href="#python-automation-escalation" title="Permanent link">&para;</a></h1>
+<h2 id="escalation-workflow">Escalation Workflow<a class="headerlink" href="#escalation-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue["Script Failure\nor Production Impact"]
+    selfDiagnose["Work through\nCommon Issues &amp; Diagnostics"]
+    resolved{"Resolved?"}
+    selfDiagnose --&gt; resolved
+    resolved --&gt;|Yes| done["Issue closed"]
+    resolved --&gt;|No| gatherInfo["Gather escalation info:\n• Full traceback\n• python3 --version\n• pip show &lt;package&gt;\n• Exact command used\n• Time of first failure\n• Recent changes"]
+    gatherInfo --&gt; raiseTicket["Raise ticket / page:\n• Summary + impact\n• Error (code block)\n• Environment details\n• Reproduction steps\n• What was already tried"]
+    issue --&gt; selfDiagnose</code></pre>
 <h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
 <p>Escalate when:</p>
 <ul>

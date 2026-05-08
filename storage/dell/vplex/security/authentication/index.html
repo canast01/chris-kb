@@ -855,6 +855,23 @@
 
 <h1 id="dell-vplex-authentication">Dell VPLEX — Authentication<a class="headerlink" href="#dell-vplex-authentication" title="Permanent link">&para;</a></h1>
 <p>Authentication for VPLEX management is split across two interfaces: SSH-based <code>vplexcli</code> access (local VMS accounts only) and the Unisphere for VPLEX web GUI (local accounts or LDAP/AD-integrated accounts).</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph "CLI Access"
+        operator(["Operator"])
+        jumpHost["Jump Host\nSSH key auth"]
+        vms["VMS\nservice@VMS_IP"]
+        vplexcli["vplexcli shell"]
+    end
+    subgraph "Web GUI Access"
+        browser(["Admin Browser"])
+        unisphere["Unisphere for VPLEX\nhttps://VMS_IP"]
+        ldap["Active Directory\nLDAP / LDAPS"]
+    end
+
+    operator --&gt; jumpHost
+    jumpHost --&gt;|"SSH key\ned25519"| vms --&gt; vplexcli
+    browser --&gt; unisphere
+    unisphere --&gt;|"LDAP bind\ngroup-to-role mapping"| ldap</code></pre>
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
 <p>VPLEX management access is provided through local accounts on the VPLEX Management Server (VMS).</p>
 <table>

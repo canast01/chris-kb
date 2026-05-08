@@ -771,6 +771,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ndu-firmware-upgrade-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDU Firmware Upgrade Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -804,6 +815,7 @@
 <th>Source Array</th>
 <th>Target Array</th>
 <th>Supported?</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
@@ -811,21 +823,25 @@
 <td>PowerMax 2500 (10.0.x)</td>
 <td>PowerMax 2500 (10.0.x)</td>
 <td>Yes (same version)</td>
+<td>Identical microcode level — full SRDF/S feature parity</td>
 </tr>
 <tr>
 <td>PowerMax 2500 (10.0.x)</td>
 <td>PowerMax 8500 (10.0.x)</td>
 <td>Yes (same major)</td>
+<td>Same major release supports cross-model pairing</td>
 </tr>
 <tr>
 <td>PowerMax (10.0.x)</td>
 <td>VMAX All Flash (8.4.x)</td>
 <td>Check matrix — limited</td>
+<td>Different product generations; some SRDF/S features unavailable</td>
 </tr>
 <tr>
 <td>PowerMax (10.1.x)</td>
 <td>PowerMax (10.0.x)</td>
 <td>Check matrix — N-1 typically supported</td>
+<td>N-1 is generally allowed but verify specific feature requirements</td>
 </tr>
 </tbody>
 </table>
@@ -915,27 +931,57 @@
 <tr>
 <th>Item</th>
 <th>Action</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>License expiry dates</td>
 <td>Annual review; alert 90 days before expiry</td>
+<td>Expired license disables SRDF operations — potential production outage</td>
 </tr>
 <tr>
 <td>SRDF/S vs SRDF/A licences</td>
 <td>Separate SKUs; verify correct licence type is applied</td>
+<td>Wrong license type results in replication mode mismatch at establish time</td>
 </tr>
 <tr>
 <td>SRDF/E (encryption)</td>
 <td>Optional add-on — track separately</td>
+<td>Required for compliance frameworks mandating data-in-transit encryption</td>
 </tr>
 <tr>
 <td>License compliance</td>
 <td>Compare licensed pairs vs. <code>symcfg list -rdfg</code> output</td>
+<td>Over-deployed pairs may fail to establish if license count is exceeded</td>
 </tr>
 </tbody>
 </table>
+<h2 id="ndu-firmware-upgrade-sequence">NDU Firmware Upgrade Sequence<a class="headerlink" href="#ndu-firmware-upgrade-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    preCheck["Verify All Pairs Synchronized\nsymrdf -g rdfg query | grep -v Synchronized"]
+    notifyApps["Notify Application Teams\nTemporary RPO degradation during window"]
+    convertAsync["Convert to SRDF/A\nsymrdf -g rdfg set mode async"]
+    nduSource["NDU on Source Array\n(Dell NDU runbook)"]
+    nduTarget["NDU on Target Array"]
+    convertSync["Re-establish Synchronous Mode\nsymrdf -g rdfg set mode sync"]
+    waitResync["Wait for Synchronized State\n(SyncInProg expected)"]
+    postValidate["Post-Upgrade Validation\nAll pairs Synchronized within 30 min"]
+    closeChange["Close Change Ticket"]
+
+    preCheck --&gt; notifyApps
+    notifyApps --&gt; convertAsync
+    convertAsync --&gt; nduSource
+    nduSource --&gt; nduTarget
+    nduTarget --&gt; convertSync
+    convertSync --&gt; waitResync
+    waitResync --&gt; postValidate
+    postValidate --&gt; closeChange
+
+    style preCheck fill:#7c3aed,color:#fff
+    style convertAsync fill:#b45309,color:#fff
+    style convertSync fill:#2563eb,color:#fff
+    style closeChange fill:#15803d,color:#fff</code></pre>
 
 
 

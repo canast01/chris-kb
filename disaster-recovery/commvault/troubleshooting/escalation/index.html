@@ -699,6 +699,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -766,6 +785,27 @@
 </tr>
 </tbody>
 </table>
+<h2 id="escalation-workflow">Escalation Workflow<a class="headerlink" href="#escalation-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue(["Issue identified\nby ops team"])
+    issue --&gt; internal["Internal triage\nCheck Job Controller\n+ collect log paths"]
+    internal --&gt; selfResolve{Resolved\ninternally?}
+    selfResolve --&gt;|Yes| document["Document root cause\n+ update runbook"]
+    selfResolve --&gt;|No| bundle["Collect support bundle\nqsystem log export\n-path C:\\cv_support_bundle"]
+    bundle --&gt; openCase["Open case on\nsupport.commvault.com\nAttach bundle + job ID"]
+    openCase --&gt; sev{Severity?}
+    sev --&gt;|"Sev 1\nproduction down"| sev1["Sev 1: 24x7 response\nRequest phone bridge\nEscalate to Premium if SLA missed"]
+    sev --&gt;|"Sev 2/3\ndegraded / informational"| sev23["Sev 2/3: portal updates\nMonitor case queue"]
+    sev1 --&gt; track["Track in incident\nmanagement system"]
+    sev23 --&gt; track
+    track --&gt; resolve(["Resolution\n+ post-incident review"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class internal,bundle,openCase,sev1,sev23,track,document action
+    class selfResolve,sev decision
+    class issue,resolve terminal</code></pre>
 
 
 

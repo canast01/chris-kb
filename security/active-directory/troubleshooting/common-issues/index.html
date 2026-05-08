@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ad-failure-triage-flowchart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AD Failure Triage Flowchart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#replication-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,23 @@
 
 <h1 id="active-directory-common-issues">Active Directory — Common Issues<a class="headerlink" href="#active-directory-common-issues" title="Permanent link">&para;</a></h1>
 <p>AD failures typically trace back to replication, DNS, time sync, or Kerberos. This page covers the most common failure categories with diagnostic commands.</p>
+<h2 id="ad-failure-triage-flowchart">AD Failure Triage Flowchart<a class="headerlink" href="#ad-failure-triage-flowchart" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    symptom["AD / authentication failure reported"]
+    symptom --&gt; dnsCheck{"DNS resolving\nDC names correctly?"}
+    dnsCheck --&gt;|"no"| fixDNS["Fix DNS:\nnltest /dsregdns\nipconfig /flushdns\ndcdiag /test:dns"]
+    dnsCheck --&gt;|"yes"| timeCheck{"Time skew &gt; 5 min\nbetween client and DC?"}
+    timeCheck --&gt;|"yes"| fixTime["Fix time:\nw32tm /resync /force\nCheck PDC Emulator NTP source"]
+    timeCheck --&gt;|"no"| kerbCheck{"Kerberos errors\n4768 / 4769 / 4771?"}
+    kerbCheck --&gt;|"yes"| kerbTriage["Check SPNs: setspn -X -F\nPurge tickets: klist purge\nVerify Kerberos enc policy"]
+    kerbCheck --&gt;|"no"| replCheck{"Replication errors\nin dcdiag / repadmin?"}
+    replCheck --&gt;|"yes"| replTriage["repadmin /showrepl\nrepadmin /replsummary\nSee replication error codes"]
+    replCheck --&gt;|"no"| servicesCheck["Check DC services:\nNTDS / Netlogon / DNS / W32Time"]
+    fixDNS --&gt; validate["Validate — retest authentication"]
+    fixTime --&gt; validate
+    kerbTriage --&gt; validate
+    replTriage --&gt; validate
+    servicesCheck --&gt; validate</code></pre>
 <h2 id="replication-errors">Replication Errors<a class="headerlink" href="#replication-errors" title="Permanent link">&para;</a></h2>
 <p>AD replication failures cause inconsistent directory state across DCs. Start with <code>repadmin</code> to identify the scope.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Show replication status for all partners

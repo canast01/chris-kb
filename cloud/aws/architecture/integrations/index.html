@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#s3-object-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3 Object Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#direct-connect-vpn" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -761,6 +772,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cloudformation-stack-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudFormation Stack Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#github-actions-oidc" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -807,6 +829,15 @@
 <p>Part of the <a href="../">Architecture</a> section.</p>
 </blockquote>
 <hr />
+<h2 id="s3-object-lifecycle">S3 Object Lifecycle<a class="headerlink" href="#s3-object-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    upload["Object Upload\nS3 Standard"]
+    ia["S3 Standard-IA\nafter 30 days"]
+    glacier["S3 Glacier\nafter 90 days"]
+    deepArchive["S3 Glacier Deep Archive\nafter 180 days (optional)"]
+    expire["Expiration\ndelete after retention period"]
+
+    upload --&gt;|"Lifecycle rule"| ia --&gt;|"Lifecycle rule"| glacier --&gt;|"Lifecycle rule"| deepArchive --&gt;|"Lifecycle rule"| expire</code></pre>
 <h2 id="direct-connect-vpn">Direct Connect + VPN<a class="headerlink" href="#direct-connect-vpn" title="Permanent link">&para;</a></h2>
 <p>On-premises to AWS connectivity:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check Direct Connect connection status</span>
@@ -867,6 +898,21 @@
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Enable cross-account backup (to log-archive account)</span>
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>aws<span class="w"> </span>backup<span class="w"> </span>put-backup-vault-access-policy<span class="w"> </span>--backup-vault-name<span class="w"> </span>prod-vault<span class="w"> </span>--policy<span class="w"> </span>file://vault-policy.json
 </code></pre></div>
+<h2 id="cloudformation-stack-lifecycle">CloudFormation Stack Lifecycle<a class="headerlink" href="#cloudformation-stack-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    template["Template\nJSON / YAML"]
+    validate["Validate\naws cloudformation validate-template"]
+    createStack["CREATE_IN_PROGRESS\nresource provisioning"]
+    complete["CREATE_COMPLETE\nstack outputs available"]
+    update["UPDATE_IN_PROGRESS\nchange set execution"]
+    rollback["ROLLBACK_IN_PROGRESS\nfailure detected"]
+    deleteStack["DELETE_IN_PROGRESS\nresource teardown"]
+
+    template --&gt; validate --&gt; createStack --&gt; complete
+    complete --&gt; update --&gt; complete
+    createStack --&gt;|"error"| rollback
+    update --&gt;|"error"| rollback
+    complete --&gt; deleteStack</code></pre>
 <h2 id="github-actions-oidc">GitHub Actions + OIDC<a class="headerlink" href="#github-actions-oidc" title="Permanent link">&para;</a></h2>
 <p>No static access keys — use OIDC federation:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># .github/workflows/deploy.yml</span>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#entra-id-identity-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entra ID Identity Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tenant-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -810,6 +821,21 @@
 
 <h1 id="microsoft-entra-id">Microsoft Entra ID<a class="headerlink" href="#microsoft-entra-id" title="Permanent link">&para;</a></h1>
 <p>Microsoft Entra ID (formerly Azure Active Directory) is the cloud-based identity and access management service. It provides authentication, authorisation, and directory services for Azure resources, Microsoft 365, and integrated SaaS applications.</p>
+<h2 id="entra-id-identity-architecture">Entra ID Identity Architecture<a class="headerlink" href="#entra-id-identity-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    onpremAD["On-Premises AD\nSource of truth"]
+    adConnect["Azure AD Connect\nDelta sync every 30 min"]
+    entraId["Microsoft Entra ID\nCloud identity plane"]
+    sso["SSO\nMicrosoft 365 · SaaS · Azure"]
+    ca["Conditional Access\nMFA · compliant device · location"]
+    pim["PIM\nJIT privileged access"]
+    mfa["MFA\nAuthenticator · FIDO2"]
+
+    onpremAD --&gt;|"Hybrid sync"| adConnect --&gt; entraId
+    entraId --&gt; sso
+    entraId --&gt; ca
+    entraId --&gt; pim
+    ca --&gt; mfa</code></pre>
 <h2 id="tenant-overview">Tenant Overview<a class="headerlink" href="#tenant-overview" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show current tenant details</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>

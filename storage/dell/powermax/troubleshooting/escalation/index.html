@@ -884,6 +884,25 @@
 </table>
 <p>ProSupport (standard, without Plus) carries P1 = 4-hour response, P2 = next business day.</p>
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    INCIDENT([P1 Incident — Production Impact]) --&gt; L1["L1 — Front-line Support Engineer\nInitial triage + remote diagnostics\nTarget: 2h engagement (ProSupport Plus)"]
+    L1 --&gt; RESOLVE1{Resolved\nwithin SLA?}
+    RESOLVE1 --&gt;|"Yes"| CLOSE([Case Closed — Document RCA])
+    RESOLVE1 --&gt;|"No — defect suspected\nor resolution blocked"| TAM["TAM — Technical Account Manager\n(ProSupport Plus)\nPriority escalation + proactive planning"]
+    TAM --&gt; PE["PE — Product Engineering Escalation\nHot fix / workaround if product defect\nRequest via TAM or case owner"]
+    PE --&gt; RESOLVE2{Resolved?}
+    RESOLVE2 --&gt;|"Yes"| CLOSE
+    RESOLVE2 --&gt;|"No — 4+ hours, no path"| EXEC["Executive Escalation\nVia TAM or account team\nParallel: call ProSupport hotline\n+1-800-945-3355"]
+    EXEC --&gt; CLOSE
+
+    classDef start fill:#be123c,stroke:#9f1239,color:#fff
+    classDef tier fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef done fill:#15803d,stroke:#166534,color:#fff
+    class INCIDENT start
+    class L1,TAM,PE,EXEC tier
+    class RESOLVE1,RESOLVE2 decision
+    class CLOSE done</code></pre>
 <ol>
 <li><strong>Front-line support engineer</strong>: Initial case triage and remote diagnostics.</li>
 <li><strong>Technical Account Manager (TAM)</strong>: Assigned under ProSupport Plus. Use for proactive planning, upgrade guidance, and priority case escalation.</li>

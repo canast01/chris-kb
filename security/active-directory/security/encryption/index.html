@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ad-protocol-encryption-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AD Protocol Encryption Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#enforcing-ldap-signing-and-channel-binding" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -748,6 +759,17 @@
 
 
 <h1 id="active-directory-encryption">Active Directory — Encryption<a class="headerlink" href="#active-directory-encryption" title="Permanent link">&para;</a></h1>
+<h2 id="ad-protocol-encryption-overview">AD Protocol Encryption Overview<a class="headerlink" href="#ad-protocol-encryption-overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    clients["AD Clients\n(computers / apps)"]
+    clients --&gt;|"LDAPS port 636\n(TLS 1.2+ required)"| dc["Domain Controller\n(LDAP with Signing + Channel Binding)"]
+    clients --&gt;|"Kerberos port 88\n(AES-256 — RC4 disabled)"| kdc["KDC\n(on DC)"]
+    clients --&gt;|"SMB port 445\n(SMB signing required)"| sysvol["SYSVOL / DFSR"]
+    dc --&gt; ntds["NTDS.DIT\n(AD database — AES encrypted at rest)"]
+    kdc --&gt; ntds
+
+    ldapPolicy["GPO: LDAP signing = Require\nChannel Binding = Always"] -. "enforced on" .-&gt; dc
+    kerbPolicy["GPO: Kerberos enc = AES128 + AES256 only\n(DES + RC4 disabled)"] -. "enforced on" .-&gt; kdc</code></pre>
 <h2 id="enforcing-ldap-signing-and-channel-binding">Enforcing LDAP Signing and Channel Binding<a class="headerlink" href="#enforcing-ldap-signing-and-channel-binding" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify current LDAP signing requirement via registry on DC</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\System\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>

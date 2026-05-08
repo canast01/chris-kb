@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-monitor-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Monitor Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#metrics-vs-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,36 @@
 
 <h1 id="azure-monitor">Azure Monitor<a class="headerlink" href="#azure-monitor" title="Permanent link">&para;</a></h1>
 <p>Azure Monitor is the unified observability platform for Azure. It collects metrics and logs from Azure resources, operating systems, applications, and custom sources, then provides tools for analysis, alerting, and visualisation.</p>
+<h2 id="azure-monitor-data-flow">Azure Monitor Data Flow<a class="headerlink" href="#azure-monitor-data-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph sources["Data Sources"]
+        azResources["Azure Resources\nVM · Storage · Network"]
+        guestOS["Guest OS\nAzure Monitor Agent"]
+        apps["Applications\nApp Insights SDK"]
+        custom["Custom Sources\nREST API · DCR"]
+    end
+    subgraph pipeline["Collection Pipeline"]
+        dcr["Data Collection Rules\nDCR"]
+        diagSettings["Diagnostic Settings\nplatform logs + metrics"]
+    end
+    subgraph stores["Data Stores"]
+        metricsDB["Metrics Store\n93-day retention"]
+        logAnalytics["Log Analytics Workspace\nKQL query engine"]
+    end
+    subgraph consume["Consumption"]
+        alerts["Alert Rules\nMetric · Log · Activity"]
+        workbooks["Workbooks\nDashboards"]
+        grafana["Managed Grafana"]
+    end
+
+    azResources --&gt; diagSettings
+    guestOS --&gt; dcr
+    apps --&gt; dcr
+    custom --&gt; dcr
+    dcr --&gt; logAnalytics &amp; metricsDB
+    diagSettings --&gt; logAnalytics &amp; metricsDB
+    metricsDB --&gt; alerts &amp; grafana
+    logAnalytics --&gt; alerts &amp; workbooks &amp; grafana</code></pre>
 <h2 id="metrics-vs-logs">Metrics vs Logs<a class="headerlink" href="#metrics-vs-logs" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

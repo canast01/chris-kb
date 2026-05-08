@@ -761,6 +761,24 @@
 <h1 id="active-directory-access-control">Active Directory — Access Control<a class="headerlink" href="#active-directory-access-control" title="Permanent link">&para;</a></h1>
 <h2 id="tiered-administration-model">Tiered Administration Model<a class="headerlink" href="#tiered-administration-model" title="Permanent link">&para;</a></h2>
 <p>Active Directory security is built around the three-tier admin model:</p>
+<pre class="mermaid"><code>graph TD
+    tier0["Tier 0\nDCs · ADCS · AAD Connect · CyberArk\n(highest sensitivity — forest boundary)"]
+    tier1["Tier 1\nApp servers · SQL · ESXi · Storage"]
+    tier2["Tier 2\nWorkstations · End-user devices"]
+
+    paw0["Tier 0 PAW\n(dedicated — no internet/email)"]
+    jump1["Jump Server / Tier 1 PAW"]
+    stdWs["Standard Workstation"]
+
+    admTier0["adm0-* accounts"] --&gt; paw0
+    paw0 --&gt;|"only allowed path"| tier0
+    admTier1["adm1-* accounts"] --&gt; jump1
+    jump1 --&gt;|"only allowed path"| tier1
+    helpdesk["Helpdesk accounts"] --&gt; stdWs
+    stdWs --&gt; tier2
+
+    tier0 -. "GPO: Deny log on locally to Tier 1/2" .-&gt; tier1
+    tier1 -. "GPO: Deny log on locally to Tier 2" .-&gt; tier2</code></pre>
 <table>
 <thead>
 <tr>

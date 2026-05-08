@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#vmsc-and-srm-integration-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vMSC and SRM Integration Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vmware-srm-dell-sra" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -813,6 +824,34 @@
 <p>Part of the <a href="../">SRDF/S Architecture</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="vmsc-and-srm-integration-topology">vMSC and SRM Integration Topology<a class="headerlink" href="#vmsc-and-srm-integration-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph siteA ["Site A — Production"]
+        vcA["vCenter\n(Site A)"]
+        srmA["SRM Server\n(Protected Site)"]
+        sra1["Dell SRA"]
+        esxiA["ESXi Hosts\n(Active VMs)"]
+        r1["PowerMax R1"]
+        vcA --- srmA
+        srmA --- sra1
+        esxiA --&gt;|"FC / iSCSI paths"| r1
+    end
+
+    subgraph siteB ["Site B — Metro DR"]
+        vcB["vCenter\n(Site B)"]
+        srmB["SRM Server\n(Recovery Site)"]
+        sra2["Dell SRA"]
+        esxiB["ESXi Hosts\n(standby)"]
+        r2["PowerMax R2"]
+        vcB --- srmB
+        srmB --- sra2
+        esxiB -.-&gt;|"at failover only"| r2
+    end
+
+    r1 --&gt;|"SRDF/S synchronous"| r2
+    srmA &lt;--&gt;|"SRM pairing"| srmB
+    sra1 --&gt; r1
+    sra2 --&gt; r2</code></pre>
 <h2 id="vmware-srm-dell-sra">VMware SRM + Dell SRA<a class="headerlink" href="#vmware-srm-dell-sra" title="Permanent link">&para;</a></h2>
 <p>The Dell Storage Replication Adapter (SRA) enables Site Recovery Manager to discover and manage SRDF/S replicated datastores for automated failover.</p>
 <h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>

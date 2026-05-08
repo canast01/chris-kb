@@ -728,6 +728,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#backup-policy-to-job-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Policy to Job Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#policy-design-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -873,6 +884,31 @@
 </tbody>
 </table>
 <p>Compliance requirements may extend yearly retention to 10 years for regulated data.</p>
+<h2 id="backup-policy-to-job-flow">Backup Policy to Job Flow<a class="headerlink" href="#backup-policy-to-job-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    policy["Backup Policy\n(application type,\nclient list, schedules)"]
+    policy --&gt; schedule["Schedule\n(full-14d, incr-7d, weekly-8w)"]
+    schedule --&gt; trigger{Schedule\ntrigger}
+    trigger --&gt;|"Window opens"| jm["Job Manager\n(allocate media server + STU)"]
+    jm --&gt; clientConn["Connect to client\nbpcd TCP 13724"]
+    clientConn --&gt; dataStream["Stream data to media server\nbpbrm TCP 13782"]
+    dataStream --&gt; dedup{Storage\ntype?}
+    dedup --&gt;|"OST / Data Domain"| ddDedup["DD Boost\ninline dedup on media server"]
+    dedup --&gt;|"MSDP"| msdpDedup["MSDP\ndedup on media server"]
+    dedup --&gt;|"BasicDisk"| basicDisk["Write directly\nno dedup"]
+    ddDedup --&gt; catalog["Catalog image in\nNetBackup DB\nbpdbm"]
+    msdpDedup --&gt; catalog
+    basicDisk --&gt; catalog
+    catalog --&gt; done(["Job complete\nlog in bpdbjobs"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+    class jm,clientConn,dataStream,ddDedup,msdpDedup,basicDisk,catalog action
+    class trigger,dedup decision
+    class policy,schedule terminal
+    class done terminal</code></pre>
 <h2 id="policy-design-rules">Policy Design Rules<a class="headerlink" href="#policy-design-rules" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Client list</strong>: Always use an explicitly named client list — wildcard client patterns are not permitted in production</li>

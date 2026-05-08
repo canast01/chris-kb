@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#component-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#consistency-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -917,6 +928,27 @@
 </tbody>
 </table>
 <hr />
+<h2 id="component-hierarchy">Component Hierarchy<a class="headerlink" href="#component-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph prodSite ["Production Site"]
+        prodHosts["Production Hosts"]
+        splitter["Splitter\n(PowerMax HW or ESXi SW)"]
+        rpaClusterA["RPA Cluster Site A\n(2+ appliances)"]
+        prodStorage["Production Storage\n(Protected LUNs)"]
+        prodHosts --&gt;|"I/O"| splitter
+        splitter --&gt;|"split write"| prodStorage
+        splitter --&gt;|"capture write"| rpaClusterA
+    end
+
+    subgraph drSite ["DR Site"]
+        rpaClusterB["RPA Cluster Site B\n(2+ appliances)"]
+        journal["Journal Volumes\n(rolling delta store)"]
+        drStorage["DR Storage\n(Replica LUNs)"]
+        rpaClusterB --&gt; journal
+        journal --&gt;|"drain"| drStorage
+    end
+
+    rpaClusterA &lt;--&gt;|"WAN — compressed\nreplication traffic"| rpaClusterB</code></pre>
 <h2 id="consistency-groups">Consistency Groups<a class="headerlink" href="#consistency-groups" title="Permanent link">&para;</a></h2>
 <p>A Consistency Group (CG) is the primary replication unit in RecoverPoint. Each CG groups one or more volumes that must be recovered together as a consistent set — for example, all data and log LUNs for an Oracle database. RecoverPoint guarantees write-order consistency across all volumes in a CG.</p>
 <table>
@@ -1021,6 +1053,7 @@
 <th>Check</th>
 <th>Command</th>
 <th>Expected</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
@@ -1028,31 +1061,37 @@
 <td>CG state</td>
 <td><code>groups status</code></td>
 <td>All <code>ACTIVE</code></td>
+<td>Non-active CG means replication is not protecting data</td>
 </tr>
 <tr>
 <td>Journal utilization</td>
 <td><code>journals list</code></td>
 <td>&lt; 70%</td>
+<td>High journal fill during test can trigger overflow and halt replication</td>
 </tr>
 <tr>
 <td>RPO compliance</td>
 <td><code>group status --gname &lt;n&gt;</code></td>
 <td>Within SLA</td>
+<td>Confirms DR copy is at an acceptable point in time for testing</td>
 </tr>
 <tr>
 <td>Image access disabled</td>
 <td><code>groups status detail</code></td>
 <td>No active image access</td>
+<td>Leftover image access from a previous test causes replication pause</td>
 </tr>
 <tr>
 <td>No active alarms</td>
 <td><code>alarms list</code></td>
 <td>No critical alarms</td>
+<td>Active hardware alarms may indicate instability before failover</td>
 </tr>
 <tr>
 <td>DR site reachable</td>
 <td><code>network connectivity check</code></td>
 <td>Connected</td>
+<td>DR site must be accessible before enabling image access</td>
 </tr>
 </tbody>
 </table>
@@ -1189,27 +1228,64 @@
 <tr>
 <th>Threshold</th>
 <th>Action</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>&gt; 70%</td>
 <td>Warning alert; review write rate and link bandwidth</td>
+<td>Early warning allows journal expansion before emergency action</td>
 </tr>
 <tr>
 <td>&gt; 80%</td>
 <td>Critical alert; plan immediate journal expansion</td>
+<td>Journal drain rate must exceed write rate to prevent overflow</td>
 </tr>
 <tr>
 <td>&gt; 90%</td>
 <td>Emergency; expand journal before replication halts</td>
+<td>At 100%, RP halts replication and a full resync is required</td>
 </tr>
 <tr>
 <td>100%</td>
 <td>Replication halted; full resync required after expansion</td>
+<td>Full overflow destroys the recovery window — full resync is the only recovery path</td>
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart TD
+    journalFill["Journal Fill Level\n(monitor continuously)"]
+    level70{"Fill Level?"}
+    ok["OK\n&lt; 70% — Normal operation"]
+    warning["Warning\n70–80%\nReview write rate and link"]
+    critical["Critical\n80–90%\nPlan immediate expansion"]
+    emergency["Emergency\n&gt; 90%\nExpand now or replication halts"]
+    halted["Replication Halted\n100% — Full resync required"]
+
+    checkLink["Check Link Bandwidth\nlinks statistics"]
+    expandJournal["Expand Journal LUN\non Storage Array"]
+    fullResync["Force Full Resync\ngroup start-resync"]
+
+    journalFill --&gt; level70
+    level70 --&gt;|"&lt; 70%"| ok
+    level70 --&gt;|"70–80%"| warning
+    level70 --&gt;|"80–90%"| critical
+    level70 --&gt;|"&gt; 90%"| emergency
+    level70 --&gt;|"100%"| halted
+
+    warning --&gt; checkLink
+    critical --&gt; expandJournal
+    emergency --&gt; expandJournal
+    halted --&gt; expandJournal
+    expandJournal --&gt; fullResync
+
+    style ok fill:#15803d,color:#fff
+    style warning fill:#b45309,color:#fff
+    style critical fill:#be123c,color:#fff
+    style emergency fill:#be123c,color:#fff
+    style halted fill:#6b7280,color:#fff
+    style fullResync fill:#7c3aed,color:#fff</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Set journal alarm threshold (via RPMA / boxmgmt)</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Navigate: Group Management → &lt;CG&gt; → Settings → Journal Alarms</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Set high-watermark threshold to 70%</span>

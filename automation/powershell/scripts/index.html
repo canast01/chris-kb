@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#remote-health-check-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Health Check Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#windows-server-health-check-powershell" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -953,6 +964,28 @@
 <p>Part of the <a href="../">PowerShell</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="remote-health-check-topology">Remote Health Check Topology<a class="headerlink" href="#remote-health-check-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    controlHost["Control Host\n(runs the script)"]
+    invokeCmd["Invoke-Command\n(parallel remote execution)"]
+    srv1["Server 1\nWinRM → ScriptBlock"]
+    srv2["Server 2\nWinRM → ScriptBlock"]
+    srv3["Server N\nWinRM → ScriptBlock"]
+    collectResults["Collect Results\n(PSObject list)"]
+    formatTable["Format-Table\n(console output)"]
+    exportCsv["Export-Csv\n(health-report.csv)"]
+    flagIssues["Flag Issues\n(CPU / Memory / Disk\n/ Services / Reboot)"]
+
+    controlHost --&gt; invokeCmd
+    invokeCmd --&gt; srv1
+    invokeCmd --&gt; srv2
+    invokeCmd --&gt; srv3
+    srv1 --&gt; collectResults
+    srv2 --&gt; collectResults
+    srv3 --&gt; collectResults
+    collectResults --&gt; formatTable
+    collectResults --&gt; exportCsv
+    collectResults --&gt; flagIssues</code></pre>
 <h2 id="windows-server-health-check-powershell">Windows Server Health Check (PowerShell)<a class="headerlink" href="#windows-server-health-check-powershell" title="Permanent link">&para;</a></h2>
 <p>Connect to remote servers via <code>Invoke-Command</code>, collect disk, memory, CPU, top processes, stopped automatic services, last boot time, and pending reboot status, then export results to CSV.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">#!/usr/bin/env pwsh</span>

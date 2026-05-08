@@ -761,6 +761,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ec2-launch-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EC2 Launch Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#iam-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -893,6 +904,18 @@
 </tr>
 </tbody>
 </table>
+<h2 id="ec2-launch-flow">EC2 Launch Flow<a class="headerlink" href="#ec2-launch-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    request["Launch Request\nConsole / CLI / ASG"]
+    iamCheck["IAM Authorization\niam:RunInstances check"]
+    amiSelect["AMI Selection\nAMI ID + EBS snapshot"]
+    networkPlace["Network Placement\nVPC · Subnet · AZ"]
+    sgApply["Security Group\napply inbound/outbound rules"]
+    instanceProfile["Instance Profile\nIAM role attached"]
+    userData["User Data\ncloud-init / bootstrap"]
+    running["Instance Running\nEC2 metadata available"]
+
+    request --&gt; iamCheck --&gt; amiSelect --&gt; networkPlace --&gt; sgApply --&gt; instanceProfile --&gt; userData --&gt; running</code></pre>
 <h2 id="iam-structure">IAM Structure<a class="headerlink" href="#iam-structure" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>AWS Organizations SCPs (guardrails — deny dangerous actions globally)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │

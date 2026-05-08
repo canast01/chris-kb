@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#certificate-lifecycle-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Lifecycle Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adcs-role-components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -821,6 +832,21 @@
   class INT1,INT2 ctrl
   class CERT1,CERT2,CERT3 host
   class CRL mgmt</code></pre>
+<h2 id="certificate-lifecycle-flow">Certificate Lifecycle Flow<a class="headerlink" href="#certificate-lifecycle-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    csrGen["CSR Generation\n(key pair on target host / HSM)"]
+    csrGen --&gt; submit["Submit CSR to CA\n(ADCS / DigiCert / Venafi)"]
+    submit --&gt; caSign["CA validates and signs\n(issues certificate)"]
+    caSign --&gt; deploy["Deploy to target service\n(nginx / IIS / F5 / Java keystore)"]
+    deploy --&gt; monitor["Continuous expiry monitoring\n(Venafi / openssl / Prometheus)"]
+    monitor --&gt; renewWindow{"Within renewal\nwindow?"}
+    renewWindow --&gt;|"yes — 30 days"| renewDecision{"Automated\nrenewal?"}
+    renewWindow --&gt;|"no"| monitor
+    renewDecision --&gt;|"yes — Venafi / ACME"| csrGen
+    renewDecision --&gt;|"no — manual"| manualRenew["Manual renewal procedure\n(owner notified)"]
+    manualRenew --&gt; csrGen
+    monitor --&gt;|"key compromise\nor decommission"| revoke["Revoke via CA\nPublish CRL + OCSP update"]</code></pre>
+<hr />
 <h2 id="adcs-role-components">ADCS Role Components<a class="headerlink" href="#adcs-role-components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

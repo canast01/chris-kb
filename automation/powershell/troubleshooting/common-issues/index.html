@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#powershell-troubleshooting-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Troubleshooting Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#execution-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -785,6 +796,21 @@
 <p>Part of the <a href="../">PowerShell Troubleshooting</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="powershell-troubleshooting-decision-flow">PowerShell Troubleshooting Decision Flow<a class="headerlink" href="#powershell-troubleshooting-decision-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    failure["Script Error\nor Unexpected Behaviour"]
+    failure --&gt; errType{"Error type?"}
+    errType --&gt;|Execution policy\nblocked| checkPolicy["Get-ExecutionPolicy -List\ncheck all scopes"]
+    checkPolicy --&gt; setPolicy["Set-ExecutionPolicy RemoteSigned\n-Scope CurrentUser"]
+    errType --&gt;|Module not found| checkModPath["$env:PSModulePath\nmodule path correct?"]
+    checkModPath --&gt;|No| addPath["Add module directory\nto PSModulePath"]
+    checkModPath --&gt;|Yes| reinstallMod["Install-Module -Force\n-AllowClobber"]
+    errType --&gt;|WinRM /\nRemoting failure| testWSMan["Test-WSMan -ComputerName host\nTest-NetConnection port 5985"]
+    testWSMan --&gt;|No response| enableRemoting["Enable-PSRemoting -Force\non target (as admin)"]
+    errType --&gt;|Credential /\nauth failure| checkCred["$Error[0] | Format-List *\ninspect exception"]
+    checkCred --&gt; refreshCred["Get-Credential again\nor Import-Clixml new file"]
+    errType --&gt;|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
+    strictMode --&gt; stepDebug["Set-PSBreakpoint\nstep through execution"]</code></pre>
 <h2 id="execution-policy">Execution Policy<a class="headerlink" href="#execution-policy" title="Permanent link">&para;</a></h2>
 <p>Execution policy errors are the most common first-run obstacle on Windows.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check the current effective execution policy</span>

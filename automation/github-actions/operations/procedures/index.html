@@ -1041,6 +1041,22 @@
 </blockquote>
 <hr />
 <h2 id="workflows">Workflows<a class="headerlink" href="#workflows" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    trigger(["Trigger Event\npush / pull_request\nschedule / workflow_dispatch"])
+    runner["Runner\nubuntu-24.04\nself-hosted"]
+    jobA["Job: build\nCheckout → Install → Test → Build"]
+    jobB["Job: test\nmatrix: OS × Python version"]
+    artifacts["Artifacts\ndist/ packages\ntest reports"]
+    jobC["Job: publish\nneeds: build\nenvironment: pypi"]
+    deploy["Deploy\n./deploy.sh\nor OIDC cloud publish"]
+
+    trigger --&gt; runner
+    runner --&gt; jobA
+    runner --&gt; jobB
+    jobA --&gt; artifacts
+    artifacts --&gt; jobC
+    jobB --&gt;|"all matrix legs pass"| jobC
+    jobC --&gt; deploy</code></pre>
 <p>Workflows live in <code>.github/workflows/</code> and are YAML files with a defined structure.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># .github/workflows/ci.yml</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI Pipeline</span><span class="w">          </span><span class="c1"># displayed in the Actions UI</span>
@@ -1069,6 +1085,16 @@
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">          </span><span class="nt">CI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">         </span><span class="c1"># step-level env vars</span>
 </code></pre></div>
 <h3 id="reusable-workflows">Reusable Workflows<a class="headerlink" href="#reusable-workflows" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    mainWf["main.yml\nCalling workflow"]
+    reuseWf["reusable-deploy.yml\nworkflow_call trigger"]
+    stagingEnv["environment: staging\nDeploy secrets injected"]
+    prodEnv["environment: production\nRequires reviewer approval"]
+
+    mainWf --&gt;|"jobs.deploy-staging.uses\nwith: environment=staging"| reuseWf
+    mainWf --&gt;|"jobs.deploy-prod.uses\nwith: environment=production"| reuseWf
+    reuseWf --&gt; stagingEnv
+    reuseWf --&gt; prodEnv</code></pre>
 <p>Reusable workflows reduce duplication by calling one workflow from another.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .github/workflows/reusable-deploy.yml (called workflow)</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reusable Deploy</span>
@@ -1285,6 +1311,32 @@
 <a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
 </code></pre></div>
 <h3 id="matrix-builds">Matrix Builds<a class="headerlink" href="#matrix-builds" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    trigger(["push to main"])
+    matrixJob["Job: test\nstrategy.matrix"]
+
+    subgraph "ubuntu-24.04"
+        u310["Python 3.10"]
+        u311["Python 3.11"]
+        u312["Python 3.12"]
+    end
+    subgraph "windows-latest"
+        w311["Python 3.11"]
+        w312["Python 3.12"]
+    end
+    subgraph "macos-latest"
+        m311["Python 3.11"]
+        m312["Python 3.12"]
+    end
+
+    trigger --&gt; matrixJob
+    matrixJob --&gt; u310
+    matrixJob --&gt; u311
+    matrixJob --&gt; u312
+    matrixJob --&gt; w311
+    matrixJob --&gt; w312
+    matrixJob --&gt; m311
+    matrixJob --&gt; m312</code></pre>
 <p>Matrix strategy runs the same job across multiple combinations of parameters.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">jobs</span><span class="p">:</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">test</span><span class="p">:</span>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#escalation-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#when-to-escalate" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -781,6 +792,19 @@
 
 
 <h1 id="terraform-escalation">Terraform — Escalation<a class="headerlink" href="#terraform-escalation" title="Permanent link">&para;</a></h1>
+<h2 id="escalation-decision-tree">Escalation Decision Tree<a class="headerlink" href="#escalation-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue["Terraform Issue\nDetected"]
+    canRecover{"Can recover with\nstandard commands?"}
+    issue --&gt; canRecover
+    canRecover --&gt;|Yes| selfResolve["Self-resolve:\nforce-unlock / import\n/ apply / refresh-only"]
+    canRecover --&gt;|No| escalate["Escalate to senior\nengineer / HashiCorp support"]
+
+    escalate --&gt; captureInfo["Capture:\n• terraform version\n• terraform providers\n• workspace\n• lock status\n• last apply log"]
+
+    captureInfo --&gt; raiseTicket["Raise ticket / page:\n• Summary\n• Full error output\n• Reproduction steps\n• State status\n• Recent changes"]
+
+    raiseTicket --&gt; backupFirst["Take state backup\nbefore recovery attempts:\nterraform state pull &gt; backup.tfstate"]</code></pre>
 <h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
 <p>Escalate when:</p>
 <ul>

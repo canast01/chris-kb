@@ -855,6 +855,19 @@
 
 <h1 id="dell-vplex-encryption">Dell VPLEX — Encryption<a class="headerlink" href="#dell-vplex-encryption" title="Permanent link">&para;</a></h1>
 <p>VPLEX itself is a virtualisation and federation layer and does not natively encrypt data in transit between hosts and the directors (Fibre Channel does not provide encryption at the SAN layer). Encryption at rest is delegated to the back-end arrays. Management traffic encryption is handled via TLS and SSH on the management plane.</p>
+<pre class="mermaid"><code>flowchart LR
+    host["Host\nESXi / Linux"]
+    vplex["VPLEX Directors"]
+    arrays["Back-end Arrays\nPowerMax D@RE\nUnity Encryption"]
+    vms["VMS\nUnisphere / vplexcli"]
+    iclLink["ICL\nMetro cluster-to-cluster"]
+
+    host --&gt;|"FC — not encrypted at VPLEX layer\nEnforce via SAN encryption switch if required"| vplex
+    vplex --&gt;|"FC back-end — not encrypted\nEnforce via SAN encryption switch"| arrays
+    arrays --&gt;|"AES-256 Data at Rest\nArray-managed D@RE"| arrays
+    vplex &lt;--&gt;|"ICL — not encrypted at VPLEX\nMACsec / IPsec at network layer"| iclLink
+    vms --&gt;|"SSH TLS — encrypted"| vplex
+    host --&gt;|"HTTPS TLS — encrypted"| vms</code></pre>
 <h2 id="encryption-scope-summary">Encryption Scope Summary<a class="headerlink" href="#encryption-scope-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

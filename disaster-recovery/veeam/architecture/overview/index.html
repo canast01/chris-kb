@@ -798,14 +798,32 @@
 <li>Proxies auto-selected by Veeam based on available throughput — no manual assignment needed for most cases</li>
 </ul>
 <h2 id="scale-out-backup-repository-sobr">Scale-Out Backup Repository (SOBR)<a class="headerlink" href="#scale-out-backup-repository-sobr" title="Permanent link">&para;</a></h2>
-<p>SOBR provides tiered storage without managing individual repository capacity:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SOBR:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Performance Extent: fast NFS/CIFS or local disk (hot backups)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    - Stores recent restore points (e.g., last 14 days)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Capacity Tier: S3-compatible object storage
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    - Automatic offload after configured time threshold (e.g., 14 days)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    - Immutable copies via S3 Object Lock
-</code></pre></div>
+<p>SOBR provides tiered storage without managing individual repository capacity.</p>
+<pre class="mermaid"><code>flowchart LR
+    job(["Backup Job\n(daily run)"])
+
+    subgraph sobr [Scale-Out Backup Repository]
+        direction TB
+        pe1[("Performance Extent 1\nfast disk — NFS / XFS\n0-14 days")]
+        pe2[("Performance Extent 2\nfast disk — second node\n0-14 days")]
+        ct[("Capacity Tier\nS3-compatible object storage\n14+ days — immutable")]
+        pe1 --&gt;|"auto-offload\nafter threshold"| ct
+        pe2 --&gt;|"auto-offload"| ct
+    end
+
+    job --&gt; pe1
+    job --&gt; pe2
+
+    ct --&gt;|"archive tier\nS3 Glacier"| glacier[("Glacier / Archive\nyearly retention")]
+
+    classDef peNode fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef ctNode fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef archNode fill:#0f766e,stroke:#0d5f58,color:#fff
+    classDef src fill:#15803d,stroke:#166534,color:#fff
+    class pe1,pe2 peNode
+    class ct ctNode
+    class glacier archNode
+    class job src</code></pre>
 <p>Configure SOBR offload: Backup Infrastructure → Scale-Out Repositories → right-click → Properties → Capacity Tier.</p>
 <h2 id="nas-backup-file-share-backup">NAS Backup (File Share Backup)<a class="headerlink" href="#nas-backup-file-share-backup" title="Permanent link">&para;</a></h2>
 <p>Veeam 12+ supports backup of SMB/NFS shares via dedicated File Share backup jobs:</p>

@@ -699,6 +699,186 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data in Transit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data in Transit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web-ui-and-rest-api-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web UI and REST API (HTTPS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web UI and REST API (HTTPS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-the-default-self-signed-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace the Default Self-Signed Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-version-and-cipher-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Version and Cipher Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sannav-to-switch-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SANnav to Switch Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sannav-to-ldap-ldaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SANnav to LDAP (LDAPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-at-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data at Rest
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data at Rest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stored-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stored Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-level-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database-Level Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +898,161 @@
 
 
 <h1 id="sannav-encryption">SANnav — Encryption<a class="headerlink" href="#sannav-encryption" title="Permanent link">&para;</a></h1>
-<p>TLS certificate management and data encryption.</p>
+<blockquote>
+<p>Part of the <a href="../../">SANnav</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SANnav encrypts data in transit using TLS and encrypts sensitive stored data (switch credentials, LDAP bind passwords) at rest using AES encryption. This page covers the configuration and verification of both.</p>
+<hr />
+<h2 id="data-in-transit">Data in Transit<a class="headerlink" href="#data-in-transit" title="Permanent link">&para;</a></h2>
+<h3 id="web-ui-and-rest-api-https">Web UI and REST API (HTTPS)<a class="headerlink" href="#web-ui-and-rest-api-https" title="Permanent link">&para;</a></h3>
+<p>All browser access and REST API calls use HTTPS (TLS 1.2 minimum; TLS 1.3 preferred). The NGINX front-end handles TLS termination.</p>
+<h4 id="replace-the-default-self-signed-certificate">Replace the Default Self-Signed Certificate<a class="headerlink" href="#replace-the-default-self-signed-certificate" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Generate a 4096-bit RSA key and CSR</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/sannav.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/sannav.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=sannav-dc1.corp.example.com/OU=Infrastructure/O=Corp/C=AU&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:sannav-dc1.corp.example.com,IP:10.10.5.20&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Submit /tmp/sannav.csr to your CA</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># After receiving sannav.crt (and any intermediate certs):</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>cat<span class="w"> </span>sannav.crt<span class="w"> </span>intermediate-ca.crt<span class="w"> </span>&gt;<span class="w"> </span>/tmp/sannav-bundle.crt
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>sudo<span class="w"> </span>install<span class="w"> </span>-m<span class="w"> </span><span class="m">640</span><span class="w"> </span>/tmp/sannav.key<span class="w">    </span>/opt/sannav/conf/ssl/server.key
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>sudo<span class="w"> </span>install<span class="w"> </span>-m<span class="w"> </span><span class="m">644</span><span class="w"> </span>/tmp/sannav-bundle.crt<span class="w"> </span>/opt/sannav/conf/ssl/server.crt
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Reload NGINX without service interruption</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Verify the new certificate is served</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>sannav-dc1.corp.example.com:443<span class="w"> </span>-servername<span class="w"> </span>sannav-dc1.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+</code></pre></div>
+<h4 id="tls-version-and-cipher-configuration">TLS Version and Cipher Configuration<a class="headerlink" href="#tls-version-and-cipher-configuration" title="Permanent link">&para;</a></h4>
+<p>SANnav's NGINX configuration restricts TLS to 1.2+ by default. Verify:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check TLS version accepted</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>sannav-dc1.corp.example.com
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Acceptable ciphers (no RC4, DES, 3DES, export, or NULL):</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># TLSv1.2: ECDHE-RSA-AES256-GCM-SHA384, ECDHE-RSA-AES128-GCM-SHA256</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># TLSv1.3: TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># If cipher hardening is needed, edit NGINX SSL configuration</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/nginx/conf.d/sannav-ssl.conf
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># ssl_protocols TLSv1.2 TLSv1.3;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># ssl_ciphers &#39;ECDHE+AESGCM:ECDHE+CHACHA20:!aNULL:!MD5:!DSS&#39;;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># ssl_prefer_server_ciphers on;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+</code></pre></div>
+<h3 id="sannav-to-switch-communication">SANnav to Switch Communication<a class="headerlink" href="#sannav-to-switch-communication" title="Permanent link">&para;</a></h3>
+<p>SANnav communicates with switches via HTTPS (FOS REST API). This is encrypted by default and uses the switch's self-signed certificate. SANnav trusts switch certificates by hostname/IP matching rather than full chain verification by default — an acceptable trade-off for closed management networks.</p>
+<p>If the switch has a certificate from the corporate CA, it can be imported into the SANnav truststore for full verification.</p>
+<h3 id="sannav-to-ldap-ldaps">SANnav to LDAP (LDAPS)<a class="headerlink" href="#sannav-to-ldap-ldaps" title="Permanent link">&para;</a></h3>
+<p>Configure port 636 (LDAPS) rather than 389 (plain LDAP) to encrypt LDAP traffic. See <a href="../authentication/">Authentication</a> for CA certificate import steps.</p>
+<h3 id="snmp">SNMP<a class="headerlink" href="#snmp" title="Permanent link">&para;</a></h3>
+<p>SNMP v3 with <code>authPriv</code> security level encrypts SNMP traffic. Configure SNMPv3 on all managed switches using AES-128 or AES-256 for encryption. See the <a href="../../architecture/standards/">Standards</a> page for switch-side SNMP configuration.</p>
+<hr />
+<h2 id="data-at-rest">Data at Rest<a class="headerlink" href="#data-at-rest" title="Permanent link">&para;</a></h2>
+<h3 id="stored-credentials">Stored Credentials<a class="headerlink" href="#stored-credentials" title="Permanent link">&para;</a></h3>
+<p>SANnav stores the following sensitive data in its PostgreSQL database, encrypted at rest using AES-256:
+- Switch HTTPS usernames and passwords
+- SNMPv3 auth and priv passwords
+- LDAP bind DN password
+- SMTP authentication credentials
+- Webhook signing keys</p>
+<p>Encryption keys are managed internally by SANnav and are stored in a protected keystore on the appliance. The keystore is tied to the appliance instance and is included in full backups (which are also encrypted).</p>
+<h3 id="database-level-encryption">Database-Level Encryption<a class="headerlink" href="#database-level-encryption" title="Permanent link">&para;</a></h3>
+<p>The embedded PostgreSQL database does not use full-disk encryption by default. To add a layer of protection for the appliance storage:</p>
+<ul>
+<li>Deploy the SANnav VM on a VMware datastore with vSphere VM Encryption enabled, or</li>
+<li>Use Linux LUKS full-disk encryption on the underlying VM disk (requires custom deployment)</li>
+</ul>
+<p>For most environments, the combination of field-level AES encryption of credentials and physical/hypervisor access controls is sufficient.</p>
+<h3 id="backup-encryption">Backup Encryption<a class="headerlink" href="#backup-encryption" title="Permanent link">&para;</a></h3>
+<p>Enable backup encryption to protect backup archives in transit and at rest on the backup target:</p>
+<ol>
+<li>Navigate to <strong>Administration &gt; Backup &gt; Settings</strong>.</li>
+<li>Enable <strong>Encrypt Backup</strong>.</li>
+<li>Set a strong backup encryption passphrase (store in vault — required for restore).</li>
+</ol>
+<p>Encrypted backups use AES-256. The passphrase is required at restore time; without it, the backup cannot be decrypted.</p>
+<hr />
+<h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
+<p>Track SANnav's TLS certificate expiry:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check certificate expiry from the command line</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>sannav-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-servername<span class="w"> </span>sannav-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># notAfter=Aug 12 00:00:00 2026 GMT</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check days until expiry</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">from datetime import datetime</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">import subprocess, re</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">result = subprocess.run([&#39;openssl&#39;,&#39;s_client&#39;,&#39;-connect&#39;,&#39;sannav-dc1.corp.example.com:443&#39;,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">  &#39;-servername&#39;,&#39;sannav-dc1.corp.example.com&#39;], capture_output=True, input=b&#39;&#39;)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">cert_pem = subprocess.run([&#39;openssl&#39;,&#39;x509&#39;,&#39;-noout&#39;,&#39;-enddate&#39;], </span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">  input=result.stdout, capture_output=True).stdout.decode()</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">date_str = re.search(r&#39;notAfter=(.*)&#39;, cert_pem).group(1).strip()</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">exp = datetime.strptime(date_str, &#39;%b %d %H:%M:%S %Y %Z&#39;)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">days = (exp - datetime.utcnow()).days</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">print(f&#39;Certificate expires in {days} days ({exp.date()})&#39;)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<p>Renew the SANnav certificate at least 30 days before expiry. A Nagios/Icinga check on port 443 with <code>--certificate</code> flag provides automated alerting.</p>
+<hr />
+<h2 id="encryption-summary">Encryption Summary<a class="headerlink" href="#encryption-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Category</th>
+<th>Encryption</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web UI / REST API traffic</td>
+<td>TLS 1.2/1.3</td>
+<td>HTTPS on port 443</td>
+</tr>
+<tr>
+<td>Switch management traffic</td>
+<td>TLS (HTTPS)</td>
+<td>FOS REST API</td>
+</tr>
+<tr>
+<td>LDAP authentication traffic</td>
+<td>TLS (LDAPS)</td>
+<td>Port 636</td>
+</tr>
+<tr>
+<td>SNMP traffic</td>
+<td>AES-128 (authPriv)</td>
+<td>SNMPv3</td>
+</tr>
+<tr>
+<td>Stored credentials (DB)</td>
+<td>AES-256</td>
+<td>SANnav internal keystore</td>
+</tr>
+<tr>
+<td>Backup archives</td>
+<td>AES-256</td>
+<td>Passphrase from vault</td>
+</tr>
+<tr>
+<td>SANnav OS disk</td>
+<td>VM encryption (hypervisor layer)</td>
+<td>vSphere or LUKS</td>
+</tr>
+</tbody>
+</table>
 
 
 

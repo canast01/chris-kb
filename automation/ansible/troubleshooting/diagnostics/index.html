@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ansible-diagnostic-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Diagnostic Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#useful-diagnostic-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -741,6 +752,28 @@
 <p>Part of the <a href="../">Ansible Troubleshooting</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="ansible-diagnostic-workflow">Ansible Diagnostic Workflow<a class="headerlink" href="#ansible-diagnostic-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    issue["Issue Reported\nor Failure Detected"]
+    listTasks["--list-tasks\nWhat tasks will run?"]
+    listHosts["--list-hosts\nWhich hosts are targeted?"]
+    syntaxCheck["--syntax-check\nAny YAML errors?"]
+    checkMode["--check --diff\nDry run: what would change?"]
+    verboseRun["-vvv\nFull connection\n&amp; task detail"]
+    retryFailed["--limit @site.retry\nRetry failed hosts only"]
+    debugTask["ansible.builtin.debug\nvar: my_variable"]
+    resolved["Issue Identified\n&amp; Resolved"]
+
+    issue --&gt; listTasks
+    issue --&gt; listHosts
+    listTasks --&gt; syntaxCheck
+    listHosts --&gt; syntaxCheck
+    syntaxCheck --&gt; checkMode
+    checkMode --&gt; verboseRun
+    verboseRun --&gt; debugTask
+    verboseRun --&gt; retryFailed
+    debugTask --&gt; resolved
+    retryFailed --&gt; resolved</code></pre>
 <h2 id="useful-diagnostic-commands">Useful Diagnostic Commands<a class="headerlink" href="#useful-diagnostic-commands" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List tasks without running them</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ansible-playbook<span class="w"> </span>site.yml<span class="w"> </span>--list-tasks

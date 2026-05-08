@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#rbac-inheritance-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Inheritance Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#resource-lock-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -957,6 +968,22 @@
 </tr>
 </tbody>
 </table>
+<h2 id="rbac-inheritance-model">RBAC Inheritance Model<a class="headerlink" href="#rbac-inheritance-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    mgRoot["Tenant Root\nManagement Group"]
+    mgPlatform["mg-platform\nManagement Group"]
+    mgLandingZones["mg-landingzones\nManagement Group"]
+    mgProd["mg-production\nManagement Group"]
+    subProd["Production\nSubscription"]
+    rg["Resource Group\nrg-prod-euw-app"]
+    resource["Resource\nVM · Storage · Key Vault"]
+
+    mgRoot --&gt;|"RBAC inherited"| mgPlatform
+    mgRoot --&gt;|"RBAC inherited"| mgLandingZones
+    mgLandingZones --&gt;|"RBAC inherited"| mgProd
+    mgProd --&gt;|"RBAC inherited"| subProd
+    subProd --&gt;|"RBAC inherited"| rg
+    rg --&gt;|"RBAC inherited"| resource</code></pre>
 <h2 id="resource-lock-standards">Resource Lock Standards<a class="headerlink" href="#resource-lock-standards" title="Permanent link">&para;</a></h2>
 <p>Apply locks to prevent accidental deletion of production infrastructure:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add delete lock to production resource group</span>

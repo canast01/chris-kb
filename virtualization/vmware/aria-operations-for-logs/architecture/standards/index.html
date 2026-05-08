@@ -699,6 +699,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-size-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Size Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-deployment-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Deployment Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-retention-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Retention Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content-pack-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content Pack Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-severity-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Severity Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-sizing-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Sizing Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +803,222 @@
 
 
 <h1 id="aria-ops-for-logs-standards">Aria Ops for Logs — Standards<a class="headerlink" href="#aria-ops-for-logs-standards" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="naming-convention">Naming Convention<a class="headerlink" href="#naming-convention" title="Permanent link">&para;</a></h2>
+<p>Follow the same naming scheme as other LCM-managed appliances:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vrli-&lt;env&gt;-&lt;node#&gt;.&lt;domain&gt;
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Master Node</th>
+<th>Worker Nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td><code>vrli-prod-01.corp.local</code></td>
+<td><code>vrli-prod-02.corp.local</code>, <code>vrli-prod-03.corp.local</code></td>
+</tr>
+<tr>
+<td>DR/Standby</td>
+<td><code>vrli-dr-01.corp.local</code></td>
+<td><code>vrli-dr-02.corp.local</code></td>
+</tr>
+<tr>
+<td>Development</td>
+<td><code>vrli-dev-01.corp.local</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="deployment-size-reference">Deployment Size Reference<a class="headerlink" href="#deployment-size-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Size</th>
+<th>Nodes</th>
+<th>vCPUs (per node)</th>
+<th>RAM (per node)</th>
+<th>Disk (per node)</th>
+<th>Daily Ingestion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extra Small</td>
+<td>1 (Master only)</td>
+<td>4</td>
+<td>8 GB</td>
+<td>200 GB</td>
+<td>Up to 20 GB/day</td>
+</tr>
+<tr>
+<td>Small</td>
+<td>1 (Master only)</td>
+<td>8</td>
+<td>18 GB</td>
+<td>500 GB</td>
+<td>Up to 75 GB/day</td>
+</tr>
+<tr>
+<td>Medium (HA)</td>
+<td>3 (1 Master + 2 Workers)</td>
+<td>8</td>
+<td>18 GB</td>
+<td>500 GB</td>
+<td>Up to 225 GB/day</td>
+</tr>
+<tr>
+<td>Large (HA)</td>
+<td>6 (1 Master + 5 Workers)</td>
+<td>8</td>
+<td>18 GB</td>
+<td>1 TB</td>
+<td>Up to 500 GB/day</td>
+</tr>
+</tbody>
+</table>
+<p>For production, deploy a minimum 3-node cluster (1 master + 2 workers) for high availability. The master handles query coordination and the UI; workers provide additional ingestion throughput and storage.</p>
+<p>Add worker nodes to scale horizontally — ingestion capacity scales linearly with workers.</p>
+<hr />
+<h2 id="pre-deployment-checklist">Pre-Deployment Checklist<a class="headerlink" href="#pre-deployment-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] DNS A record created for each node FQDN — verify: <code>nslookup vrli-prod-01.corp.local</code></li>
+<li>[ ] DNS PTR record for each node IP — verify: <code>nslookup &lt;ip&gt;</code></li>
+<li>[ ] NTP reachable; time delta &lt; 1 second — verify: <code>chronyc tracking</code></li>
+<li>[ ] Static IPs reserved in IPAM for all nodes</li>
+<li>[ ] Firewall rules permit inbound on ports 514 (UDP), 1514 (TCP), 9543 (TCP), 443 (TCP)</li>
+<li>[ ] Sufficient disk space: minimum 500 GB per node for standard production retention (30 days)</li>
+<li>[ ] CA certificate chain ready for import (leaf + intermediate + root)</li>
+<li>[ ] SMTP relay accessible for alert notifications</li>
+<li>[ ] vCenter credentials available for the vSphere content pack configuration</li>
+</ul>
+<hr />
+<h2 id="log-retention-standards">Log Retention Standards<a class="headerlink" href="#log-retention-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Tier</th>
+<th>Retention</th>
+<th>Storage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hot (searchable, interactive analytics)</td>
+<td>30 days (default)</td>
+<td>Local node disk</td>
+</tr>
+<tr>
+<td>Warm (archived, not in real-time search)</td>
+<td>90–365 days</td>
+<td>NFS archive target</td>
+</tr>
+<tr>
+<td>Cold (compliance archive)</td>
+<td>1–7 years</td>
+<td>Object storage or tape</td>
+</tr>
+</tbody>
+</table>
+<p>Configure retention:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → General → Retention → set retention period in days
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Administration → Archiving → configure NFS archive target
+</code></pre></div></p>
+<hr />
+<h2 id="content-pack-standards">Content Pack Standards<a class="headerlink" href="#content-pack-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Content Pack</th>
+<th>Source</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSphere</td>
+<td>Built-in</td>
+<td>ESXi and vCenter log parsing and dashboards</td>
+</tr>
+<tr>
+<td>NSX for vSphere</td>
+<td>Marketplace</td>
+<td>NSX-V controller and edge log parsing</td>
+</tr>
+<tr>
+<td>NSX-T</td>
+<td>Marketplace</td>
+<td>NSX-T manager and edge log parsing</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>Marketplace</td>
+<td>Generic Linux syslog parsing</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>Marketplace</td>
+<td>Windows Event Log parsing</td>
+</tr>
+</tbody>
+</table>
+<p>Install content packs: <strong>Administration → Content Packs → Marketplace → Browse → Install</strong>.</p>
+<p>Naming convention for custom content packs (developed in-house): <code>&lt;org&gt;-&lt;system&gt;-&lt;version&gt;.vlcp</code></p>
+<hr />
+<h2 id="alert-severity-standards">Alert Severity Standards<a class="headerlink" href="#alert-severity-standards" title="Permanent link">&para;</a></h2>
+<p>Define alert severity tiers consistently across all custom alert definitions:</p>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Threshold</th>
+<th>Notification</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>Service-affecting; immediate action required</td>
+<td>PagerDuty / on-call</td>
+<td>Authentication service down</td>
+</tr>
+<tr>
+<td>Error</td>
+<td>Degraded state; action required within hours</td>
+<td>Email + Teams</td>
+<td>High rate of login failures</td>
+</tr>
+<tr>
+<td>Warning</td>
+<td>Unusual pattern; investigate today</td>
+<td>Email</td>
+<td>Elevated SCSI errors</td>
+</tr>
+<tr>
+<td>Info</td>
+<td>Informational only</td>
+<td>Dashboard only</td>
+<td>User login events</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cluster-sizing-rules">Cluster Sizing Rules<a class="headerlink" href="#cluster-sizing-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Do not exceed 75% disk utilisation on any node — add a worker or expand disk before this threshold</li>
+<li>If a single node's disk is full, the cluster stops ingesting until space is freed</li>
+<li>Worker nodes can be added without downtime by joining them to the existing cluster via the master UI</li>
+</ul>
+<p>Monitor disk usage:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From master node SSH</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log/loginsight
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Or via UI: Administration → Cluster → node list shows disk utilisation per node</span>
+</code></pre></div></p>
 
 
 

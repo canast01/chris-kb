@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#audit-script-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Script Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +815,22 @@
 
 <h1 id="active-directory-scripts">Active Directory Scripts<a class="headerlink" href="#active-directory-scripts" title="Permanent link">&para;</a></h1>
 <p>PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the <code>ActiveDirectory</code> PowerShell module installed. Audit scripts require at minimum Read access to the domain; replication and GPO tasks require Domain Admin rights.</p>
+<h2 id="audit-script-workflow">Audit Script Workflow<a class="headerlink" href="#audit-script-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    trigger["Scheduled Task\n(weekly / monthly)"]
+    trigger --&gt; importMod["Import-Module ActiveDirectory"]
+    importMod --&gt; task{"Audit task"}
+    task --&gt;|"user accounts"| userQuery["Get-ADUser — stale / disabled /\nno-expiry / expiring accounts"]
+    task --&gt;|"privileged groups"| privGroups["Get-ADGroupMember\nDomain Admins / Schema Admins / EA"]
+    task --&gt;|"stale computers"| compQuery["Get-ADComputer — enabled,\nnot logged in 90+ days"]
+    task --&gt;|"replication health"| replHealth["Get-ADReplicationFailure -Scope Forest"]
+    task --&gt;|"GPO backup"| gpoBackup["Backup-GPO -All\ntimestamped folder"]
+    userQuery --&gt; export["Export-Csv\n(report file)"]
+    privGroups --&gt; export
+    compQuery --&gt; export
+    replHealth --&gt; export
+    gpoBackup --&gt; done["Notify ops team\n(email / ticketing)"]
+    export --&gt; done</code></pre>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install RSAT AD tools on Windows 10/11 or Server Core</span>

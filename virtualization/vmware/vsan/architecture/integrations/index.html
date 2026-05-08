@@ -783,6 +783,36 @@
 <h1 id="vsan-architecture-integrations">vSAN Architecture — Integrations<a class="headerlink" href="#vsan-architecture-integrations" title="Permanent link">&para;</a></h1>
 <h2 id="vcenter-required">vCenter (Required)<a class="headerlink" href="#vcenter-required" title="Permanent link">&para;</a></h2>
 <p>vSAN is exclusively managed through vCenter Server. There is no standalone vSAN management interface — all cluster configuration, storage policy management, health monitoring, and capacity reporting is done through the vSphere Client connected to vCenter.</p>
+<pre class="mermaid"><code>graph TD
+    vc["vCenter Server\n(management plane)"]
+
+    subgraph "vSAN Management Functions"
+        clusterMgmt["Cluster &amp; disk group\ncreation"]
+        policyMgmt["Storage Policy\nmanagement (SPBM)"]
+        health["Skyline Health\nmonitoring"]
+        capacity["Capacity reporting\n&amp; alerts"]
+        encMgmt["Encryption &amp; KMS\nconfiguration"]
+        vlcm["vLCM upgrade\norchestration"]
+    end
+
+    subgraph "vSAN Data Plane (ESXi — independent of vCenter)"
+        dom["DOM — Distributed\nObject Manager"]
+        clom["CLOM — Cluster Level\nObject Manager"]
+        cmmds["CMMDS — Cluster\nMembership Service"]
+        lsom["LSOM — Local Storage\nObject Manager"]
+    end
+
+    vc --&gt; clusterMgmt &amp; policyMgmt &amp; health &amp; capacity &amp; encMgmt &amp; vlcm
+    dom &lt;--&gt; clom &lt;--&gt; cmmds
+    clom --&gt; lsom
+
+    classDef vcNode fill:#b45309,stroke:#92400e,color:#fff
+    classDef mgmt fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef dp fill:#15803d,stroke:#166534,color:#fff
+
+    class vc vcNode
+    class clusterMgmt,policyMgmt,health,capacity,encMgmt,vlcm mgmt
+    class dom,clom,cmmds,lsom dp</code></pre>
 <p>Key vCenter-managed vSAN functions:</p>
 <ul>
 <li>Cluster creation and disk group claim</li>

@@ -778,6 +778,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#azure-policy-evaluation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Policy Evaluation Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#policy-lifecycle-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -986,6 +997,29 @@
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;value[0].policyAssignments[].{Policy:policyAssignmentId, NonCompliant:results.nonCompliantResources}&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
+<h2 id="azure-policy-evaluation-flow">Azure Policy Evaluation Flow<a class="headerlink" href="#azure-policy-evaluation-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    resourceOp["Resource create / update / read"]
+    exempt{"Exemption\nexists?"}
+    policyEval["Evaluate against\nall assigned policies"]
+    deny{"Effect = Deny?"}
+    audit{"Effect = Audit?"}
+    deployIfNot{"Effect = DeployIfNotExists\nor Modify?"}
+    blocked["Operation BLOCKED\n403 response"]
+    nonCompliant["Mark NonCompliant\nallow operation"]
+    remediation["Remediation Task\nauto-remediate"]
+    compliant["Compliant\noperation proceeds"]
+
+    resourceOp --&gt; exempt
+    exempt -- Yes --&gt; compliant
+    exempt -- No --&gt; policyEval
+    policyEval --&gt; deny
+    deny -- Yes --&gt; blocked
+    deny -- No --&gt; audit
+    audit -- Yes --&gt; nonCompliant
+    audit -- No --&gt; deployIfNot
+    deployIfNot -- Yes --&gt; remediation --&gt; compliant
+    deployIfNot -- No --&gt; compliant</code></pre>
 <h2 id="policy-lifecycle-management">Policy Lifecycle Management<a class="headerlink" href="#policy-lifecycle-management" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

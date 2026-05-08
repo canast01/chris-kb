@@ -717,6 +717,50 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#object-level-access-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object-Level Access Permissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-ldap-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring LDAP Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-service-account-for-api-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Service Account for API Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reviewing-current-role-assignments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reviewing Current Role Assignments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#local-admin-account-hardening" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -749,6 +793,7 @@
 
 <h1 id="aria-operations-access-control">Aria Operations — Access Control<a class="headerlink" href="#aria-operations-access-control" title="Permanent link">&para;</a></h1>
 <h2 id="rbac-roles">RBAC Roles<a class="headerlink" href="#rbac-roles" title="Permanent link">&para;</a></h2>
+<p>Aria Operations uses a hierarchical role model. Roles are assigned to local users or to groups imported from Active Directory / LDAP.</p>
 <table>
 <thead>
 <tr>
@@ -758,30 +803,121 @@
 </thead>
 <tbody>
 <tr>
-<td>Administrator</td>
-<td>Full access — manage users, adapters, system settings</td>
+<td><strong>Administrator</strong></td>
+<td>Full access: manage users, adapters, cluster settings, system configuration, and all content</td>
 </tr>
 <tr>
-<td>Content Admin</td>
-<td>Manage dashboards, views, reports, alerts, policies</td>
+<td><strong>Content Admin</strong></td>
+<td>Create and manage dashboards, views, reports, alert definitions, and policies; no system administration</td>
 </tr>
 <tr>
-<td>Operator</td>
-<td>Acknowledge/cancel alerts, run actions; no admin access</td>
+<td><strong>Operator</strong></td>
+<td>Acknowledge and cancel alerts, run manual actions; view all content; no configuration changes</td>
 </tr>
 <tr>
-<td>Read Only</td>
-<td>View dashboards, alerts, and metrics; no changes</td>
+<td><strong>Read Only</strong></td>
+<td>View dashboards, alerts, and metrics; no actions or configuration</td>
+</tr>
+<tr>
+<td><strong>PowerUser</strong></td>
+<td>Deprecated — Content Admin is the replacement</td>
 </tr>
 </tbody>
 </table>
-<p>Roles are assigned in <strong>Administration &gt; Access Control &gt; User Accounts</strong> or via imported AD/LDAP groups.</p>
+<p>Roles are assigned in <strong>Administration → Access Control → User Accounts</strong> (local users) or <strong>Administration → Access Control → User Groups</strong> (imported AD groups).</p>
+<hr />
+<h2 id="object-level-access-permissions">Object-Level Access Permissions<a class="headerlink" href="#object-level-access-permissions" title="Permanent link">&para;</a></h2>
+<p>Beyond role-level access, Aria Operations supports <strong>object permissions</strong> to restrict which inventory objects a user can see.</p>
+<p>Create an object permission policy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Access Control → Object Permissions → Add Permission
+</code></pre></div>
+<ol>
+<li>Select an <strong>Object Scope</strong>: choose specific resources (e.g., a single vCenter, cluster, datacenter)</li>
+<li>Assign the scope to a user or group</li>
+<li>Users can only view and act on resources within their permitted scope</li>
+</ol>
+<p>Example use case: Assign the <code>Operator</code> role with a scope limited to <code>DC-LON</code> — the team can only see and acknowledge alerts for London datacenter objects.</p>
+<hr />
+<h2 id="configuring-ldap-groups">Configuring LDAP Groups<a class="headerlink" href="#configuring-ldap-groups" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → Authentication Sources → (configure AD source first — see Authentication page)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Administration → Access Control → User Groups → Import Groups from Source
+</code></pre></div>
+<p>Search for the AD group by name or DN, select, and import. The group appears in the User Groups list. Assign a role:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Access Control → User Groups → select group → Assign Role → select role → Save
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>AD Group</th>
+<th>Aria Operations Role</th>
+<th>Object Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GG-VROPS-Admins</code></td>
+<td>Administrator</td>
+<td>All objects</td>
+</tr>
+<tr>
+<td><code>GG-VROPS-ContentAdmins</code></td>
+<td>Content Admin</td>
+<td>All objects</td>
+</tr>
+<tr>
+<td><code>GG-VROPS-Operators-LON</code></td>
+<td>Operator</td>
+<td>DC-LON only</td>
+</tr>
+<tr>
+<td><code>GG-VROPS-Operators-NYC</code></td>
+<td>Operator</td>
+<td>DC-NYC only</td>
+</tr>
+<tr>
+<td><code>GG-VROPS-ReadOnly</code></td>
+<td>Read Only</td>
+<td>All objects</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="creating-a-service-account-for-api-access">Creating a Service Account for API Access<a class="headerlink" href="#creating-a-service-account-for-api-access" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Administration → Access Control → User Accounts → Add → Local User
+</code></pre></div>
+<ul>
+<li>Username: <code>svc-vrops-api</code></li>
+<li>Role: assign minimum required role (Read Only for monitoring scripts; Content Admin for scripts that create alert definitions)</li>
+<li>Password: minimum 16 characters; store in vault</li>
+</ul>
+<p>For API calls, authenticate as the service account:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vrops-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;Local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+</code></pre></div>
+<hr />
+<h2 id="reviewing-current-role-assignments">Reviewing Current Role Assignments<a class="headerlink" href="#reviewing-current-role-assignments" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all user accounts and their roles via API</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/auth/userquery&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.users[] | {username: .username, role: .role[].name, source: .authSourceName}&#39;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># List all imported user groups</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/auth/usergroups&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {group: .name, role: .role[].name, source: .authSourceName}&#39;</span>
+</code></pre></div>
+<hr />
 <h2 id="local-admin-account-hardening">Local Admin Account Hardening<a class="headerlink" href="#local-admin-account-hardening" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Change the default <code>admin</code> password immediately after deployment</li>
 <li>Minimum 16 characters, mixed case, numbers, symbols</li>
 <li>Restrict local admin use — prefer AD group-based RBAC for day-to-day access</li>
-<li>Store the admin credential in a secrets vault</li>
+<li>Store the admin credential in a secrets vault (CyberArk, HashiCorp Vault)</li>
+<li>Review local accounts monthly: <strong>Administration → Access Control → User Accounts</strong> — remove any accounts that are no longer needed</li>
 </ul>
 
 

@@ -1200,6 +1200,26 @@
 <li>Monitor rebuild progress in ECS Portal → Hardware → Disks until the new disk shows <code>GOOD</code></li>
 </ol>
 <h3 id="workflow-geo-replication-lag-growing">Workflow: Geo-Replication Lag Growing<a class="headerlink" href="#workflow-geo-replication-lag-growing" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+  LAG_START(["Geo-replication lag growing"]) --&gt; IDENT["Portal → Geo Monitoring\nIdentify: which RG + which VDC behind"]
+  IDENT --&gt; REMOTE["Check remote VDC health\nGET /vdc/nodes (remote endpoint)"]
+  REMOTE --&gt; REMOTE_OK{Remote VDC\nnodes GOOD?}
+  REMOTE_OK --&gt;|No| REMOTE_FIX["Restore remote VDC\nCheck power / network / services"]
+  REMOTE_OK --&gt;|Yes| PORT["nc -zv remote-vdc-node 9100\nPort reachable?"]
+  PORT --&gt;|No| FIREWALL["Check firewall rules\nAllow port 9100 between sites"]
+  PORT --&gt;|Yes| BW["Check WAN bandwidth utilisation\nSustained &gt; 80% = saturation"]
+  BW --&gt; SAT{WAN\nsaturated?}
+  SAT --&gt;|Yes| THROTTLE["Adjust replication throttle\nPortal → Replication → Bandwidth Mgmt"]
+  SAT --&gt;|No| LOGS["Review ECS data service logs\ngrep replication /var/log/ecs/"]
+  LOGS --&gt; CASE["Open Dell support case\nif logs show errors"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class REMOTE_OK,SAT,PORT decision
+  class IDENT,REMOTE,PORT,BW,THROTTLE,LOGS,CASE action
+  class REMOTE_FIX,FIREWALL warn
+  class LAG_START term</code></pre>
 <ol>
 <li>ECS Portal → Geo Monitoring — identify which replication group has growing lag and which VDC is behind</li>
 <li>Confirm the remote VDC is healthy: <code>GET /vdc/nodes</code> against the remote VDC endpoint</li>

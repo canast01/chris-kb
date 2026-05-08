@@ -761,6 +761,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#azure-ad-auth-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure AD Auth Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#identity-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -891,6 +902,22 @@
 </tr>
 </tbody>
 </table>
+<h2 id="azure-ad-auth-flow">Azure AD Auth Flow<a class="headerlink" href="#azure-ad-auth-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant user as User
+    participant browser as Browser / Client
+    participant aad as Azure AD (Entra ID)
+    participant ca as Conditional Access
+    participant resource as Azure Resource / App
+
+    user-&gt;&gt;browser: Sign-in request
+    browser-&gt;&gt;aad: Authentication request (OAuth2 / OIDC)
+    aad-&gt;&gt;aad: Validate credentials + MFA
+    aad-&gt;&gt;ca: Evaluate Conditional Access policies
+    ca--&gt;&gt;aad: Allow / Block / Require MFA
+    aad--&gt;&gt;browser: Access token (JWT)
+    browser-&gt;&gt;resource: Request with Bearer token
+    resource--&gt;&gt;browser: Response granted</code></pre>
 <h2 id="identity-architecture">Identity Architecture<a class="headerlink" href="#identity-architecture" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Entra ID (cloud identity plane)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │

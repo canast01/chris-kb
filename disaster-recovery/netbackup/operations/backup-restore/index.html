@@ -784,6 +784,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#msdp-architecture-and-dedup-pool-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MSDP Architecture and Dedup Pool Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#common-checks_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -901,6 +912,28 @@
 <h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <p>Add known issues here as they come up.</p>
 <h2 id="catalog">Catalog<a class="headerlink" href="#catalog" title="Permanent link">&para;</a></h2>
+<h3 id="msdp-architecture-and-dedup-pool-flow">MSDP Architecture and Dedup Pool Flow<a class="headerlink" href="#msdp-architecture-and-dedup-pool-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    subgraph mediaServer [Media Server — MSDP Host]
+        bpbrm["bpbrm\nbackup manager"]
+        pdde["PDDE engine\n(dedup processing)"]
+        ddbLocal[("MSDP Catalog\nfingerprint DB\n+ container files")]
+        bpbrm --&gt; pdde
+        pdde --&gt; ddbLocal
+    end
+
+    clientData(["Client backup\ndata stream"])
+    clientData --&gt; bpbrm
+
+    ddbLocal --&gt;|"unique blocks only"| storage[("MSDP Storage\nContainer files\n(partitioned volumes)")]
+    storage --&gt;|"optimised replication\nover WAN"| drMSDP[("DR Site MSDP\nsecondary copy")]
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    class bpbrm,pdde ctrl
+    class ddbLocal,storage,drMSDP store
+    class clientData host</code></pre>
 <p>Use this section for practical NetBackup Catalog notes, checks, troubleshooting, commands, change notes, and field references.</p>
 <h3 id="common-checks_1">Common checks<a class="headerlink" href="#common-checks_1" title="Permanent link">&para;</a></h3>
 <ul>

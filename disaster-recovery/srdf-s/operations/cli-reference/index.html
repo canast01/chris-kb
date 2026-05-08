@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#srdfs-operation-decision-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF/S Operation Decision Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pair-state-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -796,6 +807,36 @@
 <p>Part of the <a href="../">SRDF/S Operations</a> reference.</p>
 </blockquote>
 <p>All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array. Always specify <code>-g &lt;group&gt;</code> to scope operations to the correct SRDF group and <code>-sid &lt;sid&gt;</code> to target the correct array.</p>
+<h2 id="srdfs-operation-decision-map">SRDF/S Operation Decision Map<a class="headerlink" href="#srdfs-operation-decision-map" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    goal["What do you need to do?"]
+    monitor["Monitor pair health\nand link state"]
+    maintenance["Planned maintenance\n(suspend replication)"]
+    drTest["DR test\n(non-disruptive)"]
+    failover["Actual failover\n(production use of R2)"]
+    failback["Return to normal\nafter failover"]
+
+    cmdQuery["symrdf -sid sid -g grp query\nsymcfg -sid sid list -rdfg\nsymstat -rdf"]
+    cmdSuspend["symrdf -sid sid -g grp suspend -noprompt\n(then resume after maintenance)"]
+    cmdSplit["symrdf -sid sid -g grp split -noprompt\n(R2 accessible for testing)"]
+    cmdFailover["symrdf -sid sid -g grp failover -noprompt"]
+    cmdFailback["symrdf -sid sid -g grp failback -noprompt\nor: restore → establish"]
+
+    goal --&gt; monitor
+    goal --&gt; maintenance
+    goal --&gt; drTest
+    goal --&gt; failover
+    goal --&gt; failback
+
+    monitor --&gt; cmdQuery
+    maintenance --&gt; cmdSuspend
+    drTest --&gt; cmdSplit
+    failover --&gt; cmdFailover
+    failback --&gt; cmdFailback
+
+    style goal fill:#2563eb,color:#fff
+    style cmdFailover fill:#be123c,color:#fff
+    style cmdFailback fill:#7c3aed,color:#fff</code></pre>
 <hr />
 <h2 id="pair-state-health">Pair State &amp; Health<a class="headerlink" href="#pair-state-health" title="Permanent link">&para;</a></h2>
 <p>Monitor SRDF/S pair states and link health before and after any change.</p>

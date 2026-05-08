@@ -750,6 +750,27 @@
 <h1 id="dell-ecs-common-issues">Dell ECS — Common Issues<a class="headerlink" href="#dell-ecs-common-issues" title="Permanent link">&para;</a></h1>
 <h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
 <p>When S3 writes fail, geo-replication falls behind, or a node goes offline, work through this sequence first.</p>
+<pre class="mermaid"><code>graph TD
+  REPORT(["Incident reported"]) --&gt; NODE{Any node\nDEGRADED?}
+  NODE --&gt;|Yes| DISK_CHK["Check Portal → Hardware → Disks\nFAILED or SUSPECT disks?"]
+  DISK_CHK --&gt; DISK_REPL["Initiate disk replacement\nMonitor rebuild"]
+  NODE --&gt;|No| S3TEST{"S3 API\nresponding?"}
+  S3TEST --&gt;|No| SVC["SSH to node\nsystemctl status storageos\nReview /var/log/ecs/"]
+  S3TEST --&gt;|Yes| AUTH_ERR{S3\nAccessDenied?}
+  AUTH_ERR --&gt;|Yes| IAM["Check: IAM user namespace\nBucket policy · addressing style\necscli bucket get --namespace ..."]
+  AUTH_ERR --&gt;|No| GEOREP{Geo-rep lag\ngrowing?}
+  GEOREP --&gt;|Yes| WAN["Check WAN link :9100\nRemote VDC health\nReplication throttle"]
+  GEOREP --&gt;|No| CAP{Quota\nexceeded?}
+  CAP --&gt;|Yes| QUOTA["Increase quota in portal\nor expire old objects"]
+  CAP --&gt;|No| BUNDLE["Collect support bundle\nOpen Dell case"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class NODE,S3TEST,AUTH_ERR,GEOREP,CAP decision
+  class DISK_CHK,DISK_REPL,SVC,IAM,WAN,QUOTA,BUNDLE action
+  class START term
+  class REPORT term</code></pre>
 <ul>
 <li>[ ] Check ECS Portal → Hardware → Nodes immediately — identify any node that has moved to <code>DEGRADED</code> or offline state; note when the state change occurred</li>
 <li>[ ] Query <code>GET /vdc/alerts</code> — retrieve the active alert list and identify alerts timestamped near the start of the incident</li>

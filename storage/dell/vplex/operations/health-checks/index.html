@@ -793,6 +793,33 @@
 
 <h1 id="dell-vplex-health-checks">Dell VPLEX — Health Checks<a class="headerlink" href="#dell-vplex-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start(["Daily check run"]) --&gt; cl
+
+    subgraph "Cluster Layer"
+        cl["ll /clusters/*/health-indications/\nAll health-state: ok?"]
+        eng["ll /engines/*/directors/*/hardware/\nAll directors healthy?"]
+        cl --&gt; eng
+    end
+
+    subgraph "Metro Layer"
+        dd["ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices in-sync?"]
+        wit["ll /metro-node/*/witness/\nWitness connected + reachable?"]
+        cg["ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?"]
+        dd --&gt; wit --&gt; cg
+    end
+
+    subgraph "Access Layer"
+        sv["ll /clusters/*/exports/storage-views/\nStorage views intact?"]
+        hcFull["health-check --full\nNo warnings or errors?"]
+        sv --&gt; hcFull
+    end
+
+    eng --&gt; dd
+    cg --&gt; sv
+    hcFull --&gt; result{All OK?}
+    result --&gt;|Yes| done(["Daily check passed"])
+    result --&gt;|No| investigate(["Investigate per\ncomponent section"])</code></pre>
 <table>
 <thead>
 <tr>

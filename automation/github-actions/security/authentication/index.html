@@ -792,6 +792,20 @@
 </code></pre></div>
 <p>The token expires when the workflow job finishes. Grant only the permissions needed.</p>
 <h2 id="oidc-keyless-cloud-authentication">OIDC — Keyless Cloud Authentication<a class="headerlink" href="#oidc-keyless-cloud-authentication" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant WF as Workflow Job\n(GitHub Runner)
+    participant GH as GitHub Actions\nOIDC Provider
+    participant AWS as AWS IAM / GCP WIF\nCloud Provider
+    participant App as AWS CLI / GCP SDK\nActual API call
+
+    WF-&gt;&gt;GH: Request OIDC token\n(permissions: id-token: write)
+    GH--&gt;&gt;WF: Short-lived JWT token\n(sub: repo:org/repo:ref:refs/heads/main)
+    WF-&gt;&gt;AWS: AssumeRoleWithWebIdentity\n(JWT + role ARN)
+    AWS-&gt;&gt;AWS: Validate JWT signature\nCheck sub / aud claims against trust policy
+    AWS--&gt;&gt;WF: Temporary credentials\n(access key + secret + session token)
+    WF-&gt;&gt;App: AWS CLI / API call\nusing temporary credentials
+    App--&gt;&gt;WF: Response
+    Note over WF,AWS: No long-lived secrets stored in GitHub</code></pre>
 <p>OIDC lets workflows authenticate to cloud providers without storing long-lived credentials as secrets.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># AWS OIDC setup</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">permissions</span><span class="p">:</span>
@@ -864,6 +878,16 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart LR
+    githubToken["GITHUB_TOKEN\nAuto-generated per run\nScoped to repo"]
+    oidc["OIDC JWT\nShort-lived token\nno stored secrets"]
+    pat["Fine-grained PAT\nStored as repo secret\nDays to years"]
+    classicPat["Classic PAT\nBroad scope\nAvoid — legacy"]
+
+    githubToken --&gt;|"best for: default API\npackages write"| ghApi["GitHub API\nGHCR / Releases"]
+    oidc --&gt;|"best for: cloud deploy"| cloudProv["AWS / GCP / Azure"]
+    pat --&gt;|"best for: cross-repo\noperations"| otherRepo["Other repos\nadmin ops"]
+    classicPat -.-&gt;|"avoid"| legacy["Legacy only"]</code></pre>
 
 
 

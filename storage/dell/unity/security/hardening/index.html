@@ -950,6 +950,42 @@
 <h1 id="unity-hardening">Unity — Hardening<a class="headerlink" href="#unity-hardening" title="Permanent link">&para;</a></h1>
 <h2 id="hardening-overview">Hardening Overview<a class="headerlink" href="#hardening-overview" title="Permanent link">&para;</a></h2>
 <p>Apply these hardening steps to all Unity deployments before handing over to production operations. Each step reduces the attack surface, limits privilege exposure, or ensures audit trails are in place.</p>
+<pre class="mermaid"><code>graph TD
+  subgraph "Credentials"
+    C1["Change default admin password"]
+    C2["Integrate LDAP / AD\n(no shared local accounts)"]
+    C3["Break-glass admin in vault"]
+  end
+  subgraph "Transport"
+    T1["Disable TLS 1.0 and 1.1"]
+    T2["Enforce TLS 1.2+"]
+    T3["Replace self-signed cert\n(optional for regulated envs)"]
+  end
+  subgraph "Protocols"
+    P1["Disable FTP and Telnet\non management interfaces"]
+    P2["Disable unused FC / iSCSI ports"]
+    P3["Enable mutual CHAP\nfor iSCSI hosts"]
+  end
+  subgraph "Encryption"
+    E1["Enable D@RE\non all SED pools"]
+    E2["KMIP external KMS\n(for PCI / HIPAA)"]
+    E3["NFS Kerberos\nfor sensitive exports"]
+  end
+  subgraph "Audit"
+    A1["Syslog forwarding → SIEM"]
+    A2["Email alerts: CRITICAL + ERROR"]
+    A3["Review audit log regularly"]
+  end
+  classDef cred fill:#b45309,stroke:#92400e,color:#fff
+  classDef transport fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef proto fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef enc fill:#15803d,stroke:#166534,color:#fff
+  classDef aud fill:#374151,stroke:#1f2937,color:#fff
+  class C1,C2,C3 cred
+  class T1,T2,T3 transport
+  class P1,P2,P3 proto
+  class E1,E2,E3 enc
+  class A1,A2,A3 aud</code></pre>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

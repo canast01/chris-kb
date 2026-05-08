@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#powershell-hardening-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Hardening Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#constrained-language-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -785,6 +796,24 @@
 <p>Part of the <a href="../">PowerShell Security</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="powershell-hardening-layers">PowerShell Hardening Layers<a class="headerlink" href="#powershell-hardening-layers" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    execPolicy["Execution Policy\n(RemoteSigned / AllSigned)"]
+    scriptSigning["Script Signing\n(Set-AuthenticodeSignature)"]
+    clm["Constrained Language Mode\n(WDAC / AppLocker)"]
+    transcripts["Transcript Logging\n(Start-Transcript → \\\\server\\pslogs)"]
+    scriptBlock["Script Block Logging\n(Event ID 4104)"]
+    jea["JEA\n(Just Enough Administration)"]
+    moduleAllow["Module Allow-listing\n(WDAC approved modules)"]
+    siem["SIEM / Log Analysis\n(alert on suspicious blocks)"]
+
+    execPolicy --&gt; scriptSigning
+    scriptSigning --&gt; clm
+    clm --&gt; jea
+    jea --&gt; moduleAllow
+    transcripts --&gt; siem
+    scriptBlock --&gt; siem
+    moduleAllow --&gt; siem</code></pre>
 <h2 id="constrained-language-mode">Constrained Language Mode<a class="headerlink" href="#constrained-language-mode" title="Permanent link">&para;</a></h2>
 <p>Constrained Language Mode limits PowerShell to a safe subset of the language, blocking arbitrary .NET access.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check the current language mode</span>
