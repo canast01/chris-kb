@@ -856,6 +856,7 @@
       
     
   <script>
+    // Reading progress bar
     (function () {
       var bar = document.getElementById('kb-progress');
       if (!bar) return;
@@ -866,6 +867,50 @@
       }
       window.addEventListener('scroll', update, { passive: true });
       update();
+    })();
+
+    // Code block language badge
+    (function () {
+      document.querySelectorAll('code[class*="language-"]').forEach(function (code) {
+        var match = Array.from(code.classList).find(function (c) { return c.startsWith('language-'); });
+        if (!match) return;
+        var lang = match.replace('language-', '');
+        if (['text', 'plaintext', 'none', 'shell-session'].includes(lang)) return;
+        var block = code.closest('.highlight');
+        if (!block || block.querySelector('.kb-lang-badge')) return;
+        var badge = document.createElement('span');
+        badge.className = 'kb-lang-badge';
+        badge.textContent = lang;
+        block.style.position = 'relative';
+        block.appendChild(badge);
+      });
+    })();
+
+    // Cursor trail — desktop only
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var N = 10;
+      var dots = Array.from({ length: N }, function (_, i) {
+        var d = document.createElement('div');
+        var size = 7 - i * 0.5;
+        var alpha = 0.65 - i * 0.055;
+        d.style.cssText = 'position:fixed;width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:rgba(56,189,248,' + alpha + ');pointer-events:none;z-index:99999;transform:translate(-50%,-50%);left:-99px;top:-99px;';
+        document.body.appendChild(d);
+        return { el: d, x: -99, y: -99 };
+      });
+      var mx = -99, my = -99;
+      document.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+      (function tick() {
+        var px = mx, py = my;
+        dots.forEach(function (dot) {
+          dot.x += (px - dot.x) * 0.35;
+          dot.y += (py - dot.y) * 0.35;
+          dot.el.style.left = dot.x + 'px';
+          dot.el.style.top = dot.y + 'px';
+          px = dot.x; py = dot.y;
+        });
+        requestAnimationFrame(tick);
+      })();
     })();
   </script>
 
