@@ -525,6 +525,199 @@ body,
   padding: 0.15em 0.4em;
 }
 
+/* Copy button feedback */
+
+.md-typeset .md-clipboard--copied::after {
+  content: 'Copied ✓';
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #34d399;
+  background: rgba(15, 23, 42, 0.85);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  pointer-events: none;
+  animation: kb-copied 1.4s ease forwards;
+}
+
+@keyframes kb-copied {
+  0%   { opacity: 0; transform: translateY(4px); }
+  15%  { opacity: 1; transform: translateY(0); }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── Image lightbox ── */
+
+.kb-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.92);
+  z-index: 99990;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  animation: kb-fade-in 0.2s ease;
+}
+
+.kb-lightbox-overlay img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+}
+
+/* ── Scroll-reveal ── */
+
+.kb-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.kb-reveal.kb-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Gradient h1 titles ── */
+
+.md-typeset h1 {
+  background: linear-gradient(135deg, var(--md-typeset-color) 40%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-md-color-scheme="slate"] .md-typeset h1 {
+  background: linear-gradient(135deg, #f1f5f9 40%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Keyboard shortcut overlay ── */
+
+.kb-shortcuts-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.82);
+  z-index: 99995;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: kb-fade-in 0.18s ease;
+}
+
+.kb-shortcuts-box {
+  background: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  min-width: 340px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+}
+
+.kb-shortcuts-box h3 {
+  color: #f1f5f9;
+  margin: 0 0 1.2rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kb-shortcuts-box table {
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+.kb-shortcuts-box table td {
+  border: none !important;
+  background: none !important;
+  padding: 0.35rem 0.5rem !important;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.kb-shortcuts-box table td:first-child {
+  font-weight: 400 !important;
+  color: #94a3b8 !important;
+  border-left: none !important;
+  white-space: nowrap;
+}
+
+.kb-shortcuts-box table td:first-child a {
+  color: inherit !important;
+}
+
+.kb-shortcuts-box kbd {
+  background: rgba(255,255,255,0.08) !important;
+  border-color: rgba(255,255,255,0.18) !important;
+  color: #e2e8f0 !important;
+  font-size: 0.8rem !important;
+}
+
+/* ── Read time badge ── */
+
+.kb-read-time {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #64748b;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 100px;
+  padding: 0.15rem 0.7rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+[data-md-color-scheme="slate"] .kb-read-time {
+  color: #94a3b8;
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.15);
+}
+
+/* ── Back to top pill ── */
+
+.kb-back-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9000;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #7dd3fc !important;
+  padding: 0.45rem 1rem;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
+  pointer-events: none;
+  text-decoration: none !important;
+  background-image: none !important;
+}
+
+.kb-back-top.kb-back-top--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.kb-back-top:hover {
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4), 0 8px 28px rgba(56, 189, 248, 0.15);
+}
+
 /* ── Section headings ── */
 
 .md-typeset h2 {
