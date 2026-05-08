@@ -1,230 +1,376 @@
 # vSAN — Diagnostics
 
-## Performance
+Diagnostic procedures for vSAN performance, object health, network issues, and disk failures. Use this page when initial health checks do not identify the root cause and deeper investigation is required.
 
-Latency, congestion, IOPS, throughput, and common performance review patterns.
+---
 
-### Daily Checks
+## Log Locations
 
-| Check | Command | Notes |
+| Log | Location | Contents |
 |---|---|---|
-| Review active alarms. |  |  |
-| Check recent failed tasks. |  |  |
-| Confirm service health. |  |  |
-| Confirm capacity and performance are normal. |  |  |
-| Check recent changes. |  |  |
+| VMkernel | `/var/log/vmkernel.log` | ESXi kernel messages — disk I/O errors, NIC errors, vSAN module messages |
+| vSAN management | `/var/log/vsanmgmt.log` | vSAN management plane — health checks, policy changes |
+| CLOM | `/var/log/clomd.log` | Cluster Level Object Manager — placement decisions, resync triggers |
+| CMMDS | `/var/log/cmmdsd.log` | Cluster monitoring, membership, and directory service — host join/leave events |
+| LSOM | `/var/log/vsand.log` | Local Storage Object Manager — on-disk I/O, disk group events |
+| VOBD | `/var/log/vobd.log` | vSphere Object-Based Datastore — datastore events |
+| Hostd | `/var/log/hostd.log` | Host daemon — vCenter-to-host API, task execution |
+| vSAN DDP | `/var/log/vsan-dp.log` | Data protection and IO stats |
+| ESXi syslog | `/var/log/syslog.log` | General syslog — includes vsand and clomd messages |
 
-### Health Commands
+**Useful grep patterns:**
 
 ```bash
-# Add environment-specific commands here
+# Disk errors in vmkernel log
+grep -i "scsi\|disk\|naa\|devio\|abort" /var/log/vmkernel.log | grep -i "err\|fail\|warn" | tail -50
+
+# vSAN object events (CLOM decisions)
+grep -i "resync\|rebuild\|absent\|degrade" /var/log/clomd.log | tail -50
+
+# CMMDS membership changes (hosts joining/leaving)
+grep -i "member\|join\|leave\|partition" /var/log/cmmdsd.log | tail -30
+
+# vSAN management health events
+grep -i "fail\|warn\|error" /var/log/vsanmgmt.log | tail -50
 ```
 
-### Common Issues
+---
 
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
+## Performance Diagnostics
 
-### Operational Tasks
+### Baseline Checks
 
-| Task | Command |
+```bash
+# vSAN Performance Service must be enabled
+esxcli vsan perf get
+
+# If disabled, enable from vCenter
+# Cluster → Configure → vSAN → Services → Performance Service → Enable
+```
+
+### ESXi-Level Performance Stats
+
+```bash
+# I/O stats per storage device (IOPS, throughput, latency, errors)
+esxcli vsan storage stats get
+
+# vSAN VMDK-level I/O stats
+esxcli vsan debug vmdk list
+
+# Congestion indicator (per disk group) — should be 0
+esxcli vsan debug disk list
+```
+
+### vSAN Performance from vCenter UI
+
+vSphere Client → Cluster → Monitor → vSAN → Performance
+
+| View | Key Metrics |
 |---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
+| Cluster | Read IOPS, Write IOPS, Read Throughput, Write Throughput, Read Latency, Write Latency |
+| Host | Per-host breakdown of the above |
+| Disk Group | Cache write buffer utilisation, capacity disk IOPS |
+| VM | Per-VM front-end IOPS and latency (requires Performance Service) |
+| Virtual Disk | Per-VMDK IOPS and latency |
 
-### Upgrade Notes
+**Alert thresholds for investigation:**
 
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
-
-### Best Practices
-
-| Recommendation | Detail |
+| Metric | Investigate at |
 |---|---|
-| Maintain consistent patch levels. | Maintain consistent patch levels. |
-| Monitor capacity trends. | Monitor capacity trends. |
-| Document configuration changes. | Document configuration changes. |
-| Perform routine health checks. | Perform routine health checks. |
-| Test recovery procedures. | Test recovery procedures. |
-| Keep support contracts current. | Keep support contracts current. |
-| Keep naming and ownership clean. | Keep naming and ownership clean. |
-| Validate changes after implementation. | Validate changes after implementation. |
+| Read latency (front-end) | > 10 ms sustained |
+| Write latency (front-end) | > 20 ms sustained |
+| Back-end read latency | > 30 ms (indicates disk issue, not just resync) |
+| Congestion | > 0 for > 5 minutes |
+| Cache write buffer (OSA) | > 95% sustained |
+
+### Collect Performance Statistics via CLI
+
+```bash
+# Real-time storage stats (refresh every 5 seconds for 60 seconds)
+watch -n 5 "esxcli vsan storage stats get 2>&1 | head -40"
+
+# Network latency between hosts (MTU-sized packets)
+vmkping -I vmk2 -d -s 8972 <peer_vmk_ip> -c 100
+
+# Check for NIC errors (drops, errors, retransmits)
+esxcli network nic stats get -n vmnic2
+```
+
+### Identify Noisy VMs
+
+```powershell
+# PowerCLI — top 10 VMs by write IOPS over last 1 hour
+$cluster = Get-Cluster "VSAN-LON-01"
+$end   = Get-Date
+$start = $end.AddHours(-1)
+
+Get-VM -Location $cluster | ForEach-Object {
+    $stats = Get-Stat -Entity $_ -Stat "disk.write.average" `
+        -Start $start -Finish $end -IntervalMins 5 -ErrorAction SilentlyContinue
+    if ($stats) {
+        [PSCustomObject]@{
+            VM   = $_.Name
+            AvgWriteKBps = [Math]::Round(($stats | Measure-Object -Property Value -Average).Average, 0)
+        }
+    }
+} | Sort-Object AvgWriteKBps -Descending | Select -First 10
+```
 
 ---
 
-## Field Reference
+## Object and Component Diagnostics
 
-vSAN provides software-defined storage across ESXi hosts using local disks, storage policies, object placement, and cluster-level health services.
+### List All Objects and Health
 
-### Where It Fits
+```bash
+# List all vSAN objects
+esxcli vsan debug object list
 
-This sits in the virtualization stack with compute, storage, networking, monitoring, backup, automation, and security controls. Treat it as a Tier 1 infrastructure area when workloads depend on it.
+# Objects that are not healthy
+esxcli vsan debug object list | grep -v "Healthy"
 
-### Architecture and Components
+# Filter by specific health states
+esxcli vsan debug object list | grep -i "absent"
+esxcli vsan debug object list | grep -i "degraded"
+esxcli vsan debug object list | grep -i "inaccessible"
+```
 
-- vSAN cluster
-- Disk groups or storage pool
-- Cache and capacity devices
-- Storage policies
-- vSAN objects and components
-- Witness or fault domains where used
-- Resync and repair services
-- vSAN health service
+### Object Detail
 
-### Dependencies
+```bash
+# Detailed view of a specific object (get UUID from object list)
+esxcli vsan debug object get -u <object-uuid>
+```
 
-Common dependencies:
+This shows:
+- Object type (vmnamespace, vmswap, vdisk)
+- Component locations (which host/disk each component is on)
+- Component health state
+- Active policy and current compliance
 
-- DNS
-- NTP
-- Active Directory or LDAP
-- Network connectivity
-- Storage availability
-- Licensing
-- Monitoring
-- Backup or recovery tooling
-- Vendor support access
+### Component Detail
 
-### Ports and Protocols
+```bash
+# List all components
+esxcli vsan debug component list
 
-| Function | Protocol | Typical Port |
-|----------|----------|--------------|
-| Management | HTTPS | 443 |
-| Monitoring | SNMP | 161 |
-| Logging | Syslog | 514 |
-| API | HTTPS | 443 |
+# Components on a specific host
+esxcli vsan debug component list | grep <host-uuid>
 
-### Daily Operations
+# Absent components
+esxcli vsan debug component list | grep -i "absent"
+```
 
-- Review vSAN Skyline Health.
-- Check object health.
-- Review resync activity.
-- Confirm capacity and slack space.
-- Check disk group health.
-- Review storage policy compliance.
-- Check latency and congestion indicators.
+### Map Object to VM
 
-### Health Checks
+```powershell
+# Find which VM owns a specific vSAN object UUID
+Connect-VIServer <vcenter>
 
-- Cluster health
-- Object health
-- Disk group health
-- Capacity usage
-- Resync status
-- Policy compliance
-- Network health
-- Physical disk health
-- Performance metrics
-
-### Upgrade Workflow
-
-1. Verify compatibility.
-2. Confirm backups or recovery point.
-3. Validate maintenance window.
-4. Check current platform health.
-5. Apply the upgrade or patch.
-6. Monitor logs and tasks.
-7. Validate health after the change.
-8. Record results and follow-up items.
-
-### Backup and Recovery Considerations
-
-- Confirm configuration backup coverage.
-- Confirm appliance or platform backup status where supported.
-- Confirm snapshots are used only when appropriate.
-- Confirm restore steps are documented.
-- Test recovery periodically.
-- Keep backup evidence with change records.
-
-### Common Issues
-
-- Object inaccessible
-- Resync backlog
-- Capacity pressure
-- Disk failure
-- Disk group issue
-- Storage policy non-compliance
-- High latency
-- Network partition or packet loss
-
-### Troubleshooting Steps
-
-1. Confirm scope.
-2. Review recent changes.
-3. Check alarms and events.
-4. Review system logs.
-5. Validate DNS, NTP, authentication, network, and storage.
-6. Check resource utilization.
-7. Escalate with timestamps, errors, screenshots, and support bundle if unresolved.
-
-### Root Cause Examples
-
-| Symptom | Possible Cause | Resolution |
-|--------|----------------|------------|
-| Object unhealthy | Host, disk, or network issue | Review object health, disk status, and resync details |
-| Resync backlog | Rebuild, maintenance, or capacity issue | Review resync dashboard and throttle change activity |
-| High latency | Disk, network, or capacity pressure | Check disk groups, congestion, and network health |
-| Policy non-compliant | Capacity or placement issue | Review policy, fault domains, and available resources |
-
-### Certification Relevance
-
-Useful certification study areas:
-
-- Architecture design
-- High availability
-- Performance optimization
-- Troubleshooting workflows
-- Security controls
-- Backup and recovery
-- Lifecycle management
+$targetUUID = "<object-uuid>"
+Get-VM | ForEach-Object {
+    $vm = $_
+    $vm.ExtensionData.Config.Hardware.Device |
+        Where-Object { $_ -is [VMware.Vim.VirtualDisk] } |
+        ForEach-Object {
+            if ($_.Backing.BackingObjectId -eq $targetUUID) {
+                Write-Host "VM: $($vm.Name), Disk: $($_.DeviceInfo.Label)"
+            }
+        }
+}
+```
 
 ---
 
-## Resync Review
+## Network Diagnostics
 
-Use this page to review vSAN resync activity, object health, and rebuild impact.
+### End-to-End Connectivity Test
 
-### Pre-Checks
+```bash
+# vSAN built-in network test (tests all unicast agents)
+esxcli vsan debug network test
 
-- Confirm scope.
-- Confirm maintenance window if changes are planned.
-- Confirm current health.
-- Check recent alerts and tasks.
-- Confirm access to management tools.
-- Confirm rollback path if configuration changes are made.
+# Manual ping to specific peer (replace with peer vSAN vmkernel IP)
+vmkping -I vmk2 192.168.100.11
 
-### Steps
+# Large packet test (MTU 9000)
+vmkping -I vmk2 -d -s 8972 192.168.100.11
 
-1. Identify the affected object.
-2. Capture current state.
-3. Review alarms, logs, and recent changes.
-4. Apply the planned action.
-5. Validate service health.
-6. Record notes and follow-up items.
+# Test to all cluster hosts (scripted)
+PEERS="192.168.100.11 192.168.100.12 192.168.100.13"
+for p in $PEERS; do
+    echo -n "Ping $p: "
+    vmkping -I vmk2 -d -s 8972 $p -c 10 | grep -E "loss|received"
+done
+```
 
-### Validation
+### Verify vSAN VMkernel Configuration
 
-- Confirm the object is healthy.
-- Confirm no new critical alarms.
-- Confirm monitoring reflects the expected state.
-- Confirm related systems still have access.
-- Document the result.
+```bash
+# Confirm vmkernel adapter and vSAN tag
+esxcli vsan network list
+esxcli network ip interface tag get -i vmk2
 
-### Rollback
+# Expected output: VSAN tag present
 
-- Revert the changed setting if possible.
-- Restore prior configuration from documented state.
-- Escalate if rollback requires vendor support.
+# Verify IP and MTU
+esxcli network ip interface list | grep -A10 vmk2
 
-### Notes
+# Check routing — all vSAN peers must be on same subnet or route must exist
+esxcli network ip route ipv4 list
+```
 
-Keep screenshots, task IDs, error messages, and timestamps with the change or incident record.
+### NIC and Switch Diagnostics
+
+```bash
+# Check NIC link speed and duplex
+esxcli network nic get -n vmnic2
+
+# Check for NIC errors
+esxcli network nic stats get -n vmnic2
+
+# Check CDP/LLDP — what switch port is connected
+esxcli network nic get -n vmnic2 | grep -i "CDP\|LLDP\|switch"
+```
+
+Expected NIC state: 25 GbE or 10 GbE, full duplex, zero errors. Any errors/discards on the NIC indicate physical layer issues (cable, SFP, switch port).
+
+---
+
+## Disk and Disk Group Diagnostics
+
+### Disk Health
+
+```bash
+# All vSAN storage devices and their health
+esxcli vsan storage list
+
+# SMART data for a specific disk
+esxcli storage core device smart get -d <naa>
+# Check: Reallocated sectors, Pending sectors, Uncorrectable errors — any non-zero = failing drive
+
+# Disk I/O errors in vmkernel log
+grep "naa.<device-id>" /var/log/vmkernel.log | grep -i "err\|fail\|abort" | tail -20
+```
+
+### Disk Group Status
+
+```bash
+# Disk group composition — cache and capacity disks
+esxcli vsan storage list | grep -E "Is SSD|Disk Group UUID|naa\.|Display Name|Tier"
+
+# Check for LSOM errors
+grep -i "lsom\|diskgroup" /var/log/vmkernel.log | grep -i "err\|fail" | tail -30
+```
+
+### Force a Disk Check (LSOM)
+
+```bash
+# Run a vSAN storage check (surface scan-equivalent for vSAN)
+esxcli vsan storage check
+
+# This runs the built-in disk consistency check — may take several minutes
+# Output shows any inconsistencies found
+```
+
+---
+
+## Support Bundle Collection
+
+Collect a support bundle before opening a VMware support case. The bundle includes logs from all cluster hosts and vCenter.
+
+### From vCenter UI
+
+vSphere Client → Menu → Administration → Export System Logs
+
+Select:
+- vCenter Server logs
+- All ESXi hosts in the vSAN cluster
+- Include vSAN logs (checkbox in the export dialog)
+
+This generates a `.zip` file with all logs consolidated.
+
+### From VCSA Shell
+
+```bash
+# Generate support bundle from VCSA (SSH to VCSA as root)
+vc-support -l /tmp/vc-support-bundle
+
+# This generates a .tgz in /tmp — download via SCP or SFTP
+```
+
+### From ESXi Shell (Individual Host)
+
+```bash
+# Collect ESXi support bundle (runs vm-support)
+vm-support --log-level 6 --vsan
+
+# Output written to /var/tmp/vmsupport/
+# Transfer to support-accessible location
+scp /var/tmp/vmsupport/*.tgz user@jumphost:/tmp/
+```
+
+### vSAN-Specific Log Collection
+
+```bash
+# Collect vSAN traces (more detailed than standard support bundle)
+esxcli vsan trace get -t 300 -d /tmp/vsantrace
+
+# Collect CMMDS state dump
+python /usr/lib/vmware/vsan/bin/cmmds-tool.py enumerate -d /tmp/cmmds-dump.json
+```
+
+---
+
+## vsish Diagnostics (Advanced)
+
+`vsish` (vSphere Internal Shell) provides low-level kernel statistics. Use only when directed by VMware Support.
+
+```bash
+# Access vsish
+vsish
+
+# List vSAN disk information at kernel level
+get /vmkModules/lsom/disks/
+
+# Get specific disk stats
+get /vmkModules/lsom/disks/<disk-uuid>/stats
+
+# CMMDS internal state
+get /reliability/cmmds/
+
+# Exit vsish
+exit
+```
+
+---
+
+## RVC Diagnostic Commands (Legacy)
+
+RVC (Ruby vSphere Console) is available on the VCSA appliance for older cluster diagnostics.
+
+```bash
+# SSH to VCSA, then launch RVC
+rvc administrator@vsphere.local@vcenter.example.com
+
+# Navigate to cluster
+ls
+cd localhost/Production/computers/VSAN-LON-01/
+
+# Run full health check
+vsan.health.health_check .
+
+# Disk stats per host
+vsan.disks_stats .
+
+# Object compliance report
+vsan.obj_status_report .
+
+# Resync dashboard
+vsan.resync_dashboard . --refresh-rate 30
+
+# Network diagnostics
+vsan.test_network_perf .
+```
+
+RVC is primarily useful for vSAN 6.x clusters. Modern clusters (7.x/8.x) should use `esxcli vsan` commands and the Skyline Health UI.
