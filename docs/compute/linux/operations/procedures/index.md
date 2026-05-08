@@ -316,3 +316,118 @@ systemd-analyze verify /etc/systemd/system/<service>.service
 # 5. Test ExecStart command manually as the service user
 sudo -u <service-user> /path/to/binary --args
 ```
+
+## Patching
+
+Patch management procedures for RHEL 8/9 and Ubuntu 22.04 LTS servers.
+
+### Pre-Patch Checklist
+
+```bash
+# 1. Confirm system is healthy before patching
+uptime
+systemctl --failed
+df -h | awk '$5+0 > 85'
+
+# 2. Capture current package versions (rollback reference)
+rpm -qa --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n" | sort > /tmp/pre-patch-packages.txt   # RHEL
+dpkg -l | awk 'NR>5' > /tmp/pre-patch-packages.txt   # Ubuntu
+
+# 3. Capture running kernel
+uname -r
+
+# 4. Check available updates without applying
+dnf check-update   # RHEL
+apt list --upgradable 2>/dev/null   # Ubuntu
+```
+
+### RHEL — dnf Patching
+
+```bash
+# List available updates
+dnf check-update
+
+# Apply all updates (security + bug fix + enhancement)
+dnf update -y
+
+# Apply security updates only
+dnf update --security -y
+
+# Apply a specific advisory
+dnf update --advisory=RHSA-2026:1234 -y
+
+# Apply updates excluding the kernel (maintenance without reboot risk)
+dnf update --exclude=kernel* -y
+
+# List installed security advisories
+dnf updateinfo list security installed | head -20
+```
+
+### RHEL — yum history (Rollback)
+
+```bash
+# List recent transactions
+yum history list | head -20
+
+# View what a transaction did
+yum history info <transaction-id>
+
+# Undo a specific transaction (rollback)
+yum history undo <transaction-id>
+```
+
+### Ubuntu — apt Patching
+
+```bash
+# Refresh package index
+apt update
+
+# List upgradable packages
+apt list --upgradable 2>/dev/null
+
+# Apply all upgrades
+apt upgrade -y
+
+# Full upgrade (handles dependency changes)
+apt full-upgrade -y
+
+# Remove unused packages after upgrade
+apt autoremove -y
+```
+
+### Kernel Updates and Reboot
+
+```bash
+# Check if a reboot is required (RHEL)
+needs-restarting -r
+# Exit code 1 = reboot required
+
+# Check if a reboot is required (Ubuntu)
+ls /var/run/reboot-required 2>/dev/null && echo "Reboot required" || echo "No reboot needed"
+```
+
+### Post-Patch Validation
+
+```bash
+# Confirm updated kernel is running (after reboot)
+uname -r
+
+# Confirm critical services are up
+systemctl is-active sshd chronyd auditd
+
+# Check for new failed services
+systemctl --failed
+
+# Compare package list to pre-patch snapshot
+rpm -qa --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n" | sort > /tmp/post-patch-packages.txt
+diff /tmp/pre-patch-packages.txt /tmp/post-patch-packages.txt
+```
+
+### Patch Schedule Standards
+
+| Server Tier | Patch Frequency | Reboot Window |
+|---|---|---|
+| Non-production | Weekly (automated) | Immediate on completion |
+| Production — non-critical | Monthly (change-controlled) | Weekend 02:00–06:00 |
+| Production — critical | Quarterly OR emergency (CVE ≥ 9.0) | Agreed maintenance window |
+| Emergency (CVSS ≥ 9.0) | Within 72 hours | Emergency change process |

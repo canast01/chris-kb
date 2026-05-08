@@ -1,15 +1,25 @@
-# Superna Eyeglass Security
+# Superna Eyeglass — Security
 
-Eyeglass admin access is controlled through built-in roles: admin (full access including failover initiation) and read-only (dashboard and reporting access only). The Eyeglass management console must be accessible only via HTTPS — HTTP access should be disabled or redirected. API tokens used by automation scripts must be stored in a secrets manager and rotated on a defined schedule.
+<div class="kb-grid kb-grid-3">
 
-All failover events are recorded in the Eyeglass audit log, which should be forwarded to a SIEM. Network access to the Eyeglass management interface should be restricted to the management VLAN or jump host only. OneFS API credentials stored in Eyeglass for cluster connectivity should use dedicated service accounts with minimum required privileges.
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Built-in roles, least privilege, and service account requirements.</span>
+</a>
 
-| Control | Detail |
-|---|---|
-| RBAC | Admin and read-only roles; enforce least privilege |
-| Console access | HTTPS only; restrict to management VLAN or jump host |
-| API token management | Store in secrets manager; rotate on schedule and on personnel change |
-| Audit log | All failover and configuration events logged; forward to SIEM |
-| Network access | Restrict Eyeglass UI and API to management network |
-| OneFS API credentials | Dedicated service account; minimum required OneFS privileges |
-| Appliance hardening | Disable unused services; keep appliance patched to current release |
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>Network restrictions, RBAC, audit log, and SIEM integration.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>HTTPS enforcement and API token management.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Audit log forwarding, appliance patching, and service account rotation.</span>
+</a>
+
+</div>

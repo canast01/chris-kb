@@ -1,9 +1,10 @@
 # RASR — Components
-## Purpose
 
-Use this page for practical RASR Media notes, checks, troubleshooting, commands, change notes, and field references.
+## Recovery Media
 
-## Common checks
+Use this section for practical RASR Media notes, checks, troubleshooting, commands, change notes, and field references.
+
+### Common checks
 
 - Confirm current health
 - Review active alerts
@@ -12,7 +13,7 @@ Use this page for practical RASR Media notes, checks, troubleshooting, commands,
 - Check logs, events, and monitoring
 - Capture current state before changes
 
-## Incident notes
+### Incident notes
 
 Capture:
 
@@ -25,7 +26,7 @@ Capture:
 - What was checked
 - Next action
 
-## Change notes
+### Change notes
 
 - Confirm change approval
 - Confirm maintenance window
@@ -34,10 +35,10 @@ Capture:
 - Make one change at a time
 - Validate after the change
 
-## Useful commands
+### Useful commands
 
 Add tested commands here.
 
-## Known issues
+### Known issues
 
 Add known issues here as they come up.

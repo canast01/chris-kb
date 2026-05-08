@@ -1,0 +1,38 @@
+# Active Directory — Access Control
+
+## Tiered Administration Model
+
+Active Directory security is built around the three-tier admin model:
+
+| Tier | Scope | Examples | Access Restriction |
+|---|---|---|---|
+| Tier 0 | Identity infrastructure | DCs, ADCS, AAD Connect, CyberArk | Only from Tier 0 PAW |
+| Tier 1 | Servers and services | App servers, SQL, ESXi | Only from Tier 1 PAW or jump host |
+| Tier 2 | Workstations | End-user PCs | From standard workstation |
+
+Tier model is enforced by GPO logon restrictions (`Deny log on locally`, `Deny access to this computer from the network`) and CyberArk safe membership.
+
+## Core Security Controls
+
+| Control | Implementation |
+|---|---|
+| Protected Users group | Disables NTLM, DES, RC4, and unconstrained delegation for members |
+| AdminSDHolder | ACL template propagated every 60 min to all protected accounts |
+| PAW | Dedicated hardened workstations; Tier 0 access only from Tier 0 PAW |
+| LDAP signing | `Domain Controller: LDAP server signing requirements` = Require signing |
+| LDAP channel binding | `Domain Controller: LDAP server channel binding token requirements` = Always |
+| Kerberos AES-256 only | Disable RC4 via `Network security: Configure encryption types allowed for Kerberos` |
+| Fine-grained PSO | Stricter password/lockout policies for admin and service accounts |
+| Defender for Identity | Sensor on all DCs; detects lateral movement, pass-the-hash, DCSync |
+
+## AdminSDHolder Monitoring
+
+```powershell
+# List all accounts protected by AdminSDHolder (adminCount=1)
+Get-ADUser -Filter { AdminCount -eq 1 } -Properties AdminCount |
+    Select-Object SamAccountName, DistinguishedName, AdminCount
+
+# Check if non-privileged accounts have adminCount=1 (sign of ACL tampering or orphaned admin membership)
+Get-ADUser -Filter { AdminCount -eq 1 } |
+    Where-Object { (Get-ADUser $_ -Properties MemberOf).MemberOf -eq $null }
+```

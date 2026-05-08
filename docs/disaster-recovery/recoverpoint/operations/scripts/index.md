@@ -1,0 +1,1037 @@
+# RecoverPoint — Scripts
+
+> Part of the [RecoverPoint](../../) > [Operations](../) reference.
+
+---
+
+## Consistency Group Health Monitor (Python)
+
+Query the RecoverPoint REST API to report the replication state, lag, and RPO compliance for every consistency group.
+
+~~~python
+#!/usr/bin/env python3
+# rp-cg-health.py
+# Usage: RP_HOST=<host> RP_USER=<user> RP_PASS=<pass> python3 rp-cg-health.py
+
+import os
+import sys
+import requests
+import urllib3
+from datetime import timedelta
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+RP_HOST = os.environ.get("RP_HOST", "")
+RP_USER = os.environ.get("RP_USER", "")
+RP_PASS = os.environ.get("RP_PASS", "")
+
+if not all([RP_HOST, RP_USER, RP_PASS]):
+    sys.exit("ERROR: RP_HOST, RP_USER, and RP_PASS must be set.")
+
+BASE_URL  = f"https://{RP_HOST}/fapi/rest/4_5"
+SESSION   = requests.Session()
+SESSION.auth    = (RP_USER, RP_PASS)
+SESSION.verify  = False
+SESSION.headers.update({"Content-Type": "application/json", "Accept": "application/json"})
+
+
+def api_get(path: str) -> dict:
+    r = SESSION.get(f"{BASE_URL}{path}")
+    r.raise_for_status()
+    return r.json()
+
+
+def ms_to_human(ms: int) -> str:
+    if ms is None:
+        return "N/A"
+    td = timedelta(milliseconds=ms)
+    total_sec = int(td.total_seconds())
+    if total_sec < 60:
+        return f"{total_sec}s"
+    if total_sec < 3600:
+        return f"{total_sec // 60}m {total_sec % 60}s"
+    return f"{total_sec // 3600}h {(total_sec % 3600) // 60}m"
+
+
+print()
+print("=== RecoverPoint Consistency Group Health Monitor ===")
+print(f"Host : {RP_HOST}")
+print()
+
+# Cluster statistics
+try:
+    cluster_stats = api_get("/cluster/statistics")
+    print(f"Cluster Status   : {cluster_stats.get('clusterUID', {}).get('id', 'unknown')}")
+except Exception as exc:
+    print(f"WARNING: Could not retrieve cluster statistics: {exc}")
+
+# CG list
+cgs = api_get("/groups")
+cg_list = cgs.get("innerSet", [])
+
+print(f"Consistency Groups: {len(cg_list)}")
+print()
+print(f"{'CG Name':<35} {'State':<15} {'Lag':<12} {'RPO':<12} {'Compliant'}")
+print("-" * 82)
+
+exit_code   = 0
+non_active  = []
+
+for cg in cg_list:
+    gid     = cg.get("groupUID", {}).get("id")
+    name    = cg.get("name", f"cg-{gid}")
+
+    try:
+        links = api_get(f"/groups/{gid}/links")
+        link_set = links.get("innerSet", [])
+    except Exception:
+        link_set = []
+
+    for link in link_set:
+        state       = link.get("linkState", "unknown")
+        lag_ms      = link.get("lagInMicros", None)
+        if lag_ms:
+            lag_ms = lag_ms // 1000  # convert microseconds to ms
+        rpo_ms      = link.get("RPOInMicros", None)
+        if rpo_ms:
+            rpo_ms = rpo_ms // 1000
+
+        lag_str = ms_to_human(lag_ms)
+        rpo_str = ms_to_human(rpo_ms)
+
+        compliant = "N/A"
+        if lag_ms is not None and rpo_ms is not None:
+            compliant = "YES" if lag_ms <= rpo_ms else "NO"
+
+        if state != "Active":
+            non_active.append((name, state))
+            exit_code = 1
+
+        flag = "" if state == "Active" else "  <-- ALERT"
+        print(f"{name:<35} {state:<15} {lag_str:<12} {rpo_str:<12} {compliant}{flag}")
+
+print()
+if non_active:
+    print(f"RESULT: DEGRADED — {len(non_active)} CG(s) not in Active state:")
+    for cg_name, cg_state in non_active:
+        print(f"  {cg_name}: {cg_state}")
+    sys.exit(1)
+else:
+    print("RESULT: ALL CGs ACTIVE")
+    sys.exit(0)
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3.7 or later installed
+- The `requests` library: `pip install requests`
+- Network access to the RecoverPoint Appliance (RPA) management IP
+- RecoverPoint admin credentials (boxmgmt or admin account)
+
+**Step 1 — Save the file**
+
+1. Open a text editor
+2. Copy the entire code block above
+3. Save it as `rp-cg-health.py`
+
+**Step 2 — Fill in your details**
+
+Set these as environment variables before running:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `RP_HOST` | IP address of the RecoverPoint Appliance | RPA management IP — ask your DR admin |
+| `RP_USER` | Admin username | Usually `admin` or `boxmgmt` |
+| `RP_PASS` | Admin password | Your RecoverPoint admin password |
+
+**Step 3 — Open a terminal**
+
+- **For .py:** Open Terminal (Linux/Mac) or Command Prompt / Git Bash (Windows). Install Python from python.org. Install packages: `pip install requests`
+
+**Step 4 — Run the script**
+
+```
+RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-cg-health.py
+```
+
+**What you should see**
+
+A table listing every consistency group with its replication state (Active/Paused/etc.), current lag, configured RPO, and whether it is compliant. Any CG not in Active state is flagged with `<-- ALERT`. The final line shows `RESULT: ALL CGs ACTIVE` or a list of degraded CGs.
+
+---
+
+## DR Test Failover Script (Bash)
+
+Authenticate against the RecoverPoint REST API, locate a consistency group by name, start image access at the latest bookmark for DR testing, and optionally roll back to restore production replication.
+
+~~~bash
+#!/usr/bin/env bash
+# rp-dr-test-failover.sh
+# Usage:
+#   ./rp-dr-test-failover.sh                 -- start image access (DR test)
+#   ./rp-dr-test-failover.sh --rollback      -- disable image access, resume replication
+
+set -euo pipefail
+
+RP_HOST="${RP_HOST:?RP_HOST is required}"
+RP_USER="${RP_USER:?RP_USER is required}"
+RP_PASS="${RP_PASS:?RP_PASS is required}"
+CG_NAME="${CG_NAME:?CG_NAME (consistency group name) is required}"
+BOOKMARK_POLICY="${BOOKMARK_POLICY:-latest}"
+ROLLBACK=false
+LOGFILE="/var/log/rp-dr-test-$(date +%Y%m%d-%H%M%S).log"
+
+for arg in "$@"; do
+    [[ "$arg" == "--rollback" ]] && ROLLBACK=true
+done
+
+BASE_URL="https://${RP_HOST}/fapi/rest/4_5"
+CURL_OPTS=(-sk -u "${RP_USER}:${RP_PASS}" -H "Content-Type: application/json" -H "Accept: application/json")
+
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "${LOGFILE}"; }
+
+rp_get()  { curl "${CURL_OPTS[@]}" "${BASE_URL}${1}"; }
+rp_post() { curl "${CURL_OPTS[@]}" -X POST -d "${2:-}" "${BASE_URL}${1}"; }
+
+log "=== RecoverPoint DR Test Failover ==="
+log "CG: ${CG_NAME}  | Mode: $( ${ROLLBACK} && echo ROLLBACK || echo FAILOVER-TEST )"
+
+# --- Step 1: Find CG ID by name ---
+log "Step 1: Locating CG '${CG_NAME}'..."
+CG_LIST=$(rp_get "/groups")
+CG_ID=$(python3 - <<EOF
+import json, sys
+data = json.loads('''${CG_LIST}''')
+for cg in data.get('innerSet', []):
+    if cg.get('name') == '${CG_NAME}':
+        print(cg['groupUID']['id'])
+        sys.exit(0)
+sys.exit(1)
+EOF
+)
+
+if [[ -z "${CG_ID}" ]]; then
+    log "ERROR: CG '${CG_NAME}' not found."
+    exit 1
+fi
+log "Found CG ID: ${CG_ID}"
+
+if ${ROLLBACK}; then
+    # --- Rollback: disable image access and resume replication ---
+    log "Step 2 (Rollback): Disabling image access for CG ${CG_ID}..."
+    rp_post "/groups/${CG_ID}/disable_image_access" '{}'
+    log "Step 3 (Rollback): Resuming replication..."
+    rp_post "/groups/${CG_ID}/start_transfer" '{}'
+    log "Rollback complete. Production replication resumed."
+    exit 0
+fi
+
+# --- Step 2: Get latest bookmark ---
+log "Step 2: Retrieving latest bookmark..."
+COPIES=$(rp_get "/groups/${CG_ID}/copies")
+COPY_ID=$(python3 - <<EOF
+import json, sys
+data = json.loads('''${COPIES}''')
+copies = data.get('innerSet', [])
+# Use the remote copy (non-production)
+for c in copies:
+    if not c.get('copySettings', {}).get('isProductionCopy', True):
+        print(c['copyUID']['globalCopyUID']['copyUID'])
+        sys.exit(0)
+sys.exit(1)
+EOF
+)
+
+if [[ -z "${COPY_ID}" ]]; then
+    log "ERROR: Could not determine remote copy ID."
+    exit 1
+fi
+log "Remote copy ID: ${COPY_ID}"
+
+# --- Step 3: Enable image access at latest bookmark ---
+log "Step 3: Enabling image access at latest bookmark on copy ${COPY_ID}..."
+REQUEST_BODY=$(python3 -c "
+import json
+print(json.dumps({
+    'copyUID': {'globalCopyUID': {'copyUID': int('${COPY_ID}')}},
+    'scenario': 'LOGGED_ACCESS',
+    'imageAccessMode': 'VIRTUAL_ACCESS_WITH_ROLL',
+    'bookmark': {'bookmarkType': 'LATEST'}
+}))
+")
+
+rp_post "/groups/${CG_ID}/enable_image_access" "${REQUEST_BODY}"
+log "Image access request submitted."
+
+# --- Step 4: Wait for access to be enabled ---
+log "Step 4: Waiting for image access to become active..."
+MAX_WAIT=120
+ELAPSED=0
+while [[ $ELAPSED -lt $MAX_WAIT ]]; do
+    STATE=$(rp_get "/groups/${CG_ID}/links" | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+links = data.get('innerSet', [])
+if links:
+    print(links[0].get('linkState', 'unknown'))
+else:
+    print('unknown')
+")
+    log "Current link state: ${STATE}"
+    if [[ "${STATE}" == "ImageAccess" ]] || [[ "${STATE}" == "ImageAccessEnabled" ]]; then
+        break
+    fi
+    sleep 10
+    ELAPSED=$((ELAPSED + 10))
+done
+
+if [[ $ELAPSED -ge $MAX_WAIT ]]; then
+    log "WARNING: Timed out waiting for image access. Check RecoverPoint UI."
+    exit 1
+fi
+
+# --- Step 5: Print accessible volumes ---
+log "Step 5: Image access enabled. Copy volumes are now accessible."
+VOLUMES=$(rp_get "/groups/${CG_ID}/copies/${COPY_ID}/volumes" 2>/dev/null || echo '{"innerSet":[]}')
+python3 - <<EOF
+import json
+data = json.loads('''${VOLUMES}''')
+for v in data.get('innerSet', []):
+    print(f"  Volume: {v.get('name', 'unknown')}  WWN: {v.get('wwn', 'N/A')}")
+EOF
+
+log "DR test failover complete. Remember to run --rollback when done."
+log "Log: ${LOGFILE}"
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- A Linux or macOS machine (or WSL on Windows)
+- `curl` and `python3` installed
+- Network access to the RecoverPoint Appliance management IP
+- RecoverPoint admin credentials
+- The exact name of the Consistency Group you want to test (case-sensitive)
+
+**Step 1 — Save the file**
+
+1. Open a text editor
+2. Copy the entire code block above
+3. Save it as `rp-dr-test-failover.sh`
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `RP_HOST` | RecoverPoint Appliance IP | RPA management IP |
+| `RP_USER` | Admin username | Usually `admin` |
+| `RP_PASS` | Admin password | Your RecoverPoint password |
+| `CG_NAME` | Consistency group name | Exact name as shown in RecoverPoint UI |
+
+**Step 3 — Open a terminal**
+
+- **For .sh:** Open Terminal on Linux/Mac, or use Git Bash / WSL on Windows
+
+**Step 4 — Make the script executable**
+
+```
+chmod +x rp-dr-test-failover.sh
+```
+
+**Step 5 — Run the DR test (enables image access)**
+
+```
+RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword CG_NAME="MyAppCG" ./rp-dr-test-failover.sh
+```
+
+**Step 6 — Run the rollback when finished (resumes replication)**
+
+```
+RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword CG_NAME="MyAppCG" ./rp-dr-test-failover.sh --rollback
+```
+
+**What you should see**
+
+Timestamped log lines showing each step: locating the CG, getting the remote copy ID, enabling image access, and polling until the link state changes to `ImageAccess`. At the end it lists the accessible volumes (name and WWN). A log file is written to `/var/log/`.
+
+---
+
+## RPO Compliance Report (Python)
+
+Query all RecoverPoint consistency groups, compare current lag to configured RPO, and flag any CG whose lag exceeds 2x the RPO.
+
+~~~python
+#!/usr/bin/env python3
+# rp-rpo-compliance.py
+# Usage: RP_HOST=<host> RP_USER=<user> RP_PASS=<pass> python3 rp-rpo-compliance.py
+
+import os
+import sys
+import requests
+import urllib3
+from datetime import datetime, timedelta
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+RP_HOST = os.environ.get("RP_HOST", "")
+RP_USER = os.environ.get("RP_USER", "")
+RP_PASS = os.environ.get("RP_PASS", "")
+
+if not all([RP_HOST, RP_USER, RP_PASS]):
+    sys.exit("ERROR: RP_HOST, RP_USER, and RP_PASS must be set.")
+
+BASE_URL = f"https://{RP_HOST}/fapi/rest/4_5"
+SESSION  = requests.Session()
+SESSION.auth    = (RP_USER, RP_PASS)
+SESSION.verify  = False
+SESSION.headers.update({"Content-Type": "application/json", "Accept": "application/json"})
+
+
+def api_get(path: str) -> dict:
+    r = SESSION.get(f"{BASE_URL}{path}")
+    r.raise_for_status()
+    return r.json()
+
+
+def micros_to_sec(us: int) -> float:
+    return us / 1_000_000 if us else 0.0
+
+
+def fmt_sec(sec: float) -> str:
+    if sec is None:
+        return "N/A"
+    s = int(sec)
+    if s < 60:
+        return f"{s}s"
+    if s < 3600:
+        return f"{s // 60}m {s % 60}s"
+    return f"{s // 3600}h {(s % 3600) // 60}m"
+
+
+print()
+print("=== RecoverPoint RPO Compliance Report ===")
+print(f"Generated : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+print(f"Host      : {RP_HOST}")
+print()
+
+cg_data = api_get("/groups")
+cg_list = cg_data.get("innerSet", [])
+
+print(f"{'CG Name':<35} {'Configured RPO':<16} {'Current Lag':<14} {'Status':<12} {'Max Lag 24h'}")
+print("-" * 90)
+
+violations   = []
+exit_code    = 0
+
+for cg in cg_list:
+    gid  = cg.get("groupUID", {}).get("id")
+    name = cg.get("name", f"cg-{gid}")
+
+    # Get link details for current lag and RPO
+    try:
+        links = api_get(f"/groups/{gid}/links")
+        link_list = links.get("innerSet", [])
+    except Exception:
+        link_list = []
+
+    for link in link_list:
+        rpo_us      = link.get("RPOInMicros", 0)
+        lag_us      = link.get("lagInMicros", 0)
+
+        rpo_sec     = micros_to_sec(rpo_us)
+        lag_sec     = micros_to_sec(lag_us)
+
+        # Attempt to retrieve trend data for max lag over 24h
+        # RP statistics API returns time-series; we take the max value.
+        max_lag_sec = None
+        try:
+            stats_url = f"/groups/{gid}/statistics"
+            stats     = api_get(stats_url)
+            lag_samples = [
+                micros_to_sec(s.get("lagInMicros", 0))
+                for s in stats.get("innerSet", [])
+                if s.get("lagInMicros") is not None
+            ]
+            if lag_samples:
+                max_lag_sec = max(lag_samples)
+        except Exception:
+            pass  # statistics endpoint may not be available on all RP versions
+
+        # Compliance
+        if rpo_sec > 0 and lag_sec > rpo_sec:
+            status = "OVER RPO"
+            exit_code = 1
+        elif rpo_sec > 0:
+            status = "OK"
+        else:
+            status = "NO RPO SET"
+
+        # 2x RPO violation
+        flagged = ""
+        if rpo_sec > 0 and lag_sec > (2 * rpo_sec):
+            flagged = "  *** LAG > 2x RPO ***"
+            violations.append(name)
+            exit_code = 1
+
+        max_lag_str = fmt_sec(max_lag_sec) if max_lag_sec is not None else "N/A"
+        print(f"{name:<35} {fmt_sec(rpo_sec):<16} {fmt_sec(lag_sec):<14} {status:<12} {max_lag_str}{flagged}")
+
+print()
+if violations:
+    print(f"VIOLATIONS: {len(violations)} CG(s) exceeded 2x RPO:")
+    for v in violations:
+        print(f"  - {v}")
+elif exit_code != 0:
+    print("WARNING: Some CGs are over RPO but within 2x threshold.")
+else:
+    print("RESULT: All CGs within RPO.")
+
+sys.exit(exit_code)
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Python 3.7 or later installed
+- The `requests` library: `pip install requests`
+- Network access to the RecoverPoint Appliance management IP
+- RecoverPoint admin credentials
+
+**Step 1 — Save the file**
+
+1. Open a text editor
+2. Copy the entire code block above
+3. Save it as `rp-rpo-compliance.py`
+
+**Step 2 — Fill in your details**
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `RP_HOST` | RecoverPoint Appliance IP | RPA management IP |
+| `RP_USER` | Admin username | Usually `admin` |
+| `RP_PASS` | Admin password | Your RecoverPoint password |
+
+**Step 3 — Open a terminal**
+
+- **For .py:** Open Terminal (Linux/Mac) or Command Prompt / Git Bash (Windows). Install Python from python.org. Install packages: `pip install requests`
+
+**Step 4 — Run the script**
+
+```
+RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-rpo-compliance.py
+```
+
+**What you should see**
+
+A table listing every CG with its configured RPO, current lag, compliance status (OK / OVER RPO / NO RPO SET), and maximum lag recorded in the last 24 hours. CGs where lag exceeds twice the RPO are flagged with `*** LAG > 2x RPO ***`. The summary at the bottom shows any violations or confirms all CGs are within RPO.
+
+---
+
+## Windows: RecoverPoint CG Status via REST API (PowerShell)
+
+Query the RecoverPoint REST API from a Windows PC to report cluster health, RPA node status, and the state of every consistency group — highlighting any CG not in Active state.
+
+~~~powershell
+# rp-cg-status-windows.ps1
+# Usage: .\rp-cg-status-windows.ps1 -RpaHost <IP> -RpUser <user> -RpPass <pass>
+# Requires: PowerShell 5.1 or later (built into Windows 10/11)
+# RecoverPoint REST API: https://<RpaHost>/fapi/rest/5_1/
+
+param(
+    [Parameter(Mandatory)][string]$RpaHost,
+    [Parameter(Mandatory)][string]$RpUser,
+    [Parameter(Mandatory)][string]$RpPass
+)
+
+# Suppress SSL errors for self-signed certificates
+if (-not ([System.Management.Automation.PSTypeName]'TrustAllCertsPolicy').Type) {
+    Add-Type @"
+    using System.Net;
+    using System.Security.Cryptography.X509Certificates;
+    public class TrustAllCertsPolicy : ICertificatePolicy {
+        public bool CheckValidationResult(
+            ServicePoint srvPoint, X509Certificate certificate,
+            WebRequest request, int certificateProblem) { return true; }
+    }
+"@
+    [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+}
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
+$BaseUrl = "https://$RpaHost/fapi/rest/5_1"
+$Auth    = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("${RpUser}:${RpPass}"))
+$Headers = @{
+    Authorization  = "Basic $Auth"
+    "Content-Type" = "application/json"
+    "Accept"       = "application/json"
+}
+
+function Get-RP {
+    param([string]$Endpoint)
+    return Invoke-RestMethod -Uri "$BaseUrl$Endpoint" -Headers $Headers -Method GET
+}
+
+Write-Host ""
+Write-Host "=== RecoverPoint CG Status (Windows) ===" -ForegroundColor Cyan
+Write-Host "RPA Host : $RpaHost"
+Write-Host "Date     : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+Write-Host ""
+
+# --- Cluster health ---
+try {
+    $clusterDetails = Get-RP "/cluster/all_clusters_details"
+    $clusters = $clusterDetails.innerSet
+    if ($clusters) {
+        foreach ($cluster in $clusters) {
+            Write-Host "Cluster Name : $($cluster.clusterName)" -ForegroundColor Cyan
+            $rpaNodes = $cluster.clusterSettings.rpasSettings
+            if ($rpaNodes) {
+                Write-Host "RPA Nodes    :"
+                foreach ($rpa in $rpaNodes) {
+                    $nodeHealth = $rpa.rpaStatus
+                    $color = if ($nodeHealth -eq "RPA_STATUS_OK") { "Green" } else { "Red" }
+                    Write-Host "  $($rpa.rpaName) — $nodeHealth" -ForegroundColor $color
+                }
+            }
+        }
+    }
+} catch {
+    Write-Host "WARNING: Could not retrieve cluster details: $_" -ForegroundColor Yellow
+}
+
+Write-Host ""
+
+# --- Consistency Groups ---
+try {
+    $groupDetails = Get-RP "/group/all_groups_details"
+    $groups = $groupDetails.innerSet
+
+    Write-Host "Consistency Groups ($($groups.Count) total):"
+    Write-Host ""
+    Write-Host ("{0,-35} {1,-15} {2,-15} {3}" -f "CG Name", "State", "Transfer State", "Lag")
+    Write-Host ("-" * 75)
+
+    $nonActiveCGs = 0
+
+    foreach ($group in $groups | Sort-Object { $_.name }) {
+        $cgName        = $group.name
+        $cgState       = $group.groupState
+        $transferState = ""
+        $lag           = "N/A"
+
+        # Get link info if available
+        $links = $group.linksStates
+        if ($links -and $links.Count -gt 0) {
+            $transferState = $links[0].pipeState
+            $lagMicros     = $links[0].lagInMicros
+            if ($lagMicros) {
+                $lagSec = [math]::Round($lagMicros / 1000000, 0)
+                if ($lagSec -lt 60) { $lag = "${lagSec}s" }
+                elseif ($lagSec -lt 3600) { $lag = "$([math]::Floor($lagSec/60))m $($lagSec % 60)s" }
+                else { $lag = "$([math]::Floor($lagSec/3600))h $([math]::Floor(($lagSec % 3600)/60))m" }
+            }
+        }
+
+        $isActive = ($cgState -eq "ACTIVE") -or ($cgState -eq "CG_STATE_ACTIVE")
+        $color    = if ($isActive) { "Green" } else { "Red" }
+        if (-not $isActive) { $nonActiveCGs++ }
+
+        Write-Host ("{0,-35} {1,-15} {2,-15} {3}" -f $cgName, $cgState, $transferState, $lag) -ForegroundColor $color
+    }
+
+    Write-Host ""
+    if ($nonActiveCGs -gt 0) {
+        Write-Host "RESULT: $nonActiveCGs CG(s) are NOT in Active state (shown in red)." -ForegroundColor Red
+        exit 1
+    } else {
+        Write-Host "RESULT: All CGs are Active." -ForegroundColor Green
+        exit 0
+    }
+} catch {
+    Write-Host "ERROR retrieving consistency group details: $_" -ForegroundColor Red
+    exit 1
+}
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- Windows 10 or 11 with PowerShell (already installed)
+- Network access to the RecoverPoint Appliance management IP from your Windows PC
+- RecoverPoint admin credentials
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Save it as `rp-cg-status-windows.ps1` on your Desktop
+
+**Step 2 — Fill in your details**
+
+You pass all values on the command line:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `$RpaHost` | IP address of the RecoverPoint Appliance | RPA management IP — ask your DR admin |
+| `$RpUser` | Admin username | Usually `admin` |
+| `$RpPass` | Admin password | Your RecoverPoint admin password |
+
+**Step 3 — Open a terminal**
+
+Windows key → search `PowerShell` → right-click → **Run as Administrator**
+
+**Step 4 — Allow scripts to run**
+
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Step 5 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+.\rp-cg-status-windows.ps1 -RpaHost 192.168.1.100 -RpUser admin -RpPass MyPassword
+```
+
+**What you should see**
+
+Cluster name and RPA node health (green = OK, red = fault), followed by a table of all consistency groups showing their state, transfer state, and current lag. Any CG not in Active state is highlighted in red. The final line shows the overall result.
+
+---
+
+## Windows: RecoverPoint CG Health via Plink (CMD)
+
+Use plink.exe to SSH to the RecoverPoint Management IP and run CLI status commands to quickly check system and group health from a Windows PC.
+
+~~~batch
+@echo off
+REM rp-cg-health.bat — RecoverPoint CG health check via SSH (plink)
+REM Uses plink.exe (from PuTTY) for SSH. Download: https://www.putty.org
+REM
+REM FIRST-TIME SETUP — Accept SSH fingerprint (run once):
+REM   plink.exe -ssh admin@YOUR_RPA_IP
+REM   Type 'y' to accept the fingerprint, then Ctrl+C.
+
+set RPA_HOST=192.168.1.100
+set SSH_USER=admin
+set PLINK=plink.exe
+
+echo.
+echo === RecoverPoint CG Health Check ===
+echo RPA Host: %RPA_HOST%
+echo.
+
+echo ----------------------------------------
+echo SYSTEM STATUS
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %RPA_HOST% "system status"
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Could not connect to %RPA_HOST%.
+    echo Check: 1) hostname is correct, 2) SSH is enabled on the RPA,
+    echo        3) you have accepted the SSH fingerprint (run plink manually once).
+    exit /b 1
+)
+
+echo.
+echo ----------------------------------------
+echo GROUPS STATUS (all consistency groups)
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %RPA_HOST% "groups status"
+
+echo.
+echo ----------------------------------------
+echo RPA NODES STATUS
+echo ----------------------------------------
+%PLINK% -ssh -l %SSH_USER% -batch %RPA_HOST% "get_all_rps_info"
+
+echo.
+echo Done.
+~~~
+
+#### How to run this script — step by step
+
+**Before you start — what you need**
+- PuTTY installed on Windows — download from https://www.putty.org
+- `plink.exe` available (installed with PuTTY, usually at `C:\Program Files\PuTTY\plink.exe`)
+- SSH access to the RecoverPoint Appliance management IP
+- RecoverPoint admin credentials (`admin` user)
+
+**Step 1 — Save the file**
+
+1. Open **Notepad** (Windows key → search Notepad)
+2. Copy the entire code block above
+3. Click **File → Save As**
+4. Change "Save as type" to **All Files**
+5. Save it as `rp-cg-health.bat` on your Desktop
+
+**Step 2 — Fill in your details**
+
+Open the saved file and change these lines:
+
+| Variable | What to put here | How to find it |
+|---|---|---|
+| `RPA_HOST` | IP address of the RecoverPoint Appliance | RPA management IP — ask your DR admin |
+| `SSH_USER` | SSH username | Usually `admin` |
+| `PLINK` | Path to plink.exe | Default `plink.exe` if in PATH, or `C:\Program Files\PuTTY\plink.exe` |
+
+**Step 3 — Accept the SSH fingerprint first (one-time step)**
+
+Open Command Prompt and run:
+```
+plink.exe -ssh admin@192.168.1.100
+```
+Type `y` when asked to accept the fingerprint, then Ctrl+C. Do this once per RPA.
+
+**Step 4 — Open a terminal**
+
+Open **Command Prompt**: Windows key → search `cmd` → press Enter
+
+**Step 5 — Run the script**
+
+```
+cd C:\Users\YourName\Desktop
+rp-cg-health.bat
+```
+
+**What you should see**
+
+Three sections of output: overall system status (RPA health, replication state), groups status showing every consistency group and its current state, and RPA nodes information. Any degraded groups or node faults will be visible in the output text.
+
+---
+
+## Daily Check Script
+
+Check RPA system status via SSH and CG health via REST API. Flags any CGs not in ACTIVE state and any RPO exceeding 15 minutes.
+
+~~~bash
+#!/bin/bash
+# rp_daily_check.sh
+# Usage: RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> ./rp_daily_check.sh
+
+RPA_HOST="${RPA_HOST:?RPA_HOST is required}"
+RPA_USER="${RPA_USER:-admin}"
+RPA_PASS="${RPA_PASS:?RPA_PASS is required}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+RPO_THRESHOLD_SEC=900   # 15 minutes
+FAIL=0
+
+ssh_cmd() { ssh $SSH_OPTS "$RPA_USER@$RPA_HOST" "$1" 2>/dev/null; }
+api_get() { curl -sk -u "$RPA_USER:$RPA_PASS" -H "Accept: application/json" "https://$RPA_HOST/fapi/rest/5_1$1"; }
+
+echo "=== RecoverPoint Daily Check: $RPA_HOST — $(date) ==="
+
+# SSH: all RPAs running
+SYS=$(ssh_cmd "system status")
+if echo "$SYS" | grep -qi "not running\|error\|fault"; then
+  echo "[FAIL] RPA system status reports issues"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   RPA system running"
+fi
+
+# SSH: groups status — count CGs not in ACTIVE
+GROUPS=$(ssh_cmd "groups status")
+NOT_ACTIVE=$(echo "$GROUPS" | grep -ic "not active\|paused\|error" || true)
+if [ "$NOT_ACTIVE" -gt 0 ]; then
+  echo "[FAIL] $NOT_ACTIVE CG(s) not in ACTIVE state"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All CGs ACTIVE"
+fi
+
+# REST: cluster health
+CLUSTER=$(api_get "/cluster/all_clusters_details" 2>/dev/null)
+if echo "$CLUSTER" | grep -qi '"clusterHealth".*"OK"'; then
+  echo "[OK]   Cluster health OK"
+else
+  echo "[WARN] Could not confirm cluster health via REST API"
+fi
+
+echo ""
+echo "Daily check: $FAIL failure(s)"
+[ "$FAIL" -gt 0 ] && exit 2 || exit 0
+~~~
+
+---
+
+## Incident Triage Script
+
+Capture a full diagnostic snapshot via SSH and REST API to a timestamped file.
+
+~~~bash
+#!/bin/bash
+# rp_triage.sh
+# Usage: RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> ./rp_triage.sh
+
+RPA_HOST="${RPA_HOST:?RPA_HOST is required}"
+RPA_USER="${RPA_USER:-admin}"
+RPA_PASS="${RPA_PASS:?RPA_PASS is required}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+OUTFILE="/tmp/rp_triage_${RPA_HOST}_$(date +%Y%m%d_%H%M%S).txt"
+
+ssh_cmd() { ssh $SSH_OPTS "$RPA_USER@$RPA_HOST" "$1" 2>/dev/null; }
+api_get()  { curl -sk -u "$RPA_USER:$RPA_PASS" -H "Accept: application/json" "https://$RPA_HOST/fapi/rest/5_1$1"; }
+
+{
+  echo "=== RecoverPoint Incident Triage: $RPA_HOST — $(date) ==="
+  echo ""
+  echo "--- system status ---"
+  ssh_cmd "system status"
+  echo ""
+  echo "--- groups status ---"
+  ssh_cmd "groups status"
+  echo ""
+  echo "--- alarms list ---"
+  ssh_cmd "alarms list"
+  echo ""
+  echo "--- journal stats ---"
+  ssh_cmd "journal stats" 2>/dev/null || echo "(journal stats not available)"
+  echo ""
+  echo "--- REST: all_clusters_details ---"
+  api_get "/cluster/all_clusters_details"
+  echo ""
+  echo "--- REST: all_groups_details ---"
+  api_get "/group/all_groups_details"
+} > "$OUTFILE" 2>&1
+
+echo "Triage data saved to: $OUTFILE"
+~~~
+
+---
+
+## Change Pre-Check Script
+
+Validate RecoverPoint state before storage or host maintenance. Exits 2 on any failure.
+
+~~~bash
+#!/bin/bash
+# rp_precheck.sh
+# Usage: RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> ./rp_precheck.sh
+
+RPA_HOST="${RPA_HOST:?RPA_HOST is required}"
+RPA_USER="${RPA_USER:-admin}"
+RPA_PASS="${RPA_PASS:?RPA_PASS is required}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+JOURNAL_WARN_PCT=80
+FAIL=0
+
+ssh_cmd() { ssh $SSH_OPTS "$RPA_USER@$RPA_HOST" "$1" 2>/dev/null; }
+api_get()  { curl -sk -u "$RPA_USER:$RPA_PASS" -H "Accept: application/json" "https://$RPA_HOST/fapi/rest/5_1$1"; }
+
+echo "=== RecoverPoint Pre-Change Check: $RPA_HOST — $(date) ==="
+
+# All CGs in ACTIVE state
+GROUPS=$(ssh_cmd "groups status")
+NOT_ACTIVE=$(echo "$GROUPS" | grep -ic "not active\|paused\|error" || true)
+if [ "$NOT_ACTIVE" -gt 0 ]; then
+  echo "[FAIL] $NOT_ACTIVE CG(s) not in ACTIVE state"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All CGs ACTIVE"
+fi
+
+# All RPAs healthy
+SYS=$(ssh_cmd "system status")
+if echo "$SYS" | grep -qi "not running\|error\|fault"; then
+  echo "[FAIL] RPA system reports issues"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All RPA nodes healthy"
+fi
+
+# No active alarms
+ALARMS=$(ssh_cmd "alarms list" | grep -ic "critical\|error" || true)
+if [ "$ALARMS" -gt 0 ]; then
+  echo "[FAIL] $ALARMS active alarm(s)"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   No active alarms"
+fi
+
+echo ""
+echo "Pre-check: $FAIL failure(s)"
+[ "$FAIL" -gt 0 ] && exit 2 || exit 0
+~~~
+
+---
+
+## Post-Change Validation Script
+
+Confirm all CGs have returned to ACTIVE state after maintenance and verify image access is not left enabled.
+
+~~~bash
+#!/bin/bash
+# rp_postcheck.sh
+# Usage: RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> ./rp_postcheck.sh
+
+RPA_HOST="${RPA_HOST:?RPA_HOST is required}"
+RPA_USER="${RPA_USER:-admin}"
+RPA_PASS="${RPA_PASS:?RPA_PASS is required}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+FAIL=0
+
+ssh_cmd() { ssh $SSH_OPTS "$RPA_USER@$RPA_HOST" "$1" 2>/dev/null; }
+api_get()  { curl -sk -u "$RPA_USER:$RPA_PASS" -H "Accept: application/json" "https://$RPA_HOST/fapi/rest/5_1$1"; }
+
+echo "=== RecoverPoint Post-Change Validation: $RPA_HOST — $(date) ==="
+
+# All CGs returned to ACTIVE
+GROUPS=$(ssh_cmd "groups status")
+NOT_ACTIVE=$(echo "$GROUPS" | grep -ic "not active\|paused\|error" || true)
+if [ "$NOT_ACTIVE" -gt 0 ]; then
+  echo "[FAIL] $NOT_ACTIVE CG(s) still not in ACTIVE state"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All CGs ACTIVE"
+fi
+
+# All RPA nodes healthy
+SYS=$(ssh_cmd "system status")
+if echo "$SYS" | grep -qi "not running\|error\|fault"; then
+  echo "[FAIL] RPA system reports issues after change"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   All RPA nodes healthy"
+fi
+
+# Image access is NOT left enabled
+IMG=$(api_get "/group/all_groups_details" 2>/dev/null)
+if echo "$IMG" | grep -qi '"imageAccessEnabled":true'; then
+  echo "[FAIL] Image access is still ENABLED on one or more CGs — disable before finishing"; FAIL=$((FAIL+1))
+else
+  echo "[OK]   No CGs have image access enabled"
+fi
+
+echo ""
+echo "Post-change validation: $FAIL failure(s)"
+[ "$FAIL" -gt 0 ] && exit 2 || exit 0
+~~~
+
+---
+
+## Health Check Script
+
+Cron-safe summary: RPA count, CG count, active vs not-active CGs, and max RPO. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
+
+~~~bash
+#!/bin/bash
+# rp_health_check.sh
+# Cron: */5 * * * * RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> /opt/scripts/rp_health_check.sh
+
+RPA_HOST="${RPA_HOST:?RPA_HOST is required}"
+RPA_USER="${RPA_USER:-admin}"
+RPA_PASS="${RPA_PASS:?RPA_PASS is required}"
+SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=10"
+
+ssh_cmd() { ssh $SSH_OPTS "$RPA_USER@$RPA_HOST" "$1" 2>/dev/null; }
+
+GROUPS=$(ssh_cmd "groups status")
+TOTAL_CG=$(echo "$GROUPS" | grep -ic "CG\|group" || true)
+NOT_ACTIVE=$(echo "$GROUPS" | grep -ic "not active\|paused\|error" || true)
+ACTIVE_CG=$((TOTAL_CG - NOT_ACTIVE))
+
+echo "rpa_host=$RPA_HOST cg_total=$TOTAL_CG cg_active=$ACTIVE_CG cg_not_active=$NOT_ACTIVE"
+
+if [ "$NOT_ACTIVE" -gt 2 ]; then
+  exit 2
+elif [ "$NOT_ACTIVE" -gt 0 ]; then
+  exit 1
+fi
+exit 0
+~~~

@@ -1,43 +1,20 @@
-# Troubleshooting
-## Purpose
+# RASR — Troubleshooting
 
-Use this page for practical RASR Troubleshooting notes, checks, troubleshooting, commands, change notes, and field references.
+<div class="kb-grid kb-grid-3">
 
-## Common checks
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>Known issues and resolution steps for RASR.</span>
+</a>
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Log analysis, diagnostic commands, and incident capture.</span>
+</a>
 
-## Incident notes
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>Vendor support process and escalation procedures.</span>
+</a>
 
-Capture:
-
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
-
-## Change notes
-
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
-
-## Useful commands
-
-Add tested commands here.
-
-## Known issues
-
-Add known issues here as they come up.
+</div>

@@ -1,30 +1,25 @@
 # Jira
 
-<div class="kb-summary">
-Jira knowledge base articles, operational procedures, troubleshooting notes, and command references.
-</div>
-
-## Articles
-
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="boards/">
-  <strong>Boards</strong>
-  <span>Boards notes, procedures, checks, and references.</span>
+
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Overview, project structure, integrations, and standards.</span>
 </a>
-<a class="kb-card" href="projects/">
-  <strong>Projects</strong>
-  <span>Projects notes, procedures, checks, and references.</span>
+
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Issue management, reporting, and workflow procedures.</span>
 </a>
-<a class="kb-card" href="reporting/">
-  <strong>Reporting</strong>
-  <span>Reporting notes, procedures, checks, and references.</span>
+
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>Authentication, permissions, and hardening.</span>
 </a>
-<a class="kb-card" href="stories/">
-  <strong>Stories</strong>
-  <span>Stories notes, procedures, checks, and references.</span>
+
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostics, and escalation.</span>
 </a>
-<a class="kb-card" href="tasks/">
-  <strong>Tasks</strong>
-  <span>Tasks notes, procedures, checks, and references.</span>
-</a>
+
 </div>

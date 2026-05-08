@@ -213,3 +213,138 @@ if (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -N
 | No System errors (24h) | `Get-WinEvent` | 0 critical errors |
 | Network adapters up | `Get-NetAdapter` | All status = Up |
 | Pending reboot | Registry check | $false |
+
+## Event Logs
+
+| Log | Path | Content |
+|---|---|---|
+| System | `System` | OS events, driver failures, service stops, hardware |
+| Application | `Application` | App errors, .NET exceptions, SQL, IIS |
+| Security | `Security` | Authentication, account management, privilege use |
+| Setup | `Setup` | Windows Update, component installs |
+| Windows PowerShell | `Windows PowerShell` | PS script execution |
+| Sysmon | `Microsoft-Windows-Sysmon/Operational` | Process creation, network, file events (if deployed) |
+
+### Get-WinEvent — Common Queries
+
+```powershell
+# Errors in System log — last 24 hours
+Get-WinEvent -FilterHashtable @{
+    LogName   = 'System'
+    Level     = 2
+    StartTime = (Get-Date).AddHours(-24)
+} | Select-Object TimeCreated, Id, Message | Format-List
+
+# Application errors — last 6 hours
+Get-WinEvent -FilterHashtable @{
+    LogName   = 'Application'
+    Level     = 2
+    StartTime = (Get-Date).AddHours(-6)
+} | Select-Object -First 20 TimeCreated, Id, Message
+
+# Security log — failed logons (Event ID 4625)
+Get-WinEvent -FilterHashtable @{
+    LogName   = 'Security'
+    Id        = 4625
+    StartTime = (Get-Date).AddHours(-24)
+} | Select-Object TimeCreated, Message | Select-Object -First 20
+```
+
+### Key Security Event IDs
+
+| Event ID | Description |
+|---|---|
+| 4624 | Successful logon |
+| 4625 | Failed logon |
+| 4634 | Logoff |
+| 4688 | Process creation |
+| 4720 | User account created |
+| 4740 | Account locked out |
+| 7036 | Service started or stopped |
+| 41 | Kernel power — unexpected reboot |
+| 6008 | Unexpected shutdown |
+
+### Log Size and Retention
+
+```powershell
+# Check current log sizes and limits
+Get-WinEvent -ListLog System, Application, Security |
+    Select-Object LogName, MaximumSizeInBytes,
+        @{N="CurrentSizeMB"; E={ [math]::Round($_.FileSize/1MB,1) }},
+        LogMode
+
+# Set max size (e.g., Security log to 1 GB)
+wevtutil sl Security /ms:1073741824
+```
+
+## Performance
+
+### Quick Performance Snapshot
+
+```powershell
+# CPU usage (5-sample average)
+$cpu = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 2 -MaxSamples 5
+[math]::Round(($cpu.CounterSamples.CookedValue | Measure-Object -Average).Average, 1)
+
+# Memory
+$os = Get-CimInstance Win32_OperatingSystem
+[PSCustomObject]@{
+    TotalGB   = [math]::Round($os.TotalVisibleMemorySize/1MB, 1)
+    FreeGB    = [math]::Round($os.FreePhysicalMemory/1MB, 1)
+    UsedPct   = [math]::Round(($os.TotalVisibleMemorySize - $os.FreePhysicalMemory)/$os.TotalVisibleMemorySize*100, 1)
+}
+
+# Top processes by CPU
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, Id,
+    @{N="CPU%"; E={ [math]::Round($_.CPU, 1) }}, WorkingSet
+
+# Top processes by memory
+Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 10 Name, Id,
+    @{N="MemMB"; E={ [math]::Round($_.WorkingSet/1MB, 1) }}
+```
+
+### Performance Thresholds
+
+| Counter | Warning | Critical |
+|---|---|---|
+| CPU % Processor Time | > 70% sustained | > 90% sustained |
+| Memory Available MB | < 20% of total | < 10% of total |
+| Pages/sec | > 100/sec | > 1,000/sec |
+| Disk Avg. sec/Transfer | > 15 ms | > 25 ms |
+| Disk % Disk Time | > 80% | > 95% |
+| Network % Bandwidth | > 70% | > 90% |
+
+### Performance Counters
+
+```powershell
+# CPU — sustained above 85% = problem
+Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 5 -MaxSamples 12 |
+    ForEach-Object { $_.CounterSamples | Select-Object Path, CookedValue }
+
+# Memory — pages/sec above 1000 sustained = memory pressure
+Get-Counter '\Memory\Pages/sec', '\Memory\Available MBytes' -SampleInterval 5 -MaxSamples 6
+
+# Disk — latency above 20ms = problem
+Get-Counter '\PhysicalDisk(*)\Avg. Disk sec/Transfer' -SampleInterval 2 -MaxSamples 5
+
+# Network — throughput and errors
+Get-Counter '\Network Interface(*)\Bytes Total/sec', '\Network Interface(*)\Packets Received Errors'
+```
+
+### Data Collector Sets (PerfMon)
+
+```powershell
+# Create a data collector set from command line
+logman create counter "PerfBaseline" ^
+    -c "\Processor(_Total)\% Processor Time" ^
+       "\Memory\Available MBytes" ^
+       "\PhysicalDisk(*)\Avg. Disk sec/Transfer" ^
+       "\Network Interface(*)\Bytes Total/sec" ^
+    -si 00:00:05 ^
+    -f bincirc ^
+    -max 500 ^
+    -o C:\PerfLogs\baseline
+
+logman start PerfBaseline
+logman stop PerfBaseline
+```

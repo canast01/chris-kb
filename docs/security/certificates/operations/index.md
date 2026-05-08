@@ -1,19 +1,35 @@
-# Certificates Operations
+# Certificates — Operations
 
-Weekly operations include reviewing the certificate expiry dashboard for certificates expiring within 30, 60, and 90 days, checking CRL and OCSP responder availability for all CAs, verifying CA service health (for ADCS: check Certificate Services in Server Manager and confirm the service is running), and confirming auto-renewal jobs completed successfully. Monthly, audit newly issued certificates against naming and validity standards.
+<div class="kb-grid kb-grid-3">
 
-OCSP and CRL freshness must be checked proactively — a stale CRL can cause widespread certificate validation failures across services that depend on it.
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Command reference for certificate management and TLS testing.</span>
+</a>
 
-**Weekly checklist:**
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Expiration monitoring, CRL freshness, and CA health checks.</span>
+</a>
 
-- [ ] Review expiry dashboard — 30 / 60 / 90-day buckets
-- [ ] Check CRL freshness and OCSP responder health for each CA
-- [ ] Verify ADCS Certificate Services is running (`Get-Service -Name CertSvc`)
-- [ ] Confirm auto-renewal jobs (Venafi / ACME) completed without error
-- [ ] Review any newly discovered unmanaged certificates
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Renewal, inventory, and TLS validation procedures.</span>
+</a>
 
-**Monthly checklist:**
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>Certificate lifecycle, CSR generation, issuance, and revocation.</span>
+</a>
 
-- [ ] Audit newly issued certificates against naming and validity standards
-- [ ] Review wildcard certificate usage
-- [ ] Confirm CA certificate expiry dates and plan renewals if within 6 months
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>CA backup procedures and key recovery workflows.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for expiry scanning, TLS checks, and CRL monitoring.</span>
+</a>
+
+</div>

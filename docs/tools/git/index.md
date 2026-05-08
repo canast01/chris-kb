@@ -1,34 +1,25 @@
 # Git
 
-<div class="kb-summary">
-Git knowledge base articles, operational procedures, troubleshooting notes, and command references.
+<div class="kb-grid kb-grid-3">
 
-<a class="kb-card" href="branches/">
-  <strong>Branches</strong>
-  <span>Branches notes, checks, commands, and references.</span>
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Overview, repository structure, integrations, and standards.</span>
 </a>
 
-<a class="kb-card" href="commits/">
-  <strong>Commits</strong>
-  <span>Commits notes, checks, commands, and references.</span>
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>CLI reference, branching, recovery, and maintenance.</span>
 </a>
 
-<a class="kb-card" href="recovery/">
-  <strong>Recovery</strong>
-  <span>Recovery procedures and validation.</span>
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>Authentication, access control, and hardening.</span>
 </a>
 
-<a class="kb-card" href="repos/">
-  <strong>Repos</strong>
-  <span>Repos notes, checks, commands, and references.</span>
-</a>
-</div>
-
-<div class="kb-grid kb-grid-1">
-
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>init, clone, branch, commit, push, pull, merge, rebase, stash, and tags.</span>
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostics, and escalation.</span>
 </a>
 
 </div>

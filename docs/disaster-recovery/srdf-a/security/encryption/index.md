@@ -1,0 +1,29 @@
+# SRDF/A — Encryption
+
+> Part of the [SRDF/A](../../) reference.
+
+---
+
+## Encryption In-Flight
+
+SRDF/E (SRDF Encryption) encrypts data over FCIP using AES-256. Verify per SRDF group:
+
+```bash
+symcfg list -rdfg -v | grep -i encrypt
+# Output should show: Encryption: Enabled
+```
+
+Enable SRDF/E on an existing SRDF group:
+
+```bash
+symrdf -g <rdfg> set encrypt enable
+symcfg list -rdfg <rdfg> -v        # Verify Encryption: Enabled
+```
+
+---
+
+## Notes
+
+- SRDF/E applies to data transmitted over FCIP links; dark fibre (native FC) does not traverse the WAN and does not require SRDF/E, though physical security of the fibre path should be assured.
+- Enabling encryption on a live SRDF group requires no downtime but may briefly increase CPU overhead on the SRDF directors.
+- Verify encryption status after any firmware upgrade or RDF group reconfiguration.

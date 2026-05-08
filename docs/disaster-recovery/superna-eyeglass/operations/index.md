@@ -1,19 +1,35 @@
-# Superna Eyeglass Operations
+# Superna Eyeglass — Operations
 
-Daily operations focus on the Eyeglass dashboard: check SyncIQ policy health (all policies in a healthy replication state), verify RPO compliance per policy (confirm replication lag is within defined thresholds), review the overall DR readiness score, confirm DNS sync status is current, and check quota policy sync status. Any policies showing degraded or failed state require immediate investigation.
+<div class="kb-grid kb-grid-3">
 
-Weekly operations include running the Eyeglass DR readiness report to confirm all shares, quotas, and DNS mappings are synchronised and the environment is ready for a failover if needed.
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>igls CLI, REST API, failover, failback, sync status, and OneFS SyncIQ commands.</span>
+</a>
 
-**Daily checklist:**
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily and weekly checklists, appliance health, SyncIQ status, and DR validation.</span>
+</a>
 
-- [ ] Eyeglass dashboard — all SyncIQ policies healthy (green)
-- [ ] RPO compliance per policy — no policies exceeding RPO threshold
-- [ ] DR readiness score — confirm at expected level (target: 100%)
-- [ ] DNS sync status — all zones synchronised
-- [ ] Quota policy sync status — no mismatches flagged
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Failover, failback, DNS cutover, and day-to-day operational procedures.</span>
+</a>
 
-**Weekly checklist:**
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Version compatibility, upgrade process, OneFS impact, EOL tracking, and licensing.</span>
+</a>
 
-- [ ] Run DR readiness report from Eyeglass UI
-- [ ] Review any share or quota mapping drift
-- [ ] Confirm Eyeglass-to-OneFS API connectivity on both sites
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Appliance configuration backup and restore procedures.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for health checks, RPO reporting, and failover validation.</span>
+</a>
+
+</div>

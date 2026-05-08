@@ -1,18 +1,35 @@
-# Venafi Operations
+# Venafi — Operations
 
-Daily operations centre on the Venafi Policy Server dashboard: review certificates expiring within 30, 60, and 90-day buckets, check for failed renewal jobs, review discovery scan results for newly found unmanaged certificates, confirm no policy violations exist, and verify CA connectivity health for each integrated CA. Certificate counts by state (active, expiring, expired, revoked) should be trended over time.
+<div class="kb-grid kb-grid-3">
 
-Weekly tasks include reviewing orphaned or unmanaged certificates surfaced by Edge Proxy discovery scans and assigning them to appropriate policy folders or scheduling revocation.
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>vcert CLI, TPP REST API, and certificate command reference.</span>
+</a>
 
-**Daily checklist:**
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily checks, certificate inventory, and CA connectivity verification.</span>
+</a>
 
-- [ ] Review expiring certificates (30 / 60 / 90-day buckets)
-- [ ] Check failed renewal jobs — investigate and re-trigger as needed
-- [ ] Review discovery scan results for new unmanaged certificates
-- [ ] Confirm no active policy violations
-- [ ] Verify CA connectivity health (ADCS, DigiCert, Entrust)
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Certificate renewal, automation, and reporting procedures.</span>
+</a>
 
-**Weekly checklist:**
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install &amp; Upgrade</strong>
+  <span>TPP upgrade procedure, compatibility matrix, and VaaS migration.</span>
+</a>
 
-- [ ] Review orphaned and unmanaged certificate report
-- [ ] Assign discovered certificates to policy folders or schedule revocation
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup &amp; Restore</strong>
+  <span>TPP database backup procedures and restore workflows.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for expiry reporting, renewal, and compliance.</span>
+</a>
+
+</div>

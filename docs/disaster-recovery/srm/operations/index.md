@@ -1,18 +1,35 @@
-# SRM Operations
+# SRM — Operations
 
-Weekly SRM operations focus on validating protection group health, confirming SRA connectivity, and ensuring recovery plans remain executable. All protection groups must show `OK` status; any group in `Not Ready` or `Error` state must be investigated and resolved before the end of the business day. Quarterly test failovers validate the full recovery plan workflow and must be completed in isolated network segments to avoid impacting production.
+<div class="kb-grid kb-grid-3">
 
-**Weekly checks:**
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>PowerCLI cmdlets and REST API commands for SRM management.</span>
+</a>
 
-| Check | Location / Command | Expected State |
-|---|---|---|
-| Protection group status | SRM UI → Protection Groups | All groups `OK` |
-| SRA connectivity | SRM UI → Array Managers | Connection `Connected` |
-| vSphere Replication health | vSphere Replication UI → Monitor | No replication errors |
-| Recovery plan status | SRM UI → Recovery Plans | All plans `Ready` |
-| Failed protection jobs | SRM UI → Tasks & Events | No failed jobs in last 7 days |
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Weekly and quarterly checks for protection groups, SRA, and recovery plans.</span>
+</a>
 
-**Quarterly:**
-- Execute test failover on at least one non-critical recovery plan.
-- Document results and resolve any script or network mapping failures.
-- Confirm SRA version compatibility with current array firmware.
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Recovery plans, test failover, planned migration, and cleanup runbooks.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Version compatibility, upgrade sequence, licensing, and EOL tracking.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>SRM configuration backup and restore procedures.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for health checks, test failover, and recovery reporting.</span>
+</a>
+
+</div>

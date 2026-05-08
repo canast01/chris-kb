@@ -1,0 +1,40 @@
+# Certificates — Encryption
+
+## CA Key Protection
+
+Root CA and Issuing CA private keys must be protected by HSMs — software-only key storage is not acceptable for CA keys.
+
+| CA Tier | Key Storage Requirement | Online Status |
+|---|---|---|
+| Root CA | HSM (FIPS 140-2 Level 3 minimum) | Offline / air-gapped |
+| Issuing CA | HSM or TPM-backed key | Online — issues end-entity certs |
+| End-entity cert | Software key acceptable | Per-application |
+
+```powershell
+# Verify ADCS CA uses HSM-backed key (look for CSP = Microsoft Smart Card or nCipher)
+certutil -getreg CA\CSP\Provider
+# Desired: hardware CSP listed (e.g., "nFast RSA and DH" or "SafeNet")
+
+# Check CA key protection on the issuing CA
+certutil -store My | findstr /i "provider\|key"
+```
+
+## CRL Availability
+
+CRL Distribution Points must remain highly available — unavailability can cause soft-fail clients to proceed with revoked certificates.
+
+```bash
+# Test CRL download
+curl -I http://crl.corp.local/IssuingCA.crl
+# Verify: HTTP 200, Content-Type: application/pkix-crl
+
+# Check CRL freshness (nextUpdate)
+openssl crl -in IssuingCA.crl -inform DER -noout -text | grep "Next Update"
+# CRL should be published at least 2x before expiry (overlap period)
+```
+
+```powershell
+# Monitor CRL validity from ADCS CA
+Get-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\CertSvc\Configuration\IssuingCA" |
+    Select-Object CRLPeriodUnits, CRLPeriod, CRLDeltaPeriodUnits, CRLDeltaPeriod
+```
