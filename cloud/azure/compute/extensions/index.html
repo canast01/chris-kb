@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#vm-extension-deployment-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Extension Deployment Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#extension-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -816,6 +827,20 @@
 <h1 id="vm-extensions">VM Extensions<a class="headerlink" href="#vm-extensions" title="Permanent link">&para;</a></h1>
 <p>Azure VM Extensions are small applications that perform post-deployment configuration and automation tasks on Azure VMs. They are managed by the Azure VM Agent and can be deployed at VM creation time or added afterward.</p>
 <hr />
+<h2 id="vm-extension-deployment-model">VM Extension Deployment Model<a class="headerlink" href="#vm-extension-deployment-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    arm["ARM Deployment\nor Azure Portal / CLI"]
+    vmAgent["Azure VM Agent\n(waagent / WindowsAzureGuestAgent)"]
+    subgraph extensions["Common Extensions"]
+        monitorAgent["Azure Monitor Agent\nmetrics · logs collection"]
+        defenderExt["Microsoft Defender\nendpoint protection"]
+        dscExt["DSC Extension\ndesired state config"]
+        customScript["Custom Script Extension\nrun scripts post-deploy"]
+        diagExt["Diagnostics Extension\nboot diagnostics · perf counters"]
+    end
+    status["Extension Status\nSucceeded · Failed · Transitioning"]
+
+    arm --&gt; vmAgent --&gt; extensions --&gt; status</code></pre>
 <h2 id="extension-architecture">Extension Architecture<a class="headerlink" href="#extension-architecture" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

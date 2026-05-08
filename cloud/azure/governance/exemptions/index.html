@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#exemption-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemption Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-exemptions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -799,6 +810,23 @@
 
 <h1 id="policy-exemptions">Policy Exemptions<a class="headerlink" href="#policy-exemptions" title="Permanent link">&para;</a></h1>
 <p>Policy exemptions allow specific resources, resource groups, or subscriptions to be excluded from policy evaluation. Exemptions are preferred over assignment exclusions because they are auditable, time-bound, and can be reviewed independently.</p>
+<h2 id="exemption-decision-flow">Exemption Decision Flow<a class="headerlink" href="#exemption-decision-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    nonCompliant["Non-compliant Resource\nidentified by policy"]
+    review{"Can resource\nbe remediated?"}
+    remediate["Remediate\nfix resource config"]
+    compliant["Compliant\n✓"]
+    justification{"Exemption\njustified?"}
+    waiver["Waiver Category\nknown non-compliance"]
+    mitigated["Mitigated Category\nalternative control in place"]
+    exempt["Create Exemption\ntime-bound · documented"]
+    noAction["Accept Risk\ndocument decision"]
+
+    nonCompliant --&gt; review
+    review -- Yes --&gt; remediate --&gt; compliant
+    review -- No --&gt; justification
+    justification -- Yes --&gt; waiver &amp; mitigated --&gt; exempt
+    justification -- No --&gt; noAction</code></pre>
 <h2 id="creating-exemptions">Creating Exemptions<a class="headerlink" href="#creating-exemptions" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create an exemption for a specific resource</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>policy<span class="w"> </span>exemption<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

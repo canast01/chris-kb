@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#reservation-discount-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reservation Discount Application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ri-purchasing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -816,6 +827,21 @@
 
 <h1 id="reservations">Reservations<a class="headerlink" href="#reservations" title="Permanent link">&para;</a></h1>
 <p>Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-as-you-go pricing in exchange for a 1-year or 3-year commitment. Reservations apply to VMs, SQL Databases, Cosmos DB, Storage, and other services.</p>
+<h2 id="reservation-discount-application">Reservation Discount Application<a class="headerlink" href="#reservation-discount-application" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    purchase["Purchase Reservation\n1-yr or 3-yr commitment"]
+    scope{"Scope"}
+    shared["Shared Scope\napplies across all subscriptions"]
+    single["Single Subscription Scope\napplies to one subscription"]
+    rgScope["Resource Group Scope\nnarrowest"]
+    usage["Matching Resource Usage\nsame SKU · region · OS"]
+    discount["Reservation Discount Applied\n(automatic — no action needed)"]
+    unused["Unused Capacity\nno refund — choose carefully"]
+
+    purchase --&gt; scope
+    scope --&gt; shared &amp; single &amp; rgScope
+    shared &amp; single &amp; rgScope --&gt; usage --&gt; discount
+    usage --&gt;|"hours not consumed"| unused</code></pre>
 <h2 id="ri-purchasing">RI Purchasing<a class="headerlink" href="#ri-purchasing" title="Permanent link">&para;</a></h2>
 <p>Reservations are purchased at the billing account or subscription level. The reservation scope determines which subscriptions benefit from the discount.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List available reservation orders</span>

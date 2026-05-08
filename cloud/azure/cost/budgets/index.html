@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#budget-alert-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budget Alert Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-a-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -799,6 +810,22 @@
 
 <h1 id="budgets">Budgets<a class="headerlink" href="#budgets" title="Permanent link">&para;</a></h1>
 <p>Azure Cost Management budgets let you set spending thresholds and trigger alerts or automated actions when spending approaches or exceeds those thresholds. Budgets are scoped to a management group, subscription, or resource group.</p>
+<h2 id="budget-alert-flow">Budget Alert Flow<a class="headerlink" href="#budget-alert-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    budget["Budget\n(subscription / RG scope)"]
+    forecastActual["Actual or Forecast Spend"]
+    threshold1{"Exceeds\n80% threshold?"}
+    threshold2{"Exceeds\n100% threshold?"}
+    alert80["Alert Notification\nemail · action group"]
+    alert100["Alert Notification\n100% budget reached"]
+    actionGroup["Action Group\nLogic App · webhook · ITSM"]
+
+    budget --&gt; forecastActual
+    forecastActual --&gt; threshold1
+    threshold1 -- Yes --&gt; alert80 --&gt; actionGroup
+    threshold1 -- No --&gt; threshold2
+    threshold2 -- Yes --&gt; alert100 --&gt; actionGroup
+    threshold2 -- No --&gt; forecastActual</code></pre>
 <h2 id="creating-a-budget">Creating a Budget<a class="headerlink" href="#creating-a-budget" title="Permanent link">&para;</a></h2>
 <p>Budgets are created with the <code>az costmanagement budget create</code> command. You define the amount, time grain, start/end dates, and notification rules in one call.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a monthly subscription-level budget with email alert at 80% and 100%</span>

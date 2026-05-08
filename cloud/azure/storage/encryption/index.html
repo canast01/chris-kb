@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#storage-encryption-key-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Encryption Key Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#encryption-key-options" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,21 @@
 <h1 id="azure-storage-encryption">Azure Storage Encryption<a class="headerlink" href="#azure-storage-encryption" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>All Azure Storage data is encrypted at rest by default using Storage Service Encryption (SSE). Encryption uses AES-256 and is transparent to applications. Key management options include Platform-Managed Keys (PMK), Customer-Managed Keys (CMK) via Azure Key Vault, and Customer-Provided Keys (CPK) for per-request encryption.</p>
+<h2 id="storage-encryption-key-model">Storage Encryption Key Model<a class="headerlink" href="#storage-encryption-key-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    data["Data\nblobs · files · disks"]
+    sse["SSE — AES-256\ntransparent encryption"]
+    subgraph keyMgmt["Key Management Options"]
+        pmk["PMK\nMicrosoft-managed\n(default)"]
+        cmk["CMK\nCustomer-managed\nvia Key Vault"]
+        cpk["CPK\nCustomer-provided\nper-request"]
+    end
+    kv["Azure Key Vault\nHSM-backed keys · RBAC"]
+    storage["Encrypted at Rest\nStorage Account"]
+
+    data --&gt; sse --&gt; storage
+    cmk --&gt; kv
+    sse --&gt; pmk &amp; cmk &amp; cpk</code></pre>
 <h2 id="encryption-key-options">Encryption Key Options<a class="headerlink" href="#encryption-key-options" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

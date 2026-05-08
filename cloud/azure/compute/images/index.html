@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-image-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Image Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#marketplace-images" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -783,6 +794,17 @@
 <h1 id="vm-images">VM Images<a class="headerlink" href="#vm-images" title="Permanent link">&para;</a></h1>
 <p>Azure VM images are the base OS configurations used to create virtual machines. This page covers Marketplace images, custom images, Azure Compute Gallery (ACG), and image versioning.</p>
 <hr />
+<h2 id="azure-image-lifecycle">Azure Image Lifecycle<a class="headerlink" href="#azure-image-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    marketplace["Azure Marketplace Image\nPublisher · Offer · SKU"]
+    customise["Customise VM\ninstall software · harden"]
+    generalise["Generalise\nsysprep (Windows) · waagent (Linux)"]
+    captureImage["Capture Image\ncustom image"]
+    acg["Azure Compute Gallery\nimage definition + versions"]
+    deploy["Deploy VMs\nfrom gallery image version"]
+
+    marketplace --&gt; customise --&gt; generalise --&gt; captureImage --&gt; acg --&gt; deploy
+    deploy --&gt;|"new customisation cycle"| customise</code></pre>
 <h2 id="marketplace-images">Marketplace Images<a class="headerlink" href="#marketplace-images" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all publishers in a region</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>vm<span class="w"> </span>image<span class="w"> </span>list-publishers<span class="w"> </span><span class="se">\</span>

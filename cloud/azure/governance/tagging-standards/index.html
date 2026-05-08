@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#tag-governance-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag Governance Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#required-tags" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,20 @@
 
 <h1 id="tagging-standards">Tagging Standards<a class="headerlink" href="#tagging-standards" title="Permanent link">&para;</a></h1>
 <p>Azure resource tags are key-value pairs applied to resources and resource groups for organisation, cost attribution, automation, and governance. A consistent tagging standard is the foundation of effective cloud management.</p>
+<h2 id="tag-governance-flow">Tag Governance Flow<a class="headerlink" href="#tag-governance-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    deploy["Resource Deployment\nPortal / IaC / CLI"]
+    policyCheck["Azure Policy\nrequire-tag deny effect"]
+    tagPresent{"Required tags\npresent?"}
+    blocked["Deployment BLOCKED\n400 error — policy deny"]
+    taggedResource["Tagged Resource\ncompliant"]
+    costMgmt["Cost Management\nfilter by tag"]
+    automation["Automation\ntag-based operations"]
+
+    deploy --&gt; policyCheck --&gt; tagPresent
+    tagPresent -- No --&gt; blocked
+    tagPresent -- Yes --&gt; taggedResource
+    taggedResource --&gt; costMgmt &amp; automation</code></pre>
 <h2 id="required-tags">Required Tags<a class="headerlink" href="#required-tags" title="Permanent link">&para;</a></h2>
 <p>Define a small, stable set of mandatory tags. Every resource and resource group must carry all required tags.</p>
 <table>

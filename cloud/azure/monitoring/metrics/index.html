@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#metrics-collection-and-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics Collection and Consumption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#platform-metrics-vs-custom-metrics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +815,23 @@
 
 <h1 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">&para;</a></h1>
 <p>Azure Monitor Metrics is a time-series database that stores numeric data from Azure resources at near-real-time frequency. Platform metrics are collected automatically at no cost; custom metrics can be emitted from application code or agents.</p>
+<h2 id="metrics-collection-and-consumption">Metrics Collection and Consumption<a class="headerlink" href="#metrics-collection-and-consumption" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph sources["Metric Sources"]
+        platformMetrics["Platform Metrics\nVM · Storage · Network (auto)"]
+        guestMetrics["Guest OS Metrics\nAMA + DCR"]
+        customMetrics["Custom Metrics\nSDK · REST API"]
+        prometheus["Prometheus\nAKS · containers"]
+    end
+    metricsStore["Azure Monitor Metrics Store\n93-day retention · time-series DB"]
+    subgraph consume["Consumption"]
+        metricsExplorer["Metrics Explorer\ninteractive charts"]
+        alertRulesM["Metric Alert Rules\nthreshold triggers"]
+        autoscaleRules["Autoscale Rules\nVMSS · App Service"]
+        dashboardsM["Dashboards / Workbooks"]
+    end
+
+    sources --&gt; metricsStore --&gt; consume</code></pre>
 <h2 id="platform-metrics-vs-custom-metrics">Platform Metrics vs Custom Metrics<a class="headerlink" href="#platform-metrics-vs-custom-metrics" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

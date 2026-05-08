@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#compliance-review-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Review Cycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#compliance-dashboard" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -816,6 +827,20 @@
 
 <h1 id="compliance-review">Compliance Review<a class="headerlink" href="#compliance-review" title="Permanent link">&para;</a></h1>
 <p>Azure Policy compliance reviews evaluate the current state of resources against assigned policies and surface non-compliant resources. Regular compliance reviews are essential for maintaining governance standards and preparing for audits.</p>
+<h2 id="compliance-review-cycle">Compliance Review Cycle<a class="headerlink" href="#compliance-review-cycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    trigger["Compliance Scan\nscheduled daily or on-demand"]
+    evaluate["Policy Evaluation\nall resources vs all assignments"]
+    dashboard["Compliance Dashboard\n% compliant per assignment"]
+    nonCompliant{"Non-compliant\nresources found?"}
+    remediate["Create Remediation Task\nor manual fix"]
+    exempt["Create Exemption\nif justified"]
+    report["Compliance Report\nexport for audit"]
+
+    trigger --&gt; evaluate --&gt; dashboard --&gt; nonCompliant
+    nonCompliant -- Yes --&gt; remediate &amp; exempt
+    nonCompliant -- No --&gt; report
+    remediate --&gt; trigger</code></pre>
 <h2 id="compliance-dashboard">Compliance Dashboard<a class="headerlink" href="#compliance-dashboard" title="Permanent link">&para;</a></h2>
 <p>The compliance dashboard in the portal shows an overall compliance percentage and breaks it down by policy assignment. Use the CLI for scripted reporting.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Get overall compliance summary for a subscription</span>

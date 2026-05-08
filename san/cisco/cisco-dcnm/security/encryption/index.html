@@ -699,6 +699,186 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data in Transit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data in Transit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web-ui-and-rest-api-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web UI and REST API (HTTPS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web UI and REST API (HTTPS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-the-self-signed-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace the Self-Signed Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-version-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Version Hardening
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dcnm-to-switch-communication-ssh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DCNM to Switch Communication (SSH)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dcnm-to-ldap-ldaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DCNM to LDAP (LDAPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-at-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data at Rest
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data at Rest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stored-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stored Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +898,179 @@
 
 
 <h1 id="cisco-dcnm-encryption">Cisco DCNM — Encryption<a class="headerlink" href="#cisco-dcnm-encryption" title="Permanent link">&para;</a></h1>
-<p>TLS certificate management and data encryption.</p>
+<blockquote>
+<p>Part of the <a href="../../">Cisco DCNM</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>DCNM encrypts management traffic using TLS and stores sensitive credentials encrypted in the PostgreSQL database. This page covers configuration, verification, and certificate management.</p>
+<hr />
+<h2 id="data-in-transit">Data in Transit<a class="headerlink" href="#data-in-transit" title="Permanent link">&para;</a></h2>
+<h3 id="web-ui-and-rest-api-https">Web UI and REST API (HTTPS)<a class="headerlink" href="#web-ui-and-rest-api-https" title="Permanent link">&para;</a></h3>
+<p>DCNM serves its web UI and REST API over HTTPS (port 443). TLS termination is handled by a Tomcat/Apache connector.</p>
+<h4 id="replace-the-self-signed-certificate">Replace the Self-Signed Certificate<a class="headerlink" href="#replace-the-self-signed-certificate" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>root@dcnm-dc1.corp.example.com
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Generate private key and CSR</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/dcnm.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/dcnm.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=dcnm-dc1.corp.example.com/O=Corp/C=AU&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:dcnm-dc1.corp.example.com&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># After CA returns signed certificate:</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Create PKCS12 bundle</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-export<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>-in<span class="w"> </span>dcnm.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-inkey<span class="w"> </span>/tmp/dcnm.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>-certfile<span class="w"> </span>intermediate-ca.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>-name<span class="w"> </span><span class="s2">&quot;dcnm&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/dcnm.p12<span class="w"> </span>-passout<span class="w"> </span>pass:keystorepass
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Import into DCNM Java keystore</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nv">KEYSTORE</span><span class="o">=</span><span class="s2">&quot;/usr/local/cisco/dcm/dcnm/conf/.dcnmkeystore&quot;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>keytool<span class="w"> </span>-importkeystore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>-srckeystore<span class="w"> </span>/tmp/dcnm.p12<span class="w"> </span>-srcstoretype<span class="w"> </span>pkcs12<span class="w"> </span>-srcstorepass<span class="w"> </span>keystorepass<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>-destkeystore<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">KEYSTORE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-deststoretype<span class="w"> </span>jks<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>-deststorepass<span class="w"> </span>&lt;keystore-password&gt;<span class="w"> </span>-alias<span class="w"> </span>dcnm<span class="w"> </span>-noprompt
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Restart DCNM</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>restart
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Verify certificate</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dcnm-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span>-servername<span class="w"> </span>dcnm-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-enddate
+</code></pre></div>
+<h4 id="tls-version-hardening">TLS Version Hardening<a class="headerlink" href="#tls-version-hardening" title="Permanent link">&para;</a></h4>
+<p>DCNM defaults to TLS 1.2+. Verify:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test which TLS versions are accepted</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-tls1<span class="w"> </span>-connect<span class="w"> </span>dcnm-dc1.corp.example.com:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Cipher\|alert&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected: handshake failure (TLS 1.0 not accepted)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-tls1_2<span class="w"> </span>-connect<span class="w"> </span>dcnm-dc1.corp.example.com:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;^SSL\|Cipher&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Expected: successful handshake</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># If TLS 1.0/1.1 is enabled, disable it in Tomcat configuration:</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;TLSv1&quot;</span><span class="w"> </span>/usr/local/cisco/dcm/dcnm/conf/server.xml
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Edit to: sslProtocol=&quot;TLSv1.2+TLSv1.3&quot; or sslEnabledProtocols=&quot;TLSv1.2,TLSv1.3&quot;</span>
+</code></pre></div>
+<h3 id="dcnm-to-switch-communication-ssh">DCNM to Switch Communication (SSH)<a class="headerlink" href="#dcnm-to-switch-communication-ssh" title="Permanent link">&para;</a></h3>
+<p>DCNM uses SSH (port 22) for all configuration push operations to MDS switches. Ensure:
+- SSH v2 is enforced on managed switches: <code>show ssh server | include version</code>
+- RSA keys are at least 2048-bit: <code>show crypto key mypubkey rsa</code>
+- DCNM uses host key verification: On first connect to a new switch, DCNM stores the host key fingerprint</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># DCNM stores known host keys here</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>/root/.ssh/known_hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;switch-ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># If a switch certificate changes (replacement, factory reset), remove old key</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ssh-keygen<span class="w"> </span>-R<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>-f<span class="w"> </span>/root/.ssh/known_hosts
+</code></pre></div>
+<h3 id="dcnm-to-ldap-ldaps">DCNM to LDAP (LDAPS)<a class="headerlink" href="#dcnm-to-ldap-ldaps" title="Permanent link">&para;</a></h3>
+<p>Use port 636 (LDAPS). Configure as described in <a href="../authentication/">Authentication</a>. Plain LDAP on port 389 transmits bind credentials in cleartext — never use in production.</p>
+<h3 id="snmp">SNMP<a class="headerlink" href="#snmp" title="Permanent link">&para;</a></h3>
+<p>Configure SNMPv3 with <code>authPriv</code> (SHA authentication, AES-128 privacy) on all managed switches. See <a href="../../architecture/standards/">Standards</a> for full switch-side SNMP configuration.</p>
+<hr />
+<h2 id="data-at-rest">Data at Rest<a class="headerlink" href="#data-at-rest" title="Permanent link">&para;</a></h2>
+<h3 id="stored-credentials">Stored Credentials<a class="headerlink" href="#stored-credentials" title="Permanent link">&para;</a></h3>
+<p>DCNM stores the following in PostgreSQL, encrypted at the application layer:
+- Switch SSH usernames and passwords
+- SNMPv3 auth and priv passwords
+- LDAP/TACACS+ service account passwords
+- SMTP credentials</p>
+<p>The encryption key is embedded in the DCNM application and is specific to the appliance instance. Backup archives contain the encrypted credential data; without the matching DCNM instance, the credentials cannot be decrypted.</p>
+<h3 id="database-encryption">Database Encryption<a class="headerlink" href="#database-encryption" title="Permanent link">&para;</a></h3>
+<p>The PostgreSQL database itself does not use column-level encryption (credentials are encrypted at the application layer). Full-disk encryption at the VM level is recommended:</p>
+<ul>
+<li>VMware: enable VM Encryption on the DCNM datastore</li>
+<li>KVM: use LUKS-encrypted volumes for the DCNM database disk</li>
+</ul>
+<h3 id="backup-encryption">Backup Encryption<a class="headerlink" href="#backup-encryption" title="Permanent link">&para;</a></h3>
+<p>DCNM database backups (SQL dumps) are not encrypted by default. Encrypt using GPG before sending to a remote backup server:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Encrypt backup with GPG</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pg_dumpall<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>gpg<span class="w"> </span>--batch<span class="w"> </span>--yes<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/.dcnm-backup-pass<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--symmetric<span class="w"> </span>--cipher-algo<span class="w"> </span>AES256<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-o<span class="w"> </span>/var/backup/dcnm/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql.gz.gpg
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Transfer encrypted backup</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>scp<span class="w"> </span>/var/backup/dcnm/dcnm-db-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql.gz.gpg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>bkp@backup-server.corp.example.com:/backups/dcnm/
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Decrypt (on restore)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>gpg<span class="w"> </span>--batch<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/.dcnm-backup-pass<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--decrypt<span class="w"> </span>dcnm-db-20260506.sql.gz.gpg<span class="w"> </span><span class="p">|</span><span class="w"> </span>gunzip<span class="w"> </span><span class="p">|</span><span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres
+</code></pre></div>
+<hr />
+<h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check DCNM certificate expiry</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dcnm-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-servername<span class="w"> </span>dcnm-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Days until expiry</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">from datetime import datetime</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">import subprocess</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">out = subprocess.run([&#39;openssl&#39;,&#39;s_client&#39;,&#39;-connect&#39;,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">  &#39;dcnm-dc1.corp.example.com:443&#39;,&#39;-servername&#39;,&#39;dcnm-dc1.corp.example.com&#39;],</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">  capture_output=True, input=b&#39;&#39;)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">cert = subprocess.run([&#39;openssl&#39;,&#39;x509&#39;,&#39;-noout&#39;,&#39;-enddate&#39;],</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">  input=out.stdout, capture_output=True).stdout.decode()</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">import re</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">d = re.search(r&#39;notAfter=(.*)&#39;, cert).group(1).strip()</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">exp = datetime.strptime(d, &#39;%b %d %H:%M:%S %Y %Z&#39;)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s2">print(f&#39;Expires in {(exp-datetime.utcnow()).days} days: {exp.date()}&#39;)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="encryption-summary">Encryption Summary<a class="headerlink" href="#encryption-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Category</th>
+<th>Encryption</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web UI / REST API</td>
+<td>TLS 1.2/1.3 (HTTPS port 443)</td>
+<td>JSSE / Tomcat</td>
+</tr>
+<tr>
+<td>Switch management</td>
+<td>SSH v2</td>
+<td>RSA 2048+</td>
+</tr>
+<tr>
+<td>LDAP traffic</td>
+<td>TLS (LDAPS port 636)</td>
+<td></td>
+</tr>
+<tr>
+<td>SNMP traffic</td>
+<td>AES-128 (SNMPv3 authPriv)</td>
+<td></td>
+</tr>
+<tr>
+<td>Stored credentials</td>
+<td>Application-layer AES</td>
+<td>DCNM internal</td>
+</tr>
+<tr>
+<td>Database backups</td>
+<td>GPG AES-256 (manual)</td>
+<td>Op procedure</td>
+</tr>
+<tr>
+<td>VM disk</td>
+<td>vSphere VM Encryption or LUKS</td>
+<td>Hypervisor</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -699,6 +699,158 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Data Collection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagnostic Data Collection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-a-support-package-log-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate a Support Package (Log Bundle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system-state-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System State Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-level-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component-Level Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component-Level Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#drive-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drive Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-port-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Port Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-metrics-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Metrics Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-log-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Log Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-calling-dell-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before Calling Dell Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +870,266 @@
 
 
 <h1 id="powerstore-diagnostics">PowerStore — Diagnostics<a class="headerlink" href="#powerstore-diagnostics" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="diagnostic-data-collection">Diagnostic Data Collection<a class="headerlink" href="#diagnostic-data-collection" title="Permanent link">&para;</a></h2>
+<p>Before contacting Dell Support or performing deep troubleshooting, collect the standard diagnostic dataset. This avoids repeated back-and-forth with support and establishes a timestamped baseline.</p>
+<h3 id="generate-a-support-package-log-bundle">Generate a Support Package (Log Bundle)<a class="headerlink" href="#generate-a-support-package-log-bundle" title="Permanent link">&para;</a></h3>
+<p>PowerStore's support package collects system logs, hardware health dumps, configuration state, and event history into a single archive. This is the primary diagnostic deliverable for Dell Support.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Request a support package via REST API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/gather_support_materials&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s1">    &quot;node_ids&quot;: [&quot;&lt;node-a-id&gt;&quot;, &quot;&lt;node-b-id&gt;&quot;],</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s1">    &quot;include_logs&quot;: true</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Monitor the job until complete</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">JOB_ID</span><span class="o">=</span><span class="s2">&quot;&lt;job-id from response&gt;&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/job/</span><span class="si">${</span><span class="nv">JOB_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Download the support package when the job state is &#39;Completed&#39;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># PowerStore Manager → Settings → Support → Support Packages → Download</span>
+</code></pre></div>
+<p>Alternatively, initiate from the UI: <strong>PowerStore Manager → Help → Collect Support Materials</strong>.</p>
+<h3 id="system-state-snapshot">System State Snapshot<a class="headerlink" href="#system-state-snapshot" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Collect the full diagnostic state in a single script run</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Save output to a timestamped file for reference</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">OUTFILE</span><span class="o">=</span><span class="s2">&quot;pstore_diag_</span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%Y%m%d_%H%M%S&#39;</span><span class="k">)</span><span class="s2">.txt&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">MGMT_IP</span><span class="o">=</span><span class="s2">&quot;192.168.10.50&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PowerStore Diagnostics: </span><span class="si">${</span><span class="nv">MGMT_IP</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTFILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Timestamp: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTFILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-ks<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://</span><span class="si">${</span><span class="nv">MGMT_IP</span><span class="si">}</span><span class="s2">/api/rest/login_session&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nv">AUTH</span><span class="o">=(</span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="o">)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>collect<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTFILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="nv">$1</span><span class="s2"> ===&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTFILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>curl<span class="w"> </span>-ks<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://</span><span class="si">${</span><span class="nv">MGMT_IP</span><span class="si">}</span><span class="s2">/api/rest/</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AUTH</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTFILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="o">}</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>collect<span class="w"> </span><span class="s2">&quot;SOFTWARE_INSTALLED&quot;</span><span class="w"> </span><span class="s2">&quot;software_installed&quot;</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>collect<span class="w"> </span><span class="s2">&quot;ALERTS_ACTIVE&quot;</span><span class="w"> </span><span class="s2">&quot;alert?state=active&quot;</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>collect<span class="w"> </span><span class="s2">&quot;HARDWARE&quot;</span><span class="w"> </span><span class="s2">&quot;hardware&quot;</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>collect<span class="w"> </span><span class="s2">&quot;DRIVES&quot;</span><span class="w"> </span><span class="s2">&quot;drive?select=name,health.state,life_remaining,drive_type,size&quot;</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>collect<span class="w"> </span><span class="s2">&quot;NODES&quot;</span><span class="w"> </span><span class="s2">&quot;node?select=name,health.state,node_id&quot;</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>collect<span class="w"> </span><span class="s2">&quot;POOLS&quot;</span><span class="w"> </span><span class="s2">&quot;pool?select=name,size_free,size_used,size_total,percent_used&quot;</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>collect<span class="w"> </span><span class="s2">&quot;VOLUMES&quot;</span><span class="w"> </span><span class="s2">&quot;volume?select=name,size,health.state,type&quot;</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>collect<span class="w"> </span><span class="s2">&quot;REPLICATION_SESSIONS&quot;</span><span class="w"> </span><span class="s2">&quot;replication_session?select=name,state,last_sync_time&quot;</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>collect<span class="w"> </span><span class="s2">&quot;NAS_SERVERS&quot;</span><span class="w"> </span><span class="s2">&quot;nas_server?select=name,health.state,current_node_id&quot;</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>collect<span class="w"> </span><span class="s2">&quot;HOSTS&quot;</span><span class="w"> </span><span class="s2">&quot;host?select=name,health.state,os_type&quot;</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Diagnostics written to: </span><span class="nv">$OUTFILE</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h2 id="component-level-diagnostics">Component-Level Diagnostics<a class="headerlink" href="#component-level-diagnostics" title="Permanent link">&para;</a></h2>
+<h3 id="drive-diagnostics">Drive Diagnostics<a class="headerlink" href="#drive-diagnostics" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Full drive inventory with health state and remaining life</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/drive?select=name,health.state,life_remaining,drive_type,size,firmware_version,model_number,serial_number&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Identify drives with low remaining life (&lt; 10%)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/drive?select=name,life_remaining&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">for d in data:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">    lr = d.get(&#39;life_remaining&#39;)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">    if lr is not None and lr &lt; 10:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">        print(f&#39;LOW LIFE: {d[\&quot;name\&quot;]} — {lr}% remaining&#39;)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Get SMART data equivalent for a specific drive</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/drive/&lt;drive-id&gt;?select=name,health,life_remaining,model_number,serial_number,firmware_version&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+</code></pre></div>
+<h3 id="node-diagnostics">Node Diagnostics<a class="headerlink" href="#node-diagnostics" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Node health summary</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/node?select=name,health,node_id,model,firmware_version&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Hardware component health (fans, PSUs, memory)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/hardware&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Fan status</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/fan?select=name,health.state&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Power supply status</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/power_supply?select=name,health.state&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+</code></pre></div>
+<h3 id="network-port-diagnostics">Network Port Diagnostics<a class="headerlink" href="#network-port-diagnostics" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># FC port status and statistics</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/fc_port?select=name,wwn,current_speed,health.state,node_id&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Ethernet port status (management and iSCSI)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/eth_port?select=name,mac_address,link_speed,health.state,node_id&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># iSCSI portal status</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/iscsi_portal?select=name,ip_address,iscsi_target_name,health.state&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+</code></pre></div>
+<h3 id="performance-metrics-diagnostics">Performance Metrics Diagnostics<a class="headerlink" href="#performance-metrics-diagnostics" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get real-time appliance-level performance metrics</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/appliance_metrics/query&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;entity&quot;: &quot;appliance&quot;,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">    &quot;entity_id&quot;: &quot;&lt;appliance-id&gt;&quot;,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    &quot;metrics&quot;: [&quot;avg_read_latency_ms&quot;, &quot;avg_write_latency_ms&quot;, &quot;total_iops&quot;, &quot;read_iops&quot;, &quot;write_iops&quot;, &quot;avg_read_bandwidth_mb&quot;, &quot;avg_write_bandwidth_mb&quot;],</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">    &quot;interval&quot;: &quot;last_5_minutes&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Volume-level performance (identify hot volumes)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/volume_metrics/query&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s1">    &quot;entity&quot;: &quot;volume&quot;,</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">    &quot;metrics&quot;: [&quot;avg_read_latency_ms&quot;, &quot;avg_write_latency_ms&quot;, &quot;read_iops&quot;, &quot;write_iops&quot;],</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s1">    &quot;interval&quot;: &quot;last_1_hour&quot;,</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s1">    &quot;order_by&quot;: &quot;write_iops desc&quot;,</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s1">    &quot;limit&quot;: 10</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h2 id="event-log-analysis">Event Log Analysis<a class="headerlink" href="#event-log-analysis" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Retrieve all events from the last 24 hours</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/event?select=created_timestamp,severity,message_key,arguments&amp;order=created_timestamp desc&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Filter events by severity</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/event?severity=Critical&amp;order=created_timestamp desc&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Filter events by type (e.g., drive events)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/event?resource_type=drive&amp;order=created_timestamp desc&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+</code></pre></div>
+<h2 id="replication-diagnostics">Replication Diagnostics<a class="headerlink" href="#replication-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Full replication session detail including error reason</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/replication_session?select=name,state,sync_state,last_sync_time,remaining_capacity_to_sync,failed_reason,role&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check remote system connectivity state</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/remote_system?select=name,management_address,connection_state,data_connection_state&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Metro Volume mediator status</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/remote_system?select=name,metro_sync_status,mediator_address&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+</code></pre></div>
+<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
+<p>PowerStore does not expose its internal OS logs directly to users — all diagnostic data is collected via the support package or REST API. Key log locations within the support package:</p>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Location in Support Package</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System event log</td>
+<td><code>events/events.json</code></td>
+<td>All system events with timestamps and severity</td>
+</tr>
+<tr>
+<td>Hardware fault log</td>
+<td><code>hardware/faults.json</code></td>
+<td>Drive and component faults</td>
+</tr>
+<tr>
+<td>Replication log</td>
+<td><code>replication/sessions.json</code></td>
+<td>Replication session history and errors</td>
+</tr>
+<tr>
+<td>Upgrade log</td>
+<td><code>upgrade/upgrade.log</code></td>
+<td>Software upgrade history and errors</td>
+</tr>
+<tr>
+<td>Node service log</td>
+<td><code>nodes/node_&lt;id&gt;/service.log</code></td>
+<td>Node-level service events</td>
+</tr>
+<tr>
+<td>NAS server log</td>
+<td><code>nas/nas_server_&lt;id&gt;/logs/</code></td>
+<td>NAS server event and protocol logs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="before-calling-dell-support">Before Calling Dell Support<a class="headerlink" href="#before-calling-dell-support" title="Permanent link">&para;</a></h2>
+<p>Collect the following before opening a support case to minimise time to resolution:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>How to Collect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System serial number</td>
+<td>PowerStore Manager → Hardware → Appliance → Serial Number</td>
+</tr>
+<tr>
+<td>PowerStoreOS version</td>
+<td><code>GET /api/rest/software_installed</code></td>
+</tr>
+<tr>
+<td>Active alerts dump</td>
+<td><code>GET /api/rest/alert?state=active</code> (JSON output)</td>
+</tr>
+<tr>
+<td>Hardware health dump</td>
+<td><code>GET /api/rest/hardware</code> (JSON output)</td>
+</tr>
+<tr>
+<td>Replication session state</td>
+<td><code>GET /api/rest/replication_session</code> (JSON output)</td>
+</tr>
+<tr>
+<td>Support package</td>
+<td>Initiate from PowerStore Manager → Help → Collect Support Materials</td>
+</tr>
+<tr>
+<td>Timeline of events</td>
+<td>Note when the issue started and what changed immediately before</td>
+</tr>
+<tr>
+<td>Error messages</td>
+<td>Exact text from PowerStore Manager alerts or REST API error responses</td>
+</tr>
+<tr>
+<td>Affected hosts</td>
+<td>List of hosts experiencing I/O issues (if connectivity problem)</td>
+</tr>
+</tbody>
+</table>
+<p>When opening the case:</p>
+<ul>
+<li><strong>Product</strong>: Dell PowerStore</li>
+<li><strong>Serial number</strong>: from hardware view</li>
+<li><strong>Software version</strong>: from software_installed API</li>
+<li><strong>Problem description</strong>: describe the symptom, when it started, and the impact on hosts and workloads</li>
+<li><strong>Attach</strong>: the support package and the system state JSON dump collected above</li>
+</ul>
 
 
 

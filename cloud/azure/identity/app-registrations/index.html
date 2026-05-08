@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#app-registration-to-service-principal-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App Registration to Service Principal Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-an-app-registration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -838,6 +849,19 @@
 
 <h1 id="app-registrations">App Registrations<a class="headerlink" href="#app-registrations" title="Permanent link">&para;</a></h1>
 <p>An app registration in Microsoft Entra ID creates an identity for an application that needs to authenticate with Azure AD or access Azure resources and APIs. It is the foundation for service principals, OAuth2 flows, and API permissions.</p>
+<h2 id="app-registration-to-service-principal-model">App Registration to Service Principal Model<a class="headerlink" href="#app-registration-to-service-principal-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    appReg["App Registration\n(Home Tenant)\nApplication Object"]
+    sp["Service Principal\n(Each Tenant where app is used)\nService Principal Object"]
+    creds["Credentials\nClient Secret OR Certificate"]
+    oidc["OIDC Federation\nno stored secret"]
+    apiPerms["API Permissions\nMicrosoft Graph · Azure · custom API"]
+    entraToken["Entra ID Token\nJWT access token"]
+    resource["Protected Resource\nMicrosoft Graph · Azure ARM · custom API"]
+
+    appReg --&gt;|"instantiates"| sp
+    appReg --&gt; creds &amp; oidc &amp; apiPerms
+    sp --&gt;|"authenticates"| entraToken --&gt; resource</code></pre>
 <h2 id="creating-an-app-registration">Creating an App Registration<a class="headerlink" href="#creating-an-app-registration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create an app registration</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>ad<span class="w"> </span>app<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

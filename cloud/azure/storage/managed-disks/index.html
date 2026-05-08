@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#managed-disk-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managed Disk Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#disk-types" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,24 @@
 <h1 id="azure-managed-disks">Azure Managed Disks<a class="headerlink" href="#azure-managed-disks" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Azure Managed Disks are block-level storage volumes managed by Azure and attached to Azure VMs. They abstract the underlying Storage Account and provide high availability through replication. The disk type determines IOPS, throughput, and cost.</p>
+<h2 id="managed-disk-architecture">Managed Disk Architecture<a class="headerlink" href="#managed-disk-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    vm["Azure VM"]
+    subgraph disks["Attached Managed Disks"]
+        osDisk["OS Disk\nC: / /boot"]
+        dataDisk1["Data Disk 1\nD: / /data"]
+        dataDisk2["Data Disk 2\nE: / /logs"]
+        tempDisk["Temp Disk\nD: (Windows) — ephemeral"]
+    end
+    subgraph storage["Underlying Storage"]
+        lrs["LRS — local replica"]
+        zrs["ZRS — zone replica"]
+    end
+    snapshot["Snapshot\npoint-in-time copy"]
+
+    vm --&gt; osDisk &amp; dataDisk1 &amp; dataDisk2 &amp; tempDisk
+    osDisk &amp; dataDisk1 --&gt; lrs &amp; zrs
+    osDisk &amp; dataDisk1 -.-&gt;|"on demand"| snapshot</code></pre>
 <h2 id="disk-types">Disk Types<a class="headerlink" href="#disk-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

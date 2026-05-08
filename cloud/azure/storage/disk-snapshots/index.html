@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snapshot-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,19 @@
 <h1 id="azure-disk-snapshots">Azure Disk Snapshots<a class="headerlink" href="#azure-disk-snapshots" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Azure managed disk snapshots capture the full state of a managed disk at a point in time. Incremental snapshots store only changed blocks since the last snapshot, significantly reducing storage costs and copy time. Snapshots are stored as page blobs in Azure Storage and can be used to restore disks or copy across regions.</p>
+<h2 id="snapshot-lifecycle">Snapshot Lifecycle<a class="headerlink" href="#snapshot-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    sourceDisk["Source Managed Disk\n(OS or data disk)"]
+    snapshot["Snapshot\npoint-in-time · incremental"]
+    subgraph uses["Snapshot Uses"]
+        restoreDisk["Restore to same disk\ndisk reset"]
+        newDisk["Create new disk\nfrom snapshot"]
+        crossRegion["Copy to another region\ndisaster recovery"]
+        exportVHD["Export as VHD\nfor migration"]
+    end
+
+    sourceDisk --&gt;|"az snapshot create"| snapshot
+    snapshot --&gt; restoreDisk &amp; newDisk &amp; crossRegion &amp; exportVHD</code></pre>
 <h2 id="creating-snapshots">Creating Snapshots<a class="headerlink" href="#creating-snapshots" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Full snapshot of a managed disk</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

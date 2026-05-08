@@ -714,6 +714,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Daily Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloud-account-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Account Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-pod-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Pod Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-deployment-event-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Deployment Event Log
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -721,6 +760,78 @@
     <span class="md-ellipsis">
       
         Weekly Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Weekly Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pending-approval-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pending Approval Requests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quota-utilisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quota Utilisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-lease-expiry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Lease Expiry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-certificate-expiry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Certificate Expiry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-maintenance-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Maintenance Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-service-health-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Service Health Commands
       
     </span>
   </a>
@@ -749,18 +860,103 @@
 
 <h1 id="aria-automation-health-checks">Aria Automation — Health Checks<a class="headerlink" href="#aria-automation-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review the deployment event log for failures</li>
-<li>All vCenter cloud accounts should show a green status indicator</li>
-<li>All NSX cloud accounts should show a green status indicator</li>
-<li>Investigate any accounts showing warning or error — re-validate credentials or connectivity</li>
-</ul>
+<h3 id="cloud-account-status">Cloud Account Status<a class="headerlink" href="#cloud-account-status" title="Permanent link">&para;</a></h3>
+<p>All vCenter and NSX cloud accounts must show a green status indicator:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Infrastructure → Connections → Cloud Accounts
+</code></pre></div>
+<p>Any account showing a warning or error status means Aria Automation cannot provision into that target. Common causes: expired service account password, vCenter certificate change, NSX Manager unreachable.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check cloud account status via API</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vra-prod-01.corp.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.corp.local/iaas/api/cloud-accounts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, type: .cloudAccountType, status: .cloudAccountStatus}&#39;</span>
+</code></pre></div>
+<hr />
+<h3 id="kubernetes-pod-health">Kubernetes Pod Health<a class="headerlink" href="#kubernetes-pod-health" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@vra-prod-01.corp.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check all pods are Running or Completed</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Any output here indicates a failing pod</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Quick summary of pod states</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 {print $4}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Describe a CrashLoopBackOff or Pending pod for diagnostics</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;
+</code></pre></div>
+<hr />
+<h3 id="review-deployment-event-log">Review Deployment Event Log<a class="headerlink" href="#review-deployment-event-log" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Deployments → All Deployments → filter by &quot;Failed&quot; status
+</code></pre></div>
+<p>Failed deployments should be investigated, even if they are not actively blocking users. Persistent failures in a specific cloud zone may indicate a resource, network, or credential issue.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># API — list recent failed deployments</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.corp.local/deployment/api/deployments?status=FAILED&amp;size=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, status: .status, reason: .reason}&#39;</span>
+</code></pre></div>
+<hr />
 <h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
+<h3 id="pending-approval-requests">Pending Approval Requests<a class="headerlink" href="#pending-approval-requests" title="Permanent link">&para;</a></h3>
+<p>Review and action approval requests older than 5 business days:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Catalog → Deployments → Pending Approvals
+</code></pre></div>
+<p>Escalate stale requests (user not responding) or reject if the requester has left the organisation.</p>
+<hr />
+<h3 id="quota-utilisation">Quota Utilisation<a class="headerlink" href="#quota-utilisation" title="Permanent link">&para;</a></h3>
+<p>Check whether any projects are approaching their VM or CPU/memory quota limits:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Infrastructure → Administration → Projects → select project → Quota
+</code></pre></div>
+<p>Projects at &gt;80% quota will start failing new deployments without a clear error to end users. Review and extend quotas proactively.</p>
+<hr />
+<h3 id="deployment-lease-expiry">Deployment Lease Expiry<a class="headerlink" href="#deployment-lease-expiry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Deployments → All Deployments → filter by lease expiry in next 7 days
+</code></pre></div>
+<p>Contact deployment owners for renewals or confirm expiry is intended. Expired deployments are automatically deleted according to the lease policy — ensure owners have been warned.</p>
+<hr />
+<h3 id="service-certificate-expiry">Service Certificate Expiry<a class="headerlink" href="#service-certificate-expiry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check Aria Automation UI certificate expiry</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check VAMI certificate expiry</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.corp.local:5480<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+</code></pre></div>
+<hr />
+<h2 id="pre-maintenance-checks">Pre-Maintenance Checks<a class="headerlink" href="#pre-maintenance-checks" title="Permanent link">&para;</a></h2>
+<p>Run before any planned change (upgrade, certificate rotation, cloud account re-credential):</p>
 <ul>
-<li>Review pending approval requests older than 5 business days — escalate or reject stale requests</li>
-<li>Review deployment count growth vs. quota limits</li>
-<li>Confirm Aria Automation–to–Orchestrator connectivity is healthy</li>
+<li>[ ] No deployments in progress: <strong>Deployments → All Deployments</strong> — no CREATING or UPDATING state</li>
+<li>[ ] All cloud accounts green</li>
+<li>[ ] All Kubernetes pods Running: <code>kubectl get pods --all-namespaces | grep -v Running | grep -v Completed</code></li>
+<li>[ ] Backup completed successfully within the last 24 hours (VAMI → Lifecycle Management → Backup)</li>
+<li>[ ] VM snapshots taken for all Aria Automation appliance nodes</li>
+<li>[ ] Inform users of maintenance window</li>
 </ul>
+<hr />
+<h2 id="platform-service-health-commands">Platform Service Health Commands<a class="headerlink" href="#platform-service-health-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ssh<span class="w"> </span>root@vra-prod-01.corp.local
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Overall appliance and service health</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>vracli<span class="w"> </span>status
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Show cluster member status (for 3-node deployments)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>health
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Show current Aria Automation version</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>vracli<span class="w"> </span>version
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Restart a specific Kubernetes deployment (use as last resort — pods self-heal)</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>prelude
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># View recent events in the prelude namespace (useful for deployment failures)</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.metadata.creationTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+</code></pre></div>
 
 
 

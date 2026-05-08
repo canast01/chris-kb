@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-operations-change-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Operations Change Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#runbook-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -935,6 +946,20 @@
 <p>Day-to-day operational tasks across compute, storage, and networking.</p>
 </blockquote>
 <hr />
+<h2 id="azure-operations-change-flow">Azure Operations Change Flow<a class="headerlink" href="#azure-operations-change-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    changeReq["Change Request\napproved in ITSM"]
+    preCheck["Pre-change Checks\nResource health · backups · snapshots"]
+    mainWindow["Maintenance Window\nnotify stakeholders"]
+    change["Execute Change\nCLI / Portal / IaC"]
+    validate["Post-change Validation\nhealth · connectivity · metrics"]
+    outcome{"Successful?"}
+    closeChange["Close Change Record\ndocument outcomes"]
+    rollback["Rollback\nrestore snapshot · redeploy"]
+
+    changeReq --&gt; preCheck --&gt; mainWindow --&gt; change --&gt; validate --&gt; outcome
+    outcome -- Yes --&gt; closeChange
+    outcome -- No --&gt; rollback --&gt; closeChange</code></pre>
 <h2 id="runbook-templates">Runbook Templates<a class="headerlink" href="#runbook-templates" title="Permanent link">&para;</a></h2>
 <p>A standard structure for Azure operational runbooks. Copy this template for any planned change, maintenance window, or incident response procedure.</p>
 <hr />

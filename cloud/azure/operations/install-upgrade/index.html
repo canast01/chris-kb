@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-vm-patching-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure VM Patching Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vm-patching" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -796,6 +807,19 @@
 <p>VM image management, patching via Azure Update Manager, and service upgrades.</p>
 </blockquote>
 <hr />
+<h2 id="azure-vm-patching-workflow">Azure VM Patching Workflow<a class="headerlink" href="#azure-vm-patching-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    assess["Patch Assessment\nidentify available updates"]
+    schedule["Maintenance Configuration\nmonthly schedule · reboot policy"]
+    testVMs["Apply to Test VMs\nvalidate application impact"]
+    prodPatch["Apply to Production VMs\nwithin maintenance window"]
+    reboot{"Reboot\nrequired?"}
+    rebootVM["Reboot VM\nwithin allowed window"]
+    compliance["Update Manager\ncompliance dashboard"]
+
+    assess --&gt; schedule --&gt; testVMs --&gt; prodPatch --&gt; reboot
+    reboot -- Yes --&gt; rebootVM --&gt; compliance
+    reboot -- No --&gt; compliance</code></pre>
 <h2 id="vm-patching">VM Patching<a class="headerlink" href="#vm-patching" title="Permanent link">&para;</a></h2>
 <p>VM OS images are patched via Azure Update Manager on a monthly schedule:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check patch assessment for a VM</span>

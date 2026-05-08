@@ -699,6 +699,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detailed Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-not-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Not Reporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-authentication-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Authentication Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webhook-not-delivering-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook Not Delivering Alerts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#incorrect-or-stale-capacity-forecast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incorrect or Stale Capacity Forecast
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scg-connectivity-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG Connectivity Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anomaly-detection-understanding-false-positives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anomaly Detection — Understanding False Positives
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -722,52 +824,299 @@
 <p>Part of the <a href="../../">CloudIQ</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="quick-reference-table">Quick Reference Table<a class="headerlink" href="#quick-reference-table" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Symptom</th>
 <th>Likely Cause</th>
-<th>Action</th>
+<th>First Action</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>System not reporting in CloudIQ</td>
-<td>SCG connectivity broken or SupportAssist disabled on the array</td>
-<td>Check SCG status page; verify <code>dsagw</code> service is running; confirm the managed system has SupportAssist enabled</td>
+<td>SCG connectivity broken; SupportAssist disabled on array; array not registered to SCG</td>
+<td>Check SCG status; run <code>systemctl status dsagw</code>; confirm array has SupportAssist enabled</td>
 </tr>
 <tr>
 <td>Health score dropped suddenly</td>
-<td>Hardware fault detected or capacity threshold breached</td>
-<td>Open the system in CloudIQ and review the alert detail panel; correlate with array-side alerts</td>
+<td>Hardware fault detected; capacity threshold crossed; performance anomaly</td>
+<td>Open system in CloudIQ; review Timeline tab; check active alerts; cross-reference with array-side alerts</td>
 </tr>
 <tr>
-<td>API authentication failure</td>
-<td>Client secret expired or incorrect client ID used</td>
-<td>Rotate API credentials in CloudIQ Settings &gt; API Access; update automation scripts with new secret</td>
+<td>Health score shows <code>N/A</code> or <code>--</code></td>
+<td>System registered but no telemetry received yet</td>
+<td>Allow 60 minutes after SCG registration; check dsagw logs if longer</td>
 </tr>
 <tr>
-<td>Capacity forecast showing incorrect trend</td>
-<td>Insufficient historical data for regression model</td>
-<td>CloudIQ requires approximately 30 days of data for a stable forecast; wait for data accumulation</td>
+<td>API authentication failure (401)</td>
+<td>Client secret expired or incorrect; token expired</td>
+<td>Regenerate credentials in CloudIQ Settings → API Access; update automation scripts</td>
 </tr>
 <tr>
-<td>Alert not routing to email or webhook</td>
-<td>Notification rule misconfigured or recipient address invalid</td>
-<td>Review notification rules under CloudIQ Settings &gt; Notifications; send a test notification to confirm routing</td>
+<td>API returns 403 Forbidden</td>
+<td>API client lacks permissions for the requested operation</td>
+<td>Check the role assigned to the API credential; Viewer role cannot acknowledge alerts or modify settings</td>
 </tr>
 <tr>
-<td>System visible but no performance data</td>
-<td>Array-side performance data collection not enabled</td>
-<td>Verify on the array that performance statistics collection is active; check SCG telemetry logs</td>
+<td>Capacity forecast showing <code>Insufficient data</code></td>
+<td>Less than 7–14 days of telemetry collected</td>
+<td>Wait for data accumulation; this resolves automatically</td>
 </tr>
 <tr>
-<td>SCG shows systems as unregistered</td>
-<td>SCG was re-deployed or system was manually deregistered</td>
-<td>Re-register the system with SCG; confirm the SCG is associated with the correct CloudIQ account</td>
+<td>Capacity forecast trend incorrect</td>
+<td>Sharp one-time data growth event skewing regression</td>
+<td>Review the capacity trend graph; exclude outlier events if the UI supports it; wait for trend to stabilise</td>
+</tr>
+<tr>
+<td>Alert not routing to email</td>
+<td>Notification rule misconfigured; recipient address blocked by spam filter</td>
+<td>Review Settings → Notifications; send a test notification; check the recipient's spam folder</td>
+</tr>
+<tr>
+<td>Alert not routing to webhook</td>
+<td>Webhook URL unreachable from Dell cloud; SSL certificate error on endpoint</td>
+<td>Test the webhook URL from an external host; verify the endpoint returns 200 to a POST request</td>
+</tr>
+<tr>
+<td>System shows correct health score but no performance data</td>
+<td>Array-side performance statistics collection disabled</td>
+<td>Enable performance stats collection on the array; for PowerMax, verify SRDF performance is enabled</td>
+</tr>
+<tr>
+<td>SCG shows systems as unregistered after SCG rebuild</td>
+<td>SCG was rebuilt or re-deployed; re-registration required</td>
+<td>Re-register each system to the new SCG from the array management interface</td>
+</tr>
+<tr>
+<td>CloudIQ dashboard shows <code>Service Unavailable</code></td>
+<td>Dell CloudIQ SaaS platform outage</td>
+<td>Check <a href="https://status.dell.com">https://status.dell.com</a>; open a P1 case if extended outage</td>
+</tr>
+<tr>
+<td>SSO login not working</td>
+<td>SAML assertion not matching; IdP configuration drift</td>
+<td>Review IdP metadata in CloudIQ Settings → Identity Provider; compare with IdP configuration</td>
+</tr>
+<tr>
+<td>Alert not acknowledging via API</td>
+<td>Incorrect alert ID; alert already resolved</td>
+<td>Confirm the alert ID and current state via <code>GET /rest/v1/alerts/&lt;id&gt;</code> before patching</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="detailed-troubleshooting">Detailed Troubleshooting<a class="headerlink" href="#detailed-troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="system-not-reporting">System Not Reporting<a class="headerlink" href="#system-not-reporting" title="Permanent link">&para;</a></h3>
+<p>A system showing <code>Not Reporting</code> or <code>No Data</code> in the CloudIQ dashboard indicates that the SCG is not successfully sending telemetry for that system.</p>
+<p><strong>Step 1 — Check dsagw service on the SCG:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to the SCG appliance</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;scg-mgmt-ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check the core telemetry forwarding service</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dsagw
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># If stopped or failed — restart it</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dsagw
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Watch logs live for telemetry errors</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>dsagw<span class="w"> </span>-f
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Look for: &quot;connection refused&quot;, &quot;TLS handshake failed&quot;, &quot;authentication error&quot;</span>
+</code></pre></div>
+<p><strong>Step 2 — Verify SCG can reach Dell endpoints:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test connectivity to Dell telemetry endpoints</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://cloudiq.dell.com
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://esrs3.emc.com
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># If either fails — check proxy or firewall rules</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Required: outbound HTTPS (443) to both endpoints</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># If behind a proxy: SCG web UI → Settings → Proxy → verify configuration</span>
+</code></pre></div>
+<p><strong>Step 3 — Verify the system is registered to SCG:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List devices registered to the SCG</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># SCG web UI: https://&lt;scg-ip&gt;:9443 → Devices → Registered Devices</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Or via SCG CLI:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>dsagw<span class="w"> </span>list-devices
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># The affected system should appear in this list with status &quot;Connected&quot;</span>
+</code></pre></div>
+<p><strong>Step 4 — Check SupportAssist on the array:</strong></p>
+<p>For most Dell arrays, the array must have SupportAssist enabled and connected for telemetry to flow to CloudIQ:</p>
+<ul>
+<li><strong>PowerStore</strong>: PowerStore Manager → Settings → Support → SupportAssist → Status should show <code>Connected</code></li>
+<li><strong>PowerMax</strong>: Unisphere → Settings → Connectivity → SupportAssist → Connected</li>
+<li><strong>Unity</strong>: Unisphere for Unity → System → Connectivity → SupportAssist</li>
+</ul>
+<hr />
+<h3 id="api-authentication-failures">API Authentication Failures<a class="headerlink" href="#api-authentication-failures" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Reproduce the failure with verbose output</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;your-client-id&gt;&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;&lt;your-client-secret&gt;&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-v<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://cloudiq.apis.dell.com/auth/oauth/v2/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=</span><span class="si">${</span><span class="nv">CLIENT_ID</span><span class="si">}</span><span class="s2">&amp;client_secret=</span><span class="si">${</span><span class="nv">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Common error responses:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># HTTP 401: invalid_client — wrong client_id or client_secret</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># HTTP 400: invalid_grant — grant_type value incorrect (must be &#39;client_credentials&#39;)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># HTTP 403: forbidden — credential exists but has been revoked or expired</span>
+</code></pre></div>
+<p><strong>If the client secret is confirmed lost or expired:</strong></p>
+<ol>
+<li>Log into the CloudIQ portal as an admin</li>
+<li>Navigate to <strong>Settings → API Access</strong></li>
+<li>Locate the affected credential</li>
+<li>Click <strong>Regenerate Secret</strong> — the old secret is immediately invalidated</li>
+<li>Copy the new secret and update all scripts and vaults</li>
+<li>Re-test authentication</li>
+</ol>
+<hr />
+<h3 id="webhook-not-delivering-alerts">Webhook Not Delivering Alerts<a class="headerlink" href="#webhook-not-delivering-alerts" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1: Test the webhook endpoint externally (from a machine that has internet access)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;&lt;your-webhook-url&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;test&quot;: true, &quot;source&quot;: &quot;cloudiq-test&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-v
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Expected: HTTP 200 (or 201) response from the endpoint</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># If HTTP 000 or connection refused: the endpoint is not reachable from the internet</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># If HTTP 4xx: the endpoint is reachable but the payload format or auth is wrong</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Step 2: Review webhook configuration in CloudIQ</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Settings → Notifications → Webhook → inspect the endpoint URL and any custom headers</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Step 3: Send a test notification from CloudIQ</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Settings → Notifications → Webhook → Send Test</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Then check the endpoint for the incoming request</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Step 4: For ServiceNow webhook failures — check the ServiceNow scripted REST API logs:</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># ServiceNow → System Log → Application Logs → filter by &quot;cloudiq&quot; or the REST API script name</span>
+</code></pre></div>
+<p><strong>Common webhook delivery issues:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Diagnosis</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Endpoint not reachable</td>
+<td><code>curl -v</code> returns connection refused or timeout</td>
+<td>The webhook endpoint must be publicly reachable; use a cloud-hosted endpoint or ngrok for testing</td>
+</tr>
+<tr>
+<td>SSL certificate error</td>
+<td>Endpoint uses a self-signed or internal CA certificate</td>
+<td>CloudIQ validates endpoint certificates; the endpoint must present a certificate from a trusted public CA</td>
+</tr>
+<tr>
+<td>401 from endpoint</td>
+<td>Endpoint requires authentication in the POST body or header</td>
+<td>Add authentication as a custom header in the CloudIQ webhook configuration</td>
+</tr>
+<tr>
+<td>Payload format rejected</td>
+<td>ServiceNow or Slack rejects the CloudIQ JSON format</td>
+<td>Use a middleware (webhook relay, Zapier, AWS Lambda) to transform the payload</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="incorrect-or-stale-capacity-forecast">Incorrect or Stale Capacity Forecast<a class="headerlink" href="#incorrect-or-stale-capacity-forecast" title="Permanent link">&para;</a></h3>
+<p>CloudIQ's capacity forecast uses a linear regression on historical data. The forecast can be inaccurate in specific scenarios:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Observed Symptom</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Array just onboarded</td>
+<td><code>Insufficient data</code> or very wide forecast range</td>
+<td>Wait for at least 14 days of telemetry; forecast stabilises with more data</td>
+</tr>
+<tr>
+<td>Large one-time data migration</td>
+<td>Forecast shows "X days to full" with an unrealistic near-term date</td>
+<td>Review the capacity trend graph; the regression will smooth the outlier over time (1–2 weeks)</td>
+</tr>
+<tr>
+<td>Array was upgraded and capacity increased</td>
+<td>Forecast shows growth trend that doesn't reflect new capacity</td>
+<td>Allow 7 days for the new capacity baseline to be reflected</td>
+</tr>
+<tr>
+<td>Thin-provisioned volumes over-allocated</td>
+<td>Forecast shows capacity as fine but actual writes are growing faster</td>
+<td>Monitor <code>total_used_capacity_gb</code> vs <code>total_physical_capacity_gb</code>; thin overcommit is not factored into the linear model</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Query current capacity state to validate against CloudIQ forecast</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-token&gt;&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://cloudiq.apis.dell.com/rest/v1&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">SYSTEM_ID</span><span class="o">=</span><span class="s2">&quot;&lt;your-system-id&gt;&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Key fields to check:</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># total_subscribed_capacity_gb — logical allocated to hosts (thin provisioning)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># total_used_capacity_gb       — physical data actually written</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># total_physical_capacity_gb   — total raw usable</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># percent_used                 — physical used percentage</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># days_to_full                 — forecast horizon</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># forecast_confidence          — LOW/MEDIUM/HIGH; LOW means insufficient data</span>
+</code></pre></div>
+<hr />
+<h3 id="scg-connectivity-diagnostics">SCG Connectivity Diagnostics<a class="headerlink" href="#scg-connectivity-diagnostics" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Full SCG connectivity diagnostic sequence</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Run on the SCG appliance (SSH as admin)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== dsagw service status ===&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dsagw
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== DNS resolution ===&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>nslookup<span class="w"> </span>cloudiq.dell.com
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>nslookup<span class="w"> </span>esrs3.emc.com
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Network connectivity ===&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>curl<span class="w"> </span>-k<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://cloudiq.dell.com<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;cloudiq.dell.com: REACHABLE&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;cloudiq.dell.com: UNREACHABLE&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>curl<span class="w"> </span>-k<span class="w"> </span>--max-time<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://esrs3.emc.com<span class="w">   </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;esrs3.emc.com: REACHABLE&quot;</span><span class="w">   </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;esrs3.emc.com: UNREACHABLE&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Registered devices ===&quot;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>dsagw<span class="w"> </span>list-devices<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;dsagw CLI not available — check SCG web UI&quot;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Recent dsagw log errors ===&quot;</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>dsagw<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fail|refused|timeout&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+</code></pre></div>
+<hr />
+<h3 id="anomaly-detection-understanding-false-positives">Anomaly Detection — Understanding False Positives<a class="headerlink" href="#anomaly-detection-understanding-false-positives" title="Permanent link">&para;</a></h3>
+<p>CloudIQ's anomaly detection uses ML models trained on historical baselines for each system. A sudden change in workload pattern can trigger an anomaly alert even if the change is expected (e.g., a scheduled batch job or a major application release).</p>
+<p>When an anomaly alert fires for a known change:</p>
+<ol>
+<li>Review the anomaly timeline in the CloudIQ system detail → <strong>Timeline</strong> tab</li>
+<li>Confirm the anomaly timestamp correlates with the planned change</li>
+<li>Acknowledge the alert in CloudIQ with a note referencing the change record</li>
+<li>If recurring false positives for a known periodic workload: create a maintenance window to suppress alerts during the expected activity period</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Acknowledge an anomaly alert (dismiss as known/planned)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">ALERT_ID</span><span class="o">=</span><span class="s2">&quot;&lt;alert-id&gt;&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/alerts/</span><span class="si">${</span><span class="nv">ALERT_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">    &quot;state&quot;: &quot;ACKNOWLEDGED&quot;,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s1">    &quot;acknowledge_note&quot;: &quot;Known: scheduled batch workload spike. CHG0012345&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 
 
 
