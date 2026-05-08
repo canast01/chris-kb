@@ -21,7 +21,7 @@
     
     
       
-        <title>SRDF/A Security - Chris KB</title>
+        <title>SRDF/A — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SRDF/A Security · Chris KB">
+  <meta property="og:title" content="SRDF/A — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SRDF/A Security · Chris KB">
+  <meta name="twitter:title" content="SRDF/A — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SRDF/A Security
+              SRDF/A — Security
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#encryption-in-flight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption In-Flight
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#solutions-enabler-rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Solutions Enabler RBAC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#preventing-accidental-resync" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preventing Accidental Resync
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-port-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Port Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#credential-rotation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Credential Rotation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,97 +717,30 @@
 
 
 
-<h1 id="srdfa-security">SRDF/A Security<a class="headerlink" href="#srdfa-security" title="Permanent link">&para;</a></h1>
-<h2 id="encryption-in-flight">Encryption In-Flight<a class="headerlink" href="#encryption-in-flight" title="Permanent link">&para;</a></h2>
-<p>SRDF/E (SRDF Encryption) encrypts data over FCIP using AES-256. Verify per SRDF group:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Output should show: Encryption: Enabled</span>
-</code></pre></div>
-<p>Enable SRDF/E on an existing SRDF group:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>encrypt<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>-v<span class="w">        </span><span class="c1"># Verify Encryption: Enabled</span>
-</code></pre></div>
-<h2 id="solutions-enabler-rbac">Solutions Enabler RBAC<a class="headerlink" href="#solutions-enabler-rbac" title="Permanent link">&para;</a></h2>
-<p>Solutions Enabler v9+ enforces role-based access at the array scope. Roles for SRDF operations:</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Permitted Operations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>StorageAdmin</code></td>
-<td>symrdf failover, establish, split, suspend</td>
-</tr>
-<tr>
-<td><code>StorageMonitor</code></td>
-<td>symrdf query, list — read-only</td>
-</tr>
-<tr>
-<td><code>Audit</code></td>
-<td>Read-only access to audit logs</td>
-</tr>
-</tbody>
-</table>
-<p>Create a dedicated service account per automation system; never use the root Solutions Enabler account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symauth<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>add<span class="w"> </span>-username<span class="w"> </span>svc_dr_automation<span class="w"> </span>-role<span class="w"> </span>StorageAdmin<span class="w"> </span>-scope<span class="w"> </span>rdfg:&lt;group_number&gt;
-</code></pre></div>
-<h2 id="preventing-accidental-resync">Preventing Accidental Resync<a class="headerlink" href="#preventing-accidental-resync" title="Permanent link">&para;</a></h2>
-<p>For async operations, accidentally re-syncing from target to source (after a failover test) destroys production data. Guard against this:</p>
-<ul>
-<li>Set SYMCLI session to confirm mode for destructive operations: <code>SYMCLI_CONFIRM=prompt</code></li>
-<li>Restrict <code>symrdf restore</code> and <code>symrdf establish -full</code> to a separate break-glass account</li>
-<li>Implement a peer-review process for any SRDF failover in production</li>
-</ul>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>All SRDF operations generate entries in the PowerMax audit log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w">         </span><span class="c1"># List all RDF events</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symevent<span class="w"> </span>show<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-event_id<span class="w"> </span>&lt;ID&gt;<span class="w">    </span><span class="c1"># Detail on specific event</span>
-</code></pre></div>
-<p>Forward to SIEM via syslog:
-- Configure Unisphere: Settings → Notifications → Syslog → add SIEM IP, port 514 (UDP) or 6514 (TLS)
-- Alert on event types: <code>SRDF Split</code>, <code>SRDF Failover</code>, <code>SRDF Suspend</code>, <code>SRDF Establish</code></p>
-<h2 id="network-port-requirements">Network Port Requirements<a class="headerlink" href="#network-port-requirements" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Port</th>
-<th>Protocol</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>3260</td>
-<td>TCP</td>
-<td>iSCSI (if used for management)</td>
-</tr>
-<tr>
-<td>5000</td>
-<td>TCP</td>
-<td>Solutions Enabler SYMAPI</td>
-</tr>
-<tr>
-<td>443</td>
-<td>HTTPS</td>
-<td>Unisphere REST API</td>
-</tr>
-<tr>
-<td>Custom</td>
-<td>FCIP</td>
-<td>SRDF replication over IP (configurable per director)</td>
-</tr>
-</tbody>
-</table>
-<p>Restrict FCIP and Solutions Enabler API ports to array management IPs only using firewall ACLs.</p>
-<h2 id="credential-rotation">Credential Rotation<a class="headerlink" href="#credential-rotation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Solutions Enabler service accounts: rotate passwords every 90 days</li>
-<li>Unisphere API tokens: rotate client certificates annually or on personnel change</li>
-<li>Verify no shared credentials between monitoring and DR automation accounts</li>
-</ul>
+<h1 id="srdfa-security">SRDF/A — Security<a class="headerlink" href="#srdfa-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Solutions Enabler service accounts, credential rotation, and access policies.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>RBAC roles, scope restrictions, and preventing accidental resync.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>SRDF/E in-flight encryption with AES-256 and verification commands.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Network port requirements, firewall rules, audit logging, and SIEM integration.</span>
+</a>
+
+</div>
 
 
 

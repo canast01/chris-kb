@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell VPLEX — Overview - Chris KB</title>
+        <title>Dell VPLEX — Architecture Overview - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Dell VPLEX — Overview · Chris KB">
+  <meta property="og:title" content="Dell VPLEX — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dell VPLEX — Overview · Chris KB">
+  <meta name="twitter:title" content="Dell VPLEX — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dell-vplex-overview" class="md-skip">
+        <a href="#dell-vplex-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell VPLEX — Overview
+              Dell VPLEX — Architecture Overview
             
           </span>
         </div>
@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#storage-federation-topology" class="md-nav__link">
+  <a href="#deployment-models" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage Federation Topology
+        Deployment Models
       
     </span>
   </a>
@@ -717,10 +717,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
+  <a href="#storage-object-hierarchy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        HA Topology
+        Storage Object Hierarchy
       
     </span>
   </a>
@@ -728,10 +728,121 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
+  <a href="#vplex-metro-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Connectivity
+        VPLEX Metro Topology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPLEX Metro Topology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inter-cluster-link-icl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inter-Cluster Link (ICL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#witness-wan-com-arbitrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Witness (WAN-COM Arbitrator)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#director-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Director Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Director Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#director-pair-and-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Director Pair and Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vplex-geo-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPLEX Geo Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-path-for-a-host-write-metro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Path for a Host Write (Metro)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vplex-local-vs-metro-feature-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPLEX Local vs. Metro — Feature Comparison
       
     </span>
   </a>
@@ -758,69 +869,405 @@
 
 
 
-<h1 id="dell-vplex-overview">Dell VPLEX — Overview<a class="headerlink" href="#dell-vplex-overview" title="Permanent link">&para;</a></h1>
-<p>Dell VPLEX is a storage virtualisation and federation platform that presents unified virtual volumes to hosts from one or more heterogeneous backend storage arrays. VPLEX abstracts physical storage into virtual volumes, enabling live data mobility between arrays, active-active block storage access across sites, and non-disruptive migration without host changes. VPLEX is deployed as a set of director pairs, each running the GeoSynchrony software stack. Management is via the <code>vplexcli</code> command-line interface or Unisphere for VPLEX web GUI.</p>
-<h2 id="storage-federation-topology">Storage Federation Topology<a class="headerlink" href="#storage-federation-topology" title="Permanent link">&para;</a></h2>
+<h1 id="dell-vplex-architecture-overview">Dell VPLEX — Architecture Overview<a class="headerlink" href="#dell-vplex-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>Dell VPLEX is a storage federation and virtualisation platform that decouples physical storage from the host view, presenting virtual volumes to hosts regardless of which back-end array holds the data. VPLEX Local, Metro, and Geo represent progressively wider federation scopes — from a single data centre through to asynchronous long-distance replication.</p>
+<h2 id="deployment-models">Deployment Models<a class="headerlink" href="#deployment-models" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Sites</th>
+<th>Replication</th>
+<th>RTT Limit</th>
+<th>Active-Active</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPLEX Local (VS2)</td>
+<td>1</td>
+<td>Synchronous (within engine)</td>
+<td>N/A</td>
+<td>Yes (within site)</td>
+<td>LUN virtualisation, data mobility, active-active within DC</td>
+</tr>
+<tr>
+<td>VPLEX Metro</td>
+<td>2</td>
+<td>Synchronous (ICL)</td>
+<td>≤5ms</td>
+<td>Yes (both sites)</td>
+<td>Zero-RPO, zero-RTO stretched cluster for VMware HA, vMotion</td>
+</tr>
+<tr>
+<td>VPLEX Geo</td>
+<td>2+</td>
+<td>Asynchronous (RecoverPoint)</td>
+<td>Any</td>
+<td>No</td>
+<td>Long-distance DR beyond Metro RTT limits</td>
+</tr>
+</tbody>
+</table>
+<h2 id="storage-object-hierarchy">Storage Object Hierarchy<a class="headerlink" href="#storage-object-hierarchy" title="Permanent link">&para;</a></h2>
+<p>VPLEX builds virtual volumes from back-end storage through a layered hierarchy. Understanding this stack is essential for provisioning, expanding, and troubleshooting.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Back-end Array LUN (storage volume)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    └── Extent            (a VPLEX claim on a storage volume or portion of one)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        └── Local Device  (one or more extents, RAID-0 or RAID-1 within a cluster)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>            └── Distributed Device (RAID-1 across two clusters — Metro only)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                └── Virtual Volume (the object presented to hosts)
+</code></pre></div>
+<p>Each layer maps to a vplexcli path:</p>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>vplexcli Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage volumes</td>
+<td><code>/clusters/&lt;c&gt;/storage-elements/storage-volumes/</code></td>
+</tr>
+<tr>
+<td>Extents</td>
+<td><code>/clusters/&lt;c&gt;/storage-elements/extents/</code></td>
+</tr>
+<tr>
+<td>Local devices</td>
+<td><code>/clusters/&lt;c&gt;/devices/</code></td>
+</tr>
+<tr>
+<td>Distributed devices</td>
+<td><code>/distributed-storage/distributed-devices/</code></td>
+</tr>
+<tr>
+<td>Virtual volumes</td>
+<td><code>/virtual-volumes/</code></td>
+</tr>
+<tr>
+<td>Storage views</td>
+<td><code>/clusters/&lt;c&gt;/exports/storage-views/</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="vplex-metro-topology">VPLEX Metro Topology<a class="headerlink" href="#vplex-metro-topology" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
-  H1(["Hosts Site A"]) --&gt; DIR1["VPLEX Director Pair\nCluster 1 — Site A"]
-  H2(["Hosts Site B"]) --&gt; DIR2["VPLEX Director Pair\nCluster 2 — Site B"]
-  DIR1 &lt;--&gt;|"WAN link\nGeoSynchrony"| DIR2
-  DIR1 --&gt; STG1[("Local Storage A")]
-  DIR2 --&gt; STG2[("Local Storage B")]
+  W(["Witness VM\nSite C (3rd domain)"])
+  subgraph "Site A"
+    HA(["Hosts A"]) --&gt; DIR_A["VPLEX Cluster-1\nDirector Pair A"]
+    DIR_A --&gt; STG_A[("Array A\nPowerMax / Unity")]
+  end
+  subgraph "Site B"
+    HB(["Hosts B"]) --&gt; DIR_B["VPLEX Cluster-2\nDirector Pair B"]
+    DIR_B --&gt; STG_B[("Array B\nPowerMax / Unity")]
+  end
+  DIR_A &lt;--&gt;|"ICL — 10/25GbE\n≤5ms RTT"| DIR_B
+  W -. "Quorum" .- DIR_A
+  W -. "Quorum" .- DIR_B
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
   classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
-  class DIR1,DIR2 ctrl
-  class STG1,STG2 store
-  class H1,H2 host</code></pre>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p><strong>Single site (VS2 / Local):</strong></p>
+  classDef wit fill:#b45309,stroke:#92400e,color:#fff
+  class DIR_A,DIR_B ctrl
+  class STG_A,STG_B store
+  class HA,HB host
+  class W wit</code></pre>
+<h3 id="inter-cluster-link-icl">Inter-Cluster Link (ICL)<a class="headerlink" href="#inter-cluster-link-icl" title="Permanent link">&para;</a></h3>
+<p>The ICL is the synchronous replication channel between Metro clusters. All write I/O to a distributed device is acknowledged only after both cluster legs confirm the write, making the ICL latency directly visible in host write latency.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTT budget</td>
+<td>≤5ms (10ms round-trip for the synchronous ack)</td>
+</tr>
+<tr>
+<td>Minimum paths</td>
+<td>2 independent physical paths</td>
+</tr>
+<tr>
+<td>Interface type</td>
+<td>10GbE or 25GbE; dark fibre or carrier WAN with QoS</td>
+</tr>
+<tr>
+<td>Bandwidth provisioning</td>
+<td>Provision ≥2× peak write throughput at either site</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Alert on ICL path failure; monitor utilisation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="witness-wan-com-arbitrator">Witness (WAN-COM Arbitrator)<a class="headerlink" href="#witness-wan-com-arbitrator" title="Permanent link">&para;</a></h3>
+<p>The Witness is a lightweight VM deployed in a third failure domain that provides quorum arbitration for Metro deployments.</p>
+<p><strong>Without Witness</strong>: if the ICL fails, neither cluster can determine whether the other is alive. Both clusters suspend I/O on distributed devices in consistency groups to prevent split-brain data divergence.</p>
+<p><strong>With Witness</strong>: on ICL failure, each cluster contacts the Witness. The Witness grants quorum to the first cluster that requests it, allowing that cluster to continue serving I/O. The other cluster's distributed device legs are suspended.</p>
+<p>Witness requirements:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Location</td>
+<td>Third failure domain — not co-located at Site A or Site B</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Reachable from both clusters on management network</td>
+</tr>
+<tr>
+<td>VM resources</td>
+<td>Minimal; typically 2 vCPU, 4GB RAM</td>
+</tr>
+<tr>
+<td>OS</td>
+<td>Provided as a pre-configured Dell appliance OVA</td>
+</tr>
+<tr>
+<td>Redundancy</td>
+<td>A second Witness VM can be configured; recommended for critical environments</td>
+</tr>
+</tbody>
+</table>
+<p>Check Witness status from both clusters:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+</code></pre></div>
+<p>Expected output fields: <code>witness-connectivity: connected</code>, <code>witness-reachable: true</code>.</p>
+<h2 id="director-architecture">Director Architecture<a class="headerlink" href="#director-architecture" title="Permanent link">&para;</a></h2>
+<p>Each VPLEX director is a processing node with:</p>
 <ul>
-<li>Director pairs provide N+1 redundancy within a site — one director can fail without interrupting I/O.</li>
-<li>Cache within a director pair is mirrored; losing one director does not lose write data.</li>
-<li>Backend arrays connect to both directors in a pair for multipath redundancy.</li>
+<li><strong>Front-end FC ports</strong> — present virtual volumes to hosts; each port is assigned to one or more storage views</li>
+<li><strong>Back-end FC ports</strong> — connect to back-end arrays; discover and claim storage volumes</li>
+<li><strong>Write cache module</strong> — NVRAM-backed write cache; mirrored between both directors in a pair</li>
+<li><strong>High-speed interconnect</strong> — connects both directors in a pair for cache mirroring and path failover</li>
 </ul>
-<p><strong>Metro (active-active, two sites):</strong></p>
-<ul>
-<li>Distributed devices span both clusters; each site has a complete copy of the data (synchronous mirroring).</li>
-<li>Hosts at both sites access the same distributed device simultaneously with full read/write capability.</li>
-<li>If one cluster becomes unreachable, the Witness determines which cluster continues serving I/O (quorum). Without a Witness, a cluster partition causes both sites to suspend I/O.</li>
-<li>Inter-Cluster Link (ICL) carries write synchronisation traffic between sites; RTT must be ≤5ms for Metro.</li>
-</ul>
-<p><strong>Geo (async, two sites):</strong></p>
-<ul>
-<li>Uses RecoverPoint for asynchronous replication; VPLEX Geo presents the volume on one site at a time.</li>
-<li>Not active-active; Geo is a DR configuration for sites beyond Metro RTT limits.</li>
-</ul>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
+<h3 id="director-pair-and-engine">Director Pair and Engine<a class="headerlink" href="#director-pair-and-engine" title="Permanent link">&para;</a></h3>
+<p>A director pair (two directors) shares a cache mirror and is housed in a single engine (chassis). Cache mirroring within a pair ensures that no write is acknowledged until both directors hold it — if one director in a pair fails, the surviving director has a complete copy of outstanding writes.</p>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Director</td>
+<td>Single processing node with FE + BE FC ports and write cache</td>
+</tr>
+<tr>
+<td>Director pair</td>
+<td>Two directors in one engine; cache-mirrored; minimum HA unit</td>
+</tr>
+<tr>
+<td>Engine</td>
+<td>Physical chassis housing one or two director pairs</td>
+</tr>
+<tr>
+<td>Cluster</td>
+<td>One or more engines at a single site presenting one logical VPLEX cluster</td>
+</tr>
+</tbody>
+</table>
+<p>List directors across all engines:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/&quot;</span>
+</code></pre></div>
+<p>List ports on a specific director:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/&quot;</span>
+</code></pre></div>
+<h3 id="port-types">Port Types<a class="headerlink" href="#port-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Port Type</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Front-end (FE)</td>
+<td><code>director-1-1-A/hardware/ports/A0-FC00</code></td>
+<td>Hosts zone to these ports; storage views present volumes through FE ports</td>
+</tr>
+<tr>
+<td>Back-end (BE)</td>
+<td><code>director-1-1-A/hardware/ports/B0-FC00</code></td>
+<td>VPLEX zones to array target ports; storage volumes are discovered and claimed on BE ports</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Dedicated management NIC on VMS</td>
+<td>Used by vplexcli and Unisphere management traffic only; no data path</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vplex-geo-architecture">VPLEX Geo Architecture<a class="headerlink" href="#vplex-geo-architecture" title="Permanent link">&para;</a></h2>
+<p>VPLEX Geo extends federation beyond the ≤5ms RTT constraint using Dell RecoverPoint for asynchronous replication. Unlike Metro, Geo volumes are active on only one site at a time.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Site A (Active)                     Site B (Standby/DR)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  VPLEX Cluster-1                     VPLEX Cluster-2
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  RecoverPoint splitter               RecoverPoint appliance
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    → async replication →               receives async journal
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  Hosts read/write vol                Hosts cannot write (site not active)
+</code></pre></div>
+<p>Key differences from Metro:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Metro</th>
+<th>Geo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Replication</td>
+<td>Synchronous</td>
+<td>Asynchronous (RecoverPoint journal)</td>
+</tr>
+<tr>
+<td>RPO</td>
+<td>Zero</td>
+<td>Configurable (minutes to hours)</td>
+</tr>
+<tr>
+<td>Active-active</td>
+<td>Yes</td>
+<td>No (active on one site at a time)</td>
+</tr>
+<tr>
+<td>Failover</td>
+<td>Transparent (Witness-arbitrated)</td>
+<td>Orchestrated RecoverPoint failover</td>
+</tr>
+<tr>
+<td>RTT limit</td>
+<td>≤5ms</td>
+<td>Any distance</td>
+</tr>
+</tbody>
+</table>
+<h2 id="connectivity-overview">Connectivity Overview<a class="headerlink" href="#connectivity-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Layer</th>
-<th>Protocol / Interface</th>
+<th>Protocol</th>
 <th>Details</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Host to VPLEX</td>
-<td>Fibre Channel (8Gb/16Gb)</td>
-<td>Hosts zone to VPLEX front-end FC ports; VPLEX presents virtual volumes to hosts</td>
+<td>Host → VPLEX</td>
+<td>Fibre Channel 8Gb/16Gb</td>
+<td>Hosts zone to VPLEX front-end FC ports only</td>
 </tr>
 <tr>
-<td>VPLEX to Backend Array</td>
-<td>Fibre Channel (8Gb/16Gb)</td>
-<td>VPLEX back-end FC ports zone to backend array ports; VPLEX discovers and claims storage volumes</td>
+<td>VPLEX → Back-end array</td>
+<td>Fibre Channel 8Gb/16Gb</td>
+<td>VPLEX back-end ports zone to array target ports</td>
 </tr>
 <tr>
-<td>Inter-Cluster Link (Metro)</td>
-<td>10GbE or 25GbE WAN / dark fibre</td>
-<td>Carries synchronous write data between Metro clusters; requires ≤5ms RTT</td>
+<td>VPLEX cluster → cluster (Metro)</td>
+<td>10GbE / 25GbE</td>
+<td>ICL carries synchronous write data; ≤5ms RTT required</td>
+</tr>
+<tr>
+<td>VPLEX → Witness</td>
+<td>IP (management network)</td>
+<td>Quorum heartbeat; low-bandwidth, high-reliability path</td>
+</tr>
+<tr>
+<td>VPLEX → RecoverPoint (Geo)</td>
+<td>Fibre Channel or IP</td>
+<td>Splitter integration for async replication</td>
 </tr>
 <tr>
 <td>Management</td>
-<td>1GbE management interface</td>
-<td>VMS connects to directors for management; vplexcli connects to the VMS</td>
+<td>SSH / HTTPS</td>
+<td>vplexcli over SSH to VMS; Unisphere HTTPS on VMS</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-path-for-a-host-write-metro">Data Path for a Host Write (Metro)<a class="headerlink" href="#data-path-for-a-host-write-metro" title="Permanent link">&para;</a></h2>
+<p>Understanding the write path is critical for latency troubleshooting:</p>
+<ol>
+<li>Host submits write to front-end FC port on VPLEX Cluster-1 director</li>
+<li>VPLEX director acknowledges receipt and writes to local NVRAM write cache</li>
+<li>VPLEX synchronously replicates the write to Cluster-2 over the ICL</li>
+<li>Cluster-2 director acknowledges receipt into its own write cache</li>
+<li>Cluster-1 director acknowledges the write completion to the host</li>
+<li>Both clusters destage the write to their local back-end arrays independently</li>
+</ol>
+<p>Host write latency = local VPLEX cache latency + ICL round-trip latency + any back-pressure from cache destage.</p>
+<h2 id="vplex-local-vs-metro-feature-comparison">VPLEX Local vs. Metro — Feature Comparison<a class="headerlink" href="#vplex-local-vs-metro-feature-comparison" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>VPLEX Local</th>
+<th>VPLEX Metro</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sites</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Virtual volumes</td>
+<td>Local only</td>
+<td>Distributed (spans both sites)</td>
+</tr>
+<tr>
+<td>Active-active host access</td>
+<td>Yes (within site)</td>
+<td>Yes (both sites simultaneously)</td>
+</tr>
+<tr>
+<td>Zero RPO</td>
+<td>Yes (within site)</td>
+<td>Yes (both sites)</td>
+</tr>
+<tr>
+<td>Transparent failover</td>
+<td>N/A</td>
+<td>Yes (Witness-arbitrated)</td>
+</tr>
+<tr>
+<td>Consistency groups</td>
+<td>Local</td>
+<td>Distributed</td>
+</tr>
+<tr>
+<td>ICL required</td>
+<td>No</td>
+<td>Yes (≤5ms RTT)</td>
+</tr>
+<tr>
+<td>Witness required</td>
+<td>No</td>
+<td>Yes (strongly recommended)</td>
+</tr>
+<tr>
+<td>Data mobility</td>
+<td>Yes (non-disruptive migration)</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>

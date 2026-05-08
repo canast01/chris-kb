@@ -699,119 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cg-in-error-state" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CG in Error State
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#journal-overflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Journal Overflow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#splitter-communication-failure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Splitter Communication Failure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rpo-violation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPO Violation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#failover-did-not-complete-cleanly" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failover Did Not Complete Cleanly
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#link-down-wan-outage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Link Down / WAN Outage
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#support-bundle-collection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Support Bundle Collection
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -831,133 +718,24 @@
 
 
 <h1 id="recoverpoint-troubleshooting">RecoverPoint — Troubleshooting<a class="headerlink" href="#recoverpoint-troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<h3 id="cg-in-error-state">CG in Error State<a class="headerlink" href="#cg-in-error-state" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms:</strong> CG status shows <code>Error</code> or <code>Communication Problem</code> in the RecoverPoint Management Application (RPMA).</p>
-<p><strong>Diagnostic Steps:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via boxmgmt SSH to RPA</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_cg<span class="w"> </span>&lt;CG-name&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
-</code></pre></div>
-<p><strong>Common causes:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Cause</th>
-<th>Resolution</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Journal volume full</td>
-<td>Expand journal LUN or reduce retention window</td>
-</tr>
-<tr>
-<td>WAN link down</td>
-<td>Restore connectivity; RP will resume replication automatically once link recovers</td>
-</tr>
-<tr>
-<td>Splitter communication failure</td>
-<td>See Splitter section below</td>
-</tr>
-<tr>
-<td>RPA node offline</td>
-<td>Check RPA cluster health; redistribute CGs if node is failed</td>
-</tr>
-<tr>
-<td>Storage path failure</td>
-<td>Verify zoning and array paths to journal volumes</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="journal-overflow">Journal Overflow<a class="headerlink" href="#journal-overflow" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms:</strong> CG RPO alarm triggered; journal shows &gt; 90% utilization.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>list
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>status<span class="w"> </span>&lt;journal-name&gt;
-</code></pre></div>
-<p><strong>Resolution:</strong>
-1. Identify which CG is generating excess writes
-2. Expand journal volume (can be done non-disruptively on most arrays)
-3. If link is down and journal is exhausted, a full resync may be required after link restoration
-4. Review if RPO target is realistic for the write rate</p>
-<hr />
-<h3 id="splitter-communication-failure">Splitter Communication Failure<a class="headerlink" href="#splitter-communication-failure" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms:</strong> CG shows <code>Splitter connection problem</code>; writes may be blocked or split-brain situation.</p>
-<p><strong>PowerMax hardware splitter:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On PowerMax (via Solutions Enabler / SYMCLI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check splitter registration in RP</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>status<span class="w"> </span>&lt;splitter-name&gt;
-</code></pre></div></p>
-<p><strong>RP4VM software splitter (ESXi):</strong>
-- Check ESXi host kernel module: <code>esxcli software vib list | grep rp</code>
-- Restart splitter on ESXi if needed (requires brief I/O pause — schedule maintenance)</p>
-<hr />
-<h3 id="rpo-violation">RPO Violation<a class="headerlink" href="#rpo-violation" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms:</strong> RPO alarm fires; CG reports lag exceeding threshold.</p>
-<p><strong>Diagnostic Steps:</strong>
-1. Check WAN link utilization — is bandwidth saturated?
-2. Check write rate increase (application change or batch job)
-3. Verify RPA cluster load — distribute CGs if one RPA is overloaded
-4. Review journal state for overflow</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_cg<span class="w"> </span>&lt;CG-name&gt;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>performance
-</code></pre></div>
-<hr />
-<h3 id="failover-did-not-complete-cleanly">Failover Did Not Complete Cleanly<a class="headerlink" href="#failover-did-not-complete-cleanly" title="Permanent link">&para;</a></h3>
-<p><strong>Symptoms:</strong> After a failover, CG is stuck in <code>Failover in progress</code> or production site does not become accessible on DR.</p>
-<p><strong>Steps:</strong>
-1. Verify all journal data has been applied at DR site
-2. Check image access logs in RPMA
-3. If failover is incomplete, use <code>Enable Image Access</code> manually for the desired recovery point
-4. After application validation, use <code>Recover Production</code> to complete the failover</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>enable_image_access<span class="w"> </span>&lt;CG-name&gt;<span class="w"> </span>&lt;copy-name&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>recover_production<span class="w"> </span>&lt;CG-name&gt;
-</code></pre></div>
-<p><strong>If re-sync is required after failover:</strong>
-- Use <code>Direct Access</code> mode to start recovery, then initiate resync back to production</p>
-<hr />
-<h3 id="link-down-wan-outage">Link Down / WAN Outage<a class="headerlink" href="#link-down-wan-outage" title="Permanent link">&para;</a></h3>
-<p><strong>During outage:</strong>
-- CGs accumulate in journal at production site
-- Monitor journal capacity; alert if &gt; 70%
-- No action needed if journal has capacity; RP resumes automatically when link restores</p>
-<p><strong>After link restores:</strong>
-- Monitor resync rate and lag reduction
-- Verify RPO returns to compliance within expected window
-- Check for any CGs that failed to resume automatically</p>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Location</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RPA system logs</td>
-<td>Accessible via <code>boxmgmt</code> → <code>Support</code> → <code>Collect support bundle</code></td>
-</tr>
-<tr>
-<td>RPMA audit log</td>
-<td>RecoverPoint Management Application → Reports → Audit Log</td>
-</tr>
-<tr>
-<td>Splitter logs (ESXi)</td>
-<td><code>/var/log/vmkernel.log</code> on ESXi host</td>
-</tr>
-</tbody>
-</table>
-<h2 id="support-bundle-collection">Support Bundle Collection<a class="headerlink" href="#support-bundle-collection" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Via boxmgmt</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>boxmgmt<span class="w"> </span>support<span class="w"> </span>collect_bundle
-</code></pre></div>
-<p>Upload bundle to Dell Support case via https://www.dell.com/support.</p>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>CG errors, journal overflow, splitter failures, and RPO violations.</span>
+</a>
+
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Log locations, support bundle collection, and diagnostic commands.</span>
+</a>
+
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>Dell support engagement, SR creation, and log collection.</span>
+</a>
+
+</div>
 
 
 

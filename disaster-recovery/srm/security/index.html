@@ -21,7 +21,7 @@
     
     
       
-        <title>SRM Security - Chris KB</title>
+        <title>SRM — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SRM Security · Chris KB">
+  <meta property="og:title" content="SRM — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SRM Security · Chris KB">
+  <meta name="twitter:title" content="SRM — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SRM Security
+              SRM — Security
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#vcenter-rbac-for-dr-operators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vCenter RBAC for DR Operators
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#site-pair-service-account" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Site Pair Service Account
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-failover-network-isolation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Failover Network Isolation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#firewall-ports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firewall Ports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,103 +717,30 @@
 
 
 
-<h1 id="srm-security">SRM Security<a class="headerlink" href="#srm-security" title="Permanent link">&para;</a></h1>
-<h2 id="vcenter-rbac-for-dr-operators">vCenter RBAC for DR Operators<a class="headerlink" href="#vcenter-rbac-for-dr-operators" title="Permanent link">&para;</a></h2>
-<p>Define a dedicated <code>DR-Operator</code> role in vCenter with only the privileges required for SRM operations:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Privileges to include:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Site Recovery Manager:
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    - Site Recovery.Manage
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    - Site Recovery.Test
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    - Site Recovery.Recovery
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  Datastore:
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    - Datastore.AllocateSpace
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Network:
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    - Network.Assign (for network customisation)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  Virtual Machine:
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    - Virtual Machine.Provisioning.* (for recovery)
-</code></pre></div>
-<p>Assign the role at the SRM inventory root — do not grant broad vCenter Admin privileges to DR operators.</p>
-<h2 id="site-pair-service-account">Site Pair Service Account<a class="headerlink" href="#site-pair-service-account" title="Permanent link">&para;</a></h2>
-<p>The SRM site pair connection uses a service account on each vCenter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Account: svc-srm-pair@domain.local
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Privileges: SRM plug-in permissions + read access to vCenter inventory
-</code></pre></div>
-<ul>
-<li>Do not use a named personal account — must survive staff changes</li>
-<li>Rotate password every 90 days (coordinate rotation on both sites simultaneously to avoid pair disconnect)</li>
-<li>Document the account in the service account inventory in CMDB</li>
-</ul>
-<p>To update credentials after rotation: SRM UI → Site Recovery → Sites → Edit Site Pair Credentials</p>
-<h2 id="test-failover-network-isolation">Test Failover Network Isolation<a class="headerlink" href="#test-failover-network-isolation" title="Permanent link">&para;</a></h2>
-<p>Recovery plan tests must never reach production networks. Enforce this:</p>
-<ol>
-<li>Create an isolated port group on the recovery site ESXi cluster: <code>vPG-SRM-Test-Bubble</code> (no uplinks)</li>
-<li>Configure network mapping in SRM: source production network → <code>vPG-SRM-Test-Bubble</code></li>
-<li>Verify no routing exists from the test bubble to production VLANs</li>
-<li>If using NSX: create a dedicated overlay segment with no uplink for test failover</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify test network mapping</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-SrmRecoveryPlan</span> <span class="p">|</span> <span class="nb">Get-SrmNetworkMapping</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">RecoveryNetwork</span>
-</code></pre></div>
-<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
-<p>Replace default self-signed certificates in production deployments:</p>
-<ol>
-<li>Generate CSR on SRM server</li>
-<li>Sign with internal CA (or public CA for partner-site connections)</li>
-<li>Install certificate: SRM → vCenter → Site Recovery → Certificates → Replace</li>
-</ol>
-<p>Certificates used by SRM:
-- SRM ↔ vCenter: VMCA-issued or custom
-- SRM ↔ SRM (inter-site): Must be mutually trusted (both sites' CAs in trust stores)
-- SRM ↔ SRA: Inherits SRM trust store</p>
-<p>Track expiry dates in certificate inventory; SRM stops functioning if certificates expire.</p>
-<h2 id="firewall-ports">Firewall Ports<a class="headerlink" href="#firewall-ports" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>Destination</th>
-<th>Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SRM Server</td>
-<td>vCenter</td>
-<td>443</td>
-<td>vSphere API</td>
-</tr>
-<tr>
-<td>SRM Server</td>
-<td>Remote SRM Server</td>
-<td>443, 8095</td>
-<td>Site pair communication</td>
-</tr>
-<tr>
-<td>SRM Server</td>
-<td>Array/SRA</td>
-<td>443, 9090</td>
-<td>SRA API calls</td>
-</tr>
-<tr>
-<td>vSphere Replication</td>
-<td>Remote vSphere Replication</td>
-<td>44046</td>
-<td>Replication traffic</td>
-</tr>
-</tbody>
-</table>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>SRM logs all recovery plan events. Ensure logs are forwarded to SIEM:</p>
-<ul>
-<li>SRM logs location: <code>C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\</code></li>
-<li>Forward using a log collector agent (Filebeat, Splunk UF) on the SRM server</li>
-<li>SIEM alert rules:</li>
-<li>Recovery plan started outside business hours or without change ticket</li>
-<li>Recovery plan started on production (non-test) mode</li>
-<li>Failed recovery plan steps (suggests misconfiguration before actual DR event)</li>
-</ul>
+<h1 id="srm-security">SRM — Security<a class="headerlink" href="#srm-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Service accounts, site pair credentials, and certificate management.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>vCenter RBAC roles and least-privilege configuration for DR operators.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>Firewall ports, TLS certificates, and inter-site communication security.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Test network isolation, audit logging, and SIEM integration.</span>
+</a>
+
+</div>
 
 
 

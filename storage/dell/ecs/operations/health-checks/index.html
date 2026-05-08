@@ -717,10 +717,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
+  <a href="#pre-change-health-check" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Check
+        Pre-Change Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-level-diagnostic-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node-Level Diagnostic Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-planning-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Planning Checks
       
     </span>
   </a>
@@ -775,94 +808,239 @@
 <thead>
 <tr>
 <th>Check</th>
-<th>Command</th>
+<th>Command / Location</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Log in to ECS Portal → Dashboard and review the Alerts panel</td>
-<td></td>
-<td>Triage by severity</td>
+<td>ECS Portal → Dashboard → Alerts</td>
+<td>Triage by severity; any <code>ERROR</code> or <code>CRITICAL</code> alert requires same-day action</td>
 </tr>
 <tr>
+<td>Review cluster capacity utilisation</td>
 <td>ECS Portal → Dashboard → Capacity</td>
-<td></td>
-<td></td>
+<td>Alert if used capacity exceeds 70%; plan expansion before 80%</td>
 </tr>
 <tr>
-<td>Query <code>GET /vdc/nodes</code> via the Management REST API</td>
+<td>Verify all nodes are in <code>GOOD</code> state</td>
 <td><code>GET /vdc/nodes</code></td>
-<td>All nodes should report <code>GOOD</code>; a <code>DEGRADED</code> or offline node requires immediate investigation</td>
+<td>A <code>DEGRADED</code> or offline node requires immediate investigation</td>
 </tr>
 <tr>
-<td>Query <code>GET /vdc/capacity</code> to retrieve current cluster capacity metrics</td>
+<td>Retrieve current capacity metrics</td>
 <td><code>GET /vdc/capacity</code></td>
-<td></td>
+<td>Compare to previous day's baseline; unexpected growth indicates a lifecycle or versioning issue</td>
 </tr>
 <tr>
+<td>Check geo-replication lag</td>
 <td>ECS Portal → Geo Monitoring</td>
-<td></td>
-<td></td>
+<td>Any growing lag between VDCs requires investigation; zero lag is the steady-state target</td>
 </tr>
 <tr>
-<td>Confirm the S3 endpoint is responding</td>
-<td><code>HEAD</code></td>
-<td></td>
+<td>Confirm S3 endpoint is responding</td>
+<td><code>HEAD /&lt;bucket&gt;</code> or <code>aws s3 ls</code></td>
+<td>A non-200 response or timeout indicates a data service or network issue</td>
 </tr>
 <tr>
-<td>Review bucket-level capacity for fast-growing buckets</td>
-<td></td>
-<td>Identify any namespace where week-over-week growth is accelerating beyond expected rates</td>
+<td>Review disk health on all nodes</td>
+<td>ECS Portal → Hardware → Disks</td>
+<td>Any <code>FAILED</code> or <code>SUSPECT</code> disk requires disk replacement initiation</td>
+</tr>
+<tr>
+<td>Check active alerts programmatically</td>
+<td><code>GET /vdc/alerts</code></td>
+<td>Automate this check from a monitoring script for 24/7 alerting</td>
 </tr>
 </tbody>
 </table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<p>Run these checks before any planned change or as first-response steps when investigating node, replication, or S3 access issues.</p>
+<h2 id="pre-change-health-check">Pre-Change Health Check<a class="headerlink" href="#pre-change-health-check" title="Permanent link">&para;</a></h2>
+<p>Run these checks before any planned change — node additions, software upgrades, replication group changes, or VDC configuration updates.</p>
 <ul>
 <li>[ ] ECS Portal → Hardware → Nodes: all nodes show <code>GOOD</code>; no nodes are <code>DEGRADED</code> or offline</li>
 <li>[ ] <code>GET /vdc/nodes</code> — programmatic confirmation that all nodes report healthy status</li>
-<li>[ ] <code>GET /vdc/capacity</code> — cluster is below 80% used; free capacity is sufficient to absorb a node rebuild if needed</li>
+<li>[ ] <code>GET /vdc/capacity</code> — cluster is below 70% used; sufficient free capacity to absorb a node rebuild</li>
 <li>[ ] <code>GET /vdc/alerts</code> — no active alerts of <code>ERROR</code> or <code>CRITICAL</code> severity</li>
 <li>[ ] ECS Portal → Geo Monitoring — all VDC replication groups are in sync with zero or near-zero lag</li>
-<li>[ ] ECS Portal → Hardware → Disks: no disks in <code>FAILED</code> or <code>SUSPECT</code> state</li>
+<li>[ ] ECS Portal → Hardware → Disks: no disks in <code>FAILED</code> or <code>SUSPECT</code> state; no <code>REBUILDING</code> disks in progress</li>
 <li>[ ] S3 endpoint functional test: a <code>ListBuckets</code> or <code>HeadBucket</code> request completes within expected latency</li>
 <li>[ ] <code>ecscli namespace list</code> — all expected namespaces are present and accessible</li>
+<li>[ ] Cassandra ring health: <code>nodetool status</code> from any node shows all nodes as <code>UN</code> (Up/Normal)</li>
+<li>[ ] ZooKeeper health: <code>echo stat | nc localhost 2181</code> from a node shows a valid <code>Mode: leader</code> or <code>Mode: follower</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to the ECS Management REST API (returns X-SDS-AUTH-TOKEN)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;sysadmin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/login&quot;</span><span class="w"> </span>-D<span class="w"> </span>-
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Retrieve VDC capacity (total, used, available, percent full)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/capacity&quot;</span>
+<h2 id="health-check-commands">Health Check Commands<a class="headerlink" href="#health-check-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># --- Authenticate to the ECS Management REST API ---</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Returns X-SDS-AUTH-TOKEN in response headers</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;sysadmin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/login&quot;</span><span class="w"> </span>-D<span class="w"> </span>-<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\r&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">ECS</span><span class="o">=</span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443&quot;</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># List all nodes and their health status</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/nodes&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Retrieve active alerts for the VDC</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/alerts&quot;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Test S3 endpoint — list buckets for a namespace using a valid access key</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;s3-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--no-verify-ssl
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># List namespaces via ecscli</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># --- Node health ---</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># All nodes should show nodestatus: GOOD</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># --- Capacity ---</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Fields: totalProvisioned_gb, usedCapacity_gb, availableCapacity_gb</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/capacity&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># --- Active alerts ---</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># No alerts should be present before a planned change</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># List buckets in a specific namespace</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>list<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># --- Geo-replication status ---</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/geo-replication/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># --- Replication group (vpool) status ---</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/data-service/vpools&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># --- S3 endpoint functional test ---</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1"># List buckets accessible to a specific object user</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;s3-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="c1"># HeadBucket test against a known bucket</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>aws<span class="w"> </span>s3api<span class="w"> </span>head-bucket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;known-bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;s3-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="c1"># --- Namespace and bucket inventory ---</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>list<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>ecscli<span class="w"> </span>bucket<span class="w"> </span>get<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;bucket&gt;
+</code></pre></div>
+<h2 id="node-level-diagnostic-checks">Node-Level Diagnostic Checks<a class="headerlink" href="#node-level-diagnostic-checks" title="Permanent link">&para;</a></h2>
+<p>SSH to individual nodes for lower-level health validation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to an ECS node</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@&lt;ecs-node&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check data disk usage (ECS data partition)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>df<span class="w"> </span>-h<span class="w"> </span>/data/
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check all node disk mounts</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,FSTYPE,MOUNTPOINT,STATE
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check ECS data service status</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>systemctl<span class="w"> </span>status<span class="w"> </span>storageos
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check ECS fabric agent status</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>systemctl<span class="w"> </span>status<span class="w"> </span>caspian
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Check service status across all nodes simultaneously</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>viprexec<span class="w"> </span>-v<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;systemctl is-active storageos&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># --- Cassandra (metadata store) health ---</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># UN = Up/Normal (healthy); UL = Up/Leaving; DN = Down/Normal (problem)</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>/opt/storageos/tools/nodetool<span class="w"> </span>status
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Cassandra compaction — excessive compaction can cause elevated metadata latency</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>/opt/storageos/tools/nodetool<span class="w"> </span>compactionstats
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># Cassandra heap usage — heap pressure causes GC pauses and metadata slowness</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>/opt/storageos/tools/nodetool<span class="w"> </span>info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>heap
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># --- ZooKeeper (cluster coordination) health ---</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># Should return Mode: leader or Mode: follower for all ZK nodes</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;srvr&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>localhost<span class="w"> </span><span class="m">2181</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Mode
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="c1"># Check ZooKeeper connection count (high connections may indicate a stuck process)</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>localhost<span class="w"> </span><span class="m">2181</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;connections|outstanding&quot;</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="c1"># --- NTP sync status (geo-replication is sensitive to clock drift) ---</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="c1"># Reference ID should be a valid time source; offset should be &lt; 100ms</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>timedatectl<span class="w"> </span>status
+</code></pre></div>
+<h2 id="capacity-planning-checks">Capacity Planning Checks<a class="headerlink" href="#capacity-planning-checks" title="Permanent link">&para;</a></h2>
+<p>Run these checks weekly or integrate into capacity reporting.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get cluster capacity and compute percent used</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/capacity&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">total = float(d.get(&#39;totalProvisioned_gb&#39;, 0))</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">used  = float(d.get(&#39;usedCapacity_gb&#39;, 0))</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">pct   = (used/total*100) if total &gt; 0 else 0</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">print(f&#39;Total: {total:.0f} GB | Used: {used:.0f} GB | Utilisation: {pct:.1f}%&#39;)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># List all namespaces and review per-namespace allocation</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Per-bucket usage (requires iterating via API)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Get all buckets in a namespace and their reported sizes</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/object/bucket?namespace=&lt;namespace&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All nodes online and healthy</li>
-<li>[ ] No active alerts at ERROR or CRITICAL level</li>
-<li>[ ] Replication health OK (no lag or failed replication)</li>
-<li>[ ] Capacity below 75%</li>
-<li>[ ] S3 endpoint responding</li>
-</ul>
+<p>Complete all items before any planned maintenance. Do not proceed if any item is unresolved.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Expected State</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All nodes GOOD</td>
+<td><code>nodestatus: GOOD</code> for every node in <code>GET /vdc/nodes</code></td>
+<td></td>
+</tr>
+<tr>
+<td>No active disk rebuilds</td>
+<td>No disks in <code>REBUILDING</code> state in Portal → Hardware → Disks</td>
+<td></td>
+</tr>
+<tr>
+<td>Geo-replication lag at zero</td>
+<td>Lag = 0 bytes / 0 seconds for all replication groups</td>
+<td></td>
+</tr>
+<tr>
+<td>No ERROR or CRITICAL alerts</td>
+<td><code>GET /vdc/alerts</code> returns empty or only informational alerts</td>
+<td></td>
+</tr>
+<tr>
+<td>Cluster capacity &lt; 70%</td>
+<td>Utilisation from <code>GET /vdc/capacity</code> is below 70%</td>
+<td></td>
+</tr>
+<tr>
+<td>Cassandra ring healthy</td>
+<td>All nodes show <code>UN</code> in <code>nodetool status</code></td>
+<td></td>
+</tr>
+<tr>
+<td>ZooKeeper quorum intact</td>
+<td>All ZK nodes reachable; <code>srvr</code> shows <code>Mode: leader/follower</code></td>
+<td></td>
+</tr>
+<tr>
+<td>NTP synchronised</td>
+<td>All nodes have offset &lt; 100ms per <code>chronyc tracking</code></td>
+<td></td>
+</tr>
+<tr>
+<td>S3 endpoint responding</td>
+<td><code>HeadBucket</code> or <code>ListBuckets</code> returns 200</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h2 id="health-summary-table">Health Summary Table<a class="headerlink" href="#health-summary-table" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -875,28 +1053,48 @@
 <tbody>
 <tr>
 <td>Node state</td>
-<td>All ONLINE</td>
-<td>Investigate offline nodes</td>
+<td>All <code>GOOD</code></td>
+<td>SSH to affected node; check OS and ECS service logs; raise Dell support case if hardware failure</td>
 </tr>
 <tr>
-<td>Capacity</td>
-<td>&lt; 75%</td>
-<td>Plan expansion</td>
+<td>Disk state</td>
+<td>All <code>GOOD</code>; no <code>FAILED</code> or <code>REBUILDING</code></td>
+<td>Initiate disk replacement via ECS Portal guided procedure; monitor rebuild progress</td>
 </tr>
 <tr>
-<td>Replication</td>
-<td>No lag/failures</td>
-<td>Check network and replication group</td>
+<td>Capacity utilisation</td>
+<td>&lt; 70%</td>
+<td>Plan node expansion; check for unexpected versioned object growth and lifecycle policy gaps</td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>0 bytes / 0 seconds</td>
+<td>Check WAN bandwidth; verify remote VDC health; check for failed replication jobs in Portal</td>
+</tr>
+<tr>
+<td>Active alerts</td>
+<td>None at ERROR/CRITICAL</td>
+<td>Triage each alert; do not proceed with changes while critical alerts are open</td>
 </tr>
 <tr>
 <td>S3 endpoint</td>
-<td>Reachable</td>
-<td>Check load balancer and node services</td>
+<td>200 OK on HeadBucket</td>
+<td>Check load balancer; check <code>storageos</code> service on nodes; review node health</td>
 </tr>
 <tr>
-<td>Alerts</td>
-<td>None critical</td>
-<td>Resolve before changes</td>
+<td>Cassandra health</td>
+<td>All nodes <code>UN</code></td>
+<td>Check Cassandra logs on affected node; high heap usage requires tuning or node restart</td>
+</tr>
+<tr>
+<td>ZooKeeper quorum</td>
+<td>Leader/follower reachable</td>
+<td>Check ZK logs; quorum loss requires immediate Dell support engagement</td>
+</tr>
+<tr>
+<td>NTP offset</td>
+<td>&lt; 100ms</td>
+<td>Fix NTP configuration immediately; ECS geo-replication consistency depends on clock sync</td>
 </tr>
 </tbody>
 </table>

@@ -21,7 +21,7 @@
     
     
       
-        <title>RecoverPoint Security - Chris KB</title>
+        <title>RecoverPoint — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="RecoverPoint Security · Chris KB">
+  <meta property="og:title" content="RecoverPoint — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="RecoverPoint Security · Chris KB">
+  <meta name="twitter:title" content="RecoverPoint — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RecoverPoint Security
+              RecoverPoint — Security
             
           </span>
         </div>
@@ -699,91 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#role-based-access-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Role-Based Access Control
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-token-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Token Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#journal-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Journal Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-segmentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Segmentation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ssh-hardening" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SSH Hardening
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-log" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Log
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -802,114 +717,30 @@
 
 
 
-<h1 id="recoverpoint-security">RecoverPoint Security<a class="headerlink" href="#recoverpoint-security" title="Permanent link">&para;</a></h1>
-<h2 id="role-based-access-control">Role-Based Access Control<a class="headerlink" href="#role-based-access-control" title="Permanent link">&para;</a></h2>
-<p>RecoverPoint has three built-in roles. Use individual named accounts, never shared credentials:</p>
-<table>
-<thead>
-<tr>
-<th>Role</th>
-<th>Capabilities</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Administrator</td>
-<td>Full configuration, failover, and system management</td>
-</tr>
-<tr>
-<td>Security Officer</td>
-<td>User management, audit log access — cannot change replication config</td>
-</tr>
-<tr>
-<td>Monitor</td>
-<td>Read-only; can view CG status, RPA health, and lag metrics</td>
-</tr>
-</tbody>
-</table>
-<p>Create accounts via RecoverPoint Management Console → System Settings → Users:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via RecoverPoint CLI</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>add_user<span class="w"> </span>-u<span class="w"> </span>svc_monitoring<span class="w"> </span>-r<span class="w"> </span>monitor<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>add_user<span class="w"> </span>-u<span class="w"> </span>svc_srm_integration<span class="w"> </span>-r<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span>
-</code></pre></div>
-<h2 id="api-token-management">API Token Management<a class="headerlink" href="#api-token-management" title="Permanent link">&para;</a></h2>
-<p>For automation accounts using the REST API, use token-based auth rather than username/password in scripts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create session token</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;rpa-ip&gt;/rest/users/sessions
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Response includes: {&quot;sessionId&quot;: &quot;&lt;token&gt;&quot;}</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Use token in subsequent calls</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span>https://&lt;rpa-ip&gt;/rest/consistency_groups
-</code></pre></div>
-<ul>
-<li>Store API tokens in CyberArk or HashiCorp Vault — never hard-code in scripts</li>
-<li>Rotate tokens quarterly or on personnel change</li>
-<li>Scope dedicated API accounts to the minimum required role (Monitor for observability, Admin only for failover automation)</li>
-</ul>
-<h2 id="journal-encryption">Journal Encryption<a class="headerlink" href="#journal-encryption" title="Permanent link">&para;</a></h2>
-<p>Journal volumes hold continuous copies of production data — protect them:</p>
-<ul>
-<li>At-rest encryption is managed at the storage array level (not in RecoverPoint itself)</li>
-<li>Ensure journal volume LUNs are on encrypted arrays or datastores</li>
-<li>For PowerMax: verify journal vols are in an encrypted Storage Group</li>
-<li>For vSphere (RP4VM): place journal VMDKs on vSAN encrypted datastore or array-encrypted NFS</li>
-</ul>
-<h2 id="network-segmentation">Network Segmentation<a class="headerlink" href="#network-segmentation" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Traffic Type</th>
-<th>Recommended Isolation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Production-to-replica replication</td>
-<td>Dedicated WAN circuit or MPLS path; no internet traversal</td>
-</tr>
-<tr>
-<td>RPA management</td>
-<td>Dedicated management VLAN, accessible only from management jump hosts</td>
-</tr>
-<tr>
-<td>RPA-to-array communication</td>
-<td>SAN fabric or dedicated NFS management network</td>
-</tr>
-<tr>
-<td>SRM ↔ RecoverPoint SRA</td>
-<td>Management network; port 7225</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ssh-hardening">SSH Hardening<a class="headerlink" href="#ssh-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify root login is disabled</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>grep<span class="w"> </span>PermitRootLogin<span class="w"> </span>/etc/ssh/sshd_config<span class="w">    </span><span class="c1"># Should show: no</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Restrict SSH to management jump hosts only (RecoverPoint CLI)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>set_system_ssh_restrictions<span class="w"> </span>-allow<span class="w"> </span>&lt;jump_host_ip&gt;/32
-</code></pre></div>
-<ul>
-<li>SSH idle session timeout: 10 minutes (TMOUT=600 in /etc/profile)</li>
-<li>SSH host keys: document fingerprints in the CMDB entry for each RPA node</li>
-</ul>
-<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
-<p>Replace the default self-signed management certificate:</p>
-<ol>
-<li>Generate CSR on each RPA node</li>
-<li>Sign with internal CA</li>
-<li>Import via Management Console → System Settings → TLS Certificates</li>
-</ol>
-<p>Track certificate expiry — RecoverPoint management console becomes inaccessible if the cert expires.</p>
-<h2 id="audit-log">Audit Log<a class="headerlink" href="#audit-log" title="Permanent link">&para;</a></h2>
-<p>RecoverPoint maintains a system audit log of all user actions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View audit log (RecoverPoint CLI)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get_audit_log<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get_audit_log<span class="w"> </span>-from_date<span class="w"> </span><span class="s2">&quot;2026-01-01&quot;</span><span class="w"> </span>-to_date<span class="w"> </span><span class="s2">&quot;2026-01-31&quot;</span>
-</code></pre></div>
-<p>Forward to SIEM via syslog: Management Console → System Settings → Syslog Notifications. Alert on:
-- Any admin account login outside business hours
-- <code>enable_image_access</code> events (indicates failover test or actual DR)
-- User account creation or role changes</p>
+<h1 id="recoverpoint-security">RecoverPoint — Security<a class="headerlink" href="#recoverpoint-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Authentication configuration and identity management.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>Roles, permissions, and least privilege access.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>Data encryption and secure communication.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Security baselines and compliance configuration.</span>
+</a>
+
+</div>
 
 
 

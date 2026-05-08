@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#local-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Accounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#active-directory-ad" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -714,13 +725,52 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Active Directory (AD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-to-role-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group-to-Role Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
   <a href="#ldap-non-ad" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LDAP (non-AD)
+        LDAP (Non-AD)
       
     </span>
   </a>
@@ -736,13 +786,63 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="SAML SSO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saml-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAML Fallback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-accounts" class="md-nav__link">
+  <a href="#api-token-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Accounts
+        API Token Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-and-password-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session and Password Policies
       
     </span>
   </a>
@@ -781,61 +881,318 @@
 
 
 <h1 id="flasharray-authentication">FlashArray — Authentication<a class="headerlink" href="#flasharray-authentication" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>SSO, LDAP, local accounts, and identity sources.</p>
-</blockquote>
-<h2 id="active-directory-ad">Active Directory (AD)<a class="headerlink" href="#active-directory-ad" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Join the FlashArray to AD: <code>puredirectoryservice setattr --base-dn &lt;base_dn&gt; --bind-user &lt;user&gt; --bind-password &lt;pwd&gt; --domain &lt;domain&gt; --uri ldaps://&lt;dc_ip&gt;</code></li>
-<li>Create admin groups in AD mapped to FlashArray roles (e.g., <code>purearray-admins</code> → <code>array_admin</code>)</li>
-<li>Test AD login with a domain account before removing local accounts</li>
-<li>Configure the group-to-role mapping: <code>pureadmin setattr --role array_admin --group &lt;ad_group&gt;</code></li>
-</ol>
-<h2 id="ldap-non-ad">LDAP (non-AD)<a class="headerlink" href="#ldap-non-ad" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Configure LDAP URI, base DN, bind credentials, and user/group attribute mapping under Directory Service settings</li>
-<li>Supports OpenLDAP, Red Hat Directory Server, and similar LDAP providers</li>
-</ul>
-<h2 id="saml-sso">SAML SSO<a class="headerlink" href="#saml-sso" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Supported on Purity//FA 6.x and later</li>
-<li>Configure the FlashArray as a SAML Service Provider in your IdP (Okta, Azure AD, ADFS)</li>
-<li>Export the FlashArray SP metadata and import into the IdP</li>
-<li>Set <code>puredirectoryservice saml</code> configuration with IdP metadata URL and certificate</li>
-</ul>
+<p>FlashArray supports multiple identity sources for admin authentication: local accounts, Active Directory (AD), LDAP, and SAML SSO. All authentication is role-based — every admin account is bound to one of the four built-in Purity roles. API tokens are the recommended credential type for automation and monitoring integrations.</p>
+<hr />
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a local admin account</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>&lt;username&gt;
+<p>Local accounts are stored on the array itself and are independent of any directory service. Use them for break-glass access and initial setup. Minimise the number of local accounts in production — prefer AD or LDAP for human admin access.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a local admin account with a specific role</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>jsmith
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Set password</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--password
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Set the account password (interactive prompt)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>jsmith<span class="w"> </span>--password
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Disable / lock an account</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pureadmin<span class="w"> </span>reset<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--lockout
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all admin accounts and their roles</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pureadmin<span class="w"> </span>list
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List all accounts</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pureadmin<span class="w"> </span>list
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List accounts with lockout status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--lockout
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Lock an account (temporary lockout)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>pureadmin<span class="w"> </span>reset<span class="w"> </span>jsmith<span class="w"> </span>--lockout
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Unlock a locked account</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>--clear<span class="w"> </span>jsmith
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Change a user&#39;s role</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>jsmith<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Delete a local account</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>jsmith
 </code></pre></div>
+<p><strong>Default <code>pureuser</code> account:</strong></p>
+<p>The factory default local admin account is <code>pureuser</code> with a default password printed on the array's label. It has <code>array_admin</code> privileges. After configuring AD/LDAP authentication and validating that at least two AD accounts can log in successfully:</p>
+<ol>
+<li>Change the <code>pureuser</code> password to a strong randomly-generated credential</li>
+<li>Store it in the organisation's PAM vault (CyberArk, HashiCorp Vault, etc.) as break-glass access</li>
+<li>Restrict who knows the password — it should be emergency-only</li>
+</ol>
+<p>Do not delete <code>pureuser</code> — it is the only guaranteed fallback if directory service integration fails.</p>
+<hr />
+<h2 id="active-directory-ad">Active Directory (AD)<a class="headerlink" href="#active-directory-ad" title="Permanent link">&para;</a></h2>
+<p>AD integration allows domain accounts to log into the array using their existing AD credentials, with role assignment driven by AD group membership.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Join the array to Active Directory</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>puredirectoryservice<span class="w"> </span>setattr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;svc-pure-bind&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--domain<span class="w"> </span><span class="s2">&quot;example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://dc01.example.com&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify the directory service configuration</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>pureds<span class="w"> </span>list
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Test AD connectivity and bind credentials</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>pureds<span class="w"> </span>check
+</code></pre></div>
+<h3 id="group-to-role-mapping">Group-to-Role Mapping<a class="headerlink" href="#group-to-role-mapping" title="Permanent link">&para;</a></h3>
+<p>Create AD security groups that correspond to Purity roles, then map them:</p>
+<table>
+<thead>
+<tr>
+<th>AD Group (example)</th>
+<th>Purity Role</th>
+<th>Who</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CN=pure-array-admins,OU=Groups,DC=example,DC=com</code></td>
+<td><code>array_admin</code></td>
+<td>Storage team leads; break-glass admins</td>
+</tr>
+<tr>
+<td><code>CN=pure-storage-admins,OU=Groups,DC=example,DC=com</code></td>
+<td><code>storage_admin</code></td>
+<td>Day-to-day provisioning engineers</td>
+</tr>
+<tr>
+<td><code>CN=pure-ops-admins,OU=Groups,DC=example,DC=com</code></td>
+<td><code>ops_admin</code></td>
+<td>Operations and on-call engineers</td>
+</tr>
+<tr>
+<td><code>CN=pure-readonly,OU=Groups,DC=example,DC=com</code></td>
+<td><code>readonly</code></td>
+<td>Monitoring; application teams; audit accounts</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Map an AD group to a Purity role</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-array-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-storage-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-ops-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Verify the group mappings are active</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>pureadmin<span class="w"> </span>list
+</code></pre></div>
+<h3 id="validation-steps">Validation Steps<a class="headerlink" href="#validation-steps" title="Permanent link">&para;</a></h3>
+<p>Before removing or disabling local accounts after AD integration:</p>
+<ol>
+<li>Log out of the current session</li>
+<li>Log in with a domain account that is a member of a mapped group</li>
+<li>Verify the role is correctly applied: <code>pureadmin list</code> should show the domain account and its role</li>
+<li>Test login from a second domain account in a different role group</li>
+<li>Confirm break-glass <code>pureuser</code> credentials are vaulted, then proceed to restrict shared local accounts</li>
+</ol>
+<hr />
+<h2 id="ldap-non-ad">LDAP (Non-AD)<a class="headerlink" href="#ldap-non-ad" title="Permanent link">&para;</a></h2>
+<p>For environments using OpenLDAP, Red Hat Directory Server, or similar LDAP providers:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure LDAP directory service</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>puredirectoryservice<span class="w"> </span>setattr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;cn=svc-pure,ou=service-accounts,dc=example,dc=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldap://ldap01.example.com:389&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># For LDAP over TLS (recommended)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>puredirectoryservice<span class="w"> </span>setattr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://ldap01.example.com:636&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Verify</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>pureds<span class="w"> </span>list
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>pureds<span class="w"> </span>check
+</code></pre></div>
+<p><strong>LDAP attribute mapping considerations:</strong></p>
+<p>Purity uses the <code>memberOf</code> attribute (or equivalent) to determine group membership for role assignment. Verify that your LDAP directory populates <code>memberOf</code> on user objects, or configure the appropriate group attribute mapping. Consult the Purity//FA Administration Guide for the specific attribute names if your LDAP schema differs from the default.</p>
+<hr />
+<h2 id="saml-sso">SAML SSO<a class="headerlink" href="#saml-sso" title="Permanent link">&para;</a></h2>
+<p>SAML 2.0 SSO allows admin logins to be federated through an enterprise Identity Provider (IdP) such as Okta, Azure AD (Entra ID), or ADFS. SAML support requires Purity//FA 6.0 or later.</p>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>In SAML terminology, FlashArray acts as the <strong>Service Provider (SP)</strong> — it redirects authentication requests to the IdP and accepts SAML assertions in return. The IdP authenticates the user (including enforcing MFA if configured) and returns a signed assertion specifying the user's identity and group memberships. Purity maps those group memberships to roles using the same AD group-to-role mapping as described above.</p>
+<h3 id="configuration-steps">Configuration Steps<a class="headerlink" href="#configuration-steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Export the FlashArray SP metadata</strong> from the Purity GUI:</li>
+<li>Navigate to <code>Settings &gt; Access &gt; Single Sign-On</code></li>
+<li>
+<p>Download the SP metadata XML file</p>
+</li>
+<li>
+<p><strong>Register FlashArray as an application in your IdP:</strong></p>
+</li>
+<li>In Okta: create a new SAML 2.0 application; upload or paste the SP metadata</li>
+<li>In Azure AD: create an enterprise application; configure SAML SSO with the FlashArray metadata</li>
+<li>
+<p>In ADFS: add a Relying Party Trust using the SP metadata</p>
+</li>
+<li>
+<p><strong>Configure the IdP to pass group membership claims</strong> in the SAML assertion — this is what drives role assignment in Purity</p>
+</li>
+<li>
+<p><strong>Import IdP metadata into Purity:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure SAML with IdP metadata URL</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>puredirectoryservice<span class="w"> </span>saml<span class="w"> </span>setattr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>--idp-metadata-url<span class="w"> </span><span class="s2">&quot;https://idp.example.com/metadata&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Or import from a local file</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>puredirectoryservice<span class="w"> </span>saml<span class="w"> </span>setattr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--idp-metadata-file<span class="w"> </span>/tmp/idp_metadata.xml
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Enable SSO</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>pureadmin<span class="w"> </span>global<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--single-sign-on
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Validate SSO login</strong> before disabling local accounts — log out and log back in using the IdP-authenticated path from the Purity GUI</p>
+</li>
+</ol>
+<h3 id="saml-fallback">SAML Fallback<a class="headerlink" href="#saml-fallback" title="Permanent link">&para;</a></h3>
+<p>If SAML is misconfigured or the IdP is unavailable, local account login remains functional. Always maintain a vaulted <code>pureuser</code> break-glass credential for this scenario.</p>
+<hr />
+<h2 id="api-token-authentication">API Token Authentication<a class="headerlink" href="#api-token-authentication" title="Permanent link">&para;</a></h2>
+<p>API tokens are the recommended authentication method for automation, monitoring integrations, scripts, and service accounts. Tokens are long-lived credentials tied to a specific admin account; they bypass the interactive login flow and do not require a username/password exchange.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create a service account and generate an API token</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>svc-monitoring
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-monitoring
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Save the displayed token securely — it cannot be retrieved again after creation</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Create a service account with a storage_admin role for provisioning automation</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>svc-terraform
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-terraform
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># List all accounts and their API token status</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Expose (display) an existing token — requires array_admin privilege</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>--expose
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Delete an API token (disables API access for the account without deleting the account)</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-monitoring<span class="w"> </span>--api-token
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Delete the account entirely</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-old-automation
+</code></pre></div>
+<p><strong>Using a token for REST API access:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Authenticate using an API token header (no session cookie required)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="s2">&quot;https://&lt;array_ip&gt;/api/2.x/arrays&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Or obtain a session token via login endpoint</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;api-token: &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="s2">&quot;https://&lt;array_ip&gt;/api/2.x/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span>-c<span class="w"> </span>/tmp/fa_session.txt
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span>-b<span class="w"> </span>/tmp/fa_session.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="s2">&quot;https://&lt;array_ip&gt;/api/2.x/volumes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
+<p><strong>Token security guidelines:</strong></p>
+<ul>
+<li>Store all API tokens in a secrets manager (HashiCorp Vault, AWS Secrets Manager, CyberArk) — never in plaintext config files or environment variables in CI systems</li>
+<li>Create one token per integration/tool — do not share tokens between multiple automation systems</li>
+<li>Rotate tokens at least annually; rotate immediately if a system is decommissioned or a credentials leak is suspected</li>
+<li>Assign the minimum necessary role — use <code>readonly</code> for monitoring, <code>storage_admin</code> for provisioning, and <code>array_admin</code> only if account management is required</li>
+<li>Audit active API tokens quarterly: <code>pureadmin list --api-token</code></li>
+</ul>
+<hr />
+<h2 id="session-and-password-policies">Session and Password Policies<a class="headerlink" href="#session-and-password-policies" title="Permanent link">&para;</a></h2>
+<p>Global login policies apply to all local and directory-service accounts.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Show global admin settings</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>list
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Show lockout policy</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>list<span class="w"> </span>--lockout
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Set maximum failed login attempts before lockout</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--max-login-attempts<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Set lockout duration (e.g., 30 minutes)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--lockout-duration<span class="w"> </span>30m
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Set minimum password length for local accounts</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--min-password-length<span class="w"> </span><span class="m">16</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Set CLI/GUI session idle timeout (minutes)</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--idle-timeout<span class="w"> </span><span class="m">15</span>
+</code></pre></div>
+<p><strong>Recommended policy settings:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Recommended Value</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Max login attempts</td>
+<td>5</td>
+<td>Prevents brute-force without locking out accidental mistypers</td>
+</tr>
+<tr>
+<td>Lockout duration</td>
+<td>30 minutes</td>
+<td>Sufficient deterrent; short enough to avoid support burden</td>
+</tr>
+<tr>
+<td>Minimum password length</td>
+<td>16 characters</td>
+<td>Aligns with NIST SP 800-63B guidance</td>
+</tr>
+<tr>
+<td>Session idle timeout</td>
+<td>15 minutes</td>
+<td>Limits exposure from unattended sessions</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>Purity//FA logs all administrative actions including logins, configuration changes, volume operations, and snapshot management.</p>
-<p><strong>What is logged:</strong>
-- All CLI and GUI login/logout events (success and failure)
-- All configuration changes with the admin account name and timestamp
-- All data operations (volume create/delete/connect, snapshot create/delete, replication changes)
-- API token creation and deletion
-- Failed authentication attempts</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View audit log on the array</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--audit
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Add a syslog server for external forwarding</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>puresyslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>udp://&lt;syslog_ip&gt;:514<span class="w"> </span>&lt;syslog_name&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># TLS syslog</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>puresyslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>tls://&lt;syslog_ip&gt;:6514<span class="w"> </span>&lt;syslog_name&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List configured syslog destinations</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>puresyslog<span class="w"> </span>list
+<p>Purity logs all authentication events and administrative actions. Logs are stored locally and should be forwarded to an external syslog/SIEM immediately — locally stored logs can potentially be altered by a compromised <code>array_admin</code> account.</p>
+<p><strong>What is logged:</strong></p>
+<ul>
+<li>All successful and failed login attempts (CLI, GUI, REST API)</li>
+<li>All configuration changes with the account name, timestamp, and command</li>
+<li>All data operations: volume create/delete/connect, snapshot create/delete, replication changes</li>
+<li>API token creation and deletion events</li>
+<li>SafeMode-related operations</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View the audit log on the array</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pureaudit<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Filter by user</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;user = &quot;jsmith&quot;&#39;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Filter by command</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purevol&quot;&#39;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Filter for volume deletion events</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purevol&quot; and subcommand=&quot;destroy&quot;&#39;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Show last 20 entries</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span><span class="w"> </span>--sort<span class="w"> </span>time-
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Configure syslog forwarding (UDP — not recommended for production)</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>puresyslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>udp://&lt;syslog_ip&gt;:514<span class="w"> </span>siem-syslog
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Configure syslog forwarding with TLS (recommended)</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>puresyslog<span class="w"> </span>create<span class="w"> </span>--uri<span class="w"> </span>tls://&lt;syslog_ip&gt;:6514<span class="w"> </span>siem-syslog-tls
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1"># List syslog destinations</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>puresyslog<span class="w"> </span>list
 </code></pre></div>
+<p><strong>SIEM integration note:</strong> When forwarding to a SIEM, use TLS syslog (<code>tls://</code>) to protect log integrity in transit. Configure the SIEM to alert on repeated failed login attempts, API token creation by non-standard accounts, and SafeMode-related audit events.</p>
 
 
 

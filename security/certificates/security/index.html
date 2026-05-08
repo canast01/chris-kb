@@ -21,7 +21,7 @@
     
     
       
-        <title>Certificate Security - Chris KB</title>
+        <title>Certificates — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Certificate Security · Chris KB">
+  <meta property="og:title" content="Certificates — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Certificate Security · Chris KB">
+  <meta name="twitter:title" content="Certificates — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#certificate-security" class="md-skip">
+        <a href="#certificates-security" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Certificate Security
+              Certificates — Security
             
           </span>
         </div>
@@ -699,113 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#ca-key-protection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CA Key Protection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#root-ca-offline-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Root CA Offline Procedure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-transparency-ct" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Transparency (CT)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ocsp-stapling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OCSP Stapling
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#crl-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CRL Availability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-pinning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Pinning
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#revocation-emergency-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Revocation Emergency Procedure
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -824,156 +717,30 @@
 
 
 
-<h1 id="certificate-security">Certificate Security<a class="headerlink" href="#certificate-security" title="Permanent link">&para;</a></h1>
-<h2 id="ca-key-protection">CA Key Protection<a class="headerlink" href="#ca-key-protection" title="Permanent link">&para;</a></h2>
-<p>Root CA and Issuing CA private keys must be protected by HSMs — software-only key storage is not acceptable for CA keys.</p>
-<table>
-<thead>
-<tr>
-<th>CA Tier</th>
-<th>Key Storage Requirement</th>
-<th>Online Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Root CA</td>
-<td>HSM (FIPS 140-2 Level 3 minimum)</td>
-<td>Offline / air-gapped</td>
-</tr>
-<tr>
-<td>Issuing CA</td>
-<td>HSM or TPM-backed key</td>
-<td>Online — issues end-entity certs</td>
-</tr>
-<tr>
-<td>End-entity cert</td>
-<td>Software key acceptable</td>
-<td>Per-application</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify ADCS CA uses HSM-backed key (look for CSP = Microsoft Smart Card or nCipher)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">certutil</span> <span class="n">-getreg</span> <span class="n">CA</span><span class="p">\</span><span class="n">CSP</span><span class="p">\</span><span class="n">Provider</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># Desired: hardware CSP listed (e.g., &quot;nFast RSA and DH&quot; or &quot;SafeNet&quot;)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Check CA key protection on the issuing CA</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">certutil</span> <span class="n">-store</span> <span class="n">My</span> <span class="p">|</span> <span class="n">findstr</span> <span class="p">/</span><span class="n">i</span> <span class="s2">&quot;provider\|key&quot;</span>
-</code></pre></div>
-<h2 id="root-ca-offline-procedure">Root CA Offline Procedure<a class="headerlink" href="#root-ca-offline-procedure" title="Permanent link">&para;</a></h2>
-<p>The Root CA is powered on only for these specific events:
-1. Issuing a new Subordinate/Issuing CA certificate
-2. Renewing the Root CA certificate itself
-3. Updating the CRL (if Root CA issues CRL directly)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># On Root CA — issue a subordinate CA certificate from a PKCS#10 CSR</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">certreq</span> <span class="n">-submit</span> <span class="n">-attrib</span> <span class="s2">&quot;CertificateTemplate:SubCA&quot;</span> <span class="n">SubCA-Request</span><span class="p">.</span><span class="n">req</span> <span class="n">SubCA-Certificate</span><span class="p">.</span><span class="n">cer</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># After signing, power down Root CA immediately</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Stop-Computer</span> <span class="n">-Force</span>
-</code></pre></div>
-<h2 id="certificate-transparency-ct">Certificate Transparency (CT)<a class="headerlink" href="#certificate-transparency-ct" title="Permanent link">&para;</a></h2>
-<p>All publicly trusted certificates must be submitted to CT logs (required by CA/Browser Forum Baseline Requirements).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify a certificate has SCT (Signed Certificate Timestamps) embedded</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">&quot;CT Precertificate SCTs&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check certificate in public CT logs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># https://crt.sh/?q=&lt;hostname&gt; — search by domain</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># curl example:</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://crt.sh/?q=corp.example.com&amp;output=json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[0:5] | .[] | {id, issuer_name, not_before, not_after}&#39;</span>
-</code></pre></div>
-<h2 id="ocsp-stapling">OCSP Stapling<a class="headerlink" href="#ocsp-stapling" title="Permanent link">&para;</a></h2>
-<p>Enforce OCSP stapling on all public TLS endpoints to avoid privacy leakage and improve connection performance.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># nginx — OCSP stapling configuration</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">ssl_stapling</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">ssl_stapling_verify</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">ssl_trusted_certificate</span><span class="w"> </span><span class="s">/etc/ssl/certs/chain.pem</span><span class="p">;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">resolver</span><span class="w"> </span><span class="mi">8</span><span class="s">.8.8.8</span><span class="w"> </span><span class="s">valid=300s</span><span class="p">;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">resolver_timeout</span><span class="w"> </span><span class="s">5s</span><span class="p">;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify OCSP stapling is working</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host.corp.example.com:443<span class="w"> </span>-status<span class="w"> </span>-tlsextdebug<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;OCSP Response&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Should show: OCSP Response Status: successful (0x0)</span>
-</code></pre></div>
-<h2 id="crl-availability">CRL Availability<a class="headerlink" href="#crl-availability" title="Permanent link">&para;</a></h2>
-<p>CRL Distribution Points must remain highly available — unavailability can cause soft-fail clients to proceed with revoked certificates.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test CRL download</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://crl.corp.local/IssuingCA.crl
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Verify: HTTP 200, Content-Type: application/pkix-crl</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check CRL freshness (nextUpdate)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>openssl<span class="w"> </span>crl<span class="w"> </span>-in<span class="w"> </span>IssuingCA.crl<span class="w"> </span>-inform<span class="w"> </span>DER<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Next Update&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># CRL should be published at least 2x before expiry (overlap period)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Monitor CRL validity from ADCS CA</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\System\CurrentControlSet\Services\CertSvc\Configuration\IssuingCA&quot;</span> <span class="p">|</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">CRLPeriodUnits</span><span class="p">,</span> <span class="n">CRLPeriod</span><span class="p">,</span> <span class="n">CRLDeltaPeriodUnits</span><span class="p">,</span> <span class="n">CRLDeltaPeriod</span>
-</code></pre></div>
-<h2 id="certificate-pinning">Certificate Pinning<a class="headerlink" href="#certificate-pinning" title="Permanent link">&para;</a></h2>
-<p>Document all pinned certificates — coordinate renewals carefully to avoid breaking pinned connections.</p>
-<table>
-<thead>
-<tr>
-<th>Application</th>
-<th>Pinned To</th>
-<th>Renewal Coordination Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Mobile app</td>
-<td>Issuing CA public key</td>
-<td>Yes — app release required</td>
-</tr>
-<tr>
-<td>Internal service</td>
-<td>Leaf certificate</td>
-<td>Yes — both sides must update together</td>
-</tr>
-<tr>
-<td>HSTS preload</td>
-<td>Root CA</td>
-<td>Rare — only at root rotation</td>
-</tr>
-</tbody>
-</table>
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Enable ADCS audit logging (on Issuing CA)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">auditpol</span> <span class="p">/</span><span class="nb">set </span><span class="p">/</span><span class="n">subcategory</span><span class="p">:</span><span class="s2">&quot;Certification Services&quot;</span> <span class="p">/</span><span class="n">success</span><span class="p">:</span><span class="n">enable</span> <span class="p">/</span><span class="n">failure</span><span class="p">:</span><span class="n">enable</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># View CA audit events (Event ID 4870 = cert revoked, 4886 = cert requested, 4887 = cert issued)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">issuingca</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4886</span><span class="p">,</span><span class="n">4887</span><span class="p">,</span><span class="n">4870</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">200</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
-</code></pre></div>
-<h2 id="security-checklist">Security Checklist<a class="headerlink" href="#security-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Root CA is offline and air-gapped</li>
-<li>[ ] Root CA key stored on HSM (FIPS 140-2 Level 3)</li>
-<li>[ ] Issuing CA key stored on HSM or equivalent</li>
-<li>[ ] ADCS audit logging enabled (event IDs 4886/4887 forwarded to SIEM)</li>
-<li>[ ] CRL published with adequate overlap (republish at 50% of validity)</li>
-<li>[ ] OCSP stapling enforced on all public endpoints</li>
-<li>[ ] CT log submission verified for public certificates</li>
-<li>[ ] Certificate pinning registry maintained and up to date</li>
-<li>[ ] Weak algorithm certs (SHA-1, RSA-1024) identified and replaced</li>
-<li>[ ] Venafi TPP expiry alerting configured for all managed certificates</li>
-<li>[ ] Emergency revocation procedure documented and tested annually</li>
-</ul>
-<h2 id="revocation-emergency-procedure">Revocation Emergency Procedure<a class="headerlink" href="#revocation-emergency-procedure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Revoke a certificate on ADCS Issuing CA</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># Get the certificate serial number first</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">certutil</span> <span class="n">-view</span> <span class="n">-restrict</span> <span class="s2">&quot;RequesterName=CORP\compromised-user&quot;</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;Serial&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Revoke</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">certutil</span> <span class="n">-revoke</span> <span class="p">&lt;</span><span class="n">SerialNumber</span><span class="p">&gt;</span> <span class="n">1</span>   <span class="c"># 1 = Key Compromise reason code</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Publish updated CRL immediately</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">certutil</span> <span class="n">-CRL</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c"># Notify Venafi to update its records</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># Venafi API: POST /vedsdk/certificates/revoke</span>
-</code></pre></div>
+<h1 id="certificates-security">Certificates — Security<a class="headerlink" href="#certificates-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-4">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Client certificate authentication and mTLS configuration.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>CA access controls, template permissions, and audit logging.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>Key protection, HSM requirements, and algorithm standards.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>OCSP stapling, CT logs, CRL availability, and security checklist.</span>
+</a>
+
+</div>
 
 
 

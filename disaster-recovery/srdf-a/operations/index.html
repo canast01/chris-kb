@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>SRDF/A — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="SRDF/A — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="SRDF/A — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#srdfa-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              SRDF/A — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,205 +717,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">SRDF/A</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] All SRDF/A pairs are in Consistent or Synchronized state</td>
-<td></td>
-<td>no pairs in Transmit Idle, Split, or Mixed state without an open change ticket</td>
-</tr>
-<tr>
-<td>[ ] Delta mark count is stable</td>
-<td></td>
-<td>a steadily growing delta mark count indicates the link cannot keep pace with writes</td>
-</tr>
-<tr>
-<td>[ ] Cycle time is within the expected range (default 30 seconds)</td>
-<td></td>
-<td>confirm via <code>symrdf queryall</code></td>
-</tr>
-<tr>
-<td>[ ] No pairs in Transmit Idle state (indicates link saturation or band</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] SRDF/A link utilization is below saturation threshold</td>
-<td></td>
-<td>check that bandwidth headroom exists for peak write periods</td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all SRDF/A pairs for a specific RDF group and show their state</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Query full SRDF/A pair state including cycle time, delta marks, and link state</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>queryall<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show SRDF/A link status and bandwidth utilization for the RDF group</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show RDF group configuration (pair count, link ports, cycle time setting)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-i<span class="w"> </span><span class="m">60</span><span class="w"> </span>-c<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check for any SRDF/A pairs in degraded states across all RDF groups</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-state<span class="w"> </span>Transmit_Idle
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-state<span class="w"> </span>Mixed
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-state<span class="w"> </span>Split
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Check R2 side (run on DR host connected to R2 array)</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Show delta marks for SRDF/A group (growing delta = link keeping up issue)</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-delta
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All SRDF/A pairs are in Consistent state before beginning any storage changes on R1 or R2 devices</li>
-<li>[ ] SRDF/A link bandwidth headroom has been confirmed — check current utilization is not at saturation</li>
-<li>[ ] SYMCLI host access to both R1 and R2 arrays is confirmed and credentials are available</li>
-<li>[ ] RDF group configuration is documented (RDF group number, R1 SID, R2 SID, cycle time)</li>
-<li>[ ] DR site personnel are available and contactable during the maintenance window</li>
-<li>[ ] If the change involves R2 devices, confirm that activating R2 (failover) is not required during the window</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All SRDF/A pairs in Consistent state</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SRDF link bandwidth headroom confirmed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SYMCLI access to R1 and R2 confirmed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>RDF group number and SIDs documented</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>DR site personnel available</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>R2 activation not required during window</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p><strong>On alert or issue:</strong>
-1. Run <code>symrdf list -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt;</code> to identify the current pair states
-2. Run <code>symrdf queryall -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt;</code> to get delta mark count, cycle time, and link state detail
-3. Check SRDF/A link utilization and bandwidth — if the link is saturated, Transmit Idle is expected
-4. Check the network/dark fibre/WAN path between R1 and R2 sites for outages or congestion
-5. If pairs have entered Mixed state, identify which devices are inconsistent and do not activate R2 until consistency is restored or a failover decision is made
-6. Escalate to DR site team if link restoration is not possible within the RPO SLA</p>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pair in Transmit Idle</td>
-<td>Link saturation — write bandwidth exceeds SRDF/A link capacity</td>
-<td>Check link utilization, reduce R1 write I/O during peak, or increase SRDF link bandwidth; run <code>symrdf queryall</code> to monitor delta marks</td>
-</tr>
-<tr>
-<td>Delta mark count growing without bound</td>
-<td>Link consistently under-provisioned for current write rate</td>
-<td>Increase SRDF bandwidth, adjust cycle time, or implement write throttling on R1</td>
-</tr>
-<tr>
-<td>Pair in Mixed state</td>
-<td>Partial consistency group inconsistency</td>
-<td>Do NOT activate R2 — run <code>symrdf queryall</code>, identify inconsistent devices, check for link errors, attempt re-establish: <code>symrdf establish -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt; -type RDF/A</code></td>
-</tr>
-<tr>
-<td>Pair in Split state (unexpected)</td>
-<td>Network interruption between R1 and R2</td>
-<td>Check inter-site network, restore connectivity, then re-establish: <code>symrdf resume -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt;</code></td>
-</tr>
-<tr>
-<td>R2 activation required (DR failover)</td>
-<td>Production site failure</td>
-<td>Follow DR failover runbook; activate R2: <code>symrdf failover -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt;</code></td>
-</tr>
-<tr>
-<td>Cycle time exceeding configured value</td>
-<td>Write burst or link latency increase</td>
-<td>Monitor cycle time via <code>symrdf queryall</code>, check inter-site latency with <code>ping</code> and <code>traceroute</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p><strong>Safe suspend procedure for SRDF/A (e.g., before a storage upgrade affecting R1 or R2):</strong></p>
-<ol>
-<li>Confirm all pairs are in Consistent state</li>
-<li>Suspend SRDF/A replication for the RDF group:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symrdf<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-force
-</code></pre></div></li>
-<li>Confirm pairs are now in the Suspended state:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symrdf<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;
-</code></pre></div></li>
-<li>Perform the planned maintenance on R1 or R2 devices</li>
-<li>Resume SRDF/A replication after maintenance:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symrdf<span class="w"> </span>resume<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A
-</code></pre></div></li>
-<li>Monitor resync — delta marks should decrease; pairs should return to Consistent state</li>
-</ol>
-<p><strong>Planned failover to R2:</strong></p>
-<ol>
-<li>Confirm all R1 applications are quiesced or shut down</li>
-<li>Initiate planned failover:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symrdf<span class="w"> </span>failover<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-planned
-</code></pre></div></li>
-<li>Activate R2 volumes for host access at the DR site</li>
-<li>When failing back, follow the failback procedure: resync R2 to R1, then swap direction</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All SRDF/A pairs have returned to Consistent state (<code>symrdf list -sid &lt;r1_sid&gt; -rdfg &lt;rdf_group_number&gt;</code>)</li>
-<li>[ ] Delta mark count is stable and trending down to zero after resync</li>
-<li>[ ] Cycle time has returned to the configured default (typically 30 seconds)</li>
-<li>[ ] No pairs remain in Transmit Idle, Split, or Mixed state</li>
-<li>[ ] SRDF/A link utilization has returned to normal operating levels</li>
-<li>[ ] Application-level data integrity test confirms no data loss (e.g., confirm last transaction on R2 matches R1)</li>
-</ul>
+<h1 id="srdfa-operations">SRDF/A — Operations<a class="headerlink" href="#srdfa-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>SYMCLI command reference by category with syntax and examples.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily checks, cycle and lag status, DSE health, and validation steps.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Change readiness, maintenance window, failover, and incident triage.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Firmware upgrades, adding/removing devices, EOL tracking, and migration.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Backup and restore procedures for SRDF/A environments.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for daily checks, health, incident triage, and validation.</span>
+</a>
+
+</div>
 
 
 

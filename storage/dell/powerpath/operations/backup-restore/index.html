@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configuration-file-location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration File Location
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration-backup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -725,6 +736,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Configuration Backup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#save-live-configuration-to-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Save Live Configuration to Disk
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-a-dated-baseline-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture a Dated Baseline Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-the-configuration-file-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup the Configuration File Directly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -732,6 +782,95 @@
     <span class="md-ellipsis">
       
         Configuration Restore
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Restore">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restore-from-saved-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore from Saved Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-run-powermt-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Run powermt restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manually-restore-from-a-configuration-file-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manually Restore from a Configuration File Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-restore-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Restore Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Post-Restore Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-restore-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Restore Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-frequency-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Frequency and Retention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disaster-recovery-consideration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery Consideration
       
     </span>
   </a>
@@ -770,38 +909,252 @@
 
 
 <h1 id="powerpath-backup-restore">PowerPath — Backup &amp; Restore<a class="headerlink" href="#powerpath-backup-restore" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Backup and restore procedures for PowerPath configuration will be documented here.</p>
-</blockquote>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>PowerPath configuration backup involves persisting the path policy, device settings, and registration state. Use <code>powermt save</code> to write the current configuration to disk before any change.</p>
+<p>PowerPath does not store data — it manages the path layer between host and storage array. "Backup" in the PowerPath context means preserving three things:</p>
+<ol>
+<li><strong>Active configuration</strong> — the policies, device registrations, and options written to disk by <code>powermt save</code></li>
+<li><strong>Baseline state snapshots</strong> — dated text captures of <code>powermt display dev=all</code> output used to validate path count after changes</li>
+<li><strong>License registration</strong> — the registration key file that licenses PowerPath on the host</li>
+</ol>
+<p>Losing PowerPath configuration after a reboot is the most common operational failure. The root cause is always the same: <code>powermt save</code> was not run after the last configuration change.</p>
+<hr />
+<h2 id="configuration-file-location">Configuration File Location<a class="headerlink" href="#configuration-file-location" title="Permanent link">&para;</a></h2>
+<p>PowerPath persists its configuration to a file on disk. The location depends on the platform:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Configuration File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux</td>
+<td><code>/etc/powermt.custom</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>C:\Program Files\EMC\PowerPath\powermt.custom</code></td>
+</tr>
+<tr>
+<td>AIX</td>
+<td><code>/etc/powermt.custom</code></td>
+</tr>
+<tr>
+<td>HP-UX</td>
+<td><code>/etc/powermt.custom</code></td>
+</tr>
+<tr>
+<td>Solaris</td>
+<td><code>/etc/powermt.custom</code></td>
+</tr>
+</tbody>
+</table>
+<p>This file is written by <code>powermt save</code> and read by the PowerPath daemon on startup. If this file does not exist or contains stale data, PowerPath applies default settings (which may not include the correct load balancing policy).</p>
+<hr />
 <h2 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Save current PowerPath configuration to disk</span>
+<h3 id="save-live-configuration-to-disk">Save Live Configuration to Disk<a class="headerlink" href="#save-live-configuration-to-disk" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Save current PowerPath configuration to the powermt.custom file</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>powermt<span class="w"> </span>save
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Save with force (overwrites existing saved config)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Force overwrite if prompted (some versions prompt for confirmation)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>save<span class="w"> </span>force
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Capture path state and policy as a dated baseline file</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span>&gt;<span class="w"> </span>&lt;hostname&gt;-powermt-baseline-<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.txt
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>powermt<span class="w"> </span>display<span class="w"> </span>options<span class="w"> </span>&gt;&gt;<span class="w"> </span>&lt;hostname&gt;-powermt-baseline-<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.txt
 </code></pre></div>
+<p>Run <code>powermt save</code> after every configuration change. This includes:
+- After changing the load balancing policy (<code>powermt set policy=...</code>)
+- After running <code>powermt config</code> to discover new devices
+- After running <code>powermt remove</code> to clean up stale devices
+- Before any OS upgrade, kernel update, or PowerPath upgrade
+- Before any SAN fabric maintenance that will change path count</p>
+<h3 id="capture-a-dated-baseline-snapshot">Capture a Dated Baseline Snapshot<a class="headerlink" href="#capture-a-dated-baseline-snapshot" title="Permanent link">&para;</a></h3>
+<p>The baseline snapshot is a plain-text record of the full path state at a known-good point in time. Store this in the change record, runbook, or a shared team directory.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Capture full path state and policy to a dated file</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">HOSTNAME</span><span class="o">=</span><span class="k">$(</span>hostname<span class="w"> </span>-s<span class="k">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">DATE</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">OUTFILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2">-powermt-baseline-</span><span class="si">${</span><span class="nv">DATE</span><span class="si">}</span><span class="s2">.txt&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="o">{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== PowerPath Baseline: </span><span class="si">${</span><span class="nv">HOSTNAME</span><span class="si">}</span><span class="s2"> — </span><span class="si">${</span><span class="nv">DATE</span><span class="si">}</span><span class="s2"> ===&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Version ---&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>powermt<span class="w"> </span>version
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Registration ---&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>powermt<span class="w"> </span>check_registration
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Options ---&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- All Devices and Paths ---&quot;</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- HBA Port States ---&quot;</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="o">}</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTFILE</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Baseline written to: </span><span class="si">${</span><span class="nv">OUTFILE</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>Store these baseline files in a location accessible to your team:
+- Change management ticket attachments
+- A shared <code>baselines/</code> directory under the host's runbook
+- Configuration management repository (e.g., Git)</p>
+<h3 id="backup-the-configuration-file-directly">Backup the Configuration File Directly<a class="headerlink" href="#backup-the-configuration-file-directly" title="Permanent link">&para;</a></h3>
+<p>In addition to the baseline snapshot, take a copy of the raw configuration file before any upgrade or significant change:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux — copy the powermt.custom file with a date stamp</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cp<span class="w"> </span>/etc/powermt.custom<span class="w"> </span>/etc/powermt.custom.bak-<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm the backup exists</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/etc/powermt.custom*
+</code></pre></div>
+<hr />
 <h2 id="configuration-restore">Configuration Restore<a class="headerlink" href="#configuration-restore" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Restore PowerPath configuration from saved state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>powermt<span class="w"> </span>restore
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># After restore, verify path state</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify policy is intact</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<h3 id="restore-from-saved-configuration">Restore from Saved Configuration<a class="headerlink" href="#restore-from-saved-configuration" title="Permanent link">&para;</a></h3>
+<p><code>powermt restore</code> reloads configuration from the last saved <code>powermt.custom</code> file and instructs PowerPath to retry all paths currently marked dead. It serves double duty: restoring saved settings and attempting path recovery.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restore PowerPath configuration from the saved powermt.custom file</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>powermt<span class="w"> </span>restore
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify that the policy was restored correctly</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify all paths are alive after restore</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm no dead paths remain</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>dead
 </code></pre></div>
+<h3 id="when-to-run-powermt-restore">When to Run powermt restore<a class="headerlink" href="#when-to-run-powermt-restore" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After a reboot where paths are not fully recovered</td>
+<td>Run <code>powermt restore</code> once the OS is fully up and all HBAs have logged in</td>
+</tr>
+<tr>
+<td>After SAN fabric maintenance completes</td>
+<td>Run <code>powermt restore</code> to bring returned paths back to <code>alive</code></td>
+</tr>
+<tr>
+<td>After resolving a dead HBA or cable</td>
+<td>Run <code>powermt restore</code> after the physical fix; do not just wait for the daemon</td>
+</tr>
+<tr>
+<td>After a PowerPath upgrade</td>
+<td>Run <code>powermt restore</code> to confirm path state is consistent with saved config</td>
+</tr>
+<tr>
+<td>Policy shows incorrect value after reboot</td>
+<td>Run <code>powermt restore</code> then <code>powermt display options</code> to confirm</td>
+</tr>
+</tbody>
+</table>
+<h3 id="manually-restore-from-a-configuration-file-backup">Manually Restore from a Configuration File Backup<a class="headerlink" href="#manually-restore-from-a-configuration-file-backup" title="Permanent link">&para;</a></h3>
+<p>If <code>powermt.custom</code> was corrupted or accidentally deleted, restore from the backup:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux — restore from a dated backup of powermt.custom</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>/etc/powermt.custom.bak-2025-01-15<span class="w"> </span>/etc/powermt.custom
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restart the PowerPath service to pick up the restored file</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>PowerPath
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify the configuration loaded correctly</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+</code></pre></div>
+<hr />
+<h2 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h2>
+<p>After any restore operation, verify the following:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Confirm policy is correct (CLAROpt for Dell/EMC arrays)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Expected: Policy=CLAROpt(co) or similar for all device classes</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 2. Confirm all paths are alive</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^Pseudo|alive|dead&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 3. Count dead paths — should be zero after a successful restore</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>dead
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># 4. Check HBA port states</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 5. Confirm license is still valid</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>powermt<span class="w"> </span>check_registration
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># 6. Compare path count per device against the baseline snapshot</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Open the baseline file and compare device-by-device</span>
+</code></pre></div>
+<h3 id="post-restore-checklist">Post-Restore Checklist<a class="headerlink" href="#post-restore-checklist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <code>powermt display options</code> — policy matches pre-change baseline (CLAROpt for Dell/EMC arrays)</li>
+<li>[ ] <code>powermt display dev=all</code> — all pseudo devices visible; no unexpected additions or removals</li>
+<li>[ ] Dead path count is zero — run <code>powermt display dev=all | grep -c dead</code> and confirm output is <code>0</code></li>
+<li>[ ] <code>powermt display ports class=all</code> — all HBA ports are in <code>alive</code> state</li>
+<li>[ ] <code>powermt check_registration</code> — license valid, not expired</li>
+<li>[ ] Path count per device matches the baseline snapshot — compare device-by-device</li>
+<li>[ ] <code>powermt save</code> run after validation — persist the confirmed-good state</li>
+</ul>
+<hr />
+<h2 id="backup-frequency-and-retention">Backup Frequency and Retention<a class="headerlink" href="#backup-frequency-and-retention" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Backup Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After every configuration change</td>
+<td><code>powermt save</code></td>
+</tr>
+<tr>
+<td>Before every maintenance window</td>
+<td>Capture dated baseline snapshot</td>
+</tr>
+<tr>
+<td>Before PowerPath upgrade</td>
+<td>Copy <code>powermt.custom</code> + capture baseline snapshot</td>
+</tr>
+<tr>
+<td>Before OS kernel upgrade</td>
+<td>Capture dated baseline snapshot</td>
+</tr>
+<tr>
+<td>Quarterly (routine)</td>
+<td>Capture dated baseline snapshot; store in runbook</td>
+</tr>
+</tbody>
+</table>
+<p>Retain baseline snapshots for a minimum of 12 months. Path count baselines are the primary evidence used to validate that SAN changes have been fully reversed.</p>
+<hr />
+<h2 id="disaster-recovery-consideration">Disaster Recovery Consideration<a class="headerlink" href="#disaster-recovery-consideration" title="Permanent link">&para;</a></h2>
+<p>PowerPath configuration is host-bound — the <code>powermt.custom</code> file is not replicated between hosts. In a disaster recovery scenario where a protected host is rebuilt:</p>
+<ol>
+<li>Re-install PowerPath using the same version that was running on the source host (or a supported upgrade version)</li>
+<li>Re-apply the license registration key</li>
+<li>Restore the <code>powermt.custom</code> from the most recent backup</li>
+<li>Run <code>powermt config</code> to discover all LUNs presented to the rebuilt host</li>
+<li>Run <code>powermt restore</code> to apply saved policy and attempt path recovery</li>
+<li>Validate with <code>powermt display dev=all</code> — confirm all expected devices and paths are present</li>
+</ol>
+<p>If the restored <code>powermt.custom</code> references devices or paths that no longer exist (e.g., after storage migration), PowerPath will show stale pseudo devices. Run <code>powermt remove dead</code> followed by <code>powermt config</code> and <code>powermt save</code> to reconcile.</p>
+<hr />
 <h2 id="backup-checklist">Backup Checklist<a class="headerlink" href="#backup-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] Run <code>powermt save</code> before every maintenance window or configuration change</li>
-<li>[ ] Store dated baseline files (<code>powermt display dev=all</code> output) in the runbook or change record</li>
-<li>[ ] Include <code>powermt check_registration</code> output in the baseline to capture license state</li>
-<li>[ ] Verify configuration persists across reboots: reboot the host and confirm path count and policy match the pre-reboot state</li>
+<li>[ ] <code>powermt save</code> run after every policy change, device discovery, or path removal</li>
+<li>[ ] Dated baseline snapshot (<code>powermt display dev=all</code> + <code>powermt display options</code>) captured before every maintenance window and stored in the change record</li>
+<li>[ ] Raw <code>powermt.custom</code> file backed up before PowerPath upgrades and OS kernel updates</li>
+<li>[ ] License registration key stored outside the host (support portal, password manager, or team runbook) — required to re-license a rebuilt host</li>
+<li>[ ] Post-restore validation completed after every restore operation: policy, path count, dead paths, and license all checked</li>
+<li>[ ] Baseline snapshots retained for at least 12 months and accessible to the storage team</li>
 </ul>
 
 

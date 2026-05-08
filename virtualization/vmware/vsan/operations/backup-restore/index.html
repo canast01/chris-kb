@@ -699,6 +699,180 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#backup-strategy-for-vsan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Strategy for vSAN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-backup-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Backup Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Backup Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vmware-vstorage-apis-for-data-protection-vadp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware vStorage APIs for Data Protection (VADP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veeam-backup-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veeam Backup &amp; Replication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commvault-intellisnap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commvault IntelliSnap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zerto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zerto
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-configuration-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Configuration Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Procedures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Restore Procedures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restore-individual-vm-veeam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Individual VM (Veeam)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-individual-vm-powercli-snapshot-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Individual VM (PowerCLI + Snapshot Rollback)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recover-vcenter-from-vcsa-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recover vCenter from VCSA Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuild-disk-group-after-drive-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rebuild Disk Group After Drive Failure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-validation-and-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Validation and Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-point-and-recovery-time-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Point and Recovery Time Objectives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +892,303 @@
 
 
 <h1 id="vsan-backup-restore">vSAN — Backup &amp; Restore<a class="headerlink" href="#vsan-backup-restore" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<p>vSAN is a storage platform, not a backup solution. All virtual machine data on vSAN must be protected by an external backup product. This page covers backup strategy, supported tools, operational procedures, and restore workflows for vSAN-backed workloads.</p>
+<hr />
+<h2 id="backup-strategy-for-vsan">Backup Strategy for vSAN<a class="headerlink" href="#backup-strategy-for-vsan" title="Permanent link">&para;</a></h2>
+<p>vSAN provides resiliency (FTT policy, RAID-1/5/6) but resiliency is not backup. A storage policy with FTT=1 protects against a single host or disk failure — it does not protect against accidental deletion, VM corruption, ransomware, or a full cluster failure.</p>
+<p><strong>Required protection layers:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Provided by</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage resiliency</td>
+<td>vSAN FTT policy</td>
+<td>Survive hardware failure without data loss</td>
+</tr>
+<tr>
+<td>Backup</td>
+<td>External tool (Veeam, Commvault, VADP)</td>
+<td>Recover from logical corruption, deletion, ransomware</td>
+</tr>
+<tr>
+<td>DR / site failover</td>
+<td>Stretched cluster or vSAN HCI Mesh</td>
+<td>Survive site-level failure</td>
+</tr>
+<tr>
+<td>Snapshot</td>
+<td>vSphere snapshot (short-term only)</td>
+<td>Short-term rollback — not a backup</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="supported-backup-methods">Supported Backup Methods<a class="headerlink" href="#supported-backup-methods" title="Permanent link">&para;</a></h2>
+<h3 id="vmware-vstorage-apis-for-data-protection-vadp">VMware vStorage APIs for Data Protection (VADP)<a class="headerlink" href="#vmware-vstorage-apis-for-data-protection-vadp" title="Permanent link">&para;</a></h3>
+<p>VADP is the standard VMware API used by all major backup products. It enables changed block tracking (CBT), quiesced snapshots, and LAN-free backup via NBD or SAN transport.</p>
+<ul>
+<li>vSAN-backed VMs are fully compatible with VADP.</li>
+<li>VADP backups use a vSphere snapshot to quiesce the VM, then read changed blocks via CBT.</li>
+<li>CBT must be enabled on VMs for incremental backups — it is enabled by default on modern hardware versions.</li>
+</ul>
+<p><strong>Verify CBT is enabled on a VM:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From PowerCLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Get-VM<span class="w"> </span>&lt;vmname&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-View<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>-ExpandProperty<span class="w"> </span>Config<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>-ExpandProperty<span class="w"> </span>ChangeTrackingEnabled
+</code></pre></div>
+<p><strong>Reset CBT if incremental backups are failing:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From PowerCLI — disable, snapshot, delete snapshot, re-enable</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VM<span class="w"> </span>&lt;vmname&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.VirtualMachineConfigSpec
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">$spec</span>.changeTrackingEnabled<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$false</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">$vm</span>.ExtensionData.ReconfigVM<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">$snap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$vm</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;CBT-Reset&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Remove-Snapshot<span class="w"> </span>-Snapshot<span class="w"> </span><span class="nv">$snap</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nv">$spec</span>.changeTrackingEnabled<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$true</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nv">$vm</span>.ExtensionData.ReconfigVM<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
+</code></pre></div>
+<h3 id="veeam-backup-replication">Veeam Backup &amp; Replication<a class="headerlink" href="#veeam-backup-replication" title="Permanent link">&para;</a></h3>
+<p>Veeam is the most widely deployed backup tool for vSAN environments. It uses VADP and supports vSAN-specific transport modes.</p>
+<p><strong>Recommended transport mode for vSAN:</strong></p>
+<ul>
+<li><strong>Direct NFS transport (vSAN):</strong> Veeam mounts vSAN datastores directly via the vSAN NFS interface. Eliminates LAN traffic for backup — most efficient for large vSAN clusters.</li>
+<li><strong>Network mode (NBD):</strong> Backup data traverses the management or vSAN network. Use when Direct NFS is not available.</li>
+</ul>
+<p><strong>Veeam job configuration for vSAN:</strong></p>
+<ol>
+<li>Create a backup job targeting the vSAN cluster or specific VMs.</li>
+<li>Set <strong>Transport Mode</strong> to <code>Automatic</code> (Veeam will select Direct NFS if available).</li>
+<li>Enable <strong>Application-aware processing</strong> for VMs running SQL, Exchange, or AD.</li>
+<li>Enable <strong>Changed Block Tracking</strong> in job settings.</li>
+<li>Set a retention policy aligned with RPO/RTO requirements.</li>
+</ol>
+<p><strong>Verify Veeam proxy access to vSAN:</strong></p>
+<p>The Veeam proxy VM must be hosted on a host with access to the vSAN datastore. For Direct NFS, the proxy must have a vmkernel adapter on the vSAN network.</p>
+<h3 id="commvault-intellisnap">Commvault IntelliSnap<a class="headerlink" href="#commvault-intellisnap" title="Permanent link">&para;</a></h3>
+<p>Commvault supports vSAN through VADP. IntelliSnap creates application-consistent snapshots and integrates with vSAN for granular file-level and VM-level recovery.</p>
+<p><strong>Key configuration points:</strong></p>
+<ul>
+<li>Install the Commvault Virtual Server Agent (VSA) on a proxy VM hosted on a vSAN cluster host.</li>
+<li>Configure the vCenter as a hypervisor client in the Commvault CommCell.</li>
+<li>Enable IntelliSnap for vSAN by selecting the vSAN datastore in the subclient.</li>
+</ul>
+<h3 id="zerto">Zerto<a class="headerlink" href="#zerto" title="Permanent link">&para;</a></h3>
+<p>Zerto provides continuous data protection (CDP) for vSAN-backed VMs. It replicates at the hypervisor level, journal-based, and supports near-zero RPO.</p>
+<ul>
+<li>Zerto Virtual Replication Appliance (ZRA) is deployed per host.</li>
+<li>Compatible with vSAN datastores on both source and target.</li>
+<li>Does not use VADP — replicates at the virtual disk I/O level.</li>
+</ul>
+<hr />
+<h2 id="vsan-configuration-backup">vSAN Configuration Backup<a class="headerlink" href="#vsan-configuration-backup" title="Permanent link">&para;</a></h2>
+<p>vSAN cluster configuration is stored in vCenter. The vSAN configuration itself (disk groups, policies, cluster settings) is not separately backed up — it is recovered by rebuilding the cluster from vCenter configuration.</p>
+<p><strong>What to back up:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Backup method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter Server Appliance (VCSA)</td>
+<td>VCSA File-Based Backup (SFTP/FTP/HTTP)</td>
+</tr>
+<tr>
+<td>Storage policies (SPBM)</td>
+<td>Export via PowerCLI</td>
+</tr>
+<tr>
+<td>vSAN advanced settings</td>
+<td>Document in change records</td>
+</tr>
+<tr>
+<td>Stretched cluster configuration</td>
+<td>Document fault domain layout and witness details</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Export storage policies via PowerCLI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Export all storage policies to a text report</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Get-SpbmStoragePolicy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Rules&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">AnyOfRuleSets</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">AllOfRules</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Value</span> <span class="p">}</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="s2">&quot;vsan_policies_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.json&quot;</span>
+</code></pre></div>
+<p><strong>VCSA File-Based Backup (recommended — schedule daily):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From VCSA shell — backup to SFTP target</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/lib/applmgmt/backup_restore/py/vmwareappliance/backup.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--location<span class="w"> </span>sftp://backup-server/vcsa-backups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--username<span class="w"> </span>backupuser<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--backuptype<span class="w"> </span>SEAT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--comment<span class="w"> </span><span class="s2">&quot;daily-backup&quot;</span>
+</code></pre></div>
+<p>Or configure the backup schedule via vSphere Client: <strong>vCenter → Administration → Backup → Schedule</strong></p>
+<hr />
+<h2 id="restore-procedures">Restore Procedures<a class="headerlink" href="#restore-procedures" title="Permanent link">&para;</a></h2>
+<h3 id="restore-individual-vm-veeam">Restore Individual VM (Veeam)<a class="headerlink" href="#restore-individual-vm-veeam" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In the Veeam console, navigate to <strong>Backups</strong> and locate the target VM.</li>
+<li>Right-click the VM → <strong>Restore</strong> → <strong>Entire VM</strong>.</li>
+<li>Select the restore point (date/time).</li>
+<li>Choose the target: restore to original location or to a new vSAN datastore.</li>
+<li>Select the target storage policy for the restored VM.</li>
+<li>Power on the VM after restore completes.</li>
+<li>Verify guest OS boot and application health.</li>
+</ol>
+<p><strong>File-level restore (Veeam FLR):</strong></p>
+<ol>
+<li>Right-click the VM backup → <strong>Restore guest files</strong> → <strong>Microsoft Windows</strong> or <strong>Linux</strong>.</li>
+<li>Mount the restore point as a disk — browse the file system.</li>
+<li>Copy the required files back to the production VM.</li>
+</ol>
+<h3 id="restore-individual-vm-powercli-snapshot-rollback">Restore Individual VM (PowerCLI + Snapshot Rollback)<a class="headerlink" href="#restore-individual-vm-powercli-snapshot-rollback" title="Permanent link">&para;</a></h3>
+<p>Snapshot rollback is a short-term rollback mechanism, not a restore from backup. Only use this within hours of creating the snapshot.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Roll back to a snapshot</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$snap</span> <span class="p">=</span> <span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-change-snapshot&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Snapshot</span> <span class="nv">$snap</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
+<p>Remove all snapshots after rollback to avoid delta disk growth:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Remove-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
+<h3 id="recover-vcenter-from-vcsa-backup">Recover vCenter from VCSA Backup<a class="headerlink" href="#recover-vcenter-from-vcsa-backup" title="Permanent link">&para;</a></h3>
+<p>If vCenter is lost (and therefore vSAN health monitoring is lost), existing VMs continue running — vSAN data plane is independent of vCenter. Recovering vCenter restores management plane access.</p>
+<p><strong>VCSA recovery procedure:</strong></p>
+<ol>
+<li>Deploy a new VCSA OVA to a standalone ESXi host (not the vSAN cluster — use a separate management host).</li>
+<li>During VCSA setup, choose <strong>Restore from backup</strong>.</li>
+<li>Provide the SFTP/FTP backup location and credentials.</li>
+<li>Select the most recent backup.</li>
+<li>After restore, the VCSA reconnects to all ESXi hosts and the vSAN cluster becomes visible again.</li>
+</ol>
+<h3 id="rebuild-disk-group-after-drive-failure">Rebuild Disk Group After Drive Failure<a class="headerlink" href="#rebuild-disk-group-after-drive-failure" title="Permanent link">&para;</a></h3>
+<p>If a disk group has been lost due to cache SSD failure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Verify which disk group is affected</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa\.|Is SSD|Disk Group UUID|Is Capacity Tier&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. Check object health — expect degraded components</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 3. Remove the failed disk group (after hardware replacement)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 4. Rebuild the disk group with new hardware</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>add<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa1&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa2&gt;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 5. Monitor resync</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+</code></pre></div>
+<hr />
+<h2 id="backup-validation-and-testing">Backup Validation and Testing<a class="headerlink" href="#backup-validation-and-testing" title="Permanent link">&para;</a></h2>
+<p>Untested backups are assumptions. Test restores on a schedule:</p>
+<table>
+<thead>
+<tr>
+<th>Test Type</th>
+<th>Frequency</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Individual VM restore</td>
+<td>Monthly</td>
+<td>Restore to isolated network, verify boot</td>
+</tr>
+<tr>
+<td>Application-consistent restore</td>
+<td>Quarterly</td>
+<td>Restore DB or AD VM, verify application start</td>
+</tr>
+<tr>
+<td>Full site restore (DR test)</td>
+<td>Annually</td>
+<td>Restore full cluster from backup to DR site</td>
+</tr>
+<tr>
+<td>CBT integrity check</td>
+<td>After each ESXi upgrade</td>
+<td>Disable/re-enable CBT, run full backup</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common backup failure points on vSAN:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CBT errors on incremental backup</td>
+<td>Stale CBT after snapshot orphan</td>
+<td>Reset CBT (disable/enable cycle with snapshot)</td>
+</tr>
+<tr>
+<td>Snapshot stuck or delta disk growing</td>
+<td>High write I/O during backup</td>
+<td>Schedule backup during off-peak hours; increase snapshot quiesce timeout</td>
+</tr>
+<tr>
+<td>Backup proxy cannot access vSAN datastore</td>
+<td>Proxy not on vSAN network segment</td>
+<td>Move proxy VM to a host with vSAN vmkernel connectivity</td>
+</tr>
+<tr>
+<td>Backup job slow on large VMs</td>
+<td>Network mode instead of Direct NFS</td>
+<td>Reconfigure Veeam proxy transport mode</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="recovery-point-and-recovery-time-objectives">Recovery Point and Recovery Time Objectives<a class="headerlink" href="#recovery-point-and-recovery-time-objectives" title="Permanent link">&para;</a></h2>
+<p>Document RPO and RTO per workload tier before deploying backup:</p>
+<table>
+<thead>
+<tr>
+<th>Workload Tier</th>
+<th>RPO Target</th>
+<th>RTO Target</th>
+<th>Backup Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier-1 Databases</td>
+<td>&lt; 1 hour</td>
+<td>&lt; 2 hours</td>
+<td>Veeam application-aware + Zerto CDP</td>
+</tr>
+<tr>
+<td>Tier-2 General VMs</td>
+<td>&lt; 4 hours</td>
+<td>&lt; 4 hours</td>
+<td>Veeam daily backup</td>
+</tr>
+<tr>
+<td>Dev/Test</td>
+<td>&lt; 24 hours</td>
+<td>&lt; 8 hours</td>
+<td>Veeam daily backup or snapshot</td>
+</tr>
+</tbody>
+</table>
+<p>vSAN stretched cluster does not improve RPO for logical failures — it only protects against site-level hardware failure. Backup remains required regardless of stretched cluster configuration.</p>
 
 
 

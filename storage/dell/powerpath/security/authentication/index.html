@@ -716,6 +716,172 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#linux-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#root-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sudo-based-access-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sudo-Based Access (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pam-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PAM Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssh-key-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Key Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-administrator-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Administrator Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows-remote-management-winrm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Remote Management (WinRM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-directory-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aix-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AIX Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automation-and-service-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automation and Service Accounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Trail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powerpath-management-suite-ppms-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerPath Management Suite (PPMS) Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -737,17 +903,180 @@
 
 
 <h1 id="powerpath-authentication">PowerPath — Authentication<a class="headerlink" href="#powerpath-authentication" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Authentication documentation for PowerPath will be documented here.</p>
-</blockquote>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>PowerPath does not implement its own authentication system. Access to <code>powermt</code> commands is controlled entirely by the host operating system's authentication mechanisms.</p>
+<p>PowerPath does not implement its own authentication system. There is no PowerPath-native login, user database, or session management. Access to <code>powermt</code> CLI commands is controlled entirely by the host operating system's authentication and authorisation mechanisms.</p>
+<p>This design means PowerPath security is inherited from the host OS security posture. Any account with sufficient OS privilege can run any <code>powermt</code> command — there is no additional PowerPath credential check.</p>
+<hr />
+<h2 id="linux-authentication">Linux Authentication<a class="headerlink" href="#linux-authentication" title="Permanent link">&para;</a></h2>
+<p>On Linux, all <code>powermt</code> commands that modify configuration require root privileges. Read-only display commands (<code>powermt display</code>) may or may not require root depending on the PowerPath version and kernel configuration.</p>
+<h3 id="root-access">Root Access<a class="headerlink" href="#root-access" title="Permanent link">&para;</a></h3>
+<p>The simplest and least secure model: operations staff SSH to the host as root and run <code>powermt</code> directly. Acceptable only in environments with full SSH key control and no shared root passwords.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Direct root access</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>root@db-prod-01
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>CLAROpt<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>save
+</code></pre></div>
+<h3 id="sudo-based-access-recommended">Sudo-Based Access (Recommended)<a class="headerlink" href="#sudo-based-access-recommended" title="Permanent link">&para;</a></h3>
+<p>The recommended model for Linux: create a named storage administration account and grant it sudo access only to specific <code>powermt</code> commands. This provides auditability (sudo logs the caller's real username) while restricting blast radius.</p>
+<p><strong>Sudoers configuration for a storage admin account:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># /etc/sudoers.d/powerpath
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Storage admin — full powermt access
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>svc-storage ALL=(root) NOPASSWD: /usr/sbin/powermt
+</code></pre></div>
+<p>This grants the <code>svc-storage</code> account the ability to run any <code>powermt</code> subcommand. If tighter restriction is needed, specify individual commands:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># /etc/sudoers.d/powerpath-monitoring
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a># Read-only monitoring account — display and registration check only
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>svc-monitoring ALL=(root) NOPASSWD: \
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    /usr/sbin/powermt display dev=all, \
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    /usr/sbin/powermt display ports class=all, \
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    /usr/sbin/powermt display options, \
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    /usr/sbin/powermt check_registration, \
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    /usr/sbin/powermt version
+</code></pre></div>
+<p>Validate the sudoers file syntax before applying:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/powerpath-monitoring
+</code></pre></div>
+<h3 id="pam-integration">PAM Integration<a class="headerlink" href="#pam-integration" title="Permanent link">&para;</a></h3>
+<p>PowerPath itself does not integrate with PAM. Host SSH authentication via PAM (including LDAP, Active Directory via SSSD, or MFA via PAM RADIUS) applies normally — PAM controls who can log into the host; once logged in, sudo controls what they can run.</p>
+<p>For environments with Active Directory integration on Linux:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm the storage admin AD group resolves on the host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>id<span class="w"> </span>svc-storage
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>getent<span class="w"> </span>group<span class="w"> </span>storage-admins
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Grant the AD group sudo access to powermt</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># /etc/sudoers.d/powerpath-ad</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>%storage-admins<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt
+</code></pre></div>
+<h3 id="ssh-key-management">SSH Key Management<a class="headerlink" href="#ssh-key-management" title="Permanent link">&para;</a></h3>
+<p>Hosts running PowerPath should enforce SSH key authentication and disable password-based SSH login for root:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># /etc/ssh/sshd_config
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>PermitRootLogin prohibit-password
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>PasswordAuthentication no
+</code></pre></div>
+<p>This ensures that interactive root access requires a managed SSH key, reducing the risk of credential-based attacks on hosts with privileged PowerPath access.</p>
+<hr />
+<h2 id="windows-authentication">Windows Authentication<a class="headerlink" href="#windows-authentication" title="Permanent link">&para;</a></h2>
+<p>On Windows Server, PowerPath installs as a system service and filter driver. The <code>powermt</code> command requires Local Administrator rights. There is no finer-grained Windows permission model for PowerPath — it is binary: Local Administrator or no access.</p>
+<h3 id="local-administrator-groups">Local Administrator Groups<a class="headerlink" href="#local-administrator-groups" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Confirm account is in the local Administrators group</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Add a service account to local Administrators (requires existing admin rights)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Add-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span> <span class="n">-Member</span> <span class="s2">&quot;DOMAIN\svc-storage&quot;</span>
+</code></pre></div>
+<h3 id="windows-remote-management-winrm">Windows Remote Management (WinRM)<a class="headerlink" href="#windows-remote-management-winrm" title="Permanent link">&para;</a></h3>
+<p>For remote PowerPath management on Windows, WinRM with constrained language mode or PowerShell JEA (Just Enough Administration) can be configured to restrict which <code>powermt</code> commands a delegated account can run remotely:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Example JEA configuration — restrict to display commands only</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># In a JEA role capability file (.psrc):</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">VisibleExternalCommands</span> <span class="p">=</span> <span class="s1">&#39;powermt display dev=all&#39;</span><span class="p">,</span> <span class="s1">&#39;powermt check_registration&#39;</span>
+</code></pre></div>
+<h3 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h3>
+<p>Windows Server hosts joined to Active Directory authenticate via Kerberos. Grant the relevant AD security group Local Administrator membership on PowerPath hosts via Group Policy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Computer Configuration &gt; Policies &gt; Windows Settings &gt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Security Settings &gt; Restricted Groups &gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Add DOMAIN\Storage-Admins to local Administrators
+</code></pre></div>
+<hr />
+<h2 id="aix-authentication">AIX Authentication<a class="headerlink" href="#aix-authentication" title="Permanent link">&para;</a></h2>
+<p>On IBM AIX, <code>powermt</code> requires root access. AIX RBAC (Role-Based Access Control) can be used to grant the <code>powermt</code> command to a non-root user:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Create a custom role for PowerPath operations</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>mkrole<span class="w"> </span><span class="nv">rolelist</span><span class="o">=</span>powerpath_admin
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Assign the powermt binary to the role</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Edit /etc/security/roles to include command access</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Assign the role to a user</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>chuser<span class="w"> </span><span class="nv">roles</span><span class="o">=</span>powerpath_admin<span class="w"> </span>storage_admin_user
+</code></pre></div>
+<p>For most AIX environments, the simpler approach is a named shared account in the <code>system</code> group that is permitted to run <code>powermt</code>, with sudo configured via the IBM AIX sudo package.</p>
+<hr />
+<h2 id="automation-and-service-accounts">Automation and Service Accounts<a class="headerlink" href="#automation-and-service-accounts" title="Permanent link">&para;</a></h2>
+<p>When PowerPath monitoring or automation scripts run <code>powermt</code> commands, use a dedicated service account rather than a shared root password or personal admin account.</p>
+<p>Principles for automation service accounts:</p>
+<ol>
+<li><strong>Least privilege</strong>: Grant only the <code>powermt</code> subcommands the automation actually needs. Monitoring scripts typically need only <code>display</code> and <code>check_registration</code> — not <code>set</code>, <code>save</code>, or <code>config</code>.</li>
+<li><strong>No interactive login</strong>: Disable interactive shell login for the service account; only sudo-based command execution should be permitted.</li>
+<li><strong>SSH key authentication</strong>: Use a unique, passphrase-protected SSH key for each automation system. Rotate annually.</li>
+<li><strong>Audit trail</strong>: Ensure all <code>powermt</code> commands run by the service account are logged via sudo (<code>/var/log/secure</code> on RHEL/OEL, <code>/var/log/auth.log</code> on Debian/Ubuntu).</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Example: monitoring service account with restricted sudo</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># /etc/sudoers.d/powerpath-svc-monitor</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>Defaults:svc-monitor<span class="w"> </span>!requiretty
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>ports<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>check_registration
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>svc-monitor<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/sbin/powermt<span class="w"> </span>display<span class="w"> </span>options
+</code></pre></div>
+<hr />
+<h2 id="audit-trail">Audit Trail<a class="headerlink" href="#audit-trail" title="Permanent link">&para;</a></h2>
+<p>PowerPath does not write its own audit log. Administrative actions (<code>powermt set</code>, <code>powermt save</code>, <code>powermt config</code>, <code>powermt remove</code>) are only traceable through:</p>
 <ul>
-<li>On Linux, <code>powermt</code> commands require root or sudo privileges</li>
-<li>On Windows, PowerPath management requires Local Administrator rights</li>
-<li>Service accounts used for automation should be granted only the minimum required permissions via sudoers (Linux) or local group membership (Windows)</li>
+<li><strong>sudo logs</strong> (Linux): <code>/var/log/secure</code> or <code>/var/log/auth.log</code> — records who ran which <code>powermt</code> command via sudo, including timestamp and originating user</li>
+<li><strong>Shell history</strong>: If admins run <code>powermt</code> as root, the command will appear in the root shell history (<code>/root/.bash_history</code>) — unreliable unless audited centrally</li>
+<li><strong>Windows Event Log</strong>: <code>powermt</code> executions on Windows are not specifically logged by PowerPath; rely on Windows process creation auditing (Security Event ID 4688) if process-level audit is required</li>
+<li><strong>Centralised logging</strong>: Forward sudo logs and Windows Event Log to a SIEM for retention and alerting on privileged PowerPath operations</li>
 </ul>
-<p>Refer to the <a href="../access-control/">Access Control</a> page for role definitions and sudoers configuration examples.</p>
+<p>For change management compliance, document every <code>powermt set</code> and <code>powermt save</code> operation in the associated change record, including the before/after output of <code>powermt display options</code>.</p>
+<hr />
+<h2 id="powerpath-management-suite-ppms-authentication">PowerPath Management Suite (PPMS) Authentication<a class="headerlink" href="#powerpath-management-suite-ppms-authentication" title="Permanent link">&para;</a></h2>
+<p>Dell PowerPath Management Suite is the optional centralised management platform for PowerPath-managed hosts. PPMS has its own authentication layer, separate from host OS authentication:</p>
+<ul>
+<li>PPMS uses local accounts and optionally integrates with LDAP/Active Directory for SSO</li>
+<li>Role-based access within PPMS: Administrator, Operator, and Read-Only roles map to full management, limited change, and view-only access respectively</li>
+<li>PPMS API access uses token-based authentication; tokens are scoped per role</li>
+<li>For environments using PPMS, direct <code>powermt</code> command access on individual hosts should be restricted to break-glass scenarios</li>
+</ul>
+<p>Refer to the Dell PowerPath Management Suite Installation and Administration Guide for PPMS-specific authentication configuration.</p>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Authentication Mechanism</th>
+<th>Minimum Required Privilege</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux</td>
+<td>Root or sudo</td>
+<td>Root (or sudo to powermt)</td>
+</tr>
+<tr>
+<td>Windows Server</td>
+<td>Windows authentication</td>
+<td>Local Administrator</td>
+</tr>
+<tr>
+<td>AIX</td>
+<td>Root or AIX RBAC</td>
+<td>Root (or RBAC role with powermt)</td>
+</tr>
+<tr>
+<td>HP-UX</td>
+<td>Root</td>
+<td>Root</td>
+</tr>
+<tr>
+<td>Solaris</td>
+<td>Root or RBAC</td>
+<td>Root (or RBAC profile)</td>
+</tr>
+<tr>
+<td>PowerPath/VE (ESXi)</td>
+<td>vSphere authentication</td>
+<td>vSphere Administrator or Storage Administrator role</td>
+</tr>
+<tr>
+<td>PPMS</td>
+<td>Local account or LDAP/AD</td>
+<td>PPMS Administrator role</td>
+</tr>
+</tbody>
+</table>
 
 
 

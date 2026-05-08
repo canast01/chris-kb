@@ -876,6 +876,117 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#event-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Logs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Event Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-winevent-common-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get-WinEvent — Common Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-security-event-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Security Event IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-size-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Size and Retention
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-performance-snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Performance Snapshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-counters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Counters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-collector-sets-perfmon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Collector Sets (PerfMon)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1107,6 +1218,220 @@
 </tr>
 </tbody>
 </table>
+<h2 id="event-logs">Event Logs<a class="headerlink" href="#event-logs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Path</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System</td>
+<td><code>System</code></td>
+<td>OS events, driver failures, service stops, hardware</td>
+</tr>
+<tr>
+<td>Application</td>
+<td><code>Application</code></td>
+<td>App errors, .NET exceptions, SQL, IIS</td>
+</tr>
+<tr>
+<td>Security</td>
+<td><code>Security</code></td>
+<td>Authentication, account management, privilege use</td>
+</tr>
+<tr>
+<td>Setup</td>
+<td><code>Setup</code></td>
+<td>Windows Update, component installs</td>
+</tr>
+<tr>
+<td>Windows PowerShell</td>
+<td><code>Windows PowerShell</code></td>
+<td>PS script execution</td>
+</tr>
+<tr>
+<td>Sysmon</td>
+<td><code>Microsoft-Windows-Sysmon/Operational</code></td>
+<td>Process creation, network, file events (if deployed)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="get-winevent-common-queries">Get-WinEvent — Common Queries<a class="headerlink" href="#get-winevent-common-queries" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Errors in System log — last 24 hours</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">LogName</span>   <span class="p">=</span> <span class="s1">&#39;System&#39;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">Level</span>     <span class="p">=</span> <span class="n">2</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">StartTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c"># Application errors — last 6 hours</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">LogName</span>   <span class="p">=</span> <span class="s1">&#39;Application&#39;</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">Level</span>     <span class="p">=</span> <span class="n">2</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="n">StartTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">6</span><span class="p">)</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c"># Security log — failed logons (Event ID 4625)</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>    <span class="n">LogName</span>   <span class="p">=</span> <span class="s1">&#39;Security&#39;</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>    <span class="n">Id</span>        <span class="p">=</span> <span class="n">4625</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    <span class="n">StartTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+</code></pre></div>
+<h3 id="key-security-event-ids">Key Security Event IDs<a class="headerlink" href="#key-security-event-ids" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Event ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4624</td>
+<td>Successful logon</td>
+</tr>
+<tr>
+<td>4625</td>
+<td>Failed logon</td>
+</tr>
+<tr>
+<td>4634</td>
+<td>Logoff</td>
+</tr>
+<tr>
+<td>4688</td>
+<td>Process creation</td>
+</tr>
+<tr>
+<td>4720</td>
+<td>User account created</td>
+</tr>
+<tr>
+<td>4740</td>
+<td>Account locked out</td>
+</tr>
+<tr>
+<td>7036</td>
+<td>Service started or stopped</td>
+</tr>
+<tr>
+<td>41</td>
+<td>Kernel power — unexpected reboot</td>
+</tr>
+<tr>
+<td>6008</td>
+<td>Unexpected shutdown</td>
+</tr>
+</tbody>
+</table>
+<h3 id="log-size-and-retention">Log Size and Retention<a class="headerlink" href="#log-size-and-retention" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Check current log sizes and limits</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-ListLog</span> <span class="n">System</span><span class="p">,</span> <span class="n">Application</span><span class="p">,</span> <span class="n">Security</span> <span class="p">|</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="nb">Select-Object</span> <span class="n">LogName</span><span class="p">,</span> <span class="n">MaximumSizeInBytes</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CurrentSizeMB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FileSize</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span><span class="n">1</span><span class="p">)</span> <span class="p">}},</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>        <span class="n">LogMode</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c"># Set max size (e.g., Security log to 1 GB)</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">wevtutil</span> <span class="nb">sl </span><span class="n">Security</span> <span class="p">/</span><span class="n">ms</span><span class="p">:</span><span class="n">1073741824</span>
+</code></pre></div>
+<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
+<h3 id="quick-performance-snapshot">Quick Performance Snapshot<a class="headerlink" href="#quick-performance-snapshot" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># CPU usage (5-sample average)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nv">$cpu</span> <span class="p">=</span> <span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">2</span> <span class="n">-MaxSamples</span> <span class="n">5</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$cpu</span><span class="p">.</span><span class="n">CounterSamples</span><span class="p">.</span><span class="n">CookedValue</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c"># Memory</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nv">$os</span> <span class="p">=</span> <span class="nb">Get-CimInstance</span> <span class="n">Win32_OperatingSystem</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="n">TotalGB</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">FreeGB</span>    <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$os</span><span class="p">.</span><span class="n">FreePhysicalMemory</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="n">UsedPct</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span> <span class="p">-</span> <span class="nv">$os</span><span class="p">.</span><span class="n">FreePhysicalMemory</span><span class="p">)/</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span><span class="p">*</span><span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="p">}</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c"># Top processes by CPU</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPU%&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CPU</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}},</span> <span class="n">WorkingSet</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c"># Top processes by memory</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">WorkingSet</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;MemMB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">WorkingSet</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}}</span>
+</code></pre></div>
+<h3 id="performance-thresholds">Performance Thresholds<a class="headerlink" href="#performance-thresholds" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Counter</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU % Processor Time</td>
+<td>&gt; 70% sustained</td>
+<td>&gt; 90% sustained</td>
+</tr>
+<tr>
+<td>Memory Available MB</td>
+<td>&lt; 20% of total</td>
+<td>&lt; 10% of total</td>
+</tr>
+<tr>
+<td>Pages/sec</td>
+<td>&gt; 100/sec</td>
+<td>&gt; 1,000/sec</td>
+</tr>
+<tr>
+<td>Disk Avg. sec/Transfer</td>
+<td>&gt; 15 ms</td>
+<td>&gt; 25 ms</td>
+</tr>
+<tr>
+<td>Disk % Disk Time</td>
+<td>&gt; 80%</td>
+<td>&gt; 95%</td>
+</tr>
+<tr>
+<td>Network % Bandwidth</td>
+<td>&gt; 70%</td>
+<td>&gt; 90%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="performance-counters">Performance Counters<a class="headerlink" href="#performance-counters" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># CPU — sustained above 85% = problem</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">12</span> <span class="p">|</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CounterSamples</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Path</span><span class="p">,</span> <span class="n">CookedValue</span> <span class="p">}</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c"># Memory — pages/sec above 1000 sustained = memory pressure</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Memory\Pages/sec&#39;</span><span class="p">,</span> <span class="s1">&#39;\Memory\Available MBytes&#39;</span> <span class="n">-SampleInterval</span> <span class="n">5</span> <span class="n">-MaxSamples</span> <span class="n">6</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c"># Disk — latency above 20ms = problem</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\PhysicalDisk(*)\Avg. Disk sec/Transfer&#39;</span> <span class="n">-SampleInterval</span> <span class="n">2</span> <span class="n">-MaxSamples</span> <span class="n">5</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c"># Network — throughput and errors</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Network Interface(*)\Bytes Total/sec&#39;</span><span class="p">,</span> <span class="s1">&#39;\Network Interface(*)\Packets Received Errors&#39;</span>
+</code></pre></div>
+<h3 id="data-collector-sets-perfmon">Data Collector Sets (PerfMon)<a class="headerlink" href="#data-collector-sets-perfmon" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># Create a data collector set from command line</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">logman</span> <span class="n">create</span> <span class="n">counter</span> <span class="s2">&quot;PerfBaseline&quot;</span> <span class="p">^</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">-c</span> <span class="s2">&quot;\Processor(_Total)\% Processor Time&quot;</span> <span class="p">^</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>       <span class="s2">&quot;\Memory\Available MBytes&quot;</span> <span class="p">^</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>       <span class="s2">&quot;\PhysicalDisk(*)\Avg. Disk sec/Transfer&quot;</span> <span class="p">^</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>       <span class="s2">&quot;\Network Interface(*)\Bytes Total/sec&quot;</span> <span class="p">^</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="n">-si</span> <span class="n">00</span><span class="p">:</span><span class="n">00</span><span class="p">:</span><span class="n">05</span> <span class="p">^</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="o">-f</span> <span class="n">bincirc</span> <span class="p">^</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    <span class="n">-max</span> <span class="n">500</span> <span class="p">^</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    <span class="n">-o</span> <span class="n">C</span><span class="p">:\</span><span class="n">PerfLogs</span><span class="p">\</span><span class="n">baseline</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="n">logman</span> <span class="nb">start </span><span class="n">PerfBaseline</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="n">logman</span> <span class="n">stop</span> <span class="n">PerfBaseline</span>
+</code></pre></div>
 
 
 

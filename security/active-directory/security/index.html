@@ -21,7 +21,7 @@
     
     
       
-        <title>Active Directory Security - Chris KB</title>
+        <title>Active Directory — Security - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Active Directory Security · Chris KB">
+  <meta property="og:title" content="Active Directory — Security · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Active Directory Security · Chris KB">
+  <meta name="twitter:title" content="Active Directory — Security · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Active Directory Security
+              Active Directory — Security
             
           </span>
         </div>
@@ -699,124 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#tiered-administration-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tiered Administration Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#privileged-access-workstations-paws" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Privileged Access Workstations (PAWs)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#core-security-controls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Core Security Controls
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enforcing-ldap-signing-and-channel-binding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Enforcing LDAP Signing and Channel Binding
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kerberos-encryption-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kerberos Encryption Policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#protected-users-group" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protected Users Group
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adminsdholder-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AdminSDHolder Monitoring
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dcsync-attack-detection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DCSync Attack Detection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#defender-for-identity-deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Defender for Identity Deployment
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hardening-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Checklist
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -835,169 +717,30 @@
 
 
 
-<h1 id="active-directory-security">Active Directory Security<a class="headerlink" href="#active-directory-security" title="Permanent link">&para;</a></h1>
-<h2 id="tiered-administration-model">Tiered Administration Model<a class="headerlink" href="#tiered-administration-model" title="Permanent link">&para;</a></h2>
-<p>Active Directory security is built around the three-tier admin model:</p>
-<table>
-<thead>
-<tr>
-<th>Tier</th>
-<th>Scope</th>
-<th>Examples</th>
-<th>Access Restriction</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Tier 0</td>
-<td>Identity infrastructure</td>
-<td>DCs, ADCS, AAD Connect, CyberArk</td>
-<td>Only from Tier 0 PAW</td>
-</tr>
-<tr>
-<td>Tier 1</td>
-<td>Servers and services</td>
-<td>App servers, SQL, ESXi</td>
-<td>Only from Tier 1 PAW or jump host</td>
-</tr>
-<tr>
-<td>Tier 2</td>
-<td>Workstations</td>
-<td>End-user PCs</td>
-<td>From standard workstation</td>
-</tr>
-</tbody>
-</table>
-<p>Tier model is enforced by GPO logon restrictions (<code>Deny log on locally</code>, <code>Deny access to this computer from the network</code>) and CyberArk safe membership.</p>
-<h2 id="privileged-access-workstations-paws">Privileged Access Workstations (PAWs)<a class="headerlink" href="#privileged-access-workstations-paws" title="Permanent link">&para;</a></h2>
-<p>PAWs are hardened, dedicated hosts:
-- No internet browsing, email, or productivity apps
-- AppLocker / WDAC policy allows only admin tools
-- BitLocker + TPM + Secure Boot enforced
-- Joined to separate PAW OU with restricted GPO</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify PAW OU GPO — confirm internet-facing apps are blocked</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-GPInheritance</span> <span class="n">-Target</span> <span class="s2">&quot;OU=PAW,OU=Tier0,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check logon restriction policy on DC</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-GPOReport</span> <span class="n">-Name</span> <span class="s2">&quot;Tier0-Logon-Restrictions&quot;</span> <span class="n">-ReportType</span> <span class="n">Html</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">tier0-gpo</span><span class="p">.</span><span class="n">html</span>
-</code></pre></div>
-<h2 id="core-security-controls">Core Security Controls<a class="headerlink" href="#core-security-controls" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Control</th>
-<th>Implementation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Protected Users group</td>
-<td>Disables NTLM, DES, RC4, and unconstrained delegation for members</td>
-</tr>
-<tr>
-<td>AdminSDHolder</td>
-<td>ACL template propagated every 60 min to all protected accounts</td>
-</tr>
-<tr>
-<td>PAW</td>
-<td>Dedicated hardened workstations; Tier 0 access only from Tier 0 PAW</td>
-</tr>
-<tr>
-<td>LDAP signing</td>
-<td><code>Domain Controller: LDAP server signing requirements</code> = Require signing</td>
-</tr>
-<tr>
-<td>LDAP channel binding</td>
-<td><code>Domain Controller: LDAP server channel binding token requirements</code> = Always</td>
-</tr>
-<tr>
-<td>Kerberos AES-256 only</td>
-<td>Disable RC4 via <code>Network security: Configure encryption types allowed for Kerberos</code></td>
-</tr>
-<tr>
-<td>Fine-grained PSO</td>
-<td>Stricter password/lockout policies for admin and service accounts</td>
-</tr>
-<tr>
-<td>Defender for Identity</td>
-<td>Sensor on all DCs; detects lateral movement, pass-the-hash, DCSync</td>
-</tr>
-</tbody>
-</table>
-<h2 id="enforcing-ldap-signing-and-channel-binding">Enforcing LDAP Signing and Channel Binding<a class="headerlink" href="#enforcing-ldap-signing-and-channel-binding" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify current LDAP signing requirement via registry on DC</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\System\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="s2">&quot;LDAPServerIntegrity&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># 2 = Require (desired); 1 = Negotiate; 0 = None</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Verify channel binding token requirements</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\System\CurrentControlSet\Services\NTDS\Parameters&quot;</span> <span class="p">|</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="nb">Select-Object</span> <span class="s2">&quot;LdapEnforceChannelBinding&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># 2 = Always (desired); 1 = When Supported; 0 = Never</span>
-</code></pre></div>
-<h2 id="kerberos-encryption-policy">Kerberos Encryption Policy<a class="headerlink" href="#kerberos-encryption-policy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify Kerberos encryption GPO is applied to DCs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># GPO setting: Computer → Windows Settings → Security Settings →</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Local Policies → Security Options → &quot;Network security: Configure encryption types allowed for Kerberos&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Desired: AES128_HMAC_SHA1, AES256_HMAC_SHA1 only (DES and RC4 unchecked)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Check if RC4 is still in use (legacy clients will fail after disabling)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Event ID 4769 with &quot;Ticket Encryption Type: 0x17&quot; = RC4 in use</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">dc1</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4769</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">500</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;0x17&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
-</code></pre></div>
-<h2 id="protected-users-group">Protected Users Group<a class="headerlink" href="#protected-users-group" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Add privileged accounts to Protected Users</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;admin-tier0-01&quot;</span><span class="p">,</span><span class="s2">&quot;admin-tier0-02&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Verify current membership</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;Protected Users&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">DistinguishedName</span>
-</code></pre></div>
-<p>Protected Users group members cannot:
-- Authenticate with NTLM, DES, or RC4
-- Use unconstrained delegation
-- Have their credentials cached on non-DCs</p>
-<h2 id="adminsdholder-monitoring">AdminSDHolder Monitoring<a class="headerlink" href="#adminsdholder-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># List all accounts protected by AdminSDHolder (adminCount=1)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span> <span class="n">AdminCount</span> <span class="o">-eq</span> <span class="n">1</span> <span class="p">}</span> <span class="n">-Properties</span> <span class="n">AdminCount</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">DistinguishedName</span><span class="p">,</span> <span class="n">AdminCount</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Check if non-privileged accounts have adminCount=1 (sign of ACL tampering or orphaned admin membership)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span> <span class="n">AdminCount</span> <span class="o">-eq</span> <span class="n">1</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nb">Get-ADUser</span> <span class="nv">$_</span> <span class="n">-Properties</span> <span class="n">MemberOf</span><span class="p">).</span><span class="n">MemberOf</span> <span class="o">-eq</span> <span class="nv">$null</span> <span class="p">}</span>
-</code></pre></div>
-<h2 id="dcsync-attack-detection">DCSync Attack Detection<a class="headerlink" href="#dcsync-attack-detection" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Defender for Identity alert: &quot;Directory Services Replication Request&quot;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Also: Event ID 4662 with access mask 0x100 (Replicating Directory Changes)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">dc1</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4662</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">200</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;1131f6aa&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;1131f6ad&quot;</span> <span class="p">}</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># These GUIDs = Replicating Directory Changes (All)</span>
-</code></pre></div>
-<h2 id="defender-for-identity-deployment">Defender for Identity Deployment<a class="headerlink" href="#defender-for-identity-deployment" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Install MDI sensor on each DC</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Download sensor installer from MDI portal → Sensors → + Sensor</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># On DC:</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">.\</span><span class="n">Azure</span> <span class="n">ATP</span> <span class="n">Sensor</span> <span class="n">Setup</span><span class="p">.</span><span class="n">exe</span> <span class="p">/</span><span class="n">quiet</span> <span class="n">NetFrameworkCommandLineArguments</span><span class="p">=</span><span class="s2">&quot;/q&quot;</span> <span class="n">AccessKey</span><span class="p">=</span><span class="s2">&quot;&lt;sensor-key&gt;&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Verify sensor status</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># MDI portal → Sensors → confirm all DCs show &quot;Running&quot;</span>
-</code></pre></div>
-<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] Protected Users group populated with all Tier 0 accounts</li>
-<li>[ ] LDAP signing = Require on all DCs</li>
-<li>[ ] LDAP channel binding = Always on all DCs</li>
-<li>[ ] Kerberos RC4 disabled via GPO</li>
-<li>[ ] AdminSDHolder ACL reviewed for unexpected permissions</li>
-<li>[ ] Defender for Identity sensor on all DCs, alerting active</li>
-<li>[ ] Privileged accounts have no email, no SPN, no internet</li>
-<li>[ ] PAW policy applied and enforced</li>
-<li>[ ] Fine-grained password policy applied to admin groups (min 20-char passphrase)</li>
-<li>[ ] AD Recycle Bin enabled (forest functional level 2008 R2+)</li>
-<li>[ ] Audit policy: Account logon, Directory Service Access, Account Management all enabled</li>
-</ul>
+<h1 id="active-directory-security">Active Directory — Security<a class="headerlink" href="#active-directory-security" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-4">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Kerberos, NTLM, Protected Users, and PAW enforcement.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>Tiered administration, AdminSDHolder, and delegation.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>LDAP signing, channel binding, and Kerberos encryption policy.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Defender for Identity, DCSync detection, and hardening checklist.</span>
+</a>
+
+</div>
 
 
 

@@ -706,13 +706,146 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-components" class="md-nav__link">
+  <a href="#hardware-components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Components
+        Hardware Components
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Hardware Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controllers-ct0-ct1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controllers (CT0, CT1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nvme-drives-and-drive-shelves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NVMe Drives and Drive Shelves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nvram-non-volatile-write-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NVRAM (Non-Volatile Write Cache)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-interface-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Interface Modules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replication-and-management-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication and Management Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Software Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#purityfa-operating-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purity//FA Operating System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pure1-cloud-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pure1 Cloud Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safemode-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SafeMode Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pods-activecluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pods (ActiveCluster)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protection-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -737,49 +870,403 @@
 
 
 <h1 id="flasharray-components">FlashArray — Components<a class="headerlink" href="#flasharray-components" title="Permanent link">&para;</a></h1>
-<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<h2 id="hardware-components">Hardware Components<a class="headerlink" href="#hardware-components" title="Permanent link">&para;</a></h2>
+<h3 id="controllers-ct0-ct1">Controllers (CT0, CT1)<a class="headerlink" href="#controllers-ct0-ct1" title="Permanent link">&para;</a></h3>
+<p>FlashArray ships with two controllers in every chassis, designated CT0 and CT1. Both controllers are active simultaneously — there is no hot-standby controller. Each runs a complete instance of Purity//FA OS and both serve host I/O at all times, with volume ownership distributed across the pair using ALUA (Asymmetric Logical Unit Access).</p>
+<p>Controller hardware varies by model generation, but each controller includes:</p>
+<ul>
+<li>Multi-core Intel or AMD CPUs dedicated to Purity OS processes</li>
+<li>NVMe-attached NVRAM (non-volatile write cache) — write acknowledgements are sent to the host only after data is committed to NVRAM on both controllers, providing crash consistency without sacrificing latency</li>
+<li>Internal NVMe fabric connecting the controller to the drive shelf</li>
+<li>Host-facing I/O modules (FC, iSCSI, NVMe/FC, NVMe/RoCE, or NVMe/TCP depending on model and configuration)</li>
+<li>Dedicated management Ethernet port for CLI, GUI, REST API, and Pure1 phone-home</li>
+<li>Dedicated replication Ethernet ports for inter-array replication traffic</li>
+</ul>
+<p><strong>Controller health commands:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show both controllers, Purity version, and status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show all hardware including controller components</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>ct
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show individual controller hardware detail</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0<span class="w"> </span>--spec
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT1<span class="w"> </span>--spec
+</code></pre></div>
+<p><strong>Controller failover behaviour:</strong></p>
+<p>If one controller fails — whether due to hardware fault, Purity process crash, or a scheduled NDU (non-disruptive upgrade) restart — the surviving controller takes ownership of all volumes within seconds. Hosts with proper multipathing experience no I/O interruption because the multipath driver automatically promotes the surviving paths. The failed controller reboots automatically and rejoins the active-active pair once Purity confirms it is healthy; volume ownership rebalances back to the original distribution without any manual intervention.</p>
 <table>
 <thead>
 <tr>
-<th>Component</th>
+<th>Condition</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One controller fails or restarts</td>
+<td>Surviving controller owns all volumes; I/O continues for correctly multipathed hosts</td>
+</tr>
+<tr>
+<td>Both controllers restart simultaneously</td>
+<td>I/O pauses until first controller returns; only occurs during an unplanned double failure</td>
+</tr>
+<tr>
+<td>NDU upgrade</td>
+<td>Controllers restart one at a time; non-disruptive for multipathed hosts</td>
+</tr>
+<tr>
+<td>Controller rejoin after recovery</td>
+<td>Volume ownership automatically rebalances; no manual steps required</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="nvme-drives-and-drive-shelves">NVMe Drives and Drive Shelves<a class="headerlink" href="#nvme-drives-and-drive-shelves" title="Permanent link">&para;</a></h3>
+<p>FlashArray //X and //C series use direct-attached NVMe SSDs housed in the primary chassis. Expansion shelves can be added to increase capacity without replacing controllers (Evergreen model).</p>
+<ul>
+<li><strong>//X series:</strong> TLC NVMe SSDs optimised for high IOPS and low latency (sub-100 µs)</li>
+<li><strong>//C series:</strong> QLC NVMe SSDs optimised for cost-per-TB; higher sequential throughput, moderate latency</li>
+<li><strong>//E series:</strong> High-density QLC drives at maximum capacity per chassis; for large-scale consolidation</li>
+</ul>
+<p>Drive health is continuously monitored by Purity. A failed drive triggers an automatic rebuild — Purity redistributes the data across the remaining drives using an internal RAID-like mechanism called RAID-HD (or DFM — Direct Flash Module protection depending on generation). The rebuild runs in the background and does not pause host I/O.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all drives and their health state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show drive specification (capacity, type, bay location)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--spec
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show drive status with bay location (e.g., CH0.BAY10)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>puredrive<span class="w"> </span>list<span class="w"> </span>CH0.BAY10
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Initiate a drive admission after physical insertion (if not auto-admitted)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>puredrive<span class="w"> </span>admit
+</code></pre></div>
+<p><strong>Drive states:</strong></p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>healthy</code></td>
+<td>Drive operating normally</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>recovering</code></td>
+<td>Purity is rebuilding data to/from this drive</td>
+<td>Monitor; do not pull the drive during rebuild</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>Drive has failed; Purity has taken it offline</td>
+<td>Open a support case; schedule drive replacement</td>
+</tr>
+<tr>
+<td><code>missing</code></td>
+<td>Drive bay is empty or drive not detected</td>
+<td>Verify physical seating; open support case if drive is present but undetected</td>
+</tr>
+<tr>
+<td><code>evicting</code></td>
+<td>Purity is migrating data off the drive before removal</td>
+<td>Wait for eviction to complete before pulling</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="nvram-non-volatile-write-cache">NVRAM (Non-Volatile Write Cache)<a class="headerlink" href="#nvram-non-volatile-write-cache" title="Permanent link">&para;</a></h3>
+<p>Each controller contains an NVRAM module — a battery-backed (or capacitor-backed) write cache. All host write I/O is acknowledged only after data has been written to the NVRAM on both controllers. This provides:</p>
+<ul>
+<li>Sub-millisecond write acknowledgement without waiting for flash media writes</li>
+<li>Crash consistency: if a controller fails immediately after acknowledging a write, the surviving controller has the data in its NVRAM and will destage it to flash</li>
+<li>Symmetric write latency regardless of which controller owns the volume</li>
+</ul>
+<p>NVRAM health is monitored by Purity and reported via <code>purehw list --type nvram</code>.</p>
+<hr />
+<h3 id="host-interface-modules">Host Interface Modules<a class="headerlink" href="#host-interface-modules" title="Permanent link">&para;</a></h3>
+<p>FlashArray uses swappable I/O modules in each controller to provide host-facing connectivity. The available module types depend on the array model:</p>
+<table>
+<thead>
+<tr>
+<th>Module Type</th>
+<th>Protocol</th>
+<th>Port Speed</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FC (16 Gb)</td>
+<td>Fibre Channel</td>
+<td>16 Gb/s</td>
+<td>Standard SAN fabric; requires FC switches and zoning</td>
+</tr>
+<tr>
+<td>FC (32 Gb)</td>
+<td>Fibre Channel / NVMe/FC</td>
+<td>32 Gb/s</td>
+<td>Required for NVMe/FC host connectivity</td>
+</tr>
+<tr>
+<td>iSCSI / NVMe/TCP</td>
+<td>Ethernet</td>
+<td>10 GbE / 25 GbE</td>
+<td>IP-based block storage; MTU 9000 recommended</td>
+</tr>
+<tr>
+<td>NVMe/RoCE</td>
+<td>Ethernet (RoCE v2)</td>
+<td>25 GbE / 100 GbE</td>
+<td>Lowest latency NVMe-oF over RDMA-capable Ethernet</td>
+</tr>
+</tbody>
+</table>
+<p>Each controller has multiple I/O module bays, allowing mixed protocol support (e.g., FC for production and iSCSI for replication).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all ports with type, speed, and status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureport<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># FC ports only (for zoning reference — note WWNs)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pureport<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Ethernet ports only</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>pureport<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>eth
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Show hardware component details for FC ports</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0.FC0
+</code></pre></div>
+<hr />
+<h3 id="replication-and-management-interfaces">Replication and Management Interfaces<a class="headerlink" href="#replication-and-management-interfaces" title="Permanent link">&para;</a></h3>
+<p>Separate from the host-facing I/O modules, each controller provides dedicated Ethernet interfaces for:</p>
+<ul>
+<li><strong>Management:</strong> SSH (Purity CLI), HTTPS (Purity GUI and REST API), SNMP, syslog, SMTP (alert relay), and Pure1 phone-home</li>
+<li><strong>Replication:</strong> Inter-array replication traffic for async protection groups and ActiveCluster synchronous replication</li>
+</ul>
+<p>Separating replication and management traffic from host I/O is a best practice — replication traffic can be significant (especially for large data sets or initial seeding) and must not compete with host I/O on the same interfaces.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show all network interfaces (management, replication, iSCSI data)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purenetwork<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Show DNS configuration</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>puredns<span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show NTP configuration</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ntpserver
+</code></pre></div>
+<hr />
+<h2 id="software-components">Software Components<a class="headerlink" href="#software-components" title="Permanent link">&para;</a></h2>
+<h3 id="purityfa-operating-system">Purity//FA Operating System<a class="headerlink" href="#purityfa-operating-system" title="Permanent link">&para;</a></h3>
+<p>Purity//FA is the operating system running on every FlashArray. It manages all data services — thin provisioning, deduplication, compression, snapshots, replication, and performance QoS — as well as the array's HA state machine, drive management, and phone-home telemetry.</p>
+<p>Key Purity data services:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Controllers (CT0, CT1)</td>
-<td>Two active-active controllers sharing ownership of all volumes; each runs a full Purity//FA instance</td>
+<td><strong>Thin provisioning</strong></td>
+<td>Volumes consume only the flash capacity they actually use; the allocated size is a logical ceiling</td>
 </tr>
 <tr>
-<td>NVMe drives / SAS SSDs</td>
-<td>Flash media carrying user data and Purity metadata; drives are direct-attached inside the chassis</td>
+<td><strong>Inline deduplication</strong></td>
+<td>Identical data blocks across all volumes are stored once; deduplication is always-on and requires no configuration</td>
 </tr>
 <tr>
-<td>Purity//FA OS</td>
-<td>The operating system managing data services: deduplication, compression, thin provisioning, snapshots, and replication</td>
+<td><strong>Inline compression</strong></td>
+<td>Data is compressed before being written to flash using a combination of pattern removal and block compression</td>
 </tr>
 <tr>
-<td>Fabric modules (//X)</td>
-<td>NVMe-oF fabric connectivity cards in the //X series providing NVMe/FC, NVMe/RoCE, and NVMe/TCP host ports</td>
+<td><strong>Snapshots</strong></td>
+<td>Space-efficient, crash-consistent point-in-time copies; no performance impact at creation; writable clones can be made from any snapshot</td>
 </tr>
 <tr>
-<td>Host interface cards</td>
-<td>FC (16/32 Gb), iSCSI (10/25 GbE), or NVMe/TCP (25/100 GbE) adapters in the I/O module bays</td>
+<td><strong>Protection Groups</strong></td>
+<td>Policy-based snapshot scheduling and async replication targeting; multiple volumes can be grouped under a single PG for consistency</td>
 </tr>
 <tr>
-<td>Replication / management ports</td>
-<td>Dedicated 10 GbE ports for inter-array replication, management access, and Pure1 phone-home</td>
+<td><strong>ActiveCluster</strong></td>
+<td>Synchronous replication in a pod construct; RPO=0, transparent active-active access from both sites</td>
 </tr>
 <tr>
-<td>Pure1 cloud management</td>
-<td>SaaS monitoring, AI analytics, capacity planning, and upgrade scheduling; no on-premises management VM required</td>
+<td><strong>ActiveDR</strong></td>
+<td>Async replication for DR; recovery via pod promotion at the DR site</td>
 </tr>
 <tr>
-<td>SafeMode snapshots</td>
-<td>Immutable, admin-delete-locked snapshot capability for ransomware protection</td>
+<td><strong>SafeMode</strong></td>
+<td>Admin-delete-locked snapshots; snapshot deletion requires a dual-approval process via Pure Support</td>
+</tr>
+<tr>
+<td><strong>QoS</strong></td>
+<td>Per-volume IOPS and bandwidth limits; protects shared workloads from noisy neighbours</td>
 </tr>
 </tbody>
 </table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show Purity version and array name</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show array space with data reduction metrics</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Real-time performance statistics</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>purearray<span class="w"> </span>monitor
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--latency
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--iops
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--bandwidth
+</code></pre></div>
+<hr />
+<h3 id="pure1-cloud-management">Pure1 Cloud Management<a class="headerlink" href="#pure1-cloud-management" title="Permanent link">&para;</a></h3>
+<p>Pure1 is Pure Storage's SaaS management, monitoring, and AI analytics platform. Every FlashArray phones home to Pure1 over HTTPS (port 443) automatically once registered.</p>
+<p><strong>Core Pure1 capabilities:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fleet-wide health dashboard</td>
+<td>Single pane of glass for all registered FlashArrays</td>
+</tr>
+<tr>
+<td>AI-driven anomaly detection</td>
+<td>Pure1 Meta analyses workload patterns and alerts on abnormal latency or capacity trends before they become problems</td>
+</tr>
+<tr>
+<td>Capacity forecasting</td>
+<td>Projects days-to-full for each array based on historical consumption trends</td>
+</tr>
+<tr>
+<td>Upgrade readiness reporting</td>
+<td>Pre-checks array compatibility and flags blockers before a Purity upgrade</td>
+</tr>
+<tr>
+<td>SLA reporting</td>
+<td>For Evergreen//One customers: availability, performance, and ransomware recovery SLA tracking</td>
+</tr>
+<tr>
+<td>Support integration</td>
+<td>Cases opened in the support portal are automatically linked to the array's Pure1 telemetry; support engineers can view diagnostic data without a manual upload</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check phone-home connectivity status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--phonehome
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Send diagnostic data to Pure Support (for open case)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>send
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Open remote assist tunnel to Pure Support</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--action<span class="w"> </span>open
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--status
+</code></pre></div>
+<hr />
+<h3 id="safemode-snapshots">SafeMode Snapshots<a class="headerlink" href="#safemode-snapshots" title="Permanent link">&para;</a></h3>
+<p>SafeMode is a data protection feature that makes snapshot retention policies immutable at the array level. Once enabled:</p>
+<ul>
+<li>Protection group snapshot schedules and retention policies cannot be modified or disabled without a dual-approval process involving Pure Support</li>
+<li>Individual snapshots cannot be deleted by any local admin (including <code>array_admin</code>) until the retention window expires</li>
+<li>Volume eradication (permanent deletion) requires a delay — SafeMode inserts a minimum eradication timer to prevent immediate data destruction</li>
+</ul>
+<p>SafeMode is designed to protect against ransomware attacks where an attacker has gained admin credentials to the array and attempts to destroy backups before encrypting production data.</p>
+<p><strong>Enabling SafeMode:</strong> Contact Pure Support. SafeMode activation requires a Pure Support engineer and cannot be enabled unilaterally from the array CLI or GUI. This is intentional — the dual-approval design ensures that SafeMode cannot be bypassed by a single compromised admin account.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify SafeMode status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--safemode
+</code></pre></div>
+<blockquote>
+<p>SafeMode is a one-way configuration change for the retention lock. Once a snapshot is locked, it cannot be unlocked by array admins. Plan retention windows carefully before enabling.</p>
+</blockquote>
+<hr />
+<h3 id="pods-activecluster">Pods (ActiveCluster)<a class="headerlink" href="#pods-activecluster" title="Permanent link">&para;</a></h3>
+<p>A pod is the logical container for ActiveCluster — Pure's synchronous replication technology. Volumes placed inside a pod are transparently accessible from both arrays in the pod with zero RPO and active-active I/O from both sites. Hosts at either site write to their local array; Purity synchronously replicates every write to the remote array before acknowledging to the host.</p>
+<p><strong>Pod components:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pod</td>
+<td>Named logical container for volumes and replication state</td>
+</tr>
+<tr>
+<td>Member arrays</td>
+<td>The two FlashArrays participating in the pod (stretched)</td>
+</tr>
+<tr>
+<td>Purity Mediator</td>
+<td>An external tiebreaker service (cloud-hosted or on-premises) that arbitrates which array survives during a split-brain event</td>
+</tr>
+<tr>
+<td>Failover preference</td>
+<td>Optional preference for which array takes full ownership during a planned failover</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create a pod</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purepod<span class="w"> </span>create<span class="w"> </span>oracle-pod
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Stretch the pod to a remote array (initiates synchronous replication)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purepod<span class="w"> </span>add<span class="w"> </span>--array<span class="w"> </span>site-b-fa-01<span class="w"> </span>oracle-pod
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Create a volume inside the pod</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>4T<span class="w"> </span>oracle-pod::oracle-data-01
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># List all pods and their stretch status</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Show mediator status for a pod</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>purepod<span class="w"> </span>list<span class="w"> </span>--mediator<span class="w"> </span>oracle-pod
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Show which array has failover preference</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference<span class="w"> </span>oracle-pod
+</code></pre></div>
+<hr />
+<h3 id="protection-groups">Protection Groups<a class="headerlink" href="#protection-groups" title="Permanent link">&para;</a></h3>
+<p>Protection groups (PGs) are the primary mechanism for coordinating crash-consistent snapshots and async replication across multiple volumes. A PG can include volumes, host groups, or hosts as members.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create a protection group</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>prod-oracle-pg
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Add volumes to the protection group</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>purepgroup<span class="w"> </span>addvollist<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--vollist<span class="w"> </span>prod-oracle-data-01,prod-oracle-redo-01
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Set a snapshot schedule (hourly snaps, retain 24/day, keep 7 days)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>prod-oracle-pg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span>--snap-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span>--snap-frequency<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>--snap-per-day<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>--snap-for-days<span class="w"> </span><span class="m">7</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Add a replication target (async replication to remote array)</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--target<span class="w"> </span>dr-fa-01
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Set replication schedule</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>prod-oracle-pg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span>--replicate-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span>--replicate-frequency<span class="w"> </span><span class="m">3600</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1"># List all protection groups and schedules</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>purepgroup<span class="w"> </span>list
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="c1"># Take an on-demand snapshot of a protection group</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>purepgroup<span class="w"> </span>snap<span class="w"> </span>--pgroup<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--suffix<span class="w"> </span>premigration-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="c1"># List protection group snapshots</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>prod-oracle-pg
+</code></pre></div>
 
 
 

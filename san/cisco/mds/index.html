@@ -717,6 +717,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#platform-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Concepts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -728,10 +750,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#upgrade-workflow-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Upgrade Workflow Summary
       
     </span>
   </a>
@@ -739,10 +761,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
+  <a href="#operational-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrade Workflow
+        Operational Reference
       
     </span>
   </a>
@@ -799,46 +821,225 @@ Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoni
 </div>
 
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Cisco MDS switches provide Fibre Channel connectivity for SAN environments.</p>
+<p>Cisco MDS 9000 series switches are purpose-built enterprise Fibre Channel SAN switches running NX-OS for SAN. The platform spans fixed-configuration switches (MDS 9132T, 9148T, 9396T) and modular directors (MDS 9706, 9710) capable of hundreds of 32G/64G FC ports per chassis.</p>
+<p>The defining feature of the MDS platform is <strong>VSAN (Virtual SAN)</strong> — each physical fabric can host multiple independent logical fabrics, each with its own FC Name Server, domain ID space, zoning database, and FLOGI table. This allows production, replication, and test traffic to share physical infrastructure with complete isolation.</p>
+<p>MDS fabrics are managed per-switch via NX-OS CLI or centrally via <strong>Cisco NDFC (Nexus Dashboard Fabric Controller)</strong>, which provides topology visibility, zone management, firmware orchestration, and SAN analytics.</p>
+<hr />
+<h2 id="platform-summary">Platform Summary<a class="headerlink" href="#platform-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Form Factor</th>
+<th>Max FC Ports</th>
+<th>Key Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MDS 9132T</td>
+<td>1U fixed</td>
+<td>32x 32G FC</td>
+<td>Entry-level, NPV capable</td>
+</tr>
+<tr>
+<td>MDS 9148T</td>
+<td>2U fixed</td>
+<td>48x 32G FC</td>
+<td>Mid-range</td>
+</tr>
+<tr>
+<td>MDS 9396T</td>
+<td>2U fixed</td>
+<td>96x 32G FC</td>
+<td>High-density fixed</td>
+</tr>
+<tr>
+<td>MDS 9706</td>
+<td>Director 6-slot</td>
+<td>Up to 384x 32G FC</td>
+<td>Modular director, ISSU</td>
+</tr>
+<tr>
+<td>MDS 9710</td>
+<td>Director 10-slot</td>
+<td>Up to 576x 32G FC</td>
+<td>Large-scale director, ISSU</td>
+</tr>
+</tbody>
+</table>
+<p>Directors (9706/9710) support <strong>ISSU (In-Service Software Upgrade)</strong> — non-disruptive NX-OS upgrades when dual supervisors are installed. Fixed-configuration switches require a reload for NX-OS upgrades.</p>
+<hr />
+<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VSAN</td>
+<td>Virtual SAN — logical fabric isolation on shared physical hardware</td>
+</tr>
+<tr>
+<td>Zoning</td>
+<td>Controls which initiators (hosts) can communicate with which targets (storage)</td>
+</tr>
+<tr>
+<td>FLOGI</td>
+<td>Fabric Login — the handshake a device uses to join the SAN fabric</td>
+</tr>
+<tr>
+<td>FCID</td>
+<td>Fabric-assigned address assigned to each logged-in device</td>
+</tr>
+<tr>
+<td>FCNS</td>
+<td>FC Name Server — directory of all logged-in devices per VSAN</td>
+</tr>
+<tr>
+<td>ISL</td>
+<td>Inter-Switch Link — connects two MDS switches to form a multi-switch fabric</td>
+</tr>
+<tr>
+<td>TE Port</td>
+<td>Trunking E_Port — carries multiple VSANs over a single ISL</td>
+</tr>
+<tr>
+<td>Port Channel</td>
+<td>Aggregated ISL group for bandwidth and redundancy</td>
+</tr>
+<tr>
+<td>Device Alias</td>
+<td>Human-readable name mapped to a port WWN (pWWN)</td>
+</tr>
+<tr>
+<td>Enhanced Zoning</td>
+<td>Default-deny zoning mode — only explicitly zoned devices can communicate</td>
+</tr>
+<tr>
+<td>CFS</td>
+<td>Cisco Fabric Services — distributes config (device aliases, zoning) across switches</td>
+</tr>
+<tr>
+<td>IVR</td>
+<td>Inter-VSAN Routing — allows controlled routing between VSANs</td>
+</tr>
+<tr>
+<td>FCIP</td>
+<td>Fibre Channel over IP — FC tunneling over WAN/DWDM for DR replication</td>
+</tr>
+<tr>
+<td>ISSU</td>
+<td>In-Service Software Upgrade — non-disruptive NX-OS upgrade on directors</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Check</th>
 <th>Command</th>
-<th>Notes</th>
+<th>Expected</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Verify fabric health</td>
-<td></td>
-<td></td>
+<td>FC interfaces up</td>
+<td><code>show interface brief</code></td>
+<td>All connected FC ports in <code>up</code> state</td>
 </tr>
 <tr>
-<td>Check port errors</td>
-<td></td>
-<td></td>
+<td>Devices logged in</td>
+<td><code>show flogi database</code></td>
+<td>All expected host HBAs and storage targets present</td>
 </tr>
 <tr>
-<td>Confirm zoning configuration</td>
-<td></td>
-<td></td>
+<td>Fabric topology</td>
+<td><code>show topology</code></td>
+<td>ISLs all up; topology matches design</td>
+</tr>
+<tr>
+<td>Active zoning</td>
+<td><code>show zoneset active vsan all</code></td>
+<td>Active zoneset name and members match expected</td>
+</tr>
+<tr>
+<td>Recent log events</td>
+<td><code>show logging last 50</code></td>
+<td>No <code>critical</code> or <code>error</code>-level entries</td>
+</tr>
+<tr>
+<td>Hardware health</td>
+<td><code>show environment</code></td>
+<td>PSUs, fans, and temperature all normal</td>
 </tr>
 </tbody>
 </table>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>show<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Quick fabric health sweep</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>interface<span class="w"> </span>brief
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>show<span class="w"> </span>zone
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>show<span class="w"> </span>fabric<span class="w"> </span>status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>show<span class="w"> </span>flogi<span class="w"> </span>database
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>show<span class="w"> </span>topology
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span>all
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">50</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>show<span class="w"> </span>environment
 </code></pre></div>
-<h2 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="upgrade-workflow-summary">Upgrade Workflow Summary<a class="headerlink" href="#upgrade-workflow-summary" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Back up configuration</li>
-<li>Verify firmware compatibility</li>
-<li>Upgrade secondary switch first</li>
+<li>Confirm both fabrics are healthy: <code>show interface brief</code>, <code>show flogi database</code></li>
+<li>Back up running configuration: <code>copy running-config scp://&lt;server&gt;/&lt;path&gt;/mds-&lt;hostname&gt;-&lt;date&gt;.cfg</code></li>
+<li>Save a named checkpoint: <code>checkpoint pre-upgrade</code></li>
+<li>Verify target NX-OS is HCL-compatible with connected HBA drivers and storage microcode</li>
+<li>For directors (9706/9710): confirm dual supervisors active and use ISSU for non-disruptive upgrade</li>
+<li>For fixed switches: schedule a maintenance window — <code>install all</code> reloads the switch</li>
+<li>Upgrade Fabric B first; validate; then Fabric A</li>
+<li>Post-upgrade: <code>show version</code>, <code>show interface brief</code>, <code>show zoneset active vsan all</code></li>
 </ol>
+<hr />
+<h2 id="operational-reference">Operational Reference<a class="headerlink" href="#operational-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Go To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zone a new host</td>
+<td><a href="operations/procedures/">Procedures — Zoning</a></td>
+</tr>
+<tr>
+<td>Troubleshoot a down FC port</td>
+<td><a href="troubleshooting/common-issues/">Troubleshooting — Common Issues</a></td>
+</tr>
+<tr>
+<td>Run NX-OS upgrade</td>
+<td><a href="operations/install-upgrade/">Install &amp; Upgrade</a></td>
+</tr>
+<tr>
+<td>Backup / restore config</td>
+<td><a href="operations/backup-restore/">Backup &amp; Restore</a></td>
+</tr>
+<tr>
+<td>Full CLI reference</td>
+<td><a href="operations/cli-reference/">CLI Reference</a></td>
+</tr>
+<tr>
+<td>Automation scripts</td>
+<td><a href="operations/scripts/">Scripts</a></td>
+</tr>
+<tr>
+<td>Security hardening</td>
+<td><a href="security/hardening/">Security — Hardening</a></td>
+</tr>
+</tbody>
+</table>
 
 
 

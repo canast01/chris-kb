@@ -706,10 +706,187 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hardening-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
         Hardening Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardening Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#account-and-credential-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Account and Credential Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssh-and-remote-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH and Remote Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-banner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login Banner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protocol-restrictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Restrictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-access-restrictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Access Restrictions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-logging-and-syslog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Logging and Syslog
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audit Logging and Syslog">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#audit-log-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-and-software-currency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware and Software Currency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vulnerability-scanning-and-penetration-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vulnerability Scanning and Penetration Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-validation-commands-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Validation — Commands Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-reference-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Reference Table
       
     </span>
   </a>
@@ -737,20 +914,350 @@
 
 
 <h1 id="data-domain-hardening">Data Domain — Hardening<a class="headerlink" href="#data-domain-hardening" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This page documents the security hardening baseline for Dell Data Domain appliances running DDOS 7.x. These settings should be applied at initial commissioning and validated periodically. The goal is to reduce the attack surface, enforce least-privilege access, and ensure all administrative actions are auditable.</p>
+<hr />
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<p>Apply these controls on every new Data Domain at commissioning. Use the checklist during quarterly security reviews.</p>
+<h3 id="account-and-credential-security">Account and Credential Security<a class="headerlink" href="#account-and-credential-security" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] Change the default <code>sysadmin</code> password immediately on commissioning</li>
-<li>[ ] Disable SSH root login: <code>adminaccess set ssh root disabled</code></li>
-<li>[ ] Restrict management access to specific subnets: <code>adminaccess set allowed-hosts &lt;subnet&gt;</code></li>
-<li>[ ] Enable HTTPS only (disable HTTP): <code>adminaccess set http-auth disabled</code></li>
-<li>[ ] Configure LDAP authentication — do not rely solely on local accounts for day-to-day access</li>
-<li>[ ] Set a login banner: <code>adminaccess set login-banner "Authorised access only"</code></li>
-<li>[ ] Set session timeout: <code>adminaccess set idle-timeout 15</code></li>
-<li>[ ] Disable unused protocols (VTL, NFS, CIFS) if not in use on this system</li>
-<li>[ ] Restrict DD Boost client access by IP if feasible: restrict in the backup software and via network ACL</li>
-<li>[ ] Enable syslog forwarding to the central log collector</li>
-<li>[ ] Enable AutoSupport but verify no sensitive data is included in bundles</li>
+<li>[ ] Change the default <code>sysadmin</code> password immediately on first access</li>
+<li>[ ] Create named admin accounts — do not use <code>sysadmin</code> for day-to-day operations; keep it as a break-glass account</li>
+<li>[ ] Configure LDAP or Active Directory authentication for all operational admin accounts</li>
+<li>[ ] Set a minimum password length of 12 characters</li>
+<li>[ ] Set a maximum password age of 90 days</li>
+<li>[ ] Rotate DD Boost service account credentials on the same cycle as the password policy</li>
 </ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Change sysadmin password</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>user<span class="w"> </span>change<span class="w"> </span>password<span class="w"> </span>sysadmin
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Set password minimum length</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-length<span class="w"> </span><span class="m">12</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Set password maximum age (days)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-age<span class="w"> </span><span class="m">90</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># View current password policy</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>user<span class="w"> </span>password-policy<span class="w"> </span>show
+</code></pre></div>
+<h3 id="ssh-and-remote-access">SSH and Remote Access<a class="headerlink" href="#ssh-and-remote-access" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Disable SSH root login</li>
+<li>[ ] Restrict SSH access to the admin jump host or bastion server IP only</li>
+<li>[ ] Disable interactive SSH password authentication if key-based auth is configured</li>
+<li>[ ] Set session idle timeout to 15 minutes</li>
+<li>[ ] Disable the HTTP (non-TLS) management interface — enforce HTTPS only</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Disable SSH root login</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>ssh<span class="w"> </span>root<span class="w"> </span>disabled
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Restrict SSH to specific management IPs (repeat for each allowed host)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>adminaccess<span class="w"> </span>add<span class="w"> </span>ssh<span class="w"> </span>allowed-hosts<span class="w"> </span>&lt;jump-host-ip&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Set session idle timeout (minutes)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>idle-timeout<span class="w"> </span><span class="m">15</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Disable plain HTTP; enforce HTTPS only</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>http-auth<span class="w"> </span>disabled
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Verify current adminaccess settings</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>adminaccess<span class="w"> </span>show
+</code></pre></div>
+<h3 id="login-banner">Login Banner<a class="headerlink" href="#login-banner" title="Permanent link">&para;</a></h3>
+<p>A legal notice banner must be displayed before login to satisfy compliance requirements (PCI-DSS 8.6, CIS benchmarks).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set a login banner</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>login-banner<span class="w"> </span><span class="s2">&quot;AUTHORISED ACCESS ONLY. This system is monitored. Unauthorised access is prohibited and will be prosecuted.&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify banner</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span>login-banner
+</code></pre></div>
+<h3 id="protocol-restrictions">Protocol Restrictions<a class="headerlink" href="#protocol-restrictions" title="Permanent link">&para;</a></h3>
+<p>Disable protocols that are not in use on the specific appliance. An unused protocol is an unnecessary attack surface.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check which protocols are currently enabled</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ddboost<span class="w"> </span>status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>nfs<span class="w"> </span>status
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>cifs<span class="w"> </span>show
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vtl<span class="w"> </span>status
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Disable CIFS if not used</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>cifs<span class="w"> </span>disable
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Disable VTL if not used</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vtl<span class="w"> </span>disable
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Disable NFS if DDBoost is the only access method</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>nfs<span class="w"> </span>disable
+</code></pre></div>
+<p>Only disable protocols after confirming with backup application teams that no backup jobs depend on them.</p>
+<h3 id="network-access-restrictions">Network Access Restrictions<a class="headerlink" href="#network-access-restrictions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restrict management access to specific subnets</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>adminaccess<span class="w"> </span>add<span class="w"> </span>allowed-hosts<span class="w"> </span>&lt;mgmt-subnet&gt;/&lt;prefix&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show current access list</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>adminaccess<span class="w"> </span>show
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify management interface is on a dedicated management VLAN</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>net<span class="w"> </span>show<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vlan
+</code></pre></div>
+<p><strong>Network architecture recommendations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Traffic Type</th>
+<th>Recommended Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management (SSH, HTTPS, REST)</td>
+<td>Dedicated management VLAN; access only from admin jump hosts</td>
+</tr>
+<tr>
+<td>Backup (DD Boost, NFS, CIFS)</td>
+<td>Dedicated backup network; no production LAN overlap</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Dedicated replication VLAN or WAN circuit; throttled via <code>replication throttle</code></td>
+</tr>
+<tr>
+<td>VTL (FC)</td>
+<td>SAN fabric; zoned to backup media servers only</td>
+</tr>
+<tr>
+<td>Cloud Tier</td>
+<td>Outbound HTTPS only; restrict egress by FQDN if possible</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="audit-logging-and-syslog">Audit Logging and Syslog<a class="headerlink" href="#audit-logging-and-syslog" title="Permanent link">&para;</a></h2>
+<p>All administrative actions must be logged and forwarded to a centralised SIEM. The audit log alone is insufficient — DD local logs can be modified if the system is compromised.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Configure syslog forwarding to centralised log collector</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;<span class="w"> </span>port<span class="w"> </span><span class="m">514</span><span class="w"> </span>protocol<span class="w"> </span>udp<span class="w">  </span><span class="c1"># or TCP for reliability</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify syslog is configured</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>log<span class="w"> </span>host<span class="w"> </span>show
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Test syslog delivery</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>log<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;syslog-server-ip&gt;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># View the local audit log</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>log<span class="w"> </span>view<span class="w"> </span>audit
+</code></pre></div>
+<h3 id="audit-log-content">Audit Log Content<a class="headerlink" href="#audit-log-content" title="Permanent link">&para;</a></h3>
+<p>The DDOS audit log captures:
+- User logins and logouts (including failed login attempts)
+- All CLI commands executed and their outcome
+- Configuration changes (MTree creation, quota changes, replication changes)
+- Retention lock events (enable, period changes)
+- Certificate operations
+- DDOS upgrade events</p>
+<p><strong>Retention requirement:</strong> Forward audit logs to a SIEM that retains them for at least 12 months (minimum for PCI-DSS; adjust per your compliance framework).</p>
+<hr />
+<h2 id="snmp-security">SNMP Security<a class="headerlink" href="#snmp-security" title="Permanent link">&para;</a></h2>
+<p>If SNMP is used for monitoring, restrict it to SNMPv3 where possible. SNMPv2c uses community strings transmitted in plaintext.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure SNMPv3 user (preferred)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snmp<span class="w"> </span>add<span class="w"> </span>user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>auth-protocol<span class="w"> </span>sha<span class="w"> </span>auth-password<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>priv-protocol<span class="w"> </span>aes<span class="w"> </span>priv-password<span class="w"> </span>&lt;priv-pass&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Add trap destination with SNMPv3</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>snmp<span class="w"> </span>add<span class="w"> </span>trapdest<span class="w"> </span>&lt;monitor-host&gt;<span class="w"> </span>v3<span class="w"> </span>user<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># If SNMPv2c is required, use a non-default community string</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>snmp<span class="w"> </span>add<span class="w"> </span>trapdest<span class="w"> </span>&lt;monitor-host&gt;<span class="w"> </span>community<span class="w"> </span>&lt;non-default-community&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Verify SNMP configuration</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>snmp<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Restrict SNMP access to the monitoring server IP only</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>snmp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>allowed-hosts<span class="w"> </span>&lt;monitor-server-ip&gt;
+</code></pre></div>
+<p>Disable SNMP entirely if the monitoring platform supports REST API polling instead:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>snmp<span class="w"> </span>disable
+</code></pre></div>
+<hr />
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>Replace self-signed certificates with CA-signed certificates for all management interfaces.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check current certificate</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Generate a CSR</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>generate-csr<span class="w"> </span>common-name<span class="w"> </span>&lt;dd-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>org<span class="w"> </span><span class="s2">&quot;&lt;Organisation Name&gt;&quot;</span><span class="w"> </span>country<span class="w"> </span>&lt;CC&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Submit the CSR to your internal CA and receive the signed certificate</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Install the signed certificate</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>install<span class="w"> </span>pem<span class="w"> </span>&lt;path-to-signed-cert.pem&gt;
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Restart the management service to apply the new certificate</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># (Note: briefly interrupts System Manager GUI access)</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>adminaccess<span class="w"> </span>restart<span class="w"> </span>https
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Verify the new certificate is in place</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
+</code></pre></div>
+<hr />
+<h2 id="encryption-hardening">Encryption Hardening<a class="headerlink" href="#encryption-hardening" title="Permanent link">&para;</a></h2>
+<p>See the <a href="../encryption/">Encryption</a> page for full D@RE configuration. Key hardening requirements:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Confirm D@RE is enabled</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>encryption<span class="w"> </span>status
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Confirm FIPS mode is active</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>encryption<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>fips
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Confirm key manager is not using the default internal key without a backup</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
+</code></pre></div>
+<p><strong>Internal key manager warning:</strong> If using the internal key manager, the encryption keys are stored on the DD appliance itself. If the appliance is destroyed in a disaster without a key backup, encrypted data cannot be recovered. Export and securely vault the internal key backup as part of the commissioning process:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Export the internal key backup (store in a secure offline vault)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>encryption<span class="w"> </span>embedded-key-manager<span class="w"> </span>export-key-backup
+</code></pre></div>
+<hr />
+<h2 id="firmware-and-software-currency">Firmware and Software Currency<a class="headerlink" href="#firmware-and-software-currency" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Keep DDOS within two minor versions of the current release</li>
+<li>Apply security patches within 30 days of release (or per your change management policy)</li>
+<li>Subscribe to Dell Security Advisories for Data Domain (available via Dell Support)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check current DDOS version</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>system<span class="w"> </span>show<span class="w"> </span>version
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check for available updates in System Manager</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># System Manager → Maintenance → Upgrade</span>
+</code></pre></div>
+<hr />
+<h2 id="vulnerability-scanning-and-penetration-testing">Vulnerability Scanning and Penetration Testing<a class="headerlink" href="#vulnerability-scanning-and-penetration-testing" title="Permanent link">&para;</a></h2>
+<p>Data Domain management interfaces should be included in regular vulnerability scans. Key considerations:</p>
+<ul>
+<li>Scan the management interface (HTTPS port 3009 and SSH port 22) from the admin network segment</li>
+<li>Do not scan DD Boost or NFS ports during active backup windows — this can cause false-positive disconnects</li>
+<li>Exclude RAID/filesystem service ports from aggressive SYN flood-style scan techniques</li>
+<li>Remediate DDOS vulnerabilities through software upgrades, not through iptables or application-layer workarounds</li>
+</ul>
+<hr />
+<h2 id="hardening-validation-commands-summary">Hardening Validation — Commands Summary<a class="headerlink" href="#hardening-validation-commands-summary" title="Permanent link">&para;</a></h2>
+<p>Run these commands after hardening to document the baseline state. Save the output as evidence for security audits.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Access controls and authentication</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>adminaccess<span class="w"> </span>show
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>user<span class="w"> </span>list
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>user<span class="w"> </span>password-policy<span class="w"> </span>show
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>auth<span class="w"> </span>show
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Protocol status</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>nfs<span class="w"> </span>status
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>cifs<span class="w"> </span>show
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>ddboost<span class="w"> </span>status
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>vtl<span class="w"> </span>status
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>snmp<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Encryption</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>encryption<span class="w"> </span>status
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>encryption<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>adminaccess<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># Logging</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>log<span class="w"> </span>host<span class="w"> </span>show
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c1"># Network access</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>allowed
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>net<span class="w"> </span>show<span class="w"> </span>all
+</code></pre></div>
+<hr />
+<h2 id="hardening-reference-table">Hardening Reference Table<a class="headerlink" href="#hardening-reference-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Setting</th>
+<th>Command to Verify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default sysadmin password changed</td>
+<td>Yes</td>
+<td>Procedural — verify at commissioning</td>
+</tr>
+<tr>
+<td>SSH root login disabled</td>
+<td>Disabled</td>
+<td><code>adminaccess show \| grep ssh</code></td>
+</tr>
+<tr>
+<td>SSH restricted to jump host IPs</td>
+<td>Restricted</td>
+<td><code>adminaccess show \| grep allowed</code></td>
+</tr>
+<tr>
+<td>HTTPS only (HTTP disabled)</td>
+<td>HTTP disabled</td>
+<td><code>adminaccess show \| grep http</code></td>
+</tr>
+<tr>
+<td>Idle session timeout</td>
+<td>15 minutes</td>
+<td><code>adminaccess show \| grep timeout</code></td>
+</tr>
+<tr>
+<td>Login banner configured</td>
+<td>Yes</td>
+<td><code>adminaccess show \| grep banner</code></td>
+</tr>
+<tr>
+<td>LDAP / AD authentication configured</td>
+<td>Yes</td>
+<td><code>auth show</code></td>
+</tr>
+<tr>
+<td>Password minimum length</td>
+<td>12+</td>
+<td><code>user password-policy show</code></td>
+</tr>
+<tr>
+<td>Password maximum age</td>
+<td>90 days</td>
+<td><code>user password-policy show</code></td>
+</tr>
+<tr>
+<td>Unused protocols disabled</td>
+<td>Per environment</td>
+<td><code>nfs status</code>, <code>cifs show</code>, <code>vtl status</code></td>
+</tr>
+<tr>
+<td>Syslog forwarding configured</td>
+<td>Yes</td>
+<td><code>log host show</code></td>
+</tr>
+<tr>
+<td>D@RE encryption enabled</td>
+<td>Enabled</td>
+<td><code>encryption status</code></td>
+</tr>
+<tr>
+<td>FIPS mode active</td>
+<td>Enabled (if required)</td>
+<td><code>encryption status \| grep fips</code></td>
+</tr>
+<tr>
+<td>CA-signed management certificate</td>
+<td>CA-signed</td>
+<td><code>adminaccess certificate show</code></td>
+</tr>
+<tr>
+<td>SNMPv3 (or SNMP disabled)</td>
+<td>v3 or disabled</td>
+<td><code>snmp show config</code></td>
+</tr>
+<tr>
+<td>DDOS within supported version range</td>
+<td>Yes</td>
+<td><code>system show version</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

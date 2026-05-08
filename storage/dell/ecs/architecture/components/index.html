@@ -717,6 +717,50 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#software-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-hardware-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Hardware Profile
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-pools-and-disk-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Pools and Disk Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#replication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -799,6 +843,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#iam-and-user-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM and User Model
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -863,6 +918,143 @@
 </tr>
 </tbody>
 </table>
+<h2 id="software-stack">Software Stack<a class="headerlink" href="#software-stack" title="Permanent link">&para;</a></h2>
+<p>ECS runs a purpose-built distributed software stack on each node. Key internal components include:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Technology</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data Service</td>
+<td>Custom C++/Java service (<code>storageos</code>)</td>
+<td>Handles object I/O, erasure coding, chunk placement, and geo-replication</td>
+</tr>
+<tr>
+<td>Metadata Store</td>
+<td>Apache Cassandra (embedded)</td>
+<td>Stores object metadata, bucket/namespace configuration, IAM definitions</td>
+</tr>
+<tr>
+<td>Coordination Service</td>
+<td>Apache ZooKeeper (embedded)</td>
+<td>Cluster coordination, leader election, distributed locking</td>
+</tr>
+<tr>
+<td>Management Plane</td>
+<td>Java application server</td>
+<td>Backs the ECS Portal UI and Management REST API on port 4443</td>
+</tr>
+<tr>
+<td>Geo-Replication Journal</td>
+<td>Custom journaling subsystem</td>
+<td>Tracks dirty chunks for replication; replays on reconnection after TSF</td>
+</tr>
+<tr>
+<td>Metadata Search Indexer</td>
+<td>Elasticsearch (embedded, optional)</td>
+<td>Enables object-level metadata search via the ECS Query API</td>
+</tr>
+</tbody>
+</table>
+<p>These services run as a unified stack managed by the ECS <code>storageos</code> system service. On-node startup and health management is handled by the ECS fabric agent (<code>caspian</code>).</p>
+<h2 id="node-hardware-profile">Node Hardware Profile<a class="headerlink" href="#node-hardware-profile" title="Permanent link">&para;</a></h2>
+<p>ECS nodes are validated on Dell ECS U-Series and CX-Series appliances. Each node is a single unit of capacity and compute in the cluster.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Typical Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>Dual socket Intel Xeon (16–32 cores per socket)</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>256 GB – 1.5 TB RAM per node (Cassandra and data service are memory-intensive)</td>
+</tr>
+<tr>
+<td>Data disks</td>
+<td>60–90 × 8 TB, 12 TB, or 20 TB NL-SAS/SATA HDDs per node (dense shelf)</td>
+</tr>
+<tr>
+<td>Boot/OS disk</td>
+<td>2 × SSD in RAID 1 for OS (not for data)</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>2 × 10 GbE or 25 GbE (data); 1 × 1 GbE (management); separate VLANs required</td>
+</tr>
+<tr>
+<td>Data IP</td>
+<td>Static IP on the data network — used for S3, Swift, and inter-node erasure coding traffic</td>
+</tr>
+<tr>
+<td>Management IP</td>
+<td>Static IP on the management network — used for ECS Portal, REST API, and SSH</td>
+</tr>
+</tbody>
+</table>
+<p>Do not mix hardware generations within a single VDC. All nodes in a VDC must use a validated Dell ECS appliance configuration; deploying on unsupported hardware voids support.</p>
+<h2 id="storage-pools-and-disk-management">Storage Pools and Disk Management<a class="headerlink" href="#storage-pools-and-disk-management" title="Permanent link">&para;</a></h2>
+<p>Within each node, ECS manages storage at the raw disk level. Disks are presented as raw block devices; ECS formats them with XFS and manages chunk placement internally.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage Pool</td>
+<td>A logical grouping of disks within a VDC used for capacity planning and replication group targeting. Multiple storage pools can exist within one VDC.</td>
+</tr>
+<tr>
+<td>Data Disk</td>
+<td>Any disk added to the ECS pool; ECS striped erasure coding fragments across data disks on all nodes</td>
+</tr>
+<tr>
+<td>Disk State</td>
+<td>ECS tracks each disk state: <code>GOOD</code>, <code>SUSPECT</code>, <code>FAILED</code>, <code>REBUILDING</code>. A failed disk triggers automatic rebuild across surviving disks.</td>
+</tr>
+<tr>
+<td>Rebuild</td>
+<td>When a disk or node is marked <code>FAILED</code>, ECS automatically reconstructs missing EC fragments from surviving fragments across the cluster. Rebuild time depends on cluster size and available bandwidth.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check disk status on all nodes via viprexec (run from any node as root)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>viprexec<span class="w"> </span>-v<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;lsblk -o NAME,SIZE,FSTYPE,STATE,MOUNTPOINT&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check per-node disk usage on the ECS data partition</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>viprexec<span class="w"> </span>-v<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;df -h /data/&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check Cassandra disk (metadata) usage per node</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>viprexec<span class="w"> </span>-v<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;df -h /opt/storageos/db/&quot;</span>
+</code></pre></div>
+<h2 id="networking-architecture">Networking Architecture<a class="headerlink" href="#networking-architecture" title="Permanent link">&para;</a></h2>
+<p>ECS separates management and data traffic. Each node has at minimum two network interfaces:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Node
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── Management NIC (1 GbE or 10 GbE)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ├── ECS Portal (443)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   ├── Management REST API (4443)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ├── SSH (22)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └── SNMP / Syslog (161/514)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>└── Data NIC (10 GbE or 25 GbE, bonded recommended)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    ├── S3 API (443 / 9021)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    ├── Swift API (9024)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    ├── Intra-cluster EC traffic
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    └── Geo-replication (9100)
+</code></pre></div>
+<p>Inter-VDC geo-replication traffic flows on port 9100 across the WAN link between sites. Size the WAN circuit for peak ingest rates; replication lag grows when WAN utilisation sustains above 80%.</p>
 <h2 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h2>
 <p>ECS replication provides geo-redundancy by replicating objects across sites using replication groups.</p>
 <h3 id="replication-groups">Replication Groups<a class="headerlink" href="#replication-groups" title="Permanent link">&para;</a></h3>
@@ -896,31 +1088,39 @@
 <li>Check <strong>Replication Lag</strong> — bytes or time behind</li>
 <li>Check for <strong>Failed</strong> replication segments</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># S3 API — verify object exists on remote site</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># (After replication) query the remote ECS endpoint</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/&lt;key&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;remote_ecs_endpoint&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># REST API — check geo-replication status for all replication groups</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/geo-replication/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># S3 API — verify object exists on remote site (after replication)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/&lt;key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--endpoint-url<span class="w"> </span>https://&lt;remote_ecs_endpoint&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>--no-verify-ssl
 </code></pre></div>
 <h3 id="replication-failure-response">Replication Failure Response<a class="headerlink" href="#replication-failure-response" title="Permanent link">&para;</a></h3>
 <p>If replication fails:</p>
 <ol>
 <li>Check the ECS Management Console for the specific replication error</li>
-<li>Check network connectivity between VDCs</li>
-<li>Check disk space on the destination VDC</li>
-<li>Review ECS system logs for replication-specific error codes</li>
+<li>Check network connectivity between VDCs on port 9100</li>
+<li>Check disk space on the destination VDC (<code>GET /vdc/capacity</code>)</li>
+<li>Review ECS system logs for replication-specific error codes (<code>/var/log/ecs/</code> on affected nodes)</li>
+<li>If the backlog is large after reconnection, monitor the replication queue drain via ECS Portal → Geo Monitoring; do not restart nodes while the backlog is draining</li>
 </ol>
 <h3 id="cross-vdc-failover">Cross-VDC Failover<a class="headerlink" href="#cross-vdc-failover" title="Permanent link">&para;</a></h3>
 <p>In a failover scenario (primary VDC unavailable):</p>
 <ol>
 <li>Update client S3 endpoint to the secondary ECS VDC IP/FQDN</li>
 <li>Confirm data is accessible:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;secondary_ecs&gt;
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;secondary_ecs&gt;<span class="w"> </span>--no-verify-ssl
 </code></pre></div></li>
-<li>Note: asynchronous replication may have RPO lag — verify with the ECS monitoring console</li>
+<li>Note: asynchronous replication may have RPO lag — verify with the ECS monitoring console before declaring recovery complete</li>
+<li>When the primary VDC recovers, re-add it to the replication group and monitor the resync backlog before sending production traffic back</li>
 </ol>
 <h3 id="bandwidth-management">Bandwidth Management<a class="headerlink" href="#bandwidth-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Replication throttling is configured via ECS Management Console</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Monitor → Replication → Bandwidth Management</span>
+<p>Replication throttling prevents geo-replication from saturating WAN links during peak hours. Configure per-replication-group bandwidth limits in ECS Portal → Replication → Bandwidth Management.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Replication throttling is configured via ECS Management Console</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># ECS Portal → Replication Groups → &lt;group&gt; → Edit → Bandwidth Limit</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Values are specified in MB/s per replication group</span>
 </code></pre></div>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <table>
@@ -935,20 +1135,70 @@
 <tr>
 <td>High replication lag</td>
 <td>Network bandwidth saturation</td>
-<td>Check network utilisation; throttle if needed</td>
+<td>Check inter-site bandwidth utilisation; throttle lower-priority replication groups if needed</td>
 </tr>
 <tr>
 <td>Replication failed</td>
 <td>Destination VDC offline or full</td>
-<td>Restore connectivity or add capacity</td>
+<td>Restore connectivity or add capacity; check <code>GET /vdc/capacity</code> on remote VDC</td>
 </tr>
 <tr>
 <td>Objects missing on replica</td>
 <td>Check replication lag time</td>
-<td>Wait for async replication; check for errors</td>
+<td>Wait for async replication; check <code>GET /vdc/alerts</code> on remote VDC for errors</td>
+</tr>
+<tr>
+<td>Replication stuck after TSF recovery</td>
+<td>Backlog too large; timeout during replay</td>
+<td>Monitor drain in Geo Monitoring; contact Dell support if stuck for &gt;24h</td>
 </tr>
 </tbody>
 </table>
+<h2 id="iam-and-user-model">IAM and User Model<a class="headerlink" href="#iam-and-user-model" title="Permanent link">&para;</a></h2>
+<p>ECS uses two distinct user types: management users (portal/API) and object users (S3/Swift data access).</p>
+<table>
+<thead>
+<tr>
+<th>User Type</th>
+<th>Scope</th>
+<th>Authentication</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management User (System Admin/Monitor)</td>
+<td>Global</td>
+<td>Local or LDAP</td>
+<td>ECS Portal and Management API administration</td>
+</tr>
+<tr>
+<td>Namespace Admin</td>
+<td>Per namespace</td>
+<td>Local or LDAP</td>
+<td>Manage buckets, IAM users, lifecycle within a namespace</td>
+</tr>
+<tr>
+<td>Object User</td>
+<td>Per namespace</td>
+<td>S3 access key / secret key</td>
+<td>S3, Swift, or Atmos data access</td>
+</tr>
+</tbody>
+</table>
+<p>Object users are assigned one or more S3 access key / secret key pairs. These are the credentials configured in S3 client applications and backup software. Secret keys are shown only once at creation and cannot be retrieved afterwards.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create an object user and generate their first S3 key pair</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ecscli<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span>--name<span class="w"> </span>svc-spark-prod
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>create<span class="w"> </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span>--name<span class="w"> </span>svc-spark-prod
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># List existing object users in a namespace</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ecscli<span class="w"> </span>user<span class="w"> </span>list-object-users<span class="w"> </span>--namespace<span class="w"> </span>analytics-prod
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Rotate a secret key: create a new key, update the application, then delete the old key</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>create<span class="w"> </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span>--name<span class="w"> </span>svc-spark-prod
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># (deploy new key to application)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>delete<span class="w"> </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span>--name<span class="w"> </span>svc-spark-prod<span class="w"> </span>--secret-key<span class="w"> </span>&lt;old-key-id&gt;
+</code></pre></div>
 
 
 
