@@ -4,6 +4,22 @@ Azure Boot Diagnostics captures the serial console output and a screenshot of th
 
 ---
 
+## Boot Diagnostics Flow
+
+```mermaid
+flowchart LR
+    vmStart["VM Start / Restart"]
+    firmware["UEFI / BIOS\nfirmware init"]
+    bootloader["Bootloader\nGRUB2 / Windows Boot Mgr"]
+    osInit["OS Initialisation\nkernel · systemd / WinInit"]
+    serialLog["Serial Console Output\ncaptured to storage"]
+    screenshot["Boot Screenshot\nPNG of screen state"]
+    diagnosticsAPI["Boot Diagnostics API\nazure portal · serial console access"]
+
+    vmStart --> firmware --> bootloader --> osInit
+    osInit --> serialLog & screenshot --> diagnosticsAPI
+```
+
 ## Overview
 
 | Feature | Description |
