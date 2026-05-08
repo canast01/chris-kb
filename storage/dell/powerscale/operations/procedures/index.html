@@ -947,6 +947,22 @@
 </tbody>
 </table>
 <h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Start Maintenance]) --&gt; B["Notify NFS/SMB client teams"]
+    B --&gt; C{"isi status clean?"}
+    C --&gt;|No| D["Resolve faults first"]
+    D --&gt; C
+    C --&gt;|Yes| E["Pause SyncIQ policies"]
+    E --&gt; F["Check capacity headroom\n&lt; 80% in isi storagepool"]
+    F --&gt; G{"Node SmartFail?"}
+    G --&gt;|Yes| H["isi devices node smartfail LNN\nMonitor Restripe job"]
+    G --&gt;|No| I["Perform change per runbook"]
+    H --&gt; I
+    I --&gt; J["isi status — all nodes ONLINE?"]
+    J --&gt;|No| K["Investigate &amp; resolve"]
+    K --&gt; J
+    J --&gt;|Yes| L["Re-enable SyncIQ policies\nTrigger manual run → confirm SUCCESS"]
+    L --&gt; M([Close Window])</code></pre>
 <p>Steps for planned maintenance on a PowerScale cluster — node SmartFail, OneFS upgrade, or network reconfiguration.</p>
 <ol>
 <li>Notify NFS and SMB client teams; confirm the maintenance window and coordinate any application quiesce if node-level work is planned</li>

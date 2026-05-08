@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#diagnostic-data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Data Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#log-locations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -826,6 +837,28 @@
 
 <h1 id="linux-diagnostics">Linux — Diagnostics<a class="headerlink" href="#linux-diagnostics" title="Permanent link">&para;</a></h1>
 <p>Diagnostic procedures and log analysis.</p>
+<h2 id="diagnostic-data-sources">Diagnostic Data Sources<a class="headerlink" href="#diagnostic-data-sources" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph kernel["Kernel Space"]
+        dmesgSrc["dmesg\nhardware · OOM · I/O errors"]
+        auditSrc["auditd\nSELinux denials · syscalls"]
+    end
+    subgraph userspace["User Space"]
+        journalSrc["journald\nall units · boot"]
+        rsyslogSrc["rsyslog\nforwarded logs"]
+    end
+    subgraph tools["Analysis Tools"]
+        ausearch["ausearch\naureport"]
+        journalctl["journalctl"]
+        grep["grep · awk\nlog files"]
+    end
+    siemDst["SIEM\nCentralised log platform"]
+
+    dmesgSrc --&gt; journalSrc
+    auditSrc --&gt; ausearch
+    journalSrc --&gt; journalctl
+    journalSrc --&gt; rsyslogSrc --&gt; siemDst
+    journalctl --&gt; grep</code></pre>
 <h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

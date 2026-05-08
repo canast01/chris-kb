@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#srm-operational-flow-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Operational Flow Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#recovery-plans" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -790,6 +801,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#test-failover-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Failover Sequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#common-checks_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -860,6 +882,17 @@
   
     <nav class="md-nav" aria-label="Planned Migration">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planned-migration-vs-failback-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Migration vs Failback Flow
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#common-checks_2" class="md-nav__link">
@@ -1014,6 +1047,41 @@
 
 
 <h1 id="srm-operations-procedures">SRM Operations — Procedures<a class="headerlink" href="#srm-operations-procedures" title="Permanent link">&para;</a></h1>
+<h2 id="srm-operational-flow-overview">SRM Operational Flow Overview<a class="headerlink" href="#srm-operational-flow-overview" title="Permanent link">&para;</a></h2>
+<p>The three primary SRM operations — Recovery Plan test, planned migration, and cleanup — each follow a distinct sequence governed by the same underlying orchestration engine.</p>
+<pre class="mermaid"><code>flowchart TD
+    start([Trigger event]) --&gt; assess{Planned or\nunplanned?}
+
+    assess --&gt;|Planned| pm[Planned Migration]
+    assess --&gt;|Unplanned / DR| fo[Emergency Failover]
+    assess --&gt;|Drill / Test| tf[Test Failover]
+
+    pm --&gt; pmShutdown[Quiesce &amp; shut down\nprotected-site VMs]
+    pmShutdown --&gt; pmSync[Final replication sync]
+    pmSync --&gt; pmPresent[Present datastores\nat recovery site]
+    pmPresent --&gt; pmBoot[Power on VMs\nper boot sequence]
+    pmBoot --&gt; pmValidate[Validate services]
+    pmValidate --&gt; pmReprotect[Reprotect\nreverse direction]
+
+    fo --&gt; foPresent[Present last-good\nreplica datastores]
+    foPresent --&gt; foBoot[Power on VMs\nat recovery site]
+    foBoot --&gt; foValidate[Validate services]
+    foValidate --&gt; foFailback[Plan failback\nwhen ready]
+
+    tf --&gt; tfSnapshot[Create isolated\ntest snapshot]
+    tfSnapshot --&gt; tfBoot[Boot VMs in\nbubble network]
+    tfBoot --&gt; tfCheck[Run health checks]
+    tfCheck --&gt; tfCleanup[Cleanup — remove\nsnapshot and powered-off VMs]
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class pmShutdown,pmSync,pmPresent,pmBoot,pmValidate,pmReprotect action
+    class foPresent,foBoot,foValidate,foFailback action
+    class tfSnapshot,tfBoot,tfCheck,tfCleanup action
+    class assess decision
+    class start,pm,fo,tf terminal</code></pre>
+<hr />
 <h2 id="recovery-plans">Recovery Plans<a class="headerlink" href="#recovery-plans" title="Permanent link">&para;</a></h2>
 <p>Use this section for practical SRM Recovery Plans notes, checks, troubleshooting, commands, change notes, and field references.</p>
 <h3 id="common-checks">Common Checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h3>
@@ -1052,6 +1120,29 @@
 <p>Add known issues here as they come up.</p>
 <hr />
 <h2 id="test-failover">Test Failover<a class="headerlink" href="#test-failover" title="Permanent link">&para;</a></h2>
+<h3 id="test-failover-sequence">Test Failover Sequence<a class="headerlink" href="#test-failover-sequence" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Admin
+    participant SRM as SRM Server
+    participant SRA as SRA / vSphere Rep
+    participant Storage as DR Storage
+    participant ESXI as Recovery ESXi
+
+    Admin-&gt;&gt;SRM: Start Test (recovery plan)
+    SRM-&gt;&gt;SRA: Create test snapshot / FlexClone
+    SRA-&gt;&gt;Storage: Snapshot R2 LUNs (no production impact)
+    Storage--&gt;&gt;SRA: Snapshot ready
+    SRM-&gt;&gt;ESXI: Present snapshot datastores
+    ESXI--&gt;&gt;SRM: Datastores accessible
+    SRM-&gt;&gt;ESXI: Register VMs from snapshot datastores
+    SRM-&gt;&gt;ESXI: Power on VMs (boot sequence)
+    ESXI--&gt;&gt;SRM: VMs online (bubble network)
+    SRM--&gt;&gt;Admin: Test running — validate services
+    Admin-&gt;&gt;SRM: Cleanup / Cancel test
+    SRM-&gt;&gt;ESXI: Power off test VMs
+    SRM-&gt;&gt;SRA: Remove test snapshot
+    SRA-&gt;&gt;Storage: Delete snapshot / FlexClone
+    SRM--&gt;&gt;Admin: Test cleanup complete</code></pre>
 <p>Use this section for practical SRM Test Failover notes, checks, troubleshooting, commands, change notes, and field references.</p>
 <h3 id="common-checks_1">Common Checks<a class="headerlink" href="#common-checks_1" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1089,6 +1180,41 @@
 <p>Add known issues here as they come up.</p>
 <hr />
 <h2 id="planned-migration">Planned Migration<a class="headerlink" href="#planned-migration" title="Permanent link">&para;</a></h2>
+<h3 id="planned-migration-vs-failback-flow">Planned Migration vs Failback Flow<a class="headerlink" href="#planned-migration-vs-failback-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    subgraph siteA [Protected Site A]
+        vmA(["Production VMs\nrunning"])
+        storA[("Primary\nDatastores")]
+    end
+
+    subgraph replLink [Replication]
+        direction TB
+        rep(["vSphere Replication\nor SRA array rep"])
+    end
+
+    subgraph siteB [Recovery Site B]
+        vmB(["VMs powered off\n(placeholders)"])
+        storB[("Replica\nDatastores")]
+    end
+
+    vmA --&gt; storA
+    storA --&gt;|"continuous\nreplication"| rep
+    rep --&gt; storB
+
+    siteA --&gt;|"1. Quiesce &amp; shutdown"| migration{{"Planned\nMigration"}}
+    migration --&gt;|"2. Final sync"| storB
+    migration --&gt;|"3. Power on"| vmB
+
+    vmB --&gt;|"Failback triggered"| failback{{"Reprotect &amp;\nFailback"}}
+    failback --&gt;|"Reverse replication"| storA
+    failback --&gt;|"Power on original site"| vmA
+
+    classDef site fill:#1e3a5f,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef action fill:#b45309,stroke:#92400e,color:#fff
+    class vmA,vmB site
+    class storA,storB store
+    class migration,failback action</code></pre>
 <p>Use this section for practical SRM Planned Migration notes, checks, troubleshooting, commands, change notes, and field references.</p>
 <h3 id="common-checks_2">Common Checks<a class="headerlink" href="#common-checks_2" title="Permanent link">&para;</a></h3>
 <ul>

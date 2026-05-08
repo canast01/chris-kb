@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#safe-account-platform-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe / Account / Platform Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#digital-vault" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -739,10 +750,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#credential-checkout-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Checkout Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#privileged-session-manager-psm" class="md-nav__link">
     <span class="md-ellipsis">
       
         Privileged Session Manager (PSM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-isolation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Isolation Flow
       
     </span>
   </a>
@@ -781,6 +814,17 @@
 
 
 <h1 id="cyberark-components">CyberArk — Components<a class="headerlink" href="#cyberark-components" title="Permanent link">&para;</a></h1>
+<h2 id="safe-account-platform-hierarchy">Safe / Account / Platform Hierarchy<a class="headerlink" href="#safe-account-platform-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    vault["Digital Vault"] --&gt; safe1["Safe: PROD-DB-Accounts"]
+    vault --&gt; safe2["Safe: PROD-WIN-Accounts"]
+    vault --&gt; safe3["Safe: APP-Service-Accounts"]
+    safe1 --&gt; acct1["Account: db01-svc-app\n@ db01.corp.example.com"]
+    safe1 --&gt; acct2["Account: db02-sa\n@ db02.corp.example.com"]
+    safe2 --&gt; acct3["Account: local-admin\n@ win-srv-01"]
+    safe1 -. "governed by" .-&gt; plat["Platform: WinServerLocal\n(CPM rotation policy)"]
+    safe1 -. "member" .-&gt; grp["AD Group: GG_CyberArk_SafeOwners"]</code></pre>
+<hr />
 <h2 id="digital-vault">Digital Vault<a class="headerlink" href="#digital-vault" title="Permanent link">&para;</a></h2>
 <p>The Vault runs on a hardened Windows Server — only the CyberArk Vault service and required OS components are present. No other roles are installed.</p>
 <ul>
@@ -819,6 +863,25 @@
 - Account locked by CPM rotation attempt
 - Platform plugin misconfiguration</p>
 <hr />
+<h2 id="credential-checkout-sequence">Credential Checkout Sequence<a class="headerlink" href="#credential-checkout-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant user as Privileged User
+    participant pvwa as PVWA
+    participant vault as Digital Vault
+    participant cpm as CPM
+    participant target as Target System
+
+    user-&gt;&gt;pvwa: Request credential (account ID + reason)
+    pvwa-&gt;&gt;vault: Validate entitlement + retrieve credential
+    vault--&gt;&gt;pvwa: Return credential (encrypted)
+    pvwa--&gt;&gt;user: Credential available (check-out)
+    note over user,target: User accesses target directly or via PSM
+    user-&gt;&gt;target: Connect with retrieved credential
+    pvwa-&gt;&gt;vault: Record audit event (who, what, when)
+    pvwa-&gt;&gt;cpm: Queue password rotation (after check-in)
+    cpm-&gt;&gt;target: Rotate credential on target
+    cpm-&gt;&gt;vault: Store new credential</code></pre>
+<hr />
 <h2 id="privileged-session-manager-psm">Privileged Session Manager (PSM)<a class="headerlink" href="#privileged-session-manager-psm" title="Permanent link">&para;</a></h2>
 <p>PSM proxies privileged sessions — the user connects to the PSM, which then connects to the target using the managed credential. The user never sees the password.</p>
 <ul>
@@ -837,6 +900,17 @@
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://pvwa.corp.example.com/PasswordVault/API/LiveSessions&quot;</span> <span class="p">`</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  <span class="n">-Headers</span> <span class="nv">$headers</span> <span class="n">-Method</span> <span class="n">Get</span>
 </code></pre></div>
+<hr />
+<h2 id="session-isolation-flow">Session Isolation Flow<a class="headerlink" href="#session-isolation-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    userReq["User requests session\nin PVWA"] --&gt; pvwaLaunch["PVWA launches PSM connection"]
+    pvwaLaunch --&gt; psmAuth["PSM authenticates to Vault\n&amp; retrieves credential"]
+    psmAuth --&gt; psmConnect["PSM connects to target system\nwith managed credential"]
+    psmConnect --&gt; sessionRecord["Session recording begins\n(video stored in Vault)"]
+    sessionRecord --&gt; userSession["User interacts via PSM proxy\nCredential never exposed"]
+    userSession --&gt; sessionEnd["Session ends — user disconnects"]
+    sessionEnd --&gt; recStore["Recording stored &amp; indexed in Vault"]
+    recStore --&gt; cpmRotate["CPM rotates credential\nafter session check-in"]</code></pre>
 <hr />
 <h2 id="pvwa-password-vault-web-access">PVWA (Password Vault Web Access)<a class="headerlink" href="#pvwa-password-vault-web-access" title="Permanent link">&para;</a></h2>
 <p>PVWA is the primary interface for users and administrators. It provides:

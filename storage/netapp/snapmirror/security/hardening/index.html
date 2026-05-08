@@ -699,6 +699,158 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardening Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intercluster-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intercluster Network
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-and-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication and Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smbc-mediator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMBC / Mediator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-and-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit and Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intercluster-lif-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intercluster LIF Hardening
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intercluster LIF Hardening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-dedicated-intercluster-lifs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Dedicated Intercluster LIFs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restrict-peer-cluster-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrict Peer Cluster Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-restricting-break-and-resync-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC: Restricting Break and Resync Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ems-alerting-for-replication-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EMS Alerting for Replication Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#annual-review-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Annual Review Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -722,8 +874,176 @@
 <p>Part of the <a href="../">SnapMirror Security</a> reference.</p>
 </blockquote>
 <hr />
-<p>This page is a stub. Content will be added in a future update.</p>
-<p>For SnapMirror hardening, refer to the ONTAP Security Hardening Guide available at <a href="https://mysupport.netapp.com">mysupport.netapp.com</a>. Key areas include restricting intercluster LIF access, enforcing encryption in transit, and applying least-privilege RBAC for replication operations — covered in <a href="../access-control/">Access Control</a> and <a href="../encryption/">Encryption</a>.</p>
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<p>Apply this checklist to all clusters participating in SnapMirror relationships. It supplements the broader <a href="../../../../ontap/security/hardening/">ONTAP Security Hardening</a> baseline, which should be applied first.</p>
+<h3 id="intercluster-network">Intercluster Network<a class="headerlink" href="#intercluster-network" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Intercluster LIFs are on a dedicated VLAN separate from data and management traffic</li>
+<li>[ ] Intercluster LIFs are not reachable from untrusted networks — firewall rules restrict access to known peer cluster addresses only</li>
+<li>[ ] TCP ports 11104 and 11105 are open only between the specific intercluster LIF IPs of the two peer clusters; no wildcard rules</li>
+<li>[ ] No data LIFs or management LIFs on the intercluster VLAN</li>
+<li>[ ] Intercluster LIF MTU matches the physical network to prevent fragmentation during large baseline transfers</li>
+</ul>
+<h3 id="authentication-and-access">Authentication and Access<a class="headerlink" href="#authentication-and-access" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Cluster peer relationship authenticated — <code>cluster peer show</code> shows <code>Auth-Status: ok</code> for all peers</li>
+<li>[ ] Stale or unused cluster peer relationships removed: <code>cluster peer show</code> — no peers without active relationships</li>
+<li>[ ] SnapMirror management operations (break, resync, initialize) restricted to named DR administrators via custom RBAC roles</li>
+<li>[ ] No shared admin accounts for SnapMirror automation — dedicated service accounts with minimum-privilege roles only</li>
+<li>[ ] Service account credentials stored in a secrets vault; not in scripts or version control</li>
+<li>[ ] Read-only monitoring account used for all monitoring tool access to SnapMirror relationship status</li>
+</ul>
+<h3 id="encryption">Encryption<a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All SnapMirror relationships crossing WAN or third-party links have <code>encryption-algorithm: aes-256</code> enabled</li>
+<li>[ ] Destination volumes containing regulated data are encrypted with NVE or NAE</li>
+<li>[ ] External KMIP key manager configured if NVE is used in regulated environments</li>
+<li>[ ] <code>security config show</code> confirms TLS 1.2 minimum on both source and destination clusters</li>
+</ul>
+<h3 id="smbc-mediator">SMBC / Mediator<a class="headerlink" href="#smbc-mediator" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] ONTAP Mediator VM is on a dedicated management network segment, not the storage data network</li>
+<li>[ ] Mediator VM SSH access restricted to infrastructure administrators only</li>
+<li>[ ] Mediator VM OS is patched and current — apply OS updates on the same cycle as cluster upgrades</li>
+<li>[ ] Mediator reachability verified from both clusters: <code>snapmirror mediator show</code></li>
+</ul>
+<h3 id="audit-and-monitoring">Audit and Monitoring<a class="headerlink" href="#audit-and-monitoring" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] EMS alerts configured for SnapMirror lag threshold breaches: <code>event log show -message-name snapmirror.lag*</code></li>
+<li>[ ] SnapMirror break and resync operations logged and reviewed after each DR test</li>
+<li>[ ] ONTAP administrative audit log forwarded to SIEM: <code>event notification destination show</code></li>
+<li>[ ] EMS filter captures <code>snapmirror.*</code> events: <code>event filter rule show -filter-name &lt;filter&gt;</code></li>
+</ul>
+<hr />
+<h2 id="intercluster-lif-hardening">Intercluster LIF Hardening<a class="headerlink" href="#intercluster-lif-hardening" title="Permanent link">&para;</a></h2>
+<h3 id="configure-dedicated-intercluster-lifs">Configure Dedicated Intercluster LIFs<a class="headerlink" href="#configure-dedicated-intercluster-lifs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create an intercluster LIF on a dedicated interface</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>network<span class="w"> </span>interface<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>-lif<span class="w"> </span>ic-node01-e0e<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span>-role<span class="w"> </span>intercluster<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span>-home-node<span class="w"> </span>&lt;node01&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>-home-port<span class="w"> </span>e0e<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span>-address<span class="w"> </span>&lt;intercluster-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span>-netmask<span class="w"> </span>&lt;mask&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Verify the LIF is up and has the intercluster role</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Confirm the intercluster LIF is not on the same subnet as data LIFs</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>address,role<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>intercluster
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check there are no data LIFs on the same subnet as the intercluster LIF</span>
+</code></pre></div>
+<h3 id="restrict-peer-cluster-access">Restrict Peer Cluster Access<a class="headerlink" href="#restrict-peer-cluster-access" title="Permanent link">&para;</a></h3>
+<p>On the external firewall or network ACL, restrict TCP 11104 and 11105 to the specific intercluster LIF IP pairs only:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Example firewall rule (pseudocode — implement in your firewall platform)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>permit tcp &lt;src-ic-lif-ip&gt;/32 &lt;dst-ic-lif-ip&gt;/32 eq 11104
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>permit tcp &lt;src-ic-lif-ip&gt;/32 &lt;dst-ic-lif-ip&gt;/32 eq 11105
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>permit tcp &lt;dst-ic-lif-ip&gt;/32 &lt;src-ic-lif-ip&gt;/32 established
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>deny tcp any any eq 11104
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>deny tcp any any eq 11105
+</code></pre></div>
+<hr />
+<h2 id="rbac-restricting-break-and-resync-operations">RBAC: Restricting Break and Resync Operations<a class="headerlink" href="#rbac-restricting-break-and-resync-operations" title="Permanent link">&para;</a></h2>
+<p><code>snapmirror break</code> and <code>snapmirror resync</code> are the most operationally critical commands — they change replication direction and data accessibility. Restrict these to named DR administrators and audit every use.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a DR admin role with break and resync access</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>-role<span class="w"> </span>dr-admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>-access<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror update&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror break&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror resync&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror quiesce&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror abort&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror initialize&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>dr-admin<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;volume mount&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Create a standard operator role with no break or resync access</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span>-cmddirname<span class="w"> </span><span class="s2">&quot;DEFAULT&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span>-access<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span>-vserver<span class="w"> </span>&lt;cluster-name&gt;
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror show&quot;</span><span class="w"> </span>-access<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror update&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>create<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator<span class="w"> </span>-cmddirname<span class="w"> </span><span class="s2">&quot;snapmirror quiesce&quot;</span><span class="w"> </span>-access<span class="w"> </span>all
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># No break or resync in this role</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># Verify roles are correct</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>dr-admin
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>security<span class="w"> </span>login<span class="w"> </span>role<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>snapmirror-operator
+</code></pre></div>
+<hr />
+<h2 id="ems-alerting-for-replication-events">EMS Alerting for Replication Events<a class="headerlink" href="#ems-alerting-for-replication-events" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a notification destination for SnapMirror alerts (email)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-name<span class="w"> </span>snapmirror-alerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-mail<span class="w"> </span>storage-team@corp.local
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Create an EMS filter for SnapMirror error and warning events</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>event<span class="w"> </span>filter<span class="w"> </span>create<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>warning
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>error
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>event<span class="w"> </span>filter<span class="w"> </span>rule<span class="w"> </span>add<span class="w"> </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span>-type<span class="w"> </span>include<span class="w"> </span>-message-name<span class="w"> </span><span class="s2">&quot;snapmirror.*&quot;</span><span class="w"> </span>-severity<span class="w"> </span>critical
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Attach filter to the notification destination</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>event<span class="w"> </span>notification<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span>-filter-name<span class="w"> </span>snapmirror-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span>-destinations<span class="w"> </span>snapmirror-alerts
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Verify EMS notification configuration</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>event<span class="w"> </span>notification<span class="w"> </span>show
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>event<span class="w"> </span>notification<span class="w"> </span>destination<span class="w"> </span>show
+</code></pre></div>
+<hr />
+<h2 id="annual-review-tasks">Annual Review Tasks<a class="headerlink" href="#annual-review-tasks" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review all cluster peer relationships; remove stale peers</td>
+<td><code>cluster peer show</code> → <code>cluster peer delete</code> for unused peers</td>
+</tr>
+<tr>
+<td>Verify all active relationships have encryption enabled</td>
+<td><code>snapmirror show -fields encryption-algorithm</code> — remediate any without <code>aes-256</code></td>
+</tr>
+<tr>
+<td>Confirm RBAC roles restrict break/resync to DR admins only</td>
+<td><code>security login role show</code> — audit <code>snapmirror break</code> access</td>
+</tr>
+<tr>
+<td>Test DR failover and failback per runbook</td>
+<td>Document outcome; resync immediately after test</td>
+</tr>
+<tr>
+<td>Review mediator VM OS patch level for SMBC deployments</td>
+<td>Apply outstanding OS patches; confirm mediator compatibility with current ONTAP version</td>
+</tr>
+<tr>
+<td>Audit service account usage; rotate credentials</td>
+<td>Review <code>security login show</code>; rotate passwords in the secrets vault</td>
+</tr>
+<tr>
+<td>Confirm EMS alerts are being received by the SIEM</td>
+<td>Verify alert delivery; test with <code>event log show -message-name snapmirror.lag*</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

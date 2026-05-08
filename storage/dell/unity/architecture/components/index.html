@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#component-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Relationships
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -843,6 +854,17 @@
   
     <nav class="md-nav" aria-label="Replication">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Flow
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#replication-sessions-overview" class="md-nav__link">
@@ -1008,6 +1030,33 @@
 </tr>
 </tbody>
 </table>
+<h2 id="component-relationships">Component Relationships<a class="headerlink" href="#component-relationships" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+  subgraph "Management Plane"
+    UNI["Unisphere GUI\n(HTTPS)"]
+    CLI["uemcli / REST API"]
+    UNI &amp; CLI --&gt; OE["Unity OE\n(Storage OS)"]
+  end
+  subgraph "Controller Layer"
+    OE --&gt; SPA["SP A"]
+    OE --&gt; SPB["SP B"]
+    SPA &lt;--&gt;|"write cache mirror"| SPB
+  end
+  subgraph "Storage Layer"
+    SPA &amp; SPB --&gt; POOL[("Storage Pool\ndisk groups")]
+    SPA &amp; SPB --&gt; FC["FAST Cache\n(SAS Flash)"]
+  end
+  subgraph "Host Access"
+    SPA --&gt; BLOCK["Block\niSCSI · FC"]
+    SPA --&gt; FILE["File\nNFS · SMB"]
+    SPB --&gt; BLOCK &amp; FILE
+  end
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef mgmt fill:#15803d,stroke:#166534,color:#fff
+  class SPA,SPB ctrl
+  class POOL,FC store
+  class UNI,CLI mgmt</code></pre>
 <h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1156,6 +1205,16 @@
 </table>
 <h2 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h2>
 <p>Replication session management, monitoring, and failover on Dell Unity.</p>
+<h3 id="replication-flow">Replication Flow<a class="headerlink" href="#replication-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+  participant SRC as "Source Unity"
+  participant REP as "Replication Session"
+  participant DST as "Destination Unity"
+  SRC-&gt;&gt;REP: changed blocks journaled
+  REP-&gt;&gt;DST: transfer (async / sync)
+  DST--&gt;&gt;REP: acknowledge receipt
+  REP--&gt;&gt;SRC: update last sync time
+  note over SRC,DST: Async: source ACKs write immediately&lt;br/&gt;Sync: source waits for DST ACK</code></pre>
 <h3 id="replication-sessions-overview">Replication Sessions Overview<a class="headerlink" href="#replication-sessions-overview" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all replication sessions</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>show

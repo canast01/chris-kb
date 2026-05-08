@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ansible-tower-awx-job-launch-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Tower / AWX Job Launch Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#playbooks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1170,6 +1181,24 @@
 <li>[ ] Inventory still returns the expected host count for all groups</li>
 <li>[ ] Vault-encrypted variables still decrypt successfully</li>
 </ul>
+<h2 id="ansible-tower-awx-job-launch-sequence">Ansible Tower / AWX Job Launch Sequence<a class="headerlink" href="#ansible-tower-awx-job-launch-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    operator["Operator\n(User / API / Schedule)"]
+    jobTemplate["Job Template\n(playbook + inventory + creds)"]
+    awxQueue["AWX/Tower\nJob Queue"]
+    awxExecutor["AWX Executor\n(container/fork)"]
+    inventorySource["Inventory Source\n(dynamic sync)"]
+    vaultCreds["Vault / Machine\nCredentials"]
+    managed["Managed Hosts\n(SSH)"]
+    jobHistory["Job History\n&amp; Artifacts"]
+
+    operator --&gt; jobTemplate
+    jobTemplate --&gt; awxQueue
+    awxQueue --&gt; awxExecutor
+    awxExecutor --&gt; inventorySource
+    awxExecutor --&gt; vaultCreds
+    awxExecutor --&gt;|ansible-playbook| managed
+    awxExecutor --&gt; jobHistory</code></pre>
 <h2 id="playbooks">Playbooks<a class="headerlink" href="#playbooks" title="Permanent link">&para;</a></h2>
 <p>A playbook is a YAML file containing one or more plays. Each play targets hosts and defines tasks.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># site.yml</span>

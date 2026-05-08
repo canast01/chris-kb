@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#fc-login-sequence-flogi-plogi-prli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Login Sequence (FLOGI / PLOGI / PRLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sannav-management-portal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -796,6 +807,29 @@
 <p>Part of the <a href="../">Architecture</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="fc-login-sequence-flogi-plogi-prli">FC Login Sequence (FLOGI / PLOGI / PRLI)<a class="headerlink" href="#fc-login-sequence-flogi-plogi-prli" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant HBA as Host HBA (N_Port)
+    participant Switch as Brocade Switch (F_Port)
+    participant NS as Name Server
+    participant Storage as Storage Target
+
+    Note over HBA,Switch: Link comes up — fabric login begins
+    HBA-&gt;&gt;Switch: FLOGI (Fabric Login)\nWWPN, WWNN, FC4 capabilities
+    Switch--&gt;&gt;HBA: ACC (Accept)\nassign F_Port address (N_Port_ID)
+    Switch-&gt;&gt;NS: Register WWPN in name server
+    NS--&gt;&gt;Switch: Registered
+
+    Note over HBA,NS: Host discovers targets via name server
+    HBA-&gt;&gt;NS: GID_FT (Get IDs by FC4 Type)\nquery for FCP targets
+    NS--&gt;&gt;HBA: List of target N_Port_IDs in zone
+
+    Note over HBA,Storage: Host logs into each target
+    HBA-&gt;&gt;Storage: PLOGI (Port Login)\nestablish N_Port session
+    Storage--&gt;&gt;HBA: ACC (Accept)
+    HBA-&gt;&gt;Storage: PRLI (Process Login)\nnegotiate FCP parameters
+    Storage--&gt;&gt;HBA: ACC — FCP ready
+    Note over HBA,Storage: LUN discovery and I/O can begin</code></pre>
 <h2 id="sannav-management-portal">SANnav Management Portal<a class="headerlink" href="#sannav-management-portal" title="Permanent link">&para;</a></h2>
 <p>SANnav provides fabric-wide monitoring, zoning management, and firmware orchestration across all Brocade switches, replacing the older DCFM/Network Advisor tools.</p>
 <p><strong>Key capabilities:</strong></p>

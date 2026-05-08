@@ -1032,6 +1032,27 @@
 </ul>
 <h2 id="lun-management">LUN Management<a class="headerlink" href="#lun-management" title="Permanent link">&para;</a></h2>
 <p>LUN lifecycle management on Dell Unity — create, map, expand, and manage snapshots.</p>
+<pre class="mermaid"><code>graph TD
+  START([Create LUN request]) --&gt; CHK{Health check\npassed?}
+  CHK --&gt;|No| FIX[Resolve faults\nbefore proceeding]
+  FIX --&gt; CHK
+  CHK --&gt;|Yes| POOL{Pool has\n≥ 20% free?}
+  POOL --&gt;|No| EXP[Expand pool\nor free space]
+  EXP --&gt; POOL
+  POOL --&gt;|Yes| CREATE["uemcli /stor/config/lun create\n-name -pool -size"]
+  CREATE --&gt; MAP["uemcli /stor/config/lunacl create\n-lun -host"]
+  MAP --&gt; FC{Protocol?}
+  FC --&gt;|FC| ZONE["Verify FC zone contains\nhost HBA WWN + Unity port WWN"]
+  FC --&gt;|iSCSI| IQN["Verify host IQN registered\nin Unisphere &gt; Hosts"]
+  ZONE &amp; IQN --&gt; HOST["Rescan HBAs on host\n(multipath -ll)"]
+  HOST --&gt; SNAP["Create snapshot schedule\n(optional)"]
+  SNAP --&gt; DONE([LUN ready for use])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class CHK,POOL,FC decision
+  class FIX,EXP,CREATE,MAP,ZONE,IQN,HOST,SNAP action
+  class START,DONE term</code></pre>
 <h3 id="lun-overview">LUN Overview<a class="headerlink" href="#lun-overview" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all LUNs</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lun<span class="w"> </span>show
@@ -1131,6 +1152,26 @@
 <p>NAS server lifecycle management — create, configure, and troubleshoot NAS servers on Dell Unity.</p>
 <h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
 <p>A NAS server on Dell Unity is a logical entity that owns file interfaces (network ports), AD/LDAP authentication configuration, and NFS/SMB protocol settings. Each NAS server runs on one storage processor and can fail over to the peer SP.</p>
+<pre class="mermaid"><code>graph LR
+  subgraph "Unity SP"
+    NAS["NAS Server\n(logical entity)"]
+    IF["File Interface\n(IP address on SP port)"]
+    NAS --&gt; IF
+  end
+  subgraph "Identity"
+    AD["Active Directory\n(machine account + Kerberos)"]
+    LDAP["LDAP\n(UID/GID mapping for NFS)"]
+    NAS --&gt; AD
+    NAS --&gt; LDAP
+  end
+  subgraph "Shares"
+    FS["File System\n(pool-backed)"]
+    NFS["NFS Export"]
+    SMB["SMB Share"]
+    FS --&gt; NFS &amp; SMB
+    NAS --&gt; FS
+  end
+  IF --&gt; CL(["NFS / SMB Clients"])</code></pre>
 <h3 id="list-and-inspect">List and Inspect<a class="headerlink" href="#list-and-inspect" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all NAS servers</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/server<span class="w"> </span>show

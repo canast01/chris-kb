@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#integration-points-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Points Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dell-emc-sra-for-powermax" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -806,6 +817,47 @@
 <blockquote>
 <p>Part of the <a href="../../">SRM</a> reference.</p>
 </blockquote>
+<h2 id="integration-points-overview">Integration Points Overview<a class="headerlink" href="#integration-points-overview" title="Permanent link">&para;</a></h2>
+<p>SRM sits at the centre of multiple integration layers — storage, networking, monitoring, and orchestration all connect through a defined interface.</p>
+<pre class="mermaid"><code>flowchart TD
+    srm["SRM Server\n(protected + recovery site)"]
+
+    subgraph storageAdapters [Storage Replication Adapters]
+        sraEMC["Dell SRA\n(PowerMax / SRDF)"]
+        sraPure["Pure SRA\n(ActiveCluster / async)"]
+        sraNetApp["NetApp SRA\n(SnapMirror)"]
+        vrBuiltin["vSphere Replication\n(built-in, no SRA)"]
+    end
+
+    subgraph networking [Network Layer]
+        nsx["NSX-T\nNetwork Mappings\n+ DFW tag follow"]
+        portGroups["vDS Port Groups\n(test bubble + prod)"]
+    end
+
+    subgraph monitoring [Monitoring &amp; Orchestration]
+        aria["Aria Operations\nSRM Management Pack"]
+        runbook["Recovery Plan\nCustom Scripts\n(pre/post steps)"]
+        dns["DNS Update\n(post-failover script)"]
+    end
+
+    srm --&gt; sraEMC
+    srm --&gt; sraPure
+    srm --&gt; sraNetApp
+    srm --&gt; vrBuiltin
+    srm --&gt; nsx
+    srm --&gt; portGroups
+    srm --&gt; aria
+    srm --&gt; runbook
+    runbook --&gt; dns
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef net fill:#0f766e,stroke:#0d5f58,color:#fff
+    classDef mon fill:#b45309,stroke:#92400e,color:#fff
+    class srm ctrl
+    class sraEMC,sraPure,sraNetApp,vrBuiltin store
+    class nsx,portGroups net
+    class aria,runbook,dns mon</code></pre>
 <hr />
 <h2 id="dell-emc-sra-for-powermax">Dell EMC SRA for PowerMax<a class="headerlink" href="#dell-emc-sra-for-powermax" title="Permanent link">&para;</a></h2>
 <p>The Dell EMC SRA translates SRM storage operations into SYMCLI/Unisphere REST API calls against PowerMax arrays.</p>

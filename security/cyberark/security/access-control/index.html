@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#safe-access-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe Access Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ad-groups-and-vault-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -771,6 +782,17 @@
 </tr>
 </tbody>
 </table>
+<h2 id="safe-access-hierarchy">Safe Access Hierarchy<a class="headerlink" href="#safe-access-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    adGrpAuditor["AD Group\nGG_CyberArk_Auditors"] --&gt; roleAuditor["Vault Role: Auditors\n(read-only all safes)"]
+    adGrpOwner["AD Group\nGG_CyberArk_SafeOwners"] --&gt; roleOwner["Vault Role: Safe Owner\n(manage assigned safes)"]
+    adGrpAdmin["AD Group\nGG_CyberArk_VaultAdmins"] --&gt; roleAdmin["Vault Role: Vault Admins\n(full admin rights)"]
+    roleOwner --&gt; safe1["Safe: PROD-DB-Accounts"]
+    roleOwner --&gt; safe2["Safe: APP-Service-Accounts"]
+    roleAdmin --&gt; allSafes["All Safes + Platform Config"]
+    safe1 --&gt; acct1["Account: db01-svc-app"]
+    safe2 --&gt; acct2["Account: svc-app01"]</code></pre>
+<hr />
 <h2 id="ad-groups-and-vault-roles">AD Groups and Vault Roles<a class="headerlink" href="#ad-groups-and-vault-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -706,6 +706,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#secret-rotation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secret Rotation Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rolling-update-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rolling Update Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#infrastructure-health-check-playbook" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -919,6 +941,49 @@
 <p>Part of the <a href="../">Ansible Operations</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="secret-rotation-workflow">Secret Rotation Workflow<a class="headerlink" href="#secret-rotation-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    trigger["Trigger\n(manual / schedule)"]
+    backup["Backup current\nvault file"]
+    generate["Generate new\npassword (openssl)"]
+    encrypt["ansible-vault\nencrypt_string"]
+    updateVars["Update\ndb_secrets.yml"]
+    runPlaybook["Run push-db-secret.yml\n(ansible-playbook)"]
+    success["Success:\nRotation complete"]
+    rollback["Rollback:\nRestore backup"]
+
+    trigger --&gt; backup
+    backup --&gt; generate
+    generate --&gt; encrypt
+    encrypt --&gt; updateVars
+    updateVars --&gt; runPlaybook
+    runPlaybook --&gt;|exit 0| success
+    runPlaybook --&gt;|exit 1| rollback</code></pre>
+<h2 id="rolling-update-flow">Rolling Update Flow<a class="headerlink" href="#rolling-update-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    selectHost["Select next host\n(serial: 1)"]
+    drainLB["Drain host\nfrom load balancer"]
+    waitConns["Wait for active\nconnections to drop"]
+    stopSvc["Stop application\nservice (systemd)"]
+    updatePkg["Update package\nto new version"]
+    startSvc["Start application\nservice"]
+    healthCheck["Health check\n(retry until 200 OK)"]
+    reAddLB["Re-add host\nto load balancer"]
+    nextHost["Next host?"]
+    done["Done"]
+    abort["ABORT: Stop pipeline\n(max_fail_percentage: 0)"]
+
+    selectHost --&gt; drainLB
+    drainLB --&gt; waitConns
+    waitConns --&gt; stopSvc
+    stopSvc --&gt; updatePkg
+    updatePkg --&gt; startSvc
+    startSvc --&gt; healthCheck
+    healthCheck --&gt;|OK| reAddLB
+    healthCheck --&gt;|Fail| abort
+    reAddLB --&gt; nextHost
+    nextHost --&gt;|More hosts| selectHost
+    nextHost --&gt;|Done| done</code></pre>
 <h2 id="infrastructure-health-check-playbook">Infrastructure Health Check Playbook<a class="headerlink" href="#infrastructure-health-check-playbook" title="Permanent link">&para;</a></h2>
 <p>A general-purpose health-check playbook targeting Linux server and network device groups. Reports disk usage, load average, failed services, and reboot time per host, with block/rescue error handling and a delegated summary at the end.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nn">---</span>

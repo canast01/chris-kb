@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#integration-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vmware-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -781,6 +792,34 @@
 
 
 <h1 id="unity-integrations">Unity — Integrations<a class="headerlink" href="#unity-integrations" title="Permanent link">&para;</a></h1>
+<h2 id="integration-map">Integration Map<a class="headerlink" href="#integration-map" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  subgraph "VMware vSphere"
+    VC["vCenter Server"]
+    ESX["ESXi Hosts"]
+    VC --&gt; ESX
+  end
+  subgraph "Dell Unity XT"
+    UNI["Unisphere / REST API"]
+    VASA["VASA Provider\n(vVols)"]
+    LUN["FC / iSCSI LUNs"]
+    NFS["NAS Exports\n(NFS / SMB)"]
+  end
+  subgraph "Backup Ecosystem"
+    VBR["Veeam B&amp;R"]
+    COMM["CommVault\nIntelliSnap"]
+    NDMP["NDMP Client"]
+  end
+  subgraph "Monitoring"
+    CIQ["Dell CloudIQ\n(via SCG)"]
+    AD["Active Directory\n(LDAP / Kerberos)"]
+  end
+  VC --&gt; VASA
+  ESX --&gt; LUN &amp; NFS
+  VBR &amp; COMM --&gt; UNI
+  NDMP --&gt; NFS
+  UNI --&gt; CIQ
+  UNI --&gt; AD</code></pre>
 <h2 id="vmware-integration">VMware Integration<a class="headerlink" href="#vmware-integration" title="Permanent link">&para;</a></h2>
 <p>Unity XT integrates with VMware vSphere via multiple paths:</p>
 <p><strong>VASA Provider (vVols)</strong></p>

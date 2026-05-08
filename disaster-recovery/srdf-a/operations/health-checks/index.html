@@ -794,6 +794,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#health-check-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#validation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -975,6 +986,7 @@
 <th>Healthy</th>
 <th>Warning</th>
 <th>Critical</th>
+<th>Why it matters</th>
 </tr>
 </thead>
 <tbody>
@@ -983,30 +995,35 @@
 <td>Consistent / Transmitting</td>
 <td>Awaiting Cycle &gt; 2x cycle time</td>
 <td>Suspended / Inconsistent</td>
+<td>State directly indicates whether R2 has up-to-date data</td>
 </tr>
 <tr>
 <td>Lag</td>
 <td>&lt; configured cycle time</td>
 <td>2-5x cycle time</td>
 <td>&gt; 5x cycle time or SLA breach</td>
+<td>Lag = RPO exposure at time of failure</td>
 </tr>
 <tr>
 <td>DSE utilization</td>
 <td>0%</td>
 <td>&gt; 30%</td>
 <td>&gt; 70% or Full</td>
+<td>Full DSE halts replication automatically</td>
 </tr>
 <tr>
 <td>RDF link</td>
 <td>Online</td>
 <td>Marginal (&gt; 80% utilization)</td>
 <td>Offline / Partitioned</td>
+<td>Link health determines whether cycles can complete</td>
 </tr>
 <tr>
 <td>Cycle duration</td>
 <td>&lt;= configured cycle time</td>
 <td>1.5x cycle time</td>
 <td>&gt; 2x cycle time</td>
+<td>Extended cycles delay RPO recovery after a burst</td>
 </tr>
 </tbody>
 </table>
@@ -1019,6 +1036,43 @@
 <li><strong>DSE jumps from 0 to 80% overnight</strong>: Points to a batch job or database maintenance task generating large write bursts. Work with the application team to stagger jobs across the week or adjust DSE device size.</li>
 </ul>
 <hr />
+<h2 id="health-check-flow">Health Check Flow<a class="headerlink" href="#health-check-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    startCheck["Daily Health Check Start"]
+    checkPairState["Check Pair States\nsymrdf -g 20 -type A query"]
+    allConsistent{"All Pairs\nConsistent?"}
+    checkLag["Check Lag Value\nsymrdf -g 20 -type A query -detail | grep Lag"]
+    lagOk{"Lag within\nSLA threshold?"}
+    checkDSE["Check DSE Utilization\nsymstat -rdf -g 20 | grep DSE"]
+    dseOk{"DSE &lt; 30%?"}
+    checkLink["Check RDF Link\nsymcfg list -rdfg 20 -detail"]
+    linkOnline{"Link Online\nand &lt; 80%?"}
+    allHealthy["All Checks Passed\nDocument in log"]
+    investigatePair["Investigate Pair State\nCheck for link/network issues"]
+    investigateLag["Investigate Lag Growth\nCheck write rate and link utilization"]
+    investigateDSE["Investigate DSE\nCheck for write burst or undersized DSE device"]
+    escalate["Escalate to Storage / Network Team"]
+
+    startCheck --&gt; checkPairState
+    checkPairState --&gt; allConsistent
+    allConsistent --&gt;|"Yes"| checkLag
+    allConsistent --&gt;|"No"| investigatePair
+    investigatePair --&gt; escalate
+    checkLag --&gt; lagOk
+    lagOk --&gt;|"Yes"| checkDSE
+    lagOk --&gt;|"No"| investigateLag
+    investigateLag --&gt; escalate
+    checkDSE --&gt; dseOk
+    dseOk --&gt;|"Yes"| checkLink
+    dseOk --&gt;|"No"| investigateDSE
+    investigateDSE --&gt; escalate
+    checkLink --&gt; linkOnline
+    linkOnline --&gt;|"Yes"| allHealthy
+    linkOnline --&gt;|"No"| escalate
+
+    style allHealthy fill:#15803d,color:#fff
+    style escalate fill:#be123c,color:#fff
+    style startCheck fill:#2563eb,color:#fff</code></pre>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
 <h3 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h3>
 <ul>

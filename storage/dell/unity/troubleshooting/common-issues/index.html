@@ -1121,6 +1121,29 @@
 </table>
 <h2 id="incident-triage-sequence">Incident Triage Sequence<a class="headerlink" href="#incident-triage-sequence" title="Permanent link">&para;</a></h2>
 <p>When a host reports I/O errors or a LUN is inaccessible, work through this sequence:</p>
+<pre class="mermaid"><code>graph TD
+  START(["Host reports I/O errors\nor LUN inaccessible"]) --&gt; SP{Both SPs\nonline?}
+  SP --&gt;|No| SPWAIT["Wait 60 sec for\nmultipath re-path\nIf SP stays offline → P1 case"]
+  SP --&gt;|Yes| POOL{Pool and disk\ngroups healthy?}
+  POOL --&gt;|No| DRIVE["Identify faulted drive\nInitiate replacement\nMonitor RAID rebuild"]
+  POOL --&gt;|Yes| ACL{LUN mapped\nto host?}
+  ACL --&gt;|No| ADDACL["uemcli /stor/config/lunacl create\n-lun -host"]
+  ACL --&gt;|Yes| PROTO{Protocol?}
+  PROTO --&gt;|FC| FCCHECK["Verify FC zone:\nhost HBA WWN + Unity port WWN\nboth present"]
+  PROTO --&gt;|iSCSI| ISCSICHECK["Verify host IQN registered\nCheck CHAP credentials\nPing iSCSI portal IP"]
+  FCCHECK &amp; ISCSICHECK --&gt; NIC{Network\ninterface up?}
+  NIC --&gt;|No| NICFIX["Check SP port; restore interface\nuemcli /net/port/fc show"]
+  NIC --&gt;|Yes| ALERTS{Active alerts\nin last 2 hours?}
+  ALERTS --&gt;|Yes| ALINV["Investigate alert details\nin Unisphere event log"]
+  ALERTS --&gt;|No| BUNDLE["Collect support bundle\nOpen Dell case"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class SP,POOL,ACL,PROTO,NIC,ALERTS decision
+  class ADDACL,FCCHECK,ISCSICHECK,NICFIX,ALINV,BUNDLE action
+  class SPWAIT,DRIVE warn
+  class START term</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — determine if the array is healthy</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/env/health<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;health.value ne OK&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>

@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#integration-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rest-api" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -816,8 +827,69 @@
 <li>Test LDAP connectivity with <code>ldapsearch</code> before completing configuration to avoid lockout.</li>
 <li>Retain at least one local admin account as a break-glass credential in the password vault.</li>
 </ul>
+<h2 id="integration-topology">Integration Topology<a class="headerlink" href="#integration-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph "VMware Layer"
+        VC["vCenter\n(SPBM / SRM)"]
+        ESX["ESXi Hosts\n(VMFS / vVols)"]
+        VASA["VASA Provider\n(Dell)"]
+        SRA["SRA Adapter\n(SRM failover)"]
+    end
+    subgraph "Backup Layer"
+        VBR["Veeam / NetBackup\n/ CommVault"]
+        PROXY["Backup Proxy\n(linked clone mount)"]
+    end
+    subgraph "Monitoring Layer"
+        CIQ["CloudIQ\n(SaaS — dell.com)"]
+        SA["SupportAssist\n(auto SR creation)"]
+    end
+    subgraph "Directory Layer"
+        AD["Active Directory\n/ LDAP"]
+    end
+    subgraph "PowerMax Array"
+        UNI["Unisphere\nREST API :8443"]
+        ARRAY[("PowerMax\nArray")]
+        SNAPVX["SnapVX\nEngine"]
+        UNI --&gt; ARRAY
+        ARRAY --&gt; SNAPVX
+    end
+
+    VC --&gt;|"VASA capabilities"| VASA --&gt; UNI
+    ESX --&gt;|"FC / NVMe-oF"| ARRAY
+    SRA --&gt;|"REST API"| UNI
+    VBR --&gt;|"REST API\nsnap establish/link"| UNI
+    PROXY --&gt;|"FC / iSCSI\nlinked clone"| ARRAY
+    UNI --&gt;|"HTTPS telemetry"| CIQ
+    UNI --&gt;|"SupportAssist\ncall-home"| SA
+    AD --&gt;|"LDAPS :636\nbind + group lookup"| UNI
+
+    classDef vmw fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef bkp fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef mon fill:#0f766e,stroke:#0d9488,color:#fff
+    classDef dir fill:#92400e,stroke:#78350f,color:#fff
+    classDef arr fill:#be123c,stroke:#9f1239,color:#fff
+    class VC,ESX,VASA,SRA vmw
+    class VBR,PROXY bkp
+    class CIQ,SA mon
+    class AD dir
+    class UNI,ARRAY,SNAPVX arr</code></pre>
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>PowerMax exposes a REST API through Unisphere for PowerMax (RESTAPI):</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Client as Automation Client
+    participant UNI as Unisphere :8443
+    participant ARRAY as PowerMax Array
+
+    Client-&gt;&gt;UNI: POST /restapi/system/Version&lt;br/&gt;(Basic Auth: admin:password)
+    UNI--&gt;&gt;Client: 200 OK + session cookie
+    Client-&gt;&gt;UNI: GET /restapi/91/system/symmetrix&lt;br/&gt;(cookie)
+    UNI-&gt;&gt;ARRAY: query array list
+    ARRAY--&gt;&gt;UNI: SID list
+    UNI--&gt;&gt;Client: 200 OK + symmetrixId[]
+    Client-&gt;&gt;UNI: POST /sloprovisioning/symmetrix/{SID}/storagegroup&lt;br/&gt;{storageGroupId, slo, srp}
+    UNI-&gt;&gt;ARRAY: create storage group
+    ARRAY--&gt;&gt;UNI: created
+    UNI--&gt;&gt;Client: 201 Created</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Base URL format</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>https://&lt;unisphere-host&gt;:8443/univmax/restapi/&lt;version&gt;/
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>

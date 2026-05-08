@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#authentication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#authentication-methods-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -966,6 +977,29 @@
 
 <h1 id="ontap-authentication">ONTAP — Authentication<a class="headerlink" href="#ontap-authentication" title="Permanent link">&para;</a></h1>
 <p>Authentication in ONTAP controls how administrators and service accounts gain access to cluster and SVM management interfaces. ONTAP supports local accounts, Active Directory (LDAP/Kerberos), SSH public keys, and SAML-based SSO for System Manager.</p>
+<h2 id="authentication-flow">Authentication Flow<a class="headerlink" href="#authentication-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    user["Administrator / Service Account"] --&gt; accessType{"Access Type"}
+    accessType --&gt;|"SSH CLI"| sshAuth{"Auth Method"}
+    accessType --&gt;|"HTTPS / REST API"| httpsAuth{"Auth Method"}
+    accessType --&gt;|"NFS Data Access"| nfsAuth["NSSwitch → files / LDAP\nUID/GID resolution"]
+    accessType --&gt;|"SMB Data Access"| smbAuth["Kerberos\nAD Domain Join"]
+
+    sshAuth --&gt;|"local account"| localCheck["Local credential store\non ONTAP node"]
+    sshAuth --&gt;|"publickey"| keyCheck["SSH key match\nstored in ONTAP"]
+    sshAuth --&gt;|"domain account"| adCheck["AD Kerberos\nvia LDAP lookup"]
+    httpsAuth --&gt;|"password"| localCheck
+    httpsAuth --&gt;|"certificate"| certCheck["Mutual TLS\nclient certificate"]
+    httpsAuth --&gt;|"SAML SSO"| samlFlow["Redirect to IdP\nADFS / Okta / Azure AD"]
+    samlFlow --&gt; mfa["MFA at IdP"]
+    mfa --&gt; token["SAML assertion\nreturned to ONTAP"]
+
+    localCheck --&gt; rbac["RBAC Role\npermission check"]
+    keyCheck --&gt; rbac
+    adCheck --&gt; rbac
+    certCheck --&gt; rbac
+    token --&gt; rbac
+    rbac --&gt; access["Access granted\nto cluster or SVM"]</code></pre>
 <h2 id="authentication-methods-summary">Authentication Methods Summary<a class="headerlink" href="#authentication-methods-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

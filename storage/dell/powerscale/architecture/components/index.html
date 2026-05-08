@@ -872,6 +872,25 @@
 </tbody>
 </table>
 <h2 id="synciq-replication">SyncIQ — Replication<a class="headerlink" href="#synciq-replication" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    srcCluster["Source Cluster\n/ifs/data/project1"]
+    policy["SyncIQ Policy\n(schedule + target)"]
+    wan["WAN / IP Network\n(TCP 7722, optional TLS)"]
+    dstCluster["Target Cluster\n/ifs/replicated/project1"]
+    snapRef["Source Snapshot\n(change-tracking reference)"]
+
+    srcCluster --&gt; policy
+    policy --&gt; snapRef
+    snapRef --&gt;|"delta sync"| wan
+    wan --&gt; dstCluster
+
+    subgraph "Failover"
+        dstCluster --&gt;|"break mirror"| rw["Target Writable\n(clients re-pointed)"]
+    end
+
+    subgraph "Failback"
+        rw --&gt;|"return policy"| srcCluster
+    end</code></pre>
 <p>SyncIQ policy management, monitoring, and failover/failback operations on Dell PowerScale.</p>
 <h3 id="policy-management">Policy Management<a class="headerlink" href="#policy-management" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all SyncIQ policies</span>

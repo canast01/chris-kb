@@ -725,6 +725,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Upgrade Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-order-dependency-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Order Dependency Chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -831,6 +848,25 @@
 </tbody>
 </table>
 <h2 id="upgrade-sequence">Upgrade Sequence<a class="headerlink" href="#upgrade-sequence" title="Permanent link">&para;</a></h2>
+<h3 id="upgrade-order-dependency-chain">Upgrade Order Dependency Chain<a class="headerlink" href="#upgrade-order-dependency-chain" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    start(["Start upgrade\nmaintenance window"])
+    start --&gt; vc["1. Upgrade vCenter\nboth protected + recovery sites"]
+    vc --&gt; srmCheck{"Plugins load\ncorrectly?"}
+    srmCheck --&gt;|No| fixVC["Fix vCenter issues\nbefore proceeding"]
+    fixVC --&gt; srmCheck
+    srmCheck --&gt;|Yes| srmUpgrade["2. Upgrade SRM Server\nprotected site first, then recovery"]
+    srmUpgrade --&gt; vrUpgrade["3. Upgrade vSphere\nReplication Appliance\n(VAMI upgrade)"]
+    vrUpgrade --&gt; sraUpdate["4. Update SRA plugins\n(Dell, Pure, NetApp)\non both SRM servers"]
+    sraUpdate --&gt; validate["5. Validate — all PGs show OK\nall VMs show Protected"]
+    validate --&gt; done(["Upgrade complete"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef check fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class vc,srmUpgrade,vrUpgrade,sraUpdate,validate,fixVC action
+    class srmCheck check
+    class start,done terminal</code></pre>
 <p><strong>Critical: always upgrade in this order to avoid compatibility breaks.</strong></p>
 <ol>
 <li><strong>Upgrade vCenter</strong> to target version; verify plugins load correctly post-upgrade</li>

@@ -950,6 +950,26 @@
 <h1 id="vcenter-security-access-control">vCenter Security — Access Control<a class="headerlink" href="#vcenter-security-access-control" title="Permanent link">&para;</a></h1>
 <h2 id="role-based-access-control-rbac">Role-Based Access Control (RBAC)<a class="headerlink" href="#role-based-access-control-rbac" title="Permanent link">&para;</a></h2>
 <p>vCenter uses a privilege-based permission model. Permissions are assigned as: <strong>principal (user/group) + role (privilege set) + inventory object (scope)</strong> + optional propagation to children.</p>
+<pre class="mermaid"><code>graph TD
+    global["Global Permission\n(all vCenters in SSO domain)"]
+    dc["Datacenter\n(DC-LON, DC-AMS)"]
+    cl["Cluster\n(CL-LON-PROD)"]
+    host["ESXi Host\n(esxi-01)"]
+    vm["Virtual Machine\n(app-server-01)"]
+
+    global --&gt;|"propagates down"| dc
+    dc --&gt;|"propagates down"| cl
+    cl --&gt;|"propagates down"| host
+    cl --&gt;|"propagates down"| vm
+
+    note1["No Access on VM\noverrides Admin on Cluster"]
+    vm -. "evaluation order" .-&gt; note1
+
+    classDef scope fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef override fill:#dc2626,stroke:#b91c1c,color:#fff
+
+    class global,dc,cl,host scope
+    class vm,note1 override</code></pre>
 <h3 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

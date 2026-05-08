@@ -782,6 +782,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bandwidth-sizing-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bandwidth Sizing Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -815,6 +826,7 @@
 <th>Application Class</th>
 <th>Target RPO</th>
 <th>Cycle Time</th>
+<th>Why</th>
 <th>Notes</th>
 </tr>
 </thead>
@@ -823,18 +835,21 @@
 <td>Tier 1 (financial, critical DB)</td>
 <td>≤ 30s</td>
 <td>30s</td>
+<td>Minimal data exposure for transaction systems</td>
 <td>Default</td>
 </tr>
 <tr>
 <td>Tier 2 (business apps)</td>
 <td>≤ 60s</td>
 <td>60s</td>
+<td>Balances RPO against WAN bandwidth consumption</td>
 <td>Allowed if WAN constrained</td>
 </tr>
 <tr>
 <td>Tier 3 (dev/test replication)</td>
 <td>≤ 300s</td>
 <td>300s</td>
+<td>WAN efficiency more important than low RPO</td>
 <td>Batch workloads</td>
 </tr>
 </tbody>
@@ -862,24 +877,29 @@
 <tr>
 <th>Range</th>
 <th>Purpose</th>
+<th>Why separated</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1–50</td>
 <td>Tier 1 production sync/async groups</td>
+<td>Strict RPO — isolated from lower-tier groups to prevent cycle contention</td>
 </tr>
 <tr>
 <td>51–100</td>
 <td>Tier 2 business apps</td>
+<td>Moderate RPO — can share directors with Tier 1 if bandwidth allows</td>
 </tr>
 <tr>
 <td>101–150</td>
 <td>DR testing and pre-production</td>
+<td>Testing operations (splits, resyncs) must not impact production group numbers</td>
 </tr>
 <tr>
 <td>151–200</td>
 <td>Reserved for future expansion</td>
+<td>Avoids group number conflicts during environment growth</td>
 </tr>
 </tbody>
 </table>
@@ -904,6 +924,26 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>symdev<span class="w"> </span>show<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Size|Track&quot;</span>
 </code></pre></div></li>
 </ul>
+<h2 id="bandwidth-sizing-diagram">Bandwidth Sizing Diagram<a class="headerlink" href="#bandwidth-sizing-diagram" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    measureWrite["Measure Peak Write Rate\nsymrdf -g rdfg query -v | grep MBs Written"]
+    calcBW["Calculate Required Bandwidth\npeak_rate x 1.20 headroom"]
+    checkLink["Compare Against Current\nSRDF Link Capacity"]
+    sufficient{"Bandwidth\nSufficient?"}
+    ok["OK — proceed with\ncurrent link provisioning"]
+    upgrade["Engage Network Team\nIncrease WAN Capacity\nor adjust cycle time"]
+    monitorCycle["Monitor Cycle Completion Rate\nfor 30 days after change"]
+
+    measureWrite --&gt; calcBW
+    calcBW --&gt; checkLink
+    checkLink --&gt; sufficient
+    sufficient --&gt;|"Yes"| ok
+    sufficient --&gt;|"No"| upgrade
+    ok --&gt; monitorCycle
+    upgrade --&gt; monitorCycle
+
+    style ok fill:#15803d,color:#fff
+    style upgrade fill:#be123c,color:#fff</code></pre>
 
 
 

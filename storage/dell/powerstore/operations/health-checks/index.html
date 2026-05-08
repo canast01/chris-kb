@@ -699,6 +699,158 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#daily-health-check-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Health Check Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Daily Health Check Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-log-in-and-review-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Log In and Review the Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-check-active-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Check Active Alerts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-hardware-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Hardware Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-capacity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Capacity Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-replication-session-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Replication Session Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-software-version-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Software Version Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-readiness-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Readiness Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-change-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Change Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-key-rest-api-health-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference — Key REST API Health Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#incident-triage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Incident Triage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-alert-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Alert Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +870,314 @@
 
 
 <h1 id="powerstore-health-checks">PowerStore — Health Checks<a class="headerlink" href="#powerstore-health-checks" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="daily-health-check-procedure">Daily Health Check Procedure<a class="headerlink" href="#daily-health-check-procedure" title="Permanent link">&para;</a></h2>
+<p>Run this procedure each morning on all production PowerStore systems. The checks can be automated using the PowerStore REST API — see the scripts in the <a href="../scripts/">Scripts</a> section.</p>
+<h3 id="1-log-in-and-review-the-dashboard">1. Log In and Review the Dashboard<a class="headerlink" href="#1-log-in-and-review-the-dashboard" title="Permanent link">&para;</a></h3>
+<p>Access PowerStore Manager at <code>https://&lt;management-ip&gt;</code> and review the Dashboard panel:</p>
+<ul>
+<li>[ ] Overall system health icon is green (no red or orange alerts)</li>
+<li>[ ] Data Reduction Ratio (DRR) is within the expected range for the workload</li>
+<li>[ ] Capacity utilisation is below the Warning threshold (typically 70%)</li>
+<li>[ ] No replication sessions shown in Error or Paused state</li>
+</ul>
+<h3 id="2-check-active-alerts">2. Check Active Alerts<a class="headerlink" href="#2-check-active-alerts" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all active (unresolved) alerts</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/alert?state=active&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Filter CRITICAL alerts only</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/alert?severity=CRITICAL&amp;state=active&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Review every active alert:</p>
+<table>
+<thead>
+<tr>
+<th>Alert Severity</th>
+<th>Required Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRITICAL</td>
+<td>Open an incident immediately; escalate to on-call engineer</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>Investigate within 2 hours; escalate if not resolved in 4 hours</td>
+</tr>
+<tr>
+<td>WARNING</td>
+<td>Review and acknowledge; resolve within 24 hours</td>
+</tr>
+<tr>
+<td>INFO</td>
+<td>Review; no immediate action required</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-hardware-health">3. Hardware Health<a class="headerlink" href="#3-hardware-health" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check all hardware components</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/hardware&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check drive health specifically</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/drive&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Check node hardware</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/node&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Look for drives with a <code>health_state</code> of <code>failed</code>, <code>degraded</code>, or <code>reconstructing</code>. A single drive failure places the pool in degraded mode — the array remains fully operational but has reduced fault tolerance until the failed drive is replaced and reconstruction completes.</p>
+<p>Reconstruction time estimate: approximately 1 hour per TB of data for NVMe SSDs under normal workload.</p>
+<h3 id="4-capacity-check">4. Capacity Check<a class="headerlink" href="#4-capacity-check" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get capacity metrics per appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/storage_resource?select=name,size_used,size_total,data_reduction_ratio&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Per-pool capacity</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/pool?select=name,size_free,size_used,size_total,percent_used&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Flag any pool with <code>percent_used</code> above 70 for capacity planning review.</p>
+<h3 id="5-replication-session-health">5. Replication Session Health<a class="headerlink" href="#5-replication-session-health" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all replication sessions and their state</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/replication_session?select=name,state,last_sync_time,remaining_capacity_to_sync&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Expected states:</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>synchronizing</code></td>
+<td>Replication in progress (normal)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>synchronized</code></td>
+<td>Up to date</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>paused</code></td>
+<td>Manually paused</td>
+<td>Confirm this is intentional</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>Replication broken</td>
+<td>Investigate immediately; check network connectivity to remote system</td>
+</tr>
+<tr>
+<td><code>system_paused</code></td>
+<td>Array paused replication automatically</td>
+<td>Check for fault condition; resume after fault cleared</td>
+</tr>
+</tbody>
+</table>
+<h3 id="6-software-version-check">6. Software Version Check<a class="headerlink" href="#6-software-version-check" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show installed software version</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/software_installed&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Compare the running version against the latest available PowerStoreOS release. Upgrade if the system is more than one minor release behind and a pending CVE applies.</p>
+<h2 id="change-readiness-checklist">Change Readiness Checklist<a class="headerlink" href="#change-readiness-checklist" title="Permanent link">&para;</a></h2>
+<p>Complete this checklist before any maintenance window or change on a PowerStore system:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Requirement</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active CRITICAL alerts</td>
+<td>None (resolve before proceeding)</td>
+<td></td>
+</tr>
+<tr>
+<td>Drive health</td>
+<td>No failed or reconstructing drives</td>
+<td></td>
+</tr>
+<tr>
+<td>Replication sessions</td>
+<td>All sessions <code>synchronized</code> or <code>synchronizing</code>; none <code>failed</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Capacity utilisation</td>
+<td>Below 80% on all pools</td>
+<td></td>
+</tr>
+<tr>
+<td>Software version</td>
+<td>Not in the middle of an upgrade</td>
+<td></td>
+</tr>
+<tr>
+<td>CloudIQ health score</td>
+<td>≥ 80</td>
+<td></td>
+</tr>
+<tr>
+<td>Snapshot policy</td>
+<td>Latest snapshot completed successfully</td>
+<td></td>
+</tr>
+<tr>
+<td>Metro Volume (if in use)</td>
+<td>Metro link state <code>synchronised</code>; mediator reachable</td>
+<td></td>
+</tr>
+<tr>
+<td>SupportAssist</td>
+<td>Connected (check Settings → Support)</td>
+<td></td>
+</tr>
+<tr>
+<td>Maintenance window</td>
+<td>Communicated to application teams</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
+<p>After completing maintenance, verify the following before closing the change:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Check for new alerts introduced during the change</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/alert?state=active&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 2. Confirm all replication sessions resumed</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/replication_session?select=name,state&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># 3. Confirm host connectivity (check host I/O counters)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/host?select=name,type,health_state&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 4. Check CloudIQ health score returned to baseline</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Log into cloudiq.dell.com and confirm the score matches pre-change value</span>
+</code></pre></div>
+<h2 id="quick-reference-key-rest-api-health-endpoints">Quick Reference — Key REST API Health Endpoints<a class="headerlink" href="#quick-reference-key-rest-api-health-endpoints" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Endpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active alerts</td>
+<td><code>GET /api/rest/alert?state=active</code></td>
+</tr>
+<tr>
+<td>Hardware health</td>
+<td><code>GET /api/rest/hardware</code></td>
+</tr>
+<tr>
+<td>Drive status</td>
+<td><code>GET /api/rest/drive</code></td>
+</tr>
+<tr>
+<td>Node health</td>
+<td><code>GET /api/rest/node</code></td>
+</tr>
+<tr>
+<td>Pool capacity</td>
+<td><code>GET /api/rest/pool</code></td>
+</tr>
+<tr>
+<td>Replication sessions</td>
+<td><code>GET /api/rest/replication_session</code></td>
+</tr>
+<tr>
+<td>Software version</td>
+<td><code>GET /api/rest/software_installed</code></td>
+</tr>
+<tr>
+<td>Host connectivity</td>
+<td><code>GET /api/rest/host</code></td>
+</tr>
+<tr>
+<td>Volume list</td>
+<td><code>GET /api/rest/volume?select=name,health_state,size,state</code></td>
+</tr>
+<tr>
+<td>Snapshot status</td>
+<td><code>GET /api/rest/volume_snapshot?select=name,state,creation_timestamp</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
+<p>When a CRITICAL alert fires on PowerStore:</p>
+<ol>
+<li>Log into PowerStore Manager; note the exact alert message and affected resource</li>
+<li>Pull the alert detail via REST API for the full error code and description</li>
+<li>Check drive health — most CRITICAL hardware alerts are drive or node related</li>
+<li>Check replication session state — confirm whether replication is still running or has failed</li>
+<li>If a node fault is suspected, review node-level health: <code>GET /api/rest/node</code></li>
+<li>Check CloudIQ for the historical health score timeline — identify when the issue began and whether it correlates with a change</li>
+<li>For unresolved hardware faults, open a Dell support case from PowerStore Manager → <strong>Support → New Case</strong> — the support case is pre-populated with system serial number and log bundles</li>
+</ol>
+<h3 id="common-alert-codes">Common Alert Codes<a class="headerlink" href="#common-alert-codes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alert Code / Message</th>
+<th>Likely Cause</th>
+<th>First Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Drive failed</code></td>
+<td>NVMe SSD hardware failure</td>
+<td>Confirm drive fault in hardware view; open Dell case for physical drive replacement</td>
+</tr>
+<tr>
+<td><code>Pool degraded</code></td>
+<td>Drive failure or reconstruction in progress</td>
+<td>Check drive health; monitor reconstruction progress</td>
+</tr>
+<tr>
+<td><code>Replication session failed</code></td>
+<td>Network connectivity lost between sites</td>
+<td>Check WAN/MPLS link; check firewall rules for replication port TCP/443</td>
+</tr>
+<tr>
+<td><code>NAS server unavailable</code></td>
+<td>Node-level fault or NAS server software fault</td>
+<td>Check node health; attempt NAS server failover manually</td>
+</tr>
+<tr>
+<td><code>Metro Volume link down</code></td>
+<td>Metro Volume network connectivity lost or mediator unreachable</td>
+<td>Check inter-site network; check mediator VM status; prepare for manual promotion if link is persistently down</td>
+</tr>
+<tr>
+<td><code>Certificate expired</code></td>
+<td>Management certificate past expiry date</td>
+<td>Renew and import the certificate; see <a href="../../security/authentication/">Security / Authentication</a></td>
+</tr>
+<tr>
+<td><code>SupportAssist connectivity lost</code></td>
+<td>Outbound HTTPS to Dell SRS blocked</td>
+<td>Check proxy/firewall for <code>esrs3.emc.com:443</code>; confirm SupportAssist configuration</td>
+</tr>
+</tbody>
+</table>
 
 
 

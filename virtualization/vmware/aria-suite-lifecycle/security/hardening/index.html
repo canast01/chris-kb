@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#default-password" class="md-nav__link">
+  <a href="#default-password-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Default Password
+        Default Password Change
       
     </span>
   </a>
@@ -721,6 +721,50 @@
     <span class="md-ellipsis">
       
         Certificate Management via Locker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-hardening-on-the-lcm-appliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Hardening on the LCM Appliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firewall-rules-for-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Rules for LCM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
       
     </span>
   </a>
@@ -748,15 +792,156 @@
 
 
 <h1 id="aria-suite-lifecycle-hardening">Aria Suite Lifecycle — Hardening<a class="headerlink" href="#aria-suite-lifecycle-hardening" title="Permanent link">&para;</a></h1>
-<h2 id="default-password">Default Password<a class="headerlink" href="#default-password" title="Permanent link">&para;</a></h2>
-<p>Change the default <code>admin</code> password immediately after deployment:
-1. LCM → Settings → Local Users → admin → Change Password
-2. Store the new password in CyberArk or enterprise vault</p>
-<p><strong>Locker Master Password</strong>: set during initial LCM configuration. If lost, all certificates and passwords in the Locker become inaccessible — requires re-import. Store securely in an offline vault.</p>
+<h2 id="default-password-change">Default Password Change<a class="headerlink" href="#default-password-change" title="Permanent link">&para;</a></h2>
+<p>Change the default <code>admin@local</code> password immediately after deployment:</p>
+<ol>
+<li>LCM → Settings → Local Users → admin → <strong>Change Password</strong></li>
+<li>Use a minimum 16-character password with mixed case, numbers, and symbols</li>
+<li>Store the new password in CyberArk or an enterprise vault — never in a shared document</li>
+</ol>
+<p><strong>Locker Master Password</strong>: set during initial LCM configuration wizard. If lost, all certificates and passwords stored in the Locker become inaccessible and require full re-import from source. Store this password in an offline vault (paper or HSM), not in the same digital system as other passwords.</p>
+<hr />
 <h2 id="certificate-management-via-locker">Certificate Management via Locker<a class="headerlink" href="#certificate-management-via-locker" title="Permanent link">&para;</a></h2>
-<p>All product certificates should be managed through the Locker — not by direct file replacement on appliances:</p>
+<p>All product certificates must be managed through the LCM Locker — not by direct file replacement on appliances. Direct file replacement bypasses LCM's tracking and breaks upgrade workflows.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>LCM → Locker → Certificates → Import Certificate
 </code></pre></div>
+<ul>
+<li>Import the full chain: leaf certificate + intermediate CA(s) + root CA</li>
+<li>Private key must be unencrypted (no passphrase) in PEM format</li>
+<li>Minimum key size: RSA 4096-bit for new certificates; RSA 2048-bit is the floor for existing</li>
+<li>Certificate must include SAN for all node FQDNs and the load balancer VIP</li>
+</ul>
+<hr />
+<h2 id="ssh-hardening-on-the-lcm-appliance">SSH Hardening on the LCM Appliance<a class="headerlink" href="#ssh-hardening-on-the-lcm-appliance" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Disable password authentication for root (prefer key-based)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Edit /etc/ssh/sshd_config</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>PermitRootLogin<span class="w"> </span>prohibit-password
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>PasswordAuthentication<span class="w"> </span>no<span class="w">   </span><span class="c1"># Only if SSH keys are pre-configured</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Restrict SSH to the management network</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>AllowUsers<span class="w"> </span>admin<span class="w"> </span>root
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># OR use /etc/hosts.allow:</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sshd:<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w">  </span><span class="c1"># management network CIDR only</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Restart SSH after changes</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+</code></pre></div>
+<hr />
+<h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
+<p>Ensure LCM does not expose weak TLS versions or cipher suites:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify TLS version from an external client</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.corp.local:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.corp.local:443<span class="w"> </span>-tls1<span class="w">   </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;alert&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># TLS 1.0 and 1.1 should return an alert — not supported in hardened deployments</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check the cipher suite negotiated</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.corp.local:443<span class="w"> </span>-tls1_3<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Cipher&quot;</span>
+</code></pre></div>
+<p>LCM 8.x ships with TLS 1.2+ enabled by default. Verify no legacy cipher suites are active using an external scanner such as <code>testssl.sh</code> or Qualys SSL Labs.</p>
+<hr />
+<h2 id="firewall-rules-for-lcm">Firewall Rules for LCM<a class="headerlink" href="#firewall-rules-for-lcm" title="Permanent link">&para;</a></h2>
+<p>Only necessary ports should be open to the LCM appliance:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admin workstations</td>
+<td>LCM appliance</td>
+<td>443</td>
+<td>TCP</td>
+<td>Web UI and API</td>
+</tr>
+<tr>
+<td>Admin workstations</td>
+<td>LCM appliance</td>
+<td>22</td>
+<td>TCP</td>
+<td>SSH (restrict to PAW/jump host)</td>
+</tr>
+<tr>
+<td>LCM appliance</td>
+<td>vCenter</td>
+<td>443</td>
+<td>TCP</td>
+<td>vCenter API for VM deployment</td>
+</tr>
+<tr>
+<td>LCM appliance</td>
+<td>VIDM</td>
+<td>443</td>
+<td>TCP</td>
+<td>SSO and group sync</td>
+</tr>
+<tr>
+<td>LCM appliance</td>
+<td>ESXi hosts</td>
+<td>443</td>
+<td>TCP</td>
+<td>OVA deployment</td>
+</tr>
+<tr>
+<td>LCM appliance</td>
+<td>NFS server</td>
+<td>2049</td>
+<td>TCP/UDP</td>
+<td>Binary repository</td>
+</tr>
+<tr>
+<td>LCM appliance</td>
+<td>DNS server</td>
+<td>53</td>
+<td>UDP</td>
+<td>Name resolution</td>
+</tr>
+<tr>
+<td>LCM appliance</td>
+<td>NTP server</td>
+<td>123</td>
+<td>UDP</td>
+<td>Time synchronisation</td>
+</tr>
+<tr>
+<td>LCM appliance</td>
+<td>SMTP relay</td>
+<td>25/587</td>
+<td>TCP</td>
+<td>Email notifications</td>
+</tr>
+<tr>
+<td>Product appliances</td>
+<td>LCM appliance</td>
+<td>443</td>
+<td>TCP</td>
+<td>Upgrade agent callback</td>
+</tr>
+</tbody>
+</table>
+<p>Close all other inbound ports at the network firewall. LCM does not require inbound access from the internet.</p>
+<hr />
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<p>Run this checklist after initial deployment and after each major upgrade:</p>
+<ul>
+<li>[ ] <code>admin@local</code> password changed from default and stored in vault</li>
+<li>[ ] Locker Master Password stored in offline vault</li>
+<li>[ ] Root SSH login requires key-based authentication (no password SSH for root)</li>
+<li>[ ] SSH access restricted to management network CIDR only</li>
+<li>[ ] TLS 1.0 and 1.1 confirmed disabled (test with <code>openssl s_client -tls1</code>)</li>
+<li>[ ] Self-signed certificate replaced with CA-signed certificate in Locker</li>
+<li>[ ] VIDM integration configured — all interactive users authenticate via VIDM, not local accounts</li>
+<li>[ ] AD groups mapped to LCM roles (not individual user accounts)</li>
+<li>[ ] NFS binary repository mounted read-write only from LCM appliance IP (NFS export permission)</li>
+<li>[ ] Syslog forwarding to Aria Ops for Logs or SIEM configured and verified</li>
+<li>[ ] Firewall rules reviewed — only required ports open</li>
+<li>[ ] LCM software at current patch level (check: <strong>LCM → Settings → System Details</strong>)</li>
+</ul>
 
 
 

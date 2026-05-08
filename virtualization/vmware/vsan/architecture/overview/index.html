@@ -1018,6 +1018,35 @@
 <li>Once all required components acknowledge (based on FTT policy), DOM acknowledges the write to the VM.</li>
 <li>Data is de-staged from cache to capacity disks asynchronously in the background.</li>
 </ol>
+<pre class="mermaid"><code>graph TD
+    vm["VM\n(guest write I/O)"]
+    dom["DOM\n(Distributed Object Manager)\nowner host"]
+    lsom_local["LSOM — Local Host\nwrite to cache SSD buffer"]
+    vsan_net["vSAN VMkernel Network\n(unicast, 10/25 GbE)"]
+    lsom_remote["LSOM — Remote Host\nwrite to cache SSD buffer"]
+    ack["All required components\nacknowledge write"]
+    destage["Async destage:\ncache SSD → capacity disks"]
+    vm_ack["Write acknowledged\nto guest"]
+
+    vm --&gt; dom
+    dom --&gt; lsom_local
+    dom --&gt;|"FTT remote component"| vsan_net --&gt; lsom_remote
+    lsom_local --&gt; ack
+    lsom_remote --&gt; ack
+    ack --&gt; vm_ack
+    lsom_local --&gt; destage
+    lsom_remote --&gt; destage
+
+    classDef vm fill:#15803d,stroke:#166534,color:#fff
+    classDef mgr fill:#b45309,stroke:#92400e,color:#fff
+    classDef io fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class vm vm
+    class dom mgr
+    class lsom_local,lsom_remote,destage io
+    class vsan_net net
+    class ack,vm_ack vm</code></pre>
 <p><strong>ESA write path:</strong></p>
 <ol>
 <li>VM issues a write.</li>
@@ -1102,6 +1131,34 @@
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      └────────────────────────┴────────────────────────┘
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                     vSAN VMkernel Network
 </code></pre></div>
+<pre class="mermaid"><code>graph LR
+    subgraph "Site A (Active)"
+        sA1["ESXi-01"]
+        sA2["ESXi-02"]
+        sA3["ESXi-03"]
+    end
+
+    subgraph "Witness Site"
+        wit["Witness Appliance\n(metadata / tiebreaker)"]
+    end
+
+    subgraph "Site B (Active)"
+        sB1["ESXi-04"]
+        sB2["ESXi-05"]
+        sB3["ESXi-06"]
+    end
+
+    sA1 &amp; sA2 &amp; sA3 --&gt;|"&lt; 5 ms RTT"| sB1 &amp; sB2 &amp; sB3
+    sA1 &amp; sA2 &amp; sA3 -.-&gt;|"&lt; 200 ms RTT"| wit
+    sB1 &amp; sB2 &amp; sB3 -.-&gt;|"&lt; 200 ms RTT"| wit
+
+    classDef siteA fill:#15803d,stroke:#166534,color:#fff
+    classDef siteB fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef witness fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class sA1,sA2,sA3 siteA
+    class sB1,sB2,sB3 siteB
+    class wit witness</code></pre>
 <p><strong>Data placement:</strong> Every VM object has a component on Site A AND a component on Site B (RAID-1 across sites). The witness holds only the tiebreaker metadata.</p>
 <p><strong>Site failure handling:</strong> If Site A fails, Site B has a complete copy of all data. The witness confirms quorum for Site B, allowing Site B to continue as the active site without data loss.</p>
 <p><strong>Key constraints:</strong>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#component-relationship" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Relationship
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#core-components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -842,6 +853,22 @@
 
 
 <h1 id="ontap-components">ONTAP — Components<a class="headerlink" href="#ontap-components" title="Permanent link">&para;</a></h1>
+<h2 id="component-relationship">Component Relationship<a class="headerlink" href="#component-relationship" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    cluster["Cluster\n(2–24 nodes)"] --&gt; nodeA["Node A (Controller)"]
+    cluster --&gt; nodeB["Node B (HA Partner)"]
+    nodeA &amp; nodeB &lt;--&gt;|"HA interconnect\nNVRAM mirror"| haPair(["HA Pair"])
+    nodeA --&gt; aggrA["Aggregate\nRAID groups of disks"]
+    nodeB --&gt; aggrB["Aggregate\nRAID groups of disks"]
+    aggrA &amp; aggrB --&gt; svmData["SVM: data\nprotocols + namespace"]
+    svmData --&gt; volA["Volume (FlexVol)\nthin/thick provisioned"]
+    volA --&gt; lun["LUN\niSCSI · FC block device"]
+    volA --&gt; snapshot["Snapshots\nread-only CoW copies"]
+    volA --&gt; qtree["Qtrees / NFS exports\nSMB shares"]
+    svmData --&gt; lif["Data LIF\nIP or WWPN endpoint"]
+    lif --&gt; clients["Clients / Hosts"]
+    cluster --&gt; svmAdmin["SVM: admin\ncluster management"]
+    svmAdmin --&gt; clusterMgmtLif["cluster-mgmt LIF\nCLI · REST · System Manager"]</code></pre>
 <h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

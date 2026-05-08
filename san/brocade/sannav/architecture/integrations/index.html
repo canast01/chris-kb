@@ -699,6 +699,169 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-active-directory-ldap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Active Directory / LDAP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Active Directory / LDAP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#role-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-the-ldap-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test the LDAP Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-smtp-email-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. SMTP / Email Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-snmp-trap-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. SNMP Trap Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-syslog-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Syslog Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-vmware-vcenter-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. VMware vCenter Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. REST API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. REST API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useful-api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful API Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-sannav-global-view-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. SANnav Global View Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +881,309 @@
 
 
 <h1 id="sannav-integrations">SANnav — Integrations<a class="headerlink" href="#sannav-integrations" title="Permanent link">&para;</a></h1>
-<p>Integration with other platforms and external systems.</p>
+<blockquote>
+<p>Part of the <a href="../../">SANnav</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SANnav integrates with external systems for authentication, alerting, monitoring, and host visibility. This page covers each integration, the configuration steps, and the operational implications.</p>
+<hr />
+<h2 id="1-active-directory-ldap">1. Active Directory / LDAP<a class="headerlink" href="#1-active-directory-ldap" title="Permanent link">&para;</a></h2>
+<p>SANnav supports LDAP and LDAPS for user authentication and group-based role assignment. LDAP integration is configured under <strong>Administration &gt; Server Settings &gt; LDAP</strong>.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value / Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server type</td>
+<td>Active Directory or OpenLDAP</td>
+</tr>
+<tr>
+<td>Server address</td>
+<td><code>ldap.corp.example.com</code> or IP</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>636 (LDAPS) — 389 only if LDAPS not available</td>
+</tr>
+<tr>
+<td>Base DN</td>
+<td><code>DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Bind DN</td>
+<td><code>CN=sannav-svc,OU=Service Accounts,DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Bind password</td>
+<td>Service account password</td>
+</tr>
+<tr>
+<td>User search base</td>
+<td><code>OU=SAN-Users,DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>User search filter</td>
+<td><code>(sAMAccountName={0})</code></td>
+</tr>
+<tr>
+<td>Group search base</td>
+<td><code>OU=SAN-Groups,DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Group member attribute</td>
+<td><code>member</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="role-mapping">Role Mapping<a class="headerlink" href="#role-mapping" title="Permanent link">&para;</a></h3>
+<p>Map LDAP groups to SANnav roles under <strong>Administration &gt; LDAP &gt; Role Mapping</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>AD Group</th>
+<th>SANnav Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GRP-SANnav-Admins</code></td>
+<td>SAN Admin</td>
+</tr>
+<tr>
+<td><code>GRP-SANnav-Operators</code></td>
+<td>SAN Operator</td>
+</tr>
+<tr>
+<td><code>GRP-SANnav-ReadOnly</code></td>
+<td>SAN Viewer</td>
+</tr>
+</tbody>
+</table>
+<h3 id="test-the-ldap-connection">Test the LDAP Connection<a class="headerlink" href="#test-the-ldap-connection" title="Permanent link">&para;</a></h3>
+<p>Navigate to <strong>Administration &gt; Server Settings &gt; LDAP</strong> and click <strong>Test Connection</strong>. SANnav will attempt a bind with the configured service account and return a success or error message. If the test fails, verify:
+- DNS resolution of the LDAP server from SANnav
+- LDAPS certificate trust (import the CA certificate if using self-signed)
+- Service account bind permissions</p>
+<hr />
+<h2 id="2-smtp-email-alerts">2. SMTP / Email Alerts<a class="headerlink" href="#2-smtp-email-alerts" title="Permanent link">&para;</a></h2>
+<p>SANnav sends alert notifications via email. Configure under <strong>Administration &gt; Server Settings &gt; SMTP</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SMTP server</td>
+<td><code>smtp.corp.example.com</code></td>
+</tr>
+<tr>
+<td>Port</td>
+<td>587 (STARTTLS) or 25</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Username/password (if relay requires auth)</td>
+</tr>
+<tr>
+<td>From address</td>
+<td><code>sannav-alerts@corp.example.com</code></td>
+</tr>
+<tr>
+<td>TLS</td>
+<td>Enabled (STARTTLS or SMTPS)</td>
+</tr>
+</tbody>
+</table>
+<p>Alert recipients and notification rules are configured separately under <strong>Administration &gt; Alert Policies</strong>. Associate email recipients with policy rules to control which severity levels trigger emails.</p>
+<hr />
+<h2 id="3-snmp-trap-forwarding">3. SNMP Trap Forwarding<a class="headerlink" href="#3-snmp-trap-forwarding" title="Permanent link">&para;</a></h2>
+<p>SANnav can forward SNMP traps to upstream NMS or SIEM platforms. Configure under <strong>Administration &gt; Alert Policies &gt; Trap Forwarding</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trap receiver IP</td>
+<td>NMS / SIEM management IP</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>162/UDP</td>
+</tr>
+<tr>
+<td>SNMP version</td>
+<td>v2c or v3</td>
+</tr>
+<tr>
+<td>Community / credentials</td>
+<td>Match NMS configuration</td>
+</tr>
+<tr>
+<td>Trap filter</td>
+<td>All events, or filter by severity</td>
+</tr>
+</tbody>
+</table>
+<p>SANnav forwards traps using its own Broadcom MIB definitions. Load the SANnav MIB files into the NMS to decode trap OIDs correctly. MIB files are downloadable from the SANnav UI under <strong>Administration &gt; Downloads</strong>.</p>
+<hr />
+<h2 id="4-syslog-integration">4. Syslog Integration<a class="headerlink" href="#4-syslog-integration" title="Permanent link">&para;</a></h2>
+<p>SANnav appliance OS logs and application event logs can be forwarded to a syslog server (SIEM). Configure syslog on the SANnav appliance CLI:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to SANnav appliance</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@sannav-mgmt.corp.example.com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Edit rsyslog configuration</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/rsyslog.d/sannav-forward.conf
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Add:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>*.*<span class="w"> </span>@10.10.3.50:514<span class="w">        </span><span class="c1"># UDP syslog</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># or</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>*.*<span class="w"> </span>@@10.10.3.50:514<span class="w">       </span><span class="c1"># TCP syslog (more reliable)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Restart rsyslog</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Verify forwarding</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>logger<span class="w"> </span>-t<span class="w"> </span>sannav-test<span class="w"> </span><span class="s2">&quot;Test syslog message from SANnav&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Check SIEM for the test message</span>
+</code></pre></div>
+<hr />
+<h2 id="5-vmware-vcenter-integration">5. VMware vCenter Integration<a class="headerlink" href="#5-vmware-vcenter-integration" title="Permanent link">&para;</a></h2>
+<p>SANnav can connect to VMware vCenter to import ESXi host information, enabling correlation between host WWNs and VM names in the SANnav topology view.</p>
+<p>Configure under <strong>Administration &gt; Third-Party Integrations &gt; VMware vCenter</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter FQDN</td>
+<td><code>vcenter.corp.example.com</code></td>
+</tr>
+<tr>
+<td>Port</td>
+<td>443</td>
+</tr>
+<tr>
+<td>Username</td>
+<td>Read-only vCenter service account</td>
+</tr>
+<tr>
+<td>Password</td>
+<td>Service account password</td>
+</tr>
+</tbody>
+</table>
+<p>After successful connection, SANnav displays the ESXi hostname and VM names alongside the HBA WWN in the device inventory and topology view. This integration does not modify any vCenter configuration.</p>
+<hr />
+<h2 id="6-rest-api">6. REST API<a class="headerlink" href="#6-rest-api" title="Permanent link">&para;</a></h2>
+<p>SANnav exposes a full REST API allowing external systems to query inventory, trigger operations, and receive event data.</p>
+<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Obtain a bearer token (session token)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://sannav.corp.example.com/rest/login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentials&quot;:{&quot;loginName&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}}&#39;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Response includes: { &quot;authToken&quot;: &quot;&lt;token&gt;&quot; }</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Use the token in subsequent requests</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sannav.corp.example.com/rest/resourcegroups/all/switches<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<h3 id="useful-api-endpoints">Useful API Endpoints<a class="headerlink" href="#useful-api-endpoints" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/rest/login</code></td>
+<td>Obtain session token</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/rest/logout</code></td>
+<td>Invalidate session token</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/resourcegroups/all/switches</code></td>
+<td>List all managed switches</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/resourcegroups/all/fabrics</code></td>
+<td>List all fabrics</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/resourcegroups/{id}/events</code></td>
+<td>Get events for resource group</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/resourcegroups/all/ports</code></td>
+<td>List all ports with state</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/license</code></td>
+<td>License status</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/rest/resourcegroups/all/switches/{switchId}/firmwareupgrade</code></td>
+<td>Trigger firmware upgrade</td>
+</tr>
+</tbody>
+</table>
+<p>API documentation (Swagger UI) is available at: <code>https://&lt;sannav-ip&gt;/rest/swagger-ui.html</code></p>
+<hr />
+<h2 id="7-sannav-global-view-integration">7. SANnav Global View Integration<a class="headerlink" href="#7-sannav-global-view-integration" title="Permanent link">&para;</a></h2>
+<p>If SANnav Global View is deployed, each Management Portal must be registered with Global View. Register under <strong>Administration &gt; Global View</strong> in the Management Portal UI.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Global View URL</td>
+<td><code>https://sannav-gv.corp.example.com</code></td>
+</tr>
+<tr>
+<td>Username</td>
+<td>Global View admin account</td>
+</tr>
+<tr>
+<td>Password</td>
+<td>Admin password</td>
+</tr>
+</tbody>
+</table>
+<p>After registration, the portal sends health summaries and event data to Global View. The portal continues to operate independently if Global View connectivity is lost.</p>
 
 
 

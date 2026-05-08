@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pool-design-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool Design Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sizing-guidelines" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,6 +781,23 @@
 
 
 <h1 id="unity-standards">Unity — Standards<a class="headerlink" href="#unity-standards" title="Permanent link">&para;</a></h1>
+<h2 id="pool-design-decision-tree">Pool Design Decision Tree<a class="headerlink" href="#pool-design-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+  START([New Pool Required]) --&gt; WL{Workload Type?}
+  WL --&gt;|"Random I/O\ndatabases / VMs"| PERF{All-Flash Budget?}
+  WL --&gt;|"Sequential\nbackup / video"| CAP["RAID-5 (8+1)\nNL-SAS · Capacity pool"]
+  PERF --&gt;|Yes| AFF["All-Flash RAID-5\nNVMe · data reduction ON"]
+  PERF --&gt;|No| HYB["Hybrid RAID-10\n10K SAS + FAST Cache"]
+  AFF --&gt; ALERT["Set pool alert\nat 70% and 80%"]
+  HYB --&gt; ALERT
+  CAP --&gt; ALERT
+  ALERT --&gt; DONE([Pool ready for LUN/FS provisioning])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class WL,PERF decision
+  class AFF,HYB,CAP,ALERT action
+  class START,DONE term</code></pre>
 <h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

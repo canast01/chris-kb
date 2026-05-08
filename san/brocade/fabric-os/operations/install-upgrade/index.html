@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#firmware-upgrade-sequence-ha-director" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware Upgrade Sequence (HA Director)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#version-tracking" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -813,6 +824,24 @@
 <p>Part of the <a href="../">Operations</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="firmware-upgrade-sequence-ha-director">Firmware Upgrade Sequence (HA Director)<a class="headerlink" href="#firmware-upgrade-sequence-ha-director" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Admin
+    participant StandbyCp as Standby CP
+    participant ActiveCp as Active CP
+    participant Fabric
+
+    Admin-&gt;&gt;Admin: Pre-checks: configupload, porterrshow, fabricshow
+    Admin-&gt;&gt;StandbyCp: firmwaredownload -s -b (non-disruptive)
+    StandbyCp-&gt;&gt;StandbyCp: Download and install firmware
+    StandbyCp--&gt;&gt;Admin: firmwaredownloadstatus — complete
+    Note over StandbyCp,ActiveCp: CP failover — non-disruptive to fabric I/O
+    StandbyCp-&gt;&gt;ActiveCp: haFailover (CP switchover)
+    ActiveCp--&gt;&gt;StandbyCp: Old active CP becomes standby
+    StandbyCp-&gt;&gt;StandbyCp: Install firmware on former active CP
+    StandbyCp--&gt;&gt;Admin: firmwaredownloadstatus — complete
+    Admin-&gt;&gt;Admin: version — confirm both CPs on new FOS
+    Admin-&gt;&gt;Fabric: switchshow, fabricshow — verify fabric intact</code></pre>
 <h2 id="version-tracking">Version Tracking<a class="headerlink" href="#version-tracking" title="Permanent link">&para;</a></h2>
 <p>Fabric OS versions are tracked against the Broadcom end-of-support schedule. Version selection is driven by:</p>
 <ul>

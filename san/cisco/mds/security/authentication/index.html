@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#authentication-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#management-plane-tacacs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -949,6 +960,38 @@
 </ul>
 <p>Both layers should be configured in enterprise environments. Management plane AAA is mandatory; FC-SP is strongly recommended for high-security fabrics.</p>
 <hr />
+<h2 id="authentication-architecture">Authentication Architecture<a class="headerlink" href="#authentication-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+  subgraph "Management Plane"
+    SSH["SSH / HTTPS Login"]
+    SSH --&gt; AAA{"AAA method list"}
+    AAA --&gt;|"primary"| TACP["TACACS+ Server\n(ISE / ACS)"]
+    AAA --&gt;|"fallback if unreachable"| RAD["RADIUS Server"]
+    AAA --&gt;|"last resort"| LOCAL["Local Account\n(break-glass only)"]
+    TACP --&gt;|"auth + role AV-pair"| ROLE["Assign NX-OS Role\n(network-admin / operator)"]
+    RAD --&gt;|"auth"| ROLE
+    LOCAL --&gt;|"auth"| ROLE
+    ROLE --&gt; CMD["Command Authorization\n&amp; Accounting"]
+    CMD --&gt; SIEM["Syslog / SIEM\n(audit trail)"]
+  end
+
+  subgraph "Fabric Plane"
+    HBA2["FC Host HBA"]
+    HBA2 --&gt;|"FLOGI"| FCSP{"FC-SP DHCHAP\nenabled?"}
+    FCSP --&gt;|"Yes — authenticate"| DHCHAP["DHCHAP challenge\n(shared secret by pWWN)"]
+    DHCHAP --&gt;|"success"| FABRIC["Device joins fabric\n(FCID assigned)"]
+    DHCHAP --&gt;|"fail"| REJECT["FLOGI rejected\nDevice cannot join"]
+    FCSP --&gt;|"No — open"| FABRIC
+  end
+
+  classDef aaaNode fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef goodNode fill:#15803d,stroke:#166534,color:#fff
+  classDef badNode fill:#991b1b,stroke:#7f1d1d,color:#fff
+  classDef decisionNode fill:#b45309,stroke:#92400e,color:#fff
+  class TACP,RAD,LOCAL,DHCHAP aaaNode
+  class ROLE,CMD,FABRIC,SIEM goodNode
+  class REJECT badNode
+  class AAA,FCSP decisionNode</code></pre>
 <h2 id="management-plane-tacacs">Management Plane: TACACS+<a class="headerlink" href="#management-plane-tacacs" title="Permanent link">&para;</a></h2>
 <p>TACACS+ is the preferred AAA protocol for MDS switches. It separates authentication, authorization, and accounting — providing granular command-level auditing.</p>
 <h3 id="basic-tacacs-setup">Basic TACACS+ Setup<a class="headerlink" href="#basic-tacacs-setup" title="Permanent link">&para;</a></h3>

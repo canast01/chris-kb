@@ -837,6 +837,20 @@
 
 <h1 id="powerpath-common-issues">PowerPath — Common Issues<a class="headerlink" href="#powerpath-common-issues" title="Permanent link">&para;</a></h1>
 <h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Host I/O error or path loss]) --&gt; B["powermt display dev=all\nIdentify dead paths"]
+    B --&gt; C{"Policy = CLAROpt?"}
+    C --&gt;|No| D["powermt set policy=CLAROpt class=all\npowermt save"]
+    C --&gt;|Yes| E["powermt restore\nRetry dead paths"]
+    D --&gt; E
+    E --&gt; F{"Dead paths\nrecovered?"}
+    F --&gt;|Yes| G(["Monitor — issue resolved"])
+    F --&gt;|No| H{"HBA port\nin dead state?"}
+    H --&gt;|Yes| I["Check fabric switch port\nCheck cable / SFP"]
+    H --&gt;|No| J{"paths unlic?"}
+    J --&gt;|Yes| K["powermt check_registration\nRe-apply license key"]
+    J --&gt;|No| L["Verify array LUN masking\nCheck fabric zoning"]
+    I &amp; K &amp; L --&gt; M(["Escalate to SAN/Storage/Dell support"])</code></pre>
 <p>When a host reports I/O errors, elevated latency, or a block device is inaccessible, work through this sequence first.</p>
 <ul>
 <li>[ ] Run <code>powermt display dev=all</code> on the affected host immediately — identify which pseudo devices have dead paths and how many paths remain alive for each</li>

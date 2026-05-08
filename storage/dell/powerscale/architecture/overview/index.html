@@ -1024,6 +1024,21 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-R<span class="w"> </span>-p<span class="w"> </span>2x<span class="w"> </span>/ifs/data/critical-metadata/
 </code></pre></div>
 <h3 id="node-pool-and-tier-architecture">Node Pool and Tier Architecture<a class="headerlink" href="#node-pool-and-tier-architecture" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    cluster["OneFS Cluster\n(single /ifs namespace)"]
+
+    cluster --&gt; tierPerf["Tier: Performance"]
+    cluster --&gt; tierCap["Tier: Capacity"]
+    cluster --&gt; tierArch["Tier: Archive"]
+
+    tierPerf --&gt; poolNVMe["Node Pool: F-series NVMe\n(6 nodes — all-flash)"]
+    tierCap --&gt; poolSAS["Node Pool: H-series Hybrid\n(12 nodes — NVMe + SAS)"]
+    tierArch --&gt; poolNLSAS["Node Pool: A-series NL-SAS\n(6 nodes — high-density)"]
+
+    fpPolicy["SmartPools File Policy\n(age / path / type rules)"]
+    fpPolicy --&gt;|"hot data → Performance"| tierPerf
+    fpPolicy --&gt;|"warm data → Capacity"| tierCap
+    fpPolicy --&gt;|"cold data → Archive"| tierArch</code></pre>
 <p>Nodes of the same hardware generation and type form a <strong>node pool</strong>. Multiple node pools of different types (SSD, SAS, SATA/NL-SAS) can be grouped into <strong>tiers</strong>. File pool policies (SmartPools) control which tier data is placed on based on access time, file type, or custom criteria.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── Tier: Performance
@@ -1073,6 +1088,21 @@
 </tbody>
 </table>
 <h3 id="smartconnect-dns-load-balancing">SmartConnect — DNS Load Balancing<a class="headerlink" href="#smartconnect-dns-load-balancing" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph LR
+    parentDNS["Parent DNS Zone\nlon.storage.example.com"]
+    scZone["SmartConnect Zone\n(NS delegation → cluster nodes)"]
+    pool["IP Pool\n(node IPs: 10.1.1.1–10.1.1.6)"]
+    lbPolicy{{"LB Policy\nround-robin / cpu / throughput"}}
+    node1(["Node 1\n10.1.1.1"])
+    node2(["Node 2\n10.1.1.2"])
+    node3(["Node 3\n10.1.1.3"])
+
+    parentDNS --&gt;|"NS record delegates"| scZone
+    scZone --&gt; pool
+    pool --&gt; lbPolicy
+    lbPolicy --&gt;|"response"| node1
+    lbPolicy --&gt;|"response"| node2
+    lbPolicy --&gt;|"response"| node3</code></pre>
 <p>SmartConnect uses DNS to distribute client connection requests across the IP addresses in a pool. When a client resolves the SmartConnect zone name (e.g., <code>nfs.lon.storage.example.com</code>), the cluster's DNS service returns one of the pool IPs based on the configured load balancing policy.</p>
 <p><strong>Setup requirements:</strong>
 1. The parent DNS zone (e.g., <code>lon.storage.example.com</code>) must have an NS record delegating the SmartConnect sub-zone to the cluster's nodes.
@@ -1180,6 +1210,21 @@
 </table>
 <hr />
 <h2 id="data-path">Data Path<a class="headerlink" href="#data-path" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    client(["NFS / SMB Client"])
+    dns["SmartConnect DNS\n(zone name → node IP)"]
+    initNode["Initiator Node\n(receives I/O)"]
+    backEnd["Back-End Network\n(InfiniBand / 25-100 GbE)"]
+    storageNodes["Storage Nodes\n(stripe + parity blocks)"]
+    disk["[(DDFS on Disk)]"]
+
+    client --&gt;|"1. DNS lookup"| dns
+    dns --&gt;|"2. return node IP"| client
+    client --&gt;|"3. write request"| initNode
+    initNode --&gt;|"4. distribute stripes"| backEnd
+    backEnd --&gt; storageNodes
+    storageNodes --&gt;|"5. write confirmed"| disk
+    disk --&gt;|"6. ACK to client"| initNode</code></pre>
 <p>When a client performs a write operation over NFS or SMB:</p>
 <ol>
 <li>The client connects to a node IP from the SmartConnect pool (via DNS).</li>

@@ -739,6 +739,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#python-logging-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Logging Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#automation-jobs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -987,6 +998,23 @@
 <li>[ ] Second scheduled run also completes successfully (confirms no transient issue)</li>
 <li>[ ] Backup copy of the previous script version retained for at least 30 days</li>
 </ul>
+<h2 id="python-logging-pipeline">Python Logging Pipeline<a class="headerlink" href="#python-logging-pipeline" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    script["Python Script"]
+    logger["logging.Logger\n(getLogger)"]
+    fileHandler["TimedRotatingFileHandler\n(/var/log/automation/job.log)"]
+    streamHandler["StreamHandler\n(stdout / console)"]
+    syslogHandler["SysLogHandler\n(syslog / journald)"]
+    logFile["Log File\n(rotated daily, 30 days)"]
+    siem["SIEM / Monitoring\n(log shipper / alert rule)"]
+
+    script --&gt; logger
+    logger --&gt; fileHandler
+    logger --&gt; streamHandler
+    logger --&gt; syslogHandler
+    fileHandler --&gt; logFile
+    logFile --&gt; siem
+    syslogHandler --&gt; siem</code></pre>
 <h2 id="automation-jobs">Automation Jobs<a class="headerlink" href="#automation-jobs" title="Permanent link">&para;</a></h2>
 <h3 id="scheduling-with-cron">Scheduling with cron<a class="headerlink" href="#scheduling-with-cron" title="Permanent link">&para;</a></h3>
 <p>The simplest scheduling mechanism on Linux is cron. Use absolute paths and redirect output.</p>

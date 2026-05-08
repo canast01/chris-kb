@@ -1038,6 +1038,22 @@
 <li>The geo-replication journal records the new object. The replication service picks up journal entries and transmits them to peer VDCs according to the replication group mode (sync/async).</li>
 <li>On the remote VDC, fragments are written and the replication journal is updated. The remote VDC can now serve the object to readers.</li>
 </ol>
+<pre class="mermaid"><code>sequenceDiagram
+  participant CLT as "S3 Client"
+  participant LB as "Load Balancer"
+  participant COORD as "Coordinator Node"
+  participant DATA as "Data Nodes (N-3)"
+  participant JRNL as "Geo-Rep Journal"
+  participant REMOTE as "Remote VDC"
+  CLT-&gt;&gt;LB: PUT /bucket/key
+  LB-&gt;&gt;COORD: route request
+  COORD-&gt;&gt;COORD: chunk + erasure code
+  COORD-&gt;&gt;DATA: write EC fragments (12+4)
+  DATA--&gt;&gt;COORD: fragments committed
+  COORD--&gt;&gt;CLT: 200 OK (write acknowledged)
+  COORD-&gt;&gt;JRNL: record new object
+  JRNL-&gt;&gt;REMOTE: replicate (async/sync)
+  REMOTE--&gt;&gt;JRNL: replicated OK</code></pre>
 <h2 id="supported-api-protocols">Supported API Protocols<a class="headerlink" href="#supported-api-protocols" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

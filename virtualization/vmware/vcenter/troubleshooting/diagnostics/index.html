@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#diagnostic-priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Priority Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#service-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -931,6 +942,24 @@
 
 
 <h1 id="vcenter-diagnostics">vCenter — Diagnostics<a class="headerlink" href="#vcenter-diagnostics" title="Permanent link">&para;</a></h1>
+<h2 id="diagnostic-priority-order">Diagnostic Priority Order<a class="headerlink" href="#diagnostic-priority-order" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    incident(["Incident reported"])
+    step1["1. Check disk usage\n(df -h)\nFull partition = root cause"]
+    step2["2. Check service status\n(service-control --status --all)"]
+    step3["3. Check DNS and NTP\n(nslookup, timedatectl)"]
+    step4["4. Check certificate expiry\n(VAMI → Certificate Mgmt)"]
+    step5["5. Check SSO/STS health\n(service-control --status vmware-stsd)"]
+    step6["6. Review logs\n(vpxd.log, sso/vmware-sts-idmd.log)"]
+    step7["7. Collect vm-support bundle\nand open support case"]
+
+    incident --&gt; step1 --&gt; step2 --&gt; step3 --&gt; step4 --&gt; step5 --&gt; step6 --&gt; step7
+
+    classDef priority fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef start fill:#15803d,stroke:#166534,color:#fff
+
+    class step1,step2,step3,step4,step5,step6,step7 priority
+    class incident start</code></pre>
 <h2 id="service-health">Service Health<a class="headerlink" href="#service-health" title="Permanent link">&para;</a></h2>
 <h3 id="appliance-management-interface-vami">Appliance Management Interface (VAMI)<a class="headerlink" href="#appliance-management-interface-vami" title="Permanent link">&para;</a></h3>
 <p>Log into <code>https://&lt;vcenter&gt;:5480</code> to get an immediate overview:

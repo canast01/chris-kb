@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#protection-method-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Method Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#native-snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -878,6 +889,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#replication-failover-and-failback-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Failover and Failback Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#replication-as-dr-protection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1026,6 +1048,22 @@
 </tr>
 </tbody>
 </table>
+<h2 id="protection-method-selection">Protection Method Selection<a class="headerlink" href="#protection-method-selection" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+  FAULT([Recovery scenario]) --&gt; TYPE{What failed?}
+  TYPE --&gt;|"Accidental file delete\nor LUN corruption"| SNAP["Native Snapshot\nRPO = last snap · RTO minutes"]
+  TYPE --&gt;|"Site / array failure"| REP{RPO target?}
+  TYPE --&gt;|"VM backup"| VBR["Veeam Storage Snapshot\nintegration"]
+  TYPE --&gt;|"NAS file backup"| NDMP["NDMP to tape / object"]
+  REP --&gt;|"Zero data loss"| SYNC["Synchronous Replication\nRPO = 0"]
+  REP --&gt;|"Minutes acceptable"| ASYNC["Asynchronous Replication\nRPO = configurable"]
+  SNAP &amp; SYNC &amp; ASYNC &amp; VBR &amp; NDMP --&gt; DONE([Recovery complete])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class TYPE,REP decision
+  class SNAP,SYNC,ASYNC,VBR,NDMP action
+  class FAULT,DONE term</code></pre>
 <h2 id="native-snapshots">Native Snapshots<a class="headerlink" href="#native-snapshots" title="Permanent link">&para;</a></h2>
 <p>Unity snapshots are space-efficient redirect-on-write copies stored within the same storage pool as the source resource. They consume space only for changed blocks after the snapshot is taken.</p>
 <h3 id="snapshot-basics">Snapshot Basics<a class="headerlink" href="#snapshot-basics" title="Permanent link">&para;</a></h3>
@@ -1192,6 +1230,19 @@
 <p>Stack schedules on critical resources — assign both an hourly and a daily schedule to the same LUN or file system.</p>
 <h2 id="veeam-backup-replication-integration">Veeam Backup &amp; Replication Integration<a class="headerlink" href="#veeam-backup-replication-integration" title="Permanent link">&para;</a></h2>
 <p>Veeam integrates with Unity via the Dell Unity Storage Plugin for Veeam. When configured, Veeam triggers Unity snapshots as part of its backup job, enabling:</p>
+<pre class="mermaid"><code>sequenceDiagram
+  participant VBR as "Veeam B&amp;R Server"
+  participant UNITY as "Unity REST API"
+  participant VM as "VMware ESXi / VM"
+  participant REPO as "Veeam Repo"
+  VBR-&gt;&gt;VM: quiesce / VSS snapshot
+  VBR-&gt;&gt;UNITY: POST /prot/snap (storage snapshot)
+  UNITY--&gt;&gt;VBR: snapshot ID
+  VBR-&gt;&gt;UNITY: mount snapshot to proxy
+  VBR-&gt;&gt;REPO: transfer data from snapshot
+  REPO--&gt;&gt;VBR: transfer complete
+  VBR-&gt;&gt;UNITY: DELETE snapshot
+  note over VBR,UNITY: Snapshots accumulating = check&lt;br/&gt;Veeam job logs for delete errors</code></pre>
 <ul>
 <li>Crash-consistent Unity-level snapshots for VMs on Unity-backed datastores.</li>
 <li>Near-instant VM restore from Unity snapshots without reading backup media.</li>
@@ -1247,6 +1298,20 @@
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/net/nas/ndmp<span class="w"> </span>-id<span class="w"> </span>&lt;ndmp_id&gt;<span class="w"> </span>delete
 </code></pre></div>
 <p>Point the NDMP backup application to the NAS server IP and port 10000. Supported NDMP backup applications include Veritas NetBackup, IBM Tivoli Storage Manager, and Commvault (NDMP mode).</p>
+<h2 id="replication-failover-and-failback-flow">Replication Failover and Failback Flow<a class="headerlink" href="#replication-failover-and-failback-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  subgraph "Normal State"
+    SRC[("Source Unity\n(active)")]
+    DST[("Destination Unity\n(replica)")]
+    SRC --&gt;|"async / sync replication"| DST
+  end
+  FAIL{Source\nfails?}
+  SRC --&gt;|disaster| FAIL
+  FAIL --&gt;|Yes| FO["uemcli /prot/rep/session\n-id ... failover"]
+  FO --&gt; ACTIVE["Destination Unity\nnow active"]
+  ACTIVE --&gt; HOSTS(["Hosts redirect I/O\nto destination"])
+  HOSTS --&gt; FBCK["When source recovers\nuemcli ... reverse → sync → failback"]
+  FBCK --&gt; SRC</code></pre>
 <h2 id="replication-as-dr-protection">Replication as DR Protection<a class="headerlink" href="#replication-as-dr-protection" title="Permanent link">&para;</a></h2>
 <p>Unity asynchronous replication provides RPO-based protection to a secondary Unity or PowerStore array. See the <a href="../cli-reference/#replication">CLI Reference — Replication</a> section for full replication commands.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Show replication sessions with last sync time</span>

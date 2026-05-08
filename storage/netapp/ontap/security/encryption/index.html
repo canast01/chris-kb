@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#encryption-layer-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Layer Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#encryption-architecture-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -873,6 +884,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#key-manager-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Manager Decision
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#key-manager-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1032,6 +1054,34 @@
 
 <h1 id="ontap-encryption">ONTAP — Encryption<a class="headerlink" href="#ontap-encryption" title="Permanent link">&para;</a></h1>
 <p>ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for management interfaces and Kerberos/IPsec for data protocols. Key management is handled by the Onboard Key Manager (OKM) or an external KMIP key manager.</p>
+<h2 id="encryption-layer-architecture">Encryption Layer Architecture<a class="headerlink" href="#encryption-layer-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "Data In Transit"
+        tlsMgmt["TLS 1.2/1.3\nHTTPS · REST API · ONTAPI"]
+        kerbNFS["NFS Kerberos krb5p\nAES-256 NFS traffic"]
+        smbEnc["SMB 3.0 Encryption\nPer-share or per-SVM"]
+        smTLS["SnapMirror over TLS\nReplication traffic"]
+    end
+
+    subgraph "Data At Rest — Software"
+        nve["NVE — NetApp Volume Encryption\nAES-256 per-volume DEK"]
+        nae["NAE — NetApp Aggregate Encryption\nAES-256 per-aggregate AEK"]
+    end
+
+    subgraph "Data At Rest — Hardware"
+        nse["NSE — Self-Encrypting Drives\nHW-level AES at drive firmware"]
+    end
+
+    subgraph "Key Management"
+        okm["Onboard Key Manager\nOKM — cluster passphrase"]
+        kmip["External KMIP\nThales · IBM · HashiCorp"]
+    end
+
+    nve --&gt; okm
+    nve --&gt; kmip
+    nae --&gt; okm
+    nae --&gt; kmip
+    nse --&gt; kmip</code></pre>
 <h2 id="encryption-architecture-overview">Encryption Architecture Overview<a class="headerlink" href="#encryption-architecture-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1248,6 +1298,15 @@
 <a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="c1"># Show keys managed by external KMS</span>
 <a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>security<span class="w"> </span>key-manager<span class="w"> </span>key<span class="w"> </span>query<span class="w"> </span>-key-manager-type<span class="w"> </span>external
 </code></pre></div>
+<h3 id="key-manager-decision">Key Manager Decision<a class="headerlink" href="#key-manager-decision" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    q1{"Multi-cluster\nenvironment?"}
+    q1 --&gt;|Yes| q2{"Compliance mandate\nPCI / HIPAA / FedRAMP?"}
+    q1 --&gt;|No| q3{"External KMS\navailable?"}
+    q2 --&gt;|Yes| extKmip["External KMIP\nThales / IBM / Entrust"]
+    q2 --&gt;|No| extKmip
+    q3 --&gt;|Yes| extKmip
+    q3 --&gt;|No| okm["Onboard Key Manager\nOKM — store passphrase\nin vault"]</code></pre>
 <h3 id="key-manager-health-checks">Key Manager Health Checks<a class="headerlink" href="#key-manager-health-checks" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show overall key manager status</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>security<span class="w"> </span>key-manager<span class="w"> </span>show-key-query

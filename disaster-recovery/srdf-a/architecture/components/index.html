@@ -729,6 +729,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#delta-set-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delta-Set State Machine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cycle-state-definitions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -902,6 +913,35 @@
 <h2 id="cycle-state">Cycle State<a class="headerlink" href="#cycle-state" title="Permanent link">&para;</a></h2>
 <p>SRDF/A (asynchronous) replication uses a <strong>delta-set / cycle</strong> model instead of per-write synchronous commit. Writes are accumulated in an in-memory delta set on the R1 array during a cycle period (typically 30 seconds). At the end of each cycle the delta set is transmitted to the R2 array and applied atomically. This guarantees R2 is always in a crash-consistent state corresponding to a previous cycle boundary.</p>
 <p>The <strong>cycle state</strong> describes what the array is currently doing with the delta sets. Monitoring cycle state is the primary way to assess SRDF/A health.</p>
+<h3 id="delta-set-state-machine">Delta-Set State Machine<a class="headerlink" href="#delta-set-state-machine" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    awaitingCycle["Awaiting Cycle\n(accumulating writes)"]
+    transmitting["Transmitting\n(delta set in flight)"]
+    consistent["Consistent\n(last cycle applied at R2)"]
+    dseActive["DSE Active\n(overflow to DSE device)"]
+    suspended["Suspended\n(replication paused)"]
+    inconsistent["Inconsistent\n(R2 cannot be made consistent)"]
+    failedOver["Failed Over\n(R2 is writable)"]
+
+    awaitingCycle --&gt;|"cycle timer fires"| transmitting
+    transmitting --&gt;|"R2 confirms receipt"| consistent
+    consistent --&gt;|"new writes arrive"| awaitingCycle
+    awaitingCycle --&gt;|"write rate exceeds memory"| dseActive
+    dseActive --&gt;|"link clears / rate drops"| transmitting
+    transmitting --&gt;|"manual suspend"| suspended
+    awaitingCycle --&gt;|"manual suspend"| suspended
+    suspended --&gt;|"resume"| awaitingCycle
+    transmitting --&gt;|"link failure / data issue"| inconsistent
+    inconsistent --&gt;|"re-establish"| awaitingCycle
+    consistent --&gt;|"failover"| failedOver
+
+    style consistent fill:#15803d,color:#fff
+    style transmitting fill:#2563eb,color:#fff
+    style awaitingCycle fill:#2563eb,color:#fff
+    style dseActive fill:#b45309,color:#fff
+    style suspended fill:#6b7280,color:#fff
+    style inconsistent fill:#be123c,color:#fff
+    style failedOver fill:#be123c,color:#fff</code></pre>
 <h3 id="cycle-state-definitions">Cycle State Definitions<a class="headerlink" href="#cycle-state-definitions" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1029,24 +1069,66 @@
 <tr>
 <th>Lag Range</th>
 <th>Assessment</th>
+<th>Why it matters</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>&lt;= configured cycle time</td>
 <td>Healthy</td>
+<td>R2 is within one cycle of R1; RPO is met</td>
+<td>None — monitor</td>
 </tr>
 <tr>
 <td>2–5x cycle time</td>
 <td>Warning — investigate link or write rate</td>
+<td>RPO exposure growing; SLA may breach soon</td>
+<td>Check link utilization and write rate; engage network team</td>
 </tr>
 <tr>
 <td>&gt; 5x cycle time or SLA breach</td>
 <td>Critical — engage network and storage teams</td>
+<td>RPO SLA is breached; DR readiness compromised</td>
+<td>Immediate escalation; consider suspending non-critical CGs to relieve link pressure</td>
 </tr>
 </tbody>
 </table>
 <p>Sustained lag growth without recovery indicates under-provisioned WAN bandwidth for the current write workload. Coordinate with the network team and review <code>symstat -rdf</code> output before adjusting cycle time settings.</p>
+<pre class="mermaid"><code>flowchart TD
+    lagAlert["RPO / Lag Alert Fires"]
+    checkDSE["Check DSE Utilization\nsymrdf -g 20 -type A query -detail"]
+    dseHigh{"DSE &gt; 70%?"}
+    checkLink["Check SRDF Link\nsymcfg list -rdfg 20 -detail"]
+    linkDown{"Link Down or\nSaturated?"}
+    checkR2["Check R2 State\nsymrdf -g 20 query"]
+    r2Inconsistent{"R2 Inconsistent\nor Suspended?"}
+    throttleIO["Throttle R1 Write I/O\nor Increase WAN Bandwidth"]
+    escalateNetwork["Escalate to Network Team\nCheck FCIP tunnel"]
+    reestablish["Re-establish Replication\nsymrdf -g 20 -type A establish"]
+    monitor["Monitor Lag Trend\nevery 5 minutes"]
+    resolved["Lag Recovering\nClose Alert"]
+
+    lagAlert --&gt; checkDSE
+    checkDSE --&gt; dseHigh
+    dseHigh --&gt;|"Yes"| throttleIO
+    dseHigh --&gt;|"No"| checkLink
+    throttleIO --&gt; monitor
+    checkLink --&gt; linkDown
+    linkDown --&gt;|"Yes"| escalateNetwork
+    linkDown --&gt;|"No"| checkR2
+    escalateNetwork --&gt; monitor
+    checkR2 --&gt; r2Inconsistent
+    r2Inconsistent --&gt;|"Yes"| reestablish
+    r2Inconsistent --&gt;|"No"| monitor
+    reestablish --&gt; monitor
+    monitor --&gt;|"Lag declining"| resolved
+
+    style lagAlert fill:#be123c,color:#fff
+    style resolved fill:#15803d,color:#fff
+    style throttleIO fill:#b45309,color:#fff
+    style escalateNetwork fill:#b45309,color:#fff
+    style reestablish fill:#7c3aed,color:#fff</code></pre>
 
 
 

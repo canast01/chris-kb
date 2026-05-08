@@ -861,6 +861,17 @@
 </tbody>
 </table>
 <h2 id="mtree-naming-convention">MTree Naming Convention<a class="headerlink" href="#mtree-naming-convention" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    dd["Data Domain\nFilesystem Root\n/data/col1/"]
+
+    dd --&gt; veeamProd["mtree-veeam-prod\n(quota: 10 TiB hard)"]
+    dd --&gt; veeamDev["mtree-veeam-dev\n(quota: 2 TiB hard)"]
+    dd --&gt; nbOracle["mtree-netbackup-ora\n(quota: 5 TiB hard)"]
+    dd --&gt; cvSQL["mtree-commvault-sql\n(quota: 8 TiB hard)"]
+
+    veeamProd --&gt;|"DD Boost SU"| suVeeam["Storage Unit: su-veeam-prod\nUser: ddboost-veeam"]
+    nbOracle --&gt;|"DD Boost SU"| suNB["Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup"]
+    cvSQL --&gt;|"DD Boost SU"| suCV["Storage Unit: su-commvault-sql\nUser: ddboost-commvault"]</code></pre>
 <p>Pattern: <code>mtree-&lt;backup-tool&gt;-&lt;client-group&gt;</code></p>
 <table>
 <thead>

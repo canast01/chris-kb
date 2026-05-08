@@ -898,6 +898,19 @@
 
 <h1 id="powerpath-health-checks">PowerPath — Health Checks<a class="headerlink" href="#powerpath-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="daily-health-check">Daily Health Check<a class="headerlink" href="#daily-health-check" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Daily Health Check]) --&gt; B["powermt display dev=all\nScan for dead paths"]
+    B --&gt; C{"Any dead paths?"}
+    C --&gt;|No| D["Verify policy = CLAROpt\npowermt display options"]
+    C --&gt;|Yes| E["powermt restore\nForce path retry"]
+    E --&gt; F{"Paths recovered?"}
+    F --&gt;|Yes| G["powermt save\nPersist state"]
+    F --&gt;|No| H{"HBA port\ndead?"}
+    H --&gt;|Yes| I["Check SAN switch port\nCheck cable/SFP"]
+    H --&gt;|No| J["Check array FA port\nVerify LUN masking"]
+    I &amp; J --&gt; K(["Escalate to SAN/Storage team"])
+    D --&gt; G
+    G --&gt; Z([Check complete])</code></pre>
 <table>
 <thead>
 <tr>

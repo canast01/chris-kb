@@ -1035,6 +1035,17 @@
 <p>Backup configuration, restore procedures, and validation for Dell PowerScale.</p>
 </blockquote>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    prod["Production Data\n/ifs/data/..."]
+
+    prod --&gt;|"SnapshotIQ\n(local, minutes–hours RPO)"| snap["[(Snapshots)]\n/ifs/.snapshot/"]
+    prod --&gt;|"SyncIQ\n(async replication, 1–4 hr RPO)"| drCluster["DR PowerScale Cluster\n/ifs/replicated/..."]
+    prod --&gt;|"NDMP\n(backup schedule RPO)"| ndmpTarget["Tape / Disk\nvia NDMP three-way"]
+    prod --&gt;|"Veeam NAS Backup\n(schedule RPO)"| veeamRepo["Veeam Repository\n(hardened or scale-out)"]
+
+    snap --&gt;|"file copy / rsync\nor snapshot revert"| restore1(["File/Dir Restore\n&lt; 60 min"])
+    drCluster --&gt;|"SyncIQ failover\n(DNS/DFS update)"| restore2(["Cluster Failover\n15–60 min"])
+    veeamRepo --&gt;|"file-level or full\nshare restore"| restore3(["Veeam Restore\nhours"])</code></pre>
 <p>PowerScale provides several complementary mechanisms for data protection and recovery. Selecting the right combination depends on the RPO, RTO, and retention requirements for each data set.</p>
 <table>
 <thead>

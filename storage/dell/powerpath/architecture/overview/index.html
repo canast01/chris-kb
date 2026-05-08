@@ -798,6 +798,21 @@
 - <strong>BasicFailover</strong> (<code>bf</code>) — uses one path, fails over to another on failure; no load balancing</p>
 <p>On path failure, PowerPath automatically marks the path <code>dead</code> and re-routes I/O to remaining <code>alive</code> paths within milliseconds. When <code>powermt restore</code> is run (or periodically by the daemon), dead paths are retested and promoted back to <code>alive</code> if they recover.</p>
 <h2 id="high-availability-design">High Availability Design<a class="headerlink" href="#high-availability-design" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    io(["Application I/O"]) --&gt; ppDriver["PowerPath\nMPIO Driver"]
+
+    ppDriver --&gt; pathCheck{{"Path health\ncheck"}}
+    pathCheck --&gt;|"alive paths exist"| lbPolicy{{"CLAROpt LB Policy\n(ALUA-aware)"}}
+    pathCheck --&gt;|"all paths dead"| ioErr(["I/O Error\n(alert ops team)"])
+
+    lbPolicy --&gt;|"optimised path"| hba0Fab1["HBA0 → Fabric A → SP-A\n(Active-Optimised)"]
+    lbPolicy --&gt;|"failover path"| hba1Fab2["HBA1 → Fabric B → SP-B\n(Active-Non-Optimised)"]
+
+    hba0Fab1 --&gt; array["Storage Array\n(PowerMax / Unity)"]
+    hba1Fab2 --&gt; array
+
+    pathFail(["Path Failure"]) --&gt;|"dead path detected"| ppDriver
+    ppDriver --&gt;|"powermt restore\n(auto + manual)"| hba0Fab1</code></pre>
 <p>PowerPath provides host-side HA through multipath redundancy. Key design principles:</p>
 <ul>
 <li>Minimum 2 paths per LUN (one per fabric/HBA) for basic redundancy</li>

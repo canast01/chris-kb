@@ -739,6 +739,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#patching-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patching Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -776,6 +787,17 @@
     <span class="md-ellipsis">
       
         Package Repository Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#os-component-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OS Component Stack
       
     </span>
   </a>
@@ -910,6 +932,17 @@
 </tbody>
 </table>
 <p>Application data in a separate VG (<code>vg_data</code>) — sized per role.</p>
+<h2 id="patching-workflow">Patching Workflow<a class="headerlink" href="#patching-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    checkUpdate["dnf check-update\napt list --upgradable"]
+    preCapture["Capture state\npackage list · kernel version"]
+    testEnv["Apply to\nnon-production"]
+    testValidate["Validate\nservices · logs"]
+    prodApply["Apply to\nproduction"]
+    reboot["Reboot if\nkernel changed"]
+    postValidate["Post-patch\nvalidation"]
+
+    checkUpdate --&gt; preCapture --&gt; testEnv --&gt; testValidate --&gt; prodApply --&gt; reboot --&gt; postValidate</code></pre>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH key-based authentication only</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># /etc/ssh/sshd_config enforced via Ansible</span>
@@ -946,6 +979,15 @@
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>deb<span class="w"> </span>http://mirror.corp.local/ubuntu<span class="w"> </span>jammy<span class="w"> </span>main<span class="w"> </span>restricted<span class="w"> </span>universe
 </code></pre></div></p>
 <p>No direct internet access from production servers — all package traffic via mirror.</p>
+<h2 id="os-component-stack">OS Component Stack<a class="headerlink" href="#os-component-stack" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    hwLayer["Hardware\nCPU · RAM · NIC · Disk"]
+    kernelCore["Linux Kernel\nsyscall interface · drivers · schedulers"]
+    initSys["Init System\nsystemd — units · targets"]
+    sysServices["System Services\nsshd · chronyd · rsyslog · firewalld"]
+    appLayer["Applications\nweb · database · monitoring agents"]
+
+    hwLayer --&gt; kernelCore --&gt; initSys --&gt; sysServices --&gt; appLayer</code></pre>
 <h2 id="software-installation-policy">Software Installation Policy<a class="headerlink" href="#software-installation-policy" title="Permanent link">&para;</a></h2>
 <ul>
 <li>All packages installed from approved repositories only</li>

@@ -725,6 +725,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Priority Tiers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protection-group-to-recovery-plan-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group to Recovery Plan Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -859,6 +876,30 @@
 </tr>
 </tbody>
 </table>
+<h3 id="protection-group-to-recovery-plan-mapping">Protection Group to Recovery Plan Mapping<a class="headerlink" href="#protection-group-to-recovery-plan-mapping" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    subgraph p1Tier [Priority 1 — SRDF/S Sync]
+        pgDB["PG-DB-DC1DC2\n(Oracle, MSSQL)"]
+        pgInfra["PG-INFRA-DC1DC2\n(AD, DNS)"]
+    end
+    subgraph p2Tier [Priority 2 — vSphere Replication]
+        pgApp["PG-APP-DC1DC2\n(Business apps)"]
+        pgFile["PG-FILE-DC1DC2\n(File servers)"]
+    end
+    subgraph p3Tier [Priority 3 — Async array rep]
+        pgDev["PG-DEV-DC1DC2\n(Dev mirrors)"]
+    end
+
+    pgDB --&gt; rpP1["RP-P1-CRITICAL\nRTO &lt; 15 min"]
+    pgInfra --&gt; rpP1
+    pgApp --&gt; rpP2["RP-P2-BUSINESS\nRTO &lt; 1 hr"]
+    pgFile --&gt; rpP2
+    pgDev --&gt; rpP3["RP-P3-NONCRIT\nRTO &lt; 4 hr"]
+
+    classDef pg fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef rp fill:#2563eb,stroke:#1d4ed8,color:#fff
+    class pgDB,pgInfra,pgApp,pgFile,pgDev pg
+    class rpP1,rpP2,rpP3 rp</code></pre>
 <h2 id="recovery-plan-design">Recovery Plan Design<a class="headerlink" href="#recovery-plan-design" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Power-on sequence is mandatory: infrastructure VMs (DC, DNS) → DB tier → APP tier → WEB tier</li>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#backup-job-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Job Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -746,6 +757,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Restore Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restore-workflow-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Workflow Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -803,6 +831,27 @@
 
 
 <h1 id="commvault-cli-reference">Commvault — CLI Reference<a class="headerlink" href="#commvault-cli-reference" title="Permanent link">&para;</a></h1>
+<h2 id="backup-job-lifecycle">Backup Job Lifecycle<a class="headerlink" href="#backup-job-lifecycle" title="Permanent link">&para;</a></h2>
+<p>From schedule trigger to media write, every CommVault backup job moves through a defined sequence of states.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Sched as Scheduler (CommServe)
+    participant JM as Job Manager
+    participant Client as Client Agent
+    participant MA as MediaAgent
+    participant DDB as DDB (dedup store)
+    participant Storage as Storage Library
+
+    Sched-&gt;&gt;JM: Trigger job per schedule policy
+    JM-&gt;&gt;Client: Initiate backup — send job token
+    Client-&gt;&gt;Client: Quiesce filesystem / app (VSS)
+    Client-&gt;&gt;MA: Stream data (TCP 8403)
+    MA-&gt;&gt;DDB: Deduplicate data blocks
+    DDB--&gt;&gt;MA: Unique blocks only
+    MA-&gt;&gt;Storage: Write to primary copy (disk library)
+    Storage--&gt;&gt;MA: Write confirmed
+    MA--&gt;&gt;JM: Job complete — update catalog
+    JM--&gt;&gt;Sched: Job status: Completed
+    note over MA,Storage: Auxiliary copy job (separate schedule)\ncopies from primary to secondary (offsite/tape/cloud)</code></pre>
 <p>CommVault provides the <code>qcommand</code> CLI toolkit installed with CommServe and MediaAgent. The <code>q*</code> commands connect to CommServe using OS credentials or an explicit login. The REST API base URL is <code>https://&lt;CommServeHostname&gt;/webconsole/api/</code> and requires token-based authentication via <code>POST /Login</code>.</p>
 <hr />
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
@@ -854,6 +903,34 @@
 </code></pre></div>
 <hr />
 <h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
+<h3 id="restore-workflow-decision-tree">Restore Workflow Decision Tree<a class="headerlink" href="#restore-workflow-decision-tree" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    restoreStart(["Restore request received"])
+    restoreStart --&gt; q1{What needs\nto be restored?}
+
+    q1 --&gt;|"One or more files"| q2{Windows\nor Linux?}
+    q1 --&gt;|"Entire volume\nor VM disk"| volumeRestore["Volume-level restore\nqoperation restore\n-subclient -topath"]
+    q1 --&gt;|"Full VM"| vmRestore["Full VM restore\n(VSA subclient)\nrestore to alternate location"]
+    q1 --&gt;|"Application data\n(SQL, Oracle, Exchange)"| appRestore["Application-aware restore\nPoint-in-time log replay\nor granular item restore"]
+
+    q2 --&gt;|"Windows"| winFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
+    q2 --&gt;|"Linux"| linFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
+
+    volumeRestore --&gt; verifyDest["Verify destination\nhas sufficient space"]
+    vmRestore --&gt; verifyDest
+    appRestore --&gt; verifyDest
+    winFlr --&gt; verifyDest
+    linFlr --&gt; verifyDest
+
+    verifyDest --&gt; execute["Execute restore\nMonitor in Job Controller"]
+    execute --&gt; validate(["Validate restored\ndata integrity"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class volumeRestore,vmRestore,appRestore,winFlr,linFlr,verifyDest,execute action
+    class q1,q2 decision
+    class restoreStart,validate terminal</code></pre>
 <p>Always verify destination and time range before executing a restore.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restore to original location at a point in time</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>qoperation<span class="w"> </span>restore<span class="w"> </span>-subclient<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-totime<span class="w"> </span><span class="s2">&quot;2024-01-01 12:00:00&quot;</span>

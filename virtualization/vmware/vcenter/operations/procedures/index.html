@@ -941,6 +941,25 @@
 </table>
 <hr />
 <h2 id="maintenance-window-procedure">Maintenance Window Procedure<a class="headerlink" href="#maintenance-window-procedure" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    preStart(["Start maintenance window"])
+    backup["Take VCSA file-based\nbackup (VAMI → Backup)"]
+    checkDisk["Check disk space\n(df -h)"]
+    checkHA["Check HA admission\ncontrol capacity"]
+    notify["Notify stakeholders\n(workloads continue on ESXi)"]
+    doWork["Perform maintenance\n(update / service restart)"]
+    monLogs["Monitor vpxd.log\nduring changes"]
+    validate["Post-maintenance validation:\nservices, hosts, DRS/HA, API"]
+    closeChange["Close change ticket\nwith evidence"]
+    preEnd(["Maintenance complete"])
+
+    preStart --&gt; backup --&gt; checkDisk --&gt; checkHA --&gt; notify --&gt; doWork --&gt; monLogs --&gt; validate --&gt; closeChange --&gt; preEnd
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef gate fill:#15803d,stroke:#166534,color:#fff
+
+    class backup,checkDisk,checkHA,notify,doWork,monLogs,validate,closeChange step
+    class preStart,preEnd gate</code></pre>
 <h3 id="pre-maintenance-steps">Pre-Maintenance Steps<a class="headerlink" href="#pre-maintenance-steps" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Take a VCSA backup via VAMI → Backup, or confirm last backup is current (&lt; 24 hours old)</li>

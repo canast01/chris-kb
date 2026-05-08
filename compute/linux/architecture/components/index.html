@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#linux-storage-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux Storage Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#init-system-and-services" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -732,6 +743,17 @@
     <span class="md-ellipsis">
       
         Package Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-network-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux Network Stack
       
     </span>
   </a>
@@ -862,6 +884,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lvm-layer-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LVM Layer Model
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1043,6 +1076,16 @@
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg_system/lv_var
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>xfs_growfs<span class="w"> </span>/var
 </code></pre></div></p>
+<h2 id="linux-storage-stack">Linux Storage Stack<a class="headerlink" href="#linux-storage-stack" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    appLayer["Application\n(read/write syscall)"]
+    vfsLayer["VFS\nVirtual File System"]
+    fsLayer["Filesystem\nxfs / ext4"]
+    blockLayer["Block Layer\nI/O scheduler"]
+    driverLayer["Device Driver\nscsi / nvme"]
+    diskLayer["Physical Disk\nSSD / HDD / SAN LUN"]
+
+    appLayer --&gt; vfsLayer --&gt; fsLayer --&gt; blockLayer --&gt; driverLayer --&gt; diskLayer</code></pre>
 <h2 id="init-system-and-services">Init System and Services<a class="headerlink" href="#init-system-and-services" title="Permanent link">&para;</a></h2>
 <p>systemd manages all services:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Common service management</span>
@@ -1066,6 +1109,21 @@
 </code></pre></div>
 <p>Repositories locked to approved internal mirrors — no direct internet access from production servers.</p>
 <hr />
+<h2 id="linux-network-stack">Linux Network Stack<a class="headerlink" href="#linux-network-stack" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph userspace["Userspace"]
+        appProc["Application Process"]
+        sockApi["Socket API\n(BSD sockets)"]
+    end
+    subgraph kernelNet["Kernel Network Stack"]
+        tcpUdp["TCP / UDP"]
+        ipLayer["IP Layer\nrouting · NAT"]
+        netfilter["Netfilter\niptables · nftables"]
+        nicDriver["NIC Driver"]
+    end
+    physNic["Physical / Virtual NIC\neth0 · bond0 · vlan"]
+
+    appProc --&gt; sockApi --&gt; tcpUdp --&gt; ipLayer --&gt; netfilter --&gt; nicDriver --&gt; physNic</code></pre>
 <h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
 <p>Standard network configuration (nmcli / Netplan):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># RHEL — configure bonded interface with VLAN</span>
@@ -1248,6 +1306,16 @@
 <a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>mtr<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>.0.0.1<span class="w">   </span><span class="c1"># Continuous trace with packet loss stats</span>
 </code></pre></div>
 <hr />
+<h2 id="lvm-layer-model">LVM Layer Model<a class="headerlink" href="#lvm-layer-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    physDisk["Physical Disk\n/dev/sdb · /dev/sdc"]
+    pv["Physical Volumes\npvcreate"]
+    vg["Volume Group\nvg_system · vg_data"]
+    lv["Logical Volumes\nlv_root · lv_var · lv_app"]
+    fs["Filesystems\nxfs · ext4 · swap"]
+    mnt["Mount Points\n/ · /var · /tmp · /opt/app"]
+
+    physDisk --&gt; pv --&gt; vg --&gt; lv --&gt; fs --&gt; mnt</code></pre>
 <h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
 <p>Disk, LVM, filesystem, and mount management on RHEL and Ubuntu.</p>
 <h3 id="disk-and-block-device-overview">Disk and Block Device Overview<a class="headerlink" href="#disk-and-block-device-overview" title="Permanent link">&para;</a></h3>

@@ -804,6 +804,27 @@
 
 <h1 id="superna-eyeglass-integrations">Superna Eyeglass — Integrations<a class="headerlink" href="#superna-eyeglass-integrations" title="Permanent link">&para;</a></h1>
 <h2 id="netapp-powerscale-synciq">NetApp PowerScale (SyncIQ)<a class="headerlink" href="#netapp-powerscale-synciq" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TB
+    subgraph "Production Site"
+        primaryPS["PowerScale Cluster A\n(Production)"]
+        synciqPol["SyncIQ Policies\nContinuous / Scheduled"]
+    end
+    subgraph "DR Site"
+        drPS["PowerScale Cluster B\n(DR)"]
+    end
+    subgraph "Management Plane"
+        eyeglass["Superna Eyeglass\nDR Assistant"]
+        ad["Active Directory\nAD group ACLs"]
+        dns["DNS Server\nWindows DNS / BIND"]
+        siem["SIEM / Monitoring\nSNMP / Syslog"]
+    end
+
+    primaryPS --&gt;|"SyncIQ replication"| drPS
+    eyeglass --&gt;|"OneFS REST API\nmonitors SyncIQ"| primaryPS
+    eyeglass --&gt;|"OneFS REST API\nchecks DR readiness"| drPS
+    ad --&gt;|"AD group mapping\nfor share ACLs"| eyeglass
+    eyeglass --&gt;|"DNS cutover\nzone delegation"| dns
+    eyeglass --&gt;|"SNMP traps\nsyslog events"| siem</code></pre>
 <p>Eyeglass uses the OneFS REST API to discover and monitor SyncIQ replication policies:</p>
 <ol>
 <li>Add the PowerScale cluster in Eyeglass Admin UI: Configuration → Cluster → Add Cluster</li>
@@ -856,6 +877,15 @@
 - <code>eyeglassDRReadinessChanged</code> — readiness score drops below 100%
 - <code>eyeglassSyncIQLagAlarm</code> — RPO threshold breached
 - <code>eyeglassFailoverStarted</code> / <code>eyeglassFailoverCompleted</code></p>
+<pre class="mermaid"><code>flowchart LR
+    eyeglass["Eyeglass Appliance"]
+    ariaOps["Aria Operations\nSNMP MIB imported"]
+    siem["SIEM\nSyslog port 514 / 6514"]
+    email["Email\nDistribution list"]
+
+    eyeglass --&gt;|"SNMP traps\nUDP 162"| ariaOps
+    eyeglass --&gt;|"syslog\nUDP 514 / TLS 6514"| siem
+    eyeglass --&gt;|"SMTP notifications\nfailover / readiness events"| email</code></pre>
 <h2 id="syslog-siem">Syslog / SIEM<a class="headerlink" href="#syslog-siem" title="Permanent link">&para;</a></h2>
 <p>Forward Eyeglass audit trail to SIEM:</p>
 <ol>

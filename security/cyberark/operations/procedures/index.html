@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#password-rotation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Rotation Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#account-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -883,6 +894,18 @@
 
 <h1 id="cyberark-procedures">CyberArk — Procedures<a class="headerlink" href="#cyberark-procedures" title="Permanent link">&para;</a></h1>
 <p>Operational procedures for account management, password rotation, session management, and audit tasks.</p>
+<h2 id="password-rotation-workflow">Password Rotation Workflow<a class="headerlink" href="#password-rotation-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    trigger["Rotation trigger\n(scheduled / on-demand / post-checkout)"]
+    trigger --&gt; cpmRetrieve["CPM retrieves current credential\nfrom Vault"]
+    cpmRetrieve --&gt; connectTarget["CPM connects to target system\nusing current credential"]
+    connectTarget --&gt; generatePwd["Generate new password\n(platform plugin policy)"]
+    generatePwd --&gt; setPwd["Set new password on target\n(RDP / SSH / API)"]
+    setPwd --&gt; verify["Verify new password works\n(CPM test logon)"]
+    verify --&gt;|"Success"| storeVault["Store new credential in Vault"]
+    verify --&gt;|"Failure"| rollback["Log failure + alert\nRetry on next cycle"]
+    storeVault --&gt; auditLog["Write audit event to SIEM"]</code></pre>
+<hr />
 <h2 id="account-management">Account Management<a class="headerlink" href="#account-management" title="Permanent link">&para;</a></h2>
 <p>Use this section for practical account management procedures, checks, and field references.</p>
 <h3 id="common-checks">Common Checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h3>

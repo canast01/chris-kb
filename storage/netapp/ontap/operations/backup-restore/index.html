@@ -778,6 +778,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#snapmirror-relationship-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SnapMirror Relationship Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snapmirror-failover-dr-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -788,6 +799,17 @@
   
     <nav class="md-nav" aria-label="SnapMirror Failover (DR Restore)">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dr-failover-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Failover Sequence
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#standard-failover-procedure" class="md-nav__link">
@@ -1087,8 +1109,55 @@
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>volume<span class="w"> </span>clone<span class="w"> </span>delete<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-flexclone<span class="w"> </span>&lt;clone_name&gt;
 </code></pre></div>
 <hr />
+<h2 id="snapmirror-relationship-types">SnapMirror Relationship Types<a class="headerlink" href="#snapmirror-relationship-types" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    subgraph "Primary Site"
+        srcVol["Source Volume\n(SVM / vol)"]
+    end
+
+    subgraph "Secondary Site"
+        dstAsync["Async Destination\n(DP — XDP)"]
+        dstSync["Sync Destination\n(SM Sync)"]
+    end
+
+    subgraph "Vault Site"
+        dstVault["SnapVault Destination\n(XDP — vault policy)"]
+    end
+
+    subgraph "SMBC Peer"
+        dstSMBC["SMBC Destination\n(zero RPO/RTO)"]
+        mediator["ONTAP Mediator"]
+    end
+
+    srcVol --&gt;|"async replication\nlag: minutes–hours"| dstAsync
+    srcVol --&gt;|"synchronous write\nconfirmation"| dstSync
+    srcVol --&gt;|"long-term retention\nindependent snapshots"| dstVault
+    srcVol &lt;--&gt;|"bidirectional sync\ntransparent failover"| dstSMBC
+    mediator -. "quorum witness" .-&gt; dstSMBC</code></pre>
+<hr />
 <h2 id="snapmirror-failover-dr-restore">SnapMirror Failover (DR Restore)<a class="headerlink" href="#snapmirror-failover-dr-restore" title="Permanent link">&para;</a></h2>
 <p>SnapMirror replicates volumes asynchronously to a destination cluster or SVM. The destination volume is read-only under normal operation. Failover (breaking the relationship) makes it writable for disaster recovery.</p>
+<h3 id="dr-failover-sequence">DR Failover Sequence<a class="headerlink" href="#dr-failover-sequence" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Admin
+    participant SrcCluster as Source Cluster
+    participant DstCluster as Destination Cluster
+    participant DRHosts as DR Hosts
+
+    Admin-&gt;&gt;DstCluster: snapmirror show (check lag)
+    DstCluster--&gt;&gt;Admin: lag-time, last-transfer-end
+    Admin-&gt;&gt;DstCluster: snapmirror quiesce
+    DstCluster--&gt;&gt;Admin: quiesced
+    Admin-&gt;&gt;DstCluster: snapmirror break
+    DstCluster--&gt;&gt;Admin: destination now writable
+    Admin-&gt;&gt;DstCluster: volume mount / create shares
+    Admin-&gt;&gt;DRHosts: mount NFS / present iSCSI LUNs
+    DRHosts--&gt;&gt;Admin: I/O active on DR site
+
+    Note over SrcCluster,DstCluster: Primary site recovered
+    Admin-&gt;&gt;DstCluster: snapmirror resync (DR→Primary)
+    Admin-&gt;&gt;SrcCluster: snapmirror break (Primary)
+    Admin-&gt;&gt;DstCluster: snapmirror resync (restore original)</code></pre>
 <h3 id="standard-failover-procedure">Standard Failover Procedure<a class="headerlink" href="#standard-failover-procedure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Confirm the relationship state and last successful transfer</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;<span class="w"> </span><span class="se">\</span>

@@ -883,6 +883,24 @@
 <h1 id="superna-eyeglass-procedures">Superna Eyeglass — Procedures<a class="headerlink" href="#superna-eyeglass-procedures" title="Permanent link">&para;</a></h1>
 <h2 id="failover">Failover<a class="headerlink" href="#failover" title="Permanent link">&para;</a></h2>
 <p>Eyeglass DR Assistant orchestrates failover of PowerScale (Isilon) access zones from a production cluster to a DR cluster. Failover includes stopping SyncIQ replication, activating DR access zones, and remapping NFS/SMB shares and DNS entries.</p>
+<pre class="mermaid"><code>flowchart TD
+    detect(["Detect: Production\ncluster unavailable / event declared"])
+    validateRPO["Validate RPO\nCheck SyncIQ lag vs threshold"]
+    preflight["egcli drtest preflight\nConfirm DR prerequisites"]
+    ready{DR Ready?}
+    noGo["Escalate — prerequisites\nnot met"]
+    triggerFO["egcli drfailover\n--policy POLICY --confirm"]
+    breakSync["Break SyncIQ replication\nDR cluster becomes writable"]
+    activateZones["Activate DR access zones\nReconfigure NFS/SMB shares"]
+    dnsSwitch["DNS cutover\nSmartConnect zone → DR VIP pool"]
+    notify["Notify stakeholders\nSNMP / Email alert"]
+    validate["Validate client access\nNFS mounts, SMB shares, DNS"]
+    done(["DR cluster active\nMonitor and plan failback"])
+
+    detect --&gt; validateRPO --&gt; preflight --&gt; ready
+    ready --&gt;|No| noGo
+    ready --&gt;|Yes| triggerFO
+    triggerFO --&gt; breakSync --&gt; activateZones --&gt; dnsSwitch --&gt; notify --&gt; validate --&gt; done</code></pre>
 <table>
 <thead>
 <tr>
@@ -1055,6 +1073,28 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart LR
+    subgraph "Normal Operation"
+        prodCluster["Production\nPowerScale"]
+        synciq["SyncIQ Policy\n(prod → DR)"]
+        drCluster["DR\nPowerScale"]
+        prodCluster --&gt;|replicates| synciq --&gt; drCluster
+    end
+
+    subgraph "During Failover"
+        drActive["DR Cluster\nActive"]
+        revSync["Reverse SyncIQ\n(DR → prod)"]
+    end
+
+    subgraph "Failback"
+        prodRestore["Production\nCluster Restored"]
+        dnsBack["DNS → Production\nSmartConnect"]
+        validated(["Replication\nresumed prod → DR"])
+    end
+
+    drCluster --&gt;|"failover declared\nSyncIQ broken"| drActive
+    drActive --&gt;|"reverse sync\nuser data back to prod"| revSync --&gt; prodRestore
+    prodRestore --&gt; dnsBack --&gt; validated</code></pre>
 <h3 id="pre-failback-checklist">Pre-Failback Checklist<a class="headerlink" href="#pre-failback-checklist" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm production PowerScale cluster is online and healthy</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>status

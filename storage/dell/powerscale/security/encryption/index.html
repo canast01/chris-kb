@@ -952,6 +952,23 @@
 <p>TLS certificate management and data encryption for Dell PowerScale.</p>
 </blockquote>
 <h2 id="encryption-layers">Encryption Layers<a class="headerlink" href="#encryption-layers" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    subgraph "Data at Rest"
+        sed["SED Drives\nAES-256 (SmartEncrypt)"]
+        kmip["Key Manager\nInternal or KMIP external"]
+        sed --- kmip
+    end
+
+    subgraph "Data in Transit"
+        syncTLS["SyncIQ Replication\nTLS (--encryption-required)"]
+        smbEnc["SMB3 Encryption\nper-share or per-zone"]
+        nfsKrb["NFSv4 krb5p\nKerberos privacy mode"]
+        mgmtTLS["Management HTTPS\nTLS 1.2+ min"]
+    end
+
+    subgraph "Object Protocol"
+        s3HTTPS["S3 HTTPS-only\nper access zone"]
+    end</code></pre>
 <table>
 <thead>
 <tr>

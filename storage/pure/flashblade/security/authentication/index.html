@@ -699,6 +699,130 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-mechanisms-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Mechanisms Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-account-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Account Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-directory-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Active Directory Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#join-flashblade-to-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Join FlashBlade to Active Directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map-ad-groups-to-purity-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Map AD Groups to Purity Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smb-and-kerberos-nfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMB and Kerberos NFS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-integration-non-ad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Integration (Non-AD)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saml-sso-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAML SSO Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-token-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Token Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-audit-and-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Audit and Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -722,10 +846,337 @@
 <p>Part of the <a href="../">FlashBlade Security</a> reference.</p>
 </blockquote>
 <hr />
-<blockquote>
-<p>This page is a stub. Authentication configuration for FlashBlade will be documented here, covering Active Directory integration, LDAP for NFS UID/GID mapping, SAML SSO configuration, local account management, and API token management.</p>
-</blockquote>
-<p>For current authentication reference, see the <a href="../../architecture/integrations/#authentication">Integrations — Authentication</a> section.</p>
+<p>This page covers all authentication mechanisms available in Purity//FB: local accounts, Active Directory integration for SMB and admin access, LDAP for NFS UID/GID mapping, SAML SSO for the management GUI, and API token management for automation.</p>
+<hr />
+<h2 id="authentication-mechanisms-summary">Authentication Mechanisms Summary<a class="headerlink" href="#authentication-mechanisms-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>Use Case</th>
+<th>Recommended?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local accounts</td>
+<td>Break-glass admin access; initial setup</td>
+<td>Limited — local accounts only for named admins and emergency access</td>
+</tr>
+<tr>
+<td>Active Directory (AD)</td>
+<td>SMB share access; optional Kerberos for NFS; admin authentication via LDAP</td>
+<td>Yes — required for SMB; recommended for NFS in AD environments</td>
+</tr>
+<tr>
+<td>LDAP (non-AD)</td>
+<td>NFS UID/GID mapping in Linux-only environments</td>
+<td>Yes — for Linux-centric deployments without AD</td>
+</tr>
+<tr>
+<td>SAML SSO</td>
+<td>Management GUI and CLI authentication for admin users</td>
+<td>Yes — enforces IdP-managed MFA; preferred for production</td>
+</tr>
+<tr>
+<td>API tokens</td>
+<td>REST API and CLI access for automation and service accounts</td>
+<td>Yes — for all non-interactive access</td>
+</tr>
+<tr>
+<td>Kerberos (NFS)</td>
+<td>Encrypted and authenticated NFS sessions (krb5/krb5i/krb5p)</td>
+<td>Yes — for environments requiring NFS in-flight authentication</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="local-account-management">Local Account Management<a class="headerlink" href="#local-account-management" title="Permanent link">&para;</a></h2>
+<p>Local accounts are stored on the FlashBlade itself and do not depend on any external directory service. Use local accounts for the break-glass emergency admin account and for initial array setup before AD or SAML is configured.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all local admin accounts and their roles</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Create a named local admin account</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span>--name<span class="w"> </span>s.jones<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>--role<span class="w"> </span>array_admin
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Create a storage operations account (lower privilege)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span>--name<span class="w"> </span>p.smith<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span>--role<span class="w"> </span>storage_admin
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Create a read-only account for monitoring tools</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span>--name<span class="w"> </span>svc-monitoring<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span>--role<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Set or change a password for an account</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>purefb<span class="w"> </span>admin<span class="w"> </span>update<span class="w"> </span>--name<span class="w"> </span>s.jones<span class="w"> </span>--password
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Enter password at the prompt — passwords are not echoed</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Delete a local account that is no longer needed</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>purefb<span class="w"> </span>admin<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>old-admin
+</code></pre></div>
+<p><strong>Roles reference:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>array_admin</code></td>
+<td>Full access — system configuration, user management, all data operations</td>
+</tr>
+<tr>
+<td><code>storage_admin</code></td>
+<td>Manage filesystems, buckets, snapshots, replication; cannot modify system or user config</td>
+</tr>
+<tr>
+<td><code>ops_admin</code></td>
+<td>Read access plus alert acknowledgement; cannot modify configuration</td>
+</tr>
+<tr>
+<td><code>readonly</code></td>
+<td>Read-only view of all configuration and operational status</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Break-glass account:</strong></p>
+<p>Maintain exactly one local <code>array_admin</code> account as a break-glass credential for use when SAML/AD is unavailable. Store this credential in a PAM vault (CyberArk, HashiCorp Vault) with access restricted to the on-call escalation procedure. Name the account <code>break-glass</code> or similar to make its purpose obvious in audit logs.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>admin<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="k">break</span>-glass<span class="w"> </span>--role<span class="w"> </span>array_admin
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Immediately store the password in the PAM vault — do not leave it written down</span>
+</code></pre></div>
+<hr />
+<h2 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h2>
+<p>AD integration in Purity//FB serves two functions:</p>
+<ol>
+<li><strong>SMB authentication</strong> — Windows clients authenticate to FlashBlade SMB shares using their domain Kerberos tickets; FlashBlade must be joined to AD as a computer account</li>
+<li><strong>Admin authentication via LDAP</strong> — AD group membership is mapped to Purity//FB admin roles, enabling domain accounts to log into the FlashBlade management GUI and CLI</li>
+</ol>
+<h3 id="join-flashblade-to-active-directory">Join FlashBlade to Active Directory<a class="headerlink" href="#join-flashblade-to-active-directory" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure the AD join</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldaps://dc01.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svc-pure-bind,OU=ServiceAccounts,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test the directory service connection</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Verify the current directory service configuration</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>list
+</code></pre></div>
+<p><strong>DNS requirement:</strong> The FlashBlade management interface must be able to resolve the AD domain and domain controller FQDNs. Confirm DNS is configured before attempting the AD join:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purefb<span class="w"> </span>dns<span class="w"> </span>list
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purefb<span class="w"> </span>dns-lookup<span class="w"> </span>--name<span class="w"> </span>dc01.example.com
+</code></pre></div>
+<p><strong>NTP requirement:</strong> FlashBlade and AD domain controllers must have clocks within 5 minutes of each other (Kerberos 5-minute skew limit). Confirm NTP is configured:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purefb<span class="w"> </span>ntp<span class="w"> </span>list
+</code></pre></div>
+<h3 id="map-ad-groups-to-purity-roles">Map AD Groups to Purity Roles<a class="headerlink" href="#map-ad-groups-to-purity-roles" title="Permanent link">&para;</a></h3>
+<p>After joining AD, create role mappings from AD security groups to Purity//FB roles. Assign all operational access to AD groups — remove individual local accounts for human admins once AD groups are validated.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Map an AD group to the array_admin role</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-fb-admins,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--role<span class="w"> </span>array_admin
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Map a group to storage_admin</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-storage-ops,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span>--role<span class="w"> </span>storage_admin
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Map a group to readonly for monitoring</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>purefb<span class="w"> </span>admin<span class="w"> </span>add-group<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span>--name<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span>--role<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># List configured group-to-role mappings</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
+</code></pre></div>
+<p><strong>Validation:</strong> Log out and log back in using a domain account that is a member of the <code>pure-fb-admins</code> group. Confirm the expected role is assigned before removing individual local admin accounts.</p>
+<h3 id="smb-and-kerberos-nfs">SMB and Kerberos NFS<a class="headerlink" href="#smb-and-kerberos-nfs" title="Permanent link">&para;</a></h3>
+<p>Once the FlashBlade is joined to AD, SMB shares automatically use Kerberos authentication — Windows clients presenting valid domain tickets can access shares without additional configuration. For NFS with Kerberos authentication:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable NFS Kerberos authentication on a filesystem</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># krb5 = authentication only</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># krb5i = authentication + integrity</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># krb5p = authentication + integrity + privacy (full encryption)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purefb<span class="w"> </span>filesystem<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--name<span class="w"> </span>prod-nfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--nfs-rules<span class="w"> </span><span class="s2">&quot;10.0.1.0/24(rw,no_root_squash,sec=krb5p)&quot;</span>
+</code></pre></div>
+<p>Kerberos NFS requires the NFS client to obtain a Kerberos ticket from the KDC (domain controller) — configure <code>/etc/krb5.conf</code> on Linux clients and ensure the client has a Kerberos keytab or principal.</p>
+<hr />
+<h2 id="ldap-integration-non-ad">LDAP Integration (Non-AD)<a class="headerlink" href="#ldap-integration-non-ad" title="Permanent link">&para;</a></h2>
+<p>For Linux-centric environments without Active Directory, configure LDAP directly (OpenLDAP, FreeIPA, etc.) for NFS UID/GID resolution. FlashBlade uses LDAP to resolve NFS user and group IDs to names for export policy enforcement.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Configure LDAP for NFS UID/GID mapping</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--uri<span class="w"> </span><span class="s2">&quot;ldap://ldap.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--base-dn<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--bind-user<span class="w"> </span><span class="s2">&quot;CN=svc-pure-bind,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>--bind-password<span class="w"> </span><span class="s2">&quot;&lt;bind_password&gt;&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Test the LDAP connection</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<p><strong>UID/GID consistency:</strong> Ensure NFS clients and the LDAP directory use consistent UID and GID assignments. Mismatched UIDs between the client and the LDAP directory cause incorrect ownership resolution on the FlashBlade, which can result in access denials even when export policy IP rules match.</p>
+<hr />
+<h2 id="saml-sso-configuration">SAML SSO Configuration<a class="headerlink" href="#saml-sso-configuration" title="Permanent link">&para;</a></h2>
+<p>SAML 2.0 SSO delegates FlashBlade GUI and CLI authentication to an enterprise IdP (Okta, Azure AD, Ping Identity, ADFS). The IdP enforces MFA, and group membership in the IdP is used to assign Purity//FB roles. This is the recommended authentication mechanism for production arrays where compliance requires MFA on privileged access.</p>
+<p><strong>SAML configuration is performed in the Purity//FB GUI under Settings &gt; Access &gt; Single Sign-On.</strong></p>
+<p>High-level steps:</p>
+<ol>
+<li><strong>Configure the Service Provider (SP) in Pure1 / Purity//FB GUI</strong></li>
+<li>Navigate to <strong>Settings &gt; Access &gt; Single Sign-On</strong></li>
+<li>
+<p>Download the FlashBlade SP metadata (Entity ID, ACS URL, SP certificate)</p>
+</li>
+<li>
+<p><strong>Configure the Identity Provider (IdP)</strong></p>
+</li>
+<li>In your IdP (Okta, Azure AD, ADFS), create a new SAML 2.0 application</li>
+<li>Upload or paste the FlashBlade SP metadata</li>
+<li>Configure attribute mapping to pass the user's role group as a SAML assertion attribute</li>
+<li>
+<p>Assign the Pure Storage SAML application to the relevant user groups</p>
+</li>
+<li>
+<p><strong>Upload IdP metadata to FlashBlade</strong></p>
+</li>
+<li>Download the IdP SAML metadata XML from your IdP</li>
+<li>
+<p>Upload to FlashBlade via <strong>Settings &gt; Access &gt; Single Sign-On &gt; IdP Configuration</strong></p>
+</li>
+<li>
+<p><strong>Map IdP role attributes to Purity//FB roles</strong></p>
+</li>
+<li>Configure attribute-based role mapping in the FlashBlade SSO settings</li>
+<li>
+<p>Typical mapping: <code>pure-fb-admins</code> group attribute → <code>array_admin</code> role</p>
+</li>
+<li>
+<p><strong>Test and validate</strong></p>
+</li>
+<li>Log into the FlashBlade GUI — the browser should redirect to the IdP login page</li>
+<li>Log in with a domain account that is a member of the <code>pure-fb-admins</code> group</li>
+<li>Confirm the expected role is shown in the FlashBlade GUI</li>
+<li>Keep the break-glass local account active until SSO is validated</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify SSO is configured (CLI shows SSO enabled/disabled status)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purefb<span class="w"> </span>array<span class="w"> </span>list<span class="w"> </span>--sso
+</code></pre></div>
+<p><strong>SAML failover:</strong> If the IdP is unreachable, SSO authentication will fail for all domain users. The local break-glass account bypasses SSO and provides emergency access. Ensure the break-glass password is current and stored in the PAM vault before enabling SSO-only mode.</p>
+<hr />
+<h2 id="api-token-management">API Token Management<a class="headerlink" href="#api-token-management" title="Permanent link">&para;</a></h2>
+<p>API tokens authenticate REST API calls and CLI sessions for automation, monitoring, and backup integrations. Each admin account can have one API token. Tokens do not expire by default — rotate them on a defined schedule and revoke immediately when a service account is decommissioned.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all accounts and show their API token status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Create an API token for an admin account</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>svc-veeam
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Output:</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">#   api_token: &lt;token_value&gt;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Save the token immediately — it is shown only at creation and cannot be retrieved later</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Revoke an API token without deleting the account</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>svc-old-monitoring
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Delete an account and its token</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>purefb<span class="w"> </span>admin<span class="w"> </span>delete<span class="w"> </span>--name<span class="w"> </span>svc-decommissioned
+</code></pre></div>
+<p><strong>Service account token standards:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Service Account</th>
+<th>Role</th>
+<th>Token Rotation Schedule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>svc-veeam</code></td>
+<td><code>storage_admin</code></td>
+<td>90 days</td>
+</tr>
+<tr>
+<td><code>svc-commvault</code></td>
+<td><code>storage_admin</code></td>
+<td>90 days</td>
+</tr>
+<tr>
+<td><code>svc-monitoring</code></td>
+<td><code>readonly</code></td>
+<td>180 days</td>
+</tr>
+<tr>
+<td><code>svc-automation</code></td>
+<td><code>storage_admin</code></td>
+<td>90 days</td>
+</tr>
+<tr>
+<td><code>break-glass</code></td>
+<td><code>array_admin</code></td>
+<td>On use; otherwise 90 days</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rotation procedure:</strong></p>
+<ol>
+<li>Create a new API token for the service account: <code>purefb admin apitoken create --name &lt;account&gt;</code></li>
+<li>Update the token in the consuming system (Veeam plugin, monitoring tool, etc.)</li>
+<li>Verify the new token works by running a test API call</li>
+<li>Revoke the old token: <code>purefb admin apitoken delete --name &lt;account&gt;</code> (this overwrites the existing token — step 1 already replaced it, so deletion in this context means the old value is gone after step 1)</li>
+</ol>
+<p><strong>Authenticating with an API token (REST API example):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Use x-auth-token header for API calls</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/2.12/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Or log in with username/password to get a session token, then use it</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;pureuser&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span>-c<span class="w"> </span>/tmp/fb_session.txt
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;https://&lt;fb-management-ip&gt;/api/2.12/filesystems&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span>-b<span class="w"> </span>/tmp/fb_session.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
+<hr />
+<h2 id="authentication-audit-and-review">Authentication Audit and Review<a class="headerlink" href="#authentication-audit-and-review" title="Permanent link">&para;</a></h2>
+<p>Run the following checks quarterly and before any access control review:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List all local accounts and their roles</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List all API tokens and their last-used timestamps</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purefb<span class="w"> </span>admin<span class="w"> </span>apitoken<span class="w"> </span>list
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Review AD/LDAP group-to-role mappings</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>purefb<span class="w"> </span>admin<span class="w"> </span>list<span class="w"> </span>--groups
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Review directory service configuration</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>purefb<span class="w"> </span>directory-service<span class="w"> </span>list
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Check audit log for recent authentication events</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>purefb<span class="w"> </span>audit<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;login\|auth\|token&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+</code></pre></div>
+<p><strong>Quarterly review checklist:</strong></p>
+<ul>
+<li>[ ] Confirm all local accounts are accounted for — no orphaned accounts from departed staff</li>
+<li>[ ] Confirm all API tokens have a documented owner and current integration</li>
+<li>[ ] Revoke API tokens for any decommissioned integrations</li>
+<li>[ ] Confirm AD/LDAP group-to-role mappings match current access requirements</li>
+<li>[ ] Confirm break-glass account credentials are current in the PAM vault</li>
+<li>[ ] Confirm SAML SSO is functioning — log in with a domain account as a test</li>
+<li>[ ] Review audit log for any unexpected login attempts or API token use from unrecognised source IPs</li>
+</ul>
 
 
 

@@ -706,10 +706,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#port-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port State Machine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#port-types" class="md-nav__link">
     <span class="md-ellipsis">
       
         Port Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zone-membership-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Membership Model
       
     </span>
   </a>
@@ -785,6 +807,18 @@
 <p>Part of the <a href="../">Architecture</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="port-state-machine">Port State Machine<a class="headerlink" href="#port-state-machine" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; No_Light : No SFP / no signal
+    No_Light --&gt; In_Sync : SFP inserted + signal detected
+    No_Light --&gt; No_Module : No SFP installed
+    In_Sync --&gt; Online : Device FLOGI complete
+    Online --&gt; No_Light : Cable pull / signal lost
+    Online --&gt; Offline_Admin : portdisable command
+    Offline_Admin --&gt; Online : portpersistentenable
+    Online --&gt; Faulty : Hardware fault detected
+    Faulty --&gt; Offline_Admin : portdisable for porttest
+    In_Sync --&gt; Offline_Admin : portdisable during maintenance</code></pre>
 <h2 id="port-types">Port Types<a class="headerlink" href="#port-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -826,6 +860,25 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>portstatsshow<span class="w"> </span>&lt;port-number&gt;
 </code></pre></div>
 <hr />
+<h2 id="zone-membership-model">Zone Membership Model<a class="headerlink" href="#zone-membership-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph "Active Zone Set: dc1-fabA-prod"
+        subgraph "Zone: esxi01_hba0__fa01_ct0_p0"
+            initA["esxi01_hba0\n(WWPN initiator)"]
+            tgtA1["fa01_ct0_p0\n(WWPN target)"]
+            tgtA2["fa01_ct0_p1\n(WWPN target)"]
+            initA --&gt; tgtA1
+            initA --&gt; tgtA2
+        end
+
+        subgraph "Zone: esxi01_hba1__fa01_ct1_p0"
+            initB["esxi01_hba1\n(WWPN initiator)"]
+            tgtB["fa01_ct1_p0\n(WWPN target)"]
+            initB --&gt; tgtB
+        end
+    end
+
+    note["Single-initiator rule:\none host HBA per zone only"]</code></pre>
 <h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
 <p>Zoning controls initiator-to-target access. Best practice: <strong>single-initiator / single-target</strong> zones.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show active zone configuration</span>

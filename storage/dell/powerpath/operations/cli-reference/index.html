@@ -1050,6 +1050,28 @@
 <p>Commonly used <code>powermt</code> commands for managing Dell PowerPath multipathing on Linux and Windows hosts. PowerPath is a multipathing driver — it sits between the OS and the storage array, managing multiple physical paths to each disk to ensure high availability and load balancing.</p>
 <hr />
 <h2 id="status-devices">Status &amp; Devices<a class="headerlink" href="#status-devices" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    host(["Host OS"])
+    ppDriver["PowerPath Driver\npseudo device /dev/emcpowerX"]
+    hba0["HBA0\nFabric A"]
+    hba1["HBA1\nFabric B"]
+    spA["Array SP-A\n(active-optimised paths)"]
+    spB["Array SP-B\n(non-optimised paths)"]
+
+    host --&gt; ppDriver
+    ppDriver --&gt;|"path 1 — alive"| hba0
+    ppDriver --&gt;|"path 2 — alive"| hba0
+    ppDriver --&gt;|"path 3 — alive"| hba1
+    ppDriver --&gt;|"path 4 — alive"| hba1
+    hba0 --&gt;|"Fabric A"| spA
+    hba0 --&gt;|"Fabric A"| spB
+    hba1 --&gt;|"Fabric B"| spA
+    hba1 --&gt;|"Fabric B"| spB
+
+    classDef alive fill:#15803d,stroke:#166534,color:#fff
+    classDef array fill:#2563eb,stroke:#1d4ed8,color:#fff
+    class hba0,hba1 alive
+    class spA,spB array</code></pre>
 <p>The first commands to run when checking on PowerPath. <code>powermt display</code> shows you all the storage devices and whether their paths are healthy. Dead paths mean some redundancy is lost — you need to investigate.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Overall summary — all devices and path states</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>powermt<span class="w"> </span>display

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#python-automation-health-check-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Automation Health Check Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -759,6 +770,19 @@
 
 
 <h1 id="python-automation-health-checks">Python Automation — Health Checks<a class="headerlink" href="#python-automation-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="python-automation-health-check-flow">Python Automation Health Check Flow<a class="headerlink" href="#python-automation-health-check-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start["Start Health Check"] --&gt; checkPython["python3 --version\nExpected version?"]
+    checkPython --&gt;|OK| checkVenv["venv intact?\npip check passes?"]
+    checkPython --&gt;|Fail| alertPython["Alert: Python version\nmismatch or missing"]
+    checkVenv --&gt;|OK| checkImports["Critical packages\nimportable?"]
+    checkVenv --&gt;|Fail| alertVenv["Alert: Recreate venv\npip install -r requirements.txt"]
+    checkImports --&gt;|OK| checkAPI["Target APIs\nreachable?"]
+    checkImports --&gt;|Fail| alertImport["Alert: pip install\nmissing package"]
+    checkAPI --&gt;|OK| checkLogs["Error lines in\nrecent logs?"]
+    checkAPI --&gt;|Fail| alertAPI["Alert: Network /\nAPI endpoint issue"]
+    checkLogs --&gt;|None| healthy["Status: HEALTHY"]
+    checkLogs --&gt;|Errors found| alertLogs["Alert: Review\nlog file errors"]</code></pre>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

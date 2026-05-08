@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#dead-path-triage-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dead Path Triage Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dead-paths" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -836,6 +847,20 @@
 
 
 <h1 id="powerpath-common-issues">PowerPath — Common Issues<a class="headerlink" href="#powerpath-common-issues" title="Permanent link">&para;</a></h1>
+<h2 id="dead-path-triage-flow">Dead Path Triage Flow<a class="headerlink" href="#dead-path-triage-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Dead path detected]) --&gt; B["powermt restore\nForce immediate path retry"]
+    B --&gt; C{"Paths recovered?"}
+    C --&gt;|Yes| D["powermt save\nMonitor for flapping"]
+    C --&gt;|No| E{"HBA port\nOnline?"}
+    E --&gt;|No| F["Check cable / SFP\nCheck HBA driver"]
+    E --&gt;|Yes| G{"Fabric switch port\nOnline?"}
+    G --&gt;|No| H["portshow / show interface\nCheck SFP, cable, BBCR"]
+    G --&gt;|Yes| I{"Array FA port\nonline &amp; zoned?"}
+    I --&gt;|No| J["Restore zoning\nCheck array port state"]
+    I --&gt;|Yes| K["Verify LUN masking\nCheck host group on array"]
+    F &amp; H &amp; J &amp; K --&gt; L(["Open support case if\npath does not recover"])
+    D --&gt; Z([Resolved])</code></pre>
 <h2 id="dead-paths">Dead Paths<a class="headerlink" href="#dead-paths" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>powermt display dev=all</code> shows one or more paths in <code>dead</code> state for a pseudo device.</p>
 <p><strong>Impact:</strong> Reduced path redundancy. I/O continues on surviving <code>alive</code> paths, but failover capacity is reduced. If all paths to a device go dead, I/O to that device will fail.</p>

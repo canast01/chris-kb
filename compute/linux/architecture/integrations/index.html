@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#active-directory-authentication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Authentication Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#active-directory-integration-sssd-realmd" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -761,6 +772,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#san-multipath-data-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAN Multipath Data Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#multipath-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +815,22 @@
 
 <h1 id="linux-integrations">Linux — Integrations<a class="headerlink" href="#linux-integrations" title="Permanent link">&para;</a></h1>
 <p>Integration with other platforms and external systems.</p>
+<h2 id="active-directory-authentication-flow">Active Directory Authentication Flow<a class="headerlink" href="#active-directory-authentication-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant user as User (SSH)
+    participant pam as PAM
+    participant sssd as SSSD
+    participant krb as Kerberos (KDC)
+    participant ad as Active Directory
+
+    user-&gt;&gt;pam: SSH login attempt
+    pam-&gt;&gt;sssd: Authenticate user@domain
+    sssd-&gt;&gt;krb: Request TGT
+    krb-&gt;&gt;ad: Validate credentials
+    ad--&gt;&gt;krb: Credential OK
+    krb--&gt;&gt;sssd: TGT issued
+    sssd--&gt;&gt;pam: Authentication success
+    pam--&gt;&gt;user: Shell granted</code></pre>
 <h2 id="active-directory-integration-sssd-realmd">Active Directory Integration (SSSD / realmd)<a class="headerlink" href="#active-directory-integration-sssd-realmd" title="Permanent link">&para;</a></h2>
 <p>Linux servers join Active Directory using <code>realmd</code> and <code>sssd</code>, allowing AD users to authenticate with Kerberos credentials without local account provisioning.</p>
 <p><strong>Join a RHEL/Ubuntu server to AD:</strong></p>
@@ -922,6 +960,19 @@
 <a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>--rescan
 </code></pre></div>
 <hr />
+<h2 id="san-multipath-data-path">SAN Multipath Data Path<a class="headerlink" href="#san-multipath-data-path" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    app["Application\n/opt/app"]
+    dm["Device Mapper\n/dev/mapper/mpathX"]
+    path1["Path 1\n/dev/sdb (HBA0)"]
+    path2["Path 2\n/dev/sdc (HBA1)"]
+    fab1["FC Fabric A"]
+    fab2["FC Fabric B"]
+    san["SAN Storage\nPowerMax · Pure"]
+
+    app --&gt; dm
+    dm --&gt; path1 --&gt; fab1 --&gt; san
+    dm --&gt; path2 --&gt; fab2 --&gt; san</code></pre>
 <h2 id="multipath-configuration">Multipath Configuration<a class="headerlink" href="#multipath-configuration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Install and enable multipathd (RHEL)</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>device-mapper-multipath

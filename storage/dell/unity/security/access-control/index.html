@@ -872,6 +872,37 @@
 <h1 id="unity-access-control">Unity — Access Control<a class="headerlink" href="#unity-access-control" title="Permanent link">&para;</a></h1>
 <h2 id="role-based-access-control-rbac">Role-Based Access Control (RBAC)<a class="headerlink" href="#role-based-access-control-rbac" title="Permanent link">&para;</a></h2>
 <p>Unisphere for Unity implements role-based access control for all administrative operations. Every Unisphere user — whether a local account or an LDAP/AD-mapped user — is assigned one of four built-in roles. There are no custom roles; access is controlled entirely by role assignment.</p>
+<pre class="mermaid"><code>graph TD
+  subgraph "Identity Sources"
+    LOCAL["Local Accounts\n(break-glass only)"]
+    AD["Active Directory\nGroups"]
+  end
+  subgraph "Unity Roles"
+    ADMIN["Administrator\nFull access"]
+    SADMIN["Storage Administrator\nProvisioning only"]
+    OPS["Operator\nACK alerts · read"]
+    VIEW["Viewer\nRead-only"]
+  end
+  subgraph "Actions"
+    PROV["Create LUNs\nManage pools\nConfigure replication"]
+    MON["View health\nAcknowledge alerts"]
+    AUD["Read capacity\nAudit review"]
+  end
+  LOCAL --&gt; ADMIN
+  AD --&gt;|"CN=Unity-Admins"| ADMIN
+  AD --&gt;|"CN=Unity-StorageAdmins"| SADMIN
+  AD --&gt;|"CN=Unity-Operators"| OPS
+  AD --&gt;|"CN=Unity-Viewers"| VIEW
+  ADMIN --&gt; PROV &amp; MON &amp; AUD
+  SADMIN --&gt; PROV &amp; MON
+  OPS --&gt; MON &amp; AUD
+  VIEW --&gt; AUD
+  classDef role fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef src fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef act fill:#15803d,stroke:#166534,color:#fff
+  class ADMIN,SADMIN,OPS,VIEW role
+  class LOCAL,AD src
+  class PROV,MON,AUD act</code></pre>
 <table>
 <thead>
 <tr>
@@ -979,6 +1010,22 @@
 </code></pre></div>
 <h2 id="iscsi-chap-authentication">iSCSI CHAP Authentication<a class="headerlink" href="#iscsi-chap-authentication" title="Permanent link">&para;</a></h2>
 <p>For iSCSI host access, Unity supports CHAP (Challenge Handshake Authentication Protocol) to authenticate initiators. This prevents unauthorised hosts from connecting to Unity iSCSI targets.</p>
+<pre class="mermaid"><code>sequenceDiagram
+  participant HOST as "iSCSI Initiator\n(host)"
+  participant UNITY as "Unity iSCSI Target"
+  HOST-&gt;&gt;UNITY: Login Request (IQN)
+  UNITY--&gt;&gt;HOST: CHAP Challenge
+  HOST-&gt;&gt;UNITY: CHAP Response (username + hash)
+  note over UNITY: Verify CHAP username and\npassword hash match configured credentials
+  alt One-way CHAP
+    UNITY--&gt;&gt;HOST: Login Accept
+  else Mutual CHAP
+    HOST--&gt;&gt;UNITY: Reverse Challenge
+    UNITY-&gt;&gt;HOST: Reverse Response
+    HOST--&gt;&gt;UNITY: Reverse Verify OK
+    UNITY--&gt;&gt;HOST: Login Accept
+  end
+  HOST-&gt;&gt;UNITY: SCSI Commands (I/O)</code></pre>
 <table>
 <thead>
 <tr>

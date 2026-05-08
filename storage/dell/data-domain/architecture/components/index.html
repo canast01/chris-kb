@@ -854,6 +854,32 @@
 
 <h1 id="data-domain-components">Data Domain — Components<a class="headerlink" href="#data-domain-components" title="Permanent link">&para;</a></h1>
 <h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph "DDFS Namespace"
+        mtreeA["MTree: mtree-veeam-prod\n/data/col1/mtree-veeam-prod"]
+        mtreeB["MTree: mtree-netbackup-ora\n/data/col1/mtree-netbackup-ora"]
+        mtreeC["MTree: mtree-commvault-sql\n/data/col1/mtree-commvault-sql"]
+    end
+
+    subgraph "Dedup Engine"
+        sisl["SISL Engine\n(fingerprint + locality filter)"]
+        segStore["[(Segment Store)]\n(deduplicated containers)"]
+        index["Fingerprint Index\n(lookup table)"]
+        nvram["NVRAM Write Cache\n(power-safe)"]
+        sisl --&gt; index
+        sisl --&gt; nvram
+        nvram --&gt; segStore
+    end
+
+    subgraph "Protocols"
+        ddboost["DD Boost\n(source-side dedup)"]
+        nfsProt["NFS v3/v4"]
+        cifsProt["CIFS/SMB"]
+        vtlProt["VTL (FC)"]
+    end
+
+    ddboost &amp; nfsProt &amp; cifsProt &amp; vtlProt --&gt; sisl
+    mtreeA &amp; mtreeB &amp; mtreeC --&gt; segStore</code></pre>
 <table>
 <thead>
 <tr>
@@ -976,6 +1002,31 @@
 </tbody>
 </table>
 <h3 id="replication-topologies">Replication Topologies<a class="headerlink" href="#replication-topologies" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph LR
+    subgraph "Primary Site"
+        srcDD["Source DD\n(production backup target)"]
+        srcMTree["MTree\n/data/col1/mtree-veeam-prod"]
+    end
+
+    subgraph "DR Site"
+        dstDD["Destination DD\n(DR copy)"]
+        dstMTree["Replicated MTree\n(read-only during normal ops)"]
+    end
+
+    subgraph "Extended Retention"
+        cloudTier["Cloud Tier\nAWS S3 / Azure Blob"]
+    end
+
+    backupSrv(["Backup Server\nVeeam / NetBackup / CommVault"])
+    backupSrv --&gt;|"DDBoost / NFS / CIFS"| srcDD
+    srcDD --&gt; srcMTree
+    srcMTree --&gt;|"DD Replicator\n(TCP 2051, delta sync)"| dstMTree
+    dstMTree --&gt; dstDD
+    srcDD --&gt;|"age &gt; retention threshold"| cloudTier
+
+    subgraph "Failover"
+        dstDD --&gt;|"replication failover"| rwMTree["MTree writable\nbackup clients re-pointed"]
+    end</code></pre>
 <table>
 <thead>
 <tr>

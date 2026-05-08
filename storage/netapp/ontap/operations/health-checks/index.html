@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#health-check-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -864,6 +875,22 @@
 
 
 <h1 id="ontap-health-checks">ONTAP — Health Checks<a class="headerlink" href="#ontap-health-checks" title="Permanent link">&para;</a></h1>
+<h2 id="health-check-decision-flow">Health Check Decision Flow<a class="headerlink" href="#health-check-decision-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start([Start Health Check]) --&gt; clusterShow["cluster show\nall nodes healthy?"]
+    clusterShow --&gt;|No| nodeDown["Investigate node\nstorage failover show"]
+    clusterShow --&gt;|Yes| diskCheck["storage disk show -broken\nany broken disks?"]
+    diskCheck --&gt;|Yes| diskAction["Check spares available\nescalate if no spare"]
+    diskCheck --&gt;|No| aggrCheck["storage aggregate show\nany above 85% used?"]
+    aggrCheck --&gt;|Yes| aggrAction["Move volumes or\nadd disks"]
+    aggrCheck --&gt;|No| smCheck["snapmirror show\nall healthy + within RPO?"]
+    smCheck --&gt;|No| smAction["Resume / update\nSnapMirror relationships"]
+    smCheck --&gt;|Yes| alertCheck["system health alert show\nany active alerts?"]
+    alertCheck --&gt;|Yes| alertAction["Review and action\nalerts by severity"]
+    alertCheck --&gt;|No| done([All Checks Pass])
+
+    style done fill:#15803d,color:#fff
+    style start fill:#2563eb,color:#fff</code></pre>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

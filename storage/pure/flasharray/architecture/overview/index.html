@@ -838,6 +838,25 @@
 <li>Fabric zoning (FC) or iSCSI network design must ensure paths reach both CT0 and CT1</li>
 <li>Host multipath driver (e.g., HPE 3PAR MPIO, native MPIO on Windows, DM-Multipath on Linux) must be active and configured for ALUA</li>
 </ul>
+<pre class="mermaid"><code>flowchart LR
+  subgraph "Host MPIO"
+    P0["Path 0\nHBA0 → Fabric A → CT0\n(Active / Optimised)"]
+    P1["Path 1\nHBA1 → Fabric B → CT1\n(Active / Non-Optimised)"]
+  end
+
+  subgraph "FlashArray"
+    CT0["CT0 — volume owner\n(preferred path)"]
+    CT1["CT1 — secondary\n(ALUA non-optimised)"]
+    CT0 &lt;--&gt;|"NVMe mirror"| CT1
+  end
+
+  P0 --&gt; CT0
+  P1 --&gt; CT1
+
+  EVENT["CT0 fails or NDU restarts"]
+  CT0 -.-&gt;|"ownership migrates"| CT1
+  EVENT --&gt; CT1
+  P0 -.-&gt;|"MPIO promotes P1\nas Active/Optimised"| P1</code></pre>
 <h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

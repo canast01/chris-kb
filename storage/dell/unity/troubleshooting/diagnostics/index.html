@@ -931,6 +931,17 @@
 <li><strong>Networking</strong> — are the relevant interfaces up and reachable?</li>
 <li><strong>Replication</strong> — are replication sessions in a consistent state?</li>
 </ol>
+<pre class="mermaid"><code>graph LR
+  SYS["1. System Health\n/env/health show"]
+  ALT["2. Alerts\n/prac/alert show"]
+  SPS["3. Storage Processors\n/env/sp show"]
+  DISK["4. Pools and Disks\n/stor/config/pool show\n/stor/config/disk show"]
+  LUN["5. LUNs / File Systems\n/stor/config/lun show\n/nas/server show"]
+  NET["6. Networking\n/net/if show\n/net/port/fc show"]
+  REP["7. Replication\n/prot/rep/session show"]
+  SYS --&gt; ALT --&gt; SPS --&gt; DISK --&gt; LUN --&gt; NET --&gt; REP
+  classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+  class SYS,ALT,SPS,DISK,LUN,NET,REP step</code></pre>
 <h2 id="system-level-diagnostics">System-Level Diagnostics<a class="headerlink" href="#system-level-diagnostics" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># System general info — name, model, serial, software version</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;sp_ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;<span class="w"> </span>/sys/general<span class="w"> </span>show<span class="w"> </span>-detail
@@ -1239,36 +1250,29 @@
 </code></pre></div>
 <p>Attach the resulting file to the support case along with the support bundle.</p>
 <h2 id="diagnostic-decision-tree">Diagnostic Decision Tree<a class="headerlink" href="#diagnostic-decision-tree" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Host reports I/O errors
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>        |
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        v
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Both SPs online? ─── No ──&gt; SP failover in progress?
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        |                           |
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>       Yes                     Wait 60 sec and recheck
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        |                      If SP still offline → Dell support case (P1)
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        v
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>Pool and disk groups healthy? ─── No ──&gt; Drive failure?
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>        |                                    |
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>       Yes                              Replace drive; monitor rebuild
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        |                               Do not change pool during rebuild
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>        v
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>LUN has host access? ─── No ──&gt; Add host access (lunacl create)
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>        |
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>       Yes
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>        |
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>        v
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>Network interface up? ─── No ──&gt; Check physical port; restore interface
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>        |
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>       Yes
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>        |
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>        v
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>Active alerts in last 2 hours? ─── Yes ──&gt; Investigate alert details
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>        |
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>       No
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>        |
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>        v
-<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>Collect support bundle + open Dell case
-</code></pre></div>
+<pre class="mermaid"><code>graph TD
+  START(["Host reports I/O errors"]) --&gt; SP{Both SPs\nonline?}
+  SP --&gt;|No| SPCK["SP failover in progress?\nWait 60 sec and recheck"]
+  SPCK --&gt; SPSTILL{SP still\noffline?}
+  SPSTILL --&gt;|Yes| P1["Open Dell P1 support case"]
+  SPSTILL --&gt;|No| POOL
+  SP --&gt;|Yes| POOL{Pool and disk\ngroups healthy?}
+  POOL --&gt;|No| DRIVE["Drive failure?\nReplace drive; monitor rebuild\nNo pool changes during rebuild"]
+  POOL --&gt;|Yes| ACL{LUN has\nhost access?}
+  ACL --&gt;|No| ADDACL["Add host access\nuemcli /stor/config/lunacl create"]
+  ACL --&gt;|Yes| NIC{Network\ninterface up?}
+  NIC --&gt;|No| NICFIX["Check physical port\nRestore interface"]
+  NIC --&gt;|Yes| ALT{Active alerts\nin last 2 hours?}
+  ALT --&gt;|Yes| ALINV["Investigate alert details"]
+  ALT --&gt;|No| BUNDLE["Collect support bundle\nOpen Dell case"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class SP,SPSTILL,POOL,ACL,NIC,ALT decision
+  class SPCK,DRIVE,ADDACL,NICFIX,ALINV,BUNDLE action
+  class P1 warn
+  class START term</code></pre>
 
 
 

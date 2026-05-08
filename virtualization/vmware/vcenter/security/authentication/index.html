@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#sso-authentication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO Authentication Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sso-security" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -948,6 +959,21 @@
 
 
 <h1 id="vcenter-security-authentication">vCenter Security — Authentication<a class="headerlink" href="#vcenter-security-authentication" title="Permanent link">&para;</a></h1>
+<h2 id="sso-authentication-flow">SSO Authentication Flow<a class="headerlink" href="#sso-authentication-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant user as User / Browser
+    participant vc as vCenter (port 443)
+    participant sso as vSphere SSO (STS)
+    participant idp as Identity Source (AD/LDAP)
+
+    user-&gt;&gt;vc: Login request (username + password)
+    vc-&gt;&gt;sso: Delegate authentication
+    sso-&gt;&gt;idp: LDAP bind + user lookup
+    idp--&gt;&gt;sso: User attributes &amp; group membership
+    sso--&gt;&gt;sso: Validate credentials &amp; policy
+    sso--&gt;&gt;vc: SAML token (signed)
+    vc--&gt;&gt;user: Session established
+    Note over vc,user: Token valid for 30 min (inactivity timeout)</code></pre>
 <h2 id="sso-security">SSO Security<a class="headerlink" href="#sso-security" title="Permanent link">&para;</a></h2>
 <h3 id="authentication-policy">Authentication Policy<a class="headerlink" href="#authentication-policy" title="Permanent link">&para;</a></h3>
 <p>Configure at <strong>Administration → Single Sign On → Configuration → Policies → Password Policy</strong>:</p>
@@ -1085,6 +1111,18 @@
 </tbody>
 </table>
 <h2 id="certificate-replacement-process">Certificate Replacement Process<a class="headerlink" href="#certificate-replacement-process" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    id1["Identify expiring cert\n(VAMI / openssl check)"]
+    id2["Confirm vCenter\nbackup is current"]
+    id3["Schedule maintenance\nwindow"]
+    id4["Replace via\ncertificate-manager"]
+    id5["Restart affected\nservices"]
+    id6["Validate browser,\nSSO, integrations"]
+
+    id1 --&gt; id2 --&gt; id3 --&gt; id4 --&gt; id5 --&gt; id6
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    class id1,id2,id3,id4,id5,id6 step</code></pre>
 <ol>
 <li>Identify the certificate and replacement method (VMCA, custom CA, or self-signed)</li>
 <li>Confirm backup of vCenter is current</li>

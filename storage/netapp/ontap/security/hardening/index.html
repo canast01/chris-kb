@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hardening-control-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Control Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hardening-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1043,6 +1054,37 @@
 
 <h1 id="ontap-hardening">ONTAP — Hardening<a class="headerlink" href="#ontap-hardening" title="Permanent link">&para;</a></h1>
 <p>Security hardening for ONTAP focuses on reducing attack surface, enforcing strong authentication, encrypting management and data traffic, and enabling comprehensive audit logging. Apply this baseline to all production clusters at build and validate quarterly.</p>
+<h2 id="hardening-control-layers">Hardening Control Layers<a class="headerlink" href="#hardening-control-layers" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+    subgraph "Network Layer"
+        mgmtVlan["Mgmt LIF — dedicated VLAN\nfirewall-restricted"]
+        icVlan["Intercluster LIF — dedicated VLAN"]
+        dataVlan["Data LIFs — separate from mgmt"]
+    end
+
+    subgraph "Protocol Layer"
+        tls["TLS 1.2+ minimum\nHTTPS · SnapMirror"]
+        sshKeys["SSH — public key only\nno password auth for admin"]
+        noLegacy["Telnet / RSH disabled\nSNMPv1/v2c removed"]
+        smb3["SMB 3.x only\nSMB1 disabled"]
+    end
+
+    subgraph "Identity Layer"
+        rbac["RBAC — least privilege\ncustom roles per team"]
+        mfa["SAML SSO + MFA\nfor System Manager"]
+        diag["diag account locked"]
+    end
+
+    subgraph "Data Layer"
+        nve["NVE / NAE encryption\non sensitive volumes"]
+        audit["Admin audit log\n+ EMS → SIEM"]
+        fpolicy["FPolicy — file access\naudit for NAS"]
+    end
+
+    mgmtVlan --&gt; sshKeys
+    sshKeys --&gt; rbac
+    rbac --&gt; audit
+    tls --&gt; nve</code></pre>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <h3 id="authentication-and-access">Authentication and Access<a class="headerlink" href="#authentication-and-access" title="Permanent link">&para;</a></h3>
 <ul>

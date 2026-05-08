@@ -1032,6 +1032,42 @@
 </ul>
 <h2 id="masking-views">Masking Views<a class="headerlink" href="#masking-views" title="Permanent link">&para;</a></h2>
 <p>A Masking View on PowerMax connects three components — a Storage Group (volumes), a Port Group (FA ports), and an Initiator Group (host HBAs) — to grant a host access to storage. All three must exist before the Masking View can be created.</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph "Host Side"
+        HBA_A["HBA Port A\n(WWN)"]
+        HBA_B["HBA Port B\n(WWN)"]
+    end
+    subgraph "Array: Masking View"
+        IG["Initiator Group\nhostname_IG\n{WWN_A, WWN_B}"]
+        MV["Masking View\nhostname_MV"]
+        PG["Port Group\nfabric_PG\n{01E:4, 02E:4}"]
+        SG["Storage Group\nhostname_SG\n{DEV001…DEV005}"]
+    end
+    subgraph "Array: Storage"
+        TDEV["TDEV Volumes\n100 GB each\nSLO: Diamond"]
+        SRP["SRP_1\n(Storage Resource Pool)"]
+        TDEV --&gt; SRP
+    end
+    subgraph "Array: Front-End"
+        FA_A["FA Dir 01E Port 4\n(Fabric A)"]
+        FA_B["FA Dir 02E Port 4\n(Fabric B)"]
+    end
+
+    HBA_A &amp; HBA_B --&gt; IG
+    IG --&gt; MV
+    PG --&gt; MV
+    SG --&gt; MV
+    SG --&gt; TDEV
+    PG --&gt; FA_A &amp; FA_B
+
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    classDef mv fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef store fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef port fill:#0f766e,stroke:#0d9488,color:#fff
+    class HBA_A,HBA_B host
+    class IG,MV,PG,SG mv
+    class TDEV,SRP store
+    class FA_A,FA_B port</code></pre>
 <h3 id="list-and-inspect">List and Inspect<a class="headerlink" href="#list-and-inspect" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all masking views</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symaccess<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>view
@@ -1111,6 +1147,34 @@
 </code></pre></div>
 <h2 id="provisioning">Provisioning<a class="headerlink" href="#provisioning" title="Permanent link">&para;</a></h2>
 <p>End-to-end workflow for provisioning storage on Dell PowerMax: create volumes, add to a storage group, and create (or update) a masking view so the host can see the storage.</p>
+<pre class="mermaid"><code>flowchart TD
+    START([Start: New Host Needs Storage]) --&gt; PREREQ{Prerequisites Met?}
+    PREREQ --&gt;|"No: zoning missing\nor HBA not logged in"| FIX_PRE["Fix Fabric Zoning\n+ confirm HBA logins"]
+    FIX_PRE --&gt; PREREQ
+    PREREQ --&gt;|"Yes"| CHK_SG{"SG already\nexists for host?"}
+    CHK_SG --&gt;|"Yes"| USE_SG["Use existing SG"]
+    CHK_SG --&gt;|"No"| CREATE_SG["Step 1 — Create SG\nsymsg create hostname_SG\n-srp SRP_1 -slo Diamond"]
+    CREATE_SG &amp; USE_SG --&gt; CREATE_DEV["Step 2 — Create TDEVs\nsymconfigure: create dev\ncount=N size=XGB sg=hostname_SG"]
+    CREATE_DEV --&gt; VERIFY_DEV["Verify: symsg show hostname_SG"]
+    VERIFY_DEV --&gt; CREATE_IG["Step 3 — Create Initiator Group\nsymaccess create hostname_IG\nAdd host HBA WWNs"]
+    CREATE_IG --&gt; CHK_PG{"Port Group\nexists for fabric?"}
+    CHK_PG --&gt;|"No"| CREATE_PG["Step 4 — Create Port Group\nsymaccess create fabric_PG\nAdd FA dir:port pairs"]
+    CHK_PG --&gt;|"Yes"| USE_PG["Use existing PG"]
+    CREATE_PG &amp; USE_PG --&gt; CREATE_MV["Step 5 — Create Masking View\nsymaccess create view hostname_MV\n-sg hostname_SG -ig hostname_IG -pg fabric_PG"]
+    CREATE_MV --&gt; HOST_SCAN["Step 6 — Host Rescan\nrescan-scsi-bus / multipath -ll"]
+    HOST_SCAN --&gt; VERIFY{Host sees\nall LUNs?}
+    VERIFY --&gt;|"No"| TSHOOT["Troubleshoot:\nsymaccess show view\ncheck zone, WWN, port state"]
+    TSHOOT --&gt; VERIFY
+    VERIFY --&gt;|"Yes"| DONE([Done — Storage Provisioned])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    classDef fix fill:#b45309,stroke:#92400e,color:#fff
+    class CREATE_SG,CREATE_DEV,CREATE_IG,CREATE_PG,CREATE_MV,HOST_SCAN,VERIFY_DEV action
+    class PREREQ,CHK_SG,CHK_PG,VERIFY decision
+    class START,DONE terminal
+    class FIX_PRE,TSHOOT fix</code></pre>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p>Before provisioning, confirm:
 - Host HBA WWNs are logged into the fabric and registered with the array

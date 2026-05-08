@@ -739,10 +739,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#credential-checkout-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Checkout Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#high-availability-and-dr" class="md-nav__link">
     <span class="md-ellipsis">
       
         High Availability and DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dr-activation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Activation Flow
       
     </span>
   </a>
@@ -856,6 +878,24 @@
 - PSM → Targets: TCP 22 (SSH), TCP 3389 (RDP), TCP 1521 (Oracle), TCP 1433 (MSSQL)
 - PSMP → Targets: TCP 22</p>
 <hr />
+<h2 id="credential-checkout-sequence">Credential Checkout Sequence<a class="headerlink" href="#credential-checkout-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant user as Privileged User
+    participant pvwa as PVWA
+    participant vault as Vault
+    participant cpm as CPM
+
+    user-&gt;&gt;pvwa: Authenticate (AD + MFA)
+    pvwa-&gt;&gt;vault: SDK connect (port 1858)
+    user-&gt;&gt;pvwa: Request credential checkout
+    pvwa-&gt;&gt;vault: Retrieve encrypted credential
+    vault--&gt;&gt;pvwa: Return credential
+    pvwa--&gt;&gt;user: Display / use credential
+    user-&gt;&gt;pvwa: Check-in (or auto check-in on expiry)
+    pvwa-&gt;&gt;cpm: Trigger rotation job
+    cpm-&gt;&gt;vault: Retrieve current credential
+    cpm-&gt;&gt;vault: Store rotated credential</code></pre>
+<hr />
 <h2 id="high-availability-and-dr">High Availability and DR<a class="headerlink" href="#high-availability-and-dr" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -883,6 +923,15 @@
 </tr>
 </tbody>
 </table>
+<h2 id="dr-activation-flow">DR Activation Flow<a class="headerlink" href="#dr-activation-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    failure["Primary Vault failure detected"] --&gt; stopSync["Stop replication on DR Vault\n(dbsync.exe service stopped)"]
+    stopSync --&gt; promDR["Change DR Vault to standalone mode\n(PrivateArk Client)"]
+    promDR --&gt; updateIni["Update vault.ini on CPM / PSM / PVWA\nto point to DR Vault IP"]
+    updateIni --&gt; restartSvc["Restart CyberArk services\non CPM, PSM, PVWA"]
+    restartSvc --&gt; validate["Validate connectivity\n(Test-NetConnection :1858)"]
+    validate --&gt; testCred["Test credential retrieval\nfrom DR Vault"]
+    testCred --&gt; ops["Operations resume from DR Vault"]</code></pre>
 <p>DR Vault activation procedure:
 1. Stop replication on the DR Vault: <code>C:\Program Files (x86)\PrivateArk\Server\dbsync.exe</code> — stop the sync service.
 2. Change DR Vault to standalone mode via PrivateArk Client.

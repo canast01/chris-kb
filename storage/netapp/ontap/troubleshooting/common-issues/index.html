@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#incident-triage-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1159,6 +1170,21 @@
 
 
 <h1 id="ontap-common-issues">ONTAP — Common Issues<a class="headerlink" href="#ontap-common-issues" title="Permanent link">&para;</a></h1>
+<h2 id="incident-triage-decision-tree">Incident Triage Decision Tree<a class="headerlink" href="#incident-triage-decision-tree" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    incident([Incident Reported]) --&gt; clusterOk{"cluster show\nAll nodes healthy?"}
+    clusterOk --&gt;|No| haCheck["storage failover show\nHA takeover active?"]
+    haCheck --&gt;|Yes| waitGiveback["Wait for auto-giveback\nor run manual giveback"]
+    haCheck --&gt;|No| nodeDown["Node down — check\ncluster ping-cluster\nhardware / power"]
+    clusterOk --&gt;|Yes| diskOk{"storage disk show -broken\nAny broken disks?"}
+    diskOk --&gt;|Yes| diskIssue["Check RAID state\nstorage aggregate show-status\nCheck spares available"]
+    diskOk --&gt;|No| volOk{"volume show -state !online\nAny offline volumes?"}
+    volOk --&gt;|Yes| volIssue["Bring volume online\ncheck aggregate state"]
+    volOk --&gt;|No| protocol{"Which protocol is failing?"}
+    protocol --&gt;|NFS| nfsCheck["network interface show\nnfs connected-client show\ncheck export policy"]
+    protocol --&gt;|SMB| smbCheck["vserver cifs show\nvserver cifs domain info\ncheck AD connectivity"]
+    protocol --&gt;|iSCSI| iscsCheck["iscsi session show\nlun mapping show\nmultipath on host"]
+    protocol --&gt;|SnapMirror| smCheck["snapmirror show -health false\ncheck intercluster LIF\ncheck throttle"]</code></pre>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

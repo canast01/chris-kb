@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#linux-boot-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux Boot Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#os-support-timelines" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -754,6 +765,17 @@
     <span class="md-ellipsis">
       
         In-Place Upgrade (RHEL 8 → 9)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server Lifecycle
       
     </span>
   </a>
@@ -898,6 +920,17 @@
 
 <h1 id="linux-install-upgrade">Linux — Install &amp; Upgrade<a class="headerlink" href="#linux-install-upgrade" title="Permanent link">&para;</a></h1>
 <p>Installation, upgrade, patching, and decommission.</p>
+<h2 id="linux-boot-sequence">Linux Boot Sequence<a class="headerlink" href="#linux-boot-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    bios["BIOS / UEFI\nPOST · firmware init"]
+    grub["GRUB2 Bootloader\nkernel selection · initrd"]
+    kernelInit["Kernel Initialisation\ndecompress · hardware probe"]
+    initrd["initramfs\nroot mount · dracut"]
+    systemdInit["systemd PID 1\nunit parsing"]
+    targets["Targets\nsysinit → basic → multi-user"]
+    services["Services\nsshd · chronyd · rsyslog · app"]
+
+    bios --&gt; grub --&gt; kernelInit --&gt; initrd --&gt; systemdInit --&gt; targets --&gt; services</code></pre>
 <h2 id="os-support-timelines">OS Support Timelines<a class="headerlink" href="#os-support-timelines" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -994,6 +1027,16 @@
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>leapp<span class="w"> </span>upgrade
 </code></pre></div>
 <p>Take a VM snapshot or backup before starting the upgrade. A rollback after the upgrade completes requires restoring from the snapshot.</p>
+<h2 id="server-lifecycle">Server Lifecycle<a class="headerlink" href="#server-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    build["Build\nKickstart / cloud-init"]
+    config["Configure\nAnsible baseline"]
+    ad["Join AD\nrealm join"]
+    register["Register\nmonitoring · backup"]
+    operate["Operate\npatching · health checks"]
+    decom["Decommission\nrealm leave · CMDB update"]
+
+    build --&gt; config --&gt; ad --&gt; register --&gt; operate --&gt; decom</code></pre>
 <h2 id="decommission-checklist">Decommission Checklist<a class="headerlink" href="#decommission-checklist" title="Permanent link">&para;</a></h2>
 <p>Before removing a server:</p>
 <ul>

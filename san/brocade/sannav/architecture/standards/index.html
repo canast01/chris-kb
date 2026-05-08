@@ -699,6 +699,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-and-resource-group-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric and Resource Group Naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-policy-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Policy Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-configuration-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP Configuration Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switch-discovery-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switch Discovery Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-management-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware Management Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-account-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Account Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +836,245 @@
 
 
 <h1 id="sannav-standards">SANnav — Standards<a class="headerlink" href="#sannav-standards" title="Permanent link">&para;</a></h1>
-<p>Sizing guidelines, design standards, and best practices.</p>
+<blockquote>
+<p>Part of the <a href="../../">SANnav</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This page defines design standards, naming conventions, and configuration baselines for SANnav Management Portal deployments. Apply these standards during initial deployment and validate them during periodic operational reviews.</p>
+<hr />
+<h2 id="appliance-naming">Appliance Naming<a class="headerlink" href="#appliance-naming" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SANnav Portal VM</td>
+<td><code>sannav-&lt;site&gt;-&lt;number&gt;</code></td>
+<td><code>sannav-dc1-01</code></td>
+</tr>
+<tr>
+<td>SANnav Global View VM</td>
+<td><code>sannav-gv-&lt;site&gt;</code></td>
+<td><code>sannav-gv-prod</code></td>
+</tr>
+<tr>
+<td>Portal DNS record</td>
+<td><code>sannav-&lt;site&gt;.corp.example.com</code></td>
+<td><code>sannav-dc1.corp.example.com</code></td>
+</tr>
+<tr>
+<td>Global View DNS record</td>
+<td><code>sannav-gv.corp.example.com</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Use DNS names, not IP addresses, in browser bookmarks and API clients. This allows the SANnav appliance IP to be changed (e.g. during DR) without client reconfiguration.</p>
+<hr />
+<h2 id="fabric-and-resource-group-naming">Fabric and Resource Group Naming<a class="headerlink" href="#fabric-and-resource-group-naming" title="Permanent link">&para;</a></h2>
+<p>SANnav groups switches into resource groups (called fabrics) that reflect the physical fabric topology:</p>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fabric / resource group</td>
+<td><code>&lt;site&gt;-FABRIC-&lt;id&gt;</code></td>
+<td><code>DC1-FABRIC-A</code>, <code>DC1-FABRIC-B</code></td>
+</tr>
+<tr>
+<td>Switch display name</td>
+<td><code>&lt;site&gt;-FC-&lt;role&gt;-&lt;rack&gt;-&lt;unit&gt;</code></td>
+<td><code>DC1-FC-DIR-A01-U10</code></td>
+</tr>
+</tbody>
+</table>
+<p>Apply consistent names at switch discovery time. SANnav uses the switch DNS name or IP if no display name is set, which makes large-fabric dashboards unreadable.</p>
+<hr />
+<h2 id="alert-policy-baseline">Alert Policy Baseline<a class="headerlink" href="#alert-policy-baseline" title="Permanent link">&para;</a></h2>
+<p>Define the following alert policy categories at minimum for all production fabrics:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Minimum Severity Threshold</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Port state change (F_Port down)</td>
+<td>Warning</td>
+<td>Email SAN team</td>
+</tr>
+<tr>
+<td>Port state change (E_Port down)</td>
+<td>Critical</td>
+<td>Email SAN team + page on-call</td>
+</tr>
+<tr>
+<td>ISL utilization &gt; 80%</td>
+<td>Warning</td>
+<td>Email SAN team</td>
+</tr>
+<tr>
+<td>MAPS CRC error violation</td>
+<td>Warning</td>
+<td>Email SAN team</td>
+</tr>
+<tr>
+<td>MAPS loss-of-signal violation</td>
+<td>Warning</td>
+<td>Email SAN team</td>
+</tr>
+<tr>
+<td>Switch health degraded</td>
+<td>Critical</td>
+<td>Email SAN team + page on-call</td>
+</tr>
+<tr>
+<td>Firmware mismatch detected</td>
+<td>Informational</td>
+<td>Email SAN team</td>
+</tr>
+<tr>
+<td>License expiry &lt; 30 days</td>
+<td>Warning</td>
+<td>Email SAN team</td>
+</tr>
+</tbody>
+</table>
+<p>Alert emails should target a distribution list, not individual engineers, so that on-call rotation does not require SANnav reconfiguration.</p>
+<hr />
+<h2 id="snmp-configuration-baseline">SNMP Configuration Baseline<a class="headerlink" href="#snmp-configuration-baseline" title="Permanent link">&para;</a></h2>
+<p>All switches managed by SANnav must have SNMPv3 configured with credentials that match what SANnav has stored. Minimum configuration on each switch (FOS CLI):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Add SNMPv3 user matching SANnav credentials</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>snmpv3<span class="w"> </span>-index<span class="w"> </span><span class="m">1</span><span class="w"> </span>-username<span class="w"> </span>sannav_mgmt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-authtype<span class="w"> </span>MD5<span class="w"> </span>-authpasswd<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-privtype<span class="w"> </span>AES128<span class="w"> </span>-privpasswd<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-rwcommunity<span class="w"> </span>sannav_rw
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Add SANnav as trap recipient</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>trapdest<span class="w"> </span>-index<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-trapdest<span class="w"> </span>&lt;sannav-ip&gt;<span class="w"> </span>-severity<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-username<span class="w"> </span>sannav_mgmt<span class="w"> </span>-authtype<span class="w"> </span>MD5<span class="w"> </span>-authpasswd<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-privtype<span class="w"> </span>AES128<span class="w"> </span>-privpasswd<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>-trapport<span class="w"> </span><span class="m">162</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verify</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>snmpconfig<span class="w"> </span>--show<span class="w"> </span>snmpv3
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>snmpconfig<span class="w"> </span>--show<span class="w"> </span>trapdest
+</code></pre></div>
+<p>In SANnav, enter these credentials under <strong>Discovery &gt; Add Switch &gt; SNMP Credentials</strong>.</p>
+<hr />
+<h2 id="switch-discovery-standards">Switch Discovery Standards<a class="headerlink" href="#switch-discovery-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>All switches must be discovered with <strong>HTTPS credentials</strong> (FOS REST API, not legacy SNMP-only management).</li>
+<li>Use dedicated SANnav service account on each switch rather than the <code>admin</code> account:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On each managed switch (FOS CLI)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>sannav_svc<span class="w"> </span>-r<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Role &quot;admin&quot; is required for zoning and firmware operations.</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Use &quot;user&quot; role for read-only SANnav deployments.</span>
+</code></pre></div>
+<ul>
+<li>Assign switches to the correct resource group immediately after discovery. Switches left in the default group are invisible to role-scoped SANnav operators.</li>
+</ul>
+<hr />
+<h2 id="backup-standards">Backup Standards<a class="headerlink" href="#backup-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Backup Type</th>
+<th>Frequency</th>
+<th>Retention</th>
+<th>Storage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SANnav full backup</td>
+<td>Weekly</td>
+<td>4 copies</td>
+<td>Remote NFS or SCP target</td>
+</tr>
+<tr>
+<td>SANnav configuration export</td>
+<td>Before every upgrade</td>
+<td>Indefinite</td>
+<td>Change management system</td>
+</tr>
+<tr>
+<td>Individual switch zone backup</td>
+<td>Before every zone change</td>
+<td>5 copies</td>
+<td>SANnav backup repository</td>
+</tr>
+</tbody>
+</table>
+<p>Backup schedule is configured under <strong>Administration &gt; Backup</strong>. Remote targets (SCP or NFS) are strongly recommended; relying on the local disk of the SANnav VM is not sufficient for DR.</p>
+<hr />
+<h2 id="firmware-management-standards">Firmware Management Standards<a class="headerlink" href="#firmware-management-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Maintain a validated FOS version baseline for each hardware generation.</li>
+<li>Upload approved FOS images to SANnav before they are needed (avoids scrambling during incidents).</li>
+<li>Use SANnav scheduled upgrades for non-disruptive rolling upgrades across a fabric — never manually upgrade all switches simultaneously.</li>
+<li>Retain one previous FOS version in the SANnav image repository for rollback.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Gen</th>
+<th>Recommended minimum FOS</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gen 7 (G7xx, X7)</td>
+<td>FOS 9.2.x</td>
+<td>Required for 64G and NVMe-oF</td>
+</tr>
+<tr>
+<td>Gen 6 (G6xx, X6)</td>
+<td>FOS 9.1.x</td>
+<td>32G FC</td>
+</tr>
+<tr>
+<td>Legacy Gen 5</td>
+<td>FOS 8.2.x</td>
+<td>No new features; security patches only</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="user-account-standards">User Account Standards<a class="headerlink" href="#user-account-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>No shared accounts. Each engineer must have an individual named account.</li>
+<li>Service accounts for automation or monitoring must be named <code>svc-&lt;purpose&gt;</code> and must use the minimum required role (Viewer for read-only; Operator for config changes).</li>
+<li>Local admin account is the break-glass only; password stored in vault; rotated quarterly.</li>
+<li>LDAP group membership controls all production access; local accounts for break-glass only.</li>
+</ul>
+<hr />
+<h2 id="change-management-integration">Change Management Integration<a class="headerlink" href="#change-management-integration" title="Permanent link">&para;</a></h2>
+<p>All SANnav configuration changes (zoning, firmware, MAPS policy deployment) must be performed within an approved change window. Document the following in the change record:</p>
+<ol>
+<li>Current zone set (export from SANnav before change)</li>
+<li>Target zone set (export after change)</li>
+<li>SANnav version at time of change</li>
+<li>Switch firmware versions at time of change</li>
+<li>Post-change validation results</li>
+</ol>
 
 
 

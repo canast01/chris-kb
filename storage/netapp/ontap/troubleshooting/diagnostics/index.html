@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#diagnostic-scope-broad-to-narrow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Scope: Broad to Narrow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#first-response-always-run-these-first" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -988,6 +999,20 @@
 
 <h1 id="ontap-diagnostics">ONTAP — Diagnostics<a class="headerlink" href="#ontap-diagnostics" title="Permanent link">&para;</a></h1>
 <p>Systematic diagnostic procedures for ONTAP. Start with cluster-level health, then narrow to the affected subsystem. Always collect an AutoSupport bundle before calling NetApp support.</p>
+<h2 id="diagnostic-scope-broad-to-narrow">Diagnostic Scope: Broad to Narrow<a class="headerlink" href="#diagnostic-scope-broad-to-narrow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    first["First Response\ncluster show\nsystem health status show\nstorage failover show"] --&gt; scope{"Symptom scope?"}
+    scope --&gt;|"Cluster / Node"| clusterDiag["Cluster &amp; Node\ncluster ring show\nsystem node run sysconfig\nstorage failover interconnect show"]
+    scope --&gt;|"Storage / Disk"| storDiag["Storage\nstorage aggregate show-status\nstorage disk show -broken\nStorage disk show -raid-state reconstructing"]
+    scope --&gt;|"Volume / Space"| volDiag["Volume\nvolume show -state !online\nvolume show percent-used\nvolume efficiency show"]
+    scope --&gt;|"Network / LIF"| netDiag["Network\nnetwork interface show -is-home false\nnetwork port show\ncluster ping-cluster"]
+    scope --&gt;|"Protocol"| protoDiag{"Which protocol?"}
+    protoDiag --&gt;|NFS| nfsDiag["nfs connected-client show\nstatistics start -object nfsv3\nvserver export-policy check-access"]
+    protoDiag --&gt;|SMB| smbDiag["vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2"]
+    protoDiag --&gt;|iSCSI| iscsiDiag["iscsi session show\nlun mapping show\niscsi tpgroup show"]
+    protoDiag --&gt;|FC| fcDiag["fcp adapter show\nfcp initiator show\nfcp topology show"]
+    scope --&gt;|"SnapMirror"| smDiag["snapmirror show -health false\nsnapmirror history show\nnetwork interface show -role intercluster"]
+    scope --&gt;|"Performance"| perfDiag["statistics start -object volume\nqos statistics performance show\nsystem node run sysstat"]</code></pre>
 <h2 id="first-response-always-run-these-first">First Response — Always Run These First<a class="headerlink" href="#first-response-always-run-these-first" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Overall cluster health summary</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show

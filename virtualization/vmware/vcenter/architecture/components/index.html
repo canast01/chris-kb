@@ -1099,6 +1099,29 @@
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                    └── vsphere-ui     ← HTML5 client
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                    └── vmware-eam     ← ESX Agent Manager
 </code></pre></div>
+<pre class="mermaid"><code>graph TD
+    vpostgres["vmware-vpostgres\n(PostgreSQL database)"]
+    stsd["vmware-stsd\n(SSO token service)"]
+    idmd["vmware-sts-idmd\n(identity management)"]
+    vpxd["vpxd\n(core vCenter daemon)"]
+    ui["vsphere-ui\n(HTML5 Client)"]
+    eam["vmware-eam\n(ESX Agent Manager)"]
+
+    vpostgres --&gt; stsd
+    stsd --&gt; idmd
+    idmd --&gt; vpxd
+    vpxd --&gt; ui
+    vpxd --&gt; eam
+
+    classDef db fill:#1d4ed8,stroke:#1e40af,color:#fff
+    classDef sso fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef core fill:#b45309,stroke:#92400e,color:#fff
+    classDef svc fill:#15803d,stroke:#166534,color:#fff
+
+    class vpostgres db
+    class stsd,idmd sso
+    class vpxd core
+    class ui,eam svc</code></pre>
 <p>If a manual restart is required:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Stop all cleanly</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all

@@ -750,6 +750,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#dual-site-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dual-Site Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pair-states" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -820,6 +831,20 @@
 <li>When R2 confirms receipt, the cycle is complete and RPO resets.</li>
 </ol>
 <p>Two delta sets are maintained simultaneously: one being transmitted (transmit delta set) and one accepting new writes (active delta set). A third set (overflow) is used when the transmit delta set is not clearing fast enough.</p>
+<pre class="mermaid"><code>flowchart TD
+    hostWrite["Host Write to R1"] --&gt; activeDeltaSet["Active Delta Set\n(accumulating writes)"]
+    activeDeltaSet --&gt;|"cycle interval ends\n(default 30s)"| closeDeltaSet["Delta Set Closed\n&amp; Queued"]
+    closeDeltaSet --&gt; newActive["New Active Delta Set\nOpens for Next Cycle"]
+    closeDeltaSet --&gt; transmit["Transmit Delta Set\n→ WAN → R2"]
+    transmit --&gt;|"R2 confirms receipt"| rpoReset["RPO Resets\nCycle Complete"]
+    transmit --&gt;|"link saturated / slow"| dse["DSE Overflow Device\nActivated"]
+    dse --&gt;|"link clears"| transmit
+
+    style activeDeltaSet fill:#2563eb,color:#fff
+    style closeDeltaSet fill:#b45309,color:#fff
+    style transmit fill:#7c3aed,color:#fff
+    style dse fill:#be123c,color:#fff
+    style rpoReset fill:#15803d,color:#fff</code></pre>
 <hr />
 <h2 id="srdf-group-design">SRDF Group Design<a class="headerlink" href="#srdf-group-design" title="Permanent link">&para;</a></h2>
 <p>An SRDF group (RDF group) is a logical container for R1/R2 device pairs. All pairs in a group share the same cycle boundary, meaning they are consistent with each other at failover.</p>
@@ -855,6 +880,32 @@
 </table>
 <p><strong>Bandwidth sizing:</strong> The required bandwidth equals the average write I/O rate × average block size × replication overhead (~1.1–1.2x). For SRDF/A, bandwidth headroom above the average is also needed to handle peak delta set sizes without cycle delay.</p>
 <hr />
+<h2 id="dual-site-topology">Dual-Site Topology<a class="headerlink" href="#dual-site-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph siteA ["Site A — Production"]
+        hosts["Production Hosts"]
+        r1["PowerMax R1\n(Source Array)"]
+        srdfDir1["SRDF Director Ports"]
+        hosts --&gt;|"host writes"| r1
+        r1 --&gt; srdfDir1
+    end
+
+    subgraph wan ["WAN / FCIP Link"]
+        link["FCIP / Dark Fibre\nReplication Link"]
+    end
+
+    subgraph siteB ["Site B — DR"]
+        srdfDir2["SRDF Director Ports"]
+        r2["PowerMax R2\n(Target Array)"]
+        dse["DSE Device\n(Overflow Buffer)"]
+        drHosts["DR Hosts\n(standby)"]
+        srdfDir2 --&gt; r2
+        r2 -.-&gt;|"only at failover"| drHosts
+        r2 --- dse
+    end
+
+    srdfDir1 --&gt;|"async delta sets\n~30s cycles"| link
+    link --&gt; srdfDir2</code></pre>
 <h2 id="pair-states">Pair States<a class="headerlink" href="#pair-states" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

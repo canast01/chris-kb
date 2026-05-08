@@ -699,6 +699,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-monitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-disk-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Disk Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-health-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Health Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bulk-locker-password-export-alias-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulk Locker Password Export (Alias List)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-validation-across-all-product-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP Validation Across All Product Nodes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trigger-upgrade-via-api-non-interactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trigger Upgrade via API (Non-Interactive)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -719,27 +793,147 @@
 
 <h1 id="aria-suite-lifecycle-scripts">Aria Suite Lifecycle — Scripts<a class="headerlink" href="#aria-suite-lifecycle-scripts" title="Permanent link">&para;</a></h1>
 <p>Automation scripts for LCM target three primary use cases: pre-upgrade validation (confirming disk space, certificate validity, and product health before initiating an upgrade), certificate expiry monitoring (scanning all Locker entries and alerting when within a configurable threshold), and scheduled health checks via the LCM REST API. Scripts use the LCM API base URL <code>https://&lt;lcm-fqdn&gt;/lcm/lcmservice/api/v2</code> with Basic or token authentication.</p>
-<p><strong>Certificate expiry monitor (Bash):</strong>
+<hr />
+<h2 id="certificate-expiry-monitor">Certificate Expiry Monitor<a class="headerlink" href="#certificate-expiry-monitor" title="Permanent link">&para;</a></h2>
+<p>Queries the Locker API and prints certificates expiring within a configurable threshold.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/usr/bin/env bash</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Usage: ./cert-expiry-check.sh &lt;lcm-fqdn&gt; &lt;username&gt; &lt;password&gt; &lt;warn-days&gt;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">LCM</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span><span class="p">;</span><span class="w"> </span><span class="nv">WARN</span><span class="o">=</span><span class="si">${</span><span class="nv">4</span><span class="k">:-</span><span class="nv">30</span><span class="si">}</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="nv">$USER</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="nv">$PASS</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/locker/api/v2/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>jq<span class="w"> </span>--argjson<span class="w"> </span>w<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WARN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="s1">&#39;.certificates[] | select((.daysToExpiry|tonumber) &lt;= $w) | &quot;\(.alias): \(.daysToExpiry) days&quot;&#39;</span>
-</code></pre></div></p>
-<p><strong>Pre-upgrade disk check (Bash):</strong>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="nv">$USER</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="nv">$PASS</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Certificates expiring within </span><span class="nv">$WARN</span><span class="s2"> days ===&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/locker/api/v2/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>jq<span class="w"> </span>--argjson<span class="w"> </span>w<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WARN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="s1">&#39;.certificates[] | select((.daysToExpiry|tonumber) &lt;= $w) |</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">   &quot;[\(.daysToExpiry) days] \(.alias) — expires \(.expirationDate)&quot;&#39;</span><span class="w"> </span>-r
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== All Locker certificates ===&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/locker/api/v2/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.certificates[] | &quot;\(.alias)\t\(.daysToExpiry) days\t\(.expirationDate)&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>sort<span class="w"> </span>-t<span class="s1">$&#39;\t&#39;</span><span class="w"> </span>-k2<span class="w"> </span>-n
+</code></pre></div>
+<hr />
+<h2 id="pre-upgrade-disk-check">Pre-Upgrade Disk Check<a class="headerlink" href="#pre-upgrade-disk-check" title="Permanent link">&para;</a></h2>
+<p>Run on the LCM appliance as root before any upgrade workflow.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/usr/bin/env bash</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Run on LCM appliance as root before any upgrade</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">for</span><span class="w"> </span>mount<span class="w"> </span><span class="k">in</span><span class="w"> </span>/<span class="w"> </span>/data<span class="w"> </span>/tmp<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nv">used</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="k">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">: </span><span class="si">${</span><span class="nv">used</span><span class="si">}</span><span class="s2">% used&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="nv">$used</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  WARNING: </span><span class="nv">$mount</span><span class="s2"> exceeds 80% — free space before upgrading&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">done</span>
-</code></pre></div></p>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">THRESHOLD</span><span class="o">=</span><span class="m">80</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">ALL_OK</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">for</span><span class="w"> </span>mount<span class="w"> </span><span class="k">in</span><span class="w"> </span>/<span class="w"> </span>/data<span class="w"> </span>/tmp<span class="w"> </span>/var/log<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span>mountpoint<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nv">used</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">: </span><span class="si">${</span><span class="nv">used</span><span class="si">}</span><span class="s2">% used&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$used</span><span class="w"> </span>-ge<span class="w"> </span><span class="nv">$THRESHOLD</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  WARNING: </span><span class="nv">$mount</span><span class="s2"> exceeds </span><span class="si">${</span><span class="nv">THRESHOLD</span><span class="si">}</span><span class="s2">% — free space before upgrading&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nv">ALL_OK</span><span class="o">=</span><span class="nb">false</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">done</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">if</span><span class="w"> </span><span class="nv">$ALL_OK</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: All filesystems within threshold&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="k">else</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: Disk space check failed — do not proceed with upgrade&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="k">fi</span>
+</code></pre></div>
+<hr />
+<h2 id="environment-health-summary">Environment Health Summary<a class="headerlink" href="#environment-health-summary" title="Permanent link">&para;</a></h2>
+<p>Queries LCM API and prints the health status of all environments and products.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Usage: ./lcm-health-summary.sh &lt;lcm-fqdn&gt; &lt;username&gt; &lt;password&gt;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">LCM</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="nv">$USER</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="nv">$PASS</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== LCM Environment Health ===&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/lcmservice/api/v2/environments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;Environment: \(.environmentName)  Health: \(.environmentHealth)&quot;&#39;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Running Requests ===&quot;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/lcmservice/api/v2/requests?state=RUNNING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;[\(.requestType)] ID:\(.requestId)  Started:\(.startTime)&quot;&#39;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Disk Usage on LCM Appliance ===&quot;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>df<span class="w"> </span>-h<span class="w"> </span>/<span class="w"> </span>/data<span class="w"> </span>/var/log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>column<span class="w"> </span>-t
+</code></pre></div>
+<hr />
+<h2 id="bulk-locker-password-export-alias-list">Bulk Locker Password Export (Alias List)<a class="headerlink" href="#bulk-locker-password-export-alias-list" title="Permanent link">&para;</a></h2>
+<p>Exports the list of password aliases and associated usernames stored in Locker (values are never exposed via API).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">LCM</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="nv">$USER</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="nv">$PASS</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;alias,username,description&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/locker/api/v2/passwords&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.passwords[] | [.alias, .userName, .description] | @csv&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="ntp-validation-across-all-product-nodes">NTP Validation Across All Product Nodes<a class="headerlink" href="#ntp-validation-across-all-product-nodes" title="Permanent link">&para;</a></h2>
+<p>After LCM deploys products, verify NTP sync on all appliances to prevent certificate failures.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Usage: ./ntp-check.sh</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Edit NODES to match your environment</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">NODES</span><span class="o">=(</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="s2">&quot;lcm-prod-01.corp.local&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;vidm-prod-01.corp.local&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="s2">&quot;vrops-prod-01.corp.local&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;vrops-prod-02.corp.local&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="s2">&quot;vra-prod-01.corp.local&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;vrli-prod-01.corp.local&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="o">)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NODES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">: &quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no<span class="w"> </span>-o<span class="w"> </span><span class="nv">ConnectTimeout</span><span class="o">=</span><span class="m">5</span><span class="w"> </span>root@<span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="s2">&quot;chronyc tracking 2&gt;/dev/null | grep &#39;System time&#39;&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;SSH failed&quot;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="k">done</span>
+</code></pre></div>
+<hr />
+<h2 id="trigger-upgrade-via-api-non-interactive">Trigger Upgrade via API (Non-Interactive)<a class="headerlink" href="#trigger-upgrade-via-api-non-interactive" title="Permanent link">&para;</a></h2>
+<p>Useful for scripted maintenance windows. Substitute environment ID and payload from UI inspection.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">LCM</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span><span class="p">;</span><span class="w"> </span><span class="nv">ENV_ID</span><span class="o">=</span><span class="nv">$4</span><span class="p">;</span><span class="w"> </span><span class="nv">PRODUCT_ID</span><span class="o">=</span><span class="nv">$5</span><span class="p">;</span><span class="w"> </span><span class="nv">TARGET_VERSION</span><span class="o">=</span><span class="nv">$6</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="nv">$USER</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="nv">$PASS</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Trigger upgrade</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">RESPONSE</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/lcmservice/api/v2/environments/</span><span class="nv">$ENV_ID</span><span class="s2">/products/</span><span class="nv">$PRODUCT_ID</span><span class="s2">/upgrade&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;targetVersion\&quot;:\&quot;</span><span class="nv">$TARGET_VERSION</span><span class="s2">\&quot;}&quot;</span><span class="k">)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nv">REQUEST_ID</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RESPONSE</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.requestId&#39;</span><span class="k">)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Upgrade triggered — Request ID: </span><span class="nv">$REQUEST_ID</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Monitor: https://</span><span class="nv">$LCM</span><span class="s2">/lcm/lcmservice/api/v2/requests/</span><span class="nv">$REQUEST_ID</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Poll until complete</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="nv">STATE</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="s2">&quot;https://</span><span class="nv">$LCM</span><span class="s2">/lcm/lcmservice/api/v2/requests/</span><span class="nv">$REQUEST_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.state&#39;</span><span class="k">)</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%H:%M:%S&#39;</span><span class="k">)</span><span class="s2"> — Request state: </span><span class="nv">$STATE</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;COMPLETED&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;FAILED&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">break</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">60</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="k">done</span>
+</code></pre></div>
 
 
 

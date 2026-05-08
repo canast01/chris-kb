@@ -815,6 +815,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#daily-health-check-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Daily Health Check Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1031,6 +1042,32 @@
 </tr>
 </tbody>
 </table>
+<h2 id="daily-health-check-sequence">Daily Health Check Sequence<a class="headerlink" href="#daily-health-check-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+  START([Begin daily check]) --&gt; SYS["uemcli /env/health show\n-filter 'health.value ne OK'"]
+  SYS --&gt; SYS_OK{Any non-OK\ncomponents?}
+  SYS_OK --&gt;|Yes| TRIAGE["Triage fault\ncheck Common Issues KB"]
+  SYS_OK --&gt;|No| SP["uemcli /env/sp show\nBoth SPs Active?"]
+  SP --&gt; SP_OK{Both Active?}
+  SP_OK --&gt;|No| SPFAIL["One SP offline —\ncheck fault LEDs\nopen Dell case if hardware"]
+  SP_OK --&gt;|Yes| POOL["uemcli /stor/config/pool show\nPool capacity &lt; 80%?"]
+  POOL --&gt; POOL_OK{Free &gt; 20%?}
+  POOL_OK --&gt;|No| CAPACT["Expand pool or\ndelete snapshots"]
+  POOL_OK --&gt;|Yes| REP["uemcli /prot/rep/session show\nAll sessions Active?"]
+  REP --&gt; REP_OK{All Active?}
+  REP_OK --&gt;|No| REPFIX["Resume or investigate\nreplication session"]
+  REP_OK --&gt;|Yes| DISK["uemcli /stor/config/disk show\nAll disks Normal?"]
+  DISK --&gt; DISK_OK{Any faulted?}
+  DISK_OK --&gt;|Yes| REPLACE["Initiate drive replacement\nmonitor RAID rebuild"]
+  DISK_OK --&gt;|No| DONE([All checks passed])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class SYS_OK,SP_OK,POOL_OK,REP_OK,DISK_OK decision
+  class SYS,SP,POOL,REP,DISK action
+  class TRIAGE,SPFAIL,CAPACT,REPFIX,REPLACE warn
+  class START,DONE term</code></pre>
 
 
 

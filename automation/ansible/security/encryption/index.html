@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#vault-encryption-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault Encryption Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vault-secrets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -803,6 +814,21 @@
 </blockquote>
 <hr />
 <p>Content to be added.</p>
+<h2 id="vault-encryption-flow">Vault Encryption Flow<a class="headerlink" href="#vault-encryption-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    plainSecret["Plaintext Secret\n(password / API key)"]
+    vaultEncrypt["ansible-vault\nencrypt_string"]
+    vaultFile["vault.yml\n(encrypted at rest)"]
+    vcKeyFile["Vault Password File\n(~/.vault_pass)"]
+
+    plainSecret --&gt; vaultEncrypt
+    vcKeyFile --&gt; vaultEncrypt
+    vaultEncrypt --&gt; vaultFile
+
+    vaultFile --&gt; mainYml["group_vars/all/main.yml\n(references vault_ vars)"]
+    mainYml --&gt; playbook["Playbook\n(uses db_password)"]
+    vcKeyFile --&gt;|decrypt at runtime| playbook
+    playbook --&gt;|over SSH| managedHost["Managed Host"]</code></pre>
 <h2 id="vault-secrets">Vault Secrets<a class="headerlink" href="#vault-secrets" title="Permanent link">&para;</a></h2>
 <p>Vault encrypts sensitive data at rest. Any YAML file or string value can be encrypted.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Encrypt a new file (opens editor)</span>

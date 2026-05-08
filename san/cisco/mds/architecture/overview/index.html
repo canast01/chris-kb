@@ -904,6 +904,36 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>graph TB
+  subgraph "Physical MDS Switch"
+    subgraph vsan10 ["VSAN 10 — Production (Fabric A)"]
+      V10NS["FC Name Server"]
+      V10Z["Zone DB"]
+      V10D["Domain ID: 1"]
+    end
+    subgraph vsan20 ["VSAN 20 — Replication (Fabric A)"]
+      V20NS["FC Name Server"]
+      V20Z["Zone DB"]
+      V20D["Domain ID: 2"]
+    end
+    subgraph vsan99 ["VSAN 99 — Management"]
+      V99NS["FC Name Server"]
+      V99Z["Zone DB"]
+      V99D["Domain ID: 3"]
+    end
+  end
+
+  H1["ESXi Host\n(HBA0 — fc1/1)"] --&gt;|"VSAN 10"| vsan10
+  SA["FlashArray CT0\n(fc1/8)"] --&gt;|"VSAN 10"| vsan10
+  SRDF1["PowerMax FA Dir A\n(fc1/9)"] --&gt;|"VSAN 20"| vsan20
+  SRDF2["PowerMax FA Dir B\n(fc1/10)"] --&gt;|"VSAN 20"| vsan20
+
+  classDef vsanBox fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef device fill:#15803d,stroke:#166534,color:#fff
+  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class vsan10,vsan20,vsan99 vsanBox
+  class H1 device
+  class SA,SRDF1,SRDF2 storage</code></pre>
 <p>Each VSAN has its own:
 - FC Name Server (FCNS)
 - Domain ID space
@@ -938,6 +968,22 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>sequenceDiagram
+  participant HBA as Host HBA
+  participant SW as MDS Switch
+  participant NS as FC Name Server
+  participant TGT as Storage Target
+
+  HBA-&gt;&gt;SW: FLOGI (Fabric Login)&lt;br/&gt;sends WWPN + WWNN
+  SW--&gt;&gt;HBA: FLOGI Accept&lt;br/&gt;assigns FCID (3-byte address)
+  HBA-&gt;&gt;NS: PLOGI to Name Server (0xFFFFFC)&lt;br/&gt;registers port type, WWPN, FCID
+  NS--&gt;&gt;HBA: LS_ACC (registration accepted)
+  HBA-&gt;&gt;NS: GNN_FT / GID_FT&lt;br/&gt;query targets in VSAN
+  NS--&gt;&gt;HBA: Return list of target FCIDs
+  HBA-&gt;&gt;TGT: PLOGI (Port Login)&lt;br/&gt;establish session
+  TGT--&gt;&gt;HBA: PLOGI Accept
+  HBA-&gt;&gt;TGT: PRLI (Process Login)&lt;br/&gt;negotiate SCSI / NVMe service
+  TGT--&gt;&gt;HBA: PRLI Accept — I/O ready</code></pre>
 <p><strong>Key commands:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all devices logged into a VSAN</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>

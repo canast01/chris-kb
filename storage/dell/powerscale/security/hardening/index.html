@@ -968,6 +968,29 @@
 <p>Security baselines and compliance configuration for Dell PowerScale.</p>
 </blockquote>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    cluster["PowerScale Cluster"]
+
+    subgraph "Network Layer"
+        netHard["Back-end VLAN isolated\nManagement VLAN firewall\nSSH source-IP restricted"]
+    end
+
+    subgraph "Protocol Layer"
+        protoHard["SMB1 disabled\nSMB signing required\nNFS root squash enabled\nUnused protocols disabled"]
+    end
+
+    subgraph "Authentication Layer"
+        authHard["AD / LDAP per access zone\nNTP sync (Kerberos req)\nPassword complexity enforced\nRBAC roles assigned"]
+    end
+
+    subgraph "Audit Layer"
+        auditHard["Protocol audit enabled\nSyslog → SIEM\nSNMP v3 only\nSupportAssist active"]
+    end
+
+    cluster --&gt; netHard
+    cluster --&gt; protoHard
+    cluster --&gt; authHard
+    cluster --&gt; auditHard</code></pre>
 <p>Apply all items before placing a cluster into production. Re-verify after each major upgrade.</p>
 <h3 id="initial-setup">Initial Setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h3>
 <ul>

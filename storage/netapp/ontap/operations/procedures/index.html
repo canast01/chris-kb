@@ -706,10 +706,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#svm-volume-lun-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SVM / Volume / LUN Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#change-readiness" class="md-nav__link">
     <span class="md-ellipsis">
       
         Change Readiness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rolling-node-upgrade-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rolling Node Upgrade Sequence
       
     </span>
   </a>
@@ -1107,6 +1129,33 @@
 
 
 <h1 id="ontap-procedures">ONTAP — Procedures<a class="headerlink" href="#ontap-procedures" title="Permanent link">&para;</a></h1>
+<h2 id="svm-volume-lun-hierarchy">SVM / Volume / LUN Hierarchy<a class="headerlink" href="#svm-volume-lun-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    cluster["Cluster"] --&gt; nodeA["Node A"]
+    cluster --&gt; nodeB["Node B"]
+    nodeA --&gt; aggrA["Aggregate (aggr1)\nRAID-DP / RAID-TEC"]
+    nodeB --&gt; aggrB["Aggregate (aggr2)\nRAID-DP / RAID-TEC"]
+    aggrA --&gt; svm1["SVM: svm-nas"]
+    aggrA --&gt; svm2["SVM: svm-san"]
+    aggrB --&gt; svm1
+    svm1 --&gt; volNFS["Volume: vol_nfs\njunction-path /nfs"]
+    svm1 --&gt; volSMB["Volume: vol_smb\njunction-path /smb"]
+    svm2 --&gt; volSAN["Volume: vol_iscsi"]
+    volSAN --&gt; lun1["LUN: /vol/vol_iscsi/lun0\nigroup: esxi-cluster"]
+    volNFS --&gt; snap1["Snapshots\n(hourly · daily · weekly)"]
+    volNFS --&gt; nfsExport["NFS Export\n/etc/exports equiv"]
+    volSMB --&gt; smbShare["SMB Share\n\\\\server\\share"]
+
+    classDef cluster fill:#1e40af,color:#fff
+    classDef node fill:#2563eb,color:#fff
+    classDef aggr fill:#7c3aed,color:#fff
+    classDef svm fill:#db6004,color:#fff
+    classDef vol fill:#15803d,color:#fff
+    class cluster cluster
+    class nodeA,nodeB node
+    class aggrA,aggrB aggr
+    class svm1,svm2 svm
+    class volNFS,volSMB,volSAN vol</code></pre>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All aggregates have at least 15% free capacity to absorb workload shifts during the change</li>
@@ -1153,6 +1202,28 @@
 </tr>
 </tbody>
 </table>
+<h2 id="rolling-node-upgrade-sequence">Rolling Node Upgrade Sequence<a class="headerlink" href="#rolling-node-upgrade-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Admin
+    participant Node1 as Node 1 (non-epsilon)
+    participant Node2 as Node 2 (HA partner)
+
+    Admin-&gt;&gt;Admin: autosupport invoke — start maintenance
+    Admin-&gt;&gt;Admin: snapmirror quiesce all relationships
+    Admin-&gt;&gt;Node2: storage failover takeover -ofnode node1
+    Node2--&gt;&gt;Admin: takeover complete — node1 aggregates on node2
+    Admin-&gt;&gt;Node1: apply firmware / ONTAP upgrade
+    Node1--&gt;&gt;Admin: node1 back online
+    Admin-&gt;&gt;Node2: storage failover giveback -ofnode node1
+    Node2--&gt;&gt;Admin: giveback complete
+    Admin-&gt;&gt;Admin: cluster show — validate node1 healthy
+    Admin-&gt;&gt;Node1: storage failover takeover -ofnode node2
+    Node1--&gt;&gt;Admin: takeover complete
+    Admin-&gt;&gt;Node2: apply firmware / ONTAP upgrade
+    Node2--&gt;&gt;Admin: node2 back online
+    Admin-&gt;&gt;Node1: storage failover giveback -ofnode node2
+    Admin-&gt;&gt;Admin: snapmirror resume all relationships
+    Admin-&gt;&gt;Admin: autosupport invoke — end maintenance</code></pre>
 <h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Send AutoSupport start-of-maintenance: <code>autosupport invoke -node * -type all -message "Maintenance window starting"</code></li>

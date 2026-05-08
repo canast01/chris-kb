@@ -1053,6 +1053,27 @@
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>       └── Disk Group 3 — RAID-10, NVMe drives
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            └── LUN or File System allocations
 </code></pre></div>
+<pre class="mermaid"><code>graph TD
+  subgraph "Unity Array"
+    subgraph "Storage Pool"
+      DG1["Disk Group 1\nRAID-5 (4+1) · SAS SSD"]
+      DG2["Disk Group 2\nRAID-5 (4+1) · NL-SAS"]
+      DG3["Disk Group 3\nRAID-10 · NVMe"]
+    end
+    LUN["Block LUN\n(thin-provisioned)"]
+    FS["File System\n(NFS / SMB)"]
+    SNAP["Snapshot\n(redirect-on-write)"]
+  end
+  DG1 &amp; DG2 &amp; DG3 --&gt; LUN
+  DG1 &amp; DG2 &amp; DG3 --&gt; FS
+  LUN -. "snap" .-&gt; SNAP
+  FS -. "snap" .-&gt; SNAP
+  classDef dg fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef res fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef snap fill:#b45309,stroke:#92400e,color:#fff
+  class DG1,DG2,DG3 dg
+  class LUN,FS res
+  class SNAP snap</code></pre>
 <table>
 <thead>
 <tr>

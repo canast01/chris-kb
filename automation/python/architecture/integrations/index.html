@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#api-call-and-retry-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Call and Retry Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#apis" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -798,6 +809,26 @@
 
 
 <h1 id="python-automation-integrations">Python Automation — Integrations<a class="headerlink" href="#python-automation-integrations" title="Permanent link">&para;</a></h1>
+<h2 id="api-call-and-retry-flow">API Call and Retry Flow<a class="headerlink" href="#api-call-and-retry-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    buildReq["Build Request\n(URL + headers + body)"]
+    sendReq["Send HTTP Request\n(requests.get/post)"]
+    checkStatus["Check Response\nStatus Code"]
+    parseBody["Parse JSON\nBody"]
+    returnData["Return Data\nto Caller"]
+    checkRetry["Retry attempt\n&lt; max_retries?"]
+    backoff["Exponential Backoff\n(backoff_factor)"]
+    raiseAlert["Raise Exception\n/ Alert"]
+
+    buildReq --&gt; sendReq
+    sendReq --&gt; checkStatus
+    checkStatus --&gt;|2xx OK| parseBody
+    parseBody --&gt; returnData
+    checkStatus --&gt;|429 / 5xx| checkRetry
+    checkRetry --&gt;|Yes| backoff
+    backoff --&gt; sendReq
+    checkRetry --&gt;|No| raiseAlert
+    checkStatus --&gt;|ConnectionError\nTimeout| checkRetry</code></pre>
 <h2 id="apis">APIs<a class="headerlink" href="#apis" title="Permanent link">&para;</a></h2>
 <h3 id="requests-library-basics">requests Library Basics<a class="headerlink" href="#requests-library-basics" title="Permanent link">&para;</a></h3>
 <p><code>requests</code> is the standard library for HTTP in Python automation scripts.</p>

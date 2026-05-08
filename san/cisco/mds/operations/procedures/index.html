@@ -751,6 +751,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#zone-provisioning-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Provisioning Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#vsan-and-zone-model" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -984,6 +995,22 @@
 </ul>
 <hr />
 <h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
+<h3 id="zone-provisioning-workflow">Zone Provisioning Workflow<a class="headerlink" href="#zone-provisioning-workflow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+  A["New host or storage port\nneeds fabric access"] --&gt; B["Get pWWN from host HBA\nor storage port"]
+  B --&gt; C["Create Device Alias\n(device-alias database)"]
+  C --&gt; D["device-alias commit"]
+  D --&gt; E["Create Zone\n(single-initiator / single-target)"]
+  E --&gt; F["Add Zone to Zone Set\n(zoneset name ... member ...)"]
+  F --&gt; G["Activate Zone Set\n(zoneset activate name ... vsan N)"]
+  G --&gt; H["Commit to fabric\n(zone commit vsan N)"]
+  H --&gt; I["Save config\n(copy running-config startup-config)"]
+  I --&gt; J["Verify: show zoneset active vsan N\nshow flogi database vsan N"]
+
+  classDef step fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef verify fill:#15803d,stroke:#166534,color:#fff
+  class A,B,C,D,E,F,G,H,I step
+  class J verify</code></pre>
 <h3 id="vsan-and-zone-model">VSAN and Zone Model<a class="headerlink" href="#vsan-and-zone-model" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  MDS Switch (VSAN 10 — Fabric A)
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ┌─────────────────────────────────────────────────────────────────────────┐

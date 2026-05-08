@@ -922,6 +922,27 @@
 <h1 id="unity-authentication">Unity — Authentication<a class="headerlink" href="#unity-authentication" title="Permanent link">&para;</a></h1>
 <h2 id="authentication-overview">Authentication Overview<a class="headerlink" href="#authentication-overview" title="Permanent link">&para;</a></h2>
 <p>Dell Unity supports two authentication pathways that serve distinct purposes:</p>
+<pre class="mermaid"><code>graph LR
+  subgraph "Management Plane"
+    GUI["Unisphere GUI\nREST API · uemcli"]
+    GUI --&gt; MAUTH{Auth method}
+    MAUTH --&gt;|Local account| LOCL["Local user DB\n(array-local)"]
+    MAUTH --&gt;|AD/LDAP| LDAP["LDAP / AD\ngroup → role mapping"]
+  end
+  subgraph "NAS Plane"
+    SMB["SMB / CIFS Clients"]
+    NFS4["NFS v4 Clients"]
+    SMB --&gt;|Kerberos / NTLM| ADOM["AD Domain\n(NAS server joined)"]
+    NFS4 --&gt;|krb5i / krb5p| ADOM
+  end
+  subgraph "Block Plane"
+    ISCSI["iSCSI Initiators"]
+    ISCSI --&gt;|CHAP| CTARGET["Unity iSCSI Target\n(per-host credentials)"]
+  end
+  classDef auth fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef plane fill:#2563eb,stroke:#1d4ed8,color:#fff
+  class MAUTH auth
+  class LOCL,LDAP,ADOM,CTARGET plane</code></pre>
 <table>
 <thead>
 <tr>

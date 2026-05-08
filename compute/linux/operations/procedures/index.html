@@ -783,6 +783,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#systemd-service-dependency-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        systemd Service Dependency Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#service-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -887,6 +898,17 @@
   
     <nav class="md-nav" aria-label="Patching">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#patching-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patching Flow
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#pre-patch-checklist" class="md-nav__link">
@@ -1137,6 +1159,23 @@
 <a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>ls<span class="w"> </span>-la<span class="w"> </span>/etc/sudoers.d/
 </code></pre></div>
 <hr />
+<h2 id="systemd-service-dependency-model">systemd Service Dependency Model<a class="headerlink" href="#systemd-service-dependency-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    hardwareInit["hardware.target\ndevice enumeration"]
+    networkOnline["network-online.target\ninterfaces configured"]
+    sysInit["sysinit.target\nfsck · mount · sysctl"]
+    basic["basic.target\ntimers · sockets · paths"]
+    multiUser["multi-user.target\nall services ready"]
+    sshd["sshd.service"]
+    chronyd["chronyd.service"]
+    rsyslog["rsyslog.service"]
+    auditd["auditd.service"]
+
+    hardwareInit --&gt; sysInit --&gt; basic --&gt; networkOnline --&gt; multiUser
+    basic --&gt; sshd
+    basic --&gt; chronyd
+    networkOnline --&gt; rsyslog
+    basic --&gt; auditd</code></pre>
 <h2 id="service-management">Service Management<a class="headerlink" href="#service-management" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all running services</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--state<span class="o">=</span>running
@@ -1310,6 +1349,21 @@
 </code></pre></div>
 <h2 id="patching">Patching<a class="headerlink" href="#patching" title="Permanent link">&para;</a></h2>
 <p>Patch management procedures for RHEL 8/9 and Ubuntu 22.04 LTS servers.</p>
+<h3 id="patching-flow">Patching Flow<a class="headerlink" href="#patching-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    preCheck["Pre-patch checks\nuptime · systemctl --failed · df -h"]
+    captureState["Capture state\npackage list · running kernel"]
+    checkUpdates["Check available updates\ndnf check-update / apt list --upgradable"]
+    apply["Apply patches\ndnf update -y / apt upgrade -y"]
+    rebootNeeded{"Reboot\nrequired?"}
+    reboot["Reboot\nnew kernel"]
+    postValidate["Post-patch validation\nservices · kernel · diff package list"]
+    done["Complete\nClose change record"]
+
+    preCheck --&gt; captureState --&gt; checkUpdates --&gt; apply --&gt; rebootNeeded
+    rebootNeeded -- Yes --&gt; reboot --&gt; postValidate
+    rebootNeeded -- No --&gt; postValidate
+    postValidate --&gt; done</code></pre>
 <h3 id="pre-patch-checklist">Pre-Patch Checklist<a class="headerlink" href="#pre-patch-checklist" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># 1. Confirm system is healthy before patching</span>
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>uptime

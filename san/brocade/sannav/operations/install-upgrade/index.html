@@ -699,6 +699,169 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-installation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Installation Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-installation-vmware-esxi-ova" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Installation — VMware ESXi (OVA)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New Installation — VMware ESXi (OVA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-deploy-ova" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Deploy OVA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-power-on-and-initial-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Power On and Initial Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-initial-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Initial Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-place-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Place Upgrade
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="In-Place Upgrade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-via-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade via GUI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-via-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade via CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-upgrade-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Upgrade Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decommission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +881,183 @@
 
 
 <h1 id="sannav-install-upgrade">SANnav — Install &amp; Upgrade<a class="headerlink" href="#sannav-install-upgrade" title="Permanent link">&para;</a></h1>
-<p>Installation, upgrade, patching, and decommission.</p>
+<blockquote>
+<p>Part of the <a href="../../">SANnav</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SANnav Management Portal is deployed as a virtual appliance (OVA for VMware, QCOW2 for KVM). Upgrades are performed in-place via the SANnav GUI or appliance CLI. This page covers new installation and in-place upgrade procedures.</p>
+<hr />
+<h2 id="pre-installation-requirements">Pre-Installation Requirements<a class="headerlink" href="#pre-installation-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hypervisor</td>
+<td>VMware ESXi 6.7 / 7.x / 8.x, or KVM (RHEL/CentOS 8+)</td>
+</tr>
+<tr>
+<td>vCPU</td>
+<td>8 minimum (16 recommended for medium environments)</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>32 GB minimum</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>300 GB thin provisioned (500 GB for &gt; 50 switches)</td>
+</tr>
+<tr>
+<td>NIC</td>
+<td>1 vNIC on management VLAN with static IP</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>SANnav must be able to reach NTP servers</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>Forward and reverse DNS for SANnav management IP</td>
+</tr>
+<tr>
+<td>Ports</td>
+<td>TCP 443 from client browsers; UDP 162 from managed switches</td>
+</tr>
+</tbody>
+</table>
+<p>Obtain the OVA or ISO from Broadcom Support portal. Verify the SHA-256 checksum against the published hash before deployment.</p>
+<hr />
+<h2 id="new-installation-vmware-esxi-ova">New Installation — VMware ESXi (OVA)<a class="headerlink" href="#new-installation-vmware-esxi-ova" title="Permanent link">&para;</a></h2>
+<h3 id="1-deploy-ova">1. Deploy OVA<a class="headerlink" href="#1-deploy-ova" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In vCenter or ESXi web client, select <strong>Actions &gt; Deploy OVF Template</strong>.</li>
+<li>Browse to the SANnav OVA file.</li>
+<li>Accept the license agreement.</li>
+<li>Configure the deployment settings:</li>
+<li>VM name: <code>sannav-dc1-01</code></li>
+<li>Datastore: select a datastore with sufficient free space (recommend 500 GB reserve)</li>
+<li>Network: select the management port group</li>
+<li>On the <strong>Customize template</strong> screen, configure:</li>
+<li>Management IP address</li>
+<li>Subnet mask</li>
+<li>Default gateway</li>
+<li>DNS server 1 / DNS server 2</li>
+<li>NTP server</li>
+<li>Hostname (FQDN): <code>sannav-dc1.corp.example.com</code></li>
+<li>Review settings and click <strong>Finish</strong>.</li>
+</ol>
+<h3 id="2-power-on-and-initial-setup">2. Power On and Initial Setup<a class="headerlink" href="#2-power-on-and-initial-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># After VM powers on, access the console or SSH with default credentials</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Default credentials: admin / passw0rd (change on first login)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ssh<span class="w"> </span>admin@&lt;sannav-ip&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Verify network connectivity</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ping<span class="w"> </span><span class="m">8</span>.8.8.8<span class="w">       </span><span class="c1"># or internal NTP/DNS server</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>hostname<span class="w">           </span><span class="c1"># should return configured FQDN</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check service startup</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>sannav<span class="w"> </span>status
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Wait 5-10 minutes for all services to start on first boot</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Change default admin password</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>passwd<span class="w"> </span>admin
+</code></pre></div>
+<h3 id="3-initial-configuration">3. Initial Configuration<a class="headerlink" href="#3-initial-configuration" title="Permanent link">&para;</a></h3>
+<p>Access the SANnav UI at <code>https://&lt;sannav-ip&gt;</code>. Log in with <code>admin</code> and the new password.</p>
+<p><strong>First-time setup checklist:</strong></p>
+<ol>
+<li><strong>Administration &gt; Server Settings &gt; NTP</strong> — confirm NTP is configured and synchronized</li>
+<li><strong>Administration &gt; Server Settings &gt; SMTP</strong> — configure email relay</li>
+<li><strong>Administration &gt; Server Settings &gt; LDAP</strong> — configure Active Directory integration</li>
+<li><strong>Administration &gt; License Management</strong> — apply SANnav license key</li>
+<li><strong>Discovery &gt; Add Switch</strong> — discover first managed switch</li>
+<li><strong>Administration &gt; Backup</strong> — configure backup schedule and remote target</li>
+</ol>
+<hr />
+<h2 id="in-place-upgrade">In-Place Upgrade<a class="headerlink" href="#in-place-upgrade" title="Permanent link">&para;</a></h2>
+<h3 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Review SANnav Release Notes for the target version (check for upgrade path restrictions)</li>
+<li>[ ] Take a VM snapshot in vCenter before starting</li>
+<li>[ ] Run a manual backup: <strong>Administration &gt; Backup &gt; Backup Now</strong></li>
+<li>[ ] Record current SANnav version: <code>sannav version</code></li>
+<li>[ ] Confirm all switches are reachable and no critical alerts are active</li>
+<li>[ ] Notify stakeholders of the planned maintenance window</li>
+</ul>
+<h3 id="upgrade-via-gui">Upgrade via GUI<a class="headerlink" href="#upgrade-via-gui" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Download the SANnav upgrade package (<code>.bin</code> file) from Broadcom Support.</li>
+<li>Navigate to <strong>Administration &gt; System &gt; Software Update</strong>.</li>
+<li>Click <strong>Upload Upgrade File</strong> and select the <code>.bin</code> file.</li>
+<li>The UI validates the package and displays the target version.</li>
+<li>Click <strong>Start Upgrade</strong>.</li>
+<li>SANnav services restart during the upgrade. The UI is unavailable for 15–30 minutes.</li>
+<li>After the upgrade completes, log back in and verify the version: <strong>Administration &gt; System &gt; About</strong>.</li>
+</ol>
+<h3 id="upgrade-via-cli">Upgrade via CLI<a class="headerlink" href="#upgrade-via-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Transfer upgrade package to SANnav (from admin workstation)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>scp<span class="w"> </span>sannav-upgrade-2.4.0.bin<span class="w"> </span>admin@sannav-dc1.corp.example.com:/tmp/
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># SSH to appliance and start upgrade</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify package checksum</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sha256sum<span class="w"> </span>/tmp/sannav-upgrade-2.4.0.bin
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Compare with published checksum</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Apply upgrade</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>sannav<span class="w"> </span>upgrade<span class="w"> </span>/tmp/sannav-upgrade-2.4.0.bin
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Monitor upgrade log</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/sannav/logs/upgrade.log
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># After completion, verify version</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>sannav<span class="w"> </span>version
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Expected: 2.4.0</span>
+</code></pre></div>
+<h3 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify all services running</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sannav<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check log for post-upgrade errors</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ERROR\|FATAL&quot;</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify switch connectivity restored</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># In GUI: Dashboard &gt; Fabric Summary — all switches should be Online within 5 min</span>
+</code></pre></div>
+<p>Post-upgrade, delete the VM snapshot taken before the upgrade. Snapshots held for more than 48 hours degrade VM performance.</p>
+<hr />
+<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<p>If the upgrade fails or a critical issue is found post-upgrade:</p>
+<ol>
+<li>Power off the SANnav VM.</li>
+<li>Revert to the pre-upgrade snapshot in vCenter.</li>
+<li>Power on the VM and verify services start.</li>
+<li>Contact Broadcom Support with the upgrade log: <code>/opt/sannav/logs/upgrade.log</code>.</li>
+</ol>
+<p>There is no in-place rollback mechanism within SANnav itself — the VM snapshot is the only rollback path.</p>
+<hr />
+<h2 id="decommission">Decommission<a class="headerlink" href="#decommission" title="Permanent link">&para;</a></h2>
+<p>To decommission a SANnav instance:</p>
+<ol>
+<li>Export all zone configurations: <strong>Inventory &gt; Fabrics &gt; Export</strong>.</li>
+<li>Export the full backup: <strong>Administration &gt; Backup &gt; Backup Now</strong>.</li>
+<li>Remove the SANnav instance from Global View (if registered): Global View <strong>Administration &gt; Portals &gt; Remove</strong>.</li>
+<li>On each managed switch, remove the SANnav SNMP trap destination and HTTPS service account:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On each switch (FOS CLI)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>trapdest<span class="w"> </span>-index<span class="w"> </span>&lt;n&gt;<span class="w"> </span>-trapdest<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w">   </span><span class="c1"># clear trap destination</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>userconfig<span class="w"> </span>--delete<span class="w"> </span>sannav_svc
+</code></pre></div>
+<ol>
+<li>Power off and delete the SANnav VM.</li>
+</ol>
 
 
 

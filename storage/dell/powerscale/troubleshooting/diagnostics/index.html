@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#triage-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triage Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#diagnostic-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -781,6 +792,19 @@
 
 
 <h1 id="powerscale-diagnostics">PowerScale — Diagnostics<a class="headerlink" href="#powerscale-diagnostics" title="Permanent link">&para;</a></h1>
+<h2 id="triage-flow">Triage Flow<a class="headerlink" href="#triage-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Alert or Incident]) --&gt; B["isi status\nisi event list --limit 20"]
+    B --&gt; C{"Node SMARTFAIL\nor DOWN?"}
+    C --&gt;|Yes| D["Monitor Restripe job\nOpen Dell support case"]
+    C --&gt;|No| E{"SyncIQ policy\nfailing?"}
+    E --&gt;|Yes| F["isi sync reports list\nCheck network to target\nResolve snapshot conflict"]
+    E --&gt;|No| G{"Quota directory\nwrite failure?"}
+    G --&gt;|Yes| H["isi quota quotas list\nRaise or remove hard limit"]
+    G --&gt;|No| I{"Client connectivity\nissue?"}
+    I --&gt;|Yes| J["isi network subnets list\nnslookup SmartConnect zone\nVerify IP pool health"]
+    I --&gt;|No| K["isi statistics query current\nisi storagepool list\nCapacity / performance path"]
+    D &amp; F &amp; H &amp; J &amp; K --&gt; Z([Escalate to Dell Support\nif unresolved])</code></pre>
 <h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Cluster node and drive health summary</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>status

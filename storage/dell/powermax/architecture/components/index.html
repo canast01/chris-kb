@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#component-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -842,6 +853,61 @@
 
 
 <h1 id="powermax-components">PowerMax — Components<a class="headerlink" href="#powermax-components" title="Permanent link">&para;</a></h1>
+<h2 id="component-hierarchy">Component Hierarchy<a class="headerlink" href="#component-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph "PowerMax Array"
+        subgraph "Engine 1"
+            DirA["Director A\n(FED + BED + RDF)"]
+            DirB["Director B\n(FED + BED + RDF)"]
+            GM["Global Memory\n(DRAM, mirrored A↔B)"]
+            DirA &lt;--&gt;|"mirror"| GM
+            DirB &lt;--&gt;|"mirror"| GM
+        end
+        subgraph "Engine N (up to 8)"
+            DirC["Director A'"]
+            DirD["Director B'"]
+            GM2["Global Memory'"]
+            DirC &lt;--&gt;|"mirror"| GM2
+            DirD &lt;--&gt;|"mirror"| GM2
+        end
+        XB[("Crossbar\nInterconnect")]
+        DirA &amp; DirB --&gt; XB
+        DirC &amp; DirD --&gt; XB
+        DAE[["NVMe-AF Drives\n(SCM / eTLC)"]]
+        XB --&gt; DAE
+    end
+    subgraph "Management"
+        UNI["Unisphere\n(vApp / appliance)"]
+        SE["Solutions Enabler\n(SYMCLI host)"]
+        EMB["Embedded SE\n(on-array)"]
+    end
+    subgraph "Host Tier"
+        FAB_A["SAN Fabric A\n(FC / NVMe-oF)"]
+        FAB_B["SAN Fabric B\n(FC / NVMe-oF)"]
+        HOSTS["Production Hosts\n(Oracle / SQL / SAP)"]
+    end
+    REMOTE["Remote PowerMax\n(SRDF R2)"]
+
+    DirA &amp; DirB --&gt;|"FE ports"| FAB_A
+    DirA &amp; DirB --&gt;|"FE ports"| FAB_B
+    FAB_A &amp; FAB_B --&gt; HOSTS
+    DirA &amp; DirB --&gt;|"RDF ports\nSRDF/S or SRDF/A"| REMOTE
+    UNI &amp; SE --&gt; DirA
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef mem fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef store fill:#0f766e,stroke:#0d9488,color:#fff
+    classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    classDef mgmt fill:#92400e,stroke:#78350f,color:#fff
+    classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+    class DirA,DirB,DirC,DirD ctrl
+    class GM,GM2 mem
+    class DAE store
+    class XB,FAB_A,FAB_B net
+    class HOSTS host
+    class UNI,SE,EMB mgmt
+    class REMOTE dr</code></pre>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -955,6 +1021,30 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>-v
 </code></pre></div>
 <h3 id="srdfs-pair-states">SRDF/S Pair States<a class="headerlink" href="#srdfs-pair-states" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    SYNC["Synchronized\n(normal)"]
+    SYNCING["Synchronizing\n(catching up)"]
+    SUSP["Suspended\n(paused — R1 queuing)"]
+    PART["Partitioned\n(link lost)"]
+    FO["Failed Over\n(R2 is R/W, R1 NR)"]
+    SPLIT["Split\n(R2 independent R/W)"]
+
+    SYNC --&gt;|"link failure"| PART
+    SYNC --&gt;|"suspend cmd"| SUSP
+    SYNC --&gt;|"planned failover"| FO
+    SUSP --&gt;|"resume / establish"| SYNCING
+    SYNCING --&gt;|"delta sync done"| SYNC
+    PART --&gt;|"link restored"| SYNCING
+    FO --&gt;|"restore / establish"| SYNCING
+    SYNC --&gt;|"split cmd"| SPLIT
+    SPLIT --&gt;|"establish"| SYNCING
+
+    classDef ok fill:#15803d,stroke:#166534,color:#fff
+    classDef warn fill:#b45309,stroke:#92400e,color:#fff
+    classDef crit fill:#be123c,stroke:#9f1239,color:#fff
+    class SYNC ok
+    class SYNCING,SUSP warn
+    class PART,FO,SPLIT crit</code></pre>
 <table>
 <thead>
 <tr>

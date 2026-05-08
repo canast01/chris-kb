@@ -875,6 +875,18 @@
 <p>Eyeglass DR configuration groups mirror SyncIQ policy naming — consistent names simplify DR readiness audits.</p>
 <h2 id="share-and-quota-alignment-requirements">Share and Quota Alignment Requirements<a class="headerlink" href="#share-and-quota-alignment-requirements" title="Permanent link">&para;</a></h2>
 <p>Before declaring DR-ready, ALL of the following must be met:</p>
+<pre class="mermaid"><code>flowchart TD
+    primaryPS["Production PowerScale\nSMB shares / NFS exports / Quotas"]
+    eyeglass["Eyeglass DR Assistant\nConfiguration Replication Engine"]
+    drPS["DR PowerScale\nReplicated config (shares / exports / quotas)"]
+    adMapping["Active Directory\nGroup-based ACLs"]
+    dnsZone["DNS Server\nSmartConnect zone delegation"]
+
+    primaryPS --&gt;|"OneFS API\ndiscovers config"| eyeglass
+    eyeglass --&gt;|"replicates SMB shares\nNFS exports\nquotas"| drPS
+    adMapping --&gt;|"AD group ACLs\nmapped to DR shares"| drPS
+    eyeglass --&gt;|"pre-stages DNS\nzone delegation"| dnsZone
+    dnsZone --&gt;|"DNS cutover\non failover"| drPS</code></pre>
 <table>
 <thead>
 <tr>
@@ -938,6 +950,18 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart LR
+    t1["Tier 1\nCritical file services\nContinuous SyncIQ\nRPO &lt; 15 min"]
+    t2["Tier 2\nDepartmental shares\nEvery 4 hours\nRPO &lt; 4 hours"]
+    t3["Tier 3\nArchival data\nDaily SyncIQ\nRPO &lt; 24 hours"]
+
+    egMonitor["Eyeglass\nRPO Monitor"]
+    snmpAlert["SNMP / Email\nAlert"]
+
+    t1 --&gt;|"lag threshold\n10 min"| egMonitor
+    t2 --&gt;|"lag threshold\n3.5 hours"| egMonitor
+    t3 --&gt;|"lag threshold\n20 hours"| egMonitor
+    egMonitor --&gt;|"breach detected"| snmpAlert</code></pre>
 <h2 id="dr-readiness-score">DR Readiness Score<a class="headerlink" href="#dr-readiness-score" title="Permanent link">&para;</a></h2>
 <p>The Eyeglass DR Readiness Score must be 100% before any scheduled failover test or before declaring DR capability for the environment.</p>
 <p>Score &lt; 100% indicates one or more missing mappings or replication lag beyond threshold — investigate and resolve before proceeding with DR exercises.</p>
@@ -1036,6 +1060,22 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart TD
+    policy["Eyeglass DR Policy\nPOL-NAS-PROD"]
+    srcCluster["Source Cluster\nProduction PowerScale"]
+    tgtCluster["Target Cluster\nDR PowerScale"]
+    accessZones["Access Zones\nzone-finance / zone-home"]
+    synciqPolicies["SyncIQ Policies\npscale-dc1-pscale-dc2-finance\npscale-dc1-pscale-dc2-home"]
+    dnsZones["DNS Zones\nSmartConnect cutover zones"]
+    rpoTarget["RPO Target\n&lt; 15 min (Tier 1)"]
+
+    policy --&gt; srcCluster
+    policy --&gt; tgtCluster
+    policy --&gt; accessZones
+    policy --&gt; synciqPolicies
+    policy --&gt; dnsZones
+    policy --&gt; rpoTarget
+    synciqPolicies --&gt;|"replicates data\nto target"| tgtCluster</code></pre>
 <h3 id="viewing-policies">Viewing Policies<a class="headerlink" href="#viewing-policies" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all DR policies</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>list

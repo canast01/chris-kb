@@ -699,6 +699,136 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-needs-to-be-backed-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Needs to Be Backed Up
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backing-up-the-lcm-appliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backing Up the LCM Appliance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backing Up the LCM Appliance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-vm-snapshot-pre-change-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1 — VM Snapshot (Pre-Change Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-vadp-compatible-backup-preferred-for-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2 — VADP-Compatible Backup (Preferred for Production)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backing-up-the-nfs-binary-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backing Up the NFS Binary Repository
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exporting-lcm-environment-configuration-via-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exporting LCM Environment Configuration via API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Restore Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restoring-the-lcm-appliance-from-vm-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restoring the LCM Appliance from VM Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restoring-after-nfs-data-loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restoring After NFS Data Loss
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-verification-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Verification Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +848,157 @@
 
 
 <h1 id="aria-suite-lifecycle-backup-restore">Aria Suite Lifecycle — Backup &amp; Restore<a class="headerlink" href="#aria-suite-lifecycle-backup-restore" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<p>LCM itself does not have a built-in scheduled backup agent. The recommended approach is to combine a <strong>file-system-level NFS backup</strong> of the binary repository with a <strong>VM-level snapshot or backup</strong> of the LCM appliance. The Locker (certificates, passwords, licences) state is stored on the appliance disk, so the appliance backup is the recovery point for all Locker data.</p>
+<hr />
+<h2 id="what-needs-to-be-backed-up">What Needs to Be Backed Up<a class="headerlink" href="#what-needs-to-be-backed-up" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Storage Location</th>
+<th>Backup Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LCM application database</td>
+<td><code>/var/lib/vrlcm/</code> on LCM appliance</td>
+<td>VM backup / snapshot</td>
+</tr>
+<tr>
+<td>Locker (certs, passwords, licences)</td>
+<td><code>/opt/vmware/vrlcm/</code> on LCM appliance</td>
+<td>VM backup / snapshot</td>
+</tr>
+<tr>
+<td>Product binaries / NFS repo</td>
+<td>NFS share mounted at <code>/data</code></td>
+<td>NFS-server-side backup</td>
+</tr>
+<tr>
+<td>LCM configuration (VIDM, vCenter)</td>
+<td>Embedded in application DB</td>
+<td>VM backup / snapshot</td>
+</tr>
+<tr>
+<td>Deployment manifests</td>
+<td>LCM DB + exported snapshots</td>
+<td>API export (see below)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="backing-up-the-lcm-appliance">Backing Up the LCM Appliance<a class="headerlink" href="#backing-up-the-lcm-appliance" title="Permanent link">&para;</a></h2>
+<h3 id="option-1-vm-snapshot-pre-change-only">Option 1 — VM Snapshot (Pre-Change Only)<a class="headerlink" href="#option-1-vm-snapshot-pre-change-only" title="Permanent link">&para;</a></h3>
+<p>Take a snapshot before any upgrade, certificate rotation, or major change. Do not use snapshots as the long-term backup mechanism — they grow indefinitely and degrade VM performance.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># PowerCLI — snapshot the LCM VM before a change</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;lcm-prod-01&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$vm</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-</span><span class="k">$(</span>Get-Date<span class="w"> </span>-Format<span class="w"> </span>yyyyMMdd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-Description<span class="w"> </span><span class="s2">&quot;Pre-upgrade snapshot — LCM 8.x to 8.y&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-Quiesce<span class="w"> </span>-Memory:<span class="nv">$false</span>
+</code></pre></div>
+<p>Remove the snapshot within 48 hours of a successful upgrade:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Get-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;lcm-prod-01&quot;</span><span class="o">)</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-*&quot;</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>Remove-Snapshot<span class="w"> </span>-Confirm:<span class="nv">$false</span>
+</code></pre></div>
+<h3 id="option-2-vadp-compatible-backup-preferred-for-production">Option 2 — VADP-Compatible Backup (Preferred for Production)<a class="headerlink" href="#option-2-vadp-compatible-backup-preferred-for-production" title="Permanent link">&para;</a></h3>
+<p>Use your enterprise backup solution (Veeam, Commvault, Veritas) to back up the LCM appliance VM with application-consistent quiesce. Schedule nightly full or incremental backups. Retain at least 14 daily restore points.</p>
+<p>Requirements:
+- VMware Tools must be running on the LCM appliance (verify: <code>vmware-toolsd --version</code> from SSH)
+- Backup job should quiesce the guest filesystem
+- LCM services do not need to be stopped for VADP backup — quiesce handles this</p>
+<hr />
+<h2 id="backing-up-the-nfs-binary-repository">Backing Up the NFS Binary Repository<a class="headerlink" href="#backing-up-the-nfs-binary-repository" title="Permanent link">&para;</a></h2>
+<p>The <code>/data</code> NFS share contains all downloaded product bundles (<code>.pak</code> files). These are large and re-downloadable from Broadcom, but backing them up avoids re-downloading during disaster recovery.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check NFS mount and size from LCM appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/*
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># On the NFS server — verify export path</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>showmount<span class="w"> </span>-e<span class="w"> </span>&lt;nfs-server-ip&gt;
+</code></pre></div>
+<p>Backup options:
+- <strong>NFS server snapshot</strong>: if the NFS server supports snapshots (NetApp, Pure, vSAN File Services), schedule daily snapshots of the export volume
+- <strong>rsync to secondary storage</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run from NFS server or a jump host with access to both locations</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>--progress<span class="w"> </span>/exports/lcm-repo/<span class="w"> </span>/backup/lcm-repo-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>/
+</code></pre></div>
+<hr />
+<h2 id="exporting-lcm-environment-configuration-via-api">Exporting LCM Environment Configuration via API<a class="headerlink" href="#exporting-lcm-environment-configuration-via-api" title="Permanent link">&para;</a></h2>
+<p>The LCM API can export environment inventory, which documents deployed product configurations for rebuild reference.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># List all environments</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>lcm-environments-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Export a specific environment (replace &lt;env-id&gt; with actual ID)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nv">ENV_ID</span><span class="o">=</span><span class="s2">&quot;&lt;env-id&gt;&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments/</span><span class="nv">$ENV_ID</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>lcm-env-<span class="si">${</span><span class="nv">ENV_ID</span><span class="si">}</span>-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Export Locker certificate inventory (metadata only — not private keys)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/locker/api/v2/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>lcm-locker-certs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+</code></pre></div>
+<p>Store these JSON exports alongside the backup job output in a version-controlled location.</p>
+<hr />
+<h2 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h2>
+<h3 id="restoring-the-lcm-appliance-from-vm-backup">Restoring the LCM Appliance from VM Backup<a class="headerlink" href="#restoring-the-lcm-appliance-from-vm-backup" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Power off the LCM appliance VM (coordinate with teams — LCM UI will be unavailable)</li>
+<li>Restore the VM from the backup job or revert to snapshot</li>
+<li>Power on the restored appliance</li>
+<li>Verify LCM services are running:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>admin@lcm-prod-01.corp.local
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>lcm
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>nginx
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vracli<span class="w"> </span>status
+</code></pre></div>
+<ol>
+<li>Open the LCM UI and verify:</li>
+<li>Environments show correct products and versions</li>
+<li>Locker contains all expected certificates and passwords</li>
+<li>
+<p>vCenter and VIDM integrations show green</p>
+</li>
+<li>
+<p>If restoring from a snapshot that predates a completed upgrade, the product appliances may be at a newer version than LCM expects. In this case, open a Broadcom SR — do not attempt manual re-registration without guidance.</p>
+</li>
+</ol>
+<h3 id="restoring-after-nfs-data-loss">Restoring After NFS Data Loss<a class="headerlink" href="#restoring-after-nfs-data-loss" title="Permanent link">&para;</a></h3>
+<p>If the <code>/data</code> NFS mount is lost but the LCM appliance is intact:</p>
+<ol>
+<li>Re-provision or restore the NFS export</li>
+<li>Remount on LCM:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Edit /etc/fstab if the NFS entry is missing</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;nfs-server&gt;:/lcm-repo /data nfs defaults,_netdev 0 0&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/fstab
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>mount<span class="w"> </span>-a
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
+</code></pre></div>
+<ol>
+<li>Re-download required product bundles from Broadcom Support Portal</li>
+<li>Re-map binaries: <strong>Lifecycle Operations → Settings → Binary Mapping → Map Binaries</strong></li>
+</ol>
+<hr />
+<h2 id="backup-verification-checklist">Backup Verification Checklist<a class="headerlink" href="#backup-verification-checklist" title="Permanent link">&para;</a></h2>
+<p>Run monthly or after every restore test:</p>
+<ul>
+<li>[ ] LCM appliance VM backup job succeeded within last 24 hours</li>
+<li>[ ] Backup restore test performed: restore to isolated network, verify LCM UI accessible</li>
+<li>[ ] NFS backup or snapshot current (within 24 hours)</li>
+<li>[ ] API export JSON files archived and stored off-appliance</li>
+<li>[ ] Locker Master Password documented in offline vault (required for decryption after restore)</li>
+<li>[ ] All Locker certificate private keys have source copies in secure offline storage (PEM files)</li>
+</ul>
 
 
 

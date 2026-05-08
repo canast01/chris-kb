@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ansible-troubleshooting-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Troubleshooting Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#verbose-mode-and-debug" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -785,6 +796,21 @@
 <p>Part of the <a href="../">Ansible Troubleshooting</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="ansible-troubleshooting-decision-flow">Ansible Troubleshooting Decision Flow<a class="headerlink" href="#ansible-troubleshooting-decision-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    failure["Playbook Failure\nor Unexpected Result"]
+    failure --&gt; checkSSH["Can you SSH manually\nto the target host?"]
+    checkSSH --&gt;|No| fixSSH["Fix SSH: key, user,\nport, firewall"]
+    checkSSH --&gt;|Yes| checkBecome["Does become/sudo\nwork on target?"]
+    checkBecome --&gt;|No| fixSudo["Add NOPASSWD to sudoers\nor use --ask-become-pass"]
+    checkBecome --&gt;|Yes| addVerbose["Re-run with -vvv\nfor connection details"]
+    addVerbose --&gt; checkInventory["Is the host listed\nin the inventory?"]
+    checkInventory --&gt;|No| fixInventory["Add host to inventory\nor fix dynamic source"]
+    checkInventory --&gt;|Yes| checkVault["Are Vault secrets\ndecryptable?"]
+    checkVault --&gt;|No| fixVault["Provide correct vault\npassword / file"]
+    checkVault --&gt;|Yes| checkModule["Is the required\ncollection installed?"]
+    checkModule --&gt;|No| installCol["ansible-galaxy collection install\n&lt;namespace.collection&gt;"]
+    checkModule --&gt;|Yes| resolved["Examine task output\n&amp; register debug"]</code></pre>
 <h2 id="verbose-mode-and-debug">Verbose Mode and Debug<a class="headerlink" href="#verbose-mode-and-debug" title="Permanent link">&para;</a></h2>
 <p>Increasing verbosity is the first step when a playbook behaves unexpectedly.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># One level: task results</span>

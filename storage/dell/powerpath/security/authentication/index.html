@@ -904,6 +904,30 @@
 
 <h1 id="powerpath-authentication">PowerPath — Authentication<a class="headerlink" href="#powerpath-authentication" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    adminUser(["Storage Admin\nor Automation Account"])
+
+    subgraph "Linux Host"
+        ssh["SSH (key-based auth)\nPAM / SSSD → AD"]
+        sudo["sudo → /usr/sbin/powermt\n(sudoers.d/powerpath)"]
+        svcAccount["Service Account\n(restricted sudo — display only)"]
+        ssh --&gt; sudo
+        ssh --&gt; svcAccount
+    end
+
+    subgraph "Windows Host"
+        winAuth["Windows Auth\n(Kerberos / NTLM)"]
+        localAdm["Local Administrators group\n(required for powermt)"]
+        jea["JEA Role Capability\n(optional: limit to display commands)"]
+        winAuth --&gt; localAdm
+        localAdm --&gt; jea
+    end
+
+    adminUser --&gt; ssh
+    adminUser --&gt; winAuth
+    sudo --&gt;|"powermt set / save / config"| ppCLI["powermt CLI"]
+    svcAccount --&gt;|"powermt display only"| ppCLI
+    jea --&gt;|"constrained commands"| ppCLI</code></pre>
 <p>PowerPath does not implement its own authentication system. There is no PowerPath-native login, user database, or session management. Access to <code>powermt</code> CLI commands is controlled entirely by the host operating system's authentication and authorisation mechanisms.</p>
 <p>This design means PowerPath security is inherited from the host OS security posture. Any account with sufficient OS privilege can run any <code>powermt</code> command — there is no additional PowerPath credential check.</p>
 <hr />

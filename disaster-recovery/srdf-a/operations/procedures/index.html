@@ -751,6 +751,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#failover-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#pre-failover-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -940,6 +951,41 @@
 <h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
 <p>SRDF/A failover promotes R2 volumes to read/write. Because SRDF/A is asynchronous, R2 is consistent to the last <strong>completed cycle</strong> rather than the last write, so there is an inherent RPO equal to the lag at the moment of failure. Before failing over, always check the cycle state and lag to understand the data exposure window.</p>
 <p>Planned failover (site still accessible) uses <code>-establish</code> to immediately reverse replication after the split. Unplanned failover (primary site down) uses the standard <code>failover</code> command and requires a separate restore+establish sequence to recover replication.</p>
+<h3 id="failover-decision-flow">Failover Decision Flow<a class="headerlink" href="#failover-decision-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    incident["Incident: Primary Site Issue Reported"]
+    primaryReachable{"Primary Site\nReachable?"}
+    checkCycleState["Check Cycle State and Lag\nsymrdf -g 20 -type A query -detail"]
+    r2Consistent{"R2 in Consistent\nor Transmitting State?"}
+    stakeholderBriefing["Brief Stakeholders on RPO\n(lag = data exposure window)"]
+    managementAuth{"Management\nAuthorisation\nGranted?"}
+    plannedFO["Planned Failover\nsymrdf -g 20 -type A failover -establish -noprompt"]
+    unplannedFO["Unplanned Failover\nsymrdf -g 20 -type A failover -noprompt"]
+    presentR2["Present R2 Volumes\nto DR Hosts"]
+    validateApp["Validate Application\nat DR Site"]
+    failback["When Primary Recovers:\nRestore + Establish\nsymrdf restore → establish"]
+    waitSite["Continue Monitoring\nWait for Site Recovery"]
+
+    incident --&gt; primaryReachable
+    primaryReachable --&gt;|"Yes — planned"| checkCycleState
+    primaryReachable --&gt;|"No — unplanned"| stakeholderBriefing
+    checkCycleState --&gt; r2Consistent
+    r2Consistent --&gt;|"Yes"| stakeholderBriefing
+    r2Consistent --&gt;|"No — Inconsistent"| stakeholderBriefing
+    stakeholderBriefing --&gt; managementAuth
+    managementAuth --&gt;|"Approved — planned"| plannedFO
+    managementAuth --&gt;|"Approved — unplanned"| unplannedFO
+    managementAuth --&gt;|"Not approved"| waitSite
+    plannedFO --&gt; presentR2
+    unplannedFO --&gt; presentR2
+    presentR2 --&gt; validateApp
+    validateApp --&gt; failback
+
+    style incident fill:#be123c,color:#fff
+    style plannedFO fill:#2563eb,color:#fff
+    style unplannedFO fill:#7c3aed,color:#fff
+    style validateApp fill:#15803d,color:#fff
+    style waitSite fill:#6b7280,color:#fff</code></pre>
 <h3 id="pre-failover-checks">Pre-Failover Checks<a class="headerlink" href="#pre-failover-checks" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm current cycle state and RPO exposure</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail
@@ -1020,6 +1066,25 @@
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Failed Over&quot;</span>
 </code></pre></div>
 <h3 id="failback-and-replication-restoration">Failback and Replication Restoration<a class="headerlink" href="#failback-and-replication-restoration" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    primaryRestored["Primary Site Restored"]
+    restoreR1["Restore R1 from R2\nsymrdf -g 20 -type A restore -noprompt"]
+    waitRestore["Wait for Restore Complete\nMonitor: symrdf -g 20 -type A query -detail"]
+    establishAsync["Re-establish SRDF/A Replication\nsymrdf -g 20 -type A establish -noprompt"]
+    verifyConsistent["Verify Consistent State\nsymrdf -g 20 -type A query"]
+    drHostsOff["Quiesce DR Applications\nUnmount R2 Volumes from DR Hosts"]
+    done["SRDF/A Replication Restored\nRPO Protection Active"]
+
+    primaryRestored --&gt; drHostsOff
+    drHostsOff --&gt; restoreR1
+    restoreR1 --&gt; waitRestore
+    waitRestore --&gt; establishAsync
+    establishAsync --&gt; verifyConsistent
+    verifyConsistent --&gt; done
+
+    style primaryRestored fill:#2563eb,color:#fff
+    style done fill:#15803d,color:#fff
+    style drHostsOff fill:#b45309,color:#fff</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># After primary site recovery: restore R1 from R2</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>restore<span class="w"> </span>-noprompt
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>

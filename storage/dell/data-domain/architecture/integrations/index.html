@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#dd-boost-backup-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DD Boost Backup Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#veeam-backup-replication-dd-boost-for-veeam-ddvdp" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -836,6 +847,22 @@
 
 
 <h1 id="data-domain-integrations">Data Domain — Integrations<a class="headerlink" href="#data-domain-integrations" title="Permanent link">&para;</a></h1>
+<h2 id="dd-boost-backup-flow">DD Boost Backup Flow<a class="headerlink" href="#dd-boost-backup-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    backupApp(["Backup Application\nVeeam / NetBackup / CommVault"])
+    ddvdp["DDBoost Client Library\n(DDVDP plug-in / OST plug-in)\ninstalled on backup server"]
+    localDedup["Source-side Dedup\n(DSP — Distributed Segment Processing)\n~50% traffic reduction"]
+    ddReceiver["DD Boost Receiver\non Data Domain"]
+    sisl["SISL Engine\n(unique segments only)"]
+    nvramCache["NVRAM Write Cache"]
+    ddfs["[(DDFS on Disk)]\n(deduplicated + compressed)"]
+
+    backupApp --&gt; ddvdp
+    ddvdp --&gt; localDedup
+    localDedup --&gt;|"unique segments only\nover TCP/IP"| ddReceiver
+    ddReceiver --&gt; sisl
+    sisl --&gt; nvramCache
+    nvramCache --&gt; ddfs</code></pre>
 <h2 id="veeam-backup-replication-dd-boost-for-veeam-ddvdp">Veeam Backup &amp; Replication (DD Boost for Veeam — DDVDP)<a class="headerlink" href="#veeam-backup-replication-dd-boost-for-veeam-ddvdp" title="Permanent link">&para;</a></h2>
 <p>Veeam integrates with Data Domain via the DD Boost for Veeam Data Domain Plugin (DDVDP). This enables source-side deduplication at the Veeam proxy, significantly reducing network traffic to the DD.</p>
 <p><strong>Setup steps:</strong></p>

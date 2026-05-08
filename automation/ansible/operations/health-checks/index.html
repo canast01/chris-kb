@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ansible-health-check-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ansible Health Check Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -752,6 +763,19 @@
 <p>Part of the <a href="../">Ansible Operations</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="ansible-health-check-flow">Ansible Health Check Flow<a class="headerlink" href="#ansible-health-check-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    start["Start Health Check"] --&gt; checkVersion["ansible --version\nExpected version?"]
+    checkVersion --&gt;|OK| pingAll["ansible all -m ping\nAll hosts reachable?"]
+    checkVersion --&gt;|Fail| alertVersion["Alert: Wrong\nAnsible version"]
+    pingAll --&gt;|OK| checkVault["Vault password\naccessible?"]
+    pingAll --&gt;|Unreachable| alertPing["Alert: SSH\nConnectivity Failure"]
+    checkVault --&gt;|OK| checkCollections["Galaxy collections\nat expected versions?"]
+    checkVault --&gt;|Fail| alertVault["Alert: Vault\nDecryption Failure"]
+    checkCollections --&gt;|OK| checkDryRun["Dry-run\n--check mode passes?"]
+    checkCollections --&gt;|Outdated| alertCollections["Alert: Update\nCollections"]
+    checkDryRun --&gt;|OK| healthy["Status: HEALTHY"]
+    checkDryRun --&gt;|Fail| alertDryRun["Alert: Playbook\nCheck-mode Errors"]</code></pre>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

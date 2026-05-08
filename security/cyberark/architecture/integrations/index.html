@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#integration-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#active-directory-ldap-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -873,6 +884,25 @@
 </tr>
 </tbody>
 </table>
+<h2 id="integration-topology">Integration Topology<a class="headerlink" href="#integration-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    vault["CyberArk Vault\n(core credential store)"]
+    pvwa["PVWA\n(UI + REST API)"]
+    cpm["CPM\n(rotation engine)"]
+    psm["PSM\n(session proxy)"]
+
+    pvwa --&gt;|"SDK port 1858"| vault
+    cpm --&gt;|"SDK port 1858"| vault
+    psm --&gt;|"SDK port 1858"| vault
+
+    pvwa --&gt;|"LDAPS 636"| adLdap["Active Directory\n(auth + group membership)"]
+    pvwa --&gt;|"RADIUS 1812"| mfa["Duo / RSA MFA Proxy"]
+    pvwa --&gt;|"REST API"| snow["ServiceNow\n(ticket validation)"]
+    vault --&gt;|"Syslog UDP 514"| siem["SIEM / Splunk"]
+    cpm --&gt;|"SSH / RDP / SQL"| linuxHosts["Linux and Windows\nTarget Hosts"]
+    cpm --&gt;|"vSphere API"| vcenter["VMware vCenter"]
+    psm --&gt;|"RDP / SSH session"| targetSys["Target Systems"]
+    ansible["Ansible / Terraform\n(automation)"] --&gt;|"REST API"| pvwa</code></pre>
 <hr />
 <h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
 <p>PVWA authenticates users against AD and uses AD group membership to determine safe access.</p>

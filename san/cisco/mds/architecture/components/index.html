@@ -827,6 +827,35 @@
 <hr />
 <h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
 <p>Zoning controls which initiator (host HBA) can communicate with which target (storage port). Best practice is <strong>single-initiator / single-target</strong> zones — one zone per host-port-to-storage-port pair.</p>
+<pre class="mermaid"><code>graph TD
+  DA1["Device Alias: esxi01_hba0\n(pWWN 10:00:00:...)"]
+  DA2["Device Alias: fa01_ct0_p0\n(pWWN 52:4a:93:...)"]
+  DA3["Device Alias: esxi01_hba1\n(pWWN 10:00:00:...)"]
+  DA4["Device Alias: fa01_ct1_p0\n(pWWN 52:4a:93:...)"]
+
+  Z1["Zone: esxi01_hba0__fa01_ct0_p0"]
+  Z2["Zone: esxi01_hba1__fa01_ct1_p0"]
+
+  ZS["Zone Set: dc1-fabA-prod\n(VSAN 10)"]
+
+  VSAN["VSAN 10 — Fabric A\n(active)"]
+
+  DA1 --&gt; Z1
+  DA2 --&gt; Z1
+  DA3 --&gt; Z2
+  DA4 --&gt; Z2
+  Z1 --&gt; ZS
+  Z2 --&gt; ZS
+  ZS --&gt;|"zoneset activate"| VSAN
+
+  classDef alias fill:#1d4ed8,stroke:#1e3a5f,color:#fff
+  classDef zone fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef zset fill:#b45309,stroke:#92400e,color:#fff
+  classDef fabric fill:#15803d,stroke:#166534,color:#fff
+  class DA1,DA2,DA3,DA4 alias
+  class Z1,Z2 zone
+  class ZS zset
+  class VSAN fabric</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show active zone set for a VSAN</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
@@ -949,6 +978,17 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>stateDiagram-v2
+  [*] --&gt; notConnected : port created / no signal
+  notConnected --&gt; up : signal detected + FLOGI success
+  up --&gt; down : link lost / SFP removed
+  down --&gt; up : link restored
+  up --&gt; errDisabled : error threshold exceeded&lt;br/&gt;(flap count, VSAN conflict, SFP fault)
+  errDisabled --&gt; down : shutdown → no shutdown&lt;br/&gt;(after root cause resolved)
+  down --&gt; notConnected : SFP removed
+  up --&gt; trunking : TE port ISL established
+  trunking --&gt; isolated : VSAN merge conflict
+  isolated --&gt; trunking : conflict resolved</code></pre>
 <hr />
 <h2 id="vsans">VSANs<a class="headerlink" href="#vsans" title="Permanent link">&para;</a></h2>
 <p>VSANs (Virtual SANs) partition a physical fabric into multiple logical fabrics. Each VSAN has its own name server, domain IDs, and zoning configuration.</p>

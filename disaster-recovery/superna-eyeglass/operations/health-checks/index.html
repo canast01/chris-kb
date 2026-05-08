@@ -899,6 +899,35 @@
 <h1 id="superna-eyeglass-health-checks">Superna Eyeglass — Health Checks<a class="headerlink" href="#superna-eyeglass-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Eyeglass health checks cover the Eyeglass appliance itself, PowerScale cluster connectivity, SyncIQ policy status, and DR policy readiness. Run daily as a minimum; automated checks should run every 15–30 minutes.</p>
+<pre class="mermaid"><code>flowchart TD
+    start([Health Check Run]) --&gt; appSvc
+
+    subgraph "Eyeglass Appliance"
+        appSvc["egcli status\nAll services running?"]
+        licOk["egcli license status\nLicense valid?"]
+        clConn["egcli clusters status\nBoth clusters reachable?"]
+        appSvc --&gt; licOk --&gt; clConn
+    end
+
+    subgraph "DR Policy Layer"
+        drState["egcli drpolicy status --all\nAll policies Replicating?"]
+        rpoLag["SyncIQ lag within RPO?"]
+        dnsSync["DNS sync current?"]
+        drState --&gt; rpoLag --&gt; dnsSync
+    end
+
+    subgraph "PowerScale Clusters"
+        isiStatus["isi status\nAll nodes healthy?"]
+        alerts["isi alerts list --category critical\nNo critical alerts?"]
+        drives["isi devices drive list\nAll drives HEALTHY?"]
+        isiStatus --&gt; alerts --&gt; drives
+    end
+
+    clConn --&gt; drState
+    dnsSync --&gt; isiStatus
+    drives --&gt; result{All checks pass?}
+    result --&gt;|Yes| ok([DR Ready - Score 100%])
+    result --&gt;|No| investigate([Investigate and remediate])</code></pre>
 <table>
 <thead>
 <tr>
@@ -1043,6 +1072,15 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart LR
+    prodCluster["Production PowerScale\nCluster"]
+    egApp["Eyeglass Appliance\negcli drpolicy status"]
+    drCluster["DR PowerScale\nCluster"]
+
+    prodCluster --&gt;|"SyncIQ replication\n(continuous / scheduled)"| drCluster
+    egApp --&gt;|"monitors SyncIQ\npolicy state"| prodCluster
+    egApp --&gt;|"checks DR readiness\nvia OneFS API"| drCluster
+    egApp --&gt;|"alert if lag &gt; RPO threshold"| alert["SNMP / Email\nAlert"]</code></pre>
 <hr />
 <h2 id="powerscale-cluster-health">PowerScale Cluster Health<a class="headerlink" href="#powerscale-cluster-health" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On each PowerScale cluster (production and DR)</span>
@@ -1159,6 +1197,24 @@
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart TD
+    trigger(["Trigger: weekly / pre-change"])
+    preflight["egcli drtest preflight\n--cluster dr-cluster"]
+    checks{"All checks\nPASS?"}
+    remediate["Remediate failing\nprerequisites"]
+    drTest["egcli drtest run\n--policy POLICY_NAME"]
+    validate["Validate: NFS mounts\nSMB shares\nDNS resolution"]
+    rollback["Eyeglass auto-rollback\nReturn to Replicating"]
+    doc["Document result\nClose change record"]
+
+    trigger --&gt; preflight
+    preflight --&gt; checks
+    checks --&gt;|No| remediate
+    remediate --&gt; preflight
+    checks --&gt;|Yes| drTest
+    drTest --&gt; validate
+    validate --&gt; rollback
+    rollback --&gt; doc</code></pre>
 <h3 id="eyeglass-dr-preflight">Eyeglass DR Preflight<a class="headerlink" href="#eyeglass-dr-preflight" title="Permanent link">&para;</a></h3>
 <p>The preflight check verifies all prerequisites for a failover without making any changes.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Run preflight against the DR cluster</span>
