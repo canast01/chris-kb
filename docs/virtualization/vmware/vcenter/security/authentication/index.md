@@ -103,3 +103,77 @@ echo | openssl s_client -connect <vcenter-fqdn>:443 -servername <vcenter-fqdn> 2
 If certificate expiry causes a login or service failure:
 - Check if the local administrator account (`administrator@vsphere.local`) still works
 - Engage VMware support if SSO or STS cannot be recovered in place
+
+---
+
+## SAML Federation (External IdP)
+
+vCenter can act as a SAML service provider for an external IdP such as ADFS, Okta, or Azure AD. This enables MFA enforcement at the IdP level without requiring MFA on every VCSA individually.
+
+Configure at **Administration → Single Sign On → Configuration → Identity Provider → Set up SAML Service Provider**.
+
+### ADFS Configuration (High Level)
+
+1. Export the vCenter SAML metadata from **SSO → Configuration → SAML Service Provider → Download Service Provider Metadata**
+2. In ADFS: Add a new Relying Party Trust using the metadata file
+3. Add claim rules: `UPN → NameID`, `Token-Groups (unqualified names) → Group`
+4. In vCenter: Set the IdP metadata URL (your ADFS federation metadata endpoint)
+5. Test login: users should be redirected to ADFS login page and returned to vSphere Client with their AD group memberships
+
+After federation is configured, grant permissions to AD groups (not individual users) in vCenter. The group SID comparison is done via the SAML assertion attributes.
+
+---
+
+## vCenter Enhanced Linked Mode (ELM)
+
+Enhanced Linked Mode connects multiple vCenter instances to a shared SSO domain, providing single-pane-of-glass management across sites.
+
+| Feature | Linked Mode |
+|---|---|
+| Single login | Yes — authenticate once, manage all vCenters |
+| Shared roles | Yes — roles defined on one vCenter are visible on others |
+| Shared permissions | Partially — global permissions apply to all; local permissions are per-vCenter |
+| Shared inventory | Yes — view VMs and hosts across all vCenters |
+| vMotion across vCenters | Yes — cross-vCenter vMotion supported (requires same SSO domain) |
+
+```powershell
+# Connect to multiple vCenters simultaneously
+Connect-VIServer -Server vcenter-lon.corp.local, vcenter-ams.corp.local
+
+# List all VMs across both vCenters
+Get-VM | Select-Object Name, @{N="vCenter";E={$_.Uid.Split(':')[0]}}, PowerState
+
+# Disconnect all
+Disconnect-VIServer * -Confirm:$false
+```
+
+---
+
+## Unlocking Accounts
+
+### Unlock administrator@vsphere.local
+
+```bash
+# SSH to VCSA
+/usr/lib/vmware-vmafd/bin/dir-cli user unlock \
+    --account administrator \
+    --domain vsphere.local \
+    --password <current-password>
+
+# If the password is also lost, reset via VCSA console (single-user mode)
+# See VMware KB 2069041 for the reset procedure
+```
+
+### Unlock an AD Account (from vCenter)
+
+AD account lockouts caused by vCenter (e.g. cached wrong password in identity source):
+1. Check if the bind account password has changed — update in **SSO → Identity Sources → Edit**
+2. Unlock the AD account from Active Directory Users and Computers or PowerShell:
+   ```powershell
+   # On a domain controller
+   Unlock-ADAccount -Identity jsmith
+   ```
+3. Restart `vmware-sts-idmd` service to clear any cached authentication state:
+   ```bash
+   service-control --restart vmware-sts-idmd
+   ```
