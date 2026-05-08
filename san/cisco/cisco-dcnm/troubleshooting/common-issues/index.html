@@ -699,6 +699,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#switch-shows-as-unmanageable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switch Shows as Unmanageable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zone-activation-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Activation Fails
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-manager-not-collecting-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Manager Not Collecting Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-authentication-failing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Authentication Failing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dcnm-gui-very-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DCNM GUI Very Slow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-traps-not-received" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP Traps Not Received
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-fails-or-leaves-dcnm-non-functional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Fails or Leaves DCNM Non-Functional
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +803,227 @@
 
 
 <h1 id="cisco-dcnm-common-issues">Cisco DCNM — Common Issues<a class="headerlink" href="#cisco-dcnm-common-issues" title="Permanent link">&para;</a></h1>
-<p>Quick reference for common problems and resolutions.</p>
+<blockquote>
+<p>Part of the <a href="../../">Cisco DCNM</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="switch-shows-as-unmanageable">Switch Shows as Unmanageable<a class="headerlink" href="#switch-shows-as-unmanageable" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Switch in <strong>SAN &gt; Fabrics</strong> shows state <strong>Unmanageable</strong> or <strong>Unknown</strong>.</p>
+<p><strong>Diagnosis and resolution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1: Test SSH from DCNM to the switch</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">ConnectTimeout</span><span class="o">=</span><span class="m">5</span><span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>dcnm_mgmt@&lt;switch-ip&gt;<span class="w"> </span><span class="s1">&#39;show version&#39;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># If fails: SSH connectivity problem</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Step 2: Test SNMP</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>snmpget<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>dcnm_poll<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr.0
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># If fails: SNMP credentials mismatch or network issue</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Step 3: Check DCNM discovery log</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;switch-ip&gt;&quot;</span><span class="w"> </span>/var/log/dcnm/discovery.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH credentials incorrect or changed</td>
+<td>Update switch credentials in <strong>SAN &gt; Fabrics &gt; Edit Credentials</strong></td>
+</tr>
+<tr>
+<td>SNMP v3 credentials mismatch</td>
+<td>Update SNMP credentials in DCNM fabric settings</td>
+</tr>
+<tr>
+<td>SSH service disabled on switch</td>
+<td><code>feature ssh</code> on the switch</td>
+</tr>
+<tr>
+<td>Switch IP changed</td>
+<td>Update switch IP in DCNM inventory</td>
+</tr>
+<tr>
+<td>ACL blocking DCNM on switch</td>
+<td>Remove or modify mgmt ACL on the switch to permit DCNM IP</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="zone-activation-fails">Zone Activation Fails<a class="headerlink" href="#zone-activation-fails" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Zone set activation from DCNM returns an error or zone configuration does not propagate to all switches.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the principal switch of the fabric (NX-OS CLI)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check: Mode, Default-zone, Merge Status</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check for merge conflicts</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>show<span class="w"> </span>zone<span class="w"> </span>merge-failure<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># If merge failure: identify the switch with conflicting zone DB</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Compare against expected from DCNM</span>
+</code></pre></div>
+<p><strong>Resolution for merge conflict:</strong>
+1. Identify the switch with the conflicting zone database.
+2. If the DCNM zone set is the source of truth, clear the zone database on the conflicting switch and let DCNM re-push:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the conflicting switch — CAUTION: this clears all zones on this switch for the VSAN</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>no<span class="w"> </span>zoneset<span class="w"> </span>distribute<span class="w"> </span>full<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>&lt;zoneset-name&gt;<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Then trigger re-push from DCNM: SAN &gt; Zoning &gt; Deploy</span>
+</code></pre></div>
+<p><strong>Resolution for DCNM permission error:</strong>
+- Verify the <code>dcnm_mgmt</code> account has <code>network-admin</code> role on the switch: <code>show user-account | grep dcnm_mgmt</code></p>
+<hr />
+<h2 id="performance-manager-not-collecting-data">Performance Manager Not Collecting Data<a class="headerlink" href="#performance-manager-not-collecting-data" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Graphs under <strong>Monitor &gt; Performance</strong> show "No Data" or data is stale (&gt; 10 minutes old).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check PM service status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dcnm-pm
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check PM log for polling errors</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/pm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|timeout\|failed&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Restart PM service</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dcnm-pm
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify SNMP polling is working manually</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>dcnm_poll<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>ifInOctets
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Expected: output with interface counter values</span>
+</code></pre></div>
+<p>Common PM issues:</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNMP credentials changed</td>
+<td>Update in DCNM fabric settings</td>
+</tr>
+<tr>
+<td>Switch ACL blocking SNMP from DCNM</td>
+<td>Add DCNM IP to switch SNMP ACL</td>
+</tr>
+<tr>
+<td>PM database full</td>
+<td>Reduce retention period; increase disk</td>
+</tr>
+<tr>
+<td>PM service crashed</td>
+<td><code>systemctl restart dcnm-pm</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ldap-authentication-failing">LDAP Authentication Failing<a class="headerlink" href="#ldap-authentication-failing" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Users cannot log in with AD credentials.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test LDAP from DCNM appliance</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=dcnm-svc,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=&lt;test-user&gt;)&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Connection refused</code></td>
+<td>Port 636 blocked</td>
+<td>Open firewall from DCNM to LDAP server</td>
+</tr>
+<tr>
+<td><code>Invalid credentials (49)</code></td>
+<td>Wrong bind password</td>
+<td>Update bind DN password in DCNM LDAP settings</td>
+</tr>
+<tr>
+<td><code>No such object (32)</code></td>
+<td>Wrong base DN or user OU</td>
+<td>Verify base DN and user search base</td>
+</tr>
+<tr>
+<td>SSL handshake failure</td>
+<td>CA cert not trusted</td>
+<td>Import CA into DCNM Java truststore</td>
+</tr>
+<tr>
+<td>Role not assigned</td>
+<td>AD group not mapped</td>
+<td>Add group to DCNM role mapping</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dcnm-gui-very-slow">DCNM GUI Very Slow<a class="headerlink" href="#dcnm-gui-very-slow" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Pages take 30+ seconds to load; sometimes timeout.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check resource usage</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>free<span class="w"> </span>-h
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check disk I/O</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check database connections</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_activity WHERE state=&#39;active&#39;;&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># If &gt; 50 active connections: connection pool exhaustion</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Check for runaway queries</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">SELECT pid, now() - query_start AS duration, query </span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">FROM pg_stat_activity </span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">WHERE state = &#39;active&#39; </span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s2">ORDER BY duration DESC </span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s2">LIMIT 10;&quot;</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># Restart DCNM if Java memory leak suspected</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>restart
+</code></pre></div>
+<p>If disk is &gt; 80% full: clear PM historical data under <strong>Administration &gt; Settings &gt; Data Retention</strong>.</p>
+<hr />
+<h2 id="snmp-traps-not-received">SNMP Traps Not Received<a class="headerlink" href="#snmp-traps-not-received" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Events appear delayed; DCNM does not reflect near-real-time switch state changes.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Capture to confirm traps are arriving</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">162</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># If not arriving: confirm trap destination on the switch</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># On MDS switch:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>show<span class="w"> </span>snmp<span class="w"> </span>host
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Should list DCNM IP</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># If arriving but not processed: check event manager</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/events.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;trap\|SNMP&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Restart event service</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dcnm-events
+</code></pre></div>
+<hr />
+<h2 id="upgrade-fails-or-leaves-dcnm-non-functional">Upgrade Fails or Leaves DCNM Non-Functional<a class="headerlink" href="#upgrade-fails-or-leaves-dcnm-non-functional" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> DCNM upgrade returns an error mid-way; UI does not come back after upgrade.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check upgrade log</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/dcnm/install.log
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check if DCNM services started after upgrade</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check for database migration errors (common cause of upgrade failure)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;liquibase\|migration\|flyway\|ERROR&quot;</span><span class="w"> </span>/var/log/dcnm/install.log
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># If upgrade is unrecoverable: revert to pre-upgrade VM snapshot</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Then contact Cisco TAC with the install log</span>
+</code></pre></div>
 
 
 

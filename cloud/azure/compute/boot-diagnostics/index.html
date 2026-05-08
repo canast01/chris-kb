@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#boot-diagnostics-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boot Diagnostics Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,18 @@
 <h1 id="boot-diagnostics">Boot Diagnostics<a class="headerlink" href="#boot-diagnostics" title="Permanent link">&para;</a></h1>
 <p>Azure Boot Diagnostics captures the serial console output and a screenshot of the VM's screen at boot time. It is essential for diagnosing VMs that fail to start or are unreachable via SSH/RDP.</p>
 <hr />
+<h2 id="boot-diagnostics-flow">Boot Diagnostics Flow<a class="headerlink" href="#boot-diagnostics-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    vmStart["VM Start / Restart"]
+    firmware["UEFI / BIOS\nfirmware init"]
+    bootloader["Bootloader\nGRUB2 / Windows Boot Mgr"]
+    osInit["OS Initialisation\nkernel · systemd / WinInit"]
+    serialLog["Serial Console Output\ncaptured to storage"]
+    screenshot["Boot Screenshot\nPNG of screen state"]
+    diagnosticsAPI["Boot Diagnostics API\nazure portal · serial console access"]
+
+    vmStart --&gt; firmware --&gt; bootloader --&gt; osInit
+    osInit --&gt; serialLog &amp; screenshot --&gt; diagnosticsAPI</code></pre>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

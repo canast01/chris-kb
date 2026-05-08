@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#failover-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failover Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#failover-types-compared" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -816,6 +827,23 @@
 <h1 id="failover">Failover<a class="headerlink" href="#failover" title="Permanent link">&para;</a></h1>
 <p>Azure Site Recovery supports three types of failover: test failover (non-disruptive validation), planned failover (zero data loss), and unplanned failover (best-effort, used during real incidents). All failovers move protected workloads to the recovery region.</p>
 <hr />
+<h2 id="failover-decision-flow">Failover Decision Flow<a class="headerlink" href="#failover-decision-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    failoverNeeded["Failover Required"]
+    drDrill{"DR Drill /\nTest Only?"}
+    testFailover["Test Failover\nIsolated test VNet\nNo production impact"]
+    planned{"Planned -\nzero data loss?"}
+    plannedFailover["Planned Failover\nClean VM shutdown\nZero RPO"]
+    unplannedFailover["Unplanned Failover\nImmediate cutover\nPossible data loss"]
+    drVMRunning["DR VM Running\nin Recovery Region"]
+    commit["Commit Failover\ncut primary VM"]
+    cleanup["Cleanup\ntest VMs deleted"]
+
+    failoverNeeded --&gt; drDrill
+    drDrill -- Yes --&gt; testFailover --&gt; cleanup
+    drDrill -- No --&gt; planned
+    planned -- Yes --&gt; plannedFailover --&gt; drVMRunning --&gt; commit
+    planned -- No --&gt; unplannedFailover --&gt; drVMRunning --&gt; commit</code></pre>
 <h2 id="failover-types-compared">Failover Types Compared<a class="headerlink" href="#failover-types-compared" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
