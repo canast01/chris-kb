@@ -1033,33 +1033,6 @@ Virtualization platform knowledge base covering VMware, Hyper-V, OpenShift, and 
       });
     })();
 
-    // Cursor trail — desktop only
-    (function () {
-      if (window.matchMedia('(hover: none)').matches) return;
-      var N = 10;
-      var dots = Array.from({ length: N }, function (_, i) {
-        var d = document.createElement('div');
-        var size = 7 - i * 0.5;
-        var alpha = 0.65 - i * 0.055;
-        d.style.cssText = 'position:fixed;width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:rgba(56,189,248,' + alpha + ');pointer-events:none;z-index:99999;transform:translate(-50%,-50%);left:-99px;top:-99px;';
-        document.body.appendChild(d);
-        return { el: d, x: -99, y: -99 };
-      });
-      var mx = -99, my = -99;
-      document.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
-      (function tick() {
-        var px = mx, py = my;
-        dots.forEach(function (dot) {
-          dot.x += (px - dot.x) * 0.35;
-          dot.y += (py - dot.y) * 0.35;
-          dot.el.style.left = dot.x + 'px';
-          dot.el.style.top = dot.y + 'px';
-          px = dot.x; py = dot.y;
-        });
-        requestAnimationFrame(tick);
-      })();
-    })();
-
     // Ambient mouse glow
     (function () {
       if (window.matchMedia('(hover: none)').matches) return;
@@ -1150,19 +1123,6 @@ Virtualization platform knowledge base covering VMware, Hyper-V, OpenShift, and 
         entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('kb-visible'); io.unobserve(e.target); } });
       }, { threshold: 0.08 });
       targets.forEach(function (el) { io.observe(el); });
-    })();
-
-    // Estimated read time
-    (function () {
-      var content = document.querySelector('.md-typeset');
-      var h1 = document.querySelector('.md-typeset h1');
-      if (!content || !h1) return;
-      var words = (content.textContent || '').trim().split(/\s+/).length;
-      var mins = Math.max(1, Math.round(words / 200));
-      var badge = document.createElement('div');
-      badge.className = 'kb-read-time';
-      badge.textContent = '~' + mins + ' min read';
-      h1.insertAdjacentElement('afterend', badge);
     })();
 
     // Back to top pill
