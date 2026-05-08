@@ -2,6 +2,25 @@
 
 Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-as-you-go pricing in exchange for a 1-year or 3-year commitment. Reservations apply to VMs, SQL Databases, Cosmos DB, Storage, and other services.
 
+## Reservation Discount Application
+
+```mermaid
+flowchart LR
+    purchase["Purchase Reservation\n1-yr or 3-yr commitment"]
+    scope{"Scope"}
+    shared["Shared Scope\napplies across all subscriptions"]
+    single["Single Subscription Scope\napplies to one subscription"]
+    rgScope["Resource Group Scope\nnarrowest"]
+    usage["Matching Resource Usage\nsame SKU · region · OS"]
+    discount["Reservation Discount Applied\n(automatic — no action needed)"]
+    unused["Unused Capacity\nno refund — choose carefully"]
+
+    purchase --> scope
+    scope --> shared & single & rgScope
+    shared & single & rgScope --> usage --> discount
+    usage -->|"hours not consumed"| unused
+```
+
 ## RI Purchasing
 
 Reservations are purchased at the billing account or subscription level. The reservation scope determines which subscriptions benefit from the discount.

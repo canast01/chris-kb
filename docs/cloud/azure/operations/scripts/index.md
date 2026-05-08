@@ -3,6 +3,27 @@
 > Part of the [Azure](../../) reference.
 
 ---
+## Script Categories
+
+```mermaid
+flowchart LR
+    subgraph healthScripts["Health Check Scripts"]
+        subHealth["Subscription Health Check\nVMs · LBs · SQL · Activity Log"]
+        vmHealth["VM Health Report\npower state · provisioning"]
+    end
+    subgraph govScripts["Governance Scripts"]
+        tagAudit["Tag Compliance Audit\nuntagged resources report"]
+        rbacAudit["RBAC Audit\nstale assignments"]
+    end
+    subgraph costScripts["Cost Scripts"]
+        costReport["Cost Report\nspend by RG · service"]
+        unusedResources["Unused Resources\nunattached disks · idle VMs"]
+    end
+    output["Output\nConsole · CSV · Email"]
+
+    healthScripts & govScripts & costScripts --> output
+```
+
 ## Azure Subscription Health Check
 
 Prints a formatted health report covering VMs, load balancers, SQL servers, and recent critical activity log events. Exits non-zero if any critical events are found.

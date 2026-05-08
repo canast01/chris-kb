@@ -4,6 +4,28 @@
 
 Azure Managed Disks are block-level storage volumes managed by Azure and attached to Azure VMs. They abstract the underlying Storage Account and provide high availability through replication. The disk type determines IOPS, throughput, and cost.
 
+## Managed Disk Architecture
+
+```mermaid
+flowchart LR
+    vm["Azure VM"]
+    subgraph disks["Attached Managed Disks"]
+        osDisk["OS Disk\nC: / /boot"]
+        dataDisk1["Data Disk 1\nD: / /data"]
+        dataDisk2["Data Disk 2\nE: / /logs"]
+        tempDisk["Temp Disk\nD: (Windows) — ephemeral"]
+    end
+    subgraph storage["Underlying Storage"]
+        lrs["LRS — local replica"]
+        zrs["ZRS — zone replica"]
+    end
+    snapshot["Snapshot\npoint-in-time copy"]
+
+    vm --> osDisk & dataDisk1 & dataDisk2 & tempDisk
+    osDisk & dataDisk1 --> lrs & zrs
+    osDisk & dataDisk1 -.->|"on demand"| snapshot
+```
+
 ## Disk Types
 
 | Type | SKU | Max IOPS | Max Throughput | Max Size | Use Case |

@@ -2,6 +2,24 @@
 
 Azure Advisor analyses your usage and configuration and surfaces personalised recommendations across cost, security, reliability, performance, and operational excellence. The cost category is the most actionable for day-to-day spend control.
 
+## Advisor Recommendation Categories
+
+```mermaid
+flowchart TD
+    advisor["Azure Advisor\npersonalised recommendations"]
+    subgraph categories["Recommendation Categories"]
+        cost["Cost\nright-size · unused resources · reservations"]
+        security["Security\nDefender for Cloud integration"]
+        reliability["Reliability\nHA · backup · recovery"]
+        performance["Performance\nthroughput · latency improvements"]
+        opExcellence["Operational Excellence\nconfiguration · automation"]
+    end
+    actions["Actions\napply · postpone · dismiss"]
+
+    advisor --> cost & security & reliability & performance & opExcellence
+    cost & security & reliability & performance & opExcellence --> actions
+```
+
 ## Viewing Recommendations
 
 Recommendations are available via the portal, CLI, and REST API. Use the CLI to script ingestion into reports or ticketing systems.

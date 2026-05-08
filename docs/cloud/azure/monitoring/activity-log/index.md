@@ -2,6 +2,26 @@
 
 The Azure Activity Log is a platform log that records subscription-level events — resource creation, modification, deletion, and administrative operations. It is retained for 90 days natively and can be exported for longer-term storage or querying.
 
+## Activity Log Data Flow
+
+```mermaid
+flowchart LR
+    events["Azure Control Plane Events\nresource create · modify · delete · admin ops"]
+    activityLog["Activity Log\n90-day native retention"]
+    subgraph export["Export Destinations"]
+        diagSetting["Diagnostic Settings\nto Log Analytics / Storage / Event Hub"]
+        logAnalytics["Log Analytics Workspace\nKQL queries · alerts"]
+        storage["Storage Account\nlong-term archival"]
+        eventHub["Event Hub\nstream to SIEM"]
+    end
+    alertRule["Activity Log Alert Rule\ne.g. resource deletion alert"]
+
+    events --> activityLog
+    activityLog --> diagSetting
+    diagSetting --> logAnalytics & storage & eventHub
+    activityLog --> alertRule
+```
+
 ## Querying the Activity Log
 
 Use `az monitor activity-log list` to retrieve events. Filter by resource group, resource type, time range, or caller.

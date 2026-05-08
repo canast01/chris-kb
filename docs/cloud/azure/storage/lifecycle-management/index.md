@@ -4,6 +4,24 @@
 
 Azure Storage lifecycle management policies automate blob tier transitions and deletion based on object age and conditions. Policies run daily and evaluate blobs against defined rules, applying transitions from Hot to Cool, Cold, or Archive, and deleting objects after a configured number of days.
 
+## Lifecycle Policy Evaluation
+
+```mermaid
+flowchart LR
+    policy["Lifecycle Management Policy\nrules run daily"]
+    filter["Filter\nblob prefix · tag · container"]
+    blobAge["Blob Age Evaluation\ndaysSinceModification"]
+    subgraph actions["Actions"]
+        toHot["Move to Hot\n(or stay)"]
+        toCool["Move to Cool\nafter N days"]
+        toCold["Move to Cold\nafter N days"]
+        toArchive["Move to Archive\nafter N days"]
+        deleteBlob["Delete Blob\nafter N days"]
+    end
+
+    policy --> filter --> blobAge --> toHot & toCool & toCold & toArchive & deleteBlob
+```
+
 ## Policy Structure
 
 A lifecycle policy is a JSON document containing one or more rules. Each rule has a filter (which blobs it applies to) and an action set (what to do).

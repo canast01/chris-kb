@@ -4,6 +4,24 @@
 
 ---
 
+## Azure Operations Change Flow
+
+```mermaid
+flowchart LR
+    changeReq["Change Request\napproved in ITSM"]
+    preCheck["Pre-change Checks\nResource health · backups · snapshots"]
+    mainWindow["Maintenance Window\nnotify stakeholders"]
+    change["Execute Change\nCLI / Portal / IaC"]
+    validate["Post-change Validation\nhealth · connectivity · metrics"]
+    outcome{"Successful?"}
+    closeChange["Close Change Record\ndocument outcomes"]
+    rollback["Rollback\nrestore snapshot · redeploy"]
+
+    changeReq --> preCheck --> mainWindow --> change --> validate --> outcome
+    outcome -- Yes --> closeChange
+    outcome -- No --> rollback --> closeChange
+```
+
 ## Runbook Templates
 
 A standard structure for Azure operational runbooks. Copy this template for any planned change, maintenance window, or incident response procedure.

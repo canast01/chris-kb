@@ -4,6 +4,23 @@
 
 Azure managed disk snapshots capture the full state of a managed disk at a point in time. Incremental snapshots store only changed blocks since the last snapshot, significantly reducing storage costs and copy time. Snapshots are stored as page blobs in Azure Storage and can be used to restore disks or copy across regions.
 
+## Snapshot Lifecycle
+
+```mermaid
+flowchart LR
+    sourceDisk["Source Managed Disk\n(OS or data disk)"]
+    snapshot["Snapshot\npoint-in-time · incremental"]
+    subgraph uses["Snapshot Uses"]
+        restoreDisk["Restore to same disk\ndisk reset"]
+        newDisk["Create new disk\nfrom snapshot"]
+        crossRegion["Copy to another region\ndisaster recovery"]
+        exportVHD["Export as VHD\nfor migration"]
+    end
+
+    sourceDisk -->|"az snapshot create"| snapshot
+    snapshot --> restoreDisk & newDisk & crossRegion & exportVHD
+```
+
 ## Creating Snapshots
 
 ```bash

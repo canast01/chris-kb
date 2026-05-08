@@ -2,6 +2,24 @@
 
 Azure Policy compliance reviews evaluate the current state of resources against assigned policies and surface non-compliant resources. Regular compliance reviews are essential for maintaining governance standards and preparing for audits.
 
+## Compliance Review Cycle
+
+```mermaid
+flowchart LR
+    trigger["Compliance Scan\nscheduled daily or on-demand"]
+    evaluate["Policy Evaluation\nall resources vs all assignments"]
+    dashboard["Compliance Dashboard\n% compliant per assignment"]
+    nonCompliant{"Non-compliant\nresources found?"}
+    remediate["Create Remediation Task\nor manual fix"]
+    exempt["Create Exemption\nif justified"]
+    report["Compliance Report\nexport for audit"]
+
+    trigger --> evaluate --> dashboard --> nonCompliant
+    nonCompliant -- Yes --> remediate & exempt
+    nonCompliant -- No --> report
+    remediate --> trigger
+```
+
 ## Compliance Dashboard
 
 The compliance dashboard in the portal shows an overall compliance percentage and breaks it down by policy assignment. Use the CLI for scripted reporting.

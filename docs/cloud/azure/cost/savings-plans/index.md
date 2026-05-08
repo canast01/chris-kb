@@ -2,6 +2,25 @@
 
 Azure Compute Savings Plans provide discounts (up to 65%) in exchange for a consistent hourly compute spend commitment over 1 or 3 years. Unlike Reserved Instances, savings plans apply automatically across VM families, regions, and compute services, giving more flexibility.
 
+## Cost Commitment Options
+
+```mermaid
+flowchart TD
+    decision["Cost Optimisation\nDecision"]
+    stable{"Workload\nstable and predictable?"}
+    singleSKU{"Single VM SKU\nand region?"}
+    reservedInstance["Reserved Instance\nup to 72% discount\nSKU + region locked"]
+    savingsPlan["Savings Plan\nup to 65% discount\nflexible across SKU + region"]
+    paygo["Pay-As-You-Go\nno commitment\nhighest cost"]
+
+    decision --> stable
+    stable -- Yes --> singleSKU
+    stable -- No --> savingsPlan
+    singleSKU -- Yes --> reservedInstance
+    singleSKU -- No --> savingsPlan
+    stable -- Unpredictable --> paygo
+```
+
 ## Savings Plan vs Reserved Instances
 
 | Dimension | Savings Plan | Reserved Instance |

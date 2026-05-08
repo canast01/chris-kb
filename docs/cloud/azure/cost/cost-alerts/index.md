@@ -2,6 +2,23 @@
 
 Azure Cost Management supports multiple alert types to notify teams of unexpected or excessive spending. Alerts complement budgets and provide finer-grained visibility into spend anomalies.
 
+## Cost Alert Types Overview
+
+```mermaid
+flowchart TD
+    spending["Azure Resource Spending"]
+    subgraph alertTypes["Alert Types"]
+        budgetAlert["Budget Alert\ncrossed % threshold"]
+        anomalyAlert["Anomaly Alert\nML-detected spike"]
+        creditAlert["Credit Alert\nbalance below threshold"]
+    end
+    notification["Notification\nemail · action group"]
+    action["Response Action\nreview · scale down · contact owner"]
+
+    spending --> budgetAlert & anomalyAlert & creditAlert
+    budgetAlert & anomalyAlert & creditAlert --> notification --> action
+```
+
 ## Alert Types
 
 | Alert Type | Trigger | Configuration |

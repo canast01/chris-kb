@@ -2,12 +2,161 @@
 
 ## Secrets and Encrypted Properties
 
-- Use **Encrypted Property Groups** for sensitive values (passwords, API tokens) in blueprints — values are stored encrypted and not exposed in deployment event logs
-- For enterprise-grade secrets management, integrate with **HashiCorp Vault** — Aria Automation retrieves secrets at deployment time via Vault's API
-- Avoid embedding plaintext secrets in Cloud Templates — use property binding or Vault references
+Sensitive values (passwords, API tokens, SSH keys) must not be stored as plaintext in cloud templates. Use one of the following methods:
+
+### Encrypted Property Groups
+
+Encrypted Property Groups store sensitive key-value pairs at the Aria Automation level. Values are encrypted at rest and never appear in deployment event logs or API responses.
+
+```
+Infrastructure → Configure → Property Groups → New Property Group → Encrypted
+```
+
+Add key-value pairs:
+- `db_password`: `<actual-password>`
+- `api_token`: `<actual-token>`
+
+Reference in a cloud template:
+
+```yaml
+# Cloud Template referencing an encrypted property group
+inputs:
+  environment:
+    type: string
+resources:
+  vm:
+    type: Cloud.vSphere.Machine
+    properties:
+      image: rhel9-gold
+      flavor: medium
+      cloudConfig: |
+        #cloud-config
+        runcmd:
+          - echo "DB_PASSWORD=${propgroup.db_password}" >> /etc/app.env
+```
+
+### HashiCorp Vault Integration
+
+For enterprise secrets management, configure Aria Automation to retrieve secrets from HashiCorp Vault at deployment time:
+
+```
+Infrastructure → Connections → Integrations → Add Integration → HashiCorp Vault
+```
+
+Provide:
+- Vault URL: `https://vault.corp.local:8200`
+- Authentication method: AppRole or Kubernetes JWT
+- AppRole Role ID and Secret ID
+
+Reference Vault secrets in cloud templates:
+
+```yaml
+resources:
+  vm:
+    type: Cloud.vSphere.Machine
+    properties:
+      cloudConfig: |
+        #cloud-config
+        runcmd:
+          - DB_PASS=$(vault kv get -field=password secret/app/db) && configure-app.sh
+```
+
+### ABX Action Secrets
+
+For ABX actions, store secrets as **Action Constants** (encrypted at rest):
+
+```
+Extensibility → Actions → select action → Constants → Add
+```
+
+Constants are injected as environment variables at runtime:
+
+```python
+def handler(context, inputs):
+    api_key = context.getSecret(inputs["apiKeyConstant"])
+    # Never log or return secrets
+```
+
+---
 
 ## TLS Certificate Management
 
-- Aria Automation ships with self-signed certificates — replace with CA-signed certificates before production use
-- Replace certificates via Aria Suite Lifecycle Manager (Locker) or via `vracli certificate import` on the appliance
-- Certificate renewals should be tracked in the LCM Locker and scheduled before expiry
+### Replacing the UI Certificate
+
+**Via LCM (recommended for LCM-managed deployments):**
+
+1. Import the new certificate into LCM Locker
+2. **LCM → Lifecycle Operations → Aria Automation product → Replace Certificate**
+3. LCM applies the certificate to all Aria Automation nodes
+
+**Via vracli (standalone deployments):**
+
+```bash
+ssh root@vra-prod-01.corp.local
+
+# Import certificate files
+vracli certificate import \
+  --cert /tmp/vra-prod-01.pem \
+  --key /tmp/vra-prod-01.key \
+  --ca /tmp/chain.pem
+
+# Verify the certificate is active
+echo | openssl s_client -connect vra-prod-01.corp.local:443 2>/dev/null | \
+  openssl x509 -noout -subject -dates -issuer
+```
+
+### Certificate Requirements
+
+| Requirement | Value |
+|---|---|
+| Algorithm | RSA 4096-bit (minimum RSA 2048-bit) |
+| Signature | SHA-256 |
+| SAN entries | All node FQDNs + load balancer VIP (if deployed behind an LB) |
+| Maximum validity | 2 years; 1 year preferred |
+| Private key | Unencrypted PEM (no passphrase) |
+| Chain | Full chain — leaf + intermediate(s) + root in single PEM |
+
+### Tracking Certificate Expiry
+
+```bash
+# Check expiry for all cluster nodes
+for node in vra-prod-01 vra-prod-02 vra-prod-03; do
+  echo -n "$node.corp.local: "
+  echo | openssl s_client -connect "$node.corp.local:443" 2>/dev/null | \
+    openssl x509 -noout -enddate 2>/dev/null
+done
+```
+
+Set a calendar reminder or monitoring alert 60 days before expiry.
+
+---
+
+## Data at Rest Encryption
+
+Aria Automation stores all state in its embedded PostgreSQL database. Native application-level encryption of the database is not included. Apply encryption at the storage layer:
+
+- **vSAN Data-at-Rest Encryption**: enable on the datastore hosting Aria Automation VMs
+- **SAN/NAS volume encryption**: enable at the array level for external storage
+- **vSphere VM Encryption**: encrypt VM virtual disks via a vSphere encryption storage policy
+
+```powershell
+# PowerCLI — verify VM disk encryption
+Get-VM | Where-Object { $_.Name -like "vra-*" } | Get-HardDisk |
+  Select-Object @{N="VM";E={$_.Parent.Name}}, Name,
+  @{N="Encrypted";E={$_.ExtensionData.Backing.KeyId -ne $null}}
+```
+
+---
+
+## Kubernetes Secret Management
+
+Aria Automation stores internal service credentials in Kubernetes secrets. These are base64-encoded by default — not encrypted at rest unless the Kubernetes data store (etcd) has encryption at rest enabled.
+
+```bash
+# List Kubernetes secrets in the prelude namespace (admin access only)
+kubectl get secrets -n prelude
+
+# Never expose Kubernetes secrets externally — they contain internal service credentials
+```
+
+The embedded Kubernetes cluster on Aria Automation appliances does not expose etcd encryption configuration to administrators. Protect the appliance disk using storage-layer encryption as the primary control.

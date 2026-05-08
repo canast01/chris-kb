@@ -2,6 +2,19 @@
 
 Azure Service Health provides personalised alerts and guidance for Azure service issues, planned maintenance, and health advisories that affect the services and regions you use. It combines three views: Service Issues, Planned Maintenance, and Health Advisories.
 
+## Service Health Alert Flow
+
+```mermaid
+flowchart LR
+    azureIncident["Azure Incident / Event\nService Issue · Planned Maintenance · Advisory"]
+    serviceHealth["Azure Service Health\npersonalised for your subscriptions + regions"]
+    healthAlert["Service Health Alert Rule\nsubscription · region · service filter"]
+    actionGroup["Action Group\nemail · SMS · webhook · ITSM"]
+    opsTeam["Operations Team\nincident response"]
+
+    azureIncident --> serviceHealth --> healthAlert --> actionGroup --> opsTeam
+```
+
 ## Service Health Components
 
 | Component           | Description                                                      |

@@ -2,6 +2,27 @@
 
 Policy exemptions allow specific resources, resource groups, or subscriptions to be excluded from policy evaluation. Exemptions are preferred over assignment exclusions because they are auditable, time-bound, and can be reviewed independently.
 
+## Exemption Decision Flow
+
+```mermaid
+flowchart TD
+    nonCompliant["Non-compliant Resource\nidentified by policy"]
+    review{"Can resource\nbe remediated?"}
+    remediate["Remediate\nfix resource config"]
+    compliant["Compliant\n✓"]
+    justification{"Exemption\njustified?"}
+    waiver["Waiver Category\nknown non-compliance"]
+    mitigated["Mitigated Category\nalternative control in place"]
+    exempt["Create Exemption\ntime-bound · documented"]
+    noAction["Accept Risk\ndocument decision"]
+
+    nonCompliant --> review
+    review -- Yes --> remediate --> compliant
+    review -- No --> justification
+    justification -- Yes --> waiver & mitigated --> exempt
+    justification -- No --> noAction
+```
+
 ## Creating Exemptions
 
 ```bash

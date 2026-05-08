@@ -2,6 +2,26 @@
 
 Azure Cost Management budgets let you set spending thresholds and trigger alerts or automated actions when spending approaches or exceeds those thresholds. Budgets are scoped to a management group, subscription, or resource group.
 
+## Budget Alert Flow
+
+```mermaid
+flowchart LR
+    budget["Budget\n(subscription / RG scope)"]
+    forecastActual["Actual or Forecast Spend"]
+    threshold1{"Exceeds\n80% threshold?"}
+    threshold2{"Exceeds\n100% threshold?"}
+    alert80["Alert Notification\nemail · action group"]
+    alert100["Alert Notification\n100% budget reached"]
+    actionGroup["Action Group\nLogic App · webhook · ITSM"]
+
+    budget --> forecastActual
+    forecastActual --> threshold1
+    threshold1 -- Yes --> alert80 --> actionGroup
+    threshold1 -- No --> threshold2
+    threshold2 -- Yes --> alert100 --> actionGroup
+    threshold2 -- No --> forecastActual
+```
+
 ## Creating a Budget
 
 Budgets are created with the `az costmanagement budget create` command. You define the amount, time grain, start/end dates, and notification rules in one call.

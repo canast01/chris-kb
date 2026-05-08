@@ -2,6 +2,24 @@
 
 Enterprise applications in Microsoft Entra ID represent the service principal for an application within your tenant. They are created automatically when an app registration is made or when a third-party SaaS app is added from the gallery.
 
+## Enterprise Application SSO Flow
+
+```mermaid
+sequenceDiagram
+    participant user as User
+    participant browser as Browser
+    participant entra as Entra ID
+    participant app as Enterprise Application (SaaS)
+
+    user->>browser: Access SaaS app URL
+    browser->>app: SAML / OIDC redirect
+    app->>entra: Authentication request
+    entra->>entra: Evaluate CA policies + MFA
+    entra-->>browser: SAML Assertion / OIDC token
+    browser->>app: Submit assertion / token
+    app-->>user: Logged in (SSO)
+```
+
 ## Viewing and Managing Enterprise Applications
 
 ```bash

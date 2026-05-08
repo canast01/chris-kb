@@ -4,6 +4,25 @@
 
 All Azure Storage data is encrypted at rest by default using Storage Service Encryption (SSE). Encryption uses AES-256 and is transparent to applications. Key management options include Platform-Managed Keys (PMK), Customer-Managed Keys (CMK) via Azure Key Vault, and Customer-Provided Keys (CPK) for per-request encryption.
 
+## Storage Encryption Key Model
+
+```mermaid
+flowchart LR
+    data["Data\nblobs · files · disks"]
+    sse["SSE — AES-256\ntransparent encryption"]
+    subgraph keyMgmt["Key Management Options"]
+        pmk["PMK\nMicrosoft-managed\n(default)"]
+        cmk["CMK\nCustomer-managed\nvia Key Vault"]
+        cpk["CPK\nCustomer-provided\nper-request"]
+    end
+    kv["Azure Key Vault\nHSM-backed keys · RBAC"]
+    storage["Encrypted at Rest\nStorage Account"]
+
+    data --> sse --> storage
+    cmk --> kv
+    sse --> pmk & cmk & cpk
+```
+
 ## Encryption Key Options
 
 | Option | Key Storage | Key Rotation | Use Case |

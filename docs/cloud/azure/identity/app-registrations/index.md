@@ -2,6 +2,23 @@
 
 An app registration in Microsoft Entra ID creates an identity for an application that needs to authenticate with Azure AD or access Azure resources and APIs. It is the foundation for service principals, OAuth2 flows, and API permissions.
 
+## App Registration to Service Principal Model
+
+```mermaid
+flowchart LR
+    appReg["App Registration\n(Home Tenant)\nApplication Object"]
+    sp["Service Principal\n(Each Tenant where app is used)\nService Principal Object"]
+    creds["Credentials\nClient Secret OR Certificate"]
+    oidc["OIDC Federation\nno stored secret"]
+    apiPerms["API Permissions\nMicrosoft Graph · Azure · custom API"]
+    entraToken["Entra ID Token\nJWT access token"]
+    resource["Protected Resource\nMicrosoft Graph · Azure ARM · custom API"]
+
+    appReg -->|"instantiates"| sp
+    appReg --> creds & oidc & apiPerms
+    sp -->|"authenticates"| entraToken --> resource
+```
+
 ## Creating an App Registration
 
 ```bash

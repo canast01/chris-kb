@@ -2,6 +2,24 @@
 
 Azure resource tags are key-value pairs applied to resources and resource groups for organisation, cost attribution, automation, and governance. A consistent tagging standard is the foundation of effective cloud management.
 
+## Tag Governance Flow
+
+```mermaid
+flowchart LR
+    deploy["Resource Deployment\nPortal / IaC / CLI"]
+    policyCheck["Azure Policy\nrequire-tag deny effect"]
+    tagPresent{"Required tags\npresent?"}
+    blocked["Deployment BLOCKED\n400 error — policy deny"]
+    taggedResource["Tagged Resource\ncompliant"]
+    costMgmt["Cost Management\nfilter by tag"]
+    automation["Automation\ntag-based operations"]
+
+    deploy --> policyCheck --> tagPresent
+    tagPresent -- No --> blocked
+    tagPresent -- Yes --> taggedResource
+    taggedResource --> costMgmt & automation
+```
+
 ## Required Tags
 
 Define a small, stable set of mandatory tags. Every resource and resource group must carry all required tags.

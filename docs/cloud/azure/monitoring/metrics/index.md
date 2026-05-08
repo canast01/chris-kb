@@ -2,6 +2,27 @@
 
 Azure Monitor Metrics is a time-series database that stores numeric data from Azure resources at near-real-time frequency. Platform metrics are collected automatically at no cost; custom metrics can be emitted from application code or agents.
 
+## Metrics Collection and Consumption
+
+```mermaid
+flowchart LR
+    subgraph sources["Metric Sources"]
+        platformMetrics["Platform Metrics\nVM · Storage · Network (auto)"]
+        guestMetrics["Guest OS Metrics\nAMA + DCR"]
+        customMetrics["Custom Metrics\nSDK · REST API"]
+        prometheus["Prometheus\nAKS · containers"]
+    end
+    metricsStore["Azure Monitor Metrics Store\n93-day retention · time-series DB"]
+    subgraph consume["Consumption"]
+        metricsExplorer["Metrics Explorer\ninteractive charts"]
+        alertRulesM["Metric Alert Rules\nthreshold triggers"]
+        autoscaleRules["Autoscale Rules\nVMSS · App Service"]
+        dashboardsM["Dashboards / Workbooks"]
+    end
+
+    sources --> metricsStore --> consume
+```
+
 ## Platform Metrics vs Custom Metrics
 
 | Type             | Source                          | Cost            | Retention  |
