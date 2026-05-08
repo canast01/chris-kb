@@ -2,6 +2,33 @@
 
 Authentication in ONTAP controls how administrators and service accounts gain access to cluster and SVM management interfaces. ONTAP supports local accounts, Active Directory (LDAP/Kerberos), SSH public keys, and SAML-based SSO for System Manager.
 
+## Authentication Flow
+
+```mermaid
+flowchart TD
+    user["Administrator / Service Account"] --> accessType{"Access Type"}
+    accessType -->|"SSH CLI"| sshAuth{"Auth Method"}
+    accessType -->|"HTTPS / REST API"| httpsAuth{"Auth Method"}
+    accessType -->|"NFS Data Access"| nfsAuth["NSSwitch → files / LDAP\nUID/GID resolution"]
+    accessType -->|"SMB Data Access"| smbAuth["Kerberos\nAD Domain Join"]
+
+    sshAuth -->|"local account"| localCheck["Local credential store\non ONTAP node"]
+    sshAuth -->|"publickey"| keyCheck["SSH key match\nstored in ONTAP"]
+    sshAuth -->|"domain account"| adCheck["AD Kerberos\nvia LDAP lookup"]
+    httpsAuth -->|"password"| localCheck
+    httpsAuth -->|"certificate"| certCheck["Mutual TLS\nclient certificate"]
+    httpsAuth -->|"SAML SSO"| samlFlow["Redirect to IdP\nADFS / Okta / Azure AD"]
+    samlFlow --> mfa["MFA at IdP"]
+    mfa --> token["SAML assertion\nreturned to ONTAP"]
+
+    localCheck --> rbac["RBAC Role\npermission check"]
+    keyCheck --> rbac
+    adCheck --> rbac
+    certCheck --> rbac
+    token --> rbac
+    rbac --> access["Access granted\nto cluster or SVM"]
+```
+
 ## Authentication Methods Summary
 
 | Method | Application | Use Case |

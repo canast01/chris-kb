@@ -75,6 +75,26 @@ Create a vCenter alarm or monitoring rule to alert if the backup job has not com
 
 Restore is a full appliance redeploy — you are deploying a new VCSA and importing the backup into it. The original VCSA must be powered off or removed before the restored appliance takes over.
 
+```mermaid
+graph TD
+    start(["Restore required"])
+    prereq["Gather: ISO, backup file,\nencryption password, target ESXi"]
+    stage1["Stage 1 — Deploy new VCSA\nRun installer → Restore mode\nSet network, FQDN, root password"]
+    stage2["Stage 2 — Import Backup\nProvide SFTP/FTP location\nEnter encryption password\nSelect backup timestamp"]
+    wait["Appliance deploys and\nimports data (30–60 min)"]
+    stage3["Stage 3 — Post-restore validation\nService status, SSO login,\nhost connectivity, integrations"]
+    done(["vCenter restored"])
+
+    start --> prereq --> stage1 --> stage2 --> wait --> stage3 --> done
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef gate fill:#15803d,stroke:#166534,color:#fff
+
+    class stage1,stage2,stage3,prereq step
+    class start,done gate
+    class wait step
+```
+
 ### Prerequisites
 
 - Encryption password (from your password vault)

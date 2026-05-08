@@ -120,6 +120,25 @@ VDC
 5. The geo-replication journal records the new object. The replication service picks up journal entries and transmits them to peer VDCs according to the replication group mode (sync/async).
 6. On the remote VDC, fragments are written and the replication journal is updated. The remote VDC can now serve the object to readers.
 
+```mermaid
+sequenceDiagram
+  participant CLT as "S3 Client"
+  participant LB as "Load Balancer"
+  participant COORD as "Coordinator Node"
+  participant DATA as "Data Nodes (N-3)"
+  participant JRNL as "Geo-Rep Journal"
+  participant REMOTE as "Remote VDC"
+  CLT->>LB: PUT /bucket/key
+  LB->>COORD: route request
+  COORD->>COORD: chunk + erasure code
+  COORD->>DATA: write EC fragments (12+4)
+  DATA-->>COORD: fragments committed
+  COORD-->>CLT: 200 OK (write acknowledged)
+  COORD->>JRNL: record new object
+  JRNL->>REMOTE: replicate (async/sync)
+  REMOTE-->>JRNL: replicated OK
+```
+
 ## Supported API Protocols
 
 | Protocol | Use Case | Notes |

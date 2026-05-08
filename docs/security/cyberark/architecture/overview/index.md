@@ -67,6 +67,29 @@ Key ports:
 
 ---
 
+## Credential Checkout Sequence
+
+```mermaid
+sequenceDiagram
+    participant user as Privileged User
+    participant pvwa as PVWA
+    participant vault as Vault
+    participant cpm as CPM
+
+    user->>pvwa: Authenticate (AD + MFA)
+    pvwa->>vault: SDK connect (port 1858)
+    user->>pvwa: Request credential checkout
+    pvwa->>vault: Retrieve encrypted credential
+    vault-->>pvwa: Return credential
+    pvwa-->>user: Display / use credential
+    user->>pvwa: Check-in (or auto check-in on expiry)
+    pvwa->>cpm: Trigger rotation job
+    cpm->>vault: Retrieve current credential
+    cpm->>vault: Store rotated credential
+```
+
+---
+
 ## High Availability and DR
 
 | Scenario | Recovery Method |
@@ -75,6 +98,19 @@ Key ports:
 | PVWA node failure | Load balancer removes failed node; remaining node serves traffic |
 | CPM failure | Accounts queue for rotation; failover CPM picks up queue on restart |
 | PSM node failure | Active sessions on failed node terminate; load balancer routes new sessions to healthy node |
+
+## DR Activation Flow
+
+```mermaid
+flowchart TD
+    failure["Primary Vault failure detected"] --> stopSync["Stop replication on DR Vault\n(dbsync.exe service stopped)"]
+    stopSync --> promDR["Change DR Vault to standalone mode\n(PrivateArk Client)"]
+    promDR --> updateIni["Update vault.ini on CPM / PSM / PVWA\nto point to DR Vault IP"]
+    updateIni --> restartSvc["Restart CyberArk services\non CPM, PSM, PVWA"]
+    restartSvc --> validate["Validate connectivity\n(Test-NetConnection :1858)"]
+    validate --> testCred["Test credential retrieval\nfrom DR Vault"]
+    testCred --> ops["Operations resume from DR Vault"]
+```
 
 DR Vault activation procedure:
 1. Stop replication on the DR Vault: `C:\Program Files (x86)\PrivateArk\Server\dbsync.exe` — stop the sync service.

@@ -4,6 +4,26 @@
 
 Use this page for practical Python scripts, field-tested commands, known issues, and operational notes.
 
+## Windows Python Environment Setup Flow
+
+```mermaid
+graph LR
+    checkPython["Check Python 3\ninstalled in PATH"]
+    createVenv["Create venv\n(python -m venv)"]
+    activateVenv["Activate venv\n(Scripts\\activate)"]
+    installPkgs["Install packages\n(pip install)"]
+    runScript["Run Python Script\n(python script.py)"]
+    deactivate["Deactivate venv"]
+
+    checkPython -->|Found| createVenv
+    checkPython -->|Not found| installPython["Install Python 3\nfrom python.org"]
+    installPython --> createVenv
+    createVenv --> activateVenv
+    activateVenv --> installPkgs
+    installPkgs --> runScript
+    runScript --> deactivate
+```
+
 ## Common Checks
 
 - Confirm current health

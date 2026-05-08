@@ -170,6 +170,27 @@ ls -la /etc/sudoers.d/
 
 ---
 
+## systemd Service Dependency Model
+
+```mermaid
+flowchart TD
+    hardwareInit["hardware.target\ndevice enumeration"]
+    networkOnline["network-online.target\ninterfaces configured"]
+    sysInit["sysinit.target\nfsck · mount · sysctl"]
+    basic["basic.target\ntimers · sockets · paths"]
+    multiUser["multi-user.target\nall services ready"]
+    sshd["sshd.service"]
+    chronyd["chronyd.service"]
+    rsyslog["rsyslog.service"]
+    auditd["auditd.service"]
+
+    hardwareInit --> sysInit --> basic --> networkOnline --> multiUser
+    basic --> sshd
+    basic --> chronyd
+    networkOnline --> rsyslog
+    basic --> auditd
+```
+
 ## Service Management
 
 ```bash
@@ -320,6 +341,25 @@ sudo -u <service-user> /path/to/binary --args
 ## Patching
 
 Patch management procedures for RHEL 8/9 and Ubuntu 22.04 LTS servers.
+
+### Patching Flow
+
+```mermaid
+flowchart TD
+    preCheck["Pre-patch checks\nuptime · systemctl --failed · df -h"]
+    captureState["Capture state\npackage list · running kernel"]
+    checkUpdates["Check available updates\ndnf check-update / apt list --upgradable"]
+    apply["Apply patches\ndnf update -y / apt upgrade -y"]
+    rebootNeeded{"Reboot\nrequired?"}
+    reboot["Reboot\nnew kernel"]
+    postValidate["Post-patch validation\nservices · kernel · diff package list"]
+    done["Complete\nClose change record"]
+
+    preCheck --> captureState --> checkUpdates --> apply --> rebootNeeded
+    rebootNeeded -- Yes --> reboot --> postValidate
+    rebootNeeded -- No --> postValidate
+    postValidate --> done
+```
 
 ### Pre-Patch Checklist
 

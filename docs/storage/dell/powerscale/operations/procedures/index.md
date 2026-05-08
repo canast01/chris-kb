@@ -23,6 +23,25 @@ Verify these items before performing any change on a PowerScale cluster — node
 
 ## Maintenance Window
 
+```mermaid
+flowchart TD
+    A([Start Maintenance]) --> B["Notify NFS/SMB client teams"]
+    B --> C{"isi status clean?"}
+    C -->|No| D["Resolve faults first"]
+    D --> C
+    C -->|Yes| E["Pause SyncIQ policies"]
+    E --> F["Check capacity headroom\n< 80% in isi storagepool"]
+    F --> G{"Node SmartFail?"}
+    G -->|Yes| H["isi devices node smartfail LNN\nMonitor Restripe job"]
+    G -->|No| I["Perform change per runbook"]
+    H --> I
+    I --> J["isi status — all nodes ONLINE?"]
+    J -->|No| K["Investigate & resolve"]
+    K --> J
+    J -->|Yes| L["Re-enable SyncIQ policies\nTrigger manual run → confirm SUCCESS"]
+    L --> M([Close Window])
+```
+
 Steps for planned maintenance on a PowerScale cluster — node SmartFail, OneFS upgrade, or network reconfiguration.
 
 1. Notify NFS and SMB client teams; confirm the maintenance window and coordinate any application quiesce if node-level work is planned

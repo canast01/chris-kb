@@ -62,6 +62,28 @@
 - [ ] Inventory still returns the expected host count for all groups
 - [ ] Vault-encrypted variables still decrypt successfully
 
+## Ansible Tower / AWX Job Launch Sequence
+
+```mermaid
+graph LR
+    operator["Operator\n(User / API / Schedule)"]
+    jobTemplate["Job Template\n(playbook + inventory + creds)"]
+    awxQueue["AWX/Tower\nJob Queue"]
+    awxExecutor["AWX Executor\n(container/fork)"]
+    inventorySource["Inventory Source\n(dynamic sync)"]
+    vaultCreds["Vault / Machine\nCredentials"]
+    managed["Managed Hosts\n(SSH)"]
+    jobHistory["Job History\n& Artifacts"]
+
+    operator --> jobTemplate
+    jobTemplate --> awxQueue
+    awxQueue --> awxExecutor
+    awxExecutor --> inventorySource
+    awxExecutor --> vaultCreds
+    awxExecutor -->|ansible-playbook| managed
+    awxExecutor --> jobHistory
+```
+
 ## Playbooks
 
 A playbook is a YAML file containing one or more plays. Each play targets hosts and defines tasks.

@@ -2,6 +2,32 @@
 
 Diagnostic procedures and log analysis.
 
+## Diagnostic Data Sources
+
+```mermaid
+flowchart LR
+    subgraph kernel["Kernel Space"]
+        dmesgSrc["dmesg\nhardware · OOM · I/O errors"]
+        auditSrc["auditd\nSELinux denials · syscalls"]
+    end
+    subgraph userspace["User Space"]
+        journalSrc["journald\nall units · boot"]
+        rsyslogSrc["rsyslog\nforwarded logs"]
+    end
+    subgraph tools["Analysis Tools"]
+        ausearch["ausearch\naureport"]
+        journalctl["journalctl"]
+        grep["grep · awk\nlog files"]
+    end
+    siemDst["SIEM\nCentralised log platform"]
+
+    dmesgSrc --> journalSrc
+    auditSrc --> ausearch
+    journalSrc --> journalctl
+    journalSrc --> rsyslogSrc --> siemDst
+    journalctl --> grep
+```
+
 ## Log Locations
 
 | Log | Path / Command | Content |

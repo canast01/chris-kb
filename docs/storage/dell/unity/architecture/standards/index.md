@@ -1,5 +1,26 @@
 # Unity — Standards
 
+## Pool Design Decision Tree
+
+```mermaid
+graph TD
+  START([New Pool Required]) --> WL{Workload Type?}
+  WL -->|"Random I/O\ndatabases / VMs"| PERF{All-Flash Budget?}
+  WL -->|"Sequential\nbackup / video"| CAP["RAID-5 (8+1)\nNL-SAS · Capacity pool"]
+  PERF -->|Yes| AFF["All-Flash RAID-5\nNVMe · data reduction ON"]
+  PERF -->|No| HYB["Hybrid RAID-10\n10K SAS + FAST Cache"]
+  AFF --> ALERT["Set pool alert\nat 70% and 80%"]
+  HYB --> ALERT
+  CAP --> ALERT
+  ALERT --> DONE([Pool ready for LUN/FS provisioning])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class WL,PERF decision
+  class AFF,HYB,CAP,ALERT action
+  class START,DONE term
+```
+
 ## Sizing Guidelines
 
 | Parameter | Guidance |

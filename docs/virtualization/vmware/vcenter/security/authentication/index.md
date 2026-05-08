@@ -1,5 +1,24 @@
 # vCenter Security — Authentication
 
+## SSO Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant user as User / Browser
+    participant vc as vCenter (port 443)
+    participant sso as vSphere SSO (STS)
+    participant idp as Identity Source (AD/LDAP)
+
+    user->>vc: Login request (username + password)
+    vc->>sso: Delegate authentication
+    sso->>idp: LDAP bind + user lookup
+    idp-->>sso: User attributes & group membership
+    sso-->>sso: Validate credentials & policy
+    sso-->>vc: SAML token (signed)
+    vc-->>user: Session established
+    Note over vc,user: Token valid for 30 min (inactivity timeout)
+```
+
 ## SSO Security
 
 ### Authentication Policy
@@ -83,6 +102,21 @@ echo | openssl s_client -connect <vcenter-fqdn>:443 -servername <vcenter-fqdn> 2
 | Solution User Certificates | VAMI → Certificate Management | Service-to-service auth failures |
 
 ## Certificate Replacement Process
+
+```mermaid
+graph LR
+    id1["Identify expiring cert\n(VAMI / openssl check)"]
+    id2["Confirm vCenter\nbackup is current"]
+    id3["Schedule maintenance\nwindow"]
+    id4["Replace via\ncertificate-manager"]
+    id5["Restart affected\nservices"]
+    id6["Validate browser,\nSSO, integrations"]
+
+    id1 --> id2 --> id3 --> id4 --> id5 --> id6
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    class id1,id2,id3,id4,id5,id6 step
+```
 
 1. Identify the certificate and replacement method (VMCA, custom CA, or self-signed)
 2. Confirm backup of vCenter is current

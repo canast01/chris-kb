@@ -2,6 +2,24 @@
 
 ## Diagnostic Overview
 
+```mermaid
+graph TD
+    subgraph "Layer 1 — PowerPath"
+        ppCmd["powermt display dev=all\npowermt display ports class=all\npowermt display options\npowermt check_registration"]
+    end
+
+    subgraph "Layer 2 — Host OS / HBA"
+        osCmd["lsmod | grep emcp\nsysctl -c fc_host -v\ndmesg | grep scsi\ngrep emcp /var/log/messages"]
+    end
+
+    subgraph "Layer 3 — Fabric / Array"
+        fabCmd["Brocade: portshow, nsshow, errdump\nCisco: show interface fc, show fcns db\nArray: confirm FA port + LUN masking"]
+    end
+
+    ppCmd -->|"dead paths seen → investigate"| osCmd
+    osCmd -->|"HBA online → investigate fabric"| fabCmd
+```
+
 PowerPath diagnostics involve three layers: the PowerPath layer itself (pseudo devices, policies, path state), the host OS / HBA layer (kernel modules, HBA port state, SCSI transport), and the fabric/array layer (SAN switch, array front-end ports). Effective diagnosis requires correlating evidence from all three layers.
 
 Always start with PowerPath-layer commands. They tell you what PowerPath sees. If PowerPath sees dead paths, the problem is at the HBA, fabric, or array layer — work outward from there.

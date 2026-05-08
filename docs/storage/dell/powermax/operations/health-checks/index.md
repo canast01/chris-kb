@@ -137,6 +137,35 @@ symdev list -sid <sid> -spare
 symstat -sid <sid> list -type cache | grep -E "WP\|Write Pending"
 ```
 
+## Health Check Decision Flow
+
+```mermaid
+flowchart TD
+    START([Begin Health Check]) --> A{"symcfg list\nArray Online?"}
+    A -->|"No"| A1["Check SE connectivity\nCheck array power\nCheck netcnfg"]
+    A -->|"Yes"| B{"symcfg show\nAll directors Online?"}
+    B -->|"Director faulted"| B1["Raise P2 case with Dell\nCheck director LEDs\nCapture symcfg show output"]
+    B -->|"Yes"| C{"sympd list -failed\nFailed drives?"}
+    C -->|"Drive failed"| C1["Check RAID protection\nMark spare drive\nRaise Dell hardware case"]
+    C -->|"None"| D{"symrdf query -rdfg all\nAll pairs Synchronized?"}
+    D -->|"Degraded pairs"| D1["Check WAN link\nCheck R2 array\nReview SRDF state table"]
+    D -->|"Yes"| E{"symcfg list -srp\nSRP < 80% subscribed?"}
+    E -->|"SRP >= 80%"| E1["Expire stale SnapVX snaps\nReview thin provisioning\nPlan capacity expansion"]
+    E -->|"Yes"| F{"symstat list -type cache\nCache WP% < 31%?"}
+    F -->|"WP% > 31%"| F1["Check for I/O spike\nIdentify hot SGs\nReview FAST VP placement"]
+    F -->|"Yes"| G{"symevent list\nUncleared critical events?"}
+    G -->|"Events found"| G1["Triage events by severity\nCorrelate with Unisphere alerts\nEscalate if hardware-related"]
+    G -->|"None"| PASS(["All checks PASSED\nArray healthy"])
+
+    classDef ok fill:#15803d,stroke:#166534,color:#fff
+    classDef fail fill:#be123c,stroke:#9f1239,color:#fff
+    classDef check fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef action fill:#b45309,stroke:#92400e,color:#fff
+    class START,PASS ok
+    class A,B,C,D,E,F,G check
+    class A1,B1,C1,D1,E1,F1,G1 action
+```
+
 ## Health Check Summary
 
 | Check | Command | Healthy |

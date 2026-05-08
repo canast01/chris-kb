@@ -4,6 +4,27 @@
 
 Eyeglass DR Assistant orchestrates failover of PowerScale (Isilon) access zones from a production cluster to a DR cluster. Failover includes stopping SyncIQ replication, activating DR access zones, and remapping NFS/SMB shares and DNS entries.
 
+```mermaid
+flowchart TD
+    detect(["Detect: Production\ncluster unavailable / event declared"])
+    validateRPO["Validate RPO\nCheck SyncIQ lag vs threshold"]
+    preflight["egcli drtest preflight\nConfirm DR prerequisites"]
+    ready{DR Ready?}
+    noGo["Escalate — prerequisites\nnot met"]
+    triggerFO["egcli drfailover\n--policy POLICY --confirm"]
+    breakSync["Break SyncIQ replication\nDR cluster becomes writable"]
+    activateZones["Activate DR access zones\nReconfigure NFS/SMB shares"]
+    dnsSwitch["DNS cutover\nSmartConnect zone → DR VIP pool"]
+    notify["Notify stakeholders\nSNMP / Email alert"]
+    validate["Validate client access\nNFS mounts, SMB shares, DNS"]
+    done(["DR cluster active\nMonitor and plan failback"])
+
+    detect --> validateRPO --> preflight --> ready
+    ready -->|No| noGo
+    ready -->|Yes| triggerFO
+    triggerFO --> breakSync --> activateZones --> dnsSwitch --> notify --> validate --> done
+```
+
 | Failover Type | Description | Disruption |
 |---|---|---|
 | Planned (Test) | Full DR rehearsal; production cluster is available; tests cutover and cutback | Temporary client disruption during cutover |
@@ -124,6 +145,31 @@ Failback is the process of returning data and user access from the DR PowerScale
 | Access zone failback | Re-map access zones, NFS exports, and SMB shares to production |
 | DNS cutover | Return DNS entries to production SmartConnect zones |
 | Validation | Confirm client access and data integrity on production |
+
+```mermaid
+flowchart LR
+    subgraph "Normal Operation"
+        prodCluster["Production\nPowerScale"]
+        synciq["SyncIQ Policy\n(prod → DR)"]
+        drCluster["DR\nPowerScale"]
+        prodCluster -->|replicates| synciq --> drCluster
+    end
+
+    subgraph "During Failover"
+        drActive["DR Cluster\nActive"]
+        revSync["Reverse SyncIQ\n(DR → prod)"]
+    end
+
+    subgraph "Failback"
+        prodRestore["Production\nCluster Restored"]
+        dnsBack["DNS → Production\nSmartConnect"]
+        validated(["Replication\nresumed prod → DR"])
+    end
+
+    drCluster -->|"failover declared\nSyncIQ broken"| drActive
+    drActive -->|"reverse sync\nuser data back to prod"| revSync --> prodRestore
+    prodRestore --> dnsBack --> validated
+```
 
 ### Pre-Failback Checklist
 

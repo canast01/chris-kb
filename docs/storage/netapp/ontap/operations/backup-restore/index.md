@@ -109,9 +109,65 @@ volume clone delete -vserver <svm> -flexclone <clone_name>
 
 ---
 
+## SnapMirror Relationship Types
+
+```mermaid
+graph LR
+    subgraph "Primary Site"
+        srcVol["Source Volume\n(SVM / vol)"]
+    end
+
+    subgraph "Secondary Site"
+        dstAsync["Async Destination\n(DP — XDP)"]
+        dstSync["Sync Destination\n(SM Sync)"]
+    end
+
+    subgraph "Vault Site"
+        dstVault["SnapVault Destination\n(XDP — vault policy)"]
+    end
+
+    subgraph "SMBC Peer"
+        dstSMBC["SMBC Destination\n(zero RPO/RTO)"]
+        mediator["ONTAP Mediator"]
+    end
+
+    srcVol -->|"async replication\nlag: minutes–hours"| dstAsync
+    srcVol -->|"synchronous write\nconfirmation"| dstSync
+    srcVol -->|"long-term retention\nindependent snapshots"| dstVault
+    srcVol <-->|"bidirectional sync\ntransparent failover"| dstSMBC
+    mediator -. "quorum witness" .-> dstSMBC
+```
+
+---
+
 ## SnapMirror Failover (DR Restore)
 
 SnapMirror replicates volumes asynchronously to a destination cluster or SVM. The destination volume is read-only under normal operation. Failover (breaking the relationship) makes it writable for disaster recovery.
+
+### DR Failover Sequence
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant SrcCluster as Source Cluster
+    participant DstCluster as Destination Cluster
+    participant DRHosts as DR Hosts
+
+    Admin->>DstCluster: snapmirror show (check lag)
+    DstCluster-->>Admin: lag-time, last-transfer-end
+    Admin->>DstCluster: snapmirror quiesce
+    DstCluster-->>Admin: quiesced
+    Admin->>DstCluster: snapmirror break
+    DstCluster-->>Admin: destination now writable
+    Admin->>DstCluster: volume mount / create shares
+    Admin->>DRHosts: mount NFS / present iSCSI LUNs
+    DRHosts-->>Admin: I/O active on DR site
+
+    Note over SrcCluster,DstCluster: Primary site recovered
+    Admin->>DstCluster: snapmirror resync (DR→Primary)
+    Admin->>SrcCluster: snapmirror break (Primary)
+    Admin->>DstCluster: snapmirror resync (restore original)
+```
 
 ### Standard Failover Procedure
 

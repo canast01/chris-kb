@@ -71,6 +71,39 @@ VSANs segment the fabric logically. Common VSAN allocation:
 | Replication | SRDF/A or SnapMirror | 20 | 21 |
 | Management | Out-of-band fabric mgmt | 99 | 99 |
 
+```mermaid
+graph TB
+  subgraph "Physical MDS Switch"
+    subgraph vsan10 ["VSAN 10 — Production (Fabric A)"]
+      V10NS["FC Name Server"]
+      V10Z["Zone DB"]
+      V10D["Domain ID: 1"]
+    end
+    subgraph vsan20 ["VSAN 20 — Replication (Fabric A)"]
+      V20NS["FC Name Server"]
+      V20Z["Zone DB"]
+      V20D["Domain ID: 2"]
+    end
+    subgraph vsan99 ["VSAN 99 — Management"]
+      V99NS["FC Name Server"]
+      V99Z["Zone DB"]
+      V99D["Domain ID: 3"]
+    end
+  end
+
+  H1["ESXi Host\n(HBA0 — fc1/1)"] -->|"VSAN 10"| vsan10
+  SA["FlashArray CT0\n(fc1/8)"] -->|"VSAN 10"| vsan10
+  SRDF1["PowerMax FA Dir A\n(fc1/9)"] -->|"VSAN 20"| vsan20
+  SRDF2["PowerMax FA Dir B\n(fc1/10)"] -->|"VSAN 20"| vsan20
+
+  classDef vsanBox fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef device fill:#15803d,stroke:#166534,color:#fff
+  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class vsan10,vsan20,vsan99 vsanBox
+  class H1 device
+  class SA,SRDF1,SRDF2 storage
+```
+
 Each VSAN has its own:
 - FC Name Server (FCNS)
 - Domain ID space
@@ -89,6 +122,25 @@ VSAN 1 is the default VSAN — do not use VSAN 1 for production; all production 
 | FSPF | Fabric Shortest Path First — routing protocol for FC fabrics |
 | FLOGI DB | Records all fabric login events (WWN, FCID, port) |
 | Zoning | Controls which initiators can communicate with which targets |
+
+```mermaid
+sequenceDiagram
+  participant HBA as Host HBA
+  participant SW as MDS Switch
+  participant NS as FC Name Server
+  participant TGT as Storage Target
+
+  HBA->>SW: FLOGI (Fabric Login)<br/>sends WWPN + WWNN
+  SW-->>HBA: FLOGI Accept<br/>assigns FCID (3-byte address)
+  HBA->>NS: PLOGI to Name Server (0xFFFFFC)<br/>registers port type, WWPN, FCID
+  NS-->>HBA: LS_ACC (registration accepted)
+  HBA->>NS: GNN_FT / GID_FT<br/>query targets in VSAN
+  NS-->>HBA: Return list of target FCIDs
+  HBA->>TGT: PLOGI (Port Login)<br/>establish session
+  TGT-->>HBA: PLOGI Accept
+  HBA->>TGT: PRLI (Process Login)<br/>negotiate SCSI / NVMe service
+  TGT-->>HBA: PRLI Accept — I/O ready
+```
 
 **Key commands:**
 

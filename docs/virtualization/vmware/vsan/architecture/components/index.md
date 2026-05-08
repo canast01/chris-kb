@@ -1,5 +1,37 @@
 # vSAN — Components
 
+## Component Hierarchy
+
+```mermaid
+graph TD
+    policy["VM Storage Policy\n(FTT=1 RAID-1, checksum on)"]
+    obj["vSAN Storage Object\n(per VMDK / VM namespace)"]
+    compA["Component A\nESXi-01, Disk Group 1"]
+    compB["Component B\nESXi-02, Disk Group 1\n(mirror)"]
+    witness["Witness Component\nESXi-03\n(metadata tiebreaker)"]
+    diskA["Capacity SSD\n(naa.xxxxx)"]
+    diskB["Capacity SSD\n(naa.yyyyy)"]
+
+    policy -->|"defines placement"| obj
+    obj --> compA
+    obj --> compB
+    obj --> witness
+    compA --> diskA
+    compB --> diskB
+
+    classDef policy fill:#b45309,stroke:#92400e,color:#fff
+    classDef obj fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef comp fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef disk fill:#15803d,stroke:#166534,color:#fff
+    classDef wit fill:#1d4ed8,stroke:#1e40af,color:#fff
+
+    class policy policy
+    class obj obj
+    class compA,compB comp
+    class diskA,diskB disk
+    class witness wit
+```
+
 ## Core Components
 
 | Component | Description |
@@ -43,6 +75,37 @@ A vSAN Stretched Cluster spans two active data sites with a third witness site:
 
 - **Site A and Site B:** Both active, hold RAID-1 mirrors of each VM object
 - **Witness Site:** Holds only metadata; acts as tiebreaker for split-brain prevention
+
+```mermaid
+graph TD
+    subgraph "Site A (Active)"
+        h1["ESXi-01"]
+        h2["ESXi-02"]
+        h3["ESXi-03"]
+    end
+
+    subgraph "Site B (Active)"
+        h4["ESXi-04"]
+        h5["ESXi-05"]
+        h6["ESXi-06"]
+    end
+
+    subgraph "Witness Site"
+        wit["Witness Appliance\n(metadata only)"]
+    end
+
+    h1 & h2 & h3 -->|"< 5 ms RTT"| h4 & h5 & h6
+    h1 & h2 & h3 -->|"< 200 ms RTT"| wit
+    h4 & h5 & h6 -->|"< 200 ms RTT"| wit
+
+    classDef siteA fill:#15803d,stroke:#166534,color:#fff
+    classDef siteB fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef witness fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class h1,h2,h3 siteA
+    class h4,h5,h6 siteB
+    class wit witness
+```
 
 Network requirements:
 

@@ -74,6 +74,29 @@ show logging last 100 | grep fc1/3
 
 **Symptom:** `show interface brief` shows `errDisabled`. NX-OS automatically disabled the port after detecting a fault.
 
+```mermaid
+flowchart TD
+  A["Port in errDisabled\n(show interface brief)"] --> B["Read error reason\n(show interface fc1/4)"]
+  B --> C{"errDisabled reason?"}
+  C -->|"fcot-not-present"| D["Reseat or replace SFP"]
+  C -->|"link-failure-count-exceeded"| E["Replace SFP → test\nReplace cable → test\nCheck peer HBA/port"]
+  C -->|"isolation"| F["Resolve VSAN merge conflict\nCheck show trunk — allowed VSANs\nCheck fcdomain domain-list"]
+  C -->|"rcf-failure"| G["Assign unique static domain ID\nbefore ISL reconnect"]
+  C -->|"cfg-invalid"| H["Fix VSAN assignment\nor port mode config"]
+  D & E & F & G & H --> I{"Root cause\nresolved?"}
+  I -->|"No — do not re-enable"| J["Collect show tech-support\nOpen Cisco TAC case"]
+  I -->|"Yes"| K["shutdown → no shutdown\nVerify state = up"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
+  classDef good fill:#15803d,stroke:#166534,color:#fff
+  class C,I decision
+  class D,E,F,G,H fix
+  class J warn
+  class K good
+```
+
 ```bash
 # Check reason
 show interface fc1/4
@@ -132,22 +155,23 @@ show vsan membership interface fc<storage-port>
 
 **Decision tree:**
 
-```
-Host in FLOGI? --No--> Check port state, VSAN assignment, cable/SFP
-       |Yes
-       v
-Storage in FLOGI? --No--> Check storage array port and VSAN assignment
-       |Yes
-       v
-Zone with both devices? --No--> Create zone and activate zone set
-       |Yes
-       v
-Zone set active? --No--> zoneset activate name <zs> vsan <id>
-       |Yes
-       v
-Still failing? ---> Verify WWPNs in zone match FLOGI PWWN exactly
-                    Check for enhanced zoning mode: show zone status vsan <id>
-                    Check IVR if devices are in different VSANs
+```mermaid
+flowchart TD
+  A["Host cannot see storage"] --> B{"Host pWWN in\nshow flogi database?"}
+  B -->|"No"| B1["Check port state\nCheck VSAN assignment\nCheck cable / SFP"]
+  B -->|"Yes"| C{"Storage pWWN in\nshow flogi database?"}
+  C -->|"No"| C1["Check array port and\nVSAN membership"]
+  C -->|"Yes"| D{"Zone containing\nboth devices exists?"}
+  D -->|"No"| D1["Create zone with aliases\nAdd to zone set\nActivate zone set"]
+  D -->|"Yes"| E{"Zone set\nactive?"}
+  E -->|"No"| E1["zoneset activate name\nzoneset-name vsan N"]
+  E -->|"Yes"| F{"Still failing?"}
+  F -->|"Yes"| F1["Verify WWPNs match\nFLOGI pWWN exactly\nCheck enhanced zoning mode\nCheck IVR if different VSANs"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  class B,C,D,E,F decision
+  class B1,C1,D1,E1,F1 fix
 ```
 
 ---

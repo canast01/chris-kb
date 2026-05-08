@@ -109,6 +109,32 @@ vmware-vpostgres      ← must start first (database)
                     └── vmware-eam     ← ESX Agent Manager
 ```
 
+```mermaid
+graph TD
+    vpostgres["vmware-vpostgres\n(PostgreSQL database)"]
+    stsd["vmware-stsd\n(SSO token service)"]
+    idmd["vmware-sts-idmd\n(identity management)"]
+    vpxd["vpxd\n(core vCenter daemon)"]
+    ui["vsphere-ui\n(HTML5 Client)"]
+    eam["vmware-eam\n(ESX Agent Manager)"]
+
+    vpostgres --> stsd
+    stsd --> idmd
+    idmd --> vpxd
+    vpxd --> ui
+    vpxd --> eam
+
+    classDef db fill:#1d4ed8,stroke:#1e40af,color:#fff
+    classDef sso fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef core fill:#b45309,stroke:#92400e,color:#fff
+    classDef svc fill:#15803d,stroke:#166534,color:#fff
+
+    class vpostgres db
+    class stsd,idmd sso
+    class vpxd core
+    class ui,eam svc
+```
+
 If a manual restart is required:
 ```bash
 # Stop all cleanly

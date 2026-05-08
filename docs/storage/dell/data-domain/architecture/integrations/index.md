@@ -1,5 +1,25 @@
 # Data Domain — Integrations
 
+## DD Boost Backup Flow
+
+```mermaid
+graph TD
+    backupApp(["Backup Application\nVeeam / NetBackup / CommVault"])
+    ddvdp["DDBoost Client Library\n(DDVDP plug-in / OST plug-in)\ninstalled on backup server"]
+    localDedup["Source-side Dedup\n(DSP — Distributed Segment Processing)\n~50% traffic reduction"]
+    ddReceiver["DD Boost Receiver\non Data Domain"]
+    sisl["SISL Engine\n(unique segments only)"]
+    nvramCache["NVRAM Write Cache"]
+    ddfs["[(DDFS on Disk)]\n(deduplicated + compressed)"]
+
+    backupApp --> ddvdp
+    ddvdp --> localDedup
+    localDedup -->|"unique segments only\nover TCP/IP"| ddReceiver
+    ddReceiver --> sisl
+    sisl --> nvramCache
+    nvramCache --> ddfs
+```
+
 ## Veeam Backup & Replication (DD Boost for Veeam — DDVDP)
 
 Veeam integrates with Data Domain via the DD Boost for Veeam Data Domain Plugin (DDVDP). This enables source-side deduplication at the Veeam proxy, significantly reducing network traffic to the DD.

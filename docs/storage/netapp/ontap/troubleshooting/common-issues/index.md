@@ -1,5 +1,24 @@
 # ONTAP — Common Issues
 
+## Incident Triage Decision Tree
+
+```mermaid
+flowchart TD
+    incident([Incident Reported]) --> clusterOk{"cluster show\nAll nodes healthy?"}
+    clusterOk -->|No| haCheck["storage failover show\nHA takeover active?"]
+    haCheck -->|Yes| waitGiveback["Wait for auto-giveback\nor run manual giveback"]
+    haCheck -->|No| nodeDown["Node down — check\ncluster ping-cluster\nhardware / power"]
+    clusterOk -->|Yes| diskOk{"storage disk show -broken\nAny broken disks?"}
+    diskOk -->|Yes| diskIssue["Check RAID state\nstorage aggregate show-status\nCheck spares available"]
+    diskOk -->|No| volOk{"volume show -state !online\nAny offline volumes?"}
+    volOk -->|Yes| volIssue["Bring volume online\ncheck aggregate state"]
+    volOk -->|No| protocol{"Which protocol is failing?"}
+    protocol -->|NFS| nfsCheck["network interface show\nnfs connected-client show\ncheck export policy"]
+    protocol -->|SMB| smbCheck["vserver cifs show\nvserver cifs domain info\ncheck AD connectivity"]
+    protocol -->|iSCSI| iscsCheck["iscsi session show\nlun mapping show\nmultipath on host"]
+    protocol -->|SnapMirror| smCheck["snapmirror show -health false\ncheck intercluster LIF\ncheck throttle"]
+```
+
 ## Quick Reference
 
 | Symptom | Likely Cause | Action |

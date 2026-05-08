@@ -68,6 +68,32 @@
 
 When a host reports I/O errors or a LUN is inaccessible, work through this sequence:
 
+```mermaid
+graph TD
+  START(["Host reports I/O errors\nor LUN inaccessible"]) --> SP{Both SPs\nonline?}
+  SP -->|No| SPWAIT["Wait 60 sec for\nmultipath re-path\nIf SP stays offline → P1 case"]
+  SP -->|Yes| POOL{Pool and disk\ngroups healthy?}
+  POOL -->|No| DRIVE["Identify faulted drive\nInitiate replacement\nMonitor RAID rebuild"]
+  POOL -->|Yes| ACL{LUN mapped\nto host?}
+  ACL -->|No| ADDACL["uemcli /stor/config/lunacl create\n-lun -host"]
+  ACL -->|Yes| PROTO{Protocol?}
+  PROTO -->|FC| FCCHECK["Verify FC zone:\nhost HBA WWN + Unity port WWN\nboth present"]
+  PROTO -->|iSCSI| ISCSICHECK["Verify host IQN registered\nCheck CHAP credentials\nPing iSCSI portal IP"]
+  FCCHECK & ISCSICHECK --> NIC{Network\ninterface up?}
+  NIC -->|No| NICFIX["Check SP port; restore interface\nuemcli /net/port/fc show"]
+  NIC -->|Yes| ALERTS{Active alerts\nin last 2 hours?}
+  ALERTS -->|Yes| ALINV["Investigate alert details\nin Unisphere event log"]
+  ALERTS -->|No| BUNDLE["Collect support bundle\nOpen Dell case"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class SP,POOL,ACL,PROTO,NIC,ALERTS decision
+  class ADDACL,FCCHECK,ISCSICHECK,NICFIX,ALINV,BUNDLE action
+  class SPWAIT,DRIVE warn
+  class START term
+```
+
 ```bash
 # Step 1 — determine if the array is healthy
 uemcli -d <ip> -u admin /env/health show -filter "health.value ne OK"

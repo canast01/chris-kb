@@ -145,3 +145,33 @@ uemcli -d <ip> -u admin /net/if show | grep -E "ID|Health|IP"
 | All LUNs OK | `/stor/config/lun show` | All health = OK |
 | Replication sessions OK | `/prot/rep/session show` | All OK / Synced |
 | Both SPs online | `/sys/sp show` | Both = OK |
+
+## Daily Health Check Sequence
+
+```mermaid
+graph TD
+  START([Begin daily check]) --> SYS["uemcli /env/health show\n-filter 'health.value ne OK'"]
+  SYS --> SYS_OK{Any non-OK\ncomponents?}
+  SYS_OK -->|Yes| TRIAGE["Triage fault\ncheck Common Issues KB"]
+  SYS_OK -->|No| SP["uemcli /env/sp show\nBoth SPs Active?"]
+  SP --> SP_OK{Both Active?}
+  SP_OK -->|No| SPFAIL["One SP offline —\ncheck fault LEDs\nopen Dell case if hardware"]
+  SP_OK -->|Yes| POOL["uemcli /stor/config/pool show\nPool capacity < 80%?"]
+  POOL --> POOL_OK{Free > 20%?}
+  POOL_OK -->|No| CAPACT["Expand pool or\ndelete snapshots"]
+  POOL_OK -->|Yes| REP["uemcli /prot/rep/session show\nAll sessions Active?"]
+  REP --> REP_OK{All Active?}
+  REP_OK -->|No| REPFIX["Resume or investigate\nreplication session"]
+  REP_OK -->|Yes| DISK["uemcli /stor/config/disk show\nAll disks Normal?"]
+  DISK --> DISK_OK{Any faulted?}
+  DISK_OK -->|Yes| REPLACE["Initiate drive replacement\nmonitor RAID rebuild"]
+  DISK_OK -->|No| DONE([All checks passed])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class SYS_OK,SP_OK,POOL_OK,REP_OK,DISK_OK decision
+  class SYS,SP,POOL,REP,DISK action
+  class TRIAGE,SPFAIL,CAPACT,REPFIX,REPLACE warn
+  class START,DONE term
+```

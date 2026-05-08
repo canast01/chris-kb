@@ -1,5 +1,25 @@
 # ONTAP — Components
 
+## Component Relationship
+
+```mermaid
+graph TD
+    cluster["Cluster\n(2–24 nodes)"] --> nodeA["Node A (Controller)"]
+    cluster --> nodeB["Node B (HA Partner)"]
+    nodeA & nodeB <-->|"HA interconnect\nNVRAM mirror"| haPair(["HA Pair"])
+    nodeA --> aggrA["Aggregate\nRAID groups of disks"]
+    nodeB --> aggrB["Aggregate\nRAID groups of disks"]
+    aggrA & aggrB --> svmData["SVM: data\nprotocols + namespace"]
+    svmData --> volA["Volume (FlexVol)\nthin/thick provisioned"]
+    volA --> lun["LUN\niSCSI · FC block device"]
+    volA --> snapshot["Snapshots\nread-only CoW copies"]
+    volA --> qtree["Qtrees / NFS exports\nSMB shares"]
+    svmData --> lif["Data LIF\nIP or WWPN endpoint"]
+    lif --> clients["Clients / Hosts"]
+    cluster --> svmAdmin["SVM: admin\ncluster management"]
+    svmAdmin --> clusterMgmtLif["cluster-mgmt LIF\nCLI · REST · System Manager"]
+```
+
 ## Core Components
 
 | Component | Description |

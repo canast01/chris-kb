@@ -1,5 +1,64 @@
 # PowerMax — Components
 
+## Component Hierarchy
+
+```mermaid
+graph TD
+    subgraph "PowerMax Array"
+        subgraph "Engine 1"
+            DirA["Director A\n(FED + BED + RDF)"]
+            DirB["Director B\n(FED + BED + RDF)"]
+            GM["Global Memory\n(DRAM, mirrored A↔B)"]
+            DirA <-->|"mirror"| GM
+            DirB <-->|"mirror"| GM
+        end
+        subgraph "Engine N (up to 8)"
+            DirC["Director A'"]
+            DirD["Director B'"]
+            GM2["Global Memory'"]
+            DirC <-->|"mirror"| GM2
+            DirD <-->|"mirror"| GM2
+        end
+        XB[("Crossbar\nInterconnect")]
+        DirA & DirB --> XB
+        DirC & DirD --> XB
+        DAE[["NVMe-AF Drives\n(SCM / eTLC)"]]
+        XB --> DAE
+    end
+    subgraph "Management"
+        UNI["Unisphere\n(vApp / appliance)"]
+        SE["Solutions Enabler\n(SYMCLI host)"]
+        EMB["Embedded SE\n(on-array)"]
+    end
+    subgraph "Host Tier"
+        FAB_A["SAN Fabric A\n(FC / NVMe-oF)"]
+        FAB_B["SAN Fabric B\n(FC / NVMe-oF)"]
+        HOSTS["Production Hosts\n(Oracle / SQL / SAP)"]
+    end
+    REMOTE["Remote PowerMax\n(SRDF R2)"]
+
+    DirA & DirB -->|"FE ports"| FAB_A
+    DirA & DirB -->|"FE ports"| FAB_B
+    FAB_A & FAB_B --> HOSTS
+    DirA & DirB -->|"RDF ports\nSRDF/S or SRDF/A"| REMOTE
+    UNI & SE --> DirA
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef mem fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef store fill:#0f766e,stroke:#0d9488,color:#fff
+    classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    classDef mgmt fill:#92400e,stroke:#78350f,color:#fff
+    classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+    class DirA,DirB,DirC,DirD ctrl
+    class GM,GM2 mem
+    class DAE store
+    class XB,FAB_A,FAB_B net
+    class HOSTS host
+    class UNI,SE,EMB mgmt
+    class REMOTE dr
+```
+
 ## Components
 
 | Component | Description |
@@ -52,6 +111,33 @@ symrdf -sid <sid> list -rdfg <rdfg_id> -v
 ```
 
 ### SRDF/S Pair States
+
+```mermaid
+flowchart LR
+    SYNC["Synchronized\n(normal)"]
+    SYNCING["Synchronizing\n(catching up)"]
+    SUSP["Suspended\n(paused — R1 queuing)"]
+    PART["Partitioned\n(link lost)"]
+    FO["Failed Over\n(R2 is R/W, R1 NR)"]
+    SPLIT["Split\n(R2 independent R/W)"]
+
+    SYNC -->|"link failure"| PART
+    SYNC -->|"suspend cmd"| SUSP
+    SYNC -->|"planned failover"| FO
+    SUSP -->|"resume / establish"| SYNCING
+    SYNCING -->|"delta sync done"| SYNC
+    PART -->|"link restored"| SYNCING
+    FO -->|"restore / establish"| SYNCING
+    SYNC -->|"split cmd"| SPLIT
+    SPLIT -->|"establish"| SYNCING
+
+    classDef ok fill:#15803d,stroke:#166534,color:#fff
+    classDef warn fill:#b45309,stroke:#92400e,color:#fff
+    classDef crit fill:#be123c,stroke:#9f1239,color:#fff
+    class SYNC ok
+    class SYNCING,SUSP warn
+    class PART,FO,SPLIT crit
+```
 
 | State | Meaning |
 |---|---|

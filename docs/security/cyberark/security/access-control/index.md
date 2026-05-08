@@ -8,6 +8,22 @@ All production safes enforce dual-control to prevent unilateral credential acces
 | Master Policy review | Quarterly review of base policy and platform-specific overrides |
 | Vault DR access | DR Vault is read-only replica; promotion only during declared disaster |
 
+## Safe Access Hierarchy
+
+```mermaid
+graph TD
+    adGrpAuditor["AD Group\nGG_CyberArk_Auditors"] --> roleAuditor["Vault Role: Auditors\n(read-only all safes)"]
+    adGrpOwner["AD Group\nGG_CyberArk_SafeOwners"] --> roleOwner["Vault Role: Safe Owner\n(manage assigned safes)"]
+    adGrpAdmin["AD Group\nGG_CyberArk_VaultAdmins"] --> roleAdmin["Vault Role: Vault Admins\n(full admin rights)"]
+    roleOwner --> safe1["Safe: PROD-DB-Accounts"]
+    roleOwner --> safe2["Safe: APP-Service-Accounts"]
+    roleAdmin --> allSafes["All Safes + Platform Config"]
+    safe1 --> acct1["Account: db01-svc-app"]
+    safe2 --> acct2["Account: svc-app01"]
+```
+
+---
+
 ## AD Groups and Vault Roles
 
 | AD Group | Vault Role |

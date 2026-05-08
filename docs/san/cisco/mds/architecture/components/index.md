@@ -30,6 +30,38 @@ interface fc1/1
 
 Zoning controls which initiator (host HBA) can communicate with which target (storage port). Best practice is **single-initiator / single-target** zones — one zone per host-port-to-storage-port pair.
 
+```mermaid
+graph TD
+  DA1["Device Alias: esxi01_hba0\n(pWWN 10:00:00:...)"]
+  DA2["Device Alias: fa01_ct0_p0\n(pWWN 52:4a:93:...)"]
+  DA3["Device Alias: esxi01_hba1\n(pWWN 10:00:00:...)"]
+  DA4["Device Alias: fa01_ct1_p0\n(pWWN 52:4a:93:...)"]
+
+  Z1["Zone: esxi01_hba0__fa01_ct0_p0"]
+  Z2["Zone: esxi01_hba1__fa01_ct1_p0"]
+
+  ZS["Zone Set: dc1-fabA-prod\n(VSAN 10)"]
+
+  VSAN["VSAN 10 — Fabric A\n(active)"]
+
+  DA1 --> Z1
+  DA2 --> Z1
+  DA3 --> Z2
+  DA4 --> Z2
+  Z1 --> ZS
+  Z2 --> ZS
+  ZS -->|"zoneset activate"| VSAN
+
+  classDef alias fill:#1d4ed8,stroke:#1e3a5f,color:#fff
+  classDef zone fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef zset fill:#b45309,stroke:#92400e,color:#fff
+  classDef fabric fill:#15803d,stroke:#166534,color:#fff
+  class DA1,DA2,DA3,DA4 alias
+  class Z1,Z2 zone
+  class ZS zset
+  class VSAN fabric
+```
+
 ```bash
 # Show active zone set for a VSAN
 show zoneset active vsan 10
@@ -119,6 +151,20 @@ show interface fc1/1 transceiver
 | loss-of-sync | Signal quality | Check SFP power levels |
 | input-crc | Bad frames | Replace SFP; check cable |
 | bb-credit-zero | Buffer-to-buffer credit depleted | Increase BB credits; check ISL design |
+
+```mermaid
+stateDiagram-v2
+  [*] --> notConnected : port created / no signal
+  notConnected --> up : signal detected + FLOGI success
+  up --> down : link lost / SFP removed
+  down --> up : link restored
+  up --> errDisabled : error threshold exceeded<br/>(flap count, VSAN conflict, SFP fault)
+  errDisabled --> down : shutdown → no shutdown<br/>(after root cause resolved)
+  down --> notConnected : SFP removed
+  up --> trunking : TE port ISL established
+  trunking --> isolated : VSAN merge conflict
+  isolated --> trunking : conflict resolved
+```
 
 ---
 

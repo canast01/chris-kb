@@ -133,6 +133,38 @@ Understanding the write path helps diagnose latency and capacity issues:
 5. Once all required components acknowledge (based on FTT policy), DOM acknowledges the write to the VM.
 6. Data is de-staged from cache to capacity disks asynchronously in the background.
 
+```mermaid
+graph TD
+    vm["VM\n(guest write I/O)"]
+    dom["DOM\n(Distributed Object Manager)\nowner host"]
+    lsom_local["LSOM — Local Host\nwrite to cache SSD buffer"]
+    vsan_net["vSAN VMkernel Network\n(unicast, 10/25 GbE)"]
+    lsom_remote["LSOM — Remote Host\nwrite to cache SSD buffer"]
+    ack["All required components\nacknowledge write"]
+    destage["Async destage:\ncache SSD → capacity disks"]
+    vm_ack["Write acknowledged\nto guest"]
+
+    vm --> dom
+    dom --> lsom_local
+    dom -->|"FTT remote component"| vsan_net --> lsom_remote
+    lsom_local --> ack
+    lsom_remote --> ack
+    ack --> vm_ack
+    lsom_local --> destage
+    lsom_remote --> destage
+
+    classDef vm fill:#15803d,stroke:#166534,color:#fff
+    classDef mgr fill:#b45309,stroke:#92400e,color:#fff
+    classDef io fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class vm vm
+    class dom mgr
+    class lsom_local,lsom_remote,destage io
+    class vsan_net net
+    class ack,vm_ack vm
+```
+
 **ESA write path:**
 
 1. VM issues a write.
@@ -216,6 +248,37 @@ Site A (Active)          Site B (Active)          Witness Site
       │                        │                        │
       └────────────────────────┴────────────────────────┘
                      vSAN VMkernel Network
+```
+
+```mermaid
+graph LR
+    subgraph "Site A (Active)"
+        sA1["ESXi-01"]
+        sA2["ESXi-02"]
+        sA3["ESXi-03"]
+    end
+
+    subgraph "Witness Site"
+        wit["Witness Appliance\n(metadata / tiebreaker)"]
+    end
+
+    subgraph "Site B (Active)"
+        sB1["ESXi-04"]
+        sB2["ESXi-05"]
+        sB3["ESXi-06"]
+    end
+
+    sA1 & sA2 & sA3 -->|"< 5 ms RTT"| sB1 & sB2 & sB3
+    sA1 & sA2 & sA3 -.->|"< 200 ms RTT"| wit
+    sB1 & sB2 & sB3 -.->|"< 200 ms RTT"| wit
+
+    classDef siteA fill:#15803d,stroke:#166534,color:#fff
+    classDef siteB fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef witness fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class sA1,sA2,sA3 siteA
+    class sB1,sB2,sB3 siteB
+    class wit witness
 ```
 
 **Data placement:** Every VM object has a component on Site A AND a component on Site B (RAID-1 across sites). The witness holds only the tiebreaker metadata.

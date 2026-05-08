@@ -2,6 +2,21 @@
 
 Eyeglass provides the `igls` CLI accessible from the appliance shell via SSH and a REST API for automation. OneFS SyncIQ CLI commands are used alongside Eyeglass operations to verify the underlying replication state. SSH to the Eyeglass appliance as the `admin` user.
 
+```mermaid
+flowchart LR
+    operator(["Operator /\nAutomation"])
+    ssh["SSH\nadmin@eyeglass-ip"]
+    iglsCLI["igls CLI\n(Eyeglass appliance)"]
+    restAPI["REST API\nhttps://eyeglass-ip/eca/api/v1"]
+    eyeglassSvc["Eyeglass Services\nDR orchestration"]
+    psApi["PowerScale\nOneFS REST API"]
+    synciq["SyncIQ\nReplication engine"]
+
+    operator --> ssh --> iglsCLI --> eyeglassSvc
+    operator --> restAPI --> eyeglassSvc
+    eyeglassSvc --> psApi --> synciq
+```
+
 ---
 
 ## Appliance Status

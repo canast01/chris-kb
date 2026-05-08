@@ -1,5 +1,38 @@
 # SRM Troubleshooting — Common Issues
 
+## Triage Decision Tree
+
+Use this flowchart to quickly route to the correct troubleshooting section.
+
+```mermaid
+flowchart TD
+    start(["SRM alert or failure"])
+    start --> q1{Where is\nthe failure?}
+
+    q1 -->|"VM shows Not Ready\nor missing from PG"| vmNotReady["VM Not in PG\n/ Not Ready State"]
+    q1 -->|"Recovery plan\nfailed mid-run"| planFailed{Which step\nfailed?}
+    q1 -->|"Array Manager\nshows Error"| sraFail["SRA Communication\nFailure"]
+    q1 -->|"Site Pair shows Error"| sitePair["Site Pair Error\n(cert / connectivity)"]
+
+    planFailed -->|"Network mapping"| netMap["Recovery Plan\nNetwork Mapping step"]
+    planFailed -->|"Plan stuck Running"| stuck["Recovery Plan\nStuck Running"]
+
+    vmNotReady --> vr["Check vSphere Replication\nstatus + disk space + RPO"]
+    sraFail --> sraLog["Check SRA service\n+ array API reachability"]
+    sitePair --> cert["Check cert validity\n+ vCenter reachability port 443"]
+    netMap --> netCheck["Verify all source networks\nhave target mappings"]
+    stuck --> script["Check custom script\nexit code or VM power-on error"]
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class vr,sraLog,cert,netCheck,script action
+    class q1,planFailed decision
+    class start terminal
+```
+
+---
+
 ## VM Not in Protection Group / `Not Ready` State
 
 ```

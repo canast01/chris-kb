@@ -1,5 +1,37 @@
 # Unity — Integrations
 
+## Integration Map
+
+```mermaid
+graph LR
+  subgraph "VMware vSphere"
+    VC["vCenter Server"]
+    ESX["ESXi Hosts"]
+    VC --> ESX
+  end
+  subgraph "Dell Unity XT"
+    UNI["Unisphere / REST API"]
+    VASA["VASA Provider\n(vVols)"]
+    LUN["FC / iSCSI LUNs"]
+    NFS["NAS Exports\n(NFS / SMB)"]
+  end
+  subgraph "Backup Ecosystem"
+    VBR["Veeam B&R"]
+    COMM["CommVault\nIntelliSnap"]
+    NDMP["NDMP Client"]
+  end
+  subgraph "Monitoring"
+    CIQ["Dell CloudIQ\n(via SCG)"]
+    AD["Active Directory\n(LDAP / Kerberos)"]
+  end
+  VC --> VASA
+  ESX --> LUN & NFS
+  VBR & COMM --> UNI
+  NDMP --> NFS
+  UNI --> CIQ
+  UNI --> AD
+```
+
 ## VMware Integration
 
 Unity XT integrates with VMware vSphere via multiple paths:

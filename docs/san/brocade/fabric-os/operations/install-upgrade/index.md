@@ -4,6 +4,28 @@
 
 ---
 
+## Firmware Upgrade Sequence (HA Director)
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant StandbyCp as Standby CP
+    participant ActiveCp as Active CP
+    participant Fabric
+
+    Admin->>Admin: Pre-checks: configupload, porterrshow, fabricshow
+    Admin->>StandbyCp: firmwaredownload -s -b (non-disruptive)
+    StandbyCp->>StandbyCp: Download and install firmware
+    StandbyCp-->>Admin: firmwaredownloadstatus — complete
+    Note over StandbyCp,ActiveCp: CP failover — non-disruptive to fabric I/O
+    StandbyCp->>ActiveCp: haFailover (CP switchover)
+    ActiveCp-->>StandbyCp: Old active CP becomes standby
+    StandbyCp->>StandbyCp: Install firmware on former active CP
+    StandbyCp-->>Admin: firmwaredownloadstatus — complete
+    Admin->>Admin: version — confirm both CPs on new FOS
+    Admin->>Fabric: switchshow, fabricshow — verify fabric intact
+```
+
 ## Version Tracking
 
 Fabric OS versions are tracked against the Broadcom end-of-support schedule. Version selection is driven by:

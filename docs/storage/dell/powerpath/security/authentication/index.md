@@ -2,6 +2,33 @@
 
 ## Overview
 
+```mermaid
+graph TD
+    adminUser(["Storage Admin\nor Automation Account"])
+
+    subgraph "Linux Host"
+        ssh["SSH (key-based auth)\nPAM / SSSD → AD"]
+        sudo["sudo → /usr/sbin/powermt\n(sudoers.d/powerpath)"]
+        svcAccount["Service Account\n(restricted sudo — display only)"]
+        ssh --> sudo
+        ssh --> svcAccount
+    end
+
+    subgraph "Windows Host"
+        winAuth["Windows Auth\n(Kerberos / NTLM)"]
+        localAdm["Local Administrators group\n(required for powermt)"]
+        jea["JEA Role Capability\n(optional: limit to display commands)"]
+        winAuth --> localAdm
+        localAdm --> jea
+    end
+
+    adminUser --> ssh
+    adminUser --> winAuth
+    sudo -->|"powermt set / save / config"| ppCLI["powermt CLI"]
+    svcAccount -->|"powermt display only"| ppCLI
+    jea -->|"constrained commands"| ppCLI
+```
+
 PowerPath does not implement its own authentication system. There is no PowerPath-native login, user database, or session management. Access to `powermt` CLI commands is controlled entirely by the host operating system's authentication and authorisation mechanisms.
 
 This design means PowerPath security is inherited from the host OS security posture. Any account with sufficient OS privilege can run any `powermt` command — there is no additional PowerPath credential check.

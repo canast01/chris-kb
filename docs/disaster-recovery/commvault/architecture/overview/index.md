@@ -51,3 +51,47 @@ Hyperscale X integrates CommServe + MediaAgent + storage into scale-out nodes:
 | Clients | MediaAgent | 8403 | Data movement |
 | CommServe | MediaAgent | 8400 | Job orchestration |
 | Browser (admin) | Command Center | 443 | Web UI |
+
+## Multi-Site Topology
+
+```mermaid
+flowchart TD
+    subgraph primarySite [Primary Site]
+        cs["CommServe\n(command & control)"]
+        ma1["MediaAgent\ndc1-ma-01"]
+        diskLib1[("Disk Library\nDDB — Primary")]
+        clients1(["VMs / DBs / Files\nSite A"])
+        clients1 --> ma1
+        ma1 --> diskLib1
+        ma1 --> cs
+    end
+
+    subgraph drSite [DR / Secondary Site]
+        ma2["MediaAgent\ndc2-ma-01"]
+        diskLib2[("Disk Library\nDDB — DR copy")]
+        clients2(["VMs / DBs / Files\nSite B"])
+        clients2 --> ma2
+        ma2 --> diskLib2
+        ma2 --> cs
+    end
+
+    subgraph cloudTier [Cloud / Tape Tier]
+        cloud[("Cloud Library\nS3 / Azure Blob\nlong-term retention")]
+        tape[("Tape Library\narchival / compliance")]
+    end
+
+    diskLib1 -->|"aux copy\n(scheduled)"| diskLib2
+    diskLib2 -->|"aux copy\n(scheduled)"| cloud
+    diskLib1 -->|"aux copy"| tape
+
+    cs --> webUI["Command Center\nWeb UI — port 443"]
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+    class cs,ma1,ma2 ctrl
+    class diskLib1,diskLib2,tape store
+    class clients1,clients2 host
+    class cloud,webUI cloud
+```

@@ -4,6 +4,26 @@
 
 ## Encryption Layers
 
+```mermaid
+graph LR
+    subgraph "Data at Rest"
+        sed["SED Drives\nAES-256 (SmartEncrypt)"]
+        kmip["Key Manager\nInternal or KMIP external"]
+        sed --- kmip
+    end
+
+    subgraph "Data in Transit"
+        syncTLS["SyncIQ Replication\nTLS (--encryption-required)"]
+        smbEnc["SMB3 Encryption\nper-share or per-zone"]
+        nfsKrb["NFSv4 krb5p\nKerberos privacy mode"]
+        mgmtTLS["Management HTTPS\nTLS 1.2+ min"]
+    end
+
+    subgraph "Object Protocol"
+        s3HTTPS["S3 HTTPS-only\nper access zone"]
+    end
+```
+
 | Layer | Mechanism | Notes |
 |---|---|---|
 | Data at Rest | Self-Encrypting Drives (SED) with AES-256 | Hardware-based; configured at factory order time. Cannot be enabled retroactively on non-SED nodes. |

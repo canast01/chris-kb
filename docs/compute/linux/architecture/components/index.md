@@ -26,6 +26,20 @@ lvextend -L +20G /dev/vg_system/lv_var
 xfs_growfs /var
 ```
 
+## Linux Storage Stack
+
+```mermaid
+flowchart LR
+    appLayer["Application\n(read/write syscall)"]
+    vfsLayer["VFS\nVirtual File System"]
+    fsLayer["Filesystem\nxfs / ext4"]
+    blockLayer["Block Layer\nI/O scheduler"]
+    driverLayer["Device Driver\nscsi / nvme"]
+    diskLayer["Physical Disk\nSSD / HDD / SAN LUN"]
+
+    appLayer --> vfsLayer --> fsLayer --> blockLayer --> driverLayer --> diskLayer
+```
+
 ## Init System and Services
 
 systemd manages all services:
@@ -57,6 +71,25 @@ ua status                    # Verify Ubuntu Advantage subscription
 Repositories locked to approved internal mirrors — no direct internet access from production servers.
 
 ---
+
+## Linux Network Stack
+
+```mermaid
+flowchart LR
+    subgraph userspace["Userspace"]
+        appProc["Application Process"]
+        sockApi["Socket API\n(BSD sockets)"]
+    end
+    subgraph kernelNet["Kernel Network Stack"]
+        tcpUdp["TCP / UDP"]
+        ipLayer["IP Layer\nrouting · NAT"]
+        netfilter["Netfilter\niptables · nftables"]
+        nicDriver["NIC Driver"]
+    end
+    physNic["Physical / Virtual NIC\neth0 · bond0 · vlan"]
+
+    appProc --> sockApi --> tcpUdp --> ipLayer --> netfilter --> nicDriver --> physNic
+```
 
 ## Networking
 
@@ -275,6 +308,20 @@ mtr -n 10.0.0.1   # Continuous trace with packet loss stats
 ```
 
 ---
+
+## LVM Layer Model
+
+```mermaid
+flowchart TD
+    physDisk["Physical Disk\n/dev/sdb · /dev/sdc"]
+    pv["Physical Volumes\npvcreate"]
+    vg["Volume Group\nvg_system · vg_data"]
+    lv["Logical Volumes\nlv_root · lv_var · lv_app"]
+    fs["Filesystems\nxfs · ext4 · swap"]
+    mnt["Mount Points\n/ · /var · /tmp · /opt/app"]
+
+    physDisk --> pv --> vg --> lv --> fs --> mnt
+```
 
 ## Storage
 

@@ -85,6 +85,30 @@ clear counters interface fc1/3
 
 **Symptom:** `show interface brief` shows a port in `errDisabled` state. The port was automatically disabled by NX-OS following an error condition.
 
+```mermaid
+flowchart TD
+  A["Port shows errDisabled\n(show interface brief)"] --> B["Check reason\n(show interface fc1/4 | include err)"]
+  B --> C{"Reason?"}
+  C -->|"fcot-not-present"| D["Reseat or replace SFP\nCheck slot seating"]
+  C -->|"link-failure-count-exceeded"| E["Replace SFP and cable\nCheck peer device port"]
+  C -->|"isolation"| F["Resolve VSAN merge conflict\nCheck trunk allowed VSANs"]
+  C -->|"rcf-failure"| G["Assign unique static domain ID\n(fcdomain domain N static vsan N)"]
+  C -->|"cfg-invalid"| H["Fix VSAN assignment or\nport mode config error"]
+  D & E & F & G & H --> I["Root cause resolved?"]
+  I -->|"Yes"| J["interface fc1/4\n  shutdown\n  no shutdown"]
+  I -->|"No"| K["Escalate to Cisco TAC\nCollect show tech-support"]
+  J --> L["Confirm: show interface fc1/4\nstate returns to 'up'"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef action fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef good fill:#15803d,stroke:#166534,color:#fff
+  classDef bad fill:#991b1b,stroke:#7f1d1d,color:#fff
+  class C decision
+  class D,E,F,G,H,J action
+  class L good
+  class K bad
+```
+
 ```bash
 # Find the reason for errDisabled
 show interface fc1/4 | include err
@@ -122,6 +146,28 @@ Never re-enable an errDisabled port without first resolving the root cause — i
 ## Host Cannot See Storage
 
 **Symptom:** A host reports no FC storage paths, or a newly connected host cannot discover storage volumes.
+
+```mermaid
+flowchart TD
+  A["Host cannot see storage"] --> B["show flogi database vsan 10\n| grep host-pwwn"]
+  B --> C{"Host in\nFLOGI?"}
+  C -->|"No"| D["Check port state\nCheck VSAN assignment\nCheck cable and SFP"]
+  C -->|"Yes"| E["show flogi database vsan 10\n| grep storage-pwwn"]
+  E --> F{"Storage in\nFLOGI?"}
+  F -->|"No"| G["Check array port state\nCheck VSAN membership on array port"]
+  F -->|"Yes"| H["show zone member pwwn\nhost-pwwn vsan 10"]
+  H --> I{"Zone with both\ndevices exists?"}
+  I -->|"No"| J["Create zone with initiator\nand target device aliases\nActivate zone set"]
+  I -->|"Yes"| K["show zoneset active vsan 10\n| grep zone-name"]
+  K --> L{"Zone set\nactive?"}
+  L -->|"No"| M["zoneset activate name\nzoneset-name vsan 10"]
+  L -->|"Yes"| N["Verify WWPNs in zone match\nFLOGI pWWN exactly\nCheck for alias typos"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  class C,F,I,L decision
+  class D,G,J,M,N fix
+```
 
 **Triage sequence:**
 

@@ -1,5 +1,21 @@
 # CyberArk — Components
 
+## Safe / Account / Platform Hierarchy
+
+```mermaid
+graph TD
+    vault["Digital Vault"] --> safe1["Safe: PROD-DB-Accounts"]
+    vault --> safe2["Safe: PROD-WIN-Accounts"]
+    vault --> safe3["Safe: APP-Service-Accounts"]
+    safe1 --> acct1["Account: db01-svc-app\n@ db01.corp.example.com"]
+    safe1 --> acct2["Account: db02-sa\n@ db02.corp.example.com"]
+    safe2 --> acct3["Account: local-admin\n@ win-srv-01"]
+    safe1 -. "governed by" .-> plat["Platform: WinServerLocal\n(CPM rotation policy)"]
+    safe1 -. "member" .-> grp["AD Group: GG_CyberArk_SafeOwners"]
+```
+
+---
+
 ## Digital Vault
 
 The Vault runs on a hardened Windows Server — only the CyberArk Vault service and required OS components are present. No other roles are installed.
@@ -52,6 +68,30 @@ Common CPM failure reasons:
 
 ---
 
+## Credential Checkout Sequence
+
+```mermaid
+sequenceDiagram
+    participant user as Privileged User
+    participant pvwa as PVWA
+    participant vault as Digital Vault
+    participant cpm as CPM
+    participant target as Target System
+
+    user->>pvwa: Request credential (account ID + reason)
+    pvwa->>vault: Validate entitlement + retrieve credential
+    vault-->>pvwa: Return credential (encrypted)
+    pvwa-->>user: Credential available (check-out)
+    note over user,target: User accesses target directly or via PSM
+    user->>target: Connect with retrieved credential
+    pvwa->>vault: Record audit event (who, what, when)
+    pvwa->>cpm: Queue password rotation (after check-in)
+    cpm->>target: Rotate credential on target
+    cpm->>vault: Store new credential
+```
+
+---
+
 ## Privileged Session Manager (PSM)
 
 PSM proxies privileged sessions — the user connects to the PSM, which then connects to the target using the managed credential. The user never sees the password.
@@ -71,6 +111,22 @@ Get-Content "C:\Program Files (x86)\CyberArk\PSM\Logs\PSMConsole.log" -Tail 100
 $headers = @{ Authorization = "Bearer $token" }
 Invoke-RestMethod -Uri "https://pvwa.corp.example.com/PasswordVault/API/LiveSessions" `
   -Headers $headers -Method Get
+```
+
+---
+
+## Session Isolation Flow
+
+```mermaid
+flowchart TD
+    userReq["User requests session\nin PVWA"] --> pvwaLaunch["PVWA launches PSM connection"]
+    pvwaLaunch --> psmAuth["PSM authenticates to Vault\n& retrieves credential"]
+    psmAuth --> psmConnect["PSM connects to target system\nwith managed credential"]
+    psmConnect --> sessionRecord["Session recording begins\n(video stored in Vault)"]
+    sessionRecord --> userSession["User interacts via PSM proxy\nCredential never exposed"]
+    userSession --> sessionEnd["Session ends — user disconnects"]
+    sessionEnd --> recStore["Recording stored & indexed in Vault"]
+    recStore --> cpmRotate["CPM rotates credential\nafter session check-in"]
 ```
 
 ---

@@ -4,6 +4,20 @@
 
 Eyeglass version must be compatible with the deployed PowerScale OneFS version. Always verify before upgrading either system.
 
+```mermaid
+flowchart TD
+    start(["Plan upgrade"]) --> exportCfg
+    exportCfg["Export configuration backup\nAdmin UI → Admin → Configuration Backup"]
+    deployOVA["Deploy new Eyeglass OVA\nalongside existing appliance"]
+    importCfg["Import configuration to new OVA\nRe-register clusters and DNS"]
+    verifyScore["Verify DR Readiness Score\n= 100%"]
+    validate24h["24-hour validation period\nConfirm SyncIQ state, shares, exports"]
+    decommOld["Shut down old appliance"]
+    done(["Upgrade complete"])
+
+    exportCfg --> deployOVA --> importCfg --> verifyScore --> validate24h --> decommOld --> done
+```
+
 | Eyeglass Version | PowerScale OneFS | Notes |
 |---|---|---|
 | 2.9.x | OneFS 9.4, 9.5, 9.6 | Check release notes |

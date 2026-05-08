@@ -4,6 +4,20 @@
 
 ## Overview
 
+```mermaid
+graph TD
+    prod["Production Data\n/ifs/data/..."]
+
+    prod -->|"SnapshotIQ\n(local, minutes–hours RPO)"| snap["[(Snapshots)]\n/ifs/.snapshot/"]
+    prod -->|"SyncIQ\n(async replication, 1–4 hr RPO)"| drCluster["DR PowerScale Cluster\n/ifs/replicated/..."]
+    prod -->|"NDMP\n(backup schedule RPO)"| ndmpTarget["Tape / Disk\nvia NDMP three-way"]
+    prod -->|"Veeam NAS Backup\n(schedule RPO)"| veeamRepo["Veeam Repository\n(hardened or scale-out)"]
+
+    snap -->|"file copy / rsync\nor snapshot revert"| restore1(["File/Dir Restore\n< 60 min"])
+    drCluster -->|"SyncIQ failover\n(DNS/DFS update)"| restore2(["Cluster Failover\n15–60 min"])
+    veeamRepo -->|"file-level or full\nshare restore"| restore3(["Veeam Restore\nhours"])
+```
+
 PowerScale provides several complementary mechanisms for data protection and recovery. Selecting the right combination depends on the RPO, RTO, and retention requirements for each data set.
 
 | Mechanism | Type | RPO | Recovery Scope |

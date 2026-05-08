@@ -42,6 +42,21 @@ Standard LVM layout applied at provisioning:
 
 Application data in a separate VG (`vg_data`) — sized per role.
 
+## Patching Workflow
+
+```mermaid
+flowchart LR
+    checkUpdate["dnf check-update\napt list --upgradable"]
+    preCapture["Capture state\npackage list · kernel version"]
+    testEnv["Apply to\nnon-production"]
+    testValidate["Validate\nservices · logs"]
+    prodApply["Apply to\nproduction"]
+    reboot["Reboot if\nkernel changed"]
+    postValidate["Post-patch\nvalidation"]
+
+    checkUpdate --> preCapture --> testEnv --> testValidate --> prodApply --> reboot --> postValidate
+```
+
 ## Authentication
 
 ```bash
@@ -93,6 +108,19 @@ deb http://mirror.corp.local/ubuntu jammy main restricted universe
 ```
 
 No direct internet access from production servers — all package traffic via mirror.
+
+## OS Component Stack
+
+```mermaid
+flowchart TD
+    hwLayer["Hardware\nCPU · RAM · NIC · Disk"]
+    kernelCore["Linux Kernel\nsyscall interface · drivers · schedulers"]
+    initSys["Init System\nsystemd — units · targets"]
+    sysServices["System Services\nsshd · chronyd · rsyslog · firewalld"]
+    appLayer["Applications\nweb · database · monitoring agents"]
+
+    hwLayer --> kernelCore --> initSys --> sysServices --> appLayer
+```
 
 ## Software Installation Policy
 

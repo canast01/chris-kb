@@ -42,9 +42,77 @@ Unisphere for PowerMax supports LDAP and Active Directory for administrator auth
 - Test LDAP connectivity with `ldapsearch` before completing configuration to avoid lockout.
 - Retain at least one local admin account as a break-glass credential in the password vault.
 
+## Integration Topology
+
+```mermaid
+flowchart LR
+    subgraph "VMware Layer"
+        VC["vCenter\n(SPBM / SRM)"]
+        ESX["ESXi Hosts\n(VMFS / vVols)"]
+        VASA["VASA Provider\n(Dell)"]
+        SRA["SRA Adapter\n(SRM failover)"]
+    end
+    subgraph "Backup Layer"
+        VBR["Veeam / NetBackup\n/ CommVault"]
+        PROXY["Backup Proxy\n(linked clone mount)"]
+    end
+    subgraph "Monitoring Layer"
+        CIQ["CloudIQ\n(SaaS — dell.com)"]
+        SA["SupportAssist\n(auto SR creation)"]
+    end
+    subgraph "Directory Layer"
+        AD["Active Directory\n/ LDAP"]
+    end
+    subgraph "PowerMax Array"
+        UNI["Unisphere\nREST API :8443"]
+        ARRAY[("PowerMax\nArray")]
+        SNAPVX["SnapVX\nEngine"]
+        UNI --> ARRAY
+        ARRAY --> SNAPVX
+    end
+
+    VC -->|"VASA capabilities"| VASA --> UNI
+    ESX -->|"FC / NVMe-oF"| ARRAY
+    SRA -->|"REST API"| UNI
+    VBR -->|"REST API\nsnap establish/link"| UNI
+    PROXY -->|"FC / iSCSI\nlinked clone"| ARRAY
+    UNI -->|"HTTPS telemetry"| CIQ
+    UNI -->|"SupportAssist\ncall-home"| SA
+    AD -->|"LDAPS :636\nbind + group lookup"| UNI
+
+    classDef vmw fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef bkp fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef mon fill:#0f766e,stroke:#0d9488,color:#fff
+    classDef dir fill:#92400e,stroke:#78350f,color:#fff
+    classDef arr fill:#be123c,stroke:#9f1239,color:#fff
+    class VC,ESX,VASA,SRA vmw
+    class VBR,PROXY bkp
+    class CIQ,SA mon
+    class AD dir
+    class UNI,ARRAY,SNAPVX arr
+```
+
 ## REST API
 
 PowerMax exposes a REST API through Unisphere for PowerMax (RESTAPI):
+
+```mermaid
+sequenceDiagram
+    participant Client as Automation Client
+    participant UNI as Unisphere :8443
+    participant ARRAY as PowerMax Array
+
+    Client->>UNI: POST /restapi/system/Version<br/>(Basic Auth: admin:password)
+    UNI-->>Client: 200 OK + session cookie
+    Client->>UNI: GET /restapi/91/system/symmetrix<br/>(cookie)
+    UNI->>ARRAY: query array list
+    ARRAY-->>UNI: SID list
+    UNI-->>Client: 200 OK + symmetrixId[]
+    Client->>UNI: POST /sloprovisioning/symmetrix/{SID}/storagegroup<br/>{storageGroupId, slo, srp}
+    UNI->>ARRAY: create storage group
+    ARRAY-->>UNI: created
+    UNI-->>Client: 201 Created
+```
 
 ```bash
 # Base URL format

@@ -3,6 +3,58 @@
 > Part of the [Ansible Operations](../) reference.
 
 ---
+
+## Secret Rotation Workflow
+
+```mermaid
+graph LR
+    trigger["Trigger\n(manual / schedule)"]
+    backup["Backup current\nvault file"]
+    generate["Generate new\npassword (openssl)"]
+    encrypt["ansible-vault\nencrypt_string"]
+    updateVars["Update\ndb_secrets.yml"]
+    runPlaybook["Run push-db-secret.yml\n(ansible-playbook)"]
+    success["Success:\nRotation complete"]
+    rollback["Rollback:\nRestore backup"]
+
+    trigger --> backup
+    backup --> generate
+    generate --> encrypt
+    encrypt --> updateVars
+    updateVars --> runPlaybook
+    runPlaybook -->|exit 0| success
+    runPlaybook -->|exit 1| rollback
+```
+
+## Rolling Update Flow
+
+```mermaid
+graph LR
+    selectHost["Select next host\n(serial: 1)"]
+    drainLB["Drain host\nfrom load balancer"]
+    waitConns["Wait for active\nconnections to drop"]
+    stopSvc["Stop application\nservice (systemd)"]
+    updatePkg["Update package\nto new version"]
+    startSvc["Start application\nservice"]
+    healthCheck["Health check\n(retry until 200 OK)"]
+    reAddLB["Re-add host\nto load balancer"]
+    nextHost["Next host?"]
+    done["Done"]
+    abort["ABORT: Stop pipeline\n(max_fail_percentage: 0)"]
+
+    selectHost --> drainLB
+    drainLB --> waitConns
+    waitConns --> stopSvc
+    stopSvc --> updatePkg
+    updatePkg --> startSvc
+    startSvc --> healthCheck
+    healthCheck -->|OK| reAddLB
+    healthCheck -->|Fail| abort
+    reAddLB --> nextHost
+    nextHost -->|More hosts| selectHost
+    nextHost -->|Done| done
+```
+
 ## Infrastructure Health Check Playbook
 
 A general-purpose health-check playbook targeting Linux server and network device groups. Reports disk usage, load average, failed services, and reboot time per host, with block/rescue error handling and a delegated summary at the end.

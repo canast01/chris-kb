@@ -8,11 +8,11 @@
 
 SRDF/A cycle time defines the maximum data age (RPO) when a failure occurs mid-cycle. Default cycle time is 30 seconds; the maximum acceptable lag is negotiated per application class.
 
-| Application Class | Target RPO | Cycle Time | Notes |
-|---|---|---|---|
-| Tier 1 (financial, critical DB) | ≤ 30s | 30s | Default |
-| Tier 2 (business apps) | ≤ 60s | 60s | Allowed if WAN constrained |
-| Tier 3 (dev/test replication) | ≤ 300s | 300s | Batch workloads |
+| Application Class | Target RPO | Cycle Time | Why | Notes |
+|---|---|---|---|---|
+| Tier 1 (financial, critical DB) | ≤ 30s | 30s | Minimal data exposure for transaction systems | Default |
+| Tier 2 (business apps) | ≤ 60s | 60s | Balances RPO against WAN bandwidth consumption | Allowed if WAN constrained |
+| Tier 3 (dev/test replication) | ≤ 300s | 300s | WAN efficiency more important than low RPO | Batch workloads |
 
 Monitor actual achieved RPO — it is always ≤ cycle time in normal operation:
 ```bash
@@ -44,12 +44,12 @@ Examples:
 
 Maintain an SRDF group number allocation register in CMDB. Ranges:
 
-| Range | Purpose |
-|---|---|
-| 1–50 | Tier 1 production sync/async groups |
-| 51–100 | Tier 2 business apps |
-| 101–150 | DR testing and pre-production |
-| 151–200 | Reserved for future expansion |
+| Range | Purpose | Why separated |
+|---|---|---|
+| 1–50 | Tier 1 production sync/async groups | Strict RPO — isolated from lower-tier groups to prevent cycle contention |
+| 51–100 | Tier 2 business apps | Moderate RPO — can share directors with Tier 1 if bandwidth allows |
+| 101–150 | DR testing and pre-production | Testing operations (splits, resyncs) must not impact production group numbers |
+| 151–200 | Reserved for future expansion | Avoids group number conflicts during environment growth |
 
 ## Consistency Group Design Rules
 
@@ -77,4 +77,28 @@ symrdf -g <rdfg> query -v | grep "MBs Written"
 - Verify before establishing:
 ```bash
 symdev show -sid <target_SID> <dev_id> | grep -E "Size|Track"
+```
+
+## Bandwidth Sizing Diagram
+
+```mermaid
+flowchart TD
+    measureWrite["Measure Peak Write Rate\nsymrdf -g rdfg query -v | grep MBs Written"]
+    calcBW["Calculate Required Bandwidth\npeak_rate x 1.20 headroom"]
+    checkLink["Compare Against Current\nSRDF Link Capacity"]
+    sufficient{"Bandwidth\nSufficient?"}
+    ok["OK — proceed with\ncurrent link provisioning"]
+    upgrade["Engage Network Team\nIncrease WAN Capacity\nor adjust cycle time"]
+    monitorCycle["Monitor Cycle Completion Rate\nfor 30 days after change"]
+
+    measureWrite --> calcBW
+    calcBW --> checkLink
+    checkLink --> sufficient
+    sufficient -->|"Yes"| ok
+    sufficient -->|"No"| upgrade
+    ok --> monitorCycle
+    upgrade --> monitorCycle
+
+    style ok fill:#15803d,color:#fff
+    style upgrade fill:#be123c,color:#fff
 ```

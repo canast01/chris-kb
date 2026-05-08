@@ -4,6 +4,29 @@
 
 vCenter uses a privilege-based permission model. Permissions are assigned as: **principal (user/group) + role (privilege set) + inventory object (scope)** + optional propagation to children.
 
+```mermaid
+graph TD
+    global["Global Permission\n(all vCenters in SSO domain)"]
+    dc["Datacenter\n(DC-LON, DC-AMS)"]
+    cl["Cluster\n(CL-LON-PROD)"]
+    host["ESXi Host\n(esxi-01)"]
+    vm["Virtual Machine\n(app-server-01)"]
+
+    global -->|"propagates down"| dc
+    dc -->|"propagates down"| cl
+    cl -->|"propagates down"| host
+    cl -->|"propagates down"| vm
+
+    note1["No Access on VM\noverrides Admin on Cluster"]
+    vm -. "evaluation order" .-> note1
+
+    classDef scope fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef override fill:#dc2626,stroke:#b91c1c,color:#fff
+
+    class global,dc,cl,host scope
+    class vm,note1 override
+```
+
 ### Built-in Roles
 
 | Role | Description |

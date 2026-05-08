@@ -79,6 +79,28 @@ FlashArray operates in an active-active dual-controller configuration. Both CT0 
 - Fabric zoning (FC) or iSCSI network design must ensure paths reach both CT0 and CT1
 - Host multipath driver (e.g., HPE 3PAR MPIO, native MPIO on Windows, DM-Multipath on Linux) must be active and configured for ALUA
 
+```mermaid
+flowchart LR
+  subgraph "Host MPIO"
+    P0["Path 0\nHBA0 → Fabric A → CT0\n(Active / Optimised)"]
+    P1["Path 1\nHBA1 → Fabric B → CT1\n(Active / Non-Optimised)"]
+  end
+
+  subgraph "FlashArray"
+    CT0["CT0 — volume owner\n(preferred path)"]
+    CT1["CT1 — secondary\n(ALUA non-optimised)"]
+    CT0 <-->|"NVMe mirror"| CT1
+  end
+
+  P0 --> CT0
+  P1 --> CT1
+
+  EVENT["CT0 fails or NDU restarts"]
+  CT0 -.->|"ownership migrates"| CT1
+  EVENT --> CT1
+  P0 -.->|"MPIO promotes P1\nas Active/Optimised"| P1
+```
+
 ## Connectivity
 
 | Protocol | Media | Port Speed | Notes |

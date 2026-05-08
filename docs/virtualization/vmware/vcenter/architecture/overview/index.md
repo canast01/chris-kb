@@ -52,6 +52,29 @@ Active VCSA ──── HA network ────▶ Passive VCSA
        └──────── Witness VCSA ─────────┘
 ```
 
+```mermaid
+graph LR
+    clients["vSphere Clients\n& API consumers"]
+    active["Active VCSA\n(serves all traffic)"]
+    passive["Passive VCSA\n(hot standby)"]
+    witness["Witness VCSA\n(2 vCPU / 1 GB — tie-breaker)"]
+
+    clients -->|"port 443"| active
+    active -->|"continuous replication\n(HA network)"| passive
+    active -.->|"heartbeat"| witness
+    passive -.->|"heartbeat"| witness
+
+    classDef active fill:#15803d,stroke:#166534,color:#fff
+    classDef standby fill:#b45309,stroke:#92400e,color:#fff
+    classDef witness fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef client fill:#2563eb,stroke:#1d4ed8,color:#fff
+
+    class active active
+    class passive standby
+    class witness witness
+    class clients client
+```
+
 ## Key Ports and Connectivity
 
 | Port | Protocol | Purpose |
@@ -91,6 +114,35 @@ vCenter Server
 ```
 
 Resource pools, vSphere tags, and content libraries are vCenter-level constructs applied within this hierarchy.
+
+```mermaid
+graph TD
+    vc["vCenter Server"]
+    dc["Datacenter\n(DC-site)"]
+    cl["Cluster\n(CL-site-function)"]
+    rp["Resource Pool\n(RP-tier-team)"]
+    host["ESXi Host\n(esxi-nn.domain)"]
+    vm["Virtual Machines"]
+    ds["Datastore\n(vSAN / VMFS / NFS)"]
+
+    vc --> dc
+    dc --> cl
+    cl --> rp
+    cl --> host
+    rp --> vm
+    host --> vm
+    host --> ds
+
+    classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+    classDef infra fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef compute fill:#15803d,stroke:#166534,color:#fff
+    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class vc,dc mgmt
+    class cl,rp infra
+    class host,vm compute
+    class ds storage
+```
 
 ## High-Level Failure Domains
 

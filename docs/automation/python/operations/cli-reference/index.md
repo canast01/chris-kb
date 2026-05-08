@@ -1,5 +1,25 @@
 # Python Automation — CLI Reference
 
+## Python Script Execution Pipeline
+
+```mermaid
+graph LR
+    readEnv["Read Environment\n(os.environ / .env)"]
+    parseArgs["Parse CLI Args\n(argparse)"]
+    loadConfig["Load Config\n(YAML / JSON / INI)"]
+    runScript["Run Script Logic\n(main function)"]
+    exportOutput["Export Output\n(CSV / JSON / Excel)"]
+    sendReport["Send Report\n(email / webhook)"]
+    logResult["Log Result\n(file / syslog)"]
+
+    readEnv --> parseArgs
+    parseArgs --> loadConfig
+    loadConfig --> runScript
+    runScript --> exportOutput
+    exportOutput --> sendReport
+    runScript --> logResult
+```
+
 ## Python CLI Flags
 
 Quick reference for commonly used interpreter flags.

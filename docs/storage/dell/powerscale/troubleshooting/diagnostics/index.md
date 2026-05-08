@@ -1,5 +1,22 @@
 # PowerScale — Diagnostics
 
+## Triage Flow
+
+```mermaid
+flowchart TD
+    A([Alert or Incident]) --> B["isi status\nisi event list --limit 20"]
+    B --> C{"Node SMARTFAIL\nor DOWN?"}
+    C -->|Yes| D["Monitor Restripe job\nOpen Dell support case"]
+    C -->|No| E{"SyncIQ policy\nfailing?"}
+    E -->|Yes| F["isi sync reports list\nCheck network to target\nResolve snapshot conflict"]
+    E -->|No| G{"Quota directory\nwrite failure?"}
+    G -->|Yes| H["isi quota quotas list\nRaise or remove hard limit"]
+    G -->|No| I{"Client connectivity\nissue?"}
+    I -->|Yes| J["isi network subnets list\nnslookup SmartConnect zone\nVerify IP pool health"]
+    I -->|No| K["isi statistics query current\nisi storagepool list\nCapacity / performance path"]
+    D & F & H & J & K --> Z([Escalate to Dell Support\nif unresolved])
+```
+
 ## Diagnostic Commands
 
 ```bash

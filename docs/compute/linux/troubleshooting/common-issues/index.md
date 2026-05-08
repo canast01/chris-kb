@@ -4,6 +4,33 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Linux server issues.
 
+## Network Connectivity Triage
+
+```mermaid
+flowchart TD
+    start["Connectivity issue reported"]
+    linkUp{"ip link: interface\nstate UP?"}
+    hasIP{"ip addr: IP address\npresent?"}
+    gwReach{"ping gateway\nsucceeds?"}
+    dnsOk{"dig resolves\ncorrectly?"}
+    portOpen{"ss -tulnp:\nport listening?"}
+    fwBlock{"firewalld / iptables\nblocking?"}
+    resolved["Issue identified\nand resolved"]
+
+    start --> linkUp
+    linkUp -- No --> resolved
+    linkUp -- Yes --> hasIP
+    hasIP -- No --> resolved
+    hasIP -- Yes --> gwReach
+    gwReach -- No --> resolved
+    gwReach -- Yes --> dnsOk
+    dnsOk -- No --> resolved
+    dnsOk -- Yes --> portOpen
+    portOpen -- No --> resolved
+    portOpen -- Yes --> fwBlock
+    fwBlock --> resolved
+```
+
 ## Triage Order
 
 1. **Is the host reachable?** — ping, SSH, IPMI/iDRAC console
@@ -142,6 +169,21 @@ faillock --user <username> --reset    # Reset counter
 
 # SELinux blocking SSH (non-standard port)
 ausearch -m avc -c sshd --start recent | tail -10
+```
+
+## SELinux / AppArmor MAC Flow
+
+```mermaid
+flowchart LR
+    subject["Subject\nProcess (e.g. httpd)"]
+    policyCheck["Policy Check\nauditd · SELinux policy DB"]
+    object["Object\nFile · Socket · Port"]
+    allow["Allow\nAccess granted"]
+    deny["Deny\nAVC denial logged\n/var/log/audit/audit.log"]
+
+    subject -->|"access request"| policyCheck
+    policyCheck -->|"rule matches"| allow --> object
+    policyCheck -->|"no matching rule"| deny
 ```
 
 ## Disk Full — Emergency

@@ -4,6 +4,28 @@
 
 ---
 
+## Backup and Restore Flow
+
+```mermaid
+flowchart TD
+    change([Pre-Change / Scheduled]) --> cfgsave["cfgsave\n(flush zone DB to flash)"]
+    cfgsave --> upload["configupload -all -scp\n(full switch config to backup server)"]
+    upload --> record["Record filename + timestamp\nin change ticket"]
+
+    failure([Switch Failure / Rollback]) --> newSwitch["Boot replacement switch\nin isolation"]
+    newSwitch --> domainId["Set static domain ID\n(match original)"]
+    domainId --> download["configdownload -all -scp\n(restore from backup)"]
+    download --> reboot["Reboot if prompted\n(VF changes)"]
+    reboot --> connectISL["Connect ISL cables\nto core switch"]
+    connectISL --> verify["Verify: fabricshow\nnsshow · cfgshow"]
+    verify --> activate["cfgenable zoneset-name\ncfgsave"]
+    activate --> done([Restore Complete])
+
+    style done fill:#15803d,color:#fff
+    style change fill:#2563eb,color:#fff
+    style failure fill:#dc2626,color:#fff
+```
+
 ## Overview
 
 Configuration backup is mandatory before any firmware upgrade, major zone change, or switch replacement. The primary backup mechanism is `configupload`, which captures the complete switch configuration including zone database, port settings, SNMP, AAA, Virtual Fabric assignments, and security policies. The zone database is separately saved with `cfgsave` and is included in the full config backup.

@@ -17,6 +17,29 @@ CyberArk integrates with AD, MFA, ticketing, VMware, Linux, and automation tooli
 | Terraform | CyberArk Terraform provider | Manage safes, accounts, platforms as code |
 | CyberArk EPM | Agent on endpoints | Least-privilege for workstations; integrated with PAM |
 
+## Integration Topology
+
+```mermaid
+graph TD
+    vault["CyberArk Vault\n(core credential store)"]
+    pvwa["PVWA\n(UI + REST API)"]
+    cpm["CPM\n(rotation engine)"]
+    psm["PSM\n(session proxy)"]
+
+    pvwa -->|"SDK port 1858"| vault
+    cpm -->|"SDK port 1858"| vault
+    psm -->|"SDK port 1858"| vault
+
+    pvwa -->|"LDAPS 636"| adLdap["Active Directory\n(auth + group membership)"]
+    pvwa -->|"RADIUS 1812"| mfa["Duo / RSA MFA Proxy"]
+    pvwa -->|"REST API"| snow["ServiceNow\n(ticket validation)"]
+    vault -->|"Syslog UDP 514"| siem["SIEM / Splunk"]
+    cpm -->|"SSH / RDP / SQL"| linuxHosts["Linux and Windows\nTarget Hosts"]
+    cpm -->|"vSphere API"| vcenter["VMware vCenter"]
+    psm -->|"RDP / SSH session"| targetSys["Target Systems"]
+    ansible["Ansible / Terraform\n(automation)"] -->|"REST API"| pvwa
+```
+
 ---
 
 ## Active Directory / LDAP Integration

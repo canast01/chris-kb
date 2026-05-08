@@ -25,6 +25,28 @@ Use this checklist at the start of any vCenter-related incident to establish sco
 
 ## Maintenance Window Procedure
 
+```mermaid
+graph TD
+    preStart(["Start maintenance window"])
+    backup["Take VCSA file-based\nbackup (VAMI → Backup)"]
+    checkDisk["Check disk space\n(df -h)"]
+    checkHA["Check HA admission\ncontrol capacity"]
+    notify["Notify stakeholders\n(workloads continue on ESXi)"]
+    doWork["Perform maintenance\n(update / service restart)"]
+    monLogs["Monitor vpxd.log\nduring changes"]
+    validate["Post-maintenance validation:\nservices, hosts, DRS/HA, API"]
+    closeChange["Close change ticket\nwith evidence"]
+    preEnd(["Maintenance complete"])
+
+    preStart --> backup --> checkDisk --> checkHA --> notify --> doWork --> monLogs --> validate --> closeChange --> preEnd
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef gate fill:#15803d,stroke:#166534,color:#fff
+
+    class backup,checkDisk,checkHA,notify,doWork,monLogs,validate,closeChange step
+    class preStart,preEnd gate
+```
+
 ### Pre-Maintenance Steps
 
 1. Take a VCSA backup via VAMI → Backup, or confirm last backup is current (< 24 hours old)

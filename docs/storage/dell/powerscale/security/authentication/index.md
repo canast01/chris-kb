@@ -4,6 +4,31 @@
 
 ## Overview
 
+```mermaid
+graph TD
+    cluster["OneFS Cluster"]
+
+    subgraph "System Zone"
+        sysAD["AD: CORP.EXAMPLE.COM\n(primary admin)"]
+        sysLocal["Local OneFS accounts\n(break-glass)"]
+    end
+
+    subgraph "ProdZone"
+        prodAD["AD: CORP.EXAMPLE.COM\n(SMB clients)"]
+        prodLDAP["LDAP: ldap.example.com\n(NFS/Linux clients)"]
+        idMap["Identity Mapping\nSID ↔ UID/GID"]
+    end
+
+    subgraph "AnalyticsZone"
+        anaLDAP["LDAP: ldap.example.com\n(Hadoop / NFS)"]
+    end
+
+    cluster --> sysAD & sysLocal
+    cluster --> prodAD & prodLDAP
+    prodAD & prodLDAP --> idMap
+    cluster --> anaLDAP
+```
+
 PowerScale OneFS supports multiple identity providers per cluster, scoped to individual access zones. Each access zone can have its own set of authentication providers, allowing different client groups to use different identity sources against the same physical cluster. Supported providers are:
 
 | Provider | Use Case |

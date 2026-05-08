@@ -13,6 +13,22 @@
 
 ## MTree Naming Convention
 
+```mermaid
+graph TD
+    dd["Data Domain\nFilesystem Root\n/data/col1/"]
+
+    dd --> veeamProd["mtree-veeam-prod\n(quota: 10 TiB hard)"]
+    dd --> veeamDev["mtree-veeam-dev\n(quota: 2 TiB hard)"]
+    dd --> nbOracle["mtree-netbackup-ora\n(quota: 5 TiB hard)"]
+    dd --> cvSQL["mtree-commvault-sql\n(quota: 8 TiB hard)"]
+
+    veeamProd -->|"DD Boost SU"| suVeeam["Storage Unit: su-veeam-prod\nUser: ddboost-veeam"]
+    nbOracle -->|"DD Boost SU"| suNB["Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup"]
+    cvSQL -->|"DD Boost SU"| suCV["Storage Unit: su-commvault-sql\nUser: ddboost-commvault"]
+```
+
+
+
 Pattern: `mtree-<backup-tool>-<client-group>`
 
 | Token | Description | Examples |

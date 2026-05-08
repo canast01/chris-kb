@@ -13,6 +13,26 @@ Dell Unity provides multiple data protection mechanisms that can be used indepen
 | NDMP backup | Last backup job | Hours (restore from tape/object) | NAS file system backup to external media |
 | Clone (thin clone) | Point-in-time | Seconds (clone attach) | Dev/test environment refresh from production |
 
+## Protection Method Selection
+
+```mermaid
+graph TD
+  FAULT([Recovery scenario]) --> TYPE{What failed?}
+  TYPE -->|"Accidental file delete\nor LUN corruption"| SNAP["Native Snapshot\nRPO = last snap · RTO minutes"]
+  TYPE -->|"Site / array failure"| REP{RPO target?}
+  TYPE -->|"VM backup"| VBR["Veeam Storage Snapshot\nintegration"]
+  TYPE -->|"NAS file backup"| NDMP["NDMP to tape / object"]
+  REP -->|"Zero data loss"| SYNC["Synchronous Replication\nRPO = 0"]
+  REP -->|"Minutes acceptable"| ASYNC["Asynchronous Replication\nRPO = configurable"]
+  SNAP & SYNC & ASYNC & VBR & NDMP --> DONE([Recovery complete])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class TYPE,REP decision
+  class SNAP,SYNC,ASYNC,VBR,NDMP action
+  class FAULT,DONE term
+```
+
 ## Native Snapshots
 
 Unity snapshots are space-efficient redirect-on-write copies stored within the same storage pool as the source resource. They consume space only for changed blocks after the snapshot is taken.
@@ -182,6 +202,22 @@ Stack schedules on critical resources — assign both an hourly and a daily sche
 
 Veeam integrates with Unity via the Dell Unity Storage Plugin for Veeam. When configured, Veeam triggers Unity snapshots as part of its backup job, enabling:
 
+```mermaid
+sequenceDiagram
+  participant VBR as "Veeam B&R Server"
+  participant UNITY as "Unity REST API"
+  participant VM as "VMware ESXi / VM"
+  participant REPO as "Veeam Repo"
+  VBR->>VM: quiesce / VSS snapshot
+  VBR->>UNITY: POST /prot/snap (storage snapshot)
+  UNITY-->>VBR: snapshot ID
+  VBR->>UNITY: mount snapshot to proxy
+  VBR->>REPO: transfer data from snapshot
+  REPO-->>VBR: transfer complete
+  VBR->>UNITY: DELETE snapshot
+  note over VBR,UNITY: Snapshots accumulating = check<br/>Veeam job logs for delete errors
+```
+
 - Crash-consistent Unity-level snapshots for VMs on Unity-backed datastores.
 - Near-instant VM restore from Unity snapshots without reading backup media.
 - SureBackup verification using snapshot-mounted VMs.
@@ -247,6 +283,24 @@ uemcli -d <ip> -u admin /net/nas/ndmp -id <ndmp_id> delete
 ```
 
 Point the NDMP backup application to the NAS server IP and port 10000. Supported NDMP backup applications include Veritas NetBackup, IBM Tivoli Storage Manager, and Commvault (NDMP mode).
+
+## Replication Failover and Failback Flow
+
+```mermaid
+graph LR
+  subgraph "Normal State"
+    SRC[("Source Unity\n(active)")]
+    DST[("Destination Unity\n(replica)")]
+    SRC -->|"async / sync replication"| DST
+  end
+  FAIL{Source\nfails?}
+  SRC -->|disaster| FAIL
+  FAIL -->|Yes| FO["uemcli /prot/rep/session\n-id ... failover"]
+  FO --> ACTIVE["Destination Unity\nnow active"]
+  ACTIVE --> HOSTS(["Hosts redirect I/O\nto destination"])
+  HOSTS --> FBCK["When source recovers\nuemcli ... reverse → sync → failback"]
+  FBCK --> SRC
+```
 
 ## Replication as DR Protection
 

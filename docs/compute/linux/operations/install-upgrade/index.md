@@ -2,6 +2,21 @@
 
 Installation, upgrade, patching, and decommission.
 
+## Linux Boot Sequence
+
+```mermaid
+flowchart TD
+    bios["BIOS / UEFI\nPOST · firmware init"]
+    grub["GRUB2 Bootloader\nkernel selection · initrd"]
+    kernelInit["Kernel Initialisation\ndecompress · hardware probe"]
+    initrd["initramfs\nroot mount · dracut"]
+    systemdInit["systemd PID 1\nunit parsing"]
+    targets["Targets\nsysinit → basic → multi-user"]
+    services["Services\nsshd · chronyd · rsyslog · app"]
+
+    bios --> grub --> kernelInit --> initrd --> systemdInit --> targets --> services
+```
+
 ## OS Support Timelines
 
 | OS | Version | End of Maintenance | Extended (ESM/ELS) |
@@ -82,6 +97,20 @@ leapp upgrade
 ```
 
 Take a VM snapshot or backup before starting the upgrade. A rollback after the upgrade completes requires restoring from the snapshot.
+
+## Server Lifecycle
+
+```mermaid
+flowchart LR
+    build["Build\nKickstart / cloud-init"]
+    config["Configure\nAnsible baseline"]
+    ad["Join AD\nrealm join"]
+    register["Register\nmonitoring · backup"]
+    operate["Operate\npatching · health checks"]
+    decom["Decommission\nrealm leave · CMDB update"]
+
+    build --> config --> ad --> register --> operate --> decom
+```
 
 ## Decommission Checklist
 

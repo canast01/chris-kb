@@ -2,6 +2,35 @@
 
 ## Core Components
 
+```mermaid
+graph TD
+    subgraph "DDFS Namespace"
+        mtreeA["MTree: mtree-veeam-prod\n/data/col1/mtree-veeam-prod"]
+        mtreeB["MTree: mtree-netbackup-ora\n/data/col1/mtree-netbackup-ora"]
+        mtreeC["MTree: mtree-commvault-sql\n/data/col1/mtree-commvault-sql"]
+    end
+
+    subgraph "Dedup Engine"
+        sisl["SISL Engine\n(fingerprint + locality filter)"]
+        segStore["[(Segment Store)]\n(deduplicated containers)"]
+        index["Fingerprint Index\n(lookup table)"]
+        nvram["NVRAM Write Cache\n(power-safe)"]
+        sisl --> index
+        sisl --> nvram
+        nvram --> segStore
+    end
+
+    subgraph "Protocols"
+        ddboost["DD Boost\n(source-side dedup)"]
+        nfsProt["NFS v3/v4"]
+        cifsProt["CIFS/SMB"]
+        vtlProt["VTL (FC)"]
+    end
+
+    ddboost & nfsProt & cifsProt & vtlProt --> sisl
+    mtreeA & mtreeB & mtreeC --> segStore
+```
+
 | Component | Description |
 |---|---|
 | DDOS | Data Domain Operating System — the purpose-built OS managing the filesystem, dedup engine, protocols, and services |
@@ -47,6 +76,34 @@ Operational guidance for managing Data Domain replication — monitoring, troubl
 | Not updating | Context may be in error state |
 
 ### Replication Topologies
+
+```mermaid
+graph LR
+    subgraph "Primary Site"
+        srcDD["Source DD\n(production backup target)"]
+        srcMTree["MTree\n/data/col1/mtree-veeam-prod"]
+    end
+
+    subgraph "DR Site"
+        dstDD["Destination DD\n(DR copy)"]
+        dstMTree["Replicated MTree\n(read-only during normal ops)"]
+    end
+
+    subgraph "Extended Retention"
+        cloudTier["Cloud Tier\nAWS S3 / Azure Blob"]
+    end
+
+    backupSrv(["Backup Server\nVeeam / NetBackup / CommVault"])
+    backupSrv -->|"DDBoost / NFS / CIFS"| srcDD
+    srcDD --> srcMTree
+    srcMTree -->|"DD Replicator\n(TCP 2051, delta sync)"| dstMTree
+    dstMTree --> dstDD
+    srcDD -->|"age > retention threshold"| cloudTier
+
+    subgraph "Failover"
+        dstDD -->|"replication failover"| rwMTree["MTree writable\nbackup clients re-pointed"]
+    end
+```
 
 | Topology | Use Case |
 |---|---|

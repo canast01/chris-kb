@@ -13,6 +13,29 @@ SRM version must match vCenter version. Always check the Broadcom Product Intero
 
 ## Upgrade Sequence
 
+### Upgrade Order Dependency Chain
+
+```mermaid
+flowchart TD
+    start(["Start upgrade\nmaintenance window"])
+    start --> vc["1. Upgrade vCenter\nboth protected + recovery sites"]
+    vc --> srmCheck{"Plugins load\ncorrectly?"}
+    srmCheck -->|No| fixVC["Fix vCenter issues\nbefore proceeding"]
+    fixVC --> srmCheck
+    srmCheck -->|Yes| srmUpgrade["2. Upgrade SRM Server\nprotected site first, then recovery"]
+    srmUpgrade --> vrUpgrade["3. Upgrade vSphere\nReplication Appliance\n(VAMI upgrade)"]
+    vrUpgrade --> sraUpdate["4. Update SRA plugins\n(Dell, Pure, NetApp)\non both SRM servers"]
+    sraUpdate --> validate["5. Validate — all PGs show OK\nall VMs show Protected"]
+    validate --> done(["Upgrade complete"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef check fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class vc,srmUpgrade,vrUpgrade,sraUpdate,validate,fixVC action
+    class srmCheck check
+    class start,done terminal
+```
+
 **Critical: always upgrade in this order to avoid compatibility breaks.**
 
 1. **Upgrade vCenter** to target version; verify plugins load correctly post-upgrade

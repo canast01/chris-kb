@@ -2,6 +2,26 @@
 
 Integration with other platforms and external systems.
 
+## Active Directory Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant user as User (SSH)
+    participant pam as PAM
+    participant sssd as SSSD
+    participant krb as Kerberos (KDC)
+    participant ad as Active Directory
+
+    user->>pam: SSH login attempt
+    pam->>sssd: Authenticate user@domain
+    sssd->>krb: Request TGT
+    krb->>ad: Validate credentials
+    ad-->>krb: Credential OK
+    krb-->>sssd: TGT issued
+    sssd-->>pam: Authentication success
+    pam-->>user: Shell granted
+```
+
 ## Active Directory Integration (SSSD / realmd)
 
 Linux servers join Active Directory using `realmd` and `sssd`, allowing AD users to authenticate with Kerberos credentials without local account provisioning.
@@ -165,6 +185,23 @@ iscsiadm --mode session --rescan
 ```
 
 ---
+
+## SAN Multipath Data Path
+
+```mermaid
+flowchart LR
+    app["Application\n/opt/app"]
+    dm["Device Mapper\n/dev/mapper/mpathX"]
+    path1["Path 1\n/dev/sdb (HBA0)"]
+    path2["Path 2\n/dev/sdc (HBA1)"]
+    fab1["FC Fabric A"]
+    fab2["FC Fabric B"]
+    san["SAN Storage\nPowerMax · Pure"]
+
+    app --> dm
+    dm --> path1 --> fab1 --> san
+    dm --> path2 --> fab2 --> san
+```
 
 ## Multipath Configuration
 

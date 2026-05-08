@@ -21,6 +21,34 @@
 | P2 | Business-critical (standard apps) | ≤ 30 min | < 1 hour |
 | P3 | Non-critical (dev mirror, reporting) | ≤ 4 hours | < 4 hours |
 
+### Protection Group to Recovery Plan Mapping
+
+```mermaid
+flowchart LR
+    subgraph p1Tier [Priority 1 — SRDF/S Sync]
+        pgDB["PG-DB-DC1DC2\n(Oracle, MSSQL)"]
+        pgInfra["PG-INFRA-DC1DC2\n(AD, DNS)"]
+    end
+    subgraph p2Tier [Priority 2 — vSphere Replication]
+        pgApp["PG-APP-DC1DC2\n(Business apps)"]
+        pgFile["PG-FILE-DC1DC2\n(File servers)"]
+    end
+    subgraph p3Tier [Priority 3 — Async array rep]
+        pgDev["PG-DEV-DC1DC2\n(Dev mirrors)"]
+    end
+
+    pgDB --> rpP1["RP-P1-CRITICAL\nRTO < 15 min"]
+    pgInfra --> rpP1
+    pgApp --> rpP2["RP-P2-BUSINESS\nRTO < 1 hr"]
+    pgFile --> rpP2
+    pgDev --> rpP3["RP-P3-NONCRIT\nRTO < 4 hr"]
+
+    classDef pg fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef rp fill:#2563eb,stroke:#1d4ed8,color:#fff
+    class pgDB,pgInfra,pgApp,pgFile,pgDev pg
+    class rpP1,rpP2,rpP3 rp
+```
+
 ## Recovery Plan Design
 
 - Power-on sequence is mandatory: infrastructure VMs (DC, DNS) → DB tier → APP tier → WEB tier

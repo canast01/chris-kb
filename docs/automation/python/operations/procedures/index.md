@@ -58,6 +58,27 @@
 - [ ] Second scheduled run also completes successfully (confirms no transient issue)
 - [ ] Backup copy of the previous script version retained for at least 30 days
 
+## Python Logging Pipeline
+
+```mermaid
+graph TD
+    script["Python Script"]
+    logger["logging.Logger\n(getLogger)"]
+    fileHandler["TimedRotatingFileHandler\n(/var/log/automation/job.log)"]
+    streamHandler["StreamHandler\n(stdout / console)"]
+    syslogHandler["SysLogHandler\n(syslog / journald)"]
+    logFile["Log File\n(rotated daily, 30 days)"]
+    siem["SIEM / Monitoring\n(log shipper / alert rule)"]
+
+    script --> logger
+    logger --> fileHandler
+    logger --> streamHandler
+    logger --> syslogHandler
+    fileHandler --> logFile
+    logFile --> siem
+    syslogHandler --> siem
+```
+
 ## Automation Jobs
 
 ### Scheduling with cron

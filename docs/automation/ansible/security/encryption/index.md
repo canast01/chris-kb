@@ -6,6 +6,25 @@
 
 Content to be added.
 
+## Vault Encryption Flow
+
+```mermaid
+graph LR
+    plainSecret["Plaintext Secret\n(password / API key)"]
+    vaultEncrypt["ansible-vault\nencrypt_string"]
+    vaultFile["vault.yml\n(encrypted at rest)"]
+    vcKeyFile["Vault Password File\n(~/.vault_pass)"]
+
+    plainSecret --> vaultEncrypt
+    vcKeyFile --> vaultEncrypt
+    vaultEncrypt --> vaultFile
+
+    vaultFile --> mainYml["group_vars/all/main.yml\n(references vault_ vars)"]
+    mainYml --> playbook["Playbook\n(uses db_password)"]
+    vcKeyFile -->|decrypt at runtime| playbook
+    playbook -->|over SSH| managedHost["Managed Host"]
+```
+
 ## Vault Secrets
 
 Vault encrypts sensitive data at rest. Any YAML file or string value can be encrypted.

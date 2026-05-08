@@ -17,6 +17,28 @@
 
 ## SyncIQ — Replication
 
+```mermaid
+graph TD
+    srcCluster["Source Cluster\n/ifs/data/project1"]
+    policy["SyncIQ Policy\n(schedule + target)"]
+    wan["WAN / IP Network\n(TCP 7722, optional TLS)"]
+    dstCluster["Target Cluster\n/ifs/replicated/project1"]
+    snapRef["Source Snapshot\n(change-tracking reference)"]
+
+    srcCluster --> policy
+    policy --> snapRef
+    snapRef -->|"delta sync"| wan
+    wan --> dstCluster
+
+    subgraph "Failover"
+        dstCluster -->|"break mirror"| rw["Target Writable\n(clients re-pointed)"]
+    end
+
+    subgraph "Failback"
+        rw -->|"return policy"| srcCluster
+    end
+```
+
 SyncIQ policy management, monitoring, and failover/failback operations on Dell PowerScale.
 
 ### Policy Management

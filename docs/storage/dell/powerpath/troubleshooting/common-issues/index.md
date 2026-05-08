@@ -1,5 +1,23 @@
 # PowerPath — Common Issues
 
+## Dead Path Triage Flow
+
+```mermaid
+flowchart TD
+    A([Dead path detected]) --> B["powermt restore\nForce immediate path retry"]
+    B --> C{"Paths recovered?"}
+    C -->|Yes| D["powermt save\nMonitor for flapping"]
+    C -->|No| E{"HBA port\nOnline?"}
+    E -->|No| F["Check cable / SFP\nCheck HBA driver"]
+    E -->|Yes| G{"Fabric switch port\nOnline?"}
+    G -->|No| H["portshow / show interface\nCheck SFP, cable, BBCR"]
+    G -->|Yes| I{"Array FA port\nonline & zoned?"}
+    I -->|No| J["Restore zoning\nCheck array port state"]
+    I -->|Yes| K["Verify LUN masking\nCheck host group on array"]
+    F & H & J & K --> L(["Open support case if\npath does not recover"])
+    D --> Z([Resolved])
+```
+
 ## Dead Paths
 
 **Symptom:** `powermt display dev=all` shows one or more paths in `dead` state for a pseudo device.

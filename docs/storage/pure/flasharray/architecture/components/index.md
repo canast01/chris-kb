@@ -52,6 +52,27 @@ FlashArray //X and //C series use direct-attached NVMe SSDs housed in the primar
 
 Drive health is continuously monitored by Purity. A failed drive triggers an automatic rebuild — Purity redistributes the data across the remaining drives using an internal RAID-like mechanism called RAID-HD (or DFM — Direct Flash Module protection depending on generation). The rebuild runs in the background and does not pause host I/O.
 
+```mermaid
+flowchart TD
+  A["Drive transitions to 'failed'\n(puredrive list shows failed)"] --> B["Purity raises error alert\n(purealert list)"]
+  B --> C["Purity begins automatic rebuild\nData redistributed across\nremaining healthy drives"]
+  C --> D["Drive state = 'recovering'\n(puredrive list --progress)"]
+  D --> E{"Rebuild\ncomplete?"}
+  E -->|"No — monitor"| D
+  E -->|"Yes"| F["New drive admitted as 'healthy'\nArray returns to full redundancy"]
+  F --> G["Open Pure Support case\nSchedule physical drive swap\n(P2 — non-urgent if single drive)"]
+  G --> H["Pure field engineer swaps drive\nPurity admits replacement drive"]
+  H --> C
+
+  classDef purity fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef action fill:#b45309,stroke:#92400e,color:#fff
+  classDef good fill:#15803d,stroke:#166534,color:#fff
+  classDef decision fill:#4b5563,stroke:#374151,color:#fff
+  class A,B,C,D purity
+  class E decision
+  class F,G,H action
+```
+
 ```bash
 # List all drives and their health state
 puredrive list
@@ -266,6 +287,41 @@ purepod list --failover-preference oracle-pod
 ### Protection Groups
 
 Protection groups (PGs) are the primary mechanism for coordinating crash-consistent snapshots and async replication across multiple volumes. A PG can include volumes, host groups, or hosts as members.
+
+```mermaid
+graph TD
+  PG["Protection Group\nprod-oracle-pg"]
+
+  subgraph "Members"
+    V1["Volume: prod-oracle-data-01"]
+    V2["Volume: prod-oracle-redo-01"]
+    V3["Volume: prod-oracle-arch-01"]
+  end
+
+  subgraph "Schedule"
+    SNAP["Snapshot schedule\nevery 1 hour\nretain 24/day × 7 days"]
+    REPL["Replication schedule\nevery 1 hour → dr-fa-01"]
+  end
+
+  subgraph "Outputs"
+    LOCALSNAP["Local snapshots\nprod-oracle-pg.YYYYMMDD.HHMMSS"]
+    REMSNAP["Remote snapshots\non dr-fa-01 (async replication)"]
+  end
+
+  PG --> V1 & V2 & V3
+  PG --> SNAP & REPL
+  SNAP --> LOCALSNAP
+  REPL --> REMSNAP
+
+  classDef pg fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef vol fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef sched fill:#b45309,stroke:#92400e,color:#fff
+  classDef out fill:#15803d,stroke:#166534,color:#fff
+  class PG pg
+  class V1,V2,V3 vol
+  class SNAP,REPL sched
+  class LOCALSNAP,REMSNAP out
+```
 
 ```bash
 # Create a protection group

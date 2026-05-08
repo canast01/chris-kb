@@ -4,6 +4,38 @@
 
 Eyeglass health checks cover the Eyeglass appliance itself, PowerScale cluster connectivity, SyncIQ policy status, and DR policy readiness. Run daily as a minimum; automated checks should run every 15–30 minutes.
 
+```mermaid
+flowchart TD
+    start([Health Check Run]) --> appSvc
+
+    subgraph "Eyeglass Appliance"
+        appSvc["egcli status\nAll services running?"]
+        licOk["egcli license status\nLicense valid?"]
+        clConn["egcli clusters status\nBoth clusters reachable?"]
+        appSvc --> licOk --> clConn
+    end
+
+    subgraph "DR Policy Layer"
+        drState["egcli drpolicy status --all\nAll policies Replicating?"]
+        rpoLag["SyncIQ lag within RPO?"]
+        dnsSync["DNS sync current?"]
+        drState --> rpoLag --> dnsSync
+    end
+
+    subgraph "PowerScale Clusters"
+        isiStatus["isi status\nAll nodes healthy?"]
+        alerts["isi alerts list --category critical\nNo critical alerts?"]
+        drives["isi devices drive list\nAll drives HEALTHY?"]
+        isiStatus --> alerts --> drives
+    end
+
+    clConn --> drState
+    dnsSync --> isiStatus
+    drives --> result{All checks pass?}
+    result -->|Yes| ok([DR Ready - Score 100%])
+    result -->|No| investigate([Investigate and remediate])
+```
+
 | Area | Tool | Frequency |
 |---|---|---|
 | Eyeglass appliance services | `egcli status` | Daily |
@@ -105,6 +137,18 @@ isi sync reports errors list
 | paused | Policy is paused | Confirm intentional; resume if not |
 | disabled | Policy is disabled | Confirm intentional; enable if DR policy |
 
+```mermaid
+flowchart LR
+    prodCluster["Production PowerScale\nCluster"]
+    egApp["Eyeglass Appliance\negcli drpolicy status"]
+    drCluster["DR PowerScale\nCluster"]
+
+    prodCluster -->|"SyncIQ replication\n(continuous / scheduled)"| drCluster
+    egApp -->|"monitors SyncIQ\npolicy state"| prodCluster
+    egApp -->|"checks DR readiness\nvia OneFS API"| drCluster
+    egApp -->|"alert if lag > RPO threshold"| alert["SNMP / Email\nAlert"]
+```
+
 ---
 
 ## PowerScale Cluster Health
@@ -173,6 +217,27 @@ DR validation for Eyeglass covers three scenarios: pre-failover readiness, DR te
 | DR test (rehearsal) | Quarterly | `egcli drtest run` |
 | Post-failover validation | After every failover | Manual + `egcli` |
 | Post-failback validation | After every failback | Manual + `egcli` |
+
+```mermaid
+flowchart TD
+    trigger(["Trigger: weekly / pre-change"])
+    preflight["egcli drtest preflight\n--cluster dr-cluster"]
+    checks{"All checks\nPASS?"}
+    remediate["Remediate failing\nprerequisites"]
+    drTest["egcli drtest run\n--policy POLICY_NAME"]
+    validate["Validate: NFS mounts\nSMB shares\nDNS resolution"]
+    rollback["Eyeglass auto-rollback\nReturn to Replicating"]
+    doc["Document result\nClose change record"]
+
+    trigger --> preflight
+    preflight --> checks
+    checks -->|No| remediate
+    remediate --> preflight
+    checks -->|Yes| drTest
+    drTest --> validate
+    validate --> rollback
+    rollback --> doc
+```
 
 ### Eyeglass DR Preflight
 

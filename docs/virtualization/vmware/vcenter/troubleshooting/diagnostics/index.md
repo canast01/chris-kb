@@ -1,5 +1,27 @@
 # vCenter — Diagnostics
 
+## Diagnostic Priority Order
+
+```mermaid
+graph TD
+    incident(["Incident reported"])
+    step1["1. Check disk usage\n(df -h)\nFull partition = root cause"]
+    step2["2. Check service status\n(service-control --status --all)"]
+    step3["3. Check DNS and NTP\n(nslookup, timedatectl)"]
+    step4["4. Check certificate expiry\n(VAMI → Certificate Mgmt)"]
+    step5["5. Check SSO/STS health\n(service-control --status vmware-stsd)"]
+    step6["6. Review logs\n(vpxd.log, sso/vmware-sts-idmd.log)"]
+    step7["7. Collect vm-support bundle\nand open support case"]
+
+    incident --> step1 --> step2 --> step3 --> step4 --> step5 --> step6 --> step7
+
+    classDef priority fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef start fill:#15803d,stroke:#166534,color:#fff
+
+    class step1,step2,step3,step4,step5,step6,step7 priority
+    class incident start
+```
+
 ## Service Health
 
 ### Appliance Management Interface (VAMI)

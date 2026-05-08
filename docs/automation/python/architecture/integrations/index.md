@@ -1,5 +1,29 @@
 # Python Automation — Integrations
 
+## API Call and Retry Flow
+
+```mermaid
+graph LR
+    buildReq["Build Request\n(URL + headers + body)"]
+    sendReq["Send HTTP Request\n(requests.get/post)"]
+    checkStatus["Check Response\nStatus Code"]
+    parseBody["Parse JSON\nBody"]
+    returnData["Return Data\nto Caller"]
+    checkRetry["Retry attempt\n< max_retries?"]
+    backoff["Exponential Backoff\n(backoff_factor)"]
+    raiseAlert["Raise Exception\n/ Alert"]
+
+    buildReq --> sendReq
+    sendReq --> checkStatus
+    checkStatus -->|2xx OK| parseBody
+    parseBody --> returnData
+    checkStatus -->|429 / 5xx| checkRetry
+    checkRetry -->|Yes| backoff
+    backoff --> sendReq
+    checkRetry -->|No| raiseAlert
+    checkStatus -->|ConnectionError\nTimeout| checkRetry
+```
+
 ## APIs
 
 ### requests Library Basics

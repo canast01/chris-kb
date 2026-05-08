@@ -1,5 +1,36 @@
 # ONTAP — Procedures
 
+## SVM / Volume / LUN Hierarchy
+
+```mermaid
+graph TD
+    cluster["Cluster"] --> nodeA["Node A"]
+    cluster --> nodeB["Node B"]
+    nodeA --> aggrA["Aggregate (aggr1)\nRAID-DP / RAID-TEC"]
+    nodeB --> aggrB["Aggregate (aggr2)\nRAID-DP / RAID-TEC"]
+    aggrA --> svm1["SVM: svm-nas"]
+    aggrA --> svm2["SVM: svm-san"]
+    aggrB --> svm1
+    svm1 --> volNFS["Volume: vol_nfs\njunction-path /nfs"]
+    svm1 --> volSMB["Volume: vol_smb\njunction-path /smb"]
+    svm2 --> volSAN["Volume: vol_iscsi"]
+    volSAN --> lun1["LUN: /vol/vol_iscsi/lun0\nigroup: esxi-cluster"]
+    volNFS --> snap1["Snapshots\n(hourly · daily · weekly)"]
+    volNFS --> nfsExport["NFS Export\n/etc/exports equiv"]
+    volSMB --> smbShare["SMB Share\n\\\\server\\share"]
+
+    classDef cluster fill:#1e40af,color:#fff
+    classDef node fill:#2563eb,color:#fff
+    classDef aggr fill:#7c3aed,color:#fff
+    classDef svm fill:#db6004,color:#fff
+    classDef vol fill:#15803d,color:#fff
+    class cluster cluster
+    class nodeA,nodeB node
+    class aggrA,aggrB aggr
+    class svm1,svm2 svm
+    class volNFS,volSMB,volSAN vol
+```
+
 ## Change Readiness
 
 - [ ] All aggregates have at least 15% free capacity to absorb workload shifts during the change
@@ -17,6 +48,32 @@
 | SnapMirror lag within RPO | | |
 | No active volume moves | | |
 | AutoSupport start message sent | | |
+
+## Rolling Node Upgrade Sequence
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant Node1 as Node 1 (non-epsilon)
+    participant Node2 as Node 2 (HA partner)
+
+    Admin->>Admin: autosupport invoke — start maintenance
+    Admin->>Admin: snapmirror quiesce all relationships
+    Admin->>Node2: storage failover takeover -ofnode node1
+    Node2-->>Admin: takeover complete — node1 aggregates on node2
+    Admin->>Node1: apply firmware / ONTAP upgrade
+    Node1-->>Admin: node1 back online
+    Admin->>Node2: storage failover giveback -ofnode node1
+    Node2-->>Admin: giveback complete
+    Admin->>Admin: cluster show — validate node1 healthy
+    Admin->>Node1: storage failover takeover -ofnode node2
+    Node1-->>Admin: takeover complete
+    Admin->>Node2: apply firmware / ONTAP upgrade
+    Node2-->>Admin: node2 back online
+    Admin->>Node1: storage failover giveback -ofnode node2
+    Admin->>Admin: snapmirror resume all relationships
+    Admin->>Admin: autosupport invoke — end maintenance
+```
 
 ## Maintenance Window
 

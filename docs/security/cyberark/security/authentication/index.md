@@ -9,6 +9,30 @@ PVWA is accessible over HTTPS only (TLS 1.2 minimum, TLS 1.3 preferred). All pri
 | LDAP / AD auth | PVWA authenticates against AD; group-based safe membership |
 | Break-glass account | Emergency Vault Admin account in sealed safe; access via dual-control + incident ticket |
 
+## PVWA Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant user as Privileged User
+    participant pvwa as PVWA
+    participant ad as Active Directory
+    participant mfa as Duo MFA Proxy
+    participant vault as Vault
+
+    user->>pvwa: Login (HTTPS / TLS 1.2+)
+    pvwa->>ad: LDAP bind — validate credentials
+    ad-->>pvwa: Auth success + group membership
+    pvwa->>mfa: RADIUS challenge to user
+    mfa-->>user: Push / OTP prompt
+    user-->>mfa: Approve MFA
+    mfa-->>pvwa: RADIUS accept
+    pvwa->>vault: SDK connect — open session
+    vault-->>pvwa: Session token
+    pvwa-->>user: Dashboard — safe entitlements loaded
+```
+
+---
+
 ## LDAP Configuration
 
 PVWA Administration > LDAP Integration:

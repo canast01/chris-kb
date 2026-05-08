@@ -1,5 +1,25 @@
 # ONTAP — Health Checks
 
+## Health Check Decision Flow
+
+```mermaid
+flowchart TD
+    start([Start Health Check]) --> clusterShow["cluster show\nall nodes healthy?"]
+    clusterShow -->|No| nodeDown["Investigate node\nstorage failover show"]
+    clusterShow -->|Yes| diskCheck["storage disk show -broken\nany broken disks?"]
+    diskCheck -->|Yes| diskAction["Check spares available\nescalate if no spare"]
+    diskCheck -->|No| aggrCheck["storage aggregate show\nany above 85% used?"]
+    aggrCheck -->|Yes| aggrAction["Move volumes or\nadd disks"]
+    aggrCheck -->|No| smCheck["snapmirror show\nall healthy + within RPO?"]
+    smCheck -->|No| smAction["Resume / update\nSnapMirror relationships"]
+    smCheck -->|Yes| alertCheck["system health alert show\nany active alerts?"]
+    alertCheck -->|Yes| alertAction["Review and action\nalerts by severity"]
+    alertCheck -->|No| done([All Checks Pass])
+
+    style done fill:#15803d,color:#fff
+    style start fill:#2563eb,color:#fff
+```
+
 ## Daily Checks
 
 | Check | Command | Notes |

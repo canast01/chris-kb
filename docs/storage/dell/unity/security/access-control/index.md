@@ -4,6 +4,40 @@
 
 Unisphere for Unity implements role-based access control for all administrative operations. Every Unisphere user — whether a local account or an LDAP/AD-mapped user — is assigned one of four built-in roles. There are no custom roles; access is controlled entirely by role assignment.
 
+```mermaid
+graph TD
+  subgraph "Identity Sources"
+    LOCAL["Local Accounts\n(break-glass only)"]
+    AD["Active Directory\nGroups"]
+  end
+  subgraph "Unity Roles"
+    ADMIN["Administrator\nFull access"]
+    SADMIN["Storage Administrator\nProvisioning only"]
+    OPS["Operator\nACK alerts · read"]
+    VIEW["Viewer\nRead-only"]
+  end
+  subgraph "Actions"
+    PROV["Create LUNs\nManage pools\nConfigure replication"]
+    MON["View health\nAcknowledge alerts"]
+    AUD["Read capacity\nAudit review"]
+  end
+  LOCAL --> ADMIN
+  AD -->|"CN=Unity-Admins"| ADMIN
+  AD -->|"CN=Unity-StorageAdmins"| SADMIN
+  AD -->|"CN=Unity-Operators"| OPS
+  AD -->|"CN=Unity-Viewers"| VIEW
+  ADMIN --> PROV & MON & AUD
+  SADMIN --> PROV & MON
+  OPS --> MON & AUD
+  VIEW --> AUD
+  classDef role fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef src fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef act fill:#15803d,stroke:#166534,color:#fff
+  class ADMIN,SADMIN,OPS,VIEW role
+  class LOCAL,AD src
+  class PROV,MON,AUD act
+```
+
 | Role | Permissions | Typical Assignment |
 |---|---|---|
 | Administrator | Full system access: storage provisioning, system configuration, user management, upgrades, and security settings | Storage team lead or senior engineer |
@@ -103,6 +137,25 @@ uemcli -d <ip> -u admin /user/role -id <mapping_id> delete
 ## iSCSI CHAP Authentication
 
 For iSCSI host access, Unity supports CHAP (Challenge Handshake Authentication Protocol) to authenticate initiators. This prevents unauthorised hosts from connecting to Unity iSCSI targets.
+
+```mermaid
+sequenceDiagram
+  participant HOST as "iSCSI Initiator\n(host)"
+  participant UNITY as "Unity iSCSI Target"
+  HOST->>UNITY: Login Request (IQN)
+  UNITY-->>HOST: CHAP Challenge
+  HOST->>UNITY: CHAP Response (username + hash)
+  note over UNITY: Verify CHAP username and\npassword hash match configured credentials
+  alt One-way CHAP
+    UNITY-->>HOST: Login Accept
+  else Mutual CHAP
+    HOST-->>UNITY: Reverse Challenge
+    UNITY->>HOST: Reverse Response
+    HOST-->>UNITY: Reverse Verify OK
+    UNITY-->>HOST: Login Accept
+  end
+  HOST->>UNITY: SCSI Commands (I/O)
+```
 
 | CHAP Mode | Description | Recommendation |
 |---|---|---|

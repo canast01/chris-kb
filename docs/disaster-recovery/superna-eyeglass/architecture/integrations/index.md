@@ -2,6 +2,30 @@
 
 ## NetApp PowerScale (SyncIQ)
 
+```mermaid
+flowchart TB
+    subgraph "Production Site"
+        primaryPS["PowerScale Cluster A\n(Production)"]
+        synciqPol["SyncIQ Policies\nContinuous / Scheduled"]
+    end
+    subgraph "DR Site"
+        drPS["PowerScale Cluster B\n(DR)"]
+    end
+    subgraph "Management Plane"
+        eyeglass["Superna Eyeglass\nDR Assistant"]
+        ad["Active Directory\nAD group ACLs"]
+        dns["DNS Server\nWindows DNS / BIND"]
+        siem["SIEM / Monitoring\nSNMP / Syslog"]
+    end
+
+    primaryPS -->|"SyncIQ replication"| drPS
+    eyeglass -->|"OneFS REST API\nmonitors SyncIQ"| primaryPS
+    eyeglass -->|"OneFS REST API\nchecks DR readiness"| drPS
+    ad -->|"AD group mapping\nfor share ACLs"| eyeglass
+    eyeglass -->|"DNS cutover\nzone delegation"| dns
+    eyeglass -->|"SNMP traps\nsyslog events"| siem
+```
+
 Eyeglass uses the OneFS REST API to discover and monitor SyncIQ replication policies:
 
 1. Add the PowerScale cluster in Eyeglass Admin UI: Configuration → Cluster → Add Cluster
@@ -63,6 +87,18 @@ Key traps to monitor:
 - `eyeglassDRReadinessChanged` — readiness score drops below 100%
 - `eyeglassSyncIQLagAlarm` — RPO threshold breached
 - `eyeglassFailoverStarted` / `eyeglassFailoverCompleted`
+
+```mermaid
+flowchart LR
+    eyeglass["Eyeglass Appliance"]
+    ariaOps["Aria Operations\nSNMP MIB imported"]
+    siem["SIEM\nSyslog port 514 / 6514"]
+    email["Email\nDistribution list"]
+
+    eyeglass -->|"SNMP traps\nUDP 162"| ariaOps
+    eyeglass -->|"syslog\nUDP 514 / TLS 6514"| siem
+    eyeglass -->|"SMTP notifications\nfailover / readiness events"| email
+```
 
 ## Syslog / SIEM
 

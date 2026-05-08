@@ -2,6 +2,25 @@
 
 Key libraries, packages, virtual environments, and parsing tools used in the Python automation environment.
 
+## Python Automation Lifecycle
+
+```mermaid
+graph LR
+    develop["Develop\n(script + venv)"]
+    test["Test\n(pytest / manual run)"]
+    package["Package\n(requirements.txt)"]
+    deploy["Deploy\n(copy to automation host)"]
+    schedule["Schedule\n(cron / APScheduler)"]
+    monitor["Monitor\n(logs / alerts)"]
+
+    develop --> test
+    test --> package
+    package --> deploy
+    deploy --> schedule
+    schedule --> monitor
+    monitor -->|Issues found| develop
+```
+
 ## Parsing
 
 ### JSON and YAML Parsing

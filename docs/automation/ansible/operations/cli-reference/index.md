@@ -6,6 +6,59 @@ Ansible is an agentless automation tool — it connects to remote hosts over SSH
 
 > Install with `pip install ansible` or your distro's package manager. Requires SSH access to managed hosts and a valid inventory file.
 
+## Control Node and Inventory Topology
+
+```mermaid
+graph TD
+    controlNode["Control Node\n(ansible + python)"]
+    inventoryFile["Inventory\n(INI / YAML / Dynamic)"]
+    vaultSecrets["Vault Secrets\n(ansible-vault)"]
+    galaxyRoles["Galaxy Roles\n& Collections"]
+
+    controlNode --> inventoryFile
+    controlNode --> vaultSecrets
+    controlNode --> galaxyRoles
+
+    inventoryFile --> groupWeb["Group: webservers\nweb01, web02"]
+    inventoryFile --> groupDB["Group: dbservers\ndb01, db02"]
+    inventoryFile --> groupNet["Group: network_devices\nrouter01"]
+
+    groupWeb -->|SSH| web01["web01"]
+    groupWeb -->|SSH| web02["web02"]
+    groupDB -->|SSH| db01["db01"]
+    groupDB -->|SSH| db02["db02"]
+    groupNet -->|SSH| router01["router01"]
+```
+
+## Playbook Execution Flow
+
+```mermaid
+graph LR
+    parseInv["Parse Inventory"] --> gatherFacts["Gather Facts"]
+    gatherFacts --> preTasks["pre_tasks"]
+    preTasks --> taskLoop["Task Loop\n(loop / when / register)"]
+    taskLoop --> runModule["Run Module\non managed host"]
+    runModule --> notifyHandler["notify:\nHandler"]
+    notifyHandler --> postTasks["post_tasks"]
+    postTasks --> flushHandlers["Flush Handlers\n(run once)"]
+    flushHandlers --> report["Play Recap\n(ok / changed / failed)"]
+```
+
+## Role Directory Structure
+
+```mermaid
+graph TD
+    role["roles/nginx/"]
+    role --> tasks["tasks/\n  main.yml"]
+    role --> handlers["handlers/\n  main.yml"]
+    role --> templates["templates/\n  nginx.conf.j2"]
+    role --> files["files/\n  index.html"]
+    role --> vars["vars/\n  main.yml (high priority)"]
+    role --> defaults["defaults/\n  main.yml (overridable)"]
+    role --> meta["meta/\n  main.yml (deps)"]
+    role --> readme["README.md"]
+```
+
 ---
 
 ## ansible (Ad-Hoc)

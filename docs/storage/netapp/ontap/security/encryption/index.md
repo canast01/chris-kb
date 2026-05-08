@@ -2,6 +2,38 @@
 
 ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for management interfaces and Kerberos/IPsec for data protocols. Key management is handled by the Onboard Key Manager (OKM) or an external KMIP key manager.
 
+## Encryption Layer Architecture
+
+```mermaid
+graph TB
+    subgraph "Data In Transit"
+        tlsMgmt["TLS 1.2/1.3\nHTTPS · REST API · ONTAPI"]
+        kerbNFS["NFS Kerberos krb5p\nAES-256 NFS traffic"]
+        smbEnc["SMB 3.0 Encryption\nPer-share or per-SVM"]
+        smTLS["SnapMirror over TLS\nReplication traffic"]
+    end
+
+    subgraph "Data At Rest — Software"
+        nve["NVE — NetApp Volume Encryption\nAES-256 per-volume DEK"]
+        nae["NAE — NetApp Aggregate Encryption\nAES-256 per-aggregate AEK"]
+    end
+
+    subgraph "Data At Rest — Hardware"
+        nse["NSE — Self-Encrypting Drives\nHW-level AES at drive firmware"]
+    end
+
+    subgraph "Key Management"
+        okm["Onboard Key Manager\nOKM — cluster passphrase"]
+        kmip["External KMIP\nThales · IBM · HashiCorp"]
+    end
+
+    nve --> okm
+    nve --> kmip
+    nae --> okm
+    nae --> kmip
+    nse --> kmip
+```
+
 ## Encryption Architecture Overview
 
 | Layer | Technology | Scope |
@@ -190,6 +222,19 @@ security key-manager external check
 
 # Show keys managed by external KMS
 security key-manager key query -key-manager-type external
+```
+
+### Key Manager Decision
+
+```mermaid
+flowchart TD
+    q1{"Multi-cluster\nenvironment?"}
+    q1 -->|Yes| q2{"Compliance mandate\nPCI / HIPAA / FedRAMP?"}
+    q1 -->|No| q3{"External KMS\navailable?"}
+    q2 -->|Yes| extKmip["External KMIP\nThales / IBM / Entrust"]
+    q2 -->|No| extKmip
+    q3 -->|Yes| extKmip
+    q3 -->|No| okm["Onboard Key Manager\nOKM — store passphrase\nin vault"]
 ```
 
 ### Key Manager Health Checks

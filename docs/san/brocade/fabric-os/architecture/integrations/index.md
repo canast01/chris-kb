@@ -4,6 +4,33 @@
 
 ---
 
+## FC Login Sequence (FLOGI / PLOGI / PRLI)
+
+```mermaid
+sequenceDiagram
+    participant HBA as Host HBA (N_Port)
+    participant Switch as Brocade Switch (F_Port)
+    participant NS as Name Server
+    participant Storage as Storage Target
+
+    Note over HBA,Switch: Link comes up — fabric login begins
+    HBA->>Switch: FLOGI (Fabric Login)\nWWPN, WWNN, FC4 capabilities
+    Switch-->>HBA: ACC (Accept)\nassign F_Port address (N_Port_ID)
+    Switch->>NS: Register WWPN in name server
+    NS-->>Switch: Registered
+
+    Note over HBA,NS: Host discovers targets via name server
+    HBA->>NS: GID_FT (Get IDs by FC4 Type)\nquery for FCP targets
+    NS-->>HBA: List of target N_Port_IDs in zone
+
+    Note over HBA,Storage: Host logs into each target
+    HBA->>Storage: PLOGI (Port Login)\nestablish N_Port session
+    Storage-->>HBA: ACC (Accept)
+    HBA->>Storage: PRLI (Process Login)\nnegotiate FCP parameters
+    Storage-->>HBA: ACC — FCP ready
+    Note over HBA,Storage: LUN discovery and I/O can begin
+```
+
 ## SANnav Management Portal
 
 SANnav provides fabric-wide monitoring, zoning management, and firmware orchestration across all Brocade switches, replacing the older DCFM/Network Advisor tools.

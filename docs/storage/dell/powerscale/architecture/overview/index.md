@@ -74,6 +74,24 @@ isi set -R -p 2x /ifs/data/critical-metadata/
 
 ### Node Pool and Tier Architecture
 
+```mermaid
+graph TD
+    cluster["OneFS Cluster\n(single /ifs namespace)"]
+
+    cluster --> tierPerf["Tier: Performance"]
+    cluster --> tierCap["Tier: Capacity"]
+    cluster --> tierArch["Tier: Archive"]
+
+    tierPerf --> poolNVMe["Node Pool: F-series NVMe\n(6 nodes — all-flash)"]
+    tierCap --> poolSAS["Node Pool: H-series Hybrid\n(12 nodes — NVMe + SAS)"]
+    tierArch --> poolNLSAS["Node Pool: A-series NL-SAS\n(6 nodes — high-density)"]
+
+    fpPolicy["SmartPools File Policy\n(age / path / type rules)"]
+    fpPolicy -->|"hot data → Performance"| tierPerf
+    fpPolicy -->|"warm data → Capacity"| tierCap
+    fpPolicy -->|"cold data → Archive"| tierArch
+```
+
 Nodes of the same hardware generation and type form a **node pool**. Multiple node pools of different types (SSD, SAS, SATA/NL-SAS) can be grouped into **tiers**. File pool policies (SmartPools) control which tier data is placed on based on access time, file type, or custom criteria.
 
 ```
@@ -120,6 +138,24 @@ The back-end network is dedicated to inter-node communication: distributed locki
 | Gen 8 / PowerScale F600, F900, H700, H7000 | 25/100 GbE |
 
 ### SmartConnect — DNS Load Balancing
+
+```mermaid
+graph LR
+    parentDNS["Parent DNS Zone\nlon.storage.example.com"]
+    scZone["SmartConnect Zone\n(NS delegation → cluster nodes)"]
+    pool["IP Pool\n(node IPs: 10.1.1.1–10.1.1.6)"]
+    lbPolicy{{"LB Policy\nround-robin / cpu / throughput"}}
+    node1(["Node 1\n10.1.1.1"])
+    node2(["Node 2\n10.1.1.2"])
+    node3(["Node 3\n10.1.1.3"])
+
+    parentDNS -->|"NS record delegates"| scZone
+    scZone --> pool
+    pool --> lbPolicy
+    lbPolicy -->|"response"| node1
+    lbPolicy -->|"response"| node2
+    lbPolicy -->|"response"| node3
+```
 
 SmartConnect uses DNS to distribute client connection requests across the IP addresses in a pool. When a client resolves the SmartConnect zone name (e.g., `nfs.lon.storage.example.com`), the cluster's DNS service returns one of the pool IPs based on the configured load balancing policy.
 
@@ -187,6 +223,24 @@ Typical access zone design:
 ---
 
 ## Data Path
+
+```mermaid
+graph TD
+    client(["NFS / SMB Client"])
+    dns["SmartConnect DNS\n(zone name → node IP)"]
+    initNode["Initiator Node\n(receives I/O)"]
+    backEnd["Back-End Network\n(InfiniBand / 25-100 GbE)"]
+    storageNodes["Storage Nodes\n(stripe + parity blocks)"]
+    disk["[(DDFS on Disk)]"]
+
+    client -->|"1. DNS lookup"| dns
+    dns -->|"2. return node IP"| client
+    client -->|"3. write request"| initNode
+    initNode -->|"4. distribute stripes"| backEnd
+    backEnd --> storageNodes
+    storageNodes -->|"5. write confirmed"| disk
+    disk -->|"6. ACK to client"| initNode
+```
 
 When a client performs a write operation over NFS or SMB:
 

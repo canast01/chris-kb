@@ -1,5 +1,31 @@
 # Commvault — CLI Reference
 
+## Backup Job Lifecycle
+
+From schedule trigger to media write, every CommVault backup job moves through a defined sequence of states.
+
+```mermaid
+sequenceDiagram
+    participant Sched as Scheduler (CommServe)
+    participant JM as Job Manager
+    participant Client as Client Agent
+    participant MA as MediaAgent
+    participant DDB as DDB (dedup store)
+    participant Storage as Storage Library
+
+    Sched->>JM: Trigger job per schedule policy
+    JM->>Client: Initiate backup — send job token
+    Client->>Client: Quiesce filesystem / app (VSS)
+    Client->>MA: Stream data (TCP 8403)
+    MA->>DDB: Deduplicate data blocks
+    DDB-->>MA: Unique blocks only
+    MA->>Storage: Write to primary copy (disk library)
+    Storage-->>MA: Write confirmed
+    MA-->>JM: Job complete — update catalog
+    JM-->>Sched: Job status: Completed
+    note over MA,Storage: Auxiliary copy job (separate schedule)\ncopies from primary to secondary (offsite/tape/cloud)
+```
+
 CommVault provides the `qcommand` CLI toolkit installed with CommServe and MediaAgent. The `q*` commands connect to CommServe using OS credentials or an explicit login. The REST API base URL is `https://<CommServeHostname>/webconsole/api/` and requires token-based authentication via `POST /Login`.
 
 ---
@@ -68,6 +94,38 @@ qlist subclient -c <client_name>
 ---
 
 ## Restore Operations
+
+### Restore Workflow Decision Tree
+
+```mermaid
+flowchart TD
+    restoreStart(["Restore request received"])
+    restoreStart --> q1{What needs\nto be restored?}
+
+    q1 -->|"One or more files"| q2{Windows\nor Linux?}
+    q1 -->|"Entire volume\nor VM disk"| volumeRestore["Volume-level restore\nqoperation restore\n-subclient -topath"]
+    q1 -->|"Full VM"| vmRestore["Full VM restore\n(VSA subclient)\nrestore to alternate location"]
+    q1 -->|"Application data\n(SQL, Oracle, Exchange)"| appRestore["Application-aware restore\nPoint-in-time log replay\nor granular item restore"]
+
+    q2 -->|"Windows"| winFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
+    q2 -->|"Linux"| linFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
+
+    volumeRestore --> verifyDest["Verify destination\nhas sufficient space"]
+    vmRestore --> verifyDest
+    appRestore --> verifyDest
+    winFlr --> verifyDest
+    linFlr --> verifyDest
+
+    verifyDest --> execute["Execute restore\nMonitor in Job Controller"]
+    execute --> validate(["Validate restored\ndata integrity"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class volumeRestore,vmRestore,appRestore,winFlr,linFlr,verifyDest,execute action
+    class q1,q2 decision
+    class restoreStart,validate terminal
+```
 
 Always verify destination and time range before executing a restore.
 

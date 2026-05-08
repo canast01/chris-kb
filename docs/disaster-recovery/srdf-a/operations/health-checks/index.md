@@ -122,13 +122,13 @@ done
 
 ## Health Status Reference Table
 
-| Metric | Healthy | Warning | Critical |
-|---|---|---|---|
-| Cycle state | Consistent / Transmitting | Awaiting Cycle > 2x cycle time | Suspended / Inconsistent |
-| Lag | < configured cycle time | 2-5x cycle time | > 5x cycle time or SLA breach |
-| DSE utilization | 0% | > 30% | > 70% or Full |
-| RDF link | Online | Marginal (> 80% utilization) | Offline / Partitioned |
-| Cycle duration | <= configured cycle time | 1.5x cycle time | > 2x cycle time |
+| Metric | Healthy | Warning | Critical | Why it matters |
+|---|---|---|---|---|
+| Cycle state | Consistent / Transmitting | Awaiting Cycle > 2x cycle time | Suspended / Inconsistent | State directly indicates whether R2 has up-to-date data |
+| Lag | < configured cycle time | 2-5x cycle time | > 5x cycle time or SLA breach | Lag = RPO exposure at time of failure |
+| DSE utilization | 0% | > 30% | > 70% or Full | Full DSE halts replication automatically |
+| RDF link | Online | Marginal (> 80% utilization) | Offline / Partitioned | Link health determines whether cycles can complete |
+| Cycle duration | <= configured cycle time | 1.5x cycle time | > 2x cycle time | Extended cycles delay RPO recovery after a burst |
 
 ---
 
@@ -140,6 +140,47 @@ done
 - **DSE jumps from 0 to 80% overnight**: Points to a batch job or database maintenance task generating large write bursts. Work with the application team to stagger jobs across the week or adjust DSE device size.
 
 ---
+
+## Health Check Flow
+
+```mermaid
+flowchart TD
+    startCheck["Daily Health Check Start"]
+    checkPairState["Check Pair States\nsymrdf -g 20 -type A query"]
+    allConsistent{"All Pairs\nConsistent?"}
+    checkLag["Check Lag Value\nsymrdf -g 20 -type A query -detail | grep Lag"]
+    lagOk{"Lag within\nSLA threshold?"}
+    checkDSE["Check DSE Utilization\nsymstat -rdf -g 20 | grep DSE"]
+    dseOk{"DSE < 30%?"}
+    checkLink["Check RDF Link\nsymcfg list -rdfg 20 -detail"]
+    linkOnline{"Link Online\nand < 80%?"}
+    allHealthy["All Checks Passed\nDocument in log"]
+    investigatePair["Investigate Pair State\nCheck for link/network issues"]
+    investigateLag["Investigate Lag Growth\nCheck write rate and link utilization"]
+    investigateDSE["Investigate DSE\nCheck for write burst or undersized DSE device"]
+    escalate["Escalate to Storage / Network Team"]
+
+    startCheck --> checkPairState
+    checkPairState --> allConsistent
+    allConsistent -->|"Yes"| checkLag
+    allConsistent -->|"No"| investigatePair
+    investigatePair --> escalate
+    checkLag --> lagOk
+    lagOk -->|"Yes"| checkDSE
+    lagOk -->|"No"| investigateLag
+    investigateLag --> escalate
+    checkDSE --> dseOk
+    dseOk -->|"Yes"| checkLink
+    dseOk -->|"No"| investigateDSE
+    investigateDSE --> escalate
+    checkLink --> linkOnline
+    linkOnline -->|"Yes"| allHealthy
+    linkOnline -->|"No"| escalate
+
+    style allHealthy fill:#15803d,color:#fff
+    style escalate fill:#be123c,color:#fff
+    style startCheck fill:#2563eb,color:#fff
+```
 
 ## Validation
 

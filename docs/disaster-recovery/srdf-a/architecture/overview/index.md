@@ -21,6 +21,23 @@ SRDF/A (Asynchronous) replicates data from a source PowerMax to a target PowerMa
 
 Two delta sets are maintained simultaneously: one being transmitted (transmit delta set) and one accepting new writes (active delta set). A third set (overflow) is used when the transmit delta set is not clearing fast enough.
 
+```mermaid
+flowchart TD
+    hostWrite["Host Write to R1"] --> activeDeltaSet["Active Delta Set\n(accumulating writes)"]
+    activeDeltaSet -->|"cycle interval ends\n(default 30s)"| closeDeltaSet["Delta Set Closed\n& Queued"]
+    closeDeltaSet --> newActive["New Active Delta Set\nOpens for Next Cycle"]
+    closeDeltaSet --> transmit["Transmit Delta Set\n→ WAN → R2"]
+    transmit -->|"R2 confirms receipt"| rpoReset["RPO Resets\nCycle Complete"]
+    transmit -->|"link saturated / slow"| dse["DSE Overflow Device\nActivated"]
+    dse -->|"link clears"| transmit
+
+    style activeDeltaSet fill:#2563eb,color:#fff
+    style closeDeltaSet fill:#b45309,color:#fff
+    style transmit fill:#7c3aed,color:#fff
+    style dse fill:#be123c,color:#fff
+    style rpoReset fill:#15803d,color:#fff
+```
+
 ---
 
 ## SRDF Group Design
@@ -46,6 +63,36 @@ SRDF/A transmits over:
 **Bandwidth sizing:** The required bandwidth equals the average write I/O rate × average block size × replication overhead (~1.1–1.2x). For SRDF/A, bandwidth headroom above the average is also needed to handle peak delta set sizes without cycle delay.
 
 ---
+
+## Dual-Site Topology
+
+```mermaid
+graph TD
+    subgraph siteA ["Site A — Production"]
+        hosts["Production Hosts"]
+        r1["PowerMax R1\n(Source Array)"]
+        srdfDir1["SRDF Director Ports"]
+        hosts -->|"host writes"| r1
+        r1 --> srdfDir1
+    end
+
+    subgraph wan ["WAN / FCIP Link"]
+        link["FCIP / Dark Fibre\nReplication Link"]
+    end
+
+    subgraph siteB ["Site B — DR"]
+        srdfDir2["SRDF Director Ports"]
+        r2["PowerMax R2\n(Target Array)"]
+        dse["DSE Device\n(Overflow Buffer)"]
+        drHosts["DR Hosts\n(standby)"]
+        srdfDir2 --> r2
+        r2 -.->|"only at failover"| drHosts
+        r2 --- dse
+    end
+
+    srdfDir1 -->|"async delta sets\n~30s cycles"| link
+    link --> srdfDir2
+```
 
 ## Pair States
 

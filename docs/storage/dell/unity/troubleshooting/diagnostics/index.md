@@ -12,6 +12,20 @@ Follow this sequence when diagnosing a Unity issue. Start at the system level an
 6. **Networking** — are the relevant interfaces up and reachable?
 7. **Replication** — are replication sessions in a consistent state?
 
+```mermaid
+graph LR
+  SYS["1. System Health\n/env/health show"]
+  ALT["2. Alerts\n/prac/alert show"]
+  SPS["3. Storage Processors\n/env/sp show"]
+  DISK["4. Pools and Disks\n/stor/config/pool show\n/stor/config/disk show"]
+  LUN["5. LUNs / File Systems\n/stor/config/lun show\n/nas/server show"]
+  NET["6. Networking\n/net/if show\n/net/port/fc show"]
+  REP["7. Replication\n/prot/rep/session show"]
+  SYS --> ALT --> SPS --> DISK --> LUN --> NET --> REP
+  classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+  class SYS,ALT,SPS,DISK,LUN,NET,REP step
+```
+
 ## System-Level Diagnostics
 
 ```bash
@@ -309,34 +323,28 @@ Attach the resulting file to the support case along with the support bundle.
 
 ## Diagnostic Decision Tree
 
-```
-Host reports I/O errors
-        |
-        v
-Both SPs online? ─── No ──> SP failover in progress?
-        |                           |
-       Yes                     Wait 60 sec and recheck
-        |                      If SP still offline → Dell support case (P1)
-        v
-Pool and disk groups healthy? ─── No ──> Drive failure?
-        |                                    |
-       Yes                              Replace drive; monitor rebuild
-        |                               Do not change pool during rebuild
-        v
-LUN has host access? ─── No ──> Add host access (lunacl create)
-        |
-       Yes
-        |
-        v
-Network interface up? ─── No ──> Check physical port; restore interface
-        |
-       Yes
-        |
-        v
-Active alerts in last 2 hours? ─── Yes ──> Investigate alert details
-        |
-       No
-        |
-        v
-Collect support bundle + open Dell case
+```mermaid
+graph TD
+  START(["Host reports I/O errors"]) --> SP{Both SPs\nonline?}
+  SP -->|No| SPCK["SP failover in progress?\nWait 60 sec and recheck"]
+  SPCK --> SPSTILL{SP still\noffline?}
+  SPSTILL -->|Yes| P1["Open Dell P1 support case"]
+  SPSTILL -->|No| POOL
+  SP -->|Yes| POOL{Pool and disk\ngroups healthy?}
+  POOL -->|No| DRIVE["Drive failure?\nReplace drive; monitor rebuild\nNo pool changes during rebuild"]
+  POOL -->|Yes| ACL{LUN has\nhost access?}
+  ACL -->|No| ADDACL["Add host access\nuemcli /stor/config/lunacl create"]
+  ACL -->|Yes| NIC{Network\ninterface up?}
+  NIC -->|No| NICFIX["Check physical port\nRestore interface"]
+  NIC -->|Yes| ALT{Active alerts\nin last 2 hours?}
+  ALT -->|Yes| ALINV["Investigate alert details"]
+  ALT -->|No| BUNDLE["Collect support bundle\nOpen Dell case"]
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef warn fill:#b45309,stroke:#92400e,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class SP,SPSTILL,POOL,ACL,NIC,ALT decision
+  class SPCK,DRIVE,ADDACL,NICFIX,ALINV,BUNDLE action
+  class P1 warn
+  class START term
 ```

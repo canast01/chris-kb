@@ -2,6 +2,35 @@
 
 Routine checks, service validation, and status verification.
 
+## Health Check Flow
+
+```mermaid
+flowchart TD
+    start["Start Daily Check"]
+    failedSvc{"systemctl --failed\n= 0?"}
+    diskOk{"df -h\n< 80%?"}
+    memOk{"free -h\nAvailable > 20%?"}
+    loadOk{"uptime load\n< nCPU?"}
+    ntpOk{"timedatectl\nSynchronised?"}
+    selinux{"getenforce\nEnforcing?"}
+    allOk["All checks passed\nLog result"]
+    investigate["Investigate\nand resolve"]
+
+    start --> failedSvc
+    failedSvc -- Yes --> diskOk
+    failedSvc -- No --> investigate
+    diskOk -- Yes --> memOk
+    diskOk -- No --> investigate
+    memOk -- Yes --> loadOk
+    memOk -- No --> investigate
+    loadOk -- Yes --> ntpOk
+    loadOk -- No --> investigate
+    ntpOk -- Yes --> selinux
+    ntpOk -- No --> investigate
+    selinux -- Yes --> allOk
+    selinux -- No --> investigate
+```
+
 ## Daily Health Check
 
 Run these checks before business hours or after any overnight maintenance window.
@@ -192,6 +221,23 @@ visudo -c   # Syntax check, no changes
 | No interface errors | `ip -s link` | TX/RX errors = 0 |
 | No kernel errors | `dmesg --level=err` | None recent |
 | SELinux enforcing | `getenforce` | Enforcing |
+
+## Log Pipeline
+
+```mermaid
+flowchart LR
+    kernel["Kernel\ndmesg · /dev/kmsg"]
+    systemd["systemd units\nstdout/stderr"]
+    journal["journald\n/var/log/journal/"]
+    rsyslog["rsyslog\n/var/log/messages"]
+    auditd["auditd\n/var/log/audit/"]
+    siem["SIEM\nsyslog.corp.local:514"]
+
+    kernel --> journal
+    systemd --> journal
+    journal --> rsyslog --> siem
+    auditd --> siem
+```
 
 ## Log Locations
 

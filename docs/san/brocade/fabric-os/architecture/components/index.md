@@ -4,6 +4,22 @@
 
 ---
 
+## Port State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> No_Light : No SFP / no signal
+    No_Light --> In_Sync : SFP inserted + signal detected
+    No_Light --> No_Module : No SFP installed
+    In_Sync --> Online : Device FLOGI complete
+    Online --> No_Light : Cable pull / signal lost
+    Online --> Offline_Admin : portdisable command
+    Offline_Admin --> Online : portpersistentenable
+    Online --> Faulty : Hardware fault detected
+    Faulty --> Offline_Admin : portdisable for porttest
+    In_Sync --> Offline_Admin : portdisable during maintenance
+```
+
 ## Port Types
 
 | Port Type | Role |
@@ -26,6 +42,29 @@ portstatsshow <port-number>
 ```
 
 ---
+
+## Zone Membership Model
+
+```mermaid
+graph TD
+    subgraph "Active Zone Set: dc1-fabA-prod"
+        subgraph "Zone: esxi01_hba0__fa01_ct0_p0"
+            initA["esxi01_hba0\n(WWPN initiator)"]
+            tgtA1["fa01_ct0_p0\n(WWPN target)"]
+            tgtA2["fa01_ct0_p1\n(WWPN target)"]
+            initA --> tgtA1
+            initA --> tgtA2
+        end
+
+        subgraph "Zone: esxi01_hba1__fa01_ct1_p0"
+            initB["esxi01_hba1\n(WWPN initiator)"]
+            tgtB["fa01_ct1_p0\n(WWPN target)"]
+            initB --> tgtB
+        end
+    end
+
+    note["Single-initiator rule:\none host HBA per zone only"]
+```
 
 ## Zoning
 

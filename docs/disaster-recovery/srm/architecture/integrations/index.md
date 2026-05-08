@@ -2,6 +2,52 @@
 
 > Part of the [SRM](../../) reference.
 
+## Integration Points Overview
+
+SRM sits at the centre of multiple integration layers — storage, networking, monitoring, and orchestration all connect through a defined interface.
+
+```mermaid
+flowchart TD
+    srm["SRM Server\n(protected + recovery site)"]
+
+    subgraph storageAdapters [Storage Replication Adapters]
+        sraEMC["Dell SRA\n(PowerMax / SRDF)"]
+        sraPure["Pure SRA\n(ActiveCluster / async)"]
+        sraNetApp["NetApp SRA\n(SnapMirror)"]
+        vrBuiltin["vSphere Replication\n(built-in, no SRA)"]
+    end
+
+    subgraph networking [Network Layer]
+        nsx["NSX-T\nNetwork Mappings\n+ DFW tag follow"]
+        portGroups["vDS Port Groups\n(test bubble + prod)"]
+    end
+
+    subgraph monitoring [Monitoring & Orchestration]
+        aria["Aria Operations\nSRM Management Pack"]
+        runbook["Recovery Plan\nCustom Scripts\n(pre/post steps)"]
+        dns["DNS Update\n(post-failover script)"]
+    end
+
+    srm --> sraEMC
+    srm --> sraPure
+    srm --> sraNetApp
+    srm --> vrBuiltin
+    srm --> nsx
+    srm --> portGroups
+    srm --> aria
+    srm --> runbook
+    runbook --> dns
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef net fill:#0f766e,stroke:#0d5f58,color:#fff
+    classDef mon fill:#b45309,stroke:#92400e,color:#fff
+    class srm ctrl
+    class sraEMC,sraPure,sraNetApp,vrBuiltin store
+    class nsx,portGroups net
+    class aria,runbook,dns mon
+```
+
 ---
 ## Dell EMC SRA for PowerMax
 

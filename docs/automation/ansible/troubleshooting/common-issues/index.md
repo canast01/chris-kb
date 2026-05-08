@@ -4,6 +4,25 @@
 
 ---
 
+## Ansible Troubleshooting Decision Flow
+
+```mermaid
+flowchart TD
+    failure["Playbook Failure\nor Unexpected Result"]
+    failure --> checkSSH["Can you SSH manually\nto the target host?"]
+    checkSSH -->|No| fixSSH["Fix SSH: key, user,\nport, firewall"]
+    checkSSH -->|Yes| checkBecome["Does become/sudo\nwork on target?"]
+    checkBecome -->|No| fixSudo["Add NOPASSWD to sudoers\nor use --ask-become-pass"]
+    checkBecome -->|Yes| addVerbose["Re-run with -vvv\nfor connection details"]
+    addVerbose --> checkInventory["Is the host listed\nin the inventory?"]
+    checkInventory -->|No| fixInventory["Add host to inventory\nor fix dynamic source"]
+    checkInventory -->|Yes| checkVault["Are Vault secrets\ndecryptable?"]
+    checkVault -->|No| fixVault["Provide correct vault\npassword / file"]
+    checkVault -->|Yes| checkModule["Is the required\ncollection installed?"]
+    checkModule -->|No| installCol["ansible-galaxy collection install\n<namespace.collection>"]
+    checkModule -->|Yes| resolved["Examine task output\n& register debug"]
+```
+
 ## Verbose Mode and Debug
 
 Increasing verbosity is the first step when a playbook behaves unexpectedly.

@@ -51,6 +51,30 @@ Run these checks after any change to confirm the Unity is healthy and host conne
 
 LUN lifecycle management on Dell Unity — create, map, expand, and manage snapshots.
 
+```mermaid
+graph TD
+  START([Create LUN request]) --> CHK{Health check\npassed?}
+  CHK -->|No| FIX[Resolve faults\nbefore proceeding]
+  FIX --> CHK
+  CHK -->|Yes| POOL{Pool has\n≥ 20% free?}
+  POOL -->|No| EXP[Expand pool\nor free space]
+  EXP --> POOL
+  POOL -->|Yes| CREATE["uemcli /stor/config/lun create\n-name -pool -size"]
+  CREATE --> MAP["uemcli /stor/config/lunacl create\n-lun -host"]
+  MAP --> FC{Protocol?}
+  FC -->|FC| ZONE["Verify FC zone contains\nhost HBA WWN + Unity port WWN"]
+  FC -->|iSCSI| IQN["Verify host IQN registered\nin Unisphere > Hosts"]
+  ZONE & IQN --> HOST["Rescan HBAs on host\n(multipath -ll)"]
+  HOST --> SNAP["Create snapshot schedule\n(optional)"]
+  SNAP --> DONE([LUN ready for use])
+  classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef term fill:#15803d,stroke:#166534,color:#fff
+  class CHK,POOL,FC decision
+  class FIX,EXP,CREATE,MAP,ZONE,IQN,HOST,SNAP action
+  class START,DONE term
+```
+
 ### LUN Overview
 
 ```bash
@@ -174,6 +198,29 @@ NAS server lifecycle management — create, configure, and troubleshoot NAS serv
 ### Overview
 
 A NAS server on Dell Unity is a logical entity that owns file interfaces (network ports), AD/LDAP authentication configuration, and NFS/SMB protocol settings. Each NAS server runs on one storage processor and can fail over to the peer SP.
+
+```mermaid
+graph LR
+  subgraph "Unity SP"
+    NAS["NAS Server\n(logical entity)"]
+    IF["File Interface\n(IP address on SP port)"]
+    NAS --> IF
+  end
+  subgraph "Identity"
+    AD["Active Directory\n(machine account + Kerberos)"]
+    LDAP["LDAP\n(UID/GID mapping for NFS)"]
+    NAS --> AD
+    NAS --> LDAP
+  end
+  subgraph "Shares"
+    FS["File System\n(pool-backed)"]
+    NFS["NFS Export"]
+    SMB["SMB Share"]
+    FS --> NFS & SMB
+    NAS --> FS
+  end
+  IF --> CL(["NFS / SMB Clients"])
+```
 
 ### List and Inspect
 

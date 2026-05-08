@@ -52,6 +52,27 @@ ONTAP HA pairs are active-active: both nodes serve I/O simultaneously and each h
 
 For larger clusters, multiple HA pairs share the same cluster network and management infrastructure but own separate aggregates. A 4-node cluster has two HA pairs; aggregates are not shared across pairs unless SyncMirror is used.
 
+### HA Takeover / Giveback Sequence
+
+```mermaid
+sequenceDiagram
+    participant Node1 as Node 1 (failed)
+    participant Node2 as Node 2 (surviving)
+    participant Clients
+
+    Note over Node1,Node2: Node 1 panic / power loss
+    Node1--xNode2: HA heartbeat lost (~45 s)
+    Node2->>Node2: Detect partner failure
+    Node2->>Node2: Take ownership of Node 1 aggregates
+    Node2-->>Clients: Serve I/O for all LIFs (both nodes)
+    Note over Node2,Clients: Node 1 recovering...
+    Node1->>Node1: Boot and rejoin cluster
+    Node2->>Node1: storage failover giveback
+    Node1->>Node1: Reclaim own aggregates
+    Node1-->>Clients: Resume serving own LIFs
+    Note over Node1,Node2: Both nodes: Connected, Not in takeover
+```
+
 ### Takeover and Giveback
 
 During an HA takeover, the surviving node takes ownership of the failed node's aggregates and continues serving I/O to all clients on both nodes' LIFs. The takeover node temporarily owns both sets of aggregates.
@@ -82,6 +103,36 @@ Takeover modes:
 ---
 
 ## Cluster Networking
+
+```mermaid
+graph LR
+    subgraph "Cluster Network"
+        clNet["100GbE / IB\nNVRAM sync · HA heartbeat\nvolume moves"]
+    end
+
+    subgraph "Data Network"
+        dataN["10/25GbE\nNFS · SMB · iSCSI\nNVMe/TCP LIFs"]
+    end
+
+    subgraph "FC Fabric"
+        fcN["16G / 32G FC\nFC / FCoE SAN\nWWPN-based LIFs"]
+    end
+
+    subgraph "Management Network"
+        mgmtN["1GbE\nCLI · API · System Manager\nnode-mgmt + cluster-mgmt LIF"]
+    end
+
+    subgraph "Intercluster Network"
+        icN["10/25GbE\nSnapMirror · cluster peering\ndedicated IC LIFs"]
+    end
+
+    Node1["Node 1"] <-->|"HA IC"| Node2["Node 2"]
+    Node1 & Node2 --- clNet
+    Node1 & Node2 --- dataN
+    Node1 & Node2 --- fcN
+    Node1 & Node2 --- mgmtN
+    Node1 & Node2 --- icN
+```
 
 ONTAP uses separate physical or logical network paths for different traffic types:
 
@@ -133,6 +184,27 @@ Cluster
                     ├── LUNs           ← block devices for iSCSI/FC (inside a volume)
                     ├── Qtrees/Shares  ← NFS exports and SMB shares
                     └── Files          ← NAS files served via NFS or SMB
+```
+
+### WAFL Write Path
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant SVM as SVM / LIF
+    participant WAFL
+    participant NVRAM
+    participant NVRAMpartner as NVRAM Mirror (HA Partner)
+    participant Disk as Disk Shelves
+
+    Client->>SVM: Write I/O (NFS / iSCSI / FC)
+    SVM->>WAFL: Pass write to WAFL engine
+    WAFL->>NVRAM: Buffer write in NVRAM
+    WAFL-->>NVRAMpartner: Mirror NVRAM to HA partner
+    WAFL-->>Client: Acknowledge write (after NVRAM commit)
+    Note over WAFL,NVRAM: Consistency Point every 10s or 80% NVRAM
+    WAFL->>Disk: Flush CP to disk (copy-on-write)
+    Note over Disk: Old blocks become snapshot data\nNew writes always go to free blocks
 ```
 
 ### WAFL — Write Anywhere File Layout
@@ -231,6 +303,38 @@ ONTAP integrates data protection at every level of the hierarchy:
 ---
 
 ## Protocol Stack
+
+```mermaid
+graph TD
+    subgraph "SVM (Storage Virtual Machine)"
+        lifs["Data LIFs\n(IP address or WWPN)"]
+
+        subgraph "NAS Protocols"
+            nfs3["NFSv3\nUDP/TCP 2049"]
+            nfs41["NFSv4.1 / pNFS\nTCP 2049"]
+            smb["SMB 2.1 / 3.x\nTCP 445"]
+        end
+
+        subgraph "SAN Protocols"
+            iscsi["iSCSI\nTCP 3260"]
+            fc["FC / FCoE\n16G / 32G"]
+            nvmefc["NVMe/FC\nFC fabric"]
+            nvmetcp["NVMe/TCP\nTCP 4420"]
+        end
+
+        subgraph "Object"
+            s3["S3\nTCP 80 / 443"]
+        end
+    end
+
+    lifs --> nfs3 & nfs41 & smb
+    lifs --> iscsi & fc & nvmefc & nvmetcp
+    lifs --> s3
+
+    nfs3 & nfs41 & smb --> nasClients["NAS Clients\nLinux · Windows · VMware"]
+    iscsi & fc & nvmefc & nvmetcp --> sanHosts["SAN Hosts\niSCSI / FC / NVMe initiators"]
+    s3 --> objClients["Object Clients\nS3-compatible apps"]
+```
 
 ONTAP serves data over six protocol families simultaneously from a single cluster:
 

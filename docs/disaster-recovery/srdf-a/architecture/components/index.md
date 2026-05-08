@@ -23,6 +23,39 @@ SRDF/A (asynchronous) replication uses a **delta-set / cycle** model instead of 
 
 The **cycle state** describes what the array is currently doing with the delta sets. Monitoring cycle state is the primary way to assess SRDF/A health.
 
+### Delta-Set State Machine
+
+```mermaid
+flowchart TD
+    awaitingCycle["Awaiting Cycle\n(accumulating writes)"]
+    transmitting["Transmitting\n(delta set in flight)"]
+    consistent["Consistent\n(last cycle applied at R2)"]
+    dseActive["DSE Active\n(overflow to DSE device)"]
+    suspended["Suspended\n(replication paused)"]
+    inconsistent["Inconsistent\n(R2 cannot be made consistent)"]
+    failedOver["Failed Over\n(R2 is writable)"]
+
+    awaitingCycle -->|"cycle timer fires"| transmitting
+    transmitting -->|"R2 confirms receipt"| consistent
+    consistent -->|"new writes arrive"| awaitingCycle
+    awaitingCycle -->|"write rate exceeds memory"| dseActive
+    dseActive -->|"link clears / rate drops"| transmitting
+    transmitting -->|"manual suspend"| suspended
+    awaitingCycle -->|"manual suspend"| suspended
+    suspended -->|"resume"| awaitingCycle
+    transmitting -->|"link failure / data issue"| inconsistent
+    inconsistent -->|"re-establish"| awaitingCycle
+    consistent -->|"failover"| failedOver
+
+    style consistent fill:#15803d,color:#fff
+    style transmitting fill:#2563eb,color:#fff
+    style awaitingCycle fill:#2563eb,color:#fff
+    style dseActive fill:#b45309,color:#fff
+    style suspended fill:#6b7280,color:#fff
+    style inconsistent fill:#be123c,color:#fff
+    style failedOver fill:#be123c,color:#fff
+```
+
 ### Cycle State Definitions
 
 | Cycle State | Description | Impact |
@@ -132,10 +165,47 @@ echo "Current lag: ${LAG} seconds"
 
 ### Lag Reference
 
-| Lag Range | Assessment |
-|---|---|
-| <= configured cycle time | Healthy |
-| 2–5x cycle time | Warning — investigate link or write rate |
-| > 5x cycle time or SLA breach | Critical — engage network and storage teams |
+| Lag Range | Assessment | Why it matters | Action |
+|---|---|---|---|
+| <= configured cycle time | Healthy | R2 is within one cycle of R1; RPO is met | None — monitor |
+| 2–5x cycle time | Warning — investigate link or write rate | RPO exposure growing; SLA may breach soon | Check link utilization and write rate; engage network team |
+| > 5x cycle time or SLA breach | Critical — engage network and storage teams | RPO SLA is breached; DR readiness compromised | Immediate escalation; consider suspending non-critical CGs to relieve link pressure |
 
 Sustained lag growth without recovery indicates under-provisioned WAN bandwidth for the current write workload. Coordinate with the network team and review `symstat -rdf` output before adjusting cycle time settings.
+
+```mermaid
+flowchart TD
+    lagAlert["RPO / Lag Alert Fires"]
+    checkDSE["Check DSE Utilization\nsymrdf -g 20 -type A query -detail"]
+    dseHigh{"DSE > 70%?"}
+    checkLink["Check SRDF Link\nsymcfg list -rdfg 20 -detail"]
+    linkDown{"Link Down or\nSaturated?"}
+    checkR2["Check R2 State\nsymrdf -g 20 query"]
+    r2Inconsistent{"R2 Inconsistent\nor Suspended?"}
+    throttleIO["Throttle R1 Write I/O\nor Increase WAN Bandwidth"]
+    escalateNetwork["Escalate to Network Team\nCheck FCIP tunnel"]
+    reestablish["Re-establish Replication\nsymrdf -g 20 -type A establish"]
+    monitor["Monitor Lag Trend\nevery 5 minutes"]
+    resolved["Lag Recovering\nClose Alert"]
+
+    lagAlert --> checkDSE
+    checkDSE --> dseHigh
+    dseHigh -->|"Yes"| throttleIO
+    dseHigh -->|"No"| checkLink
+    throttleIO --> monitor
+    checkLink --> linkDown
+    linkDown -->|"Yes"| escalateNetwork
+    linkDown -->|"No"| checkR2
+    escalateNetwork --> monitor
+    checkR2 --> r2Inconsistent
+    r2Inconsistent -->|"Yes"| reestablish
+    r2Inconsistent -->|"No"| monitor
+    reestablish --> monitor
+    monitor -->|"Lag declining"| resolved
+
+    style lagAlert fill:#be123c,color:#fff
+    style resolved fill:#15803d,color:#fff
+    style throttleIO fill:#b45309,color:#fff
+    style escalateNetwork fill:#b45309,color:#fff
+    style reestablish fill:#7c3aed,color:#fff
+```

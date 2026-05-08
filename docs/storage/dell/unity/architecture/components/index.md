@@ -12,6 +12,37 @@
 | Unisphere for Unity | Web-based management GUI served from each SP; accessible via `https://<sp-mgmt-ip>` |
 | REST API | Unisphere REST API at `https://<sp-ip>/api/types/` for programmatic management |
 
+## Component Relationships
+
+```mermaid
+graph TD
+  subgraph "Management Plane"
+    UNI["Unisphere GUI\n(HTTPS)"]
+    CLI["uemcli / REST API"]
+    UNI & CLI --> OE["Unity OE\n(Storage OS)"]
+  end
+  subgraph "Controller Layer"
+    OE --> SPA["SP A"]
+    OE --> SPB["SP B"]
+    SPA <-->|"write cache mirror"| SPB
+  end
+  subgraph "Storage Layer"
+    SPA & SPB --> POOL[("Storage Pool\ndisk groups")]
+    SPA & SPB --> FC["FAST Cache\n(SAS Flash)"]
+  end
+  subgraph "Host Access"
+    SPA --> BLOCK["Block\niSCSI · FC"]
+    SPA --> FILE["File\nNFS · SMB"]
+    SPB --> BLOCK & FILE
+  end
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef mgmt fill:#15803d,stroke:#166534,color:#fff
+  class SPA,SPB ctrl
+  class POOL,FC store
+  class UNI,CLI mgmt
+```
+
 ## Connectivity
 
 | Protocol | Interface | Use Case |
@@ -136,6 +167,20 @@ uemcli -d <ip> -u admin /storage/fastp/session show
 ## Replication
 
 Replication session management, monitoring, and failover on Dell Unity.
+
+### Replication Flow
+
+```mermaid
+sequenceDiagram
+  participant SRC as "Source Unity"
+  participant REP as "Replication Session"
+  participant DST as "Destination Unity"
+  SRC->>REP: changed blocks journaled
+  REP->>DST: transfer (async / sync)
+  DST-->>REP: acknowledge receipt
+  REP-->>SRC: update last sync time
+  note over SRC,DST: Async: source ACKs write immediately<br/>Sync: source waits for DST ACK
+```
 
 ### Replication Sessions Overview
 

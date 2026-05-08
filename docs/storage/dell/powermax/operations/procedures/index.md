@@ -51,6 +51,45 @@ Run these checks after any change to the PowerMax to confirm the array is health
 
 A Masking View on PowerMax connects three components — a Storage Group (volumes), a Port Group (FA ports), and an Initiator Group (host HBAs) — to grant a host access to storage. All three must exist before the Masking View can be created.
 
+```mermaid
+flowchart LR
+    subgraph "Host Side"
+        HBA_A["HBA Port A\n(WWN)"]
+        HBA_B["HBA Port B\n(WWN)"]
+    end
+    subgraph "Array: Masking View"
+        IG["Initiator Group\nhostname_IG\n{WWN_A, WWN_B}"]
+        MV["Masking View\nhostname_MV"]
+        PG["Port Group\nfabric_PG\n{01E:4, 02E:4}"]
+        SG["Storage Group\nhostname_SG\n{DEV001…DEV005}"]
+    end
+    subgraph "Array: Storage"
+        TDEV["TDEV Volumes\n100 GB each\nSLO: Diamond"]
+        SRP["SRP_1\n(Storage Resource Pool)"]
+        TDEV --> SRP
+    end
+    subgraph "Array: Front-End"
+        FA_A["FA Dir 01E Port 4\n(Fabric A)"]
+        FA_B["FA Dir 02E Port 4\n(Fabric B)"]
+    end
+
+    HBA_A & HBA_B --> IG
+    IG --> MV
+    PG --> MV
+    SG --> MV
+    SG --> TDEV
+    PG --> FA_A & FA_B
+
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    classDef mv fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef store fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef port fill:#0f766e,stroke:#0d9488,color:#fff
+    class HBA_A,HBA_B host
+    class IG,MV,PG,SG mv
+    class TDEV,SRP store
+    class FA_A,FA_B port
+```
+
 ### List and Inspect
 
 ```bash
@@ -149,6 +188,37 @@ symdev show <devname> -sid <sid> | grep -A 5 "Host"
 ## Provisioning
 
 End-to-end workflow for provisioning storage on Dell PowerMax: create volumes, add to a storage group, and create (or update) a masking view so the host can see the storage.
+
+```mermaid
+flowchart TD
+    START([Start: New Host Needs Storage]) --> PREREQ{Prerequisites Met?}
+    PREREQ -->|"No: zoning missing\nor HBA not logged in"| FIX_PRE["Fix Fabric Zoning\n+ confirm HBA logins"]
+    FIX_PRE --> PREREQ
+    PREREQ -->|"Yes"| CHK_SG{"SG already\nexists for host?"}
+    CHK_SG -->|"Yes"| USE_SG["Use existing SG"]
+    CHK_SG -->|"No"| CREATE_SG["Step 1 — Create SG\nsymsg create hostname_SG\n-srp SRP_1 -slo Diamond"]
+    CREATE_SG & USE_SG --> CREATE_DEV["Step 2 — Create TDEVs\nsymconfigure: create dev\ncount=N size=XGB sg=hostname_SG"]
+    CREATE_DEV --> VERIFY_DEV["Verify: symsg show hostname_SG"]
+    VERIFY_DEV --> CREATE_IG["Step 3 — Create Initiator Group\nsymaccess create hostname_IG\nAdd host HBA WWNs"]
+    CREATE_IG --> CHK_PG{"Port Group\nexists for fabric?"}
+    CHK_PG -->|"No"| CREATE_PG["Step 4 — Create Port Group\nsymaccess create fabric_PG\nAdd FA dir:port pairs"]
+    CHK_PG -->|"Yes"| USE_PG["Use existing PG"]
+    CREATE_PG & USE_PG --> CREATE_MV["Step 5 — Create Masking View\nsymaccess create view hostname_MV\n-sg hostname_SG -ig hostname_IG -pg fabric_PG"]
+    CREATE_MV --> HOST_SCAN["Step 6 — Host Rescan\nrescan-scsi-bus / multipath -ll"]
+    HOST_SCAN --> VERIFY{Host sees\nall LUNs?}
+    VERIFY -->|"No"| TSHOOT["Troubleshoot:\nsymaccess show view\ncheck zone, WWN, port state"]
+    TSHOOT --> VERIFY
+    VERIFY -->|"Yes"| DONE([Done — Storage Provisioned])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef decision fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    classDef fix fill:#b45309,stroke:#92400e,color:#fff
+    class CREATE_SG,CREATE_DEV,CREATE_IG,CREATE_PG,CREATE_MV,HOST_SCAN,VERIFY_DEV action
+    class PREREQ,CHK_SG,CHK_PG,VERIFY decision
+    class START,DONE terminal
+    class FIX_PRE,TSHOOT fix
+```
 
 ### Prerequisites
 

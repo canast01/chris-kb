@@ -19,6 +19,21 @@ Eyeglass DR configuration groups mirror SyncIQ policy naming — consistent name
 
 Before declaring DR-ready, ALL of the following must be met:
 
+```mermaid
+flowchart TD
+    primaryPS["Production PowerScale\nSMB shares / NFS exports / Quotas"]
+    eyeglass["Eyeglass DR Assistant\nConfiguration Replication Engine"]
+    drPS["DR PowerScale\nReplicated config (shares / exports / quotas)"]
+    adMapping["Active Directory\nGroup-based ACLs"]
+    dnsZone["DNS Server\nSmartConnect zone delegation"]
+
+    primaryPS -->|"OneFS API\ndiscovers config"| eyeglass
+    eyeglass -->|"replicates SMB shares\nNFS exports\nquotas"| drPS
+    adMapping -->|"AD group ACLs\nmapped to DR shares"| drPS
+    eyeglass -->|"pre-stages DNS\nzone delegation"| dnsZone
+    dnsZone -->|"DNS cutover\non failover"| drPS
+```
+
 | Check | Standard |
 |---|---|
 | SMB share mapping | Every primary share must have a corresponding DR share defined in Eyeglass |
@@ -38,6 +53,21 @@ Define RPO thresholds per SyncIQ policy in Eyeglass:
 | Tier 1 (critical file services) | Continuous | < 15 minutes | Alert at > 10 minutes lag |
 | Tier 2 (departmental shares) | Every 4 hours | < 4 hours | Alert at > 3.5 hours lag |
 | Tier 3 (archival) | Daily | < 24 hours | Alert at > 20 hours lag |
+
+```mermaid
+flowchart LR
+    t1["Tier 1\nCritical file services\nContinuous SyncIQ\nRPO < 15 min"]
+    t2["Tier 2\nDepartmental shares\nEvery 4 hours\nRPO < 4 hours"]
+    t3["Tier 3\nArchival data\nDaily SyncIQ\nRPO < 24 hours"]
+
+    egMonitor["Eyeglass\nRPO Monitor"]
+    snmpAlert["SNMP / Email\nAlert"]
+
+    t1 -->|"lag threshold\n10 min"| egMonitor
+    t2 -->|"lag threshold\n3.5 hours"| egMonitor
+    t3 -->|"lag threshold\n20 hours"| egMonitor
+    egMonitor -->|"breach detected"| snmpAlert
+```
 
 ## DR Readiness Score
 
@@ -78,6 +108,25 @@ An Eyeglass DR policy defines the mapping between a production PowerScale cluste
 | SyncIQ policy mapping | Which SyncIQ policies provide the replication |
 | DNS zones | SmartConnect zones managed as part of failover |
 | RPO target | Maximum acceptable replication lag |
+
+```mermaid
+flowchart TD
+    policy["Eyeglass DR Policy\nPOL-NAS-PROD"]
+    srcCluster["Source Cluster\nProduction PowerScale"]
+    tgtCluster["Target Cluster\nDR PowerScale"]
+    accessZones["Access Zones\nzone-finance / zone-home"]
+    synciqPolicies["SyncIQ Policies\npscale-dc1-pscale-dc2-finance\npscale-dc1-pscale-dc2-home"]
+    dnsZones["DNS Zones\nSmartConnect cutover zones"]
+    rpoTarget["RPO Target\n< 15 min (Tier 1)"]
+
+    policy --> srcCluster
+    policy --> tgtCluster
+    policy --> accessZones
+    policy --> synciqPolicies
+    policy --> dnsZones
+    policy --> rpoTarget
+    synciqPolicies -->|"replicates data\nto target"| tgtCluster
+```
 
 ### Viewing Policies
 

@@ -2,6 +2,22 @@
 
 ## Daily Health Check
 
+```mermaid
+flowchart TD
+    A([Daily Health Check]) --> B["powermt display dev=all\nScan for dead paths"]
+    B --> C{"Any dead paths?"}
+    C -->|No| D["Verify policy = CLAROpt\npowermt display options"]
+    C -->|Yes| E["powermt restore\nForce path retry"]
+    E --> F{"Paths recovered?"}
+    F -->|Yes| G["powermt save\nPersist state"]
+    F -->|No| H{"HBA port\ndead?"}
+    H -->|Yes| I["Check SAN switch port\nCheck cable/SFP"]
+    H -->|No| J["Check array FA port\nVerify LUN masking"]
+    I & J --> K(["Escalate to SAN/Storage team"])
+    D --> G
+    G --> Z([Check complete])
+```
+
 | Check | Command | Notes |
 |---|---|---|
 | [ ] Run `powermt display dev=all` on each managed host and scan for dead paths | `powermt display dev=all` | A dead path requires investigation before the next maintenance window |

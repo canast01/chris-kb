@@ -12,6 +12,26 @@ Key considerations for Windows:
 
 ## Linux DM-Multipath Comparison
 
+```mermaid
+graph TD
+    scsiDevs["Raw SCSI Devices\n/dev/sdX"]
+
+    subgraph "PowerPath path (recommended for Dell/EMC)"
+        ppKernel["PowerPath Kernel Module\n(emcp)"]
+        ppPseudo["Pseudo Device\n/dev/emcpowerX"]
+        ppKernel --> ppPseudo
+    end
+
+    subgraph "DM-Multipath path (conflict — must blacklist)"
+        dmKernel["DM-Multipath\n(multipathd)"]
+        dmDevice["DM Device\n/dev/mapper/WWID"]
+        dmKernel --> dmDevice
+    end
+
+    scsiDevs --> ppKernel
+    scsiDevs -.->|"CONFLICT — blacklist\nDell/EMC WWIDs\nin multipath.conf"| dmKernel
+```
+
 PowerPath and DM-Multipath (`multipathd`) both manage multipath devices on Linux but must not manage the same device simultaneously.
 
 | Feature | PowerPath | DM-Multipath |

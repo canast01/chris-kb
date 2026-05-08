@@ -52,6 +52,26 @@
 
 ## Zoning
 
+### Zone Provisioning Workflow
+
+```mermaid
+flowchart TD
+  A["New host or storage port\nneeds fabric access"] --> B["Get pWWN from host HBA\nor storage port"]
+  B --> C["Create Device Alias\n(device-alias database)"]
+  C --> D["device-alias commit"]
+  D --> E["Create Zone\n(single-initiator / single-target)"]
+  E --> F["Add Zone to Zone Set\n(zoneset name ... member ...)"]
+  F --> G["Activate Zone Set\n(zoneset activate name ... vsan N)"]
+  G --> H["Commit to fabric\n(zone commit vsan N)"]
+  H --> I["Save config\n(copy running-config startup-config)"]
+  I --> J["Verify: show zoneset active vsan N\nshow flogi database vsan N"]
+
+  classDef step fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef verify fill:#15803d,stroke:#166534,color:#fff
+  class A,B,C,D,E,F,G,H,I step
+  class J verify
+```
+
 ### VSAN and Zone Model
 
 ```

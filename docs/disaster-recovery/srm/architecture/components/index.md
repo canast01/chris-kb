@@ -34,6 +34,28 @@ SRAs must be installed on both sites and must match the same major version.
 
 ## Recovery Plans
 
+### Recovery Plan Boot Sequence
+
+A Recovery Plan defines what happens when failover is triggered (test or actual). The power-on sequence is mandatory — infrastructure must be online before application tiers.
+
+```mermaid
+flowchart TD
+    trigger(["Failover triggered\n(test or real)"])
+    trigger --> s1["Storage presentation\nSRA or vSphere Replication\nexposes replica datastores"]
+    s1 --> s2["VM re-registration\nSRM registers VMs from\nreplica datastores in recovery vCenter"]
+    s2 --> s3["Power on — Infra tier\nDomain Controllers, DNS"]
+    s3 --> s4["Power on — DB tier\nDatabase servers"]
+    s4 --> s5["Power on — APP tier\nApplication servers"]
+    s5 --> s6["Power on — WEB tier\nLoad balancers, web front-ends"]
+    s6 --> s7["IP customisation\n+ custom script steps"]
+    s7 --> done(["Recovery plan\ncomplete"])
+
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+    class s1,s2,s3,s4,s5,s6,s7 action
+    class trigger,done terminal
+```
+
 A Recovery Plan defines what happens when failover is triggered (test or actual):
 
 1. **Storage presentation** — SRA or vSphere Replication exposes the replica datastores to the recovery site hosts

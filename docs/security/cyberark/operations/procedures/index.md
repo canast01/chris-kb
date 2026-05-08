@@ -2,6 +2,23 @@
 
 Operational procedures for account management, password rotation, session management, and audit tasks.
 
+## Password Rotation Workflow
+
+```mermaid
+flowchart TD
+    trigger["Rotation trigger\n(scheduled / on-demand / post-checkout)"]
+    trigger --> cpmRetrieve["CPM retrieves current credential\nfrom Vault"]
+    cpmRetrieve --> connectTarget["CPM connects to target system\nusing current credential"]
+    connectTarget --> generatePwd["Generate new password\n(platform plugin policy)"]
+    generatePwd --> setPwd["Set new password on target\n(RDP / SSH / API)"]
+    setPwd --> verify["Verify new password works\n(CPM test logon)"]
+    verify -->|"Success"| storeVault["Store new credential in Vault"]
+    verify -->|"Failure"| rollback["Log failure + alert\nRetry on next cycle"]
+    storeVault --> auditLog["Write audit event to SIEM"]
+```
+
+---
+
 ## Account Management
 
 Use this section for practical account management procedures, checks, and field references.

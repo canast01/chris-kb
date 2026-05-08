@@ -1,5 +1,40 @@
 # SRM Operations — CLI Reference
 
+## SRM Object Hierarchy
+
+Protection Groups, Recovery Plans, and the steps that execute during failover form a strict containment hierarchy.
+
+```mermaid
+flowchart TD
+    srmServer["SRM Server\n(site pair)"]
+    srmServer --> pg1["Protection Group\nPG-DB-DC1DC2"]
+    srmServer --> pg2["Protection Group\nPG-APP-DC1DC2"]
+
+    pg1 --> vm1(["VM: db-01"])
+    pg1 --> vm2(["VM: db-02"])
+    pg2 --> vm3(["VM: app-01"])
+    pg2 --> vm4(["VM: app-02"])
+
+    pg1 --> rp["Recovery Plan\nRP-P1-DB-DC1DC2"]
+    pg2 --> rp
+
+    rp --> step1["Step 1: Storage presentation\n(SRA / vSphere Rep)"]
+    step1 --> step2["Step 2: VM re-registration"]
+    step2 --> step3["Step 3: Power on — Infra tier"]
+    step3 --> step4["Step 4: Power on — DB tier"]
+    step4 --> step5["Step 5: Power on — APP tier"]
+    step5 --> step6["Step 6: IP customisation\n+ custom scripts"]
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef pg fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef vm fill:#15803d,stroke:#166534,color:#fff
+    classDef step fill:#b45309,stroke:#92400e,color:#fff
+    class srmServer ctrl
+    class pg1,pg2,rp pg
+    class vm1,vm2,vm3,vm4 vm
+    class step1,step2,step3,step4,step5,step6 step
+```
+
 SRM management is primarily performed via the `VMware.VimAutomation.Srm` PowerCLI module. Connect to the SRM server with `Connect-SrmServer` before running any cmdlets. The SRM REST API (available from SRM 8.3+) provides equivalent functionality for automation pipelines.
 
 ---

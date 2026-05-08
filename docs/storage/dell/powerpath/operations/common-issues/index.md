@@ -2,6 +2,23 @@
 
 ## Incident Triage
 
+```mermaid
+flowchart TD
+    A([Host I/O error or path loss]) --> B["powermt display dev=all\nIdentify dead paths"]
+    B --> C{"Policy = CLAROpt?"}
+    C -->|No| D["powermt set policy=CLAROpt class=all\npowermt save"]
+    C -->|Yes| E["powermt restore\nRetry dead paths"]
+    D --> E
+    E --> F{"Dead paths\nrecovered?"}
+    F -->|Yes| G(["Monitor — issue resolved"])
+    F -->|No| H{"HBA port\nin dead state?"}
+    H -->|Yes| I["Check fabric switch port\nCheck cable / SFP"]
+    H -->|No| J{"paths unlic?"}
+    J -->|Yes| K["powermt check_registration\nRe-apply license key"]
+    J -->|No| L["Verify array LUN masking\nCheck fabric zoning"]
+    I & K & L --> M(["Escalate to SAN/Storage/Dell support"])
+```
+
 When a host reports I/O errors, elevated latency, or a block device is inaccessible, work through this sequence first.
 
 - [ ] Run `powermt display dev=all` on the affected host immediately — identify which pseudo devices have dead paths and how many paths remain alive for each

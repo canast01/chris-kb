@@ -39,6 +39,24 @@ On path failure, PowerPath automatically marks the path `dead` and re-routes I/O
 
 ## High Availability Design
 
+```mermaid
+flowchart TD
+    io(["Application I/O"]) --> ppDriver["PowerPath\nMPIO Driver"]
+
+    ppDriver --> pathCheck{{"Path health\ncheck"}}
+    pathCheck -->|"alive paths exist"| lbPolicy{{"CLAROpt LB Policy\n(ALUA-aware)"}}
+    pathCheck -->|"all paths dead"| ioErr(["I/O Error\n(alert ops team)"])
+
+    lbPolicy -->|"optimised path"| hba0Fab1["HBA0 → Fabric A → SP-A\n(Active-Optimised)"]
+    lbPolicy -->|"failover path"| hba1Fab2["HBA1 → Fabric B → SP-B\n(Active-Non-Optimised)"]
+
+    hba0Fab1 --> array["Storage Array\n(PowerMax / Unity)"]
+    hba1Fab2 --> array
+
+    pathFail(["Path Failure"]) -->|"dead path detected"| ppDriver
+    ppDriver -->|"powermt restore\n(auto + manual)"| hba0Fab1
+```
+
 PowerPath provides host-side HA through multipath redundancy. Key design principles:
 
 - Minimum 2 paths per LUN (one per fabric/HBA) for basic redundancy

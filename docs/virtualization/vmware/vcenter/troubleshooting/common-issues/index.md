@@ -1,5 +1,44 @@
 # vCenter Troubleshooting — Common Issues
 
+## Triage Decision Flow
+
+```mermaid
+graph TD
+    start(["vCenter issue reported"])
+    checkUI{"vSphere Client\nloading?"}
+    checkSSO{"SSO login\nworking?"}
+    checkSvc{"vpxd service\nrunning?"}
+    checkDB{"vpostgres\nrunning?"}
+    checkDisk{"Disk space\nOK?"}
+    fixDisk["Free /storage/log\nor /storage/db"]
+    startDB["Start vmware-vpostgres\nthen vpxd"]
+    restartSvc["Restart vpxd\ncheck vpxd.log"]
+    fixSSO["Restart vmware-stsd\ncheck identity source"]
+    escalate["Escalate to VMware\nSupport — DB corrupt\nor services unrecoverable"]
+    resolved(["Issue resolved"])
+
+    start --> checkUI
+    checkUI -->|"Yes"| checkSSO
+    checkUI -->|"No"| checkSvc
+    checkSSO -->|"No"| fixSSO --> resolved
+    checkSSO -->|"Yes"| resolved
+    checkSvc -->|"Running"| restartSvc --> resolved
+    checkSvc -->|"Stopped"| checkDB
+    checkDB -->|"Stopped"| checkDisk
+    checkDB -->|"Running"| restartSvc
+    checkDisk -->|"Full"| fixDisk --> startDB --> resolved
+    checkDisk -->|"OK"| startDB
+    startDB -->|"Still failing"| escalate
+
+    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+
+    class checkUI,checkSSO,checkSvc,checkDB,checkDisk decision
+    class fixDisk,startDB,restartSvc,fixSSO action
+    class start,resolved,escalate terminal
+```
+
 ## Issue Summary
 
 | Symptom | Likely Cause | First Action |

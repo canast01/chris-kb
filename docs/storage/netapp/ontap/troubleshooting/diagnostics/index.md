@@ -2,6 +2,24 @@
 
 Systematic diagnostic procedures for ONTAP. Start with cluster-level health, then narrow to the affected subsystem. Always collect an AutoSupport bundle before calling NetApp support.
 
+## Diagnostic Scope: Broad to Narrow
+
+```mermaid
+flowchart TD
+    first["First Response\ncluster show\nsystem health status show\nstorage failover show"] --> scope{"Symptom scope?"}
+    scope -->|"Cluster / Node"| clusterDiag["Cluster & Node\ncluster ring show\nsystem node run sysconfig\nstorage failover interconnect show"]
+    scope -->|"Storage / Disk"| storDiag["Storage\nstorage aggregate show-status\nstorage disk show -broken\nStorage disk show -raid-state reconstructing"]
+    scope -->|"Volume / Space"| volDiag["Volume\nvolume show -state !online\nvolume show percent-used\nvolume efficiency show"]
+    scope -->|"Network / LIF"| netDiag["Network\nnetwork interface show -is-home false\nnetwork port show\ncluster ping-cluster"]
+    scope -->|"Protocol"| protoDiag{"Which protocol?"}
+    protoDiag -->|NFS| nfsDiag["nfs connected-client show\nstatistics start -object nfsv3\nvserver export-policy check-access"]
+    protoDiag -->|SMB| smbDiag["vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2"]
+    protoDiag -->|iSCSI| iscsiDiag["iscsi session show\nlun mapping show\niscsi tpgroup show"]
+    protoDiag -->|FC| fcDiag["fcp adapter show\nfcp initiator show\nfcp topology show"]
+    scope -->|"SnapMirror"| smDiag["snapmirror show -health false\nsnapmirror history show\nnetwork interface show -role intercluster"]
+    scope -->|"Performance"| perfDiag["statistics start -object volume\nqos statistics performance show\nsystem node run sysstat"]
+```
+
 ## First Response — Always Run These First
 
 ```bash

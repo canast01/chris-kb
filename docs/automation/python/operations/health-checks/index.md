@@ -1,5 +1,22 @@
 # Python Automation — Health Checks
 
+## Python Automation Health Check Flow
+
+```mermaid
+flowchart TD
+    start["Start Health Check"] --> checkPython["python3 --version\nExpected version?"]
+    checkPython -->|OK| checkVenv["venv intact?\npip check passes?"]
+    checkPython -->|Fail| alertPython["Alert: Python version\nmismatch or missing"]
+    checkVenv -->|OK| checkImports["Critical packages\nimportable?"]
+    checkVenv -->|Fail| alertVenv["Alert: Recreate venv\npip install -r requirements.txt"]
+    checkImports -->|OK| checkAPI["Target APIs\nreachable?"]
+    checkImports -->|Fail| alertImport["Alert: pip install\nmissing package"]
+    checkAPI -->|OK| checkLogs["Error lines in\nrecent logs?"]
+    checkAPI -->|Fail| alertAPI["Alert: Network /\nAPI endpoint issue"]
+    checkLogs -->|None| healthy["Status: HEALTHY"]
+    checkLogs -->|Errors found| alertLogs["Alert: Review\nlog file errors"]
+```
+
 ## Daily Checks
 
 | Check | Command | Notes |

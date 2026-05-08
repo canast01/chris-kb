@@ -2,6 +2,41 @@
 
 Security hardening for ONTAP focuses on reducing attack surface, enforcing strong authentication, encrypting management and data traffic, and enabling comprehensive audit logging. Apply this baseline to all production clusters at build and validate quarterly.
 
+## Hardening Control Layers
+
+```mermaid
+graph TB
+    subgraph "Network Layer"
+        mgmtVlan["Mgmt LIF — dedicated VLAN\nfirewall-restricted"]
+        icVlan["Intercluster LIF — dedicated VLAN"]
+        dataVlan["Data LIFs — separate from mgmt"]
+    end
+
+    subgraph "Protocol Layer"
+        tls["TLS 1.2+ minimum\nHTTPS · SnapMirror"]
+        sshKeys["SSH — public key only\nno password auth for admin"]
+        noLegacy["Telnet / RSH disabled\nSNMPv1/v2c removed"]
+        smb3["SMB 3.x only\nSMB1 disabled"]
+    end
+
+    subgraph "Identity Layer"
+        rbac["RBAC — least privilege\ncustom roles per team"]
+        mfa["SAML SSO + MFA\nfor System Manager"]
+        diag["diag account locked"]
+    end
+
+    subgraph "Data Layer"
+        nve["NVE / NAE encryption\non sensitive volumes"]
+        audit["Admin audit log\n+ EMS → SIEM"]
+        fpolicy["FPolicy — file access\naudit for NAS"]
+    end
+
+    mgmtVlan --> sshKeys
+    sshKeys --> rbac
+    rbac --> audit
+    tls --> nve
+```
+
 ## Hardening Checklist
 
 ### Authentication and Access
