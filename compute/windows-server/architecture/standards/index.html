@@ -302,25 +302,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../standards/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Standards
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -580,33 +561,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../../standards/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Standards
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -798,6 +752,72 @@
     <span class="md-ellipsis">
       
         Group Policy Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hostname-convention-and-domain-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hostname Convention and Domain Join
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-update-and-patch-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Windows Update and Patch Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-administrator-and-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Administrator and Accounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-completion-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build Completion Checklist
       
     </span>
   </a>
@@ -1047,6 +1067,203 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="hostname-convention-and-domain-join">Hostname Convention and Domain Join<a class="headerlink" href="#hostname-convention-and-domain-join" title="Permanent link">&para;</a></h2>
+<p>Windows hostnames follow the same schema as all servers: <code>{site}{role}{env}{num}</code>. Maximum length is 15 characters (NetBIOS limit). Choose abbreviations accordingly.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Max chars</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Site code</td>
+<td>3</td>
+<td><code>dc1</code></td>
+</tr>
+<tr>
+<td>Role code</td>
+<td>4</td>
+<td><code>wsql</code></td>
+</tr>
+<tr>
+<td>Env code</td>
+<td>3</td>
+<td><code>prd</code></td>
+</tr>
+<tr>
+<td>Number</td>
+<td>2</td>
+<td><code>01</code></td>
+</tr>
+</tbody>
+</table>
+<p>Full example: <code>dc1wsqlprd01</code> (12 chars — within limit).</p>
+<p>Domain join must be completed before any application installation. All Windows servers join <code>corp.example.com</code>. The join is performed using the <code>svc-domainjoin</code> service account, which has rights scoped to a specific OU. After join, move the computer object to the correct OU immediately.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Verify domain membership</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">-Class</span> <span class="n">Win32_ComputerSystem</span><span class="p">).</span><span class="n">Domain</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsgetdc</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+</code></pre></div>
+<h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
+<p>Windows domain members automatically use the domain hierarchy for time. The PDC emulator synchronises to the internal NTP infrastructure. Do not configure external NTP sources on domain members.</p>
+<p>Verify time sync:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">source</span>
+</code></pre></div>
+<p>Expected output: source is the domain PDC or a DC. If <code>Local CMOS Clock</code> appears, the domain time sync is broken — re-run <code>w32tm /resync /force</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source</td>
+<td>Domain controller or internal NTP server</td>
+</tr>
+<tr>
+<td>Stratum</td>
+<td>4 or better</td>
+</tr>
+<tr>
+<td>Last sync offset</td>
+<td>Under 1 second</td>
+</tr>
+<tr>
+<td>Next sync time</td>
+<td>Within 8 hours</td>
+</tr>
+</tbody>
+</table>
+<h2 id="windows-update-and-patch-policy">Windows Update and Patch Policy<a class="headerlink" href="#windows-update-and-patch-policy" title="Permanent link">&para;</a></h2>
+<p>Windows Update is managed via WSUS or Windows Update for Business, not via direct internet access. Servers must be pointed at the internal WSUS server within 1 hour of domain join.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Confirm WSUS server is configured</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot;</span><span class="p">).</span><span class="n">WUServer</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Force update detection</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">wuauclt</span> <span class="p">/</span><span class="n">detectnow</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">UsoClient</span> <span class="n">StartScan</span>
+</code></pre></div>
+<p>Patching schedule:</p>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Patch window</th>
+<th>Reboot handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td>Second Tuesday of month + 7 days</td>
+<td>Scheduled maintenance window</td>
+</tr>
+<tr>
+<td>Staging</td>
+<td>Second Tuesday of month</td>
+<td>Automatic reboot</td>
+</tr>
+<tr>
+<td>Dev</td>
+<td>Weekly</td>
+<td>Automatic reboot</td>
+</tr>
+</tbody>
+</table>
+<p>Security-only patches with CVSS 9.0+ are applied out-of-band within 72 hours, regardless of environment.</p>
+<h2 id="local-administrator-and-accounts">Local Administrator and Accounts<a class="headerlink" href="#local-administrator-and-accounts" title="Permanent link">&para;</a></h2>
+<p>The built-in <code>Administrator</code> account must be renamed and a strong random password set via LAPS (Local Administrator Password Solution). LAPS must be deployed and reporting to AD before build sign-off.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Verify LAPS is installed and reporting</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-AdmPwdPassword</span> <span class="n">-ComputerName</span> <span class="n">dc1wsqlprd01</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Check LAPS client is installed</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="n">root</span><span class="p">\</span><span class="n">cimv2</span> <span class="n">-Class</span> <span class="n">Win32_Product</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*LAPS*&quot;</span> <span class="p">}</span>
+</code></pre></div>
+<p>Additional local accounts:
+- No shared local accounts permitted
+- All service accounts created in AD, not locally
+- Local <code>Guest</code> account: must be disabled
+- Local <code>Administrator</code> account: renamed to <code>lcladmin</code>, managed by LAPS</p>
+<h2 id="audit-policy">Audit Policy<a class="headerlink" href="#audit-policy" title="Permanent link">&para;</a></h2>
+<p>Windows audit policy is configured via Group Policy. The following categories must be enabled:</p>
+<table>
+<thead>
+<tr>
+<th>Audit Category</th>
+<th>Success</th>
+<th>Failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account Logon</td>
+<td>Enabled</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Account Management</td>
+<td>Enabled</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Logon/Logoff</td>
+<td>Enabled</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Object Access (file system)</td>
+<td>Enabled</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Policy Change</td>
+<td>Enabled</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Privilege Use</td>
+<td>Enabled</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>System</td>
+<td>Enabled</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Process Creation</td>
+<td>Enabled</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Security event log size must be set to a minimum of 1 GB. Logs are forwarded to the SIEM via Windows Event Forwarding (WEF) or the Elastic/Splunk agent.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Confirm audit policy</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">auditpol</span> <span class="p">/</span><span class="n">get</span> <span class="p">/</span><span class="n">category</span><span class="p">:*</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Check event log size</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Security</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">MaximumKilobytes</span>
+</code></pre></div>
+<h2 id="build-completion-checklist">Build Completion Checklist<a class="headerlink" href="#build-completion-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Hostname set and matches naming convention (max 15 chars)</li>
+<li>[ ] DNS forward and reverse resolve correctly</li>
+<li>[ ] Domain joined to <code>corp.example.com</code>, computer object in correct OU</li>
+<li>[ ] NTP source confirmed as domain controller; offset under 1 second</li>
+<li>[ ] WSUS pointing to internal server; update scan completed</li>
+<li>[ ] LAPS deployed and reporting password to AD</li>
+<li>[ ] Built-in Administrator renamed; Guest disabled</li>
+<li>[ ] Audit policy applied and confirmed via <code>auditpol</code></li>
+<li>[ ] Security event log size set to 1 GB minimum</li>
+<li>[ ] WEF or SIEM agent deployed and events visible in SIEM</li>
+<li>[ ] Server visible in monitoring platform within 15 minutes of build</li>
+</ul>
 
 
 

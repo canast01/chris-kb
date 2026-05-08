@@ -302,25 +302,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../standards/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Standards
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -570,33 +551,6 @@
   
 
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../standards/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Standards
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -990,6 +944,61 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lun-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LUN Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multipath-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multipath Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filesystem-layout-and-mount-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filesystem Layout and Mount Points
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-labelling-and-fstab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Labelling and fstab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshot-and-backup-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot and Backup Standards
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1602,6 +1611,174 @@
 <li>[ ] Array firmware within supported range; firmware update process documented</li>
 <li>[ ] Support contracts active for all storage hardware; vendor contact and case numbers documented</li>
 </ul>
+<hr />
+<h2 id="lun-naming-convention">LUN Naming Convention<a class="headerlink" href="#lun-naming-convention" title="Permanent link">&para;</a></h2>
+<p>LUN names must be unique across the array and encode enough context to identify the host, application, purpose, and sequence number without consulting a spreadsheet.</p>
+<p>Pattern: <code>{host}_{app}_{purpose}_{num}</code></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td>Short hostname (without env/site prefix)</td>
+<td><code>wsql01</code></td>
+</tr>
+<tr>
+<td><code>app</code></td>
+<td>Application or workload abbreviation</td>
+<td><code>mssql</code></td>
+</tr>
+<tr>
+<td><code>purpose</code></td>
+<td><code>data</code>, <code>log</code>, <code>temp</code>, <code>os</code>, <code>backup</code></td>
+<td><code>data</code></td>
+</tr>
+<tr>
+<td><code>num</code></td>
+<td>Two-digit sequence</td>
+<td><code>01</code></td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<ul>
+<li><code>wsql01_mssql_data_01</code> — first SQL data LUN on wsql01</li>
+<li><code>wsql01_mssql_log_01</code> — SQL transaction log LUN</li>
+<li><code>wapp02_tomcat_data_01</code> — application data LUN on a Tomcat host</li>
+</ul>
+<p>LUN names are set at array provisioning time and must not be renamed after host mapping. Renaming requires a change record and re-validation of multipath.</p>
+<h2 id="multipath-configuration">Multipath Configuration<a class="headerlink" href="#multipath-configuration" title="Permanent link">&para;</a></h2>
+<p>All Linux hosts connected to SAN storage must use device-mapper multipath (<code>multipathd</code>). Default policy is <code>service-time 0</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/multipath.conf (key sections)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">defaults {</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="na">user_friendly_names  yes</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="na">find_multipaths      yes</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="na">path_grouping_policy multibus</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="na">path_selector        &quot;service-time 0&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="na">failback             immediate</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="na">no_path_retry        fail</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="na">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="na">blacklist {</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="na">devnode &quot;^sda$&quot;   # local OS disk — never multipath</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="na">}</span>
+</code></pre></div>
+<p>Verify after mapping a new LUN:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>multipath<span class="w"> </span>-v3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;wsql01&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>lsblk<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dm-
+</code></pre></div>
+<p>Expected output: all paths <code>active ready</code>, queue depth per path as configured, DM device visible under <code>/dev/mapper/</code>.</p>
+<h2 id="filesystem-layout-and-mount-points">Filesystem Layout and Mount Points<a class="headerlink" href="#filesystem-layout-and-mount-points" title="Permanent link">&para;</a></h2>
+<p>Standard mount point layout for application servers:</p>
+<table>
+<thead>
+<tr>
+<th>Mount Point</th>
+<th>Purpose</th>
+<th>Filesystem</th>
+<th>Mount Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/</code></td>
+<td>OS root</td>
+<td>xfs</td>
+<td>defaults</td>
+</tr>
+<tr>
+<td><code>/boot</code></td>
+<td>Kernel/initrd</td>
+<td>xfs</td>
+<td>defaults</td>
+</tr>
+<tr>
+<td><code>/var</code></td>
+<td>Variable data</td>
+<td>xfs</td>
+<td>defaults,nodev</td>
+</tr>
+<tr>
+<td><code>/tmp</code></td>
+<td>Temporary files</td>
+<td>xfs</td>
+<td>defaults,nodev,nosuid,noexec</td>
+</tr>
+<tr>
+<td><code>/data</code></td>
+<td>Application data</td>
+<td>xfs</td>
+<td>defaults,nodev,nosuid</td>
+</tr>
+<tr>
+<td><code>/logs</code></td>
+<td>Application logs</td>
+<td>xfs</td>
+<td>defaults,nodev,nosuid</td>
+</tr>
+<tr>
+<td><code>/backup</code></td>
+<td>Local backup staging</td>
+<td>xfs</td>
+<td>defaults,nodev,nosuid</td>
+</tr>
+</tbody>
+</table>
+<p>SQL Server additional mounts: <code>/mssql/data</code>, <code>/mssql/log</code>, <code>/mssql/temp</code> — each on a dedicated LUN.</p>
+<p>XFS is the standard filesystem for all data and log volumes. ext4 is acceptable for OS volumes on older builds. ZFS is not in standard use.</p>
+<h2 id="disk-labelling-and-fstab">Disk Labelling and fstab<a class="headerlink" href="#disk-labelling-and-fstab" title="Permanent link">&para;</a></h2>
+<p>All non-OS disks must be mounted by label or UUID — never by device name (<code>/dev/sdb</code>). Device names change when new disks are added.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Set filesystem label at mkfs time</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mkfs.xfs<span class="w"> </span>-L<span class="w"> </span>mssql_data_01<span class="w"> </span>/dev/mapper/wsql01_mssql_data_01
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Mount by label</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;LABEL=mssql_data_01  /mssql/data  xfs  defaults,nodev,nosuid  0 0&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/fstab
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>mount<span class="w"> </span>-a<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>df<span class="w"> </span>-hT<span class="w"> </span>/mssql/data
+</code></pre></div>
+<p>For multipath devices, use the DM persistent name (<code>/dev/mapper/{alias}</code>) in fstab, not the dm-N path.</p>
+<h2 id="snapshot-and-backup-standards">Snapshot and Backup Standards<a class="headerlink" href="#snapshot-and-backup-standards" title="Permanent link">&para;</a></h2>
+<p>Array-level snapshots supplement but do not replace backup. Snapshot policy per tier:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Snapshot Frequency</th>
+<th>Retention</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td>Every 4 hours</td>
+<td>48 hours</td>
+<td>Plus daily for 7 days</td>
+</tr>
+<tr>
+<td>Staging</td>
+<td>Daily</td>
+<td>3 days</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Dev</td>
+<td>None by default</td>
+<td>—</td>
+<td>Enable on request</td>
+</tr>
+</tbody>
+</table>
+<p>Snapshots must not be used for production data recovery without testing consistency. SQL and Oracle volumes require application-consistent snapshots using VSS (Windows) or the array's application-aware plugin.</p>
+<p>All new storage builds must have a backup job configured and a successful test restore completed before going live.</p>
 
 
 

@@ -302,25 +302,6 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../../../standards/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Standards
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
@@ -580,33 +561,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../../standards/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Standards
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -815,6 +769,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#hostname-and-dns-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hostname and DNS Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-and-sudo-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH and sudo Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-packages-and-kernel-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Packages and Kernel Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syslog-and-audit-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syslog and Audit Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#build-completion-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build Completion Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -994,6 +1014,146 @@
 <li>No manual compilation from source in production</li>
 <li>Third-party RPMs/DEBs signed and hosted in the internal repository</li>
 <li>Package additions require a change record</li>
+</ul>
+<hr />
+<h2 id="hostname-and-dns-configuration">Hostname and DNS Configuration<a class="headerlink" href="#hostname-and-dns-configuration" title="Permanent link">&para;</a></h2>
+<p>Hostnames follow the server naming convention <code>{site}{role}{env}{num}</code> (see naming-conventions/servers). The hostname must be set persistently and match forward and reverse DNS before a build is marked complete.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Set hostname</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>hostnamectl<span class="w"> </span>set-hostname<span class="w"> </span>dc1-wapp-prd-01
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm FQDN resolves correctly</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>getent<span class="w"> </span>hosts<span class="w"> </span>dc1-wapp-prd-01.corp.example.com
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>dig<span class="w"> </span>+short<span class="w"> </span>dc1-wapp-prd-01.corp.example.com
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>dig<span class="w"> </span>+short<span class="w"> </span>-x<span class="w"> </span><span class="m">10</span>.10.4.21
+</code></pre></div>
+<p>DNS resolver configuration is managed by Ansible. <code>/etc/resolv.conf</code> must not be edited manually on RHEL/Ubuntu; use <code>nmcli</code> or the Ansible <code>dns_baseline</code> role.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># /etc/resolv.conf (managed — do not edit)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="na">search corp.example.com example.com</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="na">nameserver 10.10.0.10</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="na">nameserver 10.10.0.11</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="na">options timeout</span><span class="o">:</span><span class="s">2 attempts:3</span>
+</code></pre></div>
+<h2 id="ntp-configuration_1">NTP Configuration<a class="headerlink" href="#ntp-configuration_1" title="Permanent link">&para;</a></h2>
+<p>All Linux servers synchronise to internal NTP servers only. External NTP access is blocked at the perimeter firewall.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># /etc/chrony.conf — managed by Ansible role ntp_baseline</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="na">server 10.10.0.5 iburst prefer</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="na">server 10.10.0.6 iburst</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="na">driftfile /var/lib/chrony/drift</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="na">makestep 1.0 3</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="na">rtcsync</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="na">logdir /var/log/chrony</span>
+</code></pre></div>
+<p>Verify sync:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: reference time offset under 100 ms, stratum 3 or better. An alert fires if offset exceeds 500 ms for more than 5 minutes.</p>
+<h2 id="ssh-and-sudo-configuration">SSH and sudo Configuration<a class="headerlink" href="#ssh-and-sudo-configuration" title="Permanent link">&para;</a></h2>
+<p>SSH daemon configuration is enforced via the <code>ssh_baseline</code> Ansible role.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Required Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PermitRootLogin</code></td>
+<td><code>no</code></td>
+</tr>
+<tr>
+<td><code>PasswordAuthentication</code></td>
+<td><code>no</code></td>
+</tr>
+<tr>
+<td><code>PubkeyAuthentication</code></td>
+<td><code>yes</code></td>
+</tr>
+<tr>
+<td><code>Protocol</code></td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>MaxAuthTries</code></td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td><code>ClientAliveInterval</code></td>
+<td><code>300</code></td>
+</tr>
+<tr>
+<td><code>ClientAliveCountMax</code></td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>AllowGroups</code></td>
+<td><code>sshusers</code></td>
+</tr>
+<tr>
+<td><code>Banner</code></td>
+<td><code>/etc/ssh/banner</code></td>
+</tr>
+</tbody>
+</table>
+<p>sudo is configured via <code>/etc/sudoers.d/</code> drop-in files only. The base <code>/etc/sudoers</code> must not be modified directly. Engineers receive sudo via AD group membership; service accounts get targeted command whitelists.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a># /etc/sudoers.d/ops-admins
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>%ops-admins ALL=(ALL) NOPASSWD: ALL
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a># /etc/sudoers.d/svc-backup
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>svc-backup ALL=(root) NOPASSWD: /usr/bin/rsync, /usr/bin/tar
+</code></pre></div>
+<p>Run <code>visudo -c</code> after any sudoers change to confirm no syntax errors.</p>
+<h2 id="required-packages-and-kernel-parameters">Required Packages and Kernel Parameters<a class="headerlink" href="#required-packages-and-kernel-parameters" title="Permanent link">&para;</a></h2>
+<p><strong>Mandatory packages installed at build time:</strong></p>
+<ul>
+<li><code>chrony</code> — time sync</li>
+<li><code>rsyslog</code> — system logging</li>
+<li><code>audit</code> / <code>auditd</code> — kernel audit framework</li>
+<li><code>aide</code> — file integrity monitoring</li>
+<li><code>nmap-ncat</code> — connectivity testing</li>
+<li><code>open-vm-tools</code> — VMware guest tools (VM builds only)</li>
+<li><code>cloud-init</code> — cloud builds only</li>
+</ul>
+<p><strong>Kernel parameters (<code>/etc/sysctl.d/99-baseline.conf</code>):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="na">net.ipv4.ip_forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="na">net.ipv4.conf.all.accept_redirects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="na">net.ipv4.conf.all.send_redirects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="na">net.ipv4.conf.all.accept_source_route</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="na">net.ipv4.tcp_syncookies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="na">fs.suid_dumpable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="na">kernel.core_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">|/bin/false</span>
+</code></pre></div>
+<p>Apply without reboot: <code>sysctl --system</code></p>
+<h2 id="syslog-and-audit-configuration">Syslog and Audit Configuration<a class="headerlink" href="#syslog-and-audit-configuration" title="Permanent link">&para;</a></h2>
+<p>Remote syslog forwarding to the central SIEM is mandatory. The <code>rsyslog_baseline</code> Ansible role deploys:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/rsyslog.d/50-remote.conf</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>*.*<span class="w"> </span>@@siem.corp.example.com:514<span class="p">;</span>RSYSLOG_ForwardFormat
+</code></pre></div>
+<p>The audit daemon must be running and enabled at boot. Baseline audit rules capture:</p>
+<ul>
+<li>All auth events (watches on <code>/etc/passwd</code>, <code>/etc/shadow</code>, <code>/etc/group</code>)</li>
+<li><code>sudo</code> invocations via PAM</li>
+<li>Privileged command execution</li>
+<li>File opens with write intent on key paths under <code>/etc</code></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>auditd<span class="w"> </span>rsyslog
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ausearch<span class="w"> </span>-k<span class="w"> </span>privileged<span class="w"> </span>--start<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+</code></pre></div>
+<p>Log retention on the host: 30 days rolling via <code>logrotate</code>. Long-term retention is handled by the SIEM (90 days hot, 1 year cold).</p>
+<h2 id="build-completion-checklist">Build Completion Checklist<a class="headerlink" href="#build-completion-checklist" title="Permanent link">&para;</a></h2>
+<p>Before a Linux build is marked complete, confirm all items below:</p>
+<ul>
+<li>[ ] Hostname set; DNS forward and reverse resolve correctly</li>
+<li>[ ] NTP synced; <code>chronyc tracking</code> shows offset under 100 ms</li>
+<li>[ ] SSH key-auth only; root login disabled; <code>sshd_config</code> matches baseline</li>
+<li>[ ] All mandatory packages installed and services enabled at boot</li>
+<li>[ ] <code>sysctl</code> baseline applied and survives reboot</li>
+<li>[ ] <code>rsyslog</code> forwarding confirmed (test event visible in SIEM)</li>
+<li>[ ] <code>auditd</code> running; baseline rules loaded (<code>auditctl -l</code>)</li>
+<li>[ ] No pending security patches (<code>yum/dnf/apt</code> security update count = 0)</li>
+<li>[ ] Server visible in monitoring platform within 15 minutes of first boot</li>
+<li>[ ] AIDE database initialised (<code>aide --init</code>)</li>
 </ul>
 
 
