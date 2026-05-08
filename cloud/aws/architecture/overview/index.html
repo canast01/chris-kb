@@ -772,6 +772,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#iam-assume-role-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Assume-Role Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#iam-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -916,6 +927,21 @@
     running["Instance Running\nEC2 metadata available"]
 
     request --&gt; iamCheck --&gt; amiSelect --&gt; networkPlace --&gt; sgApply --&gt; instanceProfile --&gt; userData --&gt; running</code></pre>
+<h2 id="iam-assume-role-sequence">IAM Assume-Role Sequence<a class="headerlink" href="#iam-assume-role-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant principal as Principal\n(user / service / CI-CD)
+    participant sts as AWS STS
+    participant iam as IAM Policy Engine
+    participant resource as AWS Resource\n(S3 / EC2 / RDS)
+
+    principal-&gt;&gt;sts: AssumeRole (RoleArn, ExternalId)
+    sts-&gt;&gt;iam: Evaluate trust policy on role
+    iam--&gt;&gt;sts: Trust policy allows principal?
+    sts--&gt;&gt;principal: Temporary credentials\n(AccessKey + SecretKey + SessionToken)
+    principal-&gt;&gt;resource: API call with temporary credentials
+    resource-&gt;&gt;iam: Evaluate identity + resource policies
+    iam--&gt;&gt;resource: Allow / Deny decision
+    resource--&gt;&gt;principal: Response</code></pre>
 <h2 id="iam-structure">IAM Structure<a class="headerlink" href="#iam-structure" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>AWS Organizations SCPs (guardrails — deny dangerous actions globally)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │

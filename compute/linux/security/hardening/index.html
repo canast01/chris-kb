@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#linux-hardening-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux Hardening Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cis-benchmark-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -932,6 +943,33 @@
 
 <h1 id="linux-hardening">Linux — Hardening<a class="headerlink" href="#linux-hardening" title="Permanent link">&para;</a></h1>
 <p>CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login.defs, and PAM password policy.</p>
+<h2 id="linux-hardening-layers">Linux Hardening Layers<a class="headerlink" href="#linux-hardening-layers" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph kernel["Kernel Hardening"]
+        sysctl["sysctl\nnetwork · ASLR · ptrace"]
+        secBoot["Secure Boot\nUEFI · GRUB password"]
+        mods["Kernel modules\ndisable unused FS/protocols"]
+    end
+    subgraph mac["Mandatory Access Control"]
+        selinux["SELinux\nRHEL — enforcing mode"]
+        apparmor["AppArmor\nUbuntu — enforce profiles"]
+    end
+    subgraph auth["Authentication Controls"]
+        pam["PAM\npwquality · faillock · access.conf"]
+        loginDefs["login.defs\npassword aging · umask"]
+        ssh["SSH\nPubkeyAuth · no root login"]
+    end
+    subgraph audit["Audit and Monitoring"]
+        auditd["auditd\nsyscall · file · identity events"]
+        logFwd["rsyslog / syslog-ng\nSIEM forwarding"]
+    end
+    subgraph fs["Filesystem Hardening"]
+        mntOpts["Mount options\nnoexec · nosuid · nodev"]
+        chattr["chattr +i\nimmutable critical files"]
+    end
+
+    kernel --&gt; mac --&gt; auth --&gt; audit
+    fs --&gt; audit</code></pre>
 <h2 id="cis-benchmark-baseline">CIS Benchmark Baseline<a class="headerlink" href="#cis-benchmark-baseline" title="Permanent link">&para;</a></h2>
 <p>The CIS (Center for Internet Security) Benchmark for Linux provides a prioritised set of controls. Level 1 covers essential, low-risk hardening; Level 2 is for high-security environments.</p>
 <h3 id="assessment-tools">Assessment Tools<a class="headerlink" href="#assessment-tools" title="Permanent link">&para;</a></h3>

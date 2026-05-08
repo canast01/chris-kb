@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#certificate-inventory" class="md-nav__link">
+  <a href="#locker-certificate-and-secret-vault" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Certificate Inventory
+        Locker: Certificate and Secret Vault
       
     </span>
   </a>
@@ -717,10 +717,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#expiration-tracking" class="md-nav__link">
+  <a href="#certificate-lifecycle-in-lcm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Expiration Tracking
+        Certificate Lifecycle in LCM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Lifecycle in LCM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificate-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate States
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tracked-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tracked Certificates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generating-a-csr-via-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating a CSR via LCM
       
     </span>
   </a>
@@ -728,10 +767,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#trusted-root-chain" class="md-nav__link">
+  <a href="#importing-a-signed-certificate-into-locker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trusted Root Chain
+        Importing a Signed Certificate into Locker
       
     </span>
   </a>
@@ -739,10 +778,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replacement-process" class="md-nav__link">
+  <a href="#verifying-a-certificate-before-import" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replacement Process
+        Verifying a Certificate Before Import
       
     </span>
   </a>
@@ -750,10 +789,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-change-validation" class="md-nav__link">
+  <a href="#applying-a-certificate-to-a-product" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Change Validation
+        Applying a Certificate to a Product
       
     </span>
   </a>
@@ -761,10 +800,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
+  <a href="#password-encryption-in-locker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Post-Change Validation
+        Password Encryption in Locker
       
     </span>
   </a>
@@ -772,10 +811,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rollback-plan" class="md-nav__link">
+  <a href="#tls-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rollback Plan
+        TLS Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-change-certificate-validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Change Certificate Validation Checklist
       
     </span>
   </a>
@@ -803,50 +853,243 @@
 
 
 <h1 id="aria-suite-lifecycle-encryption">Aria Suite Lifecycle — Encryption<a class="headerlink" href="#aria-suite-lifecycle-encryption" title="Permanent link">&para;</a></h1>
-<h2 id="certificate-inventory">Certificate Inventory<a class="headerlink" href="#certificate-inventory" title="Permanent link">&para;</a></h2>
-<p>Track the following for each Aria product:</p>
-<ul>
-<li>Product name and version</li>
-<li>Certificate subject and SANs</li>
-<li>Expiration date</li>
-<li>Issuing CA</li>
-<li>Trust chain status</li>
-</ul>
-<h2 id="expiration-tracking">Expiration Tracking<a class="headerlink" href="#expiration-tracking" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Review certificate expiration dates monthly</li>
-<li>Flag certificates expiring within 60 days</li>
-<li>Confirm renewals are planned before the 30-day mark</li>
-</ul>
-<h2 id="trusted-root-chain">Trusted Root Chain<a class="headerlink" href="#trusted-root-chain" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm the CA root and intermediate certs are trusted by all Aria products</li>
-<li>A broken trust chain causes integration failures between products and with vCenter</li>
-</ul>
-<h2 id="replacement-process">Replacement Process<a class="headerlink" href="#replacement-process" title="Permanent link">&para;</a></h2>
+<h2 id="locker-certificate-and-secret-vault">Locker: Certificate and Secret Vault<a class="headerlink" href="#locker-certificate-and-secret-vault" title="Permanent link">&para;</a></h2>
+<p>The LCM <strong>Locker</strong> is the central vault for all certificates, passwords, and licence keys managed by LCM. Every Aria product certificate must be imported into the Locker before it can be applied to a product. Direct file-level certificate replacement on product appliances bypasses LCM tracking, breaks the upgrade workflow, and will be overwritten at the next LCM-managed operation.</p>
+<p>All Locker data is encrypted using the <strong>Locker Master Password</strong> set during the initial LCM configuration wizard. If the master password is lost, all Locker contents are inaccessible and require a full re-import from source material. Store the master password in a physical or air-gapped offline vault — never in the same digital system as other service account passwords.</p>
+<hr />
+<h2 id="certificate-lifecycle-in-lcm">Certificate Lifecycle in LCM<a class="headerlink" href="#certificate-lifecycle-in-lcm" title="Permanent link">&para;</a></h2>
+<h3 id="certificate-states">Certificate States<a class="headerlink" href="#certificate-states" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Days Remaining</th>
+<th>Required Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Valid</td>
+<td>&gt; 60 days</td>
+<td>No action required</td>
+</tr>
+<tr>
+<td>Expiring Soon</td>
+<td>30–60 days</td>
+<td>Schedule renewal; prepare CSR</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>7–30 days</td>
+<td>Renew within 5 business days</td>
+</tr>
+<tr>
+<td>Emergency</td>
+<td>&lt; 7 days</td>
+<td>Renew immediately; risk of product outage</td>
+</tr>
+<tr>
+<td>Expired</td>
+<td>0</td>
+<td>Product integrations will fail; renew now</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tracked-certificates">Tracked Certificates<a class="headerlink" href="#tracked-certificates" title="Permanent link">&para;</a></h3>
+<p>Maintain an inventory of every certificate managed by LCM:</p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Certificate Subject</th>
+<th>SANs</th>
+<th>Issuing CA</th>
+<th>Expiry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LCM Appliance</td>
+<td><code>lcm-prod-01.corp.local</code></td>
+<td><code>lcm-prod-01</code>, <code>lcm.corp.local</code></td>
+<td>Internal CA</td>
+<td>yyyy-mm-dd</td>
+</tr>
+<tr>
+<td>VIDM</td>
+<td><code>vidm-prod-01.corp.local</code></td>
+<td><code>vidm.corp.local</code></td>
+<td>Internal CA</td>
+<td>yyyy-mm-dd</td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td><code>vrops-prod-01.corp.local</code></td>
+<td>All node FQDNs + VIP</td>
+<td>Internal CA</td>
+<td>yyyy-mm-dd</td>
+</tr>
+<tr>
+<td>Aria Automation</td>
+<td><code>vra-prod.corp.local</code></td>
+<td>All node FQDNs + VIP</td>
+<td>Internal CA</td>
+<td>yyyy-mm-dd</td>
+</tr>
+<tr>
+<td>Aria Ops for Logs</td>
+<td><code>vrli-prod-01.corp.local</code></td>
+<td>All node FQDNs</td>
+<td>Internal CA</td>
+<td>yyyy-mm-dd</td>
+</tr>
+</tbody>
+</table>
+<p>Review and update this table at every renewal and after each LCM-managed deployment.</p>
+<hr />
+<h2 id="generating-a-csr-via-lcm">Generating a CSR via LCM<a class="headerlink" href="#generating-a-csr-via-lcm" title="Permanent link">&para;</a></h2>
+<p>LCM can generate certificate signing requests for managed products, or you can supply externally generated CSRs.</p>
+<p><strong>Via UI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>LCM → Locker → Certificates → Generate CSR
+</code></pre></div>
+<p>Fill in:
+- <strong>Common Name</strong>: product FQDN or VIP FQDN
+- <strong>SANs</strong>: all node FQDNs, VIP FQDN, and any short names required
+- <strong>Key size</strong>: 4096-bit RSA (minimum accepted: 2048-bit)
+- <strong>Signature algorithm</strong>: SHA-256</p>
+<p><strong>Via API:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/locker/api/v2/certificates/csr&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;alias&quot;: &quot;vrops-prod-2027&quot;,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    &quot;commonName&quot;: &quot;vrops-prod.corp.local&quot;,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    &quot;orgUnit&quot;: &quot;IT Platform&quot;,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    &quot;org&quot;: &quot;Acme Corp&quot;,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">    &quot;locality&quot;: &quot;London&quot;,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">    &quot;state&quot;: &quot;England&quot;,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">    &quot;country&quot;: &quot;GB&quot;,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">    &quot;keySize&quot;: 4096,</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">    &quot;sans&quot;: [&quot;vrops-prod-01.corp.local&quot;,&quot;vrops-prod-02.corp.local&quot;,&quot;vrops-prod.corp.local&quot;]</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+</code></pre></div>
+<p>Submit the generated CSR to the CA. Retrieve the signed certificate chain (leaf + intermediates + root) in PEM format.</p>
+<hr />
+<h2 id="importing-a-signed-certificate-into-locker">Importing a Signed Certificate into Locker<a class="headerlink" href="#importing-a-signed-certificate-into-locker" title="Permanent link">&para;</a></h2>
+<p>After the CA returns the signed certificate:</p>
+<p><strong>Via UI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>LCM → Locker → Certificates → Import Certificate
+</code></pre></div>
+<p>Paste:
+1. Certificate (leaf PEM only — not the chain)
+2. Private key (unencrypted PEM — no passphrase)
+3. CA chain (all intermediates + root, concatenated in PEM format)</p>
+<p><strong>Via API:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Read PEM files and escape newlines for JSON payload</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">CERT</span><span class="o">=</span><span class="k">$(</span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="w"> </span>leaf.pem<span class="k">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">KEY</span><span class="o">=</span><span class="k">$(</span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="w"> </span>private.key<span class="k">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">CHAIN</span><span class="o">=</span><span class="k">$(</span>awk<span class="w"> </span><span class="s1">&#39;{printf &quot;%s\\n&quot;, $0}&#39;</span><span class="w"> </span>chain.pem<span class="k">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/locker/api/v2/certificates/import&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">    \&quot;alias\&quot;: \&quot;vrops-prod-2027\&quot;,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">    \&quot;certificateChain\&quot;: \&quot;</span><span class="nv">$CERT</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">    \&quot;privateKey\&quot;: \&quot;</span><span class="nv">$KEY</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">    \&quot;caChain\&quot;: \&quot;</span><span class="nv">$CHAIN</span><span class="s2">\&quot;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">  }&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="verifying-a-certificate-before-import">Verifying a Certificate Before Import<a class="headerlink" href="#verifying-a-certificate-before-import" title="Permanent link">&para;</a></h2>
+<p>Always validate the certificate chain and key pair match before importing into Locker — a mismatch causes the certificate replacement workflow to fail mid-operation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify the certificate chain is valid (leaf verifiable against the CA chain)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>leaf.pem
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected: leaf.pem: OK</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Verify the private key matches the certificate (moduli must match)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Both hashes must be identical</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Confirm the private key has no passphrase</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span>-check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Expected: RSA key ok</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># BAD: &quot;Enter pass phrase&quot; — LCM requires an unencrypted key</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Confirm SANs are present</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Subject Alternative Name&quot;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Confirm validity period</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-in<span class="w"> </span>leaf.pem
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Confirm key size (minimum 2048-bit; 4096-bit recommended)</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Public-Key&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="applying-a-certificate-to-a-product">Applying a Certificate to a Product<a class="headerlink" href="#applying-a-certificate-to-a-product" title="Permanent link">&para;</a></h2>
+<p>After importing the certificate into Locker, apply it to the product:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>LCM → Lifecycle Operations → Environments → select environment → product card → Replace Certificate
+</code></pre></div>
 <ol>
-<li>Generate a new CSR from Aria Suite Lifecycle</li>
-<li>Submit to the CA and retrieve the signed certificate</li>
-<li>Import the certificate into Aria Suite Lifecycle</li>
-<li>Apply to the affected product endpoint</li>
-<li>Validate product health after replacement</li>
+<li>Select the new Locker certificate alias from the dropdown</li>
+<li>LCM validates the certificate is applicable (SANs cover all product node FQDNs)</li>
+<li>Click <strong>Replace</strong> — LCM applies the certificate to all product nodes sequentially</li>
+<li>Monitor progress: <strong>Lifecycle Operations → Requests</strong></li>
 </ol>
-<h2 id="pre-change-validation">Pre-Change Validation<a class="headerlink" href="#pre-change-validation" title="Permanent link">&para;</a></h2>
+<p>A successful certificate replacement shows the request in <code>COMPLETED</code> state. Verify by testing the product URL in a browser — the new certificate should be presented by the server.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify the new certificate is active on the product</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrops-prod-01.corp.local:443<span class="w"> </span>-servername<span class="w"> </span>vrops-prod-01.corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates<span class="w"> </span>-issuer
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm: subject matches the new certificate, issuer is your internal CA</span>
+</code></pre></div>
+<hr />
+<h2 id="password-encryption-in-locker">Password Encryption in Locker<a class="headerlink" href="#password-encryption-in-locker" title="Permanent link">&para;</a></h2>
+<p>Passwords stored in the Locker (service account credentials, vCenter passwords, etc.) are encrypted using the Locker Master Password. They are never returned in plain text via the API — only the alias and username are readable.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List stored passwords (alias and username only — not the values)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/locker/api/v2/passwords&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.passwords[] | {alias: .alias, username: .userName, description: .description}&#39;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Update a stored password (when the source password changes)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/locker/api/v2/passwords/&lt;password-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;alias&quot;: &quot;&lt;alias&gt;&quot;, &quot;userName&quot;: &quot;&lt;username&gt;&quot;, &quot;password&quot;: &quot;&lt;new-password&gt;&quot;}&#39;</span>
+</code></pre></div>
+<p>After updating a Locker password, re-validate any product integrations that use the credential (vCenter cloud accounts in Aria Automation, adapter credentials in Aria Operations, etc.).</p>
+<hr />
+<h2 id="tls-standards">TLS Standards<a class="headerlink" href="#tls-standards" title="Permanent link">&para;</a></h2>
+<p>All LCM API and UI endpoints use TLS. Verify the appliance TLS configuration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Confirm TLS 1.2 is accepted</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.corp.local:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Confirm TLS 1.0 is rejected (expected: alert handshake failure)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.corp.local:443<span class="w"> </span>-tls1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;alert|error&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Check cipher suite negotiated</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>lcm-prod-01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>grep<span class="w"> </span><span class="s2">&quot;Cipher is&quot;</span>
+</code></pre></div>
+<p>LCM 8.x defaults to TLS 1.2 minimum. If TLS 1.0 or 1.1 must be disabled explicitly, configure this via the NGINX configuration on the LCM appliance — consult the Broadcom hardening guide for the specific configuration path for each LCM version.</p>
+<hr />
+<h2 id="pre-change-certificate-validation-checklist">Pre-Change Certificate Validation Checklist<a class="headerlink" href="#pre-change-certificate-validation-checklist" title="Permanent link">&para;</a></h2>
+<p>Run before replacing any certificate via LCM:</p>
 <ul>
-<li>Confirm current certificates are still valid</li>
-<li>Confirm the CA is accessible</li>
-<li>Confirm backup of current product configuration</li>
-</ul>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm product UI is accessible</li>
-<li>Confirm integrations with vCenter and other products are working</li>
-<li>Confirm no certificate warnings in browser or product health views</li>
-</ul>
-<h2 id="rollback-plan">Rollback Plan<a class="headerlink" href="#rollback-plan" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Keep the previous certificate available for re-import if needed</li>
-<li>If the product becomes unreachable, restore from Aria Suite Lifecycle backup</li>
+<li>[ ] New certificate verified: <code>openssl verify -CAfile chain.pem leaf.pem</code> — output <code>OK</code></li>
+<li>[ ] Key moduli match between leaf and private key</li>
+<li>[ ] Private key has no passphrase</li>
+<li>[ ] SAN entries cover all product node FQDNs and VIP</li>
+<li>[ ] Certificate validity period &gt;= 90 days from today</li>
+<li>[ ] Locker Master Password is accessible (in case restore is needed)</li>
+<li>[ ] VM snapshot of the product appliance taken before replacement</li>
+<li>[ ] Old certificate alias retained in Locker for rollback reference (do not delete until new cert is confirmed working)</li>
 </ul>
 
 

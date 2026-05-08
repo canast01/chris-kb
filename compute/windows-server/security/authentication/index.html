@@ -718,6 +718,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#kerberos-authentication-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kerberos Authentication Sequence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ad-dns-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AD / DNS Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#domain-join" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -963,6 +985,36 @@
 <p>Active Directory integration, Kerberos, NTLM audit, LAPS, smart card, and Credential Guard.</p>
 <h2 id="active-directory-domain-authentication">Active Directory Domain Authentication<a class="headerlink" href="#active-directory-domain-authentication" title="Permanent link">&para;</a></h2>
 <p>Windows Server uses Kerberos as the primary authentication protocol within an AD domain. NTLM is a legacy fallback used only when Kerberos is not available.</p>
+<h3 id="kerberos-authentication-sequence">Kerberos Authentication Sequence<a class="headerlink" href="#kerberos-authentication-sequence" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant client as Client\n(workstation)
+    participant kdc as KDC (Domain Controller)\nAS + TGS
+    participant server as Target Server\n(e.g. file server)
+
+    client-&gt;&gt;kdc: AS-REQ — pre-auth (encrypted timestamp)
+    kdc--&gt;&gt;client: AS-REP — TGT + session key (encrypted with user secret)
+    client-&gt;&gt;kdc: TGS-REQ — TGT + requested service SPN
+    kdc--&gt;&gt;client: TGS-REP — Service Ticket (encrypted with server secret)
+    client-&gt;&gt;server: AP-REQ — Service Ticket + authenticator
+    server--&gt;&gt;client: AP-REP — mutual auth confirmation
+    client-&gt;&gt;server: Application request (authorised session)</code></pre>
+<h3 id="ad-dns-dependency">AD / DNS Dependency<a class="headerlink" href="#ad-dns-dependency" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    dns["DNS Server\nSRV records for KDC · LDAP · GC"]
+    kdc["KDC\nKey Distribution Center\n(lsass.exe on DC)"]
+    ldap["LDAP\nDirectory queries\nport 389 / 636"]
+    netlogon["Netlogon\nDC locator · secure channel"]
+    client["Domain Member\nworkstation / server"]
+    ad["AD Database\nNTDS.dit"]
+
+    dns --&gt; kdc
+    kdc --&gt; ad
+    ldap --&gt; ad
+    client --&gt;|"DC locator via DNS"| dns
+    client --&gt;|"Kerberos port 88"| kdc
+    client --&gt;|"LDAP port 389"| ldap
+    client --&gt;|"secure channel"| netlogon
+    netlogon --&gt; kdc</code></pre>
 <h3 id="domain-join">Domain Join<a class="headerlink" href="#domain-join" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Add a server to an AD domain</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-Computer</span> <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="n">-Restart</span>

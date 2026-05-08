@@ -738,6 +738,83 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ingestion-protocols-and-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingestion Protocols and Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-insight-agent-li-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Insight Agent (LI Agent)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-storage-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Storage Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content-packs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content Packs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-aria-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Aria Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability Behaviour
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#field-extraction-and-structured-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Extraction and Structured Analytics
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -760,7 +837,7 @@
 
 <h1 id="aria-ops-for-logs-architecture-overview">Aria Ops for Logs — Architecture Overview<a class="headerlink" href="#aria-ops-for-logs-architecture-overview" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Aria Operations for Logs (formerly vRealize Log Insight) is a log analytics platform that collects, indexes, and correlates log data from VMware infrastructure and other sources.</p>
+<p>Aria Operations for Logs (formerly vRealize Log Insight) is a log analytics platform that collects, indexes, and correlates log data from VMware infrastructure and other sources. It provides real-time search, pattern-based alerting, content pack-driven dashboards, and bidirectional integration with Aria Operations for launch-in-context log correlation.</p>
 <h2 id="log-pipeline-architecture">Log Pipeline Architecture<a class="headerlink" href="#log-pipeline-architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
   SRC1(["ESXi / vCenter syslog"]) &amp; SRC2(["NSX / VMs syslog"]) &amp; SRC3(["Linux / Windows agent"]) --&gt; VRLI["Aria Operations for Logs\n(Log Intelligence cluster)"]
@@ -793,6 +870,201 @@
 </tbody>
 </table>
 <p>A minimum of <strong>3 nodes</strong> (1 master + 2 workers) is recommended for production HA.</p>
+<hr />
+<h2 id="ingestion-protocols-and-ports">Ingestion Protocols and Ports<a class="headerlink" href="#ingestion-protocols-and-ports" title="Permanent link">&para;</a></h2>
+<p>Aria Operations for Logs accepts log data over several protocols. The choice of protocol determines whether the transport is encrypted and how structured the data can be.</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Port</th>
+<th>Encrypted</th>
+<th>Structured</th>
+<th>Source Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Syslog UDP</td>
+<td>514</td>
+<td>No</td>
+<td>RFC 3164 / 5424</td>
+<td>ESXi, vCenter, network devices, Linux</td>
+</tr>
+<tr>
+<td>Syslog TCP</td>
+<td>1514</td>
+<td>No</td>
+<td>RFC 3164 / 5424</td>
+<td>Linux, network devices with TCP syslog</td>
+</tr>
+<tr>
+<td>cfapi (unencrypted)</td>
+<td>9000</td>
+<td>No</td>
+<td>JSON + fields</td>
+<td>LI Agent (lab use only)</td>
+</tr>
+<tr>
+<td>cfapi (TLS)</td>
+<td>9543</td>
+<td>Yes — TLS 1.2+</td>
+<td>JSON + fields</td>
+<td>LI Agent on Linux and Windows VMs</td>
+</tr>
+<tr>
+<td>SNMP trap receiver</td>
+<td>162</td>
+<td>No</td>
+<td>MIB-decoded</td>
+<td>Network switches, firewalls</td>
+</tr>
+<tr>
+<td>REST Ingestion API</td>
+<td>9000 / 9543</td>
+<td>Optional</td>
+<td>JSON</td>
+<td>Custom applications, CI/CD pipelines</td>
+</tr>
+</tbody>
+</table>
+<p>For production deployments, prefer the LI Agent (cfapi/TLS, port 9543) over raw syslog wherever possible. The LI Agent supports field tagging, log file monitoring, structured enrichment, and encrypted delivery. ESXi syslog (UDP 514) is an accepted exception — ESXi does not support TLS for syslog.</p>
+<hr />
+<h2 id="log-insight-agent-li-agent">Log Insight Agent (LI Agent)<a class="headerlink" href="#log-insight-agent-li-agent" title="Permanent link">&para;</a></h2>
+<p>The LI Agent is a lightweight service deployed on Linux and Windows VMs. It monitors log files and forwards structured log events to Aria Ops for Logs over the cfapi protocol.</p>
+<p>Key capabilities over raw syslog:
+- <strong>File monitoring</strong>: collect from any log file path, not just syslog
+- <strong>Field tagging</strong>: attach key-value metadata (application name, environment, team) to every event before ingestion
+- <strong>Buffering</strong>: locally buffers up to 200 MB of events if the Aria Ops for Logs cluster is temporarily unavailable
+- <strong>Encrypted transport</strong>: cfapi/TLS ensures log data is encrypted in transit</p>
+<p>Agent configuration is managed centrally from the Aria Ops for Logs UI:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Agents → Agent Groups → create group → assign configuration templates
+</code></pre></div>
+<p>Configuration templates define which log files to collect and what tags to apply. Agents receive their configuration automatically when they connect to the cluster.</p>
+<hr />
+<h2 id="data-storage-model">Data Storage Model<a class="headerlink" href="#data-storage-model" title="Permanent link">&para;</a></h2>
+<p>Aria Ops for Logs uses an Apache Cassandra backend for log index storage. Logs are retained in the hot tier (local node disk, fully searchable) for the configured retention period, and then optionally archived to an NFS share for long-term cold storage.</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Retention</th>
+<th>Storage</th>
+<th>Searchable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hot</td>
+<td>Configurable (default: 30 days)</td>
+<td>Local node disk (<code>/var/log/loginsight</code>)</td>
+<td>Yes — full interactive analytics</td>
+</tr>
+<tr>
+<td>Archive</td>
+<td>Configurable (90–365 days typical)</td>
+<td>NFS share</td>
+<td>No — requires re-import for analysis</td>
+</tr>
+</tbody>
+</table>
+<p>Configure retention and archiving:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → General → Retention → set hot retention period
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Administration → Archiving → configure NFS target
+</code></pre></div>
+<p>Storage planning: assume 2–5x compression on raw log data for index sizing. A cluster ingesting 50 GB/day of raw syslog typically stores 10–25 GB/day in the hot index.</p>
+<hr />
+<h2 id="content-packs">Content Packs<a class="headerlink" href="#content-packs" title="Permanent link">&para;</a></h2>
+<p>Content packs extend Aria Ops for Logs with pre-built field extractions, dashboards, queries, and alerts for specific log sources. They are the primary mechanism for structured log analysis.</p>
+<table>
+<thead>
+<tr>
+<th>Content Pack</th>
+<th>Source</th>
+<th>What It Provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSphere</td>
+<td>Built-in</td>
+<td>ESXi and vCenter log parsing, dashboards, and alerts</td>
+</tr>
+<tr>
+<td>NSX-T</td>
+<td>Marketplace</td>
+<td>NSX-T Manager and Edge node log parsing</td>
+</tr>
+<tr>
+<td>Linux General</td>
+<td>Marketplace</td>
+<td>Generic Linux syslog parsing and security event dashboards</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>Marketplace</td>
+<td>Windows Event Log parsing via LI Agent</td>
+</tr>
+<tr>
+<td>Kubernetes</td>
+<td>Marketplace</td>
+<td>Container and pod log parsing</td>
+</tr>
+</tbody>
+</table>
+<p>Install content packs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Content Packs → Marketplace → Browse → Install
+</code></pre></div>
+<p>Content packs can also be exported and imported between clusters (Dev → Prod promotion):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export a content pack via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v1/content/contentpackmetadata/&lt;pack-id&gt;/export&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-o<span class="w"> </span>my-content-pack.vlcp
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Import to another cluster</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v1/content/contentpackmetadata&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@my-content-pack.vlcp&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="integration-with-aria-operations">Integration with Aria Operations<a class="headerlink" href="#integration-with-aria-operations" title="Permanent link">&para;</a></h2>
+<p>The bidirectional integration with Aria Operations (vROps) is a key operational feature:</p>
+<p><strong>Log Insight → Aria Operations (launch-in-context):</strong>
+When a log-based alert fires in Aria Ops for Logs, operators can click to open the correlated view in Aria Operations, showing the health and alert state of the affected object at the same time window. This contextual linking accelerates root cause analysis by correlating log evidence with metric anomalies.</p>
+<p><strong>Aria Operations → Log Insight (launch-in-context):</strong>
+From an Aria Operations alert detail page, clicking "View Logs" opens Aria Ops for Logs pre-filtered to the affected object name and the alert time window. No manual query construction is needed.</p>
+<p>Configure the integration in both products — see the <a href="../integrations/">Integrations</a> page for configuration steps.</p>
+<hr />
+<h2 id="high-availability-behaviour">High Availability Behaviour<a class="headerlink" href="#high-availability-behaviour" title="Permanent link">&para;</a></h2>
+<p>In a 3-node cluster:</p>
+<ul>
+<li><strong>Master failure</strong>: the cluster enters a degraded state. Ingestion and search may stop if the master is unavailable for more than 90 seconds. Workers do not automatically elect a new master — manual recovery (restart or restore master from snapshot) is required.</li>
+<li><strong>Worker failure</strong>: ingestion and search continue on remaining nodes. Cassandra automatically rebalances reads but does not replicate the failed node's unique data until the node is recovered or replaced.</li>
+<li><strong>Network partition</strong>: nodes that cannot reach the master will stop accepting ingestion. The master continues to operate alone.</li>
+</ul>
+<p><strong>Recommendation:</strong> deploy with 3 nodes on 3 separate ESXi hosts in a vSphere HA cluster, with anti-affinity rules ensuring nodes cannot be co-located on the same host. This protects against single-host failure.</p>
+<hr />
+<h2 id="field-extraction-and-structured-analytics">Field Extraction and Structured Analytics<a class="headerlink" href="#field-extraction-and-structured-analytics" title="Permanent link">&para;</a></h2>
+<p>One of the most powerful features is custom field extraction: defining regular expressions that pull structured values (IP addresses, usernames, error codes, response times) from unstructured log text. Once extracted, these fields can be used in:</p>
+<ul>
+<li><strong>Interactive Analytics</strong>: group-by, filter, and aggregate on the extracted field</li>
+<li><strong>Widget queries</strong>: drive dashboard charts from the field values</li>
+<li><strong>Alert conditions</strong>: fire alerts when a field value meets a threshold</li>
+<li><strong>Content pack dashboards</strong>: exported dashboards that use the field definitions</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a custom field that extracts username from a log pattern</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>https://vrli-prod-01.corp.local/api/v1/fields<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;name&quot;: &quot;authenticated_user&quot;,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    &quot;displayName&quot;: &quot;Authenticated User&quot;,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">    &quot;regex&quot;: &quot;Accepted (\\S+) for (\\S+) from&quot;,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">    &quot;regexGroupIndex&quot;: 2,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">    &quot;discoverable&quot;: true</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>After extraction, the field appears in the field selector in Interactive Analytics and in widget configuration, enabling queries like: "show me the top 10 users with failed login attempts in the last 24 hours."</p>
 
 
 

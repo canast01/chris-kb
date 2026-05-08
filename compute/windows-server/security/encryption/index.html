@@ -718,6 +718,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#bitlocker-unlock-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BitLocker Unlock Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -962,6 +973,33 @@
 <p>BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signing.</p>
 <h2 id="bitlocker-drive-encryption">BitLocker — Drive Encryption<a class="headerlink" href="#bitlocker-drive-encryption" title="Permanent link">&para;</a></h2>
 <p>BitLocker provides full-volume encryption for OS and data drives. On servers, it is typically combined with Active Directory key escrow so recovery keys are centrally stored.</p>
+<h3 id="bitlocker-unlock-flow">BitLocker Unlock Flow<a class="headerlink" href="#bitlocker-unlock-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    powerOn["Server Powers On\nUEFI POST"]
+    tpmCheck{"TPM present\nand healthy?"}
+    pcrMeasure["TPM measures boot components\nUEFI · MBR · bootloader · BCD"]
+    pcrMatch{"PCR values match\nexpected sealed state?"}
+    pinPrompt{"PIN protector\nconfigured?"}
+    pinEntry["Prompt for\nStartup PIN"]
+    networkUnlock{"Network Unlock\nconfigured + on corp network?"}
+    wdsUnlock["WDS server provides\nNetwork Unlock key"]
+    vmkRelease["TPM releases\nVolume Master Key (VMK)"]
+    fvekDecrypt["VMK decrypts\nFull Volume Encryption Key (FVEK)"]
+    driveUnlocked["Drive Unlocked\nOS boots normally"]
+    recoveryPrompt["BitLocker Recovery\nPrompt for 48-digit key"]
+    adEscrow["Retrieve key from\nActive Directory"]
+
+    powerOn --&gt; tpmCheck
+    tpmCheck -- No --&gt; recoveryPrompt
+    tpmCheck -- Yes --&gt; pcrMeasure --&gt; pcrMatch
+    pcrMatch -- No --&gt; recoveryPrompt
+    pcrMatch -- Yes --&gt; pinPrompt
+    pinPrompt -- Yes --&gt; pinEntry --&gt; networkUnlock
+    pinPrompt -- No --&gt; networkUnlock
+    networkUnlock -- Yes --&gt; wdsUnlock --&gt; vmkRelease
+    networkUnlock -- No --&gt; vmkRelease
+    vmkRelease --&gt; fvekDecrypt --&gt; driveUnlocked
+    recoveryPrompt --&gt; adEscrow --&gt; driveUnlocked</code></pre>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install BitLocker feature</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">BitLocker</span> <span class="n">-IncludeAllSubFeature</span> <span class="n">-IncludeManagementTools</span>

@@ -761,6 +761,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#azure-key-vault-secret-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Key Vault Secret Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#azure-ad-auth-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -902,6 +913,22 @@
 </tr>
 </tbody>
 </table>
+<h2 id="azure-key-vault-secret-access">Azure Key Vault Secret Access<a class="headerlink" href="#azure-key-vault-secret-access" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant app as Application\n(VM / Function / AKS pod)
+    participant mi as Managed Identity\n(IMDS endpoint)
+    participant aad as Azure AD
+    participant kv as Key Vault
+    participant policy as Key Vault Access Policy\nor RBAC
+
+    app-&gt;&gt;mi: GET token (resource=vault.azure.net)
+    mi-&gt;&gt;aad: Token request (MSI credential)
+    aad--&gt;&gt;mi: Bearer token (JWT)
+    mi--&gt;&gt;app: Bearer token
+    app-&gt;&gt;kv: GET secret (Authorization: Bearer token)
+    kv-&gt;&gt;policy: Evaluate access policy / RBAC
+    policy--&gt;&gt;kv: Allow / Deny
+    kv--&gt;&gt;app: Secret value (200 OK) or 403 Forbidden</code></pre>
 <h2 id="azure-ad-auth-flow">Azure AD Auth Flow<a class="headerlink" href="#azure-ad-auth-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>sequenceDiagram
     participant user as User

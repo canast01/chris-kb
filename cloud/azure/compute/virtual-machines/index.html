@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#azure-vm-deployment-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure VM Deployment Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-vms" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -836,6 +847,26 @@
     rg --&gt; platform
     nic --&gt; vnet
     avail --&gt; compute</code></pre>
+<h2 id="azure-vm-deployment-flow">Azure VM Deployment Flow<a class="headerlink" href="#azure-vm-deployment-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    request["Deployment Request\nPortal · CLI · Terraform · ARM"]
+    rbacCheck["RBAC Check\nMicrosoft.Compute/virtualMachines/write"]
+    policyCheck["Azure Policy Evaluation\nallowed SKUs · location · tags"]
+    policyDeny["Deployment DENIED\npolicy non-compliant"]
+    armValidate["ARM Template Validation\nresource provider checks"]
+    resourceGroup["Resource Group\ncontainer for resources"]
+    subgraph provision["Provisioning"]
+        osDisk["OS Disk\nManaged Disk provisioned"]
+        nic["NIC\nIP allocated from subnet"]
+        compute["Compute\nVM SKU allocated in AZ"]
+    end
+    extensions["Extensions Applied\nMonitor Agent · Defender · Custom Script"]
+    running["VM Running\nProvisioning state: Succeeded"]
+
+    request --&gt; rbacCheck --&gt; policyCheck
+    policyCheck -- Non-compliant --&gt; policyDeny
+    policyCheck -- Compliant --&gt; armValidate --&gt; resourceGroup --&gt; provision
+    provision --&gt; extensions --&gt; running</code></pre>
 <h2 id="creating-vms">Creating VMs<a class="headerlink" href="#creating-vms" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a Linux VM with defaults</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>vm<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

@@ -739,6 +739,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#s3-object-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3 Object Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#s3-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -754,6 +765,17 @@
     <span class="md-ellipsis">
       
         IAM Policy Evaluation Logic
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudformation-stack-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudFormation Stack Lifecycle
       
     </span>
   </a>
@@ -931,6 +953,18 @@
 </tr>
 </tbody>
 </table>
+<h2 id="s3-object-lifecycle">S3 Object Lifecycle<a class="headerlink" href="#s3-object-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    standard["S3 Standard\nFrequent access\n(day 0)"]
+    ia["S3 Standard-IA\nInfrequent access\n(day 30+)"]
+    glacier["S3 Glacier\nInstant Retrieval\n(day 90+)"]
+    deepArchive["S3 Glacier\nDeep Archive\n(day 180+)"]
+    expire["Object Expired\nDeleted by lifecycle rule"]
+
+    standard --&gt;|"Transition rule\n≥ 30 days"| ia
+    ia --&gt;|"Transition rule\n≥ 90 days"| glacier
+    glacier --&gt;|"Transition rule\n≥ 180 days"| deepArchive
+    deepArchive --&gt;|"Expiration rule"| expire</code></pre>
 <h2 id="s3-standards">S3 Standards<a class="headerlink" href="#s3-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -985,6 +1019,29 @@
     iamAllow -- No --&gt; resourcePolicy
     resourcePolicy -- Yes --&gt; allow
     resourcePolicy -- No --&gt; defaultDeny</code></pre>
+<h2 id="cloudformation-stack-lifecycle">CloudFormation Stack Lifecycle<a class="headerlink" href="#cloudformation-stack-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    template["Template\nYAML / JSON"]
+    validate["aws cloudformation validate-template"]
+    createStack["CREATE_IN_PROGRESS\naws cloudformation create-stack"]
+    createComplete["CREATE_COMPLETE\nStack resources provisioned"]
+    createFailed["CREATE_FAILED\nRollback triggered"]
+    rollbackComplete["ROLLBACK_COMPLETE\nResources removed"]
+    updateStack["UPDATE_IN_PROGRESS\naws cloudformation update-stack"]
+    updateComplete["UPDATE_COMPLETE\nChanges applied"]
+    updateFailed["UPDATE_ROLLBACK_COMPLETE\nPrevious state restored"]
+    deleteStack["DELETE_IN_PROGRESS\naws cloudformation delete-stack"]
+    deleteComplete["DELETE_COMPLETE\nStack removed"]
+
+    template --&gt; validate --&gt; createStack
+    createStack --&gt; createComplete
+    createStack --&gt; createFailed --&gt; rollbackComplete
+    createComplete --&gt; updateStack
+    updateStack --&gt; updateComplete
+    updateStack --&gt; updateFailed
+    createComplete --&gt; deleteStack
+    updateComplete --&gt; deleteStack
+    deleteStack --&gt; deleteComplete</code></pre>
 <h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
