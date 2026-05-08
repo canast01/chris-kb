@@ -728,6 +728,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#vmkernel-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMkernel Processes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#high-availability-at-host-level" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -735,6 +746,134 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-and-memory-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPU and Memory Scheduling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU and Memory Scheduling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cpu-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPU Scheduling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-ha-and-drs-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere HA and DRS Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vSphere HA and DRS Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-ha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere HA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drs-distributed-resource-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DRS (Distributed Resource Scheduler)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boot-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boot Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Boot Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#esxi-boot-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Boot Device
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boot-from-san" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boot from SAN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Profiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -760,24 +899,27 @@
 
 <h1 id="esxi-architecture-overview">ESXi — Architecture Overview<a class="headerlink" href="#esxi-architecture-overview" title="Permanent link">&para;</a></h1>
 <h2 id="hypervisor-overview">Hypervisor Overview<a class="headerlink" href="#hypervisor-overview" title="Permanent link">&para;</a></h2>
-<p>ESXi is a Type-1 (bare-metal) hypervisor built around the <strong>VMkernel</strong> — a purpose-built OS that directly manages CPU, memory, storage, and network resources on the physical host. ESXi has no general-purpose OS underneath it.</p>
-<p>Key design principles:
-- <strong>Thin footprint</strong>: ESXi runs from a USB/SD card or M.2 boot device (&lt; 1 GB)
-- <strong>In-memory configuration</strong>: most host config is held in memory and persisted to a config store
-- <strong>Direct hardware access</strong>: VMkernel drivers communicate directly with hardware via VIBs (vSphere Installation Bundles)</p>
+<p>ESXi is a Type-1 (bare-metal) hypervisor built around the <strong>VMkernel</strong> — a purpose-built OS that directly manages CPU, memory, storage, and network resources on the physical host. ESXi has no general-purpose OS underneath it; the VMkernel communicates directly with hardware through drivers packaged as VIBs (vSphere Installation Bundles).</p>
+<p>Key design principles:</p>
+<ul>
+<li><strong>Thin footprint</strong>: ESXi runs from a USB/SD card or M.2 boot device (&lt; 1 GB image)</li>
+<li><strong>In-memory configuration</strong>: most host config is held in memory and persisted to a configuration store (<code>/etc/vmware/</code> and persistent scratch partition)</li>
+<li><strong>Direct hardware access</strong>: VMkernel drivers communicate directly with hardware via VIBs</li>
+</ul>
+<hr />
 <h2 id="management-interfaces">Management Interfaces<a class="headerlink" href="#management-interfaces" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Interface</th>
-<th>Access</th>
+<th>Access Method</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>DCUI</td>
-<td>Physical console (or IPMI/iDRAC KVM)</td>
+<td>DCUI (Direct Console UI)</td>
+<td>Physical console or IPMI/iDRAC KVM</td>
 <td>Emergency management, IP config, lockdown mode</td>
 </tr>
 <tr>
@@ -796,20 +938,253 @@
 <td>Direct host management when vCenter unavailable</td>
 </tr>
 <tr>
+<td>ESXCLI</td>
+<td>SSH shell or remote via esxcli <code>-s</code></td>
+<td>Command-line host configuration and scripting</td>
+</tr>
+<tr>
 <td>REST API</td>
 <td><code>https://&lt;host&gt;/api</code></td>
 <td>Automation and programmatic access</td>
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="vmkernel-processes">VMkernel Processes<a class="headerlink" href="#vmkernel-processes" title="Permanent link">&para;</a></h2>
+<p>The ESXi VMkernel schedules VMs and manages physical resources through a set of core internal processes:</p>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vmkctl</code></td>
+<td>VMkernel control interface — creates/destroys VMs</td>
+</tr>
+<tr>
+<td><code>hostd</code></td>
+<td>Host management daemon — handles vSphere API calls</td>
+</tr>
+<tr>
+<td><code>vpxa</code></td>
+<td>vCenter agent — maintains vCenter connection</td>
+</tr>
+<tr>
+<td><code>ntpd</code></td>
+<td>NTP time synchronisation</td>
+</tr>
+<tr>
+<td><code>sfcbd</code></td>
+<td>CIM provider — hardware monitoring via CIM/IPMI</td>
+</tr>
+<tr>
+<td><code>fdm</code></td>
+<td>Fault Domain Manager — vSphere HA agent</td>
+</tr>
+<tr>
+<td><code>vmx</code></td>
+<td>Per-VM process — manages each powered-on VM</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check all running processes</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>grep<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check management agent status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Restart management agents (safe when VMs are running)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+</code></pre></div>
+<hr />
 <h2 id="high-availability-at-host-level">High Availability at Host Level<a class="headerlink" href="#high-availability-at-host-level" title="Permanent link">&para;</a></h2>
 <p>ESXi hosts do not provide HA themselves — HA is orchestrated by vCenter through the <strong>HA cluster</strong>. When a host fails:</p>
 <ol>
-<li>vCenter HA master detects host failure (network isolation or host failure)</li>
-<li>HA master elects which surviving host will restart failed VMs</li>
+<li>vCenter HA master detects host failure via heartbeat network and datastore heartbeat</li>
+<li>HA master elects which surviving hosts will restart failed VMs</li>
 <li>VMs are restarted based on restart priority and available capacity (admission control)</li>
 </ol>
-<p><strong>Host Profiles</strong> enforce consistent configuration across cluster hosts. Applied from vCenter; any host that drifts from profile is flagged as non-compliant.</p>
+<p><strong>HA Admission Control</strong> ensures the cluster always retains enough capacity to absorb the failure of N hosts (configurable — default is 1). If admission control would be violated, vCenter blocks VM power-on operations.</p>
+<p><strong>Host Isolation Response</strong>: If a host loses management network connectivity but VMs are still running, the host's isolation response determines whether to leave VMs running or power them off (configurable per cluster: <code>Leave Powered On</code>, <code>Power Off</code>, or <code>Shut Down</code>).</p>
+<hr />
+<h2 id="cpu-and-memory-scheduling">CPU and Memory Scheduling<a class="headerlink" href="#cpu-and-memory-scheduling" title="Permanent link">&para;</a></h2>
+<h3 id="cpu-scheduling">CPU Scheduling<a class="headerlink" href="#cpu-scheduling" title="Permanent link">&para;</a></h3>
+<p>The ESXi CPU scheduler assigns physical CPU time to VM vCPUs. Key concepts:</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU Ready (<code>%RDY</code>)</td>
+<td>Time a vCPU spent waiting for a physical CPU — high values indicate overcommitment</td>
+</tr>
+<tr>
+<td>CPU Co-stop (<code>%CSTP</code>)</td>
+<td>vCPUs in an SMP VM waiting for each other to be co-scheduled — reduce vCPU count</td>
+</tr>
+<tr>
+<td>NUMA</td>
+<td>Non-Uniform Memory Access — VMs perform best when all vCPUs and memory fit in one NUMA node</td>
+</tr>
+<tr>
+<td>CPU Limit</td>
+<td>Maximum CPU allocation; set to -1 (unlimited) unless required</td>
+</tr>
+<tr>
+<td>CPU Reservation</td>
+<td>Guaranteed minimum CPU; use for latency-sensitive workloads</td>
+</tr>
+</tbody>
+</table>
+<h3 id="memory-management">Memory Management<a class="headerlink" href="#memory-management" title="Permanent link">&para;</a></h3>
+<p>ESXi manages memory through a hierarchy of techniques (from least to most impactful on performance):</p>
+<ol>
+<li><strong>Transparent Page Sharing (TPS)</strong>: Deduplicates identical memory pages across VMs</li>
+<li><strong>Balloon driver</strong>: Inflates inside the guest, causing the guest OS to swap — less impactful than host swap</li>
+<li><strong>Host Swap</strong>: ESXi swaps VM memory to the <code>.vswp</code> file on a datastore — high latency</li>
+<li><strong>Memory Compression</strong>: Compresses 4KB pages before swapping — faster than full swap</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check memory stats on a host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxtop
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Press &#39;m&#39; for memory view</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Key columns: MCTLSZ (balloon), SWCUR (host swap), GRANT (memory given to VMs)</span>
+</code></pre></div>
+<hr />
+<h2 id="vsphere-ha-and-drs-integration">vSphere HA and DRS Integration<a class="headerlink" href="#vsphere-ha-and-drs-integration" title="Permanent link">&para;</a></h2>
+<h3 id="vsphere-ha">vSphere HA<a class="headerlink" href="#vsphere-ha" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM Restart</td>
+<td>Restarts VMs on surviving hosts after a host failure</td>
+</tr>
+<tr>
+<td>VM Monitoring</td>
+<td>Restarts individual VMs if VMware Tools heartbeat fails</td>
+</tr>
+<tr>
+<td>Proactive HA</td>
+<td>Pre-emptively migrates VMs from hosts with degrading hardware</td>
+</tr>
+<tr>
+<td>Application Monitoring</td>
+<td>Guest-level health checking (requires VMware Tools)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="drs-distributed-resource-scheduler">DRS (Distributed Resource Scheduler)<a class="headerlink" href="#drs-distributed-resource-scheduler" title="Permanent link">&para;</a></h3>
+<p>DRS balances VM load across the cluster using vMotion. Operation modes:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual</td>
+<td>DRS provides recommendations; admin applies them</td>
+</tr>
+<tr>
+<td>Partially Automated</td>
+<td>DRS auto-places on power-on; manual for ongoing balancing</td>
+</tr>
+<tr>
+<td>Fully Automated</td>
+<td>DRS auto-places and auto-migrates based on imbalance threshold</td>
+</tr>
+</tbody>
+</table>
+<p>DRS imbalance threshold (1–5): lower = more aggressive migrations.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check DRS recommendations (PowerCLI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Apply all pending recommendations</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-DrsRecommendation</span> <span class="p">|</span> <span class="n">Apply-DrsRecommendation</span>
+</code></pre></div>
+<hr />
+<h2 id="boot-architecture">Boot Architecture<a class="headerlink" href="#boot-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="esxi-boot-device">ESXi Boot Device<a class="headerlink" href="#esxi-boot-device" title="Permanent link">&para;</a></h3>
+<p>ESXi boots from one of:</p>
+<table>
+<thead>
+<tr>
+<th>Boot Device</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M.2 SD card (older)</td>
+<td>Factory default on many Dell/HP servers pre-2020; no local VMFS</td>
+</tr>
+<tr>
+<td>M.2 NVMe (newer)</td>
+<td>Preferred for vSphere 7/8; allows persistent logging without SAN</td>
+</tr>
+<tr>
+<td>USB (legacy)</td>
+<td>Not recommended for production — high failure rate</td>
+</tr>
+<tr>
+<td>SAN LUN (Boot from SAN)</td>
+<td>FC or iSCSI; ESXi boot from a dedicated LUN on the storage array</td>
+</tr>
+</tbody>
+</table>
+<h3 id="boot-from-san">Boot from SAN<a class="headerlink" href="#boot-from-san" title="Permanent link">&para;</a></h3>
+<p>Boot from SAN allows the ESXi image to reside on a shared SAN LUN. All hosts boot from individual LUNs on the same array.</p>
+<p>Requirements:
+- Dedicated boot LUN per host (do not share boot LUNs)
+- HBA must be configured as boot initiator in BIOS
+- SAN zoning: each HBA initiator sees only its boot LUN (not cluster LUNs)
+- LUN must be at least 8 GB (minimum); 32 GB recommended</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify boot device</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>boot<span class="w"> </span>device<span class="w"> </span>get
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View HBA boot configuration</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>san<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>get<span class="w"> </span>-A<span class="w"> </span>vmhba64
+</code></pre></div>
+<h3 id="host-profiles">Host Profiles<a class="headerlink" href="#host-profiles" title="Permanent link">&para;</a></h3>
+<p>Host Profiles capture the entire ESXi host configuration and enforce it consistently across all cluster hosts. Deviations are flagged as non-compliant.</p>
+<p>Key captured settings:
+- VMkernel adapter configuration (IPs, services, MTU)
+- NTP servers
+- DNS servers
+- Firewall ruleset state
+- VIB acceptance level
+- PSP/SATP storage rules
+- SSH and ESXi Shell state
+- Syslog server
+- Advanced settings (security timeouts, etc.)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Extract a host profile from a reference host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-VMHostProfile</span> <span class="n">-Name</span> <span class="s2">&quot;HP-Cluster-Profile&quot;</span> <span class="p">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">-ReferenceHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.corp.local&quot;</span><span class="p">)</span> <span class="p">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">-Description</span> <span class="s2">&quot;Cluster hardened baseline&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Check compliance for all hosts</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span><span class="p">,</span> <span class="n">IncomplianceDescription</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span>
+</code></pre></div>
 
 
 

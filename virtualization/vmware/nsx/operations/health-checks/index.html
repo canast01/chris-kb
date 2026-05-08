@@ -725,16 +725,188 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
+    <nav class="md-nav" aria-label="Health Check Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nsx-manager-cluster" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change Readiness
+        NSX Manager Cluster
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transport-node-status-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transport Node Status (API)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tunnel-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tunnel Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bgp-neighbor-health-edge-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BGP Neighbor Health (Edge CLI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Alarms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dfw-platform-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DFW Platform Limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weekly-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weekly Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Weekly Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificate-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Check Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ip-pool-utilisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IP Pool Utilisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-readiness-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Readiness Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Change Readiness Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cluster-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transport-and-overlay-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transport and Overlay Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#routing-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-and-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup and Rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-change-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Change Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -765,24 +937,24 @@
 <tr>
 <th>Check</th>
 <th>Command / Location</th>
-<th>Notes</th>
+<th>Expected State</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>[ ] NSX Manager system health</td>
 <td>UI → System → Overview</td>
-<td>Overall health should be green</td>
+<td>All green</td>
 </tr>
 <tr>
 <td>[ ] Management cluster status</td>
 <td><code>GET /api/v1/cluster/status</code></td>
-<td>Should show <code>STABLE</code></td>
+<td><code>STABLE</code></td>
 </tr>
 <tr>
 <td>[ ] Transport node status</td>
 <td><code>GET /api/v1/transport-nodes/status</code></td>
-<td>All should report <code>UP</code></td>
+<td>All UP (down_count = 0)</td>
 </tr>
 <tr>
 <td>[ ] Edge cluster health</td>
@@ -792,7 +964,7 @@
 <tr>
 <td>[ ] Open alarms</td>
 <td><code>GET /api/v1/alarms?status=OPEN</code></td>
-<td>Action any HIGH or CRITICAL</td>
+<td>Zero CRITICAL or HIGH</td>
 </tr>
 <tr>
 <td>[ ] BGP neighbours</td>
@@ -807,65 +979,263 @@
 <tr>
 <td>[ ] NSX Manager backup</td>
 <td>UI → System → Backup &amp; Restore</td>
-<td>Confirm last backup timestamp</td>
+<td>Last backup &lt; 25 hours ago</td>
+</tr>
+<tr>
+<td>[ ] Geneve tunnel health</td>
+<td><code>get tunnel status</code> on Manager CLI</td>
+<td>All TEP pairs UP</td>
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="health-check-commands">Health Check Commands<a class="headerlink" href="#health-check-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># NSX-T REST API health checks</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/cluster/status
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/alarms?status<span class="o">=</span>OPEN
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># From Edge node CLI (SSH to Edge)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>get<span class="w"> </span>logical-router<span class="w"> </span>&lt;tier0-router-id&gt;<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>get<span class="w"> </span>tunnel-port<span class="w"> </span>status
+<h3 id="nsx-manager-cluster">NSX Manager Cluster<a class="headerlink" href="#nsx-manager-cluster" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to any NSX Manager node</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nsxcli
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Cluster status (must show STABLE)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Individual node reachability (all should show CONNECTED)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>get<span class="w"> </span>managers
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Corfu (Raft DB) — control plane health</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># All services running</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>get<span class="w"> </span>services<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot; running&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># The above grep shows any service NOT in running state — output should be empty</span>
 </code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] NSX Manager backup current (within 24 hours)</li>
-<li>[ ] Edge cluster healthy — all Edge nodes UP and BGP sessions established</li>
-<li>[ ] All transport nodes UP</li>
-<li>[ ] DFW rule change reviewed — rule ordering and scope confirmed correct</li>
-<li>[ ] Rollback plan documented for routing changes</li>
-<li>[ ] Change window approved and communicated to networking and compute teams</li>
-</ul>
+<h3 id="transport-node-status-api">Transport Node Status (API)<a class="headerlink" href="#transport-node-status-api" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Summary — check down_count and degraded_count</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">total   = d.get(&#39;total_count&#39;, 0)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">up      = d.get(&#39;up_count&#39;, 0)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s2">down    = d.get(&#39;down_count&#39;, 0)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">degrad  = d.get(&#39;degraded_count&#39;, 0)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">print(f&#39;Transport Nodes — total={total}  up={up}  down={down}  degraded={degrad}&#39;)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s2">if down &gt; 0 or degrad &gt; 0:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">    print(&#39;ACTION REQUIRED: nodes are down or degraded&#39;)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s2">&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Identify specific failing nodes</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes?page_size=500&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s2">import sys, json, requests</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="s2">for n in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s2">    name = n.get(&#39;display_name&#39;,&#39;?&#39;)</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s2">    nid  = n.get(&#39;id&#39;,&#39;&#39;)</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s2">    print(f&#39;{name}  id={nid}&#39;)</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+</code></pre></div>
+<h3 id="tunnel-health">Tunnel Health<a class="headerlink" href="#tunnel-health" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From NSX Manager CLI — all tunnels</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsxcli
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Lines showing DOWN indicate broken TEP pairs</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Count DOWN tunnels</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>DOWN
+</code></pre></div>
+<h3 id="bgp-neighbor-health-edge-cli">BGP Neighbor Health (Edge CLI)<a class="headerlink" href="#bgp-neighbor-health-edge-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to each Edge node</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vrf<span class="w"> </span>&lt;tier0-vrf-id&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Expected output shows each peer with state=Established</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Any peer not Established = BGP issue; see Common Issues</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Specific peer detail</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;peer-ip&gt;
+</code></pre></div>
+<h3 id="open-alarms">Open Alarms<a class="headerlink" href="#open-alarms" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Critical alarms (action required immediately)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">cnt = d.get(&#39;result_count&#39;, 0)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">print(f&#39;CRITICAL alarms open: {cnt}&#39;)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">for a in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">    print(f&#39;  {a.get(\&quot;alarm_source\&quot;,{}).get(\&quot;display_name\&quot;,\&quot;?\&quot;)} — {a.get(\&quot;summary\&quot;,\&quot;\&quot;)[:80]}&#39;)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Medium alarms (monitor and plan)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=MEDIUM&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">print(f&#39;MEDIUM alarms open: {d.get(\&quot;result_count\&quot;,0)}&#39;)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<h3 id="dfw-platform-limits">DFW Platform Limits<a class="headerlink" href="#dfw-platform-limits" title="Permanent link">&para;</a></h3>
+<p>NSX-T has platform limits on DFW objects. Monitor these to avoid hitting limits that would prevent policy changes:</p>
 <table>
 <thead>
 <tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
+<th>Object</th>
+<th>Limit (per cluster)</th>
+<th>Check</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>NSX Manager backup current</td>
-<td></td>
-<td>Backup timestamp confirmed</td>
+<td>Security policies</td>
+<td>10,000</td>
+<td>UI → Security → Distributed Firewall → count</td>
 </tr>
 <tr>
-<td>Edge cluster healthy</td>
-<td></td>
-<td>All Edge nodes UP</td>
+<td>Rules per policy</td>
+<td>1,000</td>
+<td>API: list rules per policy</td>
 </tr>
 <tr>
-<td>Transport nodes all UP</td>
-<td></td>
-<td>API status check</td>
+<td>Total DFW rules</td>
+<td>100,000</td>
+<td><code>GET /api/v1/firewall/sections</code> total rule count</td>
 </tr>
 <tr>
-<td>DFW rule change reviewed</td>
-<td></td>
-<td>Peer review completed</td>
+<td>Security groups</td>
+<td>10,000</td>
+<td><code>GET /policy/api/v1/infra/domains/default/groups</code></td>
 </tr>
 <tr>
-<td>Change window approved</td>
-<td></td>
-<td>Ticket reference</td>
+<td>IP sets</td>
+<td>10,000</td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
+<p>Alert when usage exceeds 70% of any limit.</p>
+<hr />
+<h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>How</th>
+<th>Expected State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[ ] Certificate expiry</td>
+<td><code>GET /api/v1/trust-management/certificates?details=true</code></td>
+<td>All certs &gt; 60 days remaining</td>
+</tr>
+<tr>
+<td>[ ] Backup verification</td>
+<td>Verify SFTP has backup file from last 7 days</td>
+<td>File present and non-zero</td>
+</tr>
+<tr>
+<td>[ ] IP pool utilisation</td>
+<td><code>GET /api/v1/pools/ip-pools/&lt;id&gt;</code></td>
+<td>TEP pool has &gt; 10 free IPs</td>
+</tr>
+<tr>
+<td>[ ] Edge cluster HA test</td>
+<td>Review HA state; test failover in lab</td>
+<td>Active/Standby correctly assigned</td>
+</tr>
+<tr>
+<td>[ ] vSphere cluster size changes</td>
+<td>Any hosts added/removed from TNP scope?</td>
+<td>All new hosts prepared as transport nodes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="certificate-check-script">Certificate Check Script<a class="headerlink" href="#certificate-check-script" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/trust-management/certificates?details=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">from datetime import datetime, timezone</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">now = datetime.now(timezone.utc)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">for c in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">    name  = c.get(&#39;display_name&#39;, c.get(&#39;id&#39;,&#39;?&#39;))</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s2">    exp   = c.get(&#39;not_after&#39;,&#39;&#39;)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">    if exp:</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">        exp_dt = datetime.fromisoformat(exp.replace(&#39;Z&#39;,&#39;+00:00&#39;))</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s2">        days   = (exp_dt - now).days</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">        flag   = &#39;  OK&#39; if days &gt; 60 else &#39;  *** EXPIRING&#39; if days &gt; 14 else &#39;  *** CRITICAL&#39;</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">        print(f&#39;  {name:&lt;40}  expires={exp[:10]}  days={days}{flag}&#39;)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<h3 id="ip-pool-utilisation">IP Pool Utilisation<a class="headerlink" href="#ip-pool-utilisation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s2">for pool in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">    name = pool.get(&#39;display_name&#39;,&#39;?&#39;)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s2">    pid  = pool.get(&#39;id&#39;,&#39;&#39;)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s2">    print(f&#39;Pool: {name}  (id={pid})&#39;)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># For each pool ID, check allocations</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s2">for s in d.get(&#39;subnets&#39;, []):</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s2">    t = s.get(&#39;total_ips&#39;,0); f = s.get(&#39;free_ips&#39;,0)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="s2">    pct = round((t-f)/t*100,1) if t else 0</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="s2">    print(f&#39;  {s.get(\&quot;cidr\&quot;,\&quot;?\&quot;)}  total={t}  free={f}  used={pct}%&#39;)</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="change-readiness-checklist">Change Readiness Checklist<a class="headerlink" href="#change-readiness-checklist" title="Permanent link">&para;</a></h2>
+<p>Complete before any NSX configuration change, DFW policy modification, upgrade, or maintenance:</p>
+<h3 id="cluster-health">Cluster Health<a class="headerlink" href="#cluster-health" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] NSX Manager cluster status: STABLE (<code>get cluster status</code>)</li>
+<li>[ ] All Manager nodes connected (<code>get managers</code> — all CONNECTED)</li>
+<li>[ ] No CRITICAL alarms open (<code>GET /api/v1/alarms?status=OPEN&amp;severity=CRITICAL</code> — result_count = 0)</li>
+</ul>
+<h3 id="transport-and-overlay-health">Transport and Overlay Health<a class="headerlink" href="#transport-and-overlay-health" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All transport nodes UP (<code>GET /api/v1/transport-nodes/status</code> — down_count = 0)</li>
+<li>[ ] All Geneve tunnels UP (<code>get tunnel status</code> — no DOWN tunnels)</li>
+<li>[ ] Edge cluster healthy — all Edge nodes UP and reachable</li>
+</ul>
+<h3 id="routing-health">Routing Health<a class="headerlink" href="#routing-health" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All BGP sessions Established (verify from each Edge node)</li>
+<li>[ ] Routing table intact (<code>vrf &lt;id&gt;</code> → <code>get route</code> — expected prefixes present)</li>
+</ul>
+<h3 id="backup-and-rollback">Backup and Rollback<a class="headerlink" href="#backup-and-rollback" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] NSX Manager backup current and verified on SFTP (&lt; 24 hours old)</li>
+<li>[ ] Rollback plan documented for the specific change</li>
+<li>[ ] Change window approved and communicated to networking and compute teams</li>
+</ul>
+<h3 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h3>
+<p>After every NSX configuration change:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Check for new alarms</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># 2. Verify transport nodes still UP</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 3. Verify BGP still up (if routing was changed)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># SSH to Edge, run: get bgp neighbor summary</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># 4. Test VM connectivity if DFW was changed</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Use Traceflow: Plan &amp; Troubleshoot → Traceflow</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># 5. Check realisation of the specific change</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/realized-state/realized-entities?intent_path=&lt;changed-object-path&gt;&quot;</span>
+</code></pre></div>
 
 
 
