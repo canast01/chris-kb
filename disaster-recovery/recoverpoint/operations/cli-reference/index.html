@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#image-access-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image Access Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#boxmgmt-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -888,6 +899,7 @@
 <th>Interface</th>
 <th>Access</th>
 <th>Purpose</th>
+<th>When to use</th>
 </tr>
 </thead>
 <tbody>
@@ -895,19 +907,52 @@
 <td><code>boxmgmt</code> CLI</td>
 <td>SSH to RPA appliance</td>
 <td>Menu-driven system management</td>
+<td>On-call triage; image access; manual failover</td>
 </tr>
 <tr>
 <td>RPAPI REST</td>
 <td>HTTPS to cluster IP</td>
 <td>Automation, CG control, status</td>
+<td>Scripted DR tests; monitoring integrations</td>
 </tr>
 <tr>
 <td>Unisphere for RecoverPoint</td>
 <td>Web UI</td>
 <td>GUI management</td>
+<td>Configuration, visual health checks</td>
 </tr>
 </tbody>
 </table>
+<h2 id="image-access-flow">Image Access Flow<a class="headerlink" href="#image-access-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    drTestStart["DR Test or Recovery Initiated"]
+    listCGs["List CG State\ngroupsStatus"]
+    cgHealthy{"CGs ACTIVE\nand Journal &lt; 70%?"}
+    createBookmark["Create Pre-Test Bookmark\ngroup create_bookmark --gname cgname\n--name dr-test-date"]
+    enableAccess["Enable Image Access\ngroup enable-image-access\n--copy DR_Copy --image latest --access-mode virtual"]
+    confirmAccess["Confirm ImageAccess State\ngroup status --gname cgname"]
+    mountVolumes["Mount DR Volumes at DR Site\n(SAN / vSphere step)"]
+    validate["Validate Application Data\n(app team confirms)"]
+    disableAccess["Disable Image Access\ngroup disable-image-access --gname cgname"]
+    confirmActive["Confirm CG ACTIVE\ngroups status"]
+    abortTest["Do Not Proceed\nResolve CG issues first"]
+
+    drTestStart --&gt; listCGs
+    listCGs --&gt; cgHealthy
+    cgHealthy --&gt;|"Yes"| createBookmark
+    cgHealthy --&gt;|"No"| abortTest
+    createBookmark --&gt; enableAccess
+    enableAccess --&gt; confirmAccess
+    confirmAccess --&gt; mountVolumes
+    mountVolumes --&gt; validate
+    validate --&gt; disableAccess
+    disableAccess --&gt; confirmActive
+
+    style drTestStart fill:#2563eb,color:#fff
+    style confirmActive fill:#15803d,color:#fff
+    style abortTest fill:#be123c,color:#fff
+    style enableAccess fill:#b45309,color:#fff
+    style disableAccess fill:#b45309,color:#fff</code></pre>
 <hr />
 <h2 id="boxmgmt-cli">boxmgmt CLI<a class="headerlink" href="#boxmgmt-cli" title="Permanent link">&para;</a></h2>
 <p>SSH to any RPA (RecoverPoint Appliance) in the cluster. The default management user is <code>admin</code> or <code>boxmgmt</code>.</p>

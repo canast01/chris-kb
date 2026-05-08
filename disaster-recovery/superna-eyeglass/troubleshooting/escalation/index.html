@@ -877,6 +877,23 @@
 <li>For critical issues, call Superna's emergency support line (listed on the support portal)</li>
 <li>For account-level escalation: contact Superna account manager</li>
 </ol>
+<pre class="mermaid"><code>flowchart TD
+    issue(["Eyeglass issue\ncannot self-resolve"])
+    bundle["Download support bundle\nAdmin UI → Admin → Support Bundle"]
+    openSR["Open SR at support.superna.net\nAttach bundle\nSet severity level"]
+    sev1{Severity 1?\nFailover blocked}
+    emergency["Call Superna emergency\nsupport line\n(on support portal)"]
+    tier1["Await Tier 1 assignment\nSev 2: same business day"]
+    progress{Resolution\nwithin SLA?}
+    escalate["Comment in SR:\nRequest escalation to Tier 2"]
+    accMgr["Contact Superna\naccount manager"]
+    resolved(["Issue resolved"])
+
+    issue --&gt; bundle --&gt; openSR --&gt; sev1
+    sev1 --&gt;|Yes| emergency --&gt; progress
+    sev1 --&gt;|No| tier1 --&gt; progress
+    progress --&gt;|Yes| resolved
+    progress --&gt;|No| escalate --&gt; accMgr --&gt; resolved</code></pre>
 
 
 

@@ -699,6 +699,180 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#data-at-rest-encryption-dre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data-at-Rest Encryption (D@RE)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data-at-Rest Encryption (D@RE)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-management-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Management Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-dre-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify D@RE Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-key-management-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Key Management (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-key-management-kmip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Key Management (KMIP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kmip-key-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KMIP Key Rotation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cryptographic-erase-drive-sanitisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cryptographic Erase (Drive Sanitisation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption in Transit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encryption in Transit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#management-plane-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Plane (HTTPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-version-and-cipher-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Version and Cipher Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replication-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iscsi-in-transit-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iSCSI in-Transit Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nfs-in-transit-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS in-Transit Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-compliance-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Compliance Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +892,277 @@
 
 
 <h1 id="powerstore-encryption">PowerStore — Encryption<a class="headerlink" href="#powerstore-encryption" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="data-at-rest-encryption-dre">Data-at-Rest Encryption (D@RE)<a class="headerlink" href="#data-at-rest-encryption-dre" title="Permanent link">&para;</a></h2>
+<p>PowerStore encrypts all data at rest using AES-256 encryption at the drive level. D@RE is enabled by default on all PowerStore models and cannot be disabled. Encryption is transparent to hosts — no host-side configuration is required.</p>
+<h3 id="key-management-architecture">Key Management Architecture<a class="headerlink" href="#key-management-architecture" title="Permanent link">&para;</a></h3>
+<p>PowerStore D@RE uses a two-tier key hierarchy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Drive Encryption Keys (DEKs)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └── Unique per NVMe SSD; generated and stored on the drive controller
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Key Encryption Keys (KEKs)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  └── Encrypt the DEKs; held by PowerStore node
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>      Options:
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>      ├── Internal Key Management (IKM)  — KEKs stored within PowerStoreOS (default)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>      └── External Key Management (EKM)  — KEKs stored in an external KMIP key server
+</code></pre></div>
+<h3 id="verify-dre-status">Verify D@RE Status<a class="headerlink" href="#verify-dre-status" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check encryption status via REST API</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/appliance?select=name,is_encryption_enabled,encryption_mode&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Expected response for a correctly configured system:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># {</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">#   &quot;is_encryption_enabled&quot;: true,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   &quot;encryption_mode&quot;: &quot;Software&quot;   &lt;- Internal Key Management</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># }</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># or for external KMIP:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># {</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">#   &quot;encryption_mode&quot;: &quot;KMIP&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># }</span>
+</code></pre></div>
+<h3 id="internal-key-management-default">Internal Key Management (Default)<a class="headerlink" href="#internal-key-management-default" title="Permanent link">&para;</a></h3>
+<p>By default, PowerStore uses Internal Key Management — the Key Encryption Keys are stored within PowerStoreOS. This provides drive-level encryption (data is unreadable if a drive is physically removed from the appliance) but does not provide appliance-level key separation.</p>
+<p>This is acceptable for most environments and is required by FIPS 140-2 at the drive layer (PowerStore uses FIPS 140-2 validated NVMe SSDs).</p>
+<h3 id="external-key-management-kmip">External Key Management (KMIP)<a class="headerlink" href="#external-key-management-kmip" title="Permanent link">&para;</a></h3>
+<p>For environments requiring centralised key management with separation of duties between storage administration and key administration, configure PowerStore to use an external KMIP key server.</p>
+<p>Supported KMIP key servers:</p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Vendor</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thales CipherTrust Manager (KeySecure)</td>
+<td>Thales</td>
+<td>Recommended; KMIP 1.1+</td>
+</tr>
+<tr>
+<td>Entrust KeyControl (HyTrust)</td>
+<td>Entrust</td>
+<td>KMIP 1.1+</td>
+</tr>
+<tr>
+<td>Vormetric Data Security Manager</td>
+<td>Thales</td>
+<td>KMIP 1.1+</td>
+</tr>
+<tr>
+<td>HashiCorp Vault</td>
+<td>HashiCorp</td>
+<td>Requires KMIP secrets engine (Enterprise)</td>
+</tr>
+<tr>
+<td>IBM Security Guardium</td>
+<td>IBM</td>
+<td>KMIP 1.1+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure KMIP key server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/kmip_server&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;name&quot;: &quot;thales-ciphertrust-prod&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;address&quot;: &quot;192.168.10.100&quot;,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;port&quot;: 5696,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;username&quot;: &quot;powerstore-kmip-user&quot;,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">    &quot;password&quot;: &quot;&lt;kmip-service-account-password&gt;&quot;,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">    &quot;timeout&quot;: 30,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">    &quot;server_type&quot;: &quot;CipherTrust&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Verify KMIP connectivity</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/kmip_server/&lt;kmip-id&gt;/verify_connection&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Switch appliance key management mode to KMIP</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># WARNING: This operation is irreversible without a full data migration</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Ensure KMIP server is HA and backed up before switching</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/appliance/&lt;appliance-id&gt;/set_encryption_key_manager&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;kmip_server_id&quot;: &quot;&lt;kmip-id&gt;&quot;}&#39;</span>
+</code></pre></div>
+<h3 id="kmip-key-rotation">KMIP Key Rotation<a class="headerlink" href="#kmip-key-rotation" title="Permanent link">&para;</a></h3>
+<p>Rotate encryption keys annually (or per your security policy):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Rotate the KMIP-managed KEK for the appliance</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/appliance/&lt;appliance-id&gt;/rotate_encryption_key&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Monitor the rotation job status</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/job?type=encryption_key_rotation&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span>
+</code></pre></div>
+<p>Key rotation does not cause host I/O interruption. The process runs in the background and re-encrypts the DEKs with a new KEK. Duration depends on the number of drives.</p>
+<h3 id="cryptographic-erase-drive-sanitisation">Cryptographic Erase (Drive Sanitisation)<a class="headerlink" href="#cryptographic-erase-drive-sanitisation" title="Permanent link">&para;</a></h3>
+<p>When decommissioning a PowerStore appliance or replacing drives, perform a cryptographic erase to render data unrecoverable:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Perform secure erase on a drive (example: failed drive being replaced)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># This invalidates the DEK for the drive — all data becomes permanently unreadable</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># PowerStore Manager → Hardware → Drives → select drive → Actions → Erase</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># For full appliance decommissioning: Security Erase the entire appliance</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># PowerStore Manager → Settings → Security → Secure Erase Appliance</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># This operation:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 1. Deletes all data (volumes, NAS, snapshots)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># 2. Cryptographically erases all drives</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># 3. Resets the appliance to factory state</span>
+</code></pre></div>
+<p>After cryptographic erase, drives can be returned to Dell or disposed of without further physical destruction — the data is permanently unrecoverable.</p>
+<h2 id="encryption-in-transit">Encryption in Transit<a class="headerlink" href="#encryption-in-transit" title="Permanent link">&para;</a></h2>
+<h3 id="management-plane-https">Management Plane (HTTPS)<a class="headerlink" href="#management-plane-https" title="Permanent link">&para;</a></h3>
+<p>PowerStore Manager and the REST API are served over HTTPS. PowerStore ships with a self-signed certificate — replace it with a CA-signed certificate before production use.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Step 1: Generate a CSR</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-keyout<span class="w"> </span>powerstore.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-out<span class="w"> </span>powerstore.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/C=GB/ST=London/O=Example Corp/CN=lon01-pstore-001.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:lon01-pstore-001.corp.example.com,IP:192.168.10.50&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Step 2: Submit to internal CA; receive the signed certificate chain</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Step 3: Import certificate via REST API</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;mgmt-ip&gt;/api/rest/x509_certificate&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;DELL-EMC-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">    &quot;service&quot;: &quot;Manager&quot;,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s1">    &quot;certificate&quot;: &quot;&lt;base64-encoded-cert-chain&gt;&quot;,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s1">    &quot;private_key&quot;: &quot;&lt;base64-encoded-private-key&gt;&quot;,</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">    &quot;passphrase&quot;: &quot;&quot;</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Step 4: Verify the new certificate is active</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer<span class="w"> </span>-subject<span class="w"> </span>-dates
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Certificate Parameter</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Key size</td>
+<td>RSA 4096 or ECDSA P-256/P-384</td>
+</tr>
+<tr>
+<td>Signature algorithm</td>
+<td>SHA-256 or stronger</td>
+</tr>
+<tr>
+<td>SAN</td>
+<td>Must include the management FQDN and IP</td>
+</tr>
+<tr>
+<td>Validity</td>
+<td>Maximum 2 years; monitor expiry 30 days before renewal</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tls-version-and-cipher-configuration">TLS Version and Cipher Configuration<a class="headerlink" href="#tls-version-and-cipher-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify TLS 1.0 and 1.1 are disabled (both should fail)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1<span class="w">   </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;failure\|error\|handshake&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;failure\|error\|handshake&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify TLS 1.2 is functional</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;mgmt-ip&gt;:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Protocol
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Enumerate active cipher suites</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>&lt;mgmt-ip&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Acceptable: ECDHE-RSA-AES256-GCM-SHA384, ECDHE-RSA-AES128-GCM-SHA256</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Reject: RC4, 3DES, EXPORT, NULL, MD5</span>
+</code></pre></div>
+<p>Configure TLS settings: PowerStore Manager → <strong>Settings → Security → TLS Configuration</strong>.</p>
+<h3 id="replication-encryption">Replication Encryption<a class="headerlink" href="#replication-encryption" title="Permanent link">&para;</a></h3>
+<p>Async replication traffic between PowerStore systems is encrypted in transit. The replication link uses TLS on port 443 — the same management port used for REST API communication.</p>
+<p>For Metro Volume (synchronous replication), traffic uses the dedicated inter-site link. If this link traverses untrusted network segments (e.g., a third-party MPLS circuit), implement IPsec encryption at the network layer for the inter-site link.</p>
+<h3 id="iscsi-in-transit-encryption">iSCSI in-Transit Encryption<a class="headerlink" href="#iscsi-in-transit-encryption" title="Permanent link">&para;</a></h3>
+<p>iSCSI does not natively encrypt data in transit. Options for iSCSI traffic encryption:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IPsec</td>
+<td>Encrypt at the network layer; requires IPsec-capable switches/routers</td>
+</tr>
+<tr>
+<td>Dedicated VLAN</td>
+<td>Isolate iSCSI traffic on a separate, physically segregated network</td>
+</tr>
+<tr>
+<td>NVMe-oF (RoCE)</td>
+<td>Does not natively encrypt; same isolation approach as iSCSI</td>
+</tr>
+</tbody>
+</table>
+<p>For environments requiring iSCSI encryption, consider switching to Fibre Channel (which is physically isolated by nature of a separate fabric) or NVMe-oF with proper VLAN isolation.</p>
+<h3 id="nfs-in-transit-encryption">NFS in-Transit Encryption<a class="headerlink" href="#nfs-in-transit-encryption" title="Permanent link">&para;</a></h3>
+<p>Enable Kerberos with privacy (<code>krb5p</code>) on NFS exports to encrypt file data in transit. This requires:</p>
+<ol>
+<li>NAS server joined to Active Directory</li>
+<li>Kerberos keytab deployed on NAS server</li>
+<li>NFS export <code>min_security</code> set to <code>krb5p</code></li>
+<li>NFS clients configured for Kerberos authentication</li>
+</ol>
+<p>For purely internal file transfers on trusted networks, <code>sys</code> security is acceptable; <code>krb5p</code> is required if NFS traffic traverses untrusted segments.</p>
+<h2 id="encryption-compliance-summary">Encryption Compliance Summary<a class="headerlink" href="#encryption-compliance-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Requirement</th>
+<th>PowerStore Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PCI-DSS v4.0 Req 3.5</td>
+<td>Protect primary account numbers with strong cryptography</td>
+<td>D@RE with AES-256 on all drives</td>
+</tr>
+<tr>
+<td>NIST 800-53 SC-28</td>
+<td>Protection of information at rest</td>
+<td>D@RE enabled by default; external KMIP for key separation</td>
+</tr>
+<tr>
+<td>NIST 800-53 SC-8</td>
+<td>Transmission confidentiality</td>
+<td>TLS 1.2+ on management plane; replication encrypted</td>
+</tr>
+<tr>
+<td>NIST 800-53 SC-12</td>
+<td>Cryptographic key establishment</td>
+<td>KMIP for centralised key management; annual key rotation</td>
+</tr>
+<tr>
+<td>ISO 27001 A.8.24</td>
+<td>Use of cryptography</td>
+<td>AES-256 at rest; TLS in transit; KMIP for key management</td>
+</tr>
+<tr>
+<td>HIPAA §164.312(e)</td>
+<td>Encryption of ePHI in transit</td>
+<td>TLS on management; IPsec or dedicated fabric for data traffic</td>
+</tr>
+<tr>
+<td>GDPR Art. 32</td>
+<td>Appropriate security measures</td>
+<td>D@RE + secure erase for right-to-erasure compliance</td>
+</tr>
+</tbody>
+</table>
 
 
 

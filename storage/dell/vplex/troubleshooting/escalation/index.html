@@ -979,6 +979,28 @@
 </table>
 <h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
 <p>Use this path when a case is not progressing at the expected pace.</p>
+<pre class="mermaid"><code>flowchart TD
+    issue(["VPLEX issue\ncannot self-resolve"])
+    collectData["Collect diagnostic data\ncollect-support-log\nhealth-check --full\nhost path output"]
+    openCase["Open Dell Support case\ndell.com/support\nAttach support bundle\nSet severity level"]
+    sev1{Severity 1?\nI/O fully suspended}
+    missCall["Call Mission Critical line\n(ProSupport Mission Critical)"]
+    sev2Wait["Await Tier 1 response\nSev 2: 2h SLA"]
+    progressing{Case making\nprogress?}
+    escalateComment["Request escalation\nin case comments"]
+    accountMgr["Contact Dell TAM\n/ account manager"]
+    exec{Sev 1 unresolved\n&gt; 4 hours?}
+    execEsc["Executive escalation\nDell EMC Services management"]
+    resolved(["Issue resolved\nClose case"])
+
+    issue --&gt; collectData --&gt; openCase
+    openCase --&gt; sev1
+    sev1 --&gt;|Yes| missCall --&gt; progressing
+    sev1 --&gt;|No| sev2Wait --&gt; progressing
+    progressing --&gt;|Yes| resolved
+    progressing --&gt;|No| escalateComment --&gt; accountMgr --&gt; exec
+    exec --&gt;|Yes| execEsc --&gt; resolved
+    exec --&gt;|No| resolved</code></pre>
 <h3 id="step-1-case-update-request">Step 1 — Case Update Request<a class="headerlink" href="#step-1-case-update-request" title="Permanent link">&para;</a></h3>
 <p>Add a detailed comment to the open case requesting escalation. Include:
 - Time elapsed since case opening

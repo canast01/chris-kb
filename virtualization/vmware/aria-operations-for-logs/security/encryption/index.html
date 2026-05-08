@@ -699,6 +699,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tls-certificate-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Certificate Replacement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-certificate-validity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Certificate Validity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-ingestion-transport-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Ingestion Transport Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-at-rest-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data at Rest Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-configuration-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Configuration Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +781,125 @@
 
 
 <h1 id="aria-ops-for-logs-encryption">Aria Ops for Logs — Encryption<a class="headerlink" href="#aria-ops-for-logs-encryption" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="tls-certificate-replacement">TLS Certificate Replacement<a class="headerlink" href="#tls-certificate-replacement" title="Permanent link">&para;</a></h2>
+<p>Aria Operations for Logs ships with a self-signed certificate. Replace it with a CA-signed certificate for production before connecting any syslog sources or users.</p>
+<p><strong>Via UI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → SSL → Replace Certificate
+</code></pre></div>
+<p>Upload in order:
+1. <strong>Private key</strong> (PEM, no passphrase)
+2. <strong>Certificate</strong> (PEM — leaf certificate only)
+3. <strong>CA chain</strong> (PEM — intermediate + root, concatenated)</p>
+<p>After upload, Aria Ops for Logs restarts its web services — expect 1–3 minutes of unavailability.</p>
+<p><strong>Via CLI:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>admin@vrli-prod-01.corp.local
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Copy certificate files to the appliance</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Then replace via the loginsight configuration tool</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>/usr/lib/loginsight/application/sbin/loginsight<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--key<span class="w"> </span>/tmp/vrli-prod-01.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--cert<span class="w"> </span>/tmp/vrli-prod-01.pem<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--cacert<span class="w"> </span>/tmp/chain.pem
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Restart to apply</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>loginsight
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Verify the new certificate</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrli-prod-01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates<span class="w"> </span>-issuer
+</code></pre></div>
+<hr />
+<h2 id="verifying-certificate-validity">Verifying Certificate Validity<a class="headerlink" href="#verifying-certificate-validity" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check certificate expiry from an external client</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrli-prod-01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check across all cluster nodes</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrli-prod-01<span class="w"> </span>vrli-prod-02<span class="w"> </span>vrli-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.corp.local: &quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.corp.local:443&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s/notAfter=//&#39;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">done</span>
+</code></pre></div>
+<hr />
+<h2 id="log-ingestion-transport-encryption">Log Ingestion Transport Encryption<a class="headerlink" href="#log-ingestion-transport-encryption" title="Permanent link">&para;</a></h2>
+<p>Log data is forwarded to Aria Ops for Logs over several channels with varying encryption support:</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Port</th>
+<th>Encrypted</th>
+<th>Recommended For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cfapi (TLS)</td>
+<td>9543</td>
+<td>Yes — TLS 1.2+</td>
+<td>LI Agent on Linux/Windows VMs</td>
+</tr>
+<tr>
+<td>cfapi (no TLS)</td>
+<td>9000</td>
+<td>No</td>
+<td>Lab only</td>
+</tr>
+<tr>
+<td>Syslog TCP</td>
+<td>1514</td>
+<td>No (unless wrapped in TLS)</td>
+<td>Legacy devices with TCP syslog</td>
+</tr>
+<tr>
+<td>Syslog UDP</td>
+<td>514</td>
+<td>No</td>
+<td>ESXi hosts (no TLS option on ESXi syslog)</td>
+</tr>
+</tbody>
+</table>
+<p>For sensitive environments, use the LI Agent (cfapi/TLS on port 9543) instead of raw syslog where possible. ESXi syslog over UDP 514 is accepted as a known limitation of the ESXi syslog implementation — ESXi does not support TLS for syslog.</p>
+<p>Configure the LI Agent to use TLS:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /var/lib/loginsight-agent/liagent.ini</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">[server]</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="na">hostname</span><span class="o">=</span><span class="s">vrli-prod-01.corp.local</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="na">port</span><span class="o">=</span><span class="s">9543</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="na">proto</span><span class="o">=</span><span class="s">cfapi</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="na">ssl</span><span class="o">=</span><span class="s">yes</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="na">ssl_ca_path</span><span class="o">=</span><span class="s">/etc/ssl/certs/corp-ca.pem</span>
+</code></pre></div>
+<hr />
+<h2 id="data-at-rest-encryption">Data at Rest Encryption<a class="headerlink" href="#data-at-rest-encryption" title="Permanent link">&para;</a></h2>
+<p>Aria Ops for Logs stores log indices and raw data on the node's local disk (<code>/var/log/loginsight</code>). Native application-level encryption is not included. Apply encryption at the storage layer:</p>
+<ul>
+<li><strong>vSAN</strong>: enable vSAN Data-at-Rest Encryption on the datastore hosting the VMs</li>
+<li><strong>SAN/NAS LUN encryption</strong>: enable at the array level</li>
+<li><strong>VM Encryption (vSphere)</strong>: encrypt the VM virtual disks via vSphere encryption policies</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — verify if Aria Ops for Logs VMs have encrypted disks</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;vrli-*&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;VM&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Parent</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Encrypted&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Backing</span><span class="p">.</span><span class="n">KeyId</span> <span class="o">-ne</span> <span class="nv">$null</span><span class="p">}}</span>
+</code></pre></div>
+<hr />
+<h2 id="tls-configuration-hardening">TLS Configuration Hardening<a class="headerlink" href="#tls-configuration-hardening" title="Permanent link">&para;</a></h2>
+<p>Ensure only TLS 1.2 and 1.3 are active. TLS 1.0 and 1.1 are disabled by default in Aria Ops for Logs 8.x.</p>
+<p>Verify from an external scanner:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test that TLS 1.0 is rejected</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrli-prod-01.corp.local:443<span class="w"> </span>-tls1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;alert|error|CONNECTED&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Expected: alert handshake failure (not CONNECTED)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Confirm TLS 1.2 is accepted</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrli-prod-01.corp.local:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Expected: Protocol : TLSv1.2</span>
+</code></pre></div>
+<p>Use <code>testssl.sh</code> for a comprehensive scan before exposing the UI to any external network:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>testssl.sh<span class="w"> </span>--severity<span class="w"> </span>HIGH<span class="w"> </span>vrli-prod-01.corp.local:443
+</code></pre></div>
 
 
 

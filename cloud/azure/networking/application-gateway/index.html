@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#application-gateway-traffic-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Gateway Traffic Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-an-application-gateway" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,18 @@
 
 <h1 id="application-gateway">Application Gateway<a class="headerlink" href="#application-gateway" title="Permanent link">&para;</a></h1>
 <p>Azure Application Gateway is a Layer 7 load balancer that provides SSL termination, URL-based routing, Web Application Firewall (WAF), and autoscaling. It operates at the application layer and is the preferred entry point for HTTP/HTTPS workloads.</p>
+<h2 id="application-gateway-traffic-flow">Application Gateway Traffic Flow<a class="headerlink" href="#application-gateway-traffic-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    client["Internet Client\nHTTP / HTTPS"]
+    pip["Public IP\nStatic · Standard SKU"]
+    waf["WAF Policy\nOWASP rules · custom rules"]
+    listener["Listener\nHTTP :80 · HTTPS :443"]
+    routing["Routing Rules\nURL path · host header"]
+    backendPool["Backend Pool\nVMs · VMSS · AKS · App Service"]
+    healthProbe["Health Probe\nHTTP · HTTPS · custom"]
+
+    client --&gt; pip --&gt; waf --&gt; listener --&gt; routing --&gt; backendPool
+    healthProbe --&gt;|"monitors"| backendPool</code></pre>
 <h2 id="creating-an-application-gateway">Creating an Application Gateway<a class="headerlink" href="#creating-an-application-gateway" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a public IP for the Application Gateway</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>public-ip<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

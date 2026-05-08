@@ -728,6 +728,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#srdfa-command-decision-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRDF/A Command Decision Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#status-and-inspection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -819,6 +830,35 @@
 <p>SRDF/A (Asynchronous) is managed via SYMCLI on a Solutions Enabler (SE) host that has access to the PowerMax/VMAX gatekeeper devices. All commands require <code>-sid &lt;SymmID&gt;</code> and typically <code>-rdfg &lt;rdfg_number&gt;</code>.</p>
 <p>Run <code>symcfg list</code> to identify your SID. Run <code>symrdf -sid &lt;sid&gt; list</code> to identify RDF group numbers.</p>
 <hr />
+<h2 id="srdfa-command-decision-map">SRDF/A Command Decision Map<a class="headerlink" href="#srdfa-command-decision-map" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    need["What do you need?"]
+    checkHealth["Check health / pair state"]
+    checkLag["Check lag / cycle time"]
+    maintain["Planned maintenance"]
+    drOps["DR failover / failback"]
+    addRemove["Add or remove devices"]
+
+    cmdHealth["symrdf -sid sid -rdfg rdfg list -type srdf_a\nsymrdf -sid sid -rdfg rdfg queryall\nsymcfg -sid sid list -rdfgrp"]
+    cmdLag["symrdf -sid sid -rdfg rdfg list -delta\nsymstat -sid sid -type rdfg -rdfg rdfg"]
+    cmdSuspend["symrdf -sid sid -rdfg rdfg -cg cg suspend\n(then resume after maintenance)"]
+    cmdFailover["symrdf -sid sid -rdfg rdfg -cg cg failover\nor failover -nop for unplanned"]
+    cmdEstablish["symrdf -g dgname -sid sid establish -noprompt\nMonitor SyncInProg → Consistent"]
+
+    need --&gt; checkHealth
+    need --&gt; checkLag
+    need --&gt; maintain
+    need --&gt; drOps
+    need --&gt; addRemove
+
+    checkHealth --&gt; cmdHealth
+    checkLag --&gt; cmdLag
+    maintain --&gt; cmdSuspend
+    drOps --&gt; cmdFailover
+    addRemove --&gt; cmdEstablish
+
+    style need fill:#2563eb,color:#fff
+    style cmdFailover fill:#be123c,color:#fff</code></pre>
 <h2 id="status-and-inspection">Status and Inspection<a class="headerlink" href="#status-and-inspection" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

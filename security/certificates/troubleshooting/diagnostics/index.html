@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#certificate-diagnostic-tool-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Diagnostic Tool Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#useful-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -820,6 +831,15 @@
 
 
 <h1 id="certificates-diagnostics">Certificates — Diagnostics<a class="headerlink" href="#certificates-diagnostics" title="Permanent link">&para;</a></h1>
+<h2 id="certificate-diagnostic-tool-map">Certificate Diagnostic Tool Map<a class="headerlink" href="#certificate-diagnostic-tool-map" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    diag{"Certificate diagnostic task"}
+    diag --&gt;|"inspect cert fields"| inspect["openssl x509 -in cert.pem -noout -text\n(subject / issuer / SANs / expiry / key size)"]
+    diag --&gt;|"test live TLS"| tlsTest["openssl s_client -connect host:443 -showcerts\n(chain / cipher / protocol version)"]
+    diag --&gt;|"verify chain"| chainVerify["openssl verify -CAfile root.pem\n-untrusted intermediate.pem cert.pem"]
+    diag --&gt;|"check CRL freshness"| crlCheck["openssl crl -in IssuingCA.crl -inform DER\n-noout -text | grep 'Next Update'"]
+    diag --&gt;|"check OCSP"| ocspCheck["openssl s_client -connect host:443 -status\ngrep 'OCSP Response'"]
+    diag --&gt;|"Windows store"| winCheck["Get-ChildItem Cert:\\LocalMachine\\My\nTest-Certificate\ncertutil -ping\nsc query certsvc"]</code></pre>
 <h2 id="useful-commands">Useful Commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># View certificate fields</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text

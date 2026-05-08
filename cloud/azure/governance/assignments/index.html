@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#policy-assignment-scope-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Assignment Scope Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-a-policy-assignment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,16 @@
 
 <h1 id="policy-and-initiative-assignments">Policy and Initiative Assignments<a class="headerlink" href="#policy-and-initiative-assignments" title="Permanent link">&para;</a></h1>
 <p>A policy assignment connects a policy definition or initiative (policy set) to a specific scope in the Azure hierarchy. The assignment is the mechanism that makes a policy active and enforceable.</p>
+<h2 id="policy-assignment-scope-hierarchy">Policy Assignment Scope Hierarchy<a class="headerlink" href="#policy-assignment-scope-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    mgScope["Management Group Scope\nbroadest — all child subs inherit"]
+    subScope["Subscription Scope\napplies to all RGs in subscription"]
+    rgScope["Resource Group Scope\napplies to all resources in RG"]
+    resourceScope["Resource Scope\nnarrowest — single resource only"]
+    exempt["Exemption\nwaiver for specific scope or resource"]
+
+    mgScope --&gt;|"inherits down"| subScope --&gt;|"inherits down"| rgScope --&gt;|"inherits down"| resourceScope
+    resourceScope -.-&gt;|"override"| exempt</code></pre>
 <h2 id="creating-a-policy-assignment">Creating a Policy Assignment<a class="headerlink" href="#creating-a-policy-assignment" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Assign a built-in policy by definition ID</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

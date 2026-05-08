@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#blob-lifecycle-management-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blob Lifecycle Management Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#access-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -794,6 +805,18 @@
 <h1 id="azure-blob-storage">Azure Blob Storage<a class="headerlink" href="#azure-blob-storage" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Azure Blob Storage is Microsoft's object store for unstructured data. Blobs are organised into containers within Storage Accounts. Three access tiers (Hot, Cool, Archive) control cost versus retrieval latency. Blob versioning, soft delete, and lifecycle management provide data protection and cost control.</p>
+<h2 id="blob-lifecycle-management-flow">Blob Lifecycle Management Flow<a class="headerlink" href="#blob-lifecycle-management-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    upload["Blob Upload\nHot Tier"]
+    cool["Cool Tier\nafter 30 days"]
+    cold["Cold Tier\nafter 90 days"]
+    archive["Archive Tier\nafter 180 days"]
+    rehydrate["Rehydrate\nhours latency"]
+    delete["Delete\nafter retention period"]
+
+    upload --&gt;|"Lifecycle rule"| cool --&gt;|"Lifecycle rule"| cold --&gt;|"Lifecycle rule"| archive
+    archive --&gt;|"access needed"| rehydrate --&gt; cool
+    archive --&gt;|"Lifecycle rule"| delete</code></pre>
 <h2 id="access-tiers">Access Tiers<a class="headerlink" href="#access-tiers" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

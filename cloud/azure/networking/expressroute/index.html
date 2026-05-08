@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#expressroute-connectivity-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ExpressRoute Connectivity Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#circuit-creation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,19 @@
 
 <h1 id="expressroute">ExpressRoute<a class="headerlink" href="#expressroute" title="Permanent link">&para;</a></h1>
 <p>Azure ExpressRoute provides dedicated private connectivity between on-premises networks and Azure, bypassing the public internet. It offers predictable latency, higher bandwidth options, and built-in redundancy through dual circuits.</p>
+<h2 id="expressroute-connectivity-model">ExpressRoute Connectivity Model<a class="headerlink" href="#expressroute-connectivity-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    onprem["On-Premises\nNetwork"]
+    cePE["CE Router\nCustomer Edge"]
+    provider["Connectivity Provider\nEquinix · Megaport"]
+    msPE["Microsoft Edge Router\nMEE"]
+    subgraph azure["Azure"]
+        ergw["ExpressRoute GW\nhub VNet"]
+        hub["Hub VNet"]
+        spokes["Spoke VNets\nvia peering"]
+    end
+
+    onprem --&gt; cePE --&gt;|"Dual circuits\n(redundancy)"| provider --&gt; msPE --&gt; ergw --&gt; hub --&gt; spokes</code></pre>
 <h2 id="circuit-creation">Circuit Creation<a class="headerlink" href="#circuit-creation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create an ExpressRoute circuit</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>express-route<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

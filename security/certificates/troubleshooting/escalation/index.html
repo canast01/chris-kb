@@ -862,6 +862,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#escalation-path-by-vendor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Path by Vendor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#certificate-emergency-response" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1079,6 +1090,20 @@
 - DNS propagation delay during DNS-01 challenge
 - Rate limit exceeded (5 duplicate certificates per week; 50 per domain per week)</p>
 <p>Check current rate limit status: <strong>crt.sh</strong> — search for your domain to see recently issued certificates.</p>
+<hr />
+<h2 id="escalation-path-by-vendor">Escalation Path by Vendor<a class="headerlink" href="#escalation-path-by-vendor" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue["Certificate / CA issue requiring vendor support"]
+    issue --&gt; vendor{"Which CA\n/ vendor?"}
+    vendor --&gt;|"ADCS"| msSupport["Microsoft — support.microsoft.com\n(Premier / Unified Support for Sev A/B)\nPre-collect: event logs, certutil -ping, ca-dump.txt"]
+    vendor --&gt;|"DigiCert"| dgSupport["DigiCert — digicert.com/support\n24/7 for critical; portal + phone\nPre-collect: Order Number, Serial, domain validation method"]
+    vendor --&gt;|"Entrust"| enSupport["Entrust — entrust.com/support\nPortal; phone for P1\nPre-collect: Certificate ID, issuance date, error"]
+    vendor --&gt;|"Let's Encrypt"| leSupport["Let's Encrypt — community.letsencrypt.org\nCommunity only — no paid support\nRun: certbot renew --dry-run first"]
+    vendor --&gt;|"Venafi"| venafiSupport["Venafi — see Venafi vendor-support page"]
+
+    msSupport --&gt; preCollect["Run pre-collection checklist\nbefore opening case"]
+    dgSupport --&gt; preCollect
+    enSupport --&gt; preCollect</code></pre>
 <hr />
 <h2 id="certificate-emergency-response">Certificate Emergency Response<a class="headerlink" href="#certificate-emergency-response" title="Permanent link">&para;</a></h2>
 <h3 id="suspected-key-compromise">Suspected Key Compromise<a class="headerlink" href="#suspected-key-compromise" title="Permanent link">&para;</a></h3>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#replication-health-monitoring-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Health Monitoring Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#health-states-and-meanings" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,22 @@
 <h1 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h1>
 <p>Monitoring ASR replication health is critical for validating that DR protection is active and within acceptable RPO thresholds. Health states reflect the ongoing synchronisation between source and target regions.</p>
 <hr />
+<h2 id="replication-health-monitoring-flow">Replication Health Monitoring Flow<a class="headerlink" href="#replication-health-monitoring-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    asr["ASR Replicated Item"]
+    healthCheck["Replication Health Check\nRPO · sync lag · cache utilisation"]
+    normal["Normal\nRPO within threshold"]
+    warning["Warning\nRPO breach · minor issue"]
+    critical["Critical\nReplication stopped"]
+    notConfigured["None\nNo protection"]
+    investigateWarning["Investigate\ncheck cache storage · network"]
+    investigateCritical["Immediate action\ncheck agent · connectivity · vault"]
+
+    asr --&gt; healthCheck
+    healthCheck --&gt; normal
+    healthCheck --&gt; warning --&gt; investigateWarning
+    healthCheck --&gt; critical --&gt; investigateCritical
+    healthCheck --&gt; notConfigured</code></pre>
 <h2 id="health-states-and-meanings">Health States and Meanings<a class="headerlink" href="#health-states-and-meanings" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#splitter-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splitter Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#recoverpoint-for-vms-rp4vm-vcenter-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -835,6 +846,28 @@
 <p>Part of the <a href="../../">RecoverPoint</a> &gt; <a href="../">Architecture</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="splitter-topology">Splitter Topology<a class="headerlink" href="#splitter-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    subgraph esxiHost ["ESXi Host (RP4VM)"]
+        vmApp["Protected VM"]
+        softSplitter["Software Splitter\n(vSphere Kernel Module)"]
+        vmdk["VMDK — Datastore"]
+        vmApp --&gt;|"write I/O"| softSplitter
+        softSplitter --&gt;|"pass-through write"| vmdk
+        softSplitter --&gt;|"capture copy"| rpaA
+    end
+
+    subgraph powermax ["PowerMax Array"]
+        hwSplitter["Hardware Splitter\n(Array Microcode)"]
+        prodLUN["Production LUN"]
+        hwSplitter --&gt;|"pass-through"| prodLUN
+        hwSplitter --&gt;|"capture copy"| rpaA
+    end
+
+    rpaA["RPA Cluster Site A"]
+    rpaA --&gt;|"WAN replication"| rpaB["RPA Cluster Site B"]
+    rpaB --&gt; drJournal["DR Journal Volumes"]
+    drJournal --&gt; drReplica["DR Replica Volumes"]</code></pre>
 <h2 id="recoverpoint-for-vms-rp4vm-vcenter-plugin">RecoverPoint for VMs (RP4VM) — vCenter Plugin<a class="headerlink" href="#recoverpoint-for-vms-rp4vm-vcenter-plugin" title="Permanent link">&para;</a></h2>
 <p>RP4VM integrates directly with vCenter, installing a vSphere plugin and a splitter component that intercepts VM writes at the VMDK level.</p>
 <h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
@@ -891,6 +924,7 @@
 <th>Array</th>
 <th>Splitter Type</th>
 <th>Notes</th>
+<th>Why preferred</th>
 </tr>
 </thead>
 <tbody>
@@ -898,16 +932,19 @@
 <td>Dell PowerMax</td>
 <td>Array-based (XtremIO or SRDF co-existence)</td>
 <td>Integrates via Unisphere</td>
+<td>No host agent overhead; best performance</td>
 </tr>
 <tr>
 <td>Dell Unity</td>
 <td>Array-based splitter</td>
 <td>Native Unity support</td>
+<td>Embedded in array; managed from Unity Unisphere</td>
 </tr>
 <tr>
 <td>VMware vSphere</td>
 <td>Software splitter (RP4VM)</td>
 <td>VMDK-level — no array integration needed</td>
+<td>Works with any underlying storage — most flexible</td>
 </tr>
 </tbody>
 </table>

@@ -809,32 +809,80 @@
 <thead>
 <tr>
 <th>Cause</th>
+<th>Why it happens</th>
 <th>Resolution</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Journal volume full</td>
+<td>Write rate exceeds journal drain rate (link or bandwidth issue)</td>
 <td>Expand journal LUN or reduce retention window</td>
 </tr>
 <tr>
 <td>WAN link down</td>
+<td>Inter-site network outage; writes accumulate in local journal</td>
 <td>Restore connectivity; RP will resume replication automatically once link recovers</td>
 </tr>
 <tr>
 <td>Splitter communication failure</td>
+<td>Splitter lost contact with RPA due to network or array issue</td>
 <td>See Splitter section below</td>
 </tr>
 <tr>
 <td>RPA node offline</td>
+<td>Hardware fault or hypervisor issue on the RPA VM</td>
 <td>Check RPA cluster health; redistribute CGs if node is failed</td>
 </tr>
 <tr>
 <td>Storage path failure</td>
+<td>Zoning or masking change removed RPA access to journal LUNs</td>
 <td>Verify zoning and array paths to journal volumes</td>
 </tr>
 </tbody>
 </table>
+<pre class="mermaid"><code>flowchart TD
+    cgError["CG in ERROR State"]
+    checkAlarms["Check RPA Alarms\nalarms list"]
+    alarmPresent{"Active\nAlarms?"}
+    checkJournal["Check Journal\njournals list"]
+    journalFull{"Journal &gt; 90%\nor Full?"}
+    checkLink["Check Inter-site Link\nlinks statistics"]
+    linkDown{"Link\nDown?"}
+    checkSplitter["Check Splitter\nboxmgmt splitter status"]
+    splitterFault{"Splitter\nFault?"}
+    checkRPA["Check RPA Node Health\nsystem status"]
+    expandJournal["Expand Journal\nand resume replication"]
+    restoreLink["Restore Network Connectivity\nRP resumes automatically"]
+    fixSplitter["Restart Splitter\nor rezone initiators"]
+    fixRPA["Redistribute CGs\nto healthy RPA nodes"]
+    resolveAlarm["Resolve Alarm\nper alarm detail"]
+    monitorCG["Monitor CG Return\nto ACTIVE state"]
+
+    cgError --&gt; checkAlarms
+    checkAlarms --&gt; alarmPresent
+    alarmPresent --&gt;|"Yes"| resolveAlarm
+    alarmPresent --&gt;|"No"| checkJournal
+    resolveAlarm --&gt; monitorCG
+    checkJournal --&gt; journalFull
+    journalFull --&gt;|"Yes"| expandJournal
+    journalFull --&gt;|"No"| checkLink
+    expandJournal --&gt; monitorCG
+    checkLink --&gt; linkDown
+    linkDown --&gt;|"Yes"| restoreLink
+    linkDown --&gt;|"No"| checkSplitter
+    restoreLink --&gt; monitorCG
+    checkSplitter --&gt; splitterFault
+    splitterFault --&gt;|"Yes"| fixSplitter
+    splitterFault --&gt;|"No"| checkRPA
+    fixSplitter --&gt; monitorCG
+    checkRPA --&gt; fixRPA
+    fixRPA --&gt; monitorCG
+
+    style cgError fill:#be123c,color:#fff
+    style monitorCG fill:#15803d,color:#fff
+    style expandJournal fill:#b45309,color:#fff
+    style restoreLink fill:#b45309,color:#fff</code></pre>
 <hr />
 <h2 id="journal-overflow">Journal Overflow<a class="headerlink" href="#journal-overflow" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> CG RPO alarm triggered; journal shows &gt; 90% utilization.</p>

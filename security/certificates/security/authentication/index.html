@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#root-ca-lifecycle-offline-operation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root CA Lifecycle — Offline Operation Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#root-ca-offline-procedure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -748,6 +759,18 @@
 
 
 <h1 id="certificates-authentication">Certificates — Authentication<a class="headerlink" href="#certificates-authentication" title="Permanent link">&para;</a></h1>
+<h2 id="root-ca-lifecycle-offline-operation-flow">Root CA Lifecycle — Offline Operation Flow<a class="headerlink" href="#root-ca-lifecycle-offline-operation-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    rootNormal["Root CA — powered off\n(air-gapped — HSM keys secured)"]
+    rootNormal --&gt;|"trigger: new sub-CA needed\nor Root CA renewal"| powerOn["Power on Root CA\nin secure ceremony room\n(2+ witnesses required)"]
+    powerOn --&gt; submitCSR["Receive Subordinate CA CSR\n(from Issuing CA)"]
+    submitCSR --&gt; signCert["Sign Subordinate CA certificate\n(certreq -submit SubCA template)"]
+    signCert --&gt; publishAD["Publish new CA cert to AD\n(certutil -dspublish SubCA)"]
+    publishAD --&gt; powerOff["Power off Root CA immediately\n(Stop-Computer -Force)"]
+    powerOff --&gt; rootNormal
+    signCert -. "only event type" .-&gt; trigger1["Issue Sub-CA cert"]
+    signCert -. "only event type" .-&gt; trigger2["Renew Root CA cert"]
+    signCert -. "only event type" .-&gt; trigger3["Update Root CA CRL"]</code></pre>
 <h2 id="root-ca-offline-procedure">Root CA Offline Procedure<a class="headerlink" href="#root-ca-offline-procedure" title="Permanent link">&para;</a></h2>
 <p>The Root CA is powered on only for these specific events:
 1. Issuing a new Subordinate/Issuing CA certificate

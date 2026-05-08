@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#venafi-diagnostic-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Venafi Diagnostic Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -771,6 +782,21 @@
 
 <h1 id="venafi-diagnostics">Venafi — Diagnostics<a class="headerlink" href="#venafi-diagnostics" title="Permanent link">&para;</a></h1>
 <p>Use this page for practical Venafi troubleshooting notes, checks, commands, change notes, and field references.</p>
+<h2 id="venafi-diagnostic-flow">Venafi Diagnostic Flow<a class="headerlink" href="#venafi-diagnostic-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    issue["Venafi issue reported\n(cert not issuing / renewal failed / UI unavailable)"]
+    issue --&gt; svcCheck["Check Venafi services:\nGet-Service -Name 'Venafi*'"]
+    svcCheck --&gt; svcRunning{"All services\nrunning?"}
+    svcRunning --&gt;|"no"| startSvc["Start-Service Venafi*\nCheck Windows Event Log"]
+    svcRunning --&gt;|"yes"| sqlCheck["Test SQL connectivity:\nNew-Object SqlConnection + Open()"]
+    startSvc --&gt; sqlCheck
+    sqlCheck --&gt; sqlOK{"SQL connection\nok?"}
+    sqlOK --&gt;|"no"| fixSQL["Fix SQL connectivity:\nFirewall / credentials / AG failover"]
+    sqlOK --&gt;|"yes"| caCheck["Test CA connector:\nTPP UI → Config → CAs → Test Connection"]
+    fixSQL --&gt; caCheck
+    caCheck --&gt; caOK{"CA connector\nhealthy?"}
+    caOK --&gt;|"no"| caFix["Fix CA connectivity:\nADCS CES URL / DigiCert API key / network"]
+    caOK --&gt;|"yes"| logReview["Collect TPP logs:\nVdcLogFile*.log in ProgramData\\Venafi\\log"]</code></pre>
 <h2 id="common-checks">Common Checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Confirm current health</li>

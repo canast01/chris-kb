@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#diagnostic-settings-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Settings Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#enabling-diagnostic-settings" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +804,22 @@
 
 <h1 id="diagnostic-settings">Diagnostic Settings<a class="headerlink" href="#diagnostic-settings" title="Permanent link">&para;</a></h1>
 <p>Diagnostic settings control which resource logs and metrics are exported from an Azure resource and where they are sent. Each resource supports its own set of log categories; enabling them is a prerequisite for log-based alerting, compliance archival, and operational analysis.</p>
+<h2 id="diagnostic-settings-routing">Diagnostic Settings Routing<a class="headerlink" href="#diagnostic-settings-routing" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    resource["Azure Resource\nVM · KeyVault · NSG · Firewall"]
+    diagSetting["Diagnostic Setting\nselected log categories + metrics"]
+    subgraph destinations["Destinations (1–4 per resource)"]
+        la["Log Analytics Workspace\nKQL · alerts · workbooks"]
+        storage["Storage Account\nlong-term archival"]
+        eventhub["Event Hub\nstream to SIEM · Splunk"]
+        partnersol["Partner Solution\ne.g. Datadog"]
+    end
+
+    resource --&gt; diagSetting
+    diagSetting --&gt; la
+    diagSetting --&gt; storage
+    diagSetting --&gt; eventhub
+    diagSetting --&gt; partnersol</code></pre>
 <h2 id="enabling-diagnostic-settings">Enabling Diagnostic Settings<a class="headerlink" href="#enabling-diagnostic-settings" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable diagnostic settings on a Key Vault</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>diagnostic-settings<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

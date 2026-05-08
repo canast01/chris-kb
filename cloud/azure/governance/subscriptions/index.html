@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#azure-subscription-governance-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Subscription Governance Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#subscription-types" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -810,6 +821,22 @@
 
 <h1 id="subscriptions">Subscriptions<a class="headerlink" href="#subscriptions" title="Permanent link">&para;</a></h1>
 <p>An Azure subscription is a logical unit of Azure services that links to an Azure account. Subscriptions are the primary billing and access control boundary. Understanding subscription types, limits, and management operations is essential for scalable Azure governance.</p>
+<h2 id="azure-subscription-governance-model">Azure Subscription Governance Model<a class="headerlink" href="#azure-subscription-governance-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    tenant["Azure Tenant\nEntra ID"]
+    mg["Management Group\nhierarchy"]
+    sub["Subscription\nbilling + access boundary"]
+    rg["Resource Groups\nlifecycle grouping"]
+    resources["Resources\nVMs · Storage · Network · etc."]
+
+    subgraph controls["Governance Controls (all inherited downward)"]
+        policies["Azure Policy\ndeny · audit · remediate"]
+        rbac["RBAC\nrole assignments"]
+        budgets["Cost Budgets\nalerts"]
+    end
+
+    tenant --&gt; mg --&gt; sub --&gt; rg --&gt; resources
+    controls --&gt;|"applied at any scope"| sub</code></pre>
 <h2 id="subscription-types">Subscription Types<a class="headerlink" href="#subscription-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

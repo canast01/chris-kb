@@ -699,6 +699,130 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-cisco-dcnm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Is Cisco DCNM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dcnm-deployment-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DCNM Deployment Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DCNM Deployment Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standalone-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-ha-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native HA Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#federation-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Federation Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-sizing-standalone-11x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Sizing (Standalone, 11.x)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relationship-to-ndfc-and-nexus-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationship to NDFC and Nexus Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +842,209 @@
 
 
 <h1 id="cisco-dcnm-overview">Cisco DCNM — Overview<a class="headerlink" href="#cisco-dcnm-overview" title="Permanent link">&para;</a></h1>
-<p>Architecture overview, design principles, and topology.</p>
+<blockquote>
+<p>Part of the <a href="../../">Cisco DCNM</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="what-is-cisco-dcnm">What Is Cisco DCNM<a class="headerlink" href="#what-is-cisco-dcnm" title="Permanent link">&para;</a></h2>
+<p>Cisco Data Center Network Manager (DCNM) is Cisco's SAN and LAN management platform for data center networks. For SAN environments, DCNM provides centralised management of Cisco MDS 9000 Fibre Channel switches and Cisco Nexus switches running FCoE.</p>
+<p><strong>Important:</strong> DCNM was officially renamed to <strong>Nexus Dashboard Fabric Controller (NDFC)</strong> starting with version 12.0 (released 2022). NDFC runs as an application on the Cisco Nexus Dashboard platform. Environments still running DCNM 11.x are using the standalone appliance form factor. This section covers DCNM 11.x. For NDFC 12.x, see the <a href="../../nexus-dashboard/">Nexus Dashboard</a> section.</p>
+<hr />
+<h2 id="dcnm-deployment-models">DCNM Deployment Models<a class="headerlink" href="#dcnm-deployment-models" title="Permanent link">&para;</a></h2>
+<p>DCNM 11.x is deployed as a Linux-based virtual appliance (OVA for VMware, ISO for bare metal or KVM).</p>
+<h3 id="standalone-mode">Standalone Mode<a class="headerlink" href="#standalone-mode" title="Permanent link">&para;</a></h3>
+<p>Single DCNM server. Suitable for environments up to approximately 1,000 managed devices. No high availability.</p>
+<h3 id="native-ha-mode">Native HA Mode<a class="headerlink" href="#native-ha-mode" title="Permanent link">&para;</a></h3>
+<p>Two DCNM servers (active + standby) with shared external database (Oracle or PostgreSQL). Requires a Virtual IP (VIP) for client access. Recommended for production environments.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────┐         ┌─────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  DCNM Active    │◄──────►│  DCNM Standby   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  10.10.5.10     │  HA sync│  10.10.5.11     │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└────────┬────────┘         └─────────────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>         │ VIP: 10.10.5.15
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>         │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>┌────────▼────────────────────────────────────┐
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│         Managed MDS / Nexus Switches         │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└─────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="federation-mode">Federation Mode<a class="headerlink" href="#federation-mode" title="Permanent link">&para;</a></h3>
+<p>Multiple DCNM instances managing separate fabrics, federated under a single login (available in 11.5+). Useful for large environments spanning multiple data centres.</p>
+<hr />
+<h2 id="supported-hardware">Supported Hardware<a class="headerlink" href="#supported-hardware" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Role</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MDS 9132T</td>
+<td>32-port director</td>
+<td>32G FC</td>
+</tr>
+<tr>
+<td>MDS 9148T</td>
+<td>48-port ToR</td>
+<td>32G FC</td>
+</tr>
+<tr>
+<td>MDS 9396T</td>
+<td>96-port director</td>
+<td>32G FC</td>
+</tr>
+<tr>
+<td>MDS 9706</td>
+<td>6-slot director</td>
+<td>32G FC, modular</td>
+</tr>
+<tr>
+<td>MDS 9710</td>
+<td>10-slot director</td>
+<td>32G FC, high density</td>
+</tr>
+<tr>
+<td>MDS 9718</td>
+<td>18-slot director</td>
+<td>32G FC, very high density</td>
+</tr>
+<tr>
+<td>Nexus 5672UP</td>
+<td>FCoE/FC (N5K)</td>
+<td>FCoE uplinks to MDS</td>
+</tr>
+<tr>
+<td>Nexus 93180YC-FX</td>
+<td>FCoE capable</td>
+<td>NX-OS FCoE</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<p>DCNM management flow:</p>
+<ol>
+<li><strong>Discovery</strong> — DCNM discovers switches via SNMP and SSH/Telnet. SNMPv3 is preferred; SSH credentials are used for configuration push.</li>
+<li><strong>Inventory</strong> — Discovered devices are added to the DCNM inventory. Topology is built from CDP/LLDP and SNMP MIB data.</li>
+<li><strong>Configuration push</strong> — Zone changes, VSAN configuration, and device alias updates are pushed to switches via SSH (NX-OS CLI) or SNMP.</li>
+<li><strong>Monitoring</strong> — SNMP traps, syslog, and performance MIB polling provide real-time and historical monitoring data.</li>
+<li><strong>Reporting</strong> — Built-in reporting covers inventory, performance, events, and compliance.</li>
+</ol>
+<hr />
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Communication</th>
+<th>Protocol</th>
+<th>Port</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DCNM → switch</td>
+<td>SSH</td>
+<td>22</td>
+<td>Outbound from DCNM</td>
+</tr>
+<tr>
+<td>DCNM → switch</td>
+<td>SNMP v3</td>
+<td>161/UDP</td>
+<td>Outbound from DCNM</td>
+</tr>
+<tr>
+<td>Switch → DCNM</td>
+<td>SNMP trap</td>
+<td>162/UDP</td>
+<td>Inbound to DCNM</td>
+</tr>
+<tr>
+<td>Switch → DCNM</td>
+<td>Syslog</td>
+<td>514/UDP</td>
+<td>Inbound to DCNM</td>
+</tr>
+<tr>
+<td>Browser → DCNM</td>
+<td>HTTPS</td>
+<td>443</td>
+<td>Inbound to DCNM</td>
+</tr>
+<tr>
+<td>DCNM → LDAP</td>
+<td>LDAPS</td>
+<td>636</td>
+<td>Outbound from DCNM</td>
+</tr>
+<tr>
+<td>DCNM → SMTP</td>
+<td>SMTP</td>
+<td>25</td>
+<td>Outbound from DCNM</td>
+</tr>
+<tr>
+<td>DCNM → NTP</td>
+<td>NTP</td>
+<td>123/UDP</td>
+<td>Outbound from DCNM</td>
+</tr>
+<tr>
+<td>DCNM HA sync</td>
+<td>TCP</td>
+<td>5432, 5000</td>
+<td>Between DCNM nodes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vm-sizing-standalone-11x">VM Sizing (Standalone, 11.x)<a class="headerlink" href="#vm-sizing-standalone-11x" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Storage</th>
+<th>Max Switches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td>8</td>
+<td>32 GB</td>
+<td>500 GB</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>16</td>
+<td>64 GB</td>
+<td>1 TB</td>
+<td>200</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>24</td>
+<td>128 GB</td>
+<td>2 TB</td>
+<td>1000</td>
+</tr>
+</tbody>
+</table>
+<p>Storage: thick provisioning recommended; thin provisioning acceptable with guaranteed reservation.</p>
+<hr />
+<h2 id="relationship-to-ndfc-and-nexus-dashboard">Relationship to NDFC and Nexus Dashboard<a class="headerlink" href="#relationship-to-ndfc-and-nexus-dashboard" title="Permanent link">&para;</a></h2>
+<p>DCNM 11.x is the last standalone appliance release. Cisco's direction is:</p>
+<ul>
+<li><strong>DCNM 12.x = NDFC</strong> running on Nexus Dashboard</li>
+<li>New feature development is in NDFC only</li>
+<li>DCNM 11.x receives bug fixes and security patches (EoL announced for 2026)</li>
+</ul>
+<p>Migration from DCNM 11.x to NDFC 12.x requires a fresh NDFC deployment and re-discovery of managed switches. Configuration migration tooling is provided by Cisco but zone databases and historical data do not migrate automatically.</p>
 
 
 

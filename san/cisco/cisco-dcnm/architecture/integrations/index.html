@@ -699,6 +699,130 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-ldap-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. LDAP / Active Directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-snmp-trap-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. SNMP Trap Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-email-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Email Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-syslog-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Syslog Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. REST API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. REST API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key API Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-vcenter-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. vCenter Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-nexus-dashboard-integration-dcnm-115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Nexus Dashboard Integration (DCNM 11.5+)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +842,271 @@
 
 
 <h1 id="cisco-dcnm-integrations">Cisco DCNM — Integrations<a class="headerlink" href="#cisco-dcnm-integrations" title="Permanent link">&para;</a></h1>
-<p>Integration with other platforms and external systems.</p>
+<blockquote>
+<p>Part of the <a href="../../">Cisco DCNM</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>DCNM integrates with external authentication, alerting, and monitoring systems. This page covers the configuration of each integration.</p>
+<hr />
+<h2 id="1-ldap-active-directory">1. LDAP / Active Directory<a class="headerlink" href="#1-ldap-active-directory" title="Permanent link">&para;</a></h2>
+<p>DCNM supports LDAP and LDAPS for user authentication. Configure under <strong>Administration &gt; Security &gt; Authentication &gt; LDAP</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server type</td>
+<td>MS Active Directory or OpenLDAP</td>
+</tr>
+<tr>
+<td>Server address</td>
+<td><code>ldap.corp.example.com</code></td>
+</tr>
+<tr>
+<td>Port</td>
+<td>636 (LDAPS)</td>
+</tr>
+<tr>
+<td>Base DN</td>
+<td><code>DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Bind DN</td>
+<td><code>CN=dcnm-svc,OU=Service Accounts,DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Bind password</td>
+<td>Service account password</td>
+</tr>
+<tr>
+<td>User attribute</td>
+<td><code>sAMAccountName</code></td>
+</tr>
+<tr>
+<td>Group base</td>
+<td><code>OU=DCNM-Groups,DC=corp,DC=example,DC=com</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>LDAP Group Role Mapping</strong> — configure under <strong>Administration &gt; Security &gt; Roles &gt; LDAP Role Mapping</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>AD Group</th>
+<th>DCNM Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GRP-DCNM-Admins</code></td>
+<td>Admin</td>
+</tr>
+<tr>
+<td><code>GRP-DCNM-NetworkAdmin</code></td>
+<td>Network Admin</td>
+</tr>
+<tr>
+<td><code>GRP-DCNM-Operators</code></td>
+<td>Operator</td>
+</tr>
+<tr>
+<td><code>GRP-DCNM-ReadOnly</code></td>
+<td>Network Operator</td>
+</tr>
+</tbody>
+</table>
+<p>After saving, test by logging in with an AD user in one of the mapped groups.</p>
+<hr />
+<h2 id="2-snmp-trap-forwarding">2. SNMP Trap Forwarding<a class="headerlink" href="#2-snmp-trap-forwarding" title="Permanent link">&para;</a></h2>
+<p>DCNM can forward SNMP traps to an NMS or SIEM. Configure under <strong>Administration &gt; Event Settings &gt; SNMP Trap Forwarding</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trap receiver IP</td>
+<td><code>10.10.3.50</code> (NMS server)</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>162/UDP</td>
+</tr>
+<tr>
+<td>SNMP version</td>
+<td>v2c or v3</td>
+</tr>
+<tr>
+<td>Community / credentials</td>
+<td>Match NMS configuration</td>
+</tr>
+<tr>
+<td>Event filter</td>
+<td>All, or filter by severity (WARNING and above recommended)</td>
+</tr>
+</tbody>
+</table>
+<p>DCNM uses its own CISCO-DCNM-MIB. Load the MIB files into your NMS to decode trap OIDs. MIBs are available at <code>https://software.cisco.com/download/home</code> under DCNM software.</p>
+<hr />
+<h2 id="3-email-notifications">3. Email Notifications<a class="headerlink" href="#3-email-notifications" title="Permanent link">&para;</a></h2>
+<p>Configure under <strong>Administration &gt; Event Settings &gt; Mail Setup</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SMTP server</td>
+<td><code>smtp.corp.example.com</code></td>
+</tr>
+<tr>
+<td>Port</td>
+<td>25 or 587</td>
+</tr>
+<tr>
+<td>From</td>
+<td><code>dcnm-alerts@corp.example.com</code></td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Username/password if relay requires auth</td>
+</tr>
+</tbody>
+</table>
+<p>Configure notification rules under <strong>Administration &gt; Event Settings &gt; Notification Rules</strong>:
+- Severity: Critical, Warning, or All
+- Destination: email address
+- Scope: all fabrics or specific fabric</p>
+<hr />
+<h2 id="4-syslog-integration">4. Syslog Integration<a class="headerlink" href="#4-syslog-integration" title="Permanent link">&para;</a></h2>
+<p>DCNM generates its own syslog from application events and can forward to a SIEM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On DCNM appliance</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>root@dcnm-mgmt.corp.example.com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Configure syslog forwarding (rsyslog)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/rsyslog.d/dcnm-forward.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s"># Forward DCNM application logs to SIEM</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s">local0.* @10.10.3.50:514</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s">*.err @@10.10.3.50:514</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s">EOF</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>logger<span class="w"> </span>-p<span class="w"> </span>local0.info<span class="w"> </span>-t<span class="w"> </span>dcnm<span class="w"> </span><span class="s2">&quot;Test message&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verify arrival at SIEM</span>
+</code></pre></div>
+<p>DCNM also receives syslog from managed switches on UDP 514 and displays them in <strong>Monitor &gt; Syslog</strong>. These switch syslogs can be re-forwarded to the SIEM from DCNM's syslog receiver.</p>
+<hr />
+<h2 id="5-rest-api">5. REST API<a class="headerlink" href="#5-rest-api" title="Permanent link">&para;</a></h2>
+<p>DCNM exposes a REST API (v1) for automation and integration.</p>
+<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Login — returns session cookie</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-c<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>https://dcnm.corp.example.com/rest/logon<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;expirationTime&quot;: 86400}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;password&gt;&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Use cookie for subsequent requests</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>https://dcnm.corp.example.com/rest/inventory/switches<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Logout</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>https://dcnm.corp.example.com/rest/logout
+</code></pre></div>
+<h3 id="key-api-endpoints">Key API Endpoints<a class="headerlink" href="#key-api-endpoints" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/rest/logon</code></td>
+<td>Authenticate and get session</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/rest/logout</code></td>
+<td>End session</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/inventory/switches</code></td>
+<td>List all switches</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/inventory/switches/{serialNumber}</code></td>
+<td>Switch detail</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/san/fabric</code></td>
+<td>List fabrics</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/san/vsan</code></td>
+<td>List VSANs</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/san/zoning</code></td>
+<td>Zoning information</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/rest/san/zoning</code></td>
+<td>Create/modify zones</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/events/allevents</code></td>
+<td>Retrieve events</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/rest/fm/image</code></td>
+<td>List firmware images</td>
+</tr>
+</tbody>
+</table>
+<p>API documentation: <code>https://dcnm.corp.example.com/api-docs</code></p>
+<hr />
+<h2 id="6-vcenter-integration">6. vCenter Integration<a class="headerlink" href="#6-vcenter-integration" title="Permanent link">&para;</a></h2>
+<p>DCNM can query VMware vCenter to correlate host WWNs with VM and host names:</p>
+<ol>
+<li>Navigate to <strong>Administration &gt; VMware vCenter</strong>.</li>
+<li>Enter vCenter FQDN, port (443), username (read-only service account), and password.</li>
+<li>Click <strong>Test Connection</strong>, then <strong>Save</strong>.</li>
+</ol>
+<p>After connection, DCNM displays the ESXi hostname next to HBA WWNs in the End Devices view (<strong>SAN &gt; End Devices</strong>), improving topology readability.</p>
+<hr />
+<h2 id="7-nexus-dashboard-integration-dcnm-115">7. Nexus Dashboard Integration (DCNM 11.5+)<a class="headerlink" href="#7-nexus-dashboard-integration-dcnm-115" title="Permanent link">&para;</a></h2>
+<p>DCNM 11.5 introduced the ability to register with a Nexus Dashboard instance for federated visibility:</p>
+<ol>
+<li>In DCNM: <strong>Administration &gt; Settings &gt; Nexus Dashboard</strong>.</li>
+<li>Enter Nexus Dashboard cluster IP and admin credentials.</li>
+<li>Click <strong>Register</strong>.</li>
+</ol>
+<p>This allows DCNM fabric data to appear in Nexus Dashboard Insights dashboards. Full migration to NDFC is a separate process.</p>
 
 
 

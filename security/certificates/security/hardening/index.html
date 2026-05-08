@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ocsp-stapling-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCSP Stapling Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ocsp-stapling" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -748,6 +759,21 @@
 
 
 <h1 id="certificates-hardening">Certificates — Hardening<a class="headerlink" href="#certificates-hardening" title="Permanent link">&para;</a></h1>
+<h2 id="ocsp-stapling-flow">OCSP Stapling Flow<a class="headerlink" href="#ocsp-stapling-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant nginx as nginx / Web Server
+    participant ocsp as OCSP Responder
+    participant client as TLS Client
+
+    note over nginx: Server startup / cert load
+    nginx-&gt;&gt;ocsp: OCSP request for its own certificate
+    ocsp--&gt;&gt;nginx: OCSP response (cached — staple)
+    note over nginx: Response stapled to TLS handshake
+
+    client-&gt;&gt;nginx: TLS ClientHello
+    nginx--&gt;&gt;client: ServerHello + Certificate + Stapled OCSP response
+    client-&gt;&gt;client: Verify stapled OCSP signature (no external request)
+    client-&gt;&gt;nginx: TLS handshake complete (faster + private)</code></pre>
 <h2 id="ocsp-stapling">OCSP Stapling<a class="headerlink" href="#ocsp-stapling" title="Permanent link">&para;</a></h2>
 <p>Enforce OCSP stapling on all public TLS endpoints to avoid privacy leakage and improve connection performance.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># nginx — OCSP stapling configuration</span>

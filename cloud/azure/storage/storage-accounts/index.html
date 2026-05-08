@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#storage-account-service-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Account Service Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#account-types" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -805,6 +816,24 @@
 <h1 id="azure-storage-accounts">Azure Storage Accounts<a class="headerlink" href="#azure-storage-accounts" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>A Storage Account is the top-level namespace for all Azure Storage services (Blobs, Files, Queues, Tables). The account type, replication option, and access tier are set at creation and determine cost, durability, and available features.</p>
+<h2 id="storage-account-service-hierarchy">Storage Account Service Hierarchy<a class="headerlink" href="#storage-account-service-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    storageAccount["Storage Account\nGPv2 (recommended)"]
+    subgraph services["Storage Services"]
+        blobs["Blob Storage\nBlock · Append · Page"]
+        files["Azure Files\nSMB · NFS shares"]
+        queues["Queue Storage\nmessage queues"]
+        tables["Table Storage\nNoSQL key-value"]
+    end
+    subgraph replication["Replication Tiers"]
+        lrs["LRS\n3 copies — 1 DC"]
+        zrs["ZRS\n3 copies — 3 zones"]
+        grs["GRS\n6 copies — 2 regions"]
+        gzrs["GZRS\nzone + geo redundant"]
+    end
+
+    storageAccount --&gt; services
+    storageAccount --&gt; replication</code></pre>
 <h2 id="account-types">Account Types<a class="headerlink" href="#account-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

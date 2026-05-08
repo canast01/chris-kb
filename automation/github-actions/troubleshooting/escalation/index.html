@@ -809,6 +809,22 @@
 <li>[ ] Checked GitHub Community discussions for similar reports</li>
 <li>[ ] Raised a support ticket with run ID, repo name, and log excerpt</li>
 </ul>
+<pre class="mermaid"><code>flowchart TD
+    issue(["Workflow issue\ncannot self-resolve"])
+    statusPage["Check githubstatus.com\nPlatform incident?"]
+    incident{Platform\nincident?}
+    waitResolve["Wait for GitHub\nto resolve"]
+    collectData["Collect data\ngh run view RUN_ID --log\ngh run list --workflow ci.yml"]
+    community["Search GitHub Community\nDiscussions for similar reports"]
+    found{Solution\nfound?}
+    openTicket["Open GitHub Support ticket\nRun ID + repo name + log excerpt\nEnterprise plan: SLA-backed"]
+    done(["Issue resolved"])
+
+    issue --&gt; statusPage --&gt; incident
+    incident --&gt;|Yes| waitResolve --&gt; done
+    incident --&gt;|No| collectData --&gt; community --&gt; found
+    found --&gt;|Yes| done
+    found --&gt;|No| openTicket --&gt; done</code></pre>
 
 
 

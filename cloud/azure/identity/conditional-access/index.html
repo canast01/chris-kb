@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#conditional-access-evaluation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Access Evaluation Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ca-policy-creation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -810,6 +821,29 @@
 
 <h1 id="conditional-access">Conditional Access<a class="headerlink" href="#conditional-access" title="Permanent link">&para;</a></h1>
 <p>Conditional Access (CA) policies are the enforcement engine of Zero Trust in Microsoft Entra ID. They evaluate signals (user, location, device, app, risk) and grant, block, or require additional controls (MFA, compliant device) before granting access.</p>
+<h2 id="conditional-access-evaluation-flow">Conditional Access Evaluation Flow<a class="headerlink" href="#conditional-access-evaluation-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    signIn["Sign-in Attempt"]
+    signals["Signals Evaluated\nuser · location · device · app · risk"]
+    policiesEval["All matching CA policies evaluated"]
+    block{"Any policy\nresult = Block?"}
+    mfaReq{"Any policy\nrequires MFA?"}
+    compliantReq{"Compliant device\nrequired?"}
+    mfaComplete{"MFA\ncompleted?"}
+    blocked["Access BLOCKED"]
+    granted["Access GRANTED\ntoken issued"]
+
+    signIn --&gt; signals --&gt; policiesEval
+    policiesEval --&gt; block
+    block -- Yes --&gt; blocked
+    block -- No --&gt; mfaReq
+    mfaReq -- Yes --&gt; mfaComplete
+    mfaComplete -- Yes --&gt; compliantReq
+    mfaComplete -- No --&gt; blocked
+    mfaReq -- No --&gt; compliantReq
+    compliantReq -- Yes (compliant) --&gt; granted
+    compliantReq -- No (non-compliant) --&gt; blocked
+    compliantReq -- No requirement --&gt; granted</code></pre>
 <h2 id="ca-policy-creation">CA Policy Creation<a class="headerlink" href="#ca-policy-creation" title="Permanent link">&para;</a></h2>
 <p>Conditional Access policies are primarily managed through the Entra ID portal or Microsoft Graph API. The <code>az</code> CLI covers some operations via the <code>az ad</code> extension and <code>az rest</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all Conditional Access policies via Microsoft Graph</span>

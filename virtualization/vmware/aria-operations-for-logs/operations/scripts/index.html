@@ -699,6 +699,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-coverage-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Coverage Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-recent-events-via-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Recent Events via API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bulk-alert-definition-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulk Alert Definition Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-usage-monitor-with-warning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Usage Monitor with Warning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notification-channel-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notification Channel Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#esxi-syslog-configuration-bulk-powercli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Syslog Configuration (Bulk PowerCLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +803,135 @@
 
 
 <h1 id="aria-ops-for-logs-scripts">Aria Ops for Logs — Scripts<a class="headerlink" href="#aria-ops-for-logs-scripts" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<p>Scripts for Aria Operations for Logs target four use cases: cluster health monitoring, log source coverage auditing, alert definition management, and log queries via the REST API. The API base URL is <code>https://&lt;vrli-fqdn&gt;/api/v2</code> with HTTP Basic authentication.</p>
+<hr />
+<h2 id="cluster-health-check">Cluster Health Check<a class="headerlink" href="#cluster-health-check" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Usage: ./vrli-health.sh &lt;vrli-fqdn&gt; &lt;username&gt; &lt;password&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">VRLI</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Cluster Nodes ===&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.nodes[] | &quot;\(.hostname)\t\(.state)\t\(.role)\t\(.version)&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>column<span class="w"> </span>-t
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Ingestion Stats ===&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/cluster/stats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;{eventsPerSecond: .eventsIngested, diskUsedPct: .diskUsagePercent,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">       totalDiskGB: .totalDiskSpaceGB, usedDiskGB: .usedDiskSpaceGB}&#39;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Active Alerts (Critical) ===&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/alerts?severity=critical&amp;status=active&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.alerts[] | &quot;\(.name)\t\(.timestamp)&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>column<span class="w"> </span>-t
+</code></pre></div>
+<hr />
+<h2 id="agent-coverage-report">Agent Coverage Report<a class="headerlink" href="#agent-coverage-report" title="Permanent link">&para;</a></h2>
+<p>Identifies agents that have not checked in within the last 30 minutes — potential connectivity or service failures.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">VRLI</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">THRESHOLD_MINS</span><span class="o">=</span><span class="m">30</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">THRESHOLD_MS</span><span class="o">=</span><span class="k">$((</span><span class="nv">THRESHOLD_MINS</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000</span><span class="k">))</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">NOW_MS</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s%3N<span class="k">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Agents not checked in within </span><span class="nv">$THRESHOLD_MINS</span><span class="s2"> minutes ===&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/agents&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>jq<span class="w"> </span>--argjson<span class="w"> </span>now<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NOW_MS</span><span class="s2">&quot;</span><span class="w"> </span>--argjson<span class="w"> </span>thresh<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$THRESHOLD_MS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="s1">&#39;.agents[] | select(($now - (.lastActive | tonumber)) &gt; $thresh) |</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">   {host: .hostname, lastActive: .lastActive, state: .state}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;&quot;STALE: \(.host) — last seen \(.lastActive)&quot;&#39;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== All agents summary ===&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/agents&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.agents | length&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Total agents registered: {}&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="query-recent-events-via-api">Query Recent Events via API<a class="headerlink" href="#query-recent-events-via-api" title="Permanent link">&para;</a></h2>
+<p>Use the API to search for log events programmatically (useful for automation and integration with incident management tools).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Search for authentication failures in the last hour</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">VRLI</span><span class="o">=</span><span class="s2">&quot;vrli-prod-01.corp.local&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">START</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span>+%s<span class="k">)</span><span class="m">000</span><span class="w">  </span><span class="c1"># milliseconds</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">END</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="m">000</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/events/ingest&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">    \&quot;query\&quot;: \&quot;Failed to authenticate OR authentication failure\&quot;,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">    \&quot;start-time\&quot;: </span><span class="nv">$START</span><span class="s2">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">    \&quot;end-time\&quot;: </span><span class="nv">$END</span><span class="s2">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">    \&quot;limit\&quot;: 100</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">  }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.events[] | {time: .timestamp, host: .fields.hostname, text: .text}&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="bulk-alert-definition-export">Bulk Alert Definition Export<a class="headerlink" href="#bulk-alert-definition-export" title="Permanent link">&para;</a></h2>
+<p>Export all alert definitions to JSON for version control or migration to another cluster.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">VRLI</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">&quot;vrli-alerts-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.json&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Exported </span><span class="k">$(</span>jq<span class="w"> </span><span class="s1">&#39;.alerts | length&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2"> alert definitions to </span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="disk-usage-monitor-with-warning">Disk Usage Monitor with Warning<a class="headerlink" href="#disk-usage-monitor-with-warning" title="Permanent link">&para;</a></h2>
+<p>Sends a warning if any cluster node disk usage exceeds a threshold.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">VRLI</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span><span class="p">;</span><span class="w"> </span><span class="nv">WARN_PCT</span><span class="o">=</span><span class="si">${</span><span class="nv">4</span><span class="k">:-</span><span class="nv">75</span><span class="si">}</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">STATS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/cluster/stats&quot;</span><span class="k">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">USED_PCT</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATS</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.diskUsagePercent // 0&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Cluster disk used: </span><span class="si">${</span><span class="nv">USED_PCT</span><span class="si">}</span><span class="s2">%&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">if</span><span class="w"> </span><span class="o">((</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USED_PCT</span><span class="s2"> &gt; </span><span class="nv">$WARN_PCT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="w"> </span>-l<span class="k">)</span><span class="w"> </span><span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARNING: Disk usage exceeds </span><span class="si">${</span><span class="nv">WARN_PCT</span><span class="si">}</span><span class="s2">% — expand storage or reduce retention&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">else</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: Disk usage within threshold&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="k">fi</span>
+</code></pre></div>
+<hr />
+<h2 id="notification-channel-test">Notification Channel Test<a class="headerlink" href="#notification-channel-test" title="Permanent link">&para;</a></h2>
+<p>Test all configured notification channels and report pass/fail.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">VRLI</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span><span class="w"> </span><span class="nv">USER</span><span class="o">=</span><span class="nv">$2</span><span class="p">;</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="nv">$3</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Notification Channels ===&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/notification&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.notifications[] | &quot;\(.name)\t\(.type)\t\(.enabled)&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>column<span class="w"> </span>-t
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Test each enabled channel</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/notification&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.notifications[] | select(.enabled == true) | .id&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>id<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nv">RESULT</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$USER</span><span class="s2">:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">      </span><span class="s2">&quot;https://</span><span class="nv">$VRLI</span><span class="s2">/api/v2/notification/</span><span class="nv">$id</span><span class="s2">/test&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.status&#39;</span><span class="k">)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Channel </span><span class="nv">$id</span><span class="s2">: </span><span class="nv">$RESULT</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="k">done</span>
+</code></pre></div>
+<hr />
+<h2 id="esxi-syslog-configuration-bulk-powercli">ESXi Syslog Configuration (Bulk PowerCLI)<a class="headerlink" href="#esxi-syslog-configuration-bulk-powercli" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Configure all ESXi hosts to forward syslog to Aria Ops for Logs</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$vrliTarget</span> <span class="p">=</span> <span class="s2">&quot;udp://vrli-prod-01.corp.local:514&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="nv">$esxcli</span> <span class="p">=</span> <span class="nb">Get-EsxCli</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="n">-V2</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="nv">$params</span> <span class="p">=</span> <span class="nv">$esxcli</span><span class="p">.</span><span class="n">system</span><span class="p">.</span><span class="n">syslog</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">set</span><span class="p">.</span><span class="n">CreateArgs</span><span class="p">()</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="nv">$params</span><span class="p">.</span><span class="n">loghost</span> <span class="p">=</span> <span class="nv">$vrliTarget</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="nv">$esxcli</span><span class="p">.</span><span class="n">system</span><span class="p">.</span><span class="n">syslog</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">set</span><span class="p">.</span><span class="n">Invoke</span><span class="p">(</span><span class="nv">$params</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="nv">$esxcli</span><span class="p">.</span><span class="n">system</span><span class="p">.</span><span class="n">syslog</span><span class="p">.</span><span class="n">reload</span><span class="p">.</span><span class="n">Invoke</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="nv">$cfg</span> <span class="p">=</span> <span class="nv">$esxcli</span><span class="p">.</span><span class="n">system</span><span class="p">.</span><span class="n">syslog</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">get</span><span class="p">.</span><span class="n">Invoke</span><span class="p">()</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>        <span class="n">Host</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>        <span class="n">RemoteHost</span> <span class="p">=</span> <span class="nv">$cfg</span><span class="p">.</span><span class="n">RemoteHost</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="n">Status</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$cfg</span><span class="p">.</span><span class="n">RemoteHost</span> <span class="o">-eq</span> <span class="nv">$vrliTarget</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;OK&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;MISMATCH&quot;</span> <span class="p">}</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="p">}</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+</code></pre></div>
 
 
 

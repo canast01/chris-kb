@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#alert-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#alert-rule-types" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +815,20 @@
 
 <h1 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h1>
 <p>Azure Monitor Alerts proactively notify you when conditions in your monitored resources are met. Alert rules evaluate signals — metrics, log queries, or activity log events — and fire when thresholds are crossed. Action groups define who gets notified and how.</p>
+<h2 id="alert-flow">Alert Flow<a class="headerlink" href="#alert-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    signal["Signal Source\nMetric · Log · Activity Log"]
+    alertRule["Alert Rule\nthreshold · window · frequency"]
+    fired{"Condition\nmet?"}
+    actionGroup["Action Group\nemail · SMS · webhook · Logic App"]
+    notify["Notification\nOps team notified"]
+    suppress["Suppressed\n(alert processing rule)"]
+    resolved["Alert Resolved\nauto or manual"]
+
+    signal --&gt; alertRule --&gt; fired
+    fired -- Yes --&gt; actionGroup --&gt; notify --&gt; resolved
+    fired -- Yes, but suppressed --&gt; suppress
+    fired -- No --&gt; signal</code></pre>
 <h2 id="alert-rule-types">Alert Rule Types<a class="headerlink" href="#alert-rule-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

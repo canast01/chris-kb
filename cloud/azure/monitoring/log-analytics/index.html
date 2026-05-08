@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#log-analytics-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Analytics Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#workspace-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,6 +815,27 @@
 
 <h1 id="log-analytics">Log Analytics<a class="headerlink" href="#log-analytics" title="Permanent link">&para;</a></h1>
 <p>Azure Log Analytics is the primary platform for collecting, querying, and alerting on log data in Azure Monitor. Data is stored in a Log Analytics workspace and queried using KQL (Kusto Query Language).</p>
+<h2 id="log-analytics-data-flow">Log Analytics Data Flow<a class="headerlink" href="#log-analytics-data-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph ingest["Data Ingestion"]
+        diagSettings["Diagnostic Settings\nplatform logs + metrics"]
+        dcr["Data Collection Rules\nVM guest OS logs"]
+        customApi["Custom Logs\nData Collector API"]
+        sentinel["Microsoft Sentinel\nconnectors"]
+    end
+    workspace["Log Analytics Workspace\nKQL engine · retention"]
+    subgraph consume["Consumption"]
+        kql["KQL Queries\nLog search"]
+        alertRules["Alert Rules\nlog search alerts"]
+        workbooksOut["Workbooks\nvisualisation"]
+        grafanaOut["Managed Grafana"]
+    end
+
+    diagSettings --&gt; workspace
+    dcr --&gt; workspace
+    customApi --&gt; workspace
+    sentinel --&gt; workspace
+    workspace --&gt; kql &amp; alertRules &amp; workbooksOut &amp; grafanaOut</code></pre>
 <h2 id="workspace-configuration">Workspace Configuration<a class="headerlink" href="#workspace-configuration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a Log Analytics workspace</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>workspace<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>

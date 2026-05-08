@@ -699,6 +699,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#default-account-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Account Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replace-self-signed-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace Self-Signed Certificate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldaps-only-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAPS-Only Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firewall-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#syslog-output-for-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syslog Output for Audit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +803,161 @@
 
 
 <h1 id="aria-ops-for-logs-hardening">Aria Ops for Logs — Hardening<a class="headerlink" href="#aria-ops-for-logs-hardening" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<h2 id="default-account-hardening">Default Account Hardening<a class="headerlink" href="#default-account-hardening" title="Permanent link">&para;</a></h2>
+<p>Change the <code>admin</code> password immediately after completing the setup wizard:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Authentication → Local Users → admin → Edit → Change Password
+</code></pre></div>
+<ul>
+<li>Minimum 16 characters, mixed case, numbers, and symbols</li>
+<li>Store in an enterprise vault (CyberArk, HashiCorp Vault)</li>
+<li>Do not use the <code>admin</code> account for routine interactive access — create named AD-backed accounts</li>
+</ul>
+<hr />
+<h2 id="replace-self-signed-certificate">Replace Self-Signed Certificate<a class="headerlink" href="#replace-self-signed-certificate" title="Permanent link">&para;</a></h2>
+<p>Before any log sources or users connect, replace the default self-signed certificate:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → SSL → Replace Certificate
+</code></pre></div>
+<p>Upload: private key (no passphrase), leaf certificate (PEM), CA chain (intermediate + root, PEM).</p>
+<p>Verify after replacement:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrli-prod-01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer<span class="w"> </span>-subject<span class="w"> </span>-dates
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Issuer should be your internal CA, not &quot;VMware&quot; or &quot;self-signed&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="ldaps-only-authentication">LDAPS-Only Authentication<a class="headerlink" href="#ldaps-only-authentication" title="Permanent link">&para;</a></h2>
+<p>Disable plain LDAP (port 389) for AD authentication — always use LDAPS (port 636):</p>
+<ol>
+<li>Import the domain CA certificate: <strong>Administration → SSL → Import Certificate</strong></li>
+<li>Configure AD with port 636 and <strong>Use SSL: Yes</strong></li>
+<li>Test the connection before saving</li>
+<li>Firewall: block outbound TCP 389 from the Aria Ops for Logs appliance to domain controllers</li>
+</ol>
+<hr />
+<h2 id="ssh-hardening">SSH Hardening<a class="headerlink" href="#ssh-hardening" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restrict SSH to the management network</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;sshd: 10.0.1.0/24&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.allow
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ALL: ALL&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/etc/hosts.deny
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Disable root password login</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Edit /etc/ssh/sshd_config:</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>PermitRootLogin<span class="w"> </span>prohibit-password
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>PasswordAuthentication<span class="w"> </span>no<span class="w">   </span><span class="c1"># Only after SSH keys are configured</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+</code></pre></div>
+<hr />
+<h2 id="firewall-rules">Firewall Rules<a class="headerlink" href="#firewall-rules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admin workstations</td>
+<td>443</td>
+<td>TCP</td>
+<td>Web UI and API</td>
+</tr>
+<tr>
+<td>Admin workstations</td>
+<td>22</td>
+<td>TCP</td>
+<td>SSH (restrict to PAW/jump host)</td>
+</tr>
+<tr>
+<td>ESXi hosts</td>
+<td>514</td>
+<td>UDP</td>
+<td>Syslog from ESXi</td>
+</tr>
+<tr>
+<td>vCenter</td>
+<td>514</td>
+<td>UDP</td>
+<td>vCenter syslog</td>
+</tr>
+<tr>
+<td>NSX nodes</td>
+<td>514</td>
+<td>UDP</td>
+<td>NSX syslog</td>
+</tr>
+<tr>
+<td>LI Agent endpoints</td>
+<td>9543</td>
+<td>TCP</td>
+<td>cfapi/TLS agent protocol</td>
+</tr>
+<tr>
+<td>Generic TCP syslog sources</td>
+<td>1514</td>
+<td>TCP</td>
+<td>Reliable syslog</td>
+</tr>
+<tr>
+<td>SNMP trap sources</td>
+<td>162</td>
+<td>UDP</td>
+<td>Network device traps</td>
+</tr>
+<tr>
+<td>Aria Ops for Logs → SMTP relay</td>
+<td>25/587</td>
+<td>TCP</td>
+<td>Alert notifications</td>
+</tr>
+<tr>
+<td>Aria Ops for Logs → LDAP/AD</td>
+<td>636</td>
+<td>TCP</td>
+<td>LDAPS authentication</td>
+</tr>
+<tr>
+<td>Aria Ops for Logs → Aria Ops</td>
+<td>443</td>
+<td>TCP</td>
+<td>Bi-directional integration</td>
+</tr>
+<tr>
+<td>Aria Ops for Logs → NFS archive</td>
+<td>2049</td>
+<td>TCP</td>
+<td>Log archiving</td>
+</tr>
+</tbody>
+</table>
+<p>Block all other inbound ports. Aria Ops for Logs does not require any inbound internet access.</p>
+<hr />
+<h2 id="syslog-output-for-audit">Syslog Output for Audit<a class="headerlink" href="#syslog-output-for-audit" title="Permanent link">&para;</a></h2>
+<p>Forward the Aria Ops for Logs appliance's own system logs to a SIEM or separate log repository — a log analytics platform should not be its own audit log store:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="s"># Forward all syslog to SIEM</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s">*.* @@siem.corp.local:514</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s">EOF</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</code></pre></div>
+<hr />
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Admin password changed and stored in vault</li>
+<li>[ ] Self-signed certificate replaced with CA-signed certificate</li>
+<li>[ ] LDAPS configured (port 636); domain CA imported</li>
+<li>[ ] AD groups mapped to roles — local accounts used only for break-glass</li>
+<li>[ ] SSH restricted to management network CIDR</li>
+<li>[ ] Firewall rules reviewed — only log ingestion ports open from appropriate sources</li>
+<li>[ ] Syslog output to SIEM configured and verified</li>
+<li>[ ] TLS 1.0 and 1.1 confirmed disabled</li>
+<li>[ ] LI Agent connections use cfapi/TLS (port 9543), not unencrypted port 9000</li>
+<li>[ ] Aria Ops for Logs software at current patch level</li>
+<li>[ ] VM disk encryption enabled at storage layer</li>
+<li>[ ] NTP configured and delta &lt; 1 second: <code>chronyc tracking</code></li>
+<li>[ ] SNMP trap receiver enabled only if network devices are configured to send traps; disabled otherwise</li>
+</ul>
 
 
 

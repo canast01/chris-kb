@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ca-key-protection-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CA Key Protection Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ca-key-protection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -748,6 +759,13 @@
 
 
 <h1 id="certificates-encryption">Certificates — Encryption<a class="headerlink" href="#certificates-encryption" title="Permanent link">&para;</a></h1>
+<h2 id="ca-key-protection-hierarchy">CA Key Protection Hierarchy<a class="headerlink" href="#ca-key-protection-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    rootCA[("Root CA Private Key\nHSM — FIPS 140-2 Level 3\n(offline / air-gapped)")] --&gt; issuingCA["Issuing CA Private Key\nHSM or TPM-backed\n(online — issues end-entity certs)"]
+    issuingCA --&gt; endEntity["End-Entity Private Key\nSoftware key acceptable\n(generated on target host — never exported)"]
+
+    hsmBackup["HSM Key Backup\n(M-of-N quorum cards\n3-of-5 ceremony)"] -. "protects" .-&gt; rootCA
+    cyberArk["CyberArk\n(stores high-value keys:\nwildcard / code signing)"] -. "optional HSM alternative" .-&gt; endEntity</code></pre>
 <h2 id="ca-key-protection">CA Key Protection<a class="headerlink" href="#ca-key-protection" title="Permanent link">&para;</a></h2>
 <p>Root CA and Issuing CA private keys must be protected by HSMs — software-only key storage is not acceptable for CA keys.</p>
 <table>
