@@ -6,6 +6,30 @@ See also: [Troubleshooting](../) for full diagnostic procedures.
 
 ---
 
+## Azure Connectivity Triage
+
+```mermaid
+flowchart TD
+    connFail["VM / Resource connectivity failure"]
+    nsgCheck{"Effective NSG rules\nallow traffic?"}
+    routeCheck{"Effective routes\ncorrect next hop?"}
+    fwCheck{"Azure Firewall / NVA\nrule allows traffic?"}
+    dnsCheck{"DNS resolution\ncorrect IP?"}
+    vmState{"VM running?\nProvisioning Succeeded?"}
+    resolved["Issue identified\nand resolved"]
+
+    connFail --> vmState
+    vmState -- No --> resolved
+    vmState -- Yes --> nsgCheck
+    nsgCheck -- Deny found --> resolved
+    nsgCheck -- OK --> routeCheck
+    routeCheck -- Incorrect --> resolved
+    routeCheck -- OK --> fwCheck
+    fwCheck -- Blocked --> resolved
+    fwCheck -- OK --> dnsCheck
+    dnsCheck --> resolved
+```
+
 ## VM Connectivity Issues
 
 ```bash

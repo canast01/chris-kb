@@ -2,6 +2,20 @@
 
 ## Diagnostic Commands
 
+```mermaid
+flowchart TD
+    symptom(["Eyeglass alert\nor anomaly"]) --> serviceStatus
+
+    serviceStatus["igls adm status\nAll services running?"]
+    apiConn["curl -sk https://cluster:8080/\nOneFS API reachable?"]
+    syncLog["tail -f /var/log/eyeglass/sync.log\nErrors or timeouts?"]
+    dnsLog["tail -f /var/log/eyeglass/dns.log\nDNS integration errors?"]
+    foLog["tail -f /var/log/eyeglass/failover.log\nFailover events?"]
+
+    serviceStatus --> apiConn --> syncLog --> dnsLog --> foLog
+    foLog --> resolved(["Root cause identified\nRemediate or escalate"])
+```
+
 ```bash
 # Check Eyeglass service status (from appliance console)
 igls adm status

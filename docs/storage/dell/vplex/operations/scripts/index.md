@@ -2,6 +2,23 @@
 
 > Part of the [Dell VPLEX](../../) reference.
 
+```mermaid
+flowchart LR
+    schedCron(["Scheduled cron\nor CI pipeline"])
+    devHealth["vplex_device_health.sh\nSSH to VMS → vplexcli"]
+    cgMonitor["vplex_cg_monitor.pl\nConsistency group state"]
+    dailyCheck["vplex_daily_check.sh\nFull daily health run"]
+    preChange["vplex_precheck.sh\nPre-maintenance gate"]
+    nms["NMS / Monitoring\nNagios / Zabbix / Prometheus"]
+    pagerAlert["Alert\nSev-2 page / ticket"]
+
+    schedCron --> devHealth --> nms
+    schedCron --> cgMonitor --> nms
+    schedCron --> dailyCheck --> nms
+    preChange -->|"exit 2 on failure\nblock maintenance"| pagerAlert
+    nms -->|"threshold breach"| pagerAlert
+```
+
 ---
 ## Distributed Device Health Check
 
