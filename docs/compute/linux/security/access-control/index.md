@@ -82,6 +82,27 @@ stat -c "%a %U %G %n" /etc/passwd /etc/shadow /etc/sudoers /etc/ssh/sshd_config
 
 SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.
 
+### SELinux MAC Decision Flow
+
+```mermaid
+flowchart TD
+    subject["Subject\nProcess with SELinux label\ne.g. httpd_t"]
+    dacCheck{"DAC Check\nUnix permissions allow?"}
+    dacDeny["DENY\n(DAC blocks)"]
+    selinuxCheck{"SELinux Policy\nallow rule exists?"}
+    audit["AVC Denial logged\n/var/log/audit/audit.log"]
+    allow["ALLOW\nAccess granted to object"]
+    object["Object\nFile / Socket / Port\ne.g. httpd_sys_content_t"]
+
+    subject --> dacCheck
+    dacCheck -- No --> dacDeny
+    dacCheck -- Yes --> selinuxCheck
+    selinuxCheck -- No --> audit --> dacDeny
+    selinuxCheck -- Yes --> allow --> object
+```
+
+
+
 ### SELinux Modes
 
 ```bash
@@ -154,6 +175,30 @@ sealert -a /var/log/audit/audit.log
 ```
 
 ## Mandatory Access Control — AppArmor (Ubuntu/Debian)
+
+### AppArmor MAC Decision Flow
+
+```mermaid
+flowchart TD
+    proc["Process\ne.g. nginx"]
+    profileLoaded{"AppArmor profile\nloaded for process?"}
+    enforce{"Profile mode?"}
+    complain["Complain mode\nLog but allow"]
+    policyCheck{"Requested operation\nmatches profile rule?"}
+    allowed["ALLOW\nOperation proceeds"]
+    denied["DENY\nOperation blocked + logged"]
+    noProfile["Unconfined\nNo restrictions"]
+
+    proc --> profileLoaded
+    profileLoaded -- No --> noProfile
+    profileLoaded -- Yes --> enforce
+    enforce -- Complain --> complain --> policyCheck
+    enforce -- Enforce --> policyCheck
+    policyCheck -- Match --> allowed
+    policyCheck -- No match (enforce) --> denied
+```
+
+
 
 ```bash
 # Check status
