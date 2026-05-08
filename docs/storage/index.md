@@ -1,7 +1,7 @@
 # Storage
 
 <div class="kb-summary">
-Storage knowledge base articles, operational references, troubleshooting notes, and procedures.
+Enterprise storage knowledge base covering Dell PowerMax, PowerScale, PowerStore, Unity, VPLEX, Data Domain, and ECS — alongside Pure Storage FlashArray and FlashBlade, and NetApp ONTAP. Includes architecture references, operational procedures, CLI commands, replication, data protection, and troubleshooting guides across block, file, and object storage platforms.
 </div>
 
 ## Articles

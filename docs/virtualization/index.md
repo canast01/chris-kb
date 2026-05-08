@@ -1,7 +1,7 @@
 # Virtualization
 
 <div class="kb-summary">
-Virtualization knowledge base articles, operational references, troubleshooting notes, and procedures for VMware, VxRail, Hyper-V, and container platforms.
+Virtualization platform knowledge base covering VMware Cloud Foundation, vCenter, ESXi, vSAN, NSX, VxRail, and the full Aria Suite. Includes architecture references, operational procedures, CLI commands, health checks, lifecycle management, and troubleshooting guides across the VMware stack.
 </div>
 
 <div class="kb-grid kb-grid-4">

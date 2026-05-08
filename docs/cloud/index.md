@@ -1,7 +1,7 @@
 # Cloud
 
 <div class="kb-summary">
-Cloud infrastructure knowledge base covering AWS, Azure, compute, storage, networking, identity, monitoring, backup, security, governance, and cost operations.
+Cloud infrastructure knowledge base covering AWS and Azure. Includes architecture references, identity and access management, compute, storage, networking, monitoring, backup and disaster recovery, security, governance, cost management, CLI references, and operational procedures across both platforms.
 </div>
 
 ## Cloud Platforms

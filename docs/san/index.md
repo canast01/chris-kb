@@ -1,7 +1,7 @@
 # SAN
 
 <div class="kb-summary">
-SAN knowledge base articles, operational references, troubleshooting notes, and procedures for Cisco and Brocade fabric environments.
+SAN knowledge base covering Cisco MDS switches, DCNM, Nexus Dashboard, Brocade Fabric OS, and SANnav. Includes fabric architecture, zoning standards, ISL and port configuration, host connectivity, CLI references, health checks, and troubleshooting guides for Fibre Channel environments.
 </div>
 
 <div class="kb-grid kb-grid-3">

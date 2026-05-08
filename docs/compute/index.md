@@ -1,7 +1,7 @@
 # Compute
 
 <div class="kb-summary">
-Compute knowledge base articles, operational references, troubleshooting notes, and procedures for Windows Server and Linux.
+Compute platform knowledge base covering Windows Server and Linux host operations. Includes architecture references, server build standards, operational procedures, CLI commands, patching and lifecycle management, performance troubleshooting, and security hardening guides.
 </div>
 
 <div class="kb-grid kb-grid-3">

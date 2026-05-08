@@ -1,7 +1,7 @@
 # Networking
 
 <div class="kb-summary">
-Networking knowledge base articles, operational references, troubleshooting notes, and procedures for routing, VLANs, DNS, firewalls, and connectivity.
+Networking knowledge base covering routing, VLANs, DNS, firewalls, load balancers, VPN, TCP/IP, and subnetting. Includes design references, configuration procedures, connectivity troubleshooting, and validation guides for enterprise network environments.
 </div>
 
 <div class="kb-grid kb-grid-3">
