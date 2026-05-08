@@ -88,12 +88,16 @@ body,
 
 .hero-body {
   flex: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-name {
   text-align: right;
   white-space: nowrap;
   padding-bottom: 0.15rem;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-name strong {
@@ -146,13 +150,16 @@ body,
   display: block;
   padding: 1.1rem 1.2rem;
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.68);
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  box-shadow: var(--kb-card-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.52);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  box-shadow:
+    0 8px 32px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   text-decoration: none !important;
   transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  overflow: hidden;
 }
 
 .kb-card:hover {
@@ -380,19 +387,31 @@ body,
 /* ── Dark mode card depth ── */
 
 [data-md-color-scheme="slate"] .kb-card {
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  border-color: rgba(148, 163, 184, 0.14);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-color: rgba(255, 255, 255, 0.07);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 [data-md-color-scheme="slate"] .kb-card:hover {
-  background: rgba(20, 30, 55, 0.65);
+  background: rgba(20, 30, 55, 0.55);
   box-shadow:
     0 0 0 1px rgba(56, 189, 248, 0.28),
     0 20px 48px rgba(56, 189, 248, 0.08),
-    0 8px 24px rgba(0,0,0,0.35);
+    0 8px 24px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+[data-md-color-scheme="slate"] .kb-card::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.07),
+    transparent
+  );
 }
 
 /* ── Quick Access cards ── */
@@ -786,6 +805,32 @@ body,
   border-color: rgba(56, 189, 248, 0.28);
 }
 
+/* ── Card shine sweep ── */
+
+.kb-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+  transform: skewX(-12deg);
+  pointer-events: none;
+  transition: none;
+  z-index: 1;
+}
+
+.kb-card:hover::before {
+  left: 130%;
+  transition: left 0.55s ease;
+}
+
 /* ── Card left-accent strip ── */
 
 .kb-card {
@@ -854,6 +899,11 @@ body,
 @keyframes kb-fade-in {
   from { opacity: 0; transform: translateY(5px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes kb-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
 
 /* ── Blockquotes ── */
