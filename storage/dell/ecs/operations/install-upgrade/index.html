@@ -717,10 +717,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pre-upgrade-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#upgrade-and-update-paths" class="md-nav__link">
     <span class="md-ellipsis">
       
         Upgrade and Update Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-new-node-to-an-existing-vdc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a New Node to an Existing VDC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Replacement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Replacement
       
     </span>
   </a>
@@ -808,18 +852,140 @@
 </tbody>
 </table>
 <p>Check the Dell ECS Support Matrix on the Dell Support portal for the current supported version list and minimum supported version for new deployments.</p>
+<h2 id="pre-upgrade-checks">Pre-Upgrade Checks<a class="headerlink" href="#pre-upgrade-checks" title="Permanent link">&para;</a></h2>
+<p>Before initiating any software upgrade, confirm all of the following. Do not proceed if any item is not satisfied.</p>
+<ul>
+<li>[ ] All nodes are in <code>GOOD</code> health: <code>GET /vdc/nodes</code> shows no <code>DEGRADED</code> or offline nodes</li>
+<li>[ ] No active disk rebuilds: ECS Portal → Hardware → Disks shows no disks in <code>REBUILDING</code> state</li>
+<li>[ ] Geo-replication lag is at zero for all replication groups: ECS Portal → Geo Monitoring</li>
+<li>[ ] No active alerts of <code>ERROR</code> or <code>CRITICAL</code> severity: <code>GET /vdc/alerts</code></li>
+<li>[ ] Cluster capacity is below 70%: <code>GET /vdc/capacity</code></li>
+<li>[ ] Cassandra ring is healthy: <code>nodetool status</code> on any node shows all nodes as <code>UN</code></li>
+<li>[ ] The target version is a supported upgrade path from the current version (check the ECS release notes — some major version jumps require an intermediate stop)</li>
+<li>[ ] The upgrade package has been downloaded from the Dell Support portal and verified (SHA checksum)</li>
+<li>[ ] A maintenance window has been opened and all application teams consuming S3/Swift/CAS endpoints have been notified</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Capture pre-upgrade baseline (store in the change record)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;sysadmin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-D<span class="w"> </span>-<span class="w"> </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\r&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">ECS</span><span class="o">=</span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/version&quot;</span><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/nodes&quot;</span><span class="w">    </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/capacity&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/alerts&quot;</span><span class="w">   </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <h2 id="upgrade-and-update-paths">Upgrade and Update Paths<a class="headerlink" href="#upgrade-and-update-paths" title="Permanent link">&para;</a></h2>
-<p>ECS upgrades are rolling — the cluster remains online throughout. The ECS Portal handles upgrade orchestration.</p>
+<p>ECS upgrades are rolling — the cluster remains online throughout. The ECS Portal handles upgrade orchestration; each node is upgraded sequentially with automatic health validation between each node.</p>
+<p><strong>Upgrade procedure:</strong></p>
 <ol>
-<li>Confirm all nodes are in <code>GOOD</code> health and geo-replication lag is zero before initiating an upgrade</li>
+<li>Confirm all pre-upgrade checks pass (see above)</li>
 <li>Download the ECS upgrade bundle from the Dell Support portal (requires active support contract)</li>
+<li>Verify the SHA-256 checksum of the downloaded bundle before uploading</li>
 <li>Upload the bundle to the ECS Portal → Settings → Software Update staging area</li>
-<li>Review the release notes for the target version; note any mandatory interim stops (some major version jumps require an intermediate version)</li>
-<li>Initiate the upgrade from the portal; ECS upgrades nodes sequentially with automatic health validation between each node</li>
-<li>Monitor upgrade progress in the portal; each node reboot takes approximately 15–30 minutes depending on hardware</li>
-<li>After all nodes complete, confirm cluster version, node health, and geo-replication status</li>
+<li>Review the release notes for the target version; note any mandatory interim stops</li>
+<li>Some major version jumps require upgrading to an intermediate version first (e.g., 3.6 → 3.8 may require 3.7 as an intermediate)</li>
+<li>Initiate the upgrade from the portal: ECS Portal → Settings → Software Update → Start Upgrade</li>
+<li>ECS upgrades nodes sequentially with automatic health validation between each node</li>
+<li>Each node reboots during its upgrade; reboot time is approximately 15–30 minutes per node</li>
+<li>The cluster continues to serve S3 requests during the rolling upgrade (with one fewer node per upgrade step)</li>
+<li>Monitor upgrade progress in the portal; each node shows its upgrade state</li>
+<li>Do not interrupt the rolling upgrade once started; do not reboot nodes manually or cut power during an upgrade</li>
+<li>After all nodes complete, confirm:</li>
+<li>All nodes return to <code>GOOD</code> status: <code>GET /vdc/nodes</code></li>
+<li>Software version reflects the new version: <code>GET /vdc/version</code></li>
+<li>Geo-replication resumes and lag returns to zero</li>
+<li>No new alerts introduced: <code>GET /vdc/alerts</code></li>
+<li>Run a functional S3 test from at least one consuming application before closing the change</li>
 </ol>
 <p><strong>Supported upgrade paths</strong>: Single-version minor upgrades are always supported. Major version jumps may require an intermediate stop — verify in the release notes before proceeding.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Post-upgrade validation commands</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;sysadmin:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-D<span class="w"> </span>-<span class="w"> </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\r&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">ECS</span><span class="o">=</span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Confirm new software version</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Confirm all nodes are healthy</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Confirm no new alerts</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/alerts&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Confirm geo-replication is healthy</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/vdc/geo-replication/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Functional S3 test</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-s3-endpoint&gt;:9021<span class="w"> </span>--no-verify-ssl<span class="w"> </span>--profile<span class="w"> </span>ecs
+</code></pre></div>
+<h2 id="adding-a-new-node-to-an-existing-vdc">Adding a New Node to an Existing VDC<a class="headerlink" href="#adding-a-new-node-to-an-existing-vdc" title="Permanent link">&para;</a></h2>
+<p>Adding nodes expands cluster capacity and compute. ECS rebalances erasure coding stripes in the background after a new node is added.</p>
+<p><strong>Procedure:</strong></p>
+<ol>
+<li>Confirm pre-change checks: all existing nodes <code>GOOD</code>, no active rebuilds, capacity &lt; 70%</li>
+<li>Rack and cable the new node according to the Dell ECS hardware installation guide</li>
+<li>Boot the new node; it should appear in ECS Portal → Hardware → Nodes with a <code>NEW</code> status</li>
+<li>Navigate to ECS Portal → Hardware → Nodes → select the new node → Add to VDC</li>
+<li>ECS automatically begins rebalancing data to include the new node in erasure coding stripes</li>
+<li>Monitor rebalancing progress in ECS Portal → Hardware — the cluster capacity view will update as data moves</li>
+<li>Do not initiate another planned change (upgrade, node addition) while rebalancing is in progress</li>
+</ol>
+<p><strong>Node addition considerations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum increment</td>
+<td>Add at least 4 nodes at once to maintain EC stripe width; adding a single node results in temporary stripe imbalance</td>
+</tr>
+<tr>
+<td>Rebalancing duration</td>
+<td>Rebalancing is background I/O-intensive; duration depends on cluster size and data volume — plan 24–72 hours for dense clusters</td>
+</tr>
+<tr>
+<td>Performance impact</td>
+<td>Rebalancing competes with client I/O; avoid adding nodes during peak usage hours</td>
+</tr>
+<tr>
+<td>Version matching</td>
+<td>New nodes must run the same ECS software version as existing nodes before being added to the VDC</td>
+</tr>
+</tbody>
+</table>
+<h2 id="disk-replacement">Disk Replacement<a class="headerlink" href="#disk-replacement" title="Permanent link">&para;</a></h2>
+<p>When a disk fails, ECS marks it as <code>FAILED</code> and begins automatic rebuild. The disk should be physically replaced promptly to restore full redundancy.</p>
+<p><strong>Procedure:</strong></p>
+<ol>
+<li>Identify the failed disk in ECS Portal → Hardware → Disks — note the node and slot position</li>
+<li>Navigate to ECS Portal → Hardware → Disks → select the failed disk → Begin Replacement</li>
+<li>The portal identifies which physical disk to replace (slot number, LED indicator if supported)</li>
+<li>Replace the disk following the Dell hardware guide (hot-swap for supported models)</li>
+<li>ECS automatically detects the new disk and begins rebuilding erasure coding fragments onto it</li>
+<li>Monitor rebuild progress in ECS Portal → Hardware → Disks; the disk transitions from <code>REBUILDING</code> to <code>GOOD</code> when complete</li>
+<li>Do not replace more than <code>(parity fragments - 1)</code> disks simultaneously; for 12+4 EC, do not replace 4 or more disks at the same time</li>
+</ol>
+<h2 id="node-replacement">Node Replacement<a class="headerlink" href="#node-replacement" title="Permanent link">&para;</a></h2>
+<p>Replacing a failed node requires draining it from the cluster before physical replacement.</p>
+<p><strong>Procedure:</strong></p>
+<ol>
+<li>Place the node in maintenance mode: ECS Portal → Hardware → Nodes → select node → Enter Maintenance Mode</li>
+<li>Wait for the node to drain (ECS redistributes its data to surviving nodes)</li>
+<li>Power off the node and perform hardware replacement</li>
+<li>Boot the replacement node; install the same ECS software version as the cluster</li>
+<li>Add the replacement node to the VDC: ECS Portal → Hardware → Nodes → Add to VDC</li>
+<li>ECS rebalances data to include the replacement node</li>
+<li>Confirm the replacement node shows <code>GOOD</code> in the portal after rebalancing completes</li>
+</ol>
 <h2 id="eol-and-renewal-tracking">EOL and Renewal Tracking<a class="headerlink" href="#eol-and-renewal-tracking" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -848,12 +1014,17 @@
 <tr>
 <td>TLS certificate (Management API / S3 endpoint)</td>
 <td>ECS Portal → Settings → Certificates</td>
-<td>Renew 30 days before expiry</td>
+<td>Renew 30 days before expiry; alert at 60 days</td>
 </tr>
 <tr>
 <td>Object user secret key rotation</td>
-<td>ECS Portal → Namespace → IAM Users</td>
+<td>IAM registry / secrets manager</td>
 <td>Rotate every 12 months per policy</td>
+</tr>
+<tr>
+<td>KMIP client certificate (if used)</td>
+<td>KMS server and ECS key management config</td>
+<td>Renew 60 days before expiry</td>
 </tr>
 </tbody>
 </table>
@@ -863,8 +1034,18 @@
 <li>Data migration from an old cluster to a new ECS deployment is performed via geo-replication: stand up the new cluster as a VDC, add it to the replication group, let data sync, then cut over applications and retire the old VDC</li>
 <li>When replacing individual nodes within a cluster, use the ECS Portal guided node replacement procedure; do not remove a node without following the procedure as ECS must rebalance erasure coding stripes</li>
 <li>For platform migration (ECS to a different object storage platform), use S3 replication tools (e.g., rclone, Veeam Data Mover) to copy objects; ECS does not have a native cross-platform migration tool</li>
-<li>Decommission steps: drain the VDC (move all replication groups to other VDCs), remove VDC from replication groups, then shut down nodes; do not shut down nodes while still in an active replication group</li>
 </ul>
+<p><strong>Decommission steps:</strong></p>
+<ol>
+<li>Move all replication groups away from the VDC being decommissioned (migrate to other VDCs)</li>
+<li>Verify all data is accessible from the surviving VDC before proceeding</li>
+<li>Update all client S3 endpoints to point to surviving VDCs</li>
+<li>Remove the VDC from all replication groups in ECS Portal → Settings → Replication Groups</li>
+<li>Shut down ECS services on all nodes in the VDC: <code>viprexec -v -cmd "systemctl stop storageos"</code></li>
+<li>Power off and decommission nodes following the Dell hardware decommission guide</li>
+<li>Securely erase all disks if required by data classification policy (use Dell secure erase tools)</li>
+</ol>
+<p><strong>Do not shut down nodes while still in an active replication group — this will cause data access failures on the surviving VDC.</strong></p>
 
 
 

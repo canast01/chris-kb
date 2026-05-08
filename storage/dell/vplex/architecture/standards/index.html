@@ -714,6 +714,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Sizing Guidelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#icl-bandwidth-sizing-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ICL Bandwidth Sizing Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -728,6 +745,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metro-configuration-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metro Configuration Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metro Configuration Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#witness-configuration-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Witness Configuration Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#build-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -736,6 +781,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Build Baseline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#consistency-group-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consistency Group Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-view-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage View Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#back-end-zoning-and-masking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Back-End Zoning and Masking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#management-and-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management and Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -743,6 +838,17 @@
     <span class="md-ellipsis">
       
         Configuration Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-baselines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Baselines
       
     </span>
   </a>
@@ -770,6 +876,7 @@
 
 
 <h1 id="dell-vplex-standards">Dell VPLEX — Standards<a class="headerlink" href="#dell-vplex-standards" title="Permanent link">&para;</a></h1>
+<p>Design standards, sizing guidelines, naming conventions, and configuration baselines for VPLEX deployments.</p>
 <h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -781,31 +888,71 @@
 <tbody>
 <tr>
 <td>Virtual volume size</td>
-<td>Maximum virtual volume size determined by GeoSynchrony version; check release notes</td>
+<td>Maximum virtual volume size is determined by the GeoSynchrony version; verify in release notes before provisioning large volumes</td>
 </tr>
 <tr>
 <td>Write cache per director</td>
-<td>Cache size is fixed per director model; do not exceed 70% cache utilisation under sustained write workloads</td>
+<td>Cache size is fixed per director model; do not sustain cache utilisation above 70% under write-heavy workloads; monitor via Unisphere performance dashboard</td>
 </tr>
 <tr>
 <td>Backend IOPS budget</td>
-<td>Sum of all virtual volume IOPS must not exceed the backend array's rated IOPS after accounting for RAID overhead</td>
+<td>Sum of all virtual volume IOPS must not exceed the backend array's rated IOPS after accounting for RAID overhead and array cache efficiency</td>
 </tr>
 <tr>
 <td>ICL bandwidth (Metro)</td>
-<td>ICL bandwidth must exceed peak write throughput at either site; provision 2× expected write bandwidth for headroom</td>
+<td>ICL bandwidth must exceed peak write throughput at either site; provision ≥2× expected peak write bandwidth for headroom and burst absorption</td>
 </tr>
 <tr>
 <td>Director port count</td>
-<td>Allocate front-end ports based on host count and bandwidth requirements; maintain port balance across directors within an engine</td>
+<td>Allocate front-end ports based on host count and per-host bandwidth requirements; maintain port balance across both directors in a pair</td>
 </tr>
 <tr>
 <td>Consistency groups</td>
-<td>One consistency group per multi-volume application; do not exceed documented CG limits per GeoSynchrony version</td>
+<td>One consistency group per multi-volume application; do not exceed documented CG member and CG count limits per GeoSynchrony version</td>
+</tr>
+<tr>
+<td>Witness VM sizing</td>
+<td>Use the Dell-provided Witness OVA; do not resize; the Witness is not in the data path and requires only minimal resources</td>
+</tr>
+</tbody>
+</table>
+<h3 id="icl-bandwidth-sizing-example">ICL Bandwidth Sizing Example<a class="headerlink" href="#icl-bandwidth-sizing-example" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Peak write throughput at Site A</td>
+<td>4 GB/s</td>
+</tr>
+<tr>
+<td>Peak write throughput at Site B</td>
+<td>3 GB/s</td>
+</tr>
+<tr>
+<td>Worst-case replication load</td>
+<td>4 GB/s (both sites write; worst leg dictates)</td>
+</tr>
+<tr>
+<td>Recommended ICL provisioning</td>
+<td>≥8 GB/s (2× headroom)</td>
+</tr>
+<tr>
+<td>Minimum ICL provisioning</td>
+<td>≥5 GB/s (1.25× headroom; not recommended for production)</td>
+</tr>
+<tr>
+<td>ICL interface</td>
+<td>2× 25GbE ICL ports per director (50 Gbps = 6.25 GB/s raw; plan for ≤70% sustained utilisation)</td>
 </tr>
 </tbody>
 </table>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<p>All VPLEX objects must follow a consistent naming convention to allow rapid identification during incident response.</p>
 <table>
 <thead>
 <tr>
@@ -841,61 +988,180 @@
 <td><code>sv-db-prod-01</code>, <code>sv-esxi-prod-04</code></td>
 </tr>
 <tr>
-<td>Initiator</td>
+<td>Initiator Port</td>
 <td><code>&lt;hostname&gt;-hba&lt;n&gt;</code></td>
 <td><code>db-prod-01-hba0</code>, <code>db-prod-01-hba1</code></td>
 </tr>
 <tr>
-<td>Port (front-end)</td>
-<td><code>&lt;cluster&gt;-director-&lt;n&gt;-&lt;port&gt;</code></td>
-<td>Follows VPLEX default naming; document in CMDB</td>
-</tr>
-<tr>
 <td>Extent</td>
-<td><code>ext-&lt;storage-volume-name&gt;</code></td>
-<td>Follows VPLEX auto-naming convention</td>
+<td><code>ext-&lt;sv-name&gt;-&lt;nn&gt;</code></td>
+<td><code>ext-sv-001-01</code> (follows storage volume naming)</td>
 </tr>
 <tr>
 <td>Storage Volume</td>
-<td><code>sv-&lt;array&gt;-&lt;lun-id&gt;</code></td>
-<td>Descriptive name matching backend array LUN</td>
+<td>Descriptive name matching backend array LUN ID</td>
+<td><code>sv-pmax-00A12B</code></td>
+</tr>
+<tr>
+<td>Port (front-end)</td>
+<td>Use VPLEX default naming; document VPLEX port WWN → fabric alias mapping in CMDB</td>
+<td><code>A0-FC00</code>, <code>B0-FC00</code></td>
 </tr>
 </tbody>
 </table>
+<p><strong>Naming rules:</strong>
+- Use only lowercase alphanumeric characters and hyphens; no spaces, underscores, or special characters.
+- Environment codes: <code>prod</code>, <code>nonprod</code>, <code>dev</code>, <code>dr</code>.
+- Application codes: short form matching the CMDB application record (e.g., <code>oracle</code>, <code>sql</code>, <code>sap</code>).
+- Sequence numbers: zero-padded two digits (<code>01</code>, <code>02</code>, ... <code>10</code>).</p>
+<h2 id="metro-configuration-standards">Metro Configuration Standards<a class="headerlink" href="#metro-configuration-standards" title="Permanent link">&para;</a></h2>
+<p>Every production VPLEX Metro deployment must meet these requirements before go-live:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Witness VM location</td>
+<td>Third failure domain — not co-located at Site A or Site B; must be reachable from both clusters at all times</td>
+</tr>
+<tr>
+<td>ICL redundancy</td>
+<td>Minimum two independent physical ICL paths between clusters using different physical routes or carriers</td>
+</tr>
+<tr>
+<td>ICL RTT</td>
+<td>Must be ≤5ms round-trip under peak load conditions; test with sustained traffic, not just idle ping</td>
+</tr>
+<tr>
+<td>ICL utilisation alert threshold</td>
+<td>Alert at 70% sustained utilisation; investigate at 80%</td>
+</tr>
+<tr>
+<td>Distributed device coverage</td>
+<td>All production application volumes must be distributed devices (Metro) at go-live</td>
+</tr>
+<tr>
+<td>Consistency group coverage</td>
+<td>Every multi-volume application must be in a consistency group; single-volume applications must also be in a CG for Metro deployments</td>
+</tr>
+<tr>
+<td>Pre-production failover test</td>
+<td>Perform a planned site switch in a maintenance window before production go-live; document the test result and recovery time</td>
+</tr>
+<tr>
+<td>Annual Metro test</td>
+<td>Repeat the planned site switch test annually; document results and update the runbook</td>
+</tr>
+</tbody>
+</table>
+<h3 id="witness-configuration-verification">Witness Configuration Verification<a class="headerlink" href="#witness-configuration-verification" title="Permanent link">&para;</a></h3>
+<p>Run these checks to confirm Witness is correctly configured before any Metro go-live:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Witness must show connected and reachable from both clusters</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Simulate ICL failure (in lab/pre-prod only) and confirm Witness grants quorum to one cluster</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># — do not perform this test in production without a detailed runbook and application owner approval</span>
+</code></pre></div>
 <h2 id="build-baseline">Build Baseline<a class="headerlink" href="#build-baseline" title="Permanent link">&para;</a></h2>
-<p>Every VPLEX deployment should be configured to the following baseline before handover to operations:</p>
-<p><strong>Consistency Group Policy</strong></p>
+<p>Every VPLEX deployment must be configured to this baseline before handover to operations.</p>
+<h3 id="consistency-group-policy">Consistency Group Policy<a class="headerlink" href="#consistency-group-policy" title="Permanent link">&para;</a></h3>
 <ul>
-<li>All multi-volume applications must be in a consistency group to ensure write-order fidelity across volumes.</li>
-<li>Single-volume applications should still be placed in a consistency group for Metro deployments to enable coordinated failover.</li>
-<li>Consistency group membership is set at provisioning time and should not change without a change record.</li>
+<li>All multi-volume applications must be in a dedicated consistency group to ensure write-order fidelity across volumes during failover.</li>
+<li>Single-volume applications in Metro deployments must also be in a consistency group to enable Witness-arbitrated failover.</li>
+<li>Consistency group membership is set at provisioning time; changes require a change record.</li>
+<li>Maximum CG members: check the GeoSynchrony release notes for per-version limits; do not approach the documented maximum.</li>
 </ul>
-<p><strong>Metro Configuration</strong></p>
+<h3 id="storage-view-policy">Storage View Policy<a class="headerlink" href="#storage-view-policy" title="Permanent link">&para;</a></h3>
 <ul>
-<li>All production distributed devices must span both Metro clusters.</li>
-<li>The Witness VM must be deployed in a third failure domain (not co-located at either Metro site) and connectivity from both clusters must be verified before go-live.</li>
-<li>ICL links must be redundant (minimum two physical paths); link utilisation should be monitored and must remain below 70% under peak load.</li>
+<li>One storage view per host; no shared views between different hosts or applications.</li>
+<li>Front-end ports from both directors in a pair must be included in each storage view for path redundancy.</li>
+<li>Only include the virtual volumes the specific host requires; no catch-all views.</li>
+<li>Storage view names must match the naming convention (<code>sv-&lt;hostname&gt;</code>).</li>
 </ul>
-<p><strong>WAN Link Redundancy</strong></p>
+<h3 id="back-end-zoning-and-masking">Back-End Zoning and Masking<a class="headerlink" href="#back-end-zoning-and-masking" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Provision at least two independent ICL paths between Metro clusters using different physical routes.</li>
-<li>Configure ICL link monitoring and alert on any link failure immediately.</li>
+<li>VPLEX back-end ports must be the only initiators in the back-end array masking view for VPLEX storage volumes.</li>
+<li>Hosts must never be zoned directly to back-end array ports; all host access must pass through VPLEX.</li>
+<li>Use separate SAN fabrics for front-end (host-to-VPLEX) and back-end (VPLEX-to-array) zoning.</li>
+</ul>
+<h3 id="management-and-monitoring">Management and Monitoring<a class="headerlink" href="#management-and-monitoring" title="Permanent link">&para;</a></h3>
+<ul>
+<li>VMS must be on a dedicated management VLAN with no access from production servers.</li>
+<li>Syslog forwarding from VMS to the SIEM must be configured and verified before go-live.</li>
+<li>SNMP traps must be configured to the NMS before go-live.</li>
+<li>CloudIQ telemetry upload must be configured if licensed.</li>
+<li>A VMS VM backup schedule must be active before go-live.</li>
 </ul>
 <h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
-<p>Complete this checklist before signing off a new VPLEX deployment or a post-change validation:</p>
-<ul>
-<li>[ ] All directors online and healthy: <code>ll /engines/*/directors/*/hardware/</code></li>
-<li>[ ] Inter-cluster link (ICL) healthy and RTT ≤5ms for Metro: <code>ll /clusters/*/inter-cluster-links/</code></li>
-<li>[ ] Witness reachable from both clusters and quorum status healthy</li>
-<li>[ ] All distributed devices in a healthy sync state: <code>ll /distributed-storage/distributed-devices/*/health-indications/</code></li>
-<li>[ ] All consistency groups healthy and containing the correct distributed devices</li>
-<li>[ ] All storage views contain the correct initiators, front-end ports, and virtual volumes</li>
-<li>[ ] Hosts can see virtual volumes and multipath drivers report all expected paths active</li>
-<li>[ ] Backend array storage volumes correctly claimed and not directly visible to hosts outside of VPLEX</li>
-<li>[ ] Full health check passing: <code>health-check --full</code></li>
-<li>[ ] CMDB updated with storage view-to-host-to-virtual volume mappings</li>
-<li>[ ] VMS VM is backed up and backup verified</li>
-</ul>
+<p>Complete this checklist before signing off a new VPLEX deployment or validating after a significant change:</p>
+<p><strong>Physical and director health:</strong>
+- [ ] All directors online and healthy: <code>ll /engines/*/directors/*/hardware/</code>
+- [ ] All director front-end and back-end ports are operational: <code>ll /engines/*/directors/*/hardware/ports/</code></p>
+<p><strong>Metro connectivity:</strong>
+- [ ] Inter-cluster link (ICL) healthy and RTT ≤5ms: <code>ll /clusters/*/communication/inter-cluster-links/</code>
+- [ ] ICL has minimum two independent physical paths
+- [ ] Witness reachable from both clusters: <code>ll /clusters/*/cluster-witness/</code>
+- [ ] Planned site-switch failover test completed and documented</p>
+<p><strong>Storage objects:</strong>
+- [ ] All distributed devices in a healthy sync state: <code>ll /distributed-storage/distributed-devices/*/health-indications/</code>
+- [ ] All consistency groups healthy and containing the correct distributed devices
+- [ ] All storage views contain the correct initiators, front-end ports, and virtual volumes
+- [ ] Hosts can see virtual volumes and multipath drivers report all expected paths active</p>
+<p><strong>Back-end:</strong>
+- [ ] Backend array storage volumes correctly claimed and not directly accessible to hosts outside of VPLEX
+- [ ] Backend array masking views contain only VPLEX back-end port WWNs (no host WWNs)</p>
+<p><strong>Operations readiness:</strong>
+- [ ] Full health check passing: <code>health-check --full</code>
+- [ ] CMDB updated with storage view-to-host-to-virtual volume mappings
+- [ ] VMS VM is backed up and backup verified
+- [ ] Syslog forwarding to SIEM configured and log ingestion verified
+- [ ] SNMP traps to NMS configured and tested
+- [ ] Naming convention applied to all objects
+- [ ] Operations team briefed on daily check procedure and incident response runbook</p>
+<h2 id="performance-baselines">Performance Baselines<a class="headerlink" href="#performance-baselines" title="Permanent link">&para;</a></h2>
+<p>Record these at go-live and compare during incident investigation:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Baseline Value</th>
+<th>Alert Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ICL RTT (Metro)</td>
+<td><em>measured at go-live</em></td>
+<td>&gt;3ms (warning), &gt;5ms (critical)</td>
+</tr>
+<tr>
+<td>ICL utilisation</td>
+<td><em>measured at go-live</em></td>
+<td>&gt;70% sustained</td>
+</tr>
+<tr>
+<td>Write cache utilisation per director</td>
+<td><em>measured at go-live</em></td>
+<td>&gt;70% sustained</td>
+</tr>
+<tr>
+<td>Host path count per volume</td>
+<td><em>measured at go-live</em></td>
+<td>Less than expected (path failure)</td>
+</tr>
+<tr>
+<td>Distributed device rebuild time</td>
+<td><em>measured after first test rebuild</em></td>
+<td>Reference for estimating future rebuild windows</td>
+</tr>
+</tbody>
+</table>
+<p>Document baseline values in the CMDB operational record for the VPLEX cluster.</p>
 
 
 

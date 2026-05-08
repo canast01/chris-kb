@@ -728,6 +728,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#commvault-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commvault Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#netbackup-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetBackup Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hdfs-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -760,6 +782,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cloudiq-integration-ecs-39" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudIQ Integration (ECS 3.9+)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-and-syslog-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP and Syslog Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -782,54 +826,289 @@
 
 <h1 id="dell-ecs-integrations">Dell ECS — Integrations<a class="headerlink" href="#dell-ecs-integrations" title="Permanent link">&para;</a></h1>
 <h2 id="s3-client-integration">S3 Client Integration<a class="headerlink" href="#s3-client-integration" title="Permanent link">&para;</a></h2>
-<p>ECS exposes a native S3-compatible API on HTTPS port 443 (or 9021 for plain HTTP in lab environments). Any S3-compatible client can connect using path-style or virtual-hosted-style addressing.</p>
-<p><strong>Connection parameters:</strong>
-- Endpoint: <code>https://&lt;ecs-load-balancer-or-node&gt;</code> (port 443)
-- Access key: object user access key from ECS Portal → Namespace → IAM Users
-- Secret key: associated secret from key creation
-- Region: ECS does not enforce AWS regions; set to any value (e.g., <code>us-east-1</code>) in the client config</p>
+<p>ECS exposes a native S3-compatible API on HTTPS port 443 (or 9021 for the non-standard S3 port; 9020 for plain HTTP in lab environments). Any S3-compatible client can connect using path-style or virtual-hosted-style addressing.</p>
+<p><strong>Connection parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Endpoint</td>
+<td><code>https://&lt;ecs-load-balancer-or-node&gt;</code> (port 443 or 9021)</td>
+</tr>
+<tr>
+<td>Access key</td>
+<td>Object user access key from ECS Portal → Namespace → IAM Users</td>
+</tr>
+<tr>
+<td>Secret key</td>
+<td>Associated secret from key creation (shown once at creation only)</td>
+</tr>
+<tr>
+<td>Region</td>
+<td>ECS does not enforce AWS regions; set to any value (e.g., <code>us-east-1</code>) in client config</td>
+</tr>
+<tr>
+<td>Signature version</td>
+<td>AWS Signature Version 4 (SigV4) — required; SigV2 is not supported in ECS 3.8+</td>
+</tr>
+<tr>
+<td>Addressing style</td>
+<td>Path-style (<code>&lt;endpoint&gt;/&lt;bucket&gt;</code>) or virtual-hosted (<code>&lt;bucket&gt;.&lt;endpoint&gt;</code>)</td>
+</tr>
+</tbody>
+</table>
 <p><strong>AWS CLI configuration:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>aws<span class="w"> </span>configure<span class="w"> </span><span class="nb">set</span><span class="w"> </span>aws_access_key_id<span class="w"> </span>&lt;ecs_access_key&gt;
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>configure<span class="w"> </span><span class="nb">set</span><span class="w"> </span>aws_secret_access_key<span class="w"> </span>&lt;ecs_secret_key&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>aws<span class="w"> </span>configure<span class="w"> </span><span class="nb">set</span><span class="w"> </span>default.region<span class="w"> </span>us-east-1
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Use --endpoint-url and --no-verify-ssl (if using self-signed cert)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;<span class="w"> </span>--no-verify-ssl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Configure a named profile for ECS</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>configure<span class="w"> </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># AWS Access Key ID:     &lt;object_user_access_key&gt;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># AWS Secret Access Key: &lt;object_user_secret_key&gt;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Default region:        us-east-1</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Default output format: json</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Upload a file</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>localfile.tar.gz<span class="w"> </span>s3://&lt;bucket&gt;/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">ECS_EP</span><span class="o">=</span><span class="s2">&quot;https://&lt;ecs-node-or-lb&gt;:9021&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">PROFILE</span><span class="o">=</span><span class="s2">&quot;--profile ecs --endpoint-url </span><span class="nv">$ECS_EP</span><span class="s2"> --no-verify-ssl&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># List all buckets accessible to this user</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-buckets<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Upload a file</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>localfile.tar.gz<span class="w"> </span>s3://&lt;bucket&gt;/path/<span class="w"> </span><span class="nv">$PROFILE</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Sync a directory recursively</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>aws<span class="w"> </span>s3<span class="w"> </span>sync<span class="w"> </span>/local/backup/<span class="w"> </span>s3://&lt;bucket&gt;/backups/<span class="w"> </span><span class="nv">$PROFILE</span>
 </code></pre></div>
-<p>ECS supports S3 multipart upload, S3 Object Lock (WORM), presigned URLs, bucket versioning, and lifecycle policies. Virtual-hosted-style (<code>&lt;bucket&gt;.&lt;ecs-endpoint&gt;</code>) requires DNS configuration; path-style (<code>&lt;ecs-endpoint&gt;/&lt;bucket&gt;</code>) works without DNS changes.</p>
+<p>ECS supports S3 multipart upload, S3 Object Lock (WORM), presigned URLs, bucket versioning, and lifecycle policies. Virtual-hosted-style (<code>&lt;bucket&gt;.&lt;ecs-endpoint&gt;</code>) requires DNS configuration pointing <code>*.ecs.example.com</code> to the ECS load balancer VIP; path-style (<code>&lt;ecs-endpoint&gt;/&lt;bucket&gt;</code>) works without DNS changes and is easier to configure in most clients.</p>
+<p><strong>s3cmd configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ~/.s3cfg for Dell ECS</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">[default]</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="na">access_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;ecs_access_key&gt;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="na">secret_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;ecs_secret_key&gt;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="na">host_base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;ecs-endpoint&gt;:9021</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="na">host_bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;ecs-endpoint&gt;:9021/%(bucket)s</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="na">use_https</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="na">check_ssl_certificate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="na">signature_v2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test s3cmd connectivity</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>s3cmd<span class="w"> </span>ls
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Upload a file</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>s3cmd<span class="w"> </span>put<span class="w"> </span>localfile.tar.gz<span class="w"> </span>s3://&lt;bucket&gt;/path/
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Sync a directory</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>s3cmd<span class="w"> </span>sync<span class="w"> </span>/local/path/<span class="w"> </span>s3://&lt;bucket&gt;/
+</code></pre></div>
 <h2 id="veeam-object-repository">Veeam Object Repository<a class="headerlink" href="#veeam-object-repository" title="Permanent link">&para;</a></h2>
 <p>ECS is a certified S3-compatible target for Veeam Backup &amp; Replication object repositories (Scale-out Backup Repository offload and Capacity Tier).</p>
-<p><strong>Integration steps:</strong>
-1. Create a dedicated ECS namespace and bucket for Veeam (<code>veeam-prod-offload</code>)
-2. Create a dedicated object user with read/write access to the bucket
-3. In Veeam: Add Object Storage Repository → S3 Compatible → enter ECS endpoint, port, bucket name, and credentials
-4. Optionally enable Veeam Immutability (requires ECS Object Lock enabled on the bucket at creation)</p>
-<p><strong>Key ECS settings for Veeam:</strong>
-- Bucket versioning: not required for Veeam (Veeam manages its own metadata)
-- Object Lock: enable only if Veeam immutable backups are required; set the retention period on the bucket
-- Quota: set a hard quota on the bucket to prevent Veeam from consuming unbounded cluster capacity</p>
+<p><strong>Integration steps:</strong></p>
+<ol>
+<li>Create a dedicated ECS namespace for Veeam: <code>veeam-prod</code></li>
+<li>Create a dedicated bucket: <code>veeam-prod-offload</code></li>
+<li>Enable Object Lock at bucket creation if Veeam Immutability is required</li>
+<li>Set a hard quota matching the planned Veeam storage allocation + 20% buffer</li>
+<li>Create a dedicated object user: <code>svc-veeam-prod</code></li>
+<li>Generate access key and secret key; store in Veeam credential store</li>
+<li>In Veeam VBR: <strong>Backup Infrastructure</strong> → <strong>Add Backup Repository</strong> → <strong>Object Storage</strong> → <strong>S3 Compatible</strong></li>
+<li>Service point: <code>https://&lt;ecs-load-balancer&gt;:9021</code></li>
+<li>Region: any value (e.g., <code>us-east-1</code>)</li>
+<li>Credentials: <code>svc-veeam-prod</code> access key and secret key</li>
+<li>Bucket: <code>veeam-prod-offload</code></li>
+<li>Enable Immutability (if Object Lock enabled on bucket): set retention period matching backup policy RPO</li>
+<li>Add the ECS object repository as a Capacity Tier or Performance Tier extent in the Scale-out Backup Repository</li>
+</ol>
+<p><strong>Key ECS settings for Veeam:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bucket versioning</td>
+<td>Not required for Veeam; Veeam manages its own metadata structures</td>
+</tr>
+<tr>
+<td>Object Lock</td>
+<td>Enable only if Veeam Immutability is required; must be enabled at bucket creation</td>
+</tr>
+<tr>
+<td>Object Lock mode</td>
+<td>Compliance mode for air-gap immutability against ransomware; Governance mode for operational flexibility</td>
+</tr>
+<tr>
+<td>Namespace quota</td>
+<td>Set hard quota; Veeam can consume all available cluster capacity without a quota</td>
+</tr>
+<tr>
+<td>Bucket quota</td>
+<td>Set per-bucket quota in addition to namespace quota for finer-grained control</td>
+</tr>
+<tr>
+<td>S3 endpoint</td>
+<td>Use the load balancer VIP or a DNS round-robin for resilience; do not point Veeam at a single node</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Validating Veeam backup data on ECS:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm Veeam backup data is present</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://veeam-prod-offload/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--recursive<span class="w"> </span>--human-readable<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div>
+<h2 id="commvault-integration">Commvault Integration<a class="headerlink" href="#commvault-integration" title="Permanent link">&para;</a></h2>
+<p>Commvault supports ECS as an S3-compatible cloud library target for secondary copy and archival. Configuration is performed in the Commvault Command Center.</p>
+<p><strong>Integration steps:</strong></p>
+<ol>
+<li>Create a dedicated ECS namespace and bucket for Commvault: <code>commvault-prod</code> / <code>commvault-prod-archive</code></li>
+<li>Create a dedicated object user: <code>svc-commvault-prod</code></li>
+<li>In Commvault Command Center: <strong>Storage</strong> → <strong>Cloud</strong> → <strong>Add Cloud Storage</strong> → <strong>S3 Compatible</strong></li>
+<li>Service host: <code>&lt;ecs-endpoint&gt;</code> (without <code>https://</code> prefix in some Commvault versions)</li>
+<li>Port: <code>9021</code></li>
+<li>Access key and secret key: <code>svc-commvault-prod</code> credentials</li>
+<li>Bucket: <code>commvault-prod-archive</code></li>
+<li>Configure the cloud library as a storage pool target for secondary or archive copies</li>
+<li>Test a synthetic full backup to confirm end-to-end connectivity and write throughput</li>
+</ol>
+<h2 id="netbackup-integration">NetBackup Integration<a class="headerlink" href="#netbackup-integration" title="Permanent link">&para;</a></h2>
+<p>Veritas NetBackup can use ECS as an object storage target via the NetBackup CloudCatalyst or as a direct S3-compatible storage unit.</p>
+<p><strong>CloudCatalyst (deduplication target):</strong>
+- Deploy NetBackup CloudCatalyst on a dedicated server with network access to ECS
+- Configure the CloudCatalyst to use ECS as its backing S3 store with the ECS endpoint and object user credentials
+- CloudCatalyst deduplicates backup streams before writing to ECS, reducing ECS capacity consumption</p>
+<p><strong>Direct S3 storage unit:</strong>
+- NetBackup 8.3+: create a Cloud Storage Server with <code>S3</code> type and ECS endpoint
+- Configure the storage unit to use the ECS bucket and object user credentials
+- Enable CloudCatalyst on the media server for deduplication (recommended for large environments)</p>
 <h2 id="hdfs-integration">HDFS Integration<a class="headerlink" href="#hdfs-integration" title="Permanent link">&para;</a></h2>
 <p>ECS supports HDFS-compatible access through the ECS HDFS connector, enabling Hadoop ecosystem tools (Spark, Hive, MapReduce) to read and write directly to ECS buckets.</p>
-<ul>
-<li>Install the ECS HDFS connector JAR on Hadoop cluster nodes</li>
-<li>Configure <code>core-site.xml</code> to point to <code>ecss://</code> or <code>ecshdfs://</code> scheme with the ECS endpoint</li>
-<li>Authentication uses Kerberos or simple auth depending on the ECS namespace HDFS auth setting</li>
+<p><strong>Integration steps:</strong></p>
+<ol>
+<li>Download the ECS HDFS connector JAR from the Dell Support portal</li>
+<li>Install the JAR on all Hadoop cluster nodes (place in the Hadoop classpath)</li>
+<li>Configure <code>core-site.xml</code> to point to the <code>ecshdfs://</code> scheme:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">&lt;property&gt;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>fs.ecshdfs.impl<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&lt;value&gt;</span>com.emc.hadoop.fs.vipr.ViPRFileSystem<span class="nt">&lt;/value&gt;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">&lt;/property&gt;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">&lt;property&gt;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>fs.AbstractFileSystem.ecshdfs.impl<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nt">&lt;value&gt;</span>com.emc.hadoop.fs.vipr.ViPRAbstractFilesystem<span class="nt">&lt;/value&gt;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nt">&lt;/property&gt;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nt">&lt;property&gt;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>viprfs.client.access_key<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="nt">&lt;value&gt;&lt;ecs_object_user_access_key&gt;&lt;/value&gt;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nt">&lt;/property&gt;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nt">&lt;property&gt;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>viprfs.client.secret_key<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="nt">&lt;value&gt;&lt;ecs_object_user_secret_key&gt;&lt;/value&gt;</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nt">&lt;/property&gt;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nt">&lt;property&gt;</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>viprfs.client.vipr.hostname<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="nt">&lt;value&gt;&lt;ecs-endpoint&gt;&lt;/value&gt;</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="nt">&lt;/property&gt;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="nt">&lt;property&gt;</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="nt">&lt;name&gt;</span>viprfs.client.vipr.port<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span><span class="nt">&lt;value&gt;</span>9021<span class="nt">&lt;/value&gt;</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="nt">&lt;/property&gt;</span>
+</code></pre></div></li>
+<li>Authentication uses ECS object user access keys (simple auth); Kerberos integration is possible for secured Hadoop clusters — configure via ECS namespace HDFS auth settings</li>
 <li>ECS presents HDFS namespace paths mapped to buckets; directory emulation is handled by the connector</li>
-</ul>
+<li>Test: <code>hadoop fs -ls ecshdfs://&lt;namespace&gt;@&lt;ecs-endpoint&gt;/&lt;bucket&gt;/</code></li>
+</ol>
+<p><strong>HDFS considerations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Performance</td>
+<td>ECS HDFS is not optimised for small random I/O; best suited for large sequential reads/writes (Spark workloads)</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>S3 access keys are embedded in <code>core-site.xml</code> — store the file with restricted permissions; use secrets management integration if available</td>
+</tr>
+<tr>
+<td>Namespace mapping</td>
+<td>Each ECS namespace appears as a separate HDFS cluster identifier; paths are <code>ecshdfs://&lt;namespace&gt;@&lt;ecs-endpoint&gt;/&lt;bucket&gt;/</code></td>
+</tr>
+<tr>
+<td>Metadata search</td>
+<td>HDFS access does not use ECS metadata search; queries must go through the ECS Query API</td>
+</tr>
+</tbody>
+</table>
 <h2 id="metadata-search-integration">Metadata Search Integration<a class="headerlink" href="#metadata-search-integration" title="Permanent link">&para;</a></h2>
 <p>ECS supports custom object metadata tagging and a Metadata Search API (based on Elasticsearch) that allows querying objects by custom key-value tags across a namespace.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Search for objects with a custom metadata tag (requires metadata search enabled on namespace)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/object/namespaces/&lt;namespace&gt;/buckets/&lt;bucket&gt;/query?query=&lt;key&gt;%3D&lt;value&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<p><strong>Enable metadata search per namespace:</strong>
+1. Navigate to ECS Portal → Manage → Namespaces → select namespace → Edit
+2. Enable <strong>Metadata Search</strong> — this provisions an Elasticsearch indexer for the namespace
+3. Note: metadata search adds indexer capacity overhead; plan ECS node sizing with this enabled</p>
+<p><strong>Tag objects with custom metadata on upload:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Upload an object with custom metadata tags</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-object<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--bucket<span class="w"> </span>analytics-prod-raw<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--key<span class="w"> </span>data/2024/report.parquet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--body<span class="w"> </span>report.parquet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--metadata<span class="w"> </span><span class="s1">&#39;{&quot;project&quot;:&quot;alpha&quot;,&quot;env&quot;:&quot;prod&quot;,&quot;owner&quot;:&quot;analytics-team&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
 </code></pre></div>
-<p>Enable metadata search per namespace in ECS Portal → Namespace → Edit. Metadata search requires additional indexer capacity; plan ECS node sizing accordingly.</p>
+<p><strong>Query objects by metadata tag (ECS Query API):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Search for objects with a custom metadata tag (requires metadata search enabled on namespace)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/object/namespaces/analytics-prod/buckets/analytics-prod-raw/query?query=project%3Dalpha&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># URL-encoded query format: key=value -&gt; key%3Dvalue</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Multiple conditions: key1=value1 AND key2=value2 -&gt; key1%3Dvalue1%20AND%20key2%3Dvalue2</span>
+</code></pre></div>
 <h2 id="external-authentication-ldapad">External Authentication (LDAP/AD)<a class="headerlink" href="#external-authentication-ldapad" title="Permanent link">&para;</a></h2>
-<p>ECS can delegate IAM user authentication to an external LDAP or Active Directory service for namespace-level access. Configure under ECS Portal → Namespace → Edit → Authentication Domain. Object users with S3 keys always authenticate locally; LDAP integration applies to management console users.</p>
+<p>ECS can delegate IAM user authentication to an external LDAP or Active Directory service for namespace-level management access. Configure under ECS Portal → Namespace → Edit → Authentication Domain.</p>
+<ul>
+<li>Object users with S3 access keys always authenticate locally — LDAP integration applies to management console users only</li>
+<li>LDAP is configured per namespace; multiple namespaces can reference different LDAP domains</li>
+<li>Supported protocols: LDAP (TCP 389) and LDAPS (TCP 636)</li>
+<li>Map AD groups to ECS namespace roles in the Authentication Domain configuration</li>
+</ul>
+<h2 id="cloudiq-integration-ecs-39">CloudIQ Integration (ECS 3.9+)<a class="headerlink" href="#cloudiq-integration-ecs-39" title="Permanent link">&para;</a></h2>
+<p>ECS 3.9 introduced integration with Dell CloudIQ for cloud-based capacity analytics, proactive health alerts, and hardware lifecycle management.</p>
+<ul>
+<li>Configure CloudIQ connectivity in ECS Portal → Settings → CloudIQ</li>
+<li>CloudIQ provides multi-cluster capacity trending and forecasting alongside other Dell storage systems</li>
+<li>Proactive recommendations for capacity expansion are surfaced in the CloudIQ portal before utilisation thresholds are reached</li>
+<li>Hardware component health and end-of-service-life alerts are raised in CloudIQ automatically</li>
+</ul>
+<h2 id="snmp-and-syslog-integration">SNMP and Syslog Integration<a class="headerlink" href="#snmp-and-syslog-integration" title="Permanent link">&para;</a></h2>
+<p>ECS generates SNMP traps and syslog messages for hardware and service health events. Integrate with your monitoring platform for 24/7 alerting.</p>
+<p><strong>Syslog configuration:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ECS Portal → Settings → Syslog
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  - Syslog server: &lt;SIEM-or-syslog-aggregator-IP&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  - Port: 514 (UDP or TCP)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  - Protocol: RFC 5424 or RFC 3164
+</code></pre></div></p>
+<p><strong>SNMP configuration:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ECS Portal → Settings → SNMP
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  - SNMP version: v3 (recommended); v2c for legacy monitoring systems
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  - Community string (v2c): &lt;monitoring-community&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  - Trap destination: &lt;monitoring-server-IP&gt;:162
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  - Trap types: node status, disk status, capacity threshold, replication status
+</code></pre></div></p>
+<p><strong>Key SNMP MIBs:</strong> Download the ECS MIB file from ECS Portal → Settings → SNMP → Download MIB to import into your monitoring platform (Nagios, Zabbix, SolarWinds, etc.).</p>
 
 
 

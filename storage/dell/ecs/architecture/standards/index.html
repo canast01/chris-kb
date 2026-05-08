@@ -717,6 +717,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sizing-by-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing by Workload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -739,10 +761,43 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#replication-group-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Group Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iam-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Design Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
         Configuration Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management Standards
       
     </span>
   </a>
@@ -771,7 +826,7 @@
 
 <h1 id="dell-ecs-standards">Dell ECS — Standards<a class="headerlink" href="#dell-ecs-standards" title="Permanent link">&para;</a></h1>
 <h2 id="sizing-and-capacity-model">Sizing and Capacity Model<a class="headerlink" href="#sizing-and-capacity-model" title="Permanent link">&para;</a></h2>
-<p>ECS nodes are standardised appliance configurations (ECS U-Series, CX-Series). Raw capacity is converted to usable capacity after erasure coding overhead (approximately 1.33× raw for 12+4 EC) and a 30% overhead reservation.</p>
+<p>ECS nodes are standardised appliance configurations (ECS U-Series, CX-Series). Raw capacity is converted to usable capacity after erasure coding overhead (approximately 1.33× raw for 12+4 EC) and a 30% overhead reservation for metadata, journals, and rebuild workspace.</p>
 <table>
 <thead>
 <tr>
@@ -798,11 +853,89 @@
 </tr>
 <tr>
 <td>Storage per node</td>
-<td>Typically 60–90 × 8 TB or 12 TB HDDs per node in dense configurations</td>
+<td>Typically 60–90 × 8 TB, 12 TB, or 20 TB HDDs per node in dense configurations</td>
 </tr>
 </tbody>
 </table>
-<p>Plan ECS node additions in increments of at least one full row (4 nodes minimum) to maintain erasure coding stripe width and avoid rebalancing penalties.</p>
+<p><strong>Usable capacity formula:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Raw capacity = nodes × disks_per_node × disk_size_TB
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>EC overhead factor = 1.33 (for 12+4); 1.20 (for 10+2)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Metadata/journal reservation = 30% of raw after EC
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Usable capacity ≈ (Raw × (1 / EC_overhead_factor)) × 0.70
+</code></pre></div>
+<p>Example: 8-node cluster, 60 × 12 TB disks per node, 12+4 EC:
+- Raw: 8 × 60 × 12 = 5,760 TB
+- After EC: 5,760 / 1.33 ≈ 4,331 TB
+- After 30% reservation: 4,331 × 0.70 ≈ 3,032 TB usable</p>
+<p>Plan node additions in increments of at least one full row (4 nodes minimum) to maintain erasure coding stripe width and avoid rebalancing penalties.</p>
+<h2 id="sizing-by-workload">Sizing by Workload<a class="headerlink" href="#sizing-by-workload" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Workload Type</th>
+<th>Key Sizing Driver</th>
+<th>Guidance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup target (Veeam, Commvault)</td>
+<td>Ingest bandwidth and retention period</td>
+<td>Size WAN / network for peak ingest rate; size capacity for daily ingest × retention days</td>
+</tr>
+<tr>
+<td>Analytics data lake</td>
+<td>Random read IOPS and object count</td>
+<td>ECS performs best with objects &gt; 1 MB; avoid large numbers of tiny objects</td>
+</tr>
+<tr>
+<td>Compliance archival</td>
+<td>Capacity and retention period</td>
+<td>Size for total data volume + annual growth; enable Object Lock; no performance SLA required</td>
+</tr>
+<tr>
+<td>Active media / streaming</td>
+<td>Throughput (MB/s)</td>
+<td>Size for concurrent stream count × bitrate; use load balancer for even node distribution</td>
+</tr>
+<tr>
+<td>Multi-tenant (namespaces)</td>
+<td>Per-namespace quota and isolation</td>
+<td>Set hard quotas per namespace; model each team's capacity independently</td>
+</tr>
+</tbody>
+</table>
+<h2 id="network-sizing">Network Sizing<a class="headerlink" href="#network-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traffic Type</th>
+<th>Bandwidth Guidance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intra-cluster EC traffic</td>
+<td>Minimum 10 GbE per node (bonded 2 × 10 GbE for production)</td>
+</tr>
+<tr>
+<td>Client S3 traffic</td>
+<td>Size the load balancer uplink for peak client throughput × node count</td>
+</tr>
+<tr>
+<td>Geo-replication (async)</td>
+<td>Size inter-site WAN for 110% of peak ingest rate to allow replication to keep pace</td>
+</tr>
+<tr>
+<td>Geo-replication (sync)</td>
+<td>Size inter-site WAN for 200%+ of peak ingest rate; synchronous replication doubles the write traffic on the WAN</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>1 GbE per node is sufficient; management traffic is low-volume</td>
+</tr>
+</tbody>
+</table>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -830,18 +963,18 @@
 </tr>
 <tr>
 <td>Bucket</td>
-<td><code>&lt;namespace&gt;-&lt;purpose&gt;-&lt;optional-tier&gt;</code></td>
-<td><code>analytics-prod-raw-s3</code></td>
+<td><code>&lt;namespace&gt;-&lt;purpose&gt;</code> or <code>&lt;namespace&gt;-&lt;purpose&gt;-&lt;tier&gt;</code></td>
+<td><code>analytics-prod-raw</code>, <code>analytics-prod-archive</code></td>
 </tr>
 <tr>
-<td>IAM user (object user)</td>
-<td><code>svc-&lt;app&gt;-&lt;env&gt;</code></td>
-<td><code>svc-veeam-prod</code></td>
+<td>IAM object user</td>
+<td><code>svc-&lt;app&gt;-&lt;env&gt;</code> (lowercase)</td>
+<td><code>svc-veeam-prod</code>, <code>svc-spark-prod</code></td>
 </tr>
 <tr>
 <td>ECS node hostname</td>
 <td><code>&lt;site&gt;-ecs-n&lt;node-number&gt;</code></td>
-<td><code>lon01-ecs-n01</code></td>
+<td><code>lon01-ecs-n01</code>, <code>lon01-ecs-n02</code></td>
 </tr>
 <tr>
 <td>Management service account</td>
@@ -850,40 +983,172 @@
 </tr>
 <tr>
 <td>Replication policy profile</td>
-<td><code>&lt;rpo-minutes&gt;min-&lt;consistency&gt;</code></td>
-<td><code>15min-async</code></td>
+<td><code>&lt;rpo&gt;-&lt;consistency&gt;</code></td>
+<td><code>15min-async</code>, <code>0min-sync</code></td>
+</tr>
+<tr>
+<td>Lifecycle policy ID</td>
+<td><code>&lt;purpose&gt;-&lt;action&gt;-&lt;days&gt;d</code></td>
+<td><code>versioned-expire-90d</code>, <code>mpu-abort-7d</code></td>
+</tr>
+<tr>
+<td>Audit bucket</td>
+<td><code>&lt;namespace&gt;-access-logs</code></td>
+<td><code>analytics-prod-access-logs</code></td>
 </tr>
 </tbody>
 </table>
+<p>S3 bucket names must comply with S3 naming rules: 3–63 characters, lowercase letters, numbers, and hyphens only. Do not use dots (<code>.</code>) in bucket names — they cause virtual-hosted-style TLS certificate matching issues.</p>
 <h2 id="build-and-deployment-baseline">Build and Deployment Baseline<a class="headerlink" href="#build-and-deployment-baseline" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Deploy ECS via the Dell ECS Installation and Configuration Guide; do not deviate from the supported hardware bill of materials</li>
 <li>Each VDC must have a minimum of 4 nodes for production; 3-node clusters are not supported for the default 12+4 erasure coding scheme</li>
 <li>All nodes in a VDC must run the same ECS software version; mixed-version clusters are unsupported</li>
 <li>Assign a dedicated management IP and data IP per node; separate management and data traffic onto different VLANs or NICs</li>
-<li>Configure NTP on all nodes to a consistent time source — ECS geo-replication consistency depends on clock synchronisation across VDCs</li>
+<li>Configure NTP on all nodes to a consistent time source — ECS geo-replication consistency depends on clock synchronisation across VDCs; NTP offset should not exceed 100ms between nodes</li>
 <li>Enable syslog forwarding from ECS nodes to a centralised log management platform at deployment</li>
 <li>Create a dedicated management service account (<code>svc-ecs-mgmt</code>) for API automation; never use <code>sysadmin</code> in automation scripts</li>
 <li>Document the replication group topology (VDC names, replication mode, RPO) in the site runbook before go-live</li>
 <li>Configure namespace and bucket quotas from the outset; unconstrained namespaces are a capacity risk</li>
+<li>Replace self-signed TLS certificates on the Management API and S3 endpoint before connecting production applications</li>
+<li>Register all ECS nodes in the Dell Support portal under the active support contract before go-live</li>
 </ul>
+<h2 id="replication-group-design">Replication Group Design<a class="headerlink" href="#replication-group-design" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Guidance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Number of VDCs per replication group</td>
+<td>Minimum 2 for geo-redundancy; 3 for active-active-active topology</td>
+</tr>
+<tr>
+<td>Replication mode</td>
+<td>Async for most workloads; Sync for compliance/financial data where RPO must be zero</td>
+</tr>
+<tr>
+<td>RPO targets</td>
+<td>Document the RPO target per replication group in the runbook; align with business requirements</td>
+</tr>
+<tr>
+<td>Bandwidth throttling</td>
+<td>Configure per-replication-group bandwidth limits to prevent replication from saturating WAN links during business hours</td>
+</tr>
+<tr>
+<td>Temporary Site Failure behaviour</td>
+<td><code>is_stale_allowed: true</code> for HA (reads served from stale local copy during TSF); <code>false</code> for strong consistency (reads may fail during TSF)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="iam-design-principles">IAM Design Principles<a class="headerlink" href="#iam-design-principles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One object user per application</td>
+<td>Never share S3 credentials between applications</td>
+</tr>
+<tr>
+<td>Least-privilege bucket policies</td>
+<td>Grant only the S3 actions required by the application; no <code>Action: "*"</code></td>
+</tr>
+<tr>
+<td>No wildcard bucket resources</td>
+<td>Restrict policy resources to specific buckets, not <code>arn:aws:s3:::*</code></td>
+</tr>
+<tr>
+<td>Separate users for read and write</td>
+<td>Create read-only users for reporting tools; create read-write users for ingest applications</td>
+</tr>
+<tr>
+<td>No shared credentials for humans</td>
+<td>Human access to S3 data should use short-lived presigned URLs, not permanent access keys</td>
+</tr>
+<tr>
+<td>Key rotation schedule</td>
+<td>Rotate all object user access keys every 12 months; document rotation dates in the IAM registry</td>
+</tr>
+</tbody>
+</table>
 <h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] All nodes visible in ECS Portal → Hardware with status <code>GOOD</code></li>
-<li>[ ] NTP configured and synchronised on all nodes (<code>date</code> output matches across nodes)</li>
+<li>[ ] NTP configured and synchronised on all nodes (<code>date</code> output matches across nodes to within 100ms)</li>
 <li>[ ] Syslog forwarding configured and events visible in the SIEM</li>
 <li>[ ] Management REST API accessible over HTTPS on port 4443; self-signed certificate replaced with a signed certificate</li>
-<li>[ ] Admin service account <code>svc-ecs-mgmt</code> created; default <code>sysadmin</code> password changed</li>
-<li>[ ] Replication group created and remote VDC connectivity verified (geo-replication lag = 0 at steady state)</li>
-<li>[ ] Each namespace has an assigned replication group and a quota (hard or advisory)</li>
-<li>[ ] Bucket versioning enabled only on buckets with a corresponding lifecycle policy to expire non-current versions</li>
-<li>[ ] Lifecycle policies configured on all versioned buckets</li>
 <li>[ ] S3 API endpoint TLS certificate is signed and trusted by consuming applications</li>
+<li>[ ] Admin service account <code>svc-ecs-mgmt</code> created; default <code>sysadmin</code> password changed</li>
+<li>[ ] HTTP (port 9021 plain HTTP) disabled in production; HTTPS only</li>
+<li>[ ] TLS 1.2 minimum enforced; TLS 1.0 and 1.1 disabled</li>
+<li>[ ] Replication group created and remote VDC connectivity verified (geo-replication lag = 0 at steady state)</li>
+<li>[ ] Each namespace has an assigned replication group and a hard quota</li>
+<li>[ ] Bucket versioning enabled only on buckets with a corresponding lifecycle policy to expire non-current versions</li>
+<li>[ ] Lifecycle policies configured on all versioned buckets (non-current version expiration + MPU abort)</li>
 <li>[ ] Baseline <code>GET /vdc/nodes</code> and <code>GET /vdc/capacity</code> outputs captured and stored in the runbook</li>
 <li>[ ] SNMP or syslog alerting configured for node or disk failure events</li>
-<li>[ ] IAM users created per application with least-privilege bucket policies; no use of the root/admin object user in applications</li>
+<li>[ ] IAM users created per application with least-privilege bucket policies; no wildcard actions in production bucket policies</li>
 <li>[ ] Geo-replication tested: write an object to one VDC and confirm it is readable from the remote VDC</li>
+<li>[ ] ECS nodes registered in the Dell Support portal under the active support contract</li>
+<li>[ ] CloudIQ connectivity configured (ECS 3.9+) for capacity analytics and proactive alerts</li>
+<li>[ ] Access logging enabled on all buckets with compliance or audit requirements</li>
+<li>[ ] Certificate expiry dates recorded in the monitoring system with 30-day advance alert</li>
 </ul>
+<h2 id="change-management-standards">Change Management Standards<a class="headerlink" href="#change-management-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>Required Pre-Conditions</th>
+<th>Approval Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bucket/namespace creation</td>
+<td>Change record; pre-change health check passed</td>
+<td>Standard change (pre-approved)</td>
+</tr>
+<tr>
+<td>IAM user creation or deletion</td>
+<td>Change record; justification documented</td>
+<td>Standard change</td>
+</tr>
+<tr>
+<td>Software upgrade</td>
+<td>Pre-change health check; change window; application team notification</td>
+<td>Normal change</td>
+</tr>
+<tr>
+<td>Node addition</td>
+<td>Pre-change health check; capacity headroom verified</td>
+<td>Normal change</td>
+</tr>
+<tr>
+<td>Replication group modification</td>
+<td>Pre-change health check; impact assessed; approval from storage lead</td>
+<td>Normal change</td>
+</tr>
+<tr>
+<td>Disk replacement</td>
+<td>ECS Portal guided procedure; change record</td>
+<td>Emergency change (if unplanned)</td>
+</tr>
+<tr>
+<td>VDC decommission</td>
+<td>Full data migration verified; all replication groups updated; application teams confirmed</td>
+<td>Major change</td>
+</tr>
+</tbody>
+</table>
 
 
 
