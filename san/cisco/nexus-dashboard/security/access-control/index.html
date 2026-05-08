@@ -699,6 +699,192 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#site-level-scoping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site-Level Scoping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Site-Level Scoping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assign-a-user-to-a-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assign a User to a Site
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#site-scoping-for-ldap-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site Scoping for LDAP Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ndfc-application-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDFC Application Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-account-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Account Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Account Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Service Account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#least-privilege-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least Privilege Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quarterly-access-review-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quarterly Access Review Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quarterly Access Review Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-based-user-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API-Based User Audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disabling-and-removing-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disabling and Removing Accounts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Disabling and Removing Accounts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disable-temporary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable (Temporary)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-permanent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete (Permanent)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +904,262 @@
 
 
 <h1 id="nexus-dashboard-access-control">Nexus Dashboard — Access Control<a class="headerlink" href="#nexus-dashboard-access-control" title="Permanent link">&para;</a></h1>
-<p>Roles, permissions, and least privilege access.</p>
+<blockquote>
+<p>Part of the <a href="../../">Nexus Dashboard</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Nexus Dashboard RBAC is built around roles and site-level scoping. A user's effective access is the intersection of their platform role (what operations they can perform) and their site assignment (which fabrics they can see and manage). Applications (NDFC, NDI) inherit the platform roles but may add additional granularity at the application level.</p>
+<hr />
+<h2 id="platform-roles">Platform Roles<a class="headerlink" href="#platform-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Permissions</th>
+<th>Typical Assignee</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Full access: all ND configuration, user management, app settings, cluster administration</td>
+<td>ND platform owner</td>
+</tr>
+<tr>
+<td><strong>Operator</strong></td>
+<td>Application operations (SAN management, zone changes, firmware) but no cluster/user admin</td>
+<td>SAN operations team</td>
+</tr>
+<tr>
+<td><strong>Viewer</strong></td>
+<td>Read-only access to all dashboards, inventory, and reports</td>
+<td>NOC, capacity, audit</td>
+</tr>
+<tr>
+<td><strong>App User</strong></td>
+<td>Application-specific access; defined per-app (NDFC / NDI define their own sub-roles)</td>
+<td>App-specific users</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>Admin</strong> role is the only role with access to the Admin Console (cluster settings, user management, certificates, backup). Operators and Viewers access only application workspaces (NDFC, NDI).</p>
+<hr />
+<h2 id="site-level-scoping">Site-Level Scoping<a class="headerlink" href="#site-level-scoping" title="Permanent link">&para;</a></h2>
+<p>Users can be scoped to specific sites (fabrics), restricting their visibility and operations to only the assigned sites.</p>
+<h3 id="assign-a-user-to-a-site">Assign a User to a Site<a class="headerlink" href="#assign-a-user-to-a-site" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Admin Console &gt; Security &gt; Users &gt; [Username] &gt; Sites</strong>.</li>
+<li>Click <strong>Add Site</strong>.</li>
+<li>Select the site and the role for this site (can differ from the user's global role).</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<p>Example: a remote site engineer gets <code>Operator</code> role on <code>DC2-SAN</code> and <code>DC2-ACI</code> but <code>Viewer</code> role on DC1 fabrics.</p>
+<h3 id="site-scoping-for-ldap-groups">Site Scoping for LDAP Groups<a class="headerlink" href="#site-scoping-for-ldap-groups" title="Permanent link">&para;</a></h3>
+<p>LDAP group role mappings can also be scoped to sites:</p>
+<ol>
+<li>Navigate to <strong>Admin Console &gt; Security &gt; Roles &gt; LDAP Role Mapping &gt; [Group]</strong>.</li>
+<li>Set the site scope: <strong>All Sites</strong> or select specific sites.</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<p>This allows different AD groups to manage different sites without creating individual user assignments.</p>
+<hr />
+<h2 id="ndfc-application-roles">NDFC Application Roles<a class="headerlink" href="#ndfc-application-roles" title="Permanent link">&para;</a></h2>
+<p>NDFC adds its own role layer within the Operator permission level. When a user with Operator access logs into NDFC:</p>
+<table>
+<thead>
+<tr>
+<th>NDFC Role</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network Admin</td>
+<td>Full SAN operations: zones, VSANs, device aliases, firmware, discovery. No user management.</td>
+</tr>
+<tr>
+<td>Operator</td>
+<td>Zone changes and operational tasks (read/write for fabric operations).</td>
+</tr>
+<tr>
+<td>Network Operator</td>
+<td>Read-only access to NDFC inventory, topology, and events.</td>
+</tr>
+<tr>
+<td>Access Admin</td>
+<td>Manage NDFC-level user accounts and roles only.</td>
+</tr>
+</tbody>
+</table>
+<p>NDFC roles are assigned in NDFC itself: <strong>NDFC &gt; Admin &gt; Users &gt; [User] &gt; NDFC Role</strong>.</p>
+<hr />
+<h2 id="service-account-configuration">Service Account Configuration<a class="headerlink" href="#service-account-configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Account</th>
+<th>Role</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>svc-monitor</code></td>
+<td>Viewer</td>
+<td>Monitoring scripts, health checks, read-only API queries</td>
+</tr>
+<tr>
+<td><code>svc-automation</code></td>
+<td>Operator</td>
+<td>Automated zone changes, zone exports, NDFC config</td>
+</tr>
+<tr>
+<td><code>svc-reporting</code></td>
+<td>Viewer</td>
+<td>Report generation, audit exports</td>
+</tr>
+</tbody>
+</table>
+<p>Service account requirements:
+- Named <code>svc-&lt;purpose&gt;</code> — local ND accounts
+- Password stored in vault; never hard-coded or committed to scripts
+- Rotate every 90 days, coordinated with automation owners
+- Automation scripts must call logout endpoint when finished</p>
+<h3 id="create-a-service-account">Create a Service Account<a class="headerlink" href="#create-a-service-account" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Via REST API</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd-dc1.corp.example.com/login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;userName&quot;:&quot;admin&quot;,&quot;userPasswd&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;local&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd-dc1.corp.example.com/nexus/api/v1/users<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s1">    &quot;username&quot;: &quot;svc-monitor&quot;,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s1">    &quot;password&quot;: &quot;&lt;strong-password&gt;&quot;,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s1">    &quot;firstName&quot;: &quot;Service&quot;,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">    &quot;lastName&quot;: &quot;Monitor&quot;,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s1">    &quot;email&quot;: &quot;san-team@corp.example.com&quot;,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">    &quot;roles&quot;: [{&quot;name&quot;: &quot;Viewer&quot;, &quot;sites&quot;: [{&quot;name&quot;: &quot;DC1-SAN&quot;}, {&quot;name&quot;: &quot;DC2-SAN&quot;}]}]</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<hr />
+<h2 id="least-privilege-reference">Least Privilege Reference<a class="headerlink" href="#least-privilege-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Minimum Role</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View dashboards, inventory, topology</td>
+<td>Viewer</td>
+<td></td>
+</tr>
+<tr>
+<td>View NDI anomalies</td>
+<td>Viewer</td>
+<td>NDI site must be in scope</td>
+</tr>
+<tr>
+<td>Acknowledge/clear NDFC alarms</td>
+<td>Operator</td>
+<td></td>
+</tr>
+<tr>
+<td>Create/modify/activate NDFC zones</td>
+<td>Operator</td>
+<td>NDFC Network Admin required</td>
+</tr>
+<tr>
+<td>Manage VSANs and device aliases</td>
+<td>Operator</td>
+<td>NDFC Network Admin required</td>
+</tr>
+<tr>
+<td>MDS firmware upgrade via NDFC</td>
+<td>Operator</td>
+<td>NDFC Network Admin required</td>
+</tr>
+<tr>
+<td>Register new sites</td>
+<td>Admin</td>
+<td></td>
+</tr>
+<tr>
+<td>Install/upgrade ND applications</td>
+<td>Admin</td>
+<td></td>
+</tr>
+<tr>
+<td>Manage ND user accounts</td>
+<td>Admin</td>
+<td></td>
+</tr>
+<tr>
+<td>Configure LDAP/TACACS+/SAML</td>
+<td>Admin</td>
+<td></td>
+</tr>
+<tr>
+<td>ND cluster backup and restore</td>
+<td>Admin</td>
+<td></td>
+</tr>
+<tr>
+<td>TLS certificate management</td>
+<td>Admin</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="quarterly-access-review-procedure">Quarterly Access Review Procedure<a class="headerlink" href="#quarterly-access-review-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Export the user list: <strong>Admin Console &gt; Security &gt; Local Users &gt; Export</strong>.</li>
+<li>For LDAP accounts: export the current LDAP group membership for all ND-mapped groups.</li>
+<li>For each account:</li>
+<li>Confirm the user is still employed and in the correct role</li>
+<li>Confirm the user has logged in within the past 90 days (inactive accounts should be disabled or deleted)</li>
+<li>Confirm service accounts are still in use by active automation</li>
+<li>Disable accounts no longer required:</li>
+<li>Navigate to <strong>Admin Console &gt; Security &gt; Local Users &gt; [Username] &gt; Disable</strong></li>
+<li>For LDAP accounts: remove the user from the AD group; ND denies access on next login attempt</li>
+<li>Document the review in the change management system.</li>
+</ol>
+<h3 id="api-based-user-audit">API-Based User Audit<a class="headerlink" href="#api-based-user-audit" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all local users with their roles</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://nd-dc1.corp.example.com/nexus/api/v1/users<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">ND_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">import sys, json, csv</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">users = json.load(sys.stdin)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">w = csv.writer(sys.stdout)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s2">w.writerow([&#39;username&#39;,&#39;email&#39;,&#39;roles&#39;,&#39;lastLoginTime&#39;])</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">for u in users:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">    roles = &#39;, &#39;.join(r.get(&#39;name&#39;,&#39;&#39;) for r in u.get(&#39;roles&#39;,[]))</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s2">    w.writerow([u.get(&#39;username&#39;,&#39;&#39;), u.get(&#39;email&#39;,&#39;&#39;), roles, u.get(&#39;lastLoginTime&#39;,&#39;&#39;)])</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="disabling-and-removing-accounts">Disabling and Removing Accounts<a class="headerlink" href="#disabling-and-removing-accounts" title="Permanent link">&para;</a></h2>
+<h3 id="disable-temporary">Disable (Temporary)<a class="headerlink" href="#disable-temporary" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Admin Console &gt; Security &gt; Local Users &gt; [Username]</strong>.</li>
+<li>Click <strong>Disable Account</strong>.</li>
+<li>The user cannot log in but the account and audit trail are retained.</li>
+</ol>
+<h3 id="delete-permanent">Delete (Permanent)<a class="headerlink" href="#delete-permanent" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Admin Console &gt; Security &gt; Local Users &gt; [Username]</strong>.</li>
+<li>Click <strong>Delete</strong>.</li>
+</ol>
+<p>For LDAP users: removing the user from the mapped AD group is sufficient to revoke access. ND re-evaluates group membership on every login.</p>
 
 
 

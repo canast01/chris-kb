@@ -699,6 +699,158 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#platform-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#policy-server-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Server (Engine)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-sdk-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web SDK (REST API)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adaptable-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adaptable Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connector-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connector Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-lifecycle-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Lifecycle Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcert-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VCert CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discovery-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discovery Engine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimum-sql-server-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum SQL Server Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +870,414 @@
 
 
 <h1 id="venafi-components">Venafi — Components<a class="headerlink" href="#venafi-components" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<p>Venafi Trust Protection Platform (TPP) is an enterprise certificate lifecycle management (CLM) solution. It automates the full certificate lifecycle from discovery and request through issuance, deployment, monitoring, and renewal across hybrid and multi-cloud environments.</p>
+<hr />
+<h2 id="platform-architecture-overview">Platform Architecture Overview<a class="headerlink" href="#platform-architecture-overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TB
+    subgraph External["External Systems"]
+        CA_EXT[("External CAs\n(DigiCert, Entrust,\nSectigo)")]
+        CA_INT[("Internal CAs\n(ADCS, EJBCA)")]
+        HSM[("HSM / Key\nStorage")]
+    end
+
+    subgraph TPP["Venafi TPP Core"]
+        PS[Policy Server\n(Engine)]
+        SDK[Web SDK / REST API]
+        LS[Log Server]
+
+        PS &lt;--&gt; SDK
+        PS --&gt; LS
+    end
+
+    subgraph Connectors["Connector Framework"]
+        CA_CON[CA Connectors]
+        APP_CON[Application Drivers\n/ Adaptable Apps]
+        DISC[Discovery Engines]
+    end
+
+    subgraph Targets["Target Systems"]
+        IIS[IIS / Windows]
+        F5[F5 / NetScaler]
+        K8S[Kubernetes\n(cert-manager)]
+        CLOUD[Cloud ACM /\nAzure Key Vault]
+    end
+
+    subgraph Clients["Client Interfaces"]
+        PVWA_UI[TPP Web UI]
+        CLI[VCert CLI]
+        API_CLT[REST Clients\n/ CI/CD]
+    end
+
+    CA_EXT &lt;--&gt; CA_CON
+    CA_INT &lt;--&gt; CA_CON
+    HSM &lt;--&gt; PS
+
+    CA_CON --&gt; PS
+    APP_CON --&gt; PS
+    DISC --&gt; PS
+
+    PS --&gt; APP_CON --&gt; Targets
+
+    Clients --&gt; SDK</code></pre>
+<hr />
+<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<h3 id="policy-server-engine">Policy Server (Engine)<a class="headerlink" href="#policy-server-engine" title="Permanent link">&para;</a></h3>
+<p>The Policy Server is the central orchestration service of TPP. It enforces certificate policy, manages the object model (Policy Folders, Certificate objects), and coordinates all lifecycle operations.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service name</td>
+<td><code>VenafiPolicyServer</code> (Windows service)</td>
+</tr>
+<tr>
+<td>Default port</td>
+<td>443 (HTTPS via IIS)</td>
+</tr>
+<tr>
+<td>Object model</td>
+<td>Tree-based Policy Folders → Certificate objects</td>
+</tr>
+<tr>
+<td>Data store</td>
+<td>Microsoft SQL Server (2016 SP2 minimum)</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>LDAP/AD, local accounts, OAuth2 (client credentials)</td>
+</tr>
+</tbody>
+</table>
+<p>Key responsibilities:</p>
+<ul>
+<li>Enforcing naming, SAN, validity, and key algorithm policies per Policy Folder</li>
+<li>Routing certificate requests to the appropriate CA</li>
+<li>Triggering renewal workflows based on expiry thresholds</li>
+<li>Evaluating approval workflows before submission to CA</li>
+</ul>
+<h3 id="web-sdk-rest-api">Web SDK (REST API)<a class="headerlink" href="#web-sdk-rest-api" title="Permanent link">&para;</a></h3>
+<p>The Web SDK exposes all TPP functionality as a RESTful API. It is the primary integration point for CI/CD pipelines, VCert CLI, and third-party systems.</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint Base</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/vedsdk/authorize/</code></td>
+<td>Obtain OAuth2 token</td>
+</tr>
+<tr>
+<td><code>/vedsdk/certificates/</code></td>
+<td>Create, retrieve, revoke certificates</td>
+</tr>
+<tr>
+<td><code>/vedsdk/config/</code></td>
+<td>Read/write policy folder attributes</td>
+</tr>
+<tr>
+<td><code>/vedsdk/discovery/</code></td>
+<td>Trigger and retrieve discovery results</td>
+</tr>
+<tr>
+<td><code>/vedsdk/credentials/</code></td>
+<td>Manage CA and application credentials</td>
+</tr>
+<tr>
+<td><code>/vedsdk/log/</code></td>
+<td>Write and retrieve audit log entries</td>
+</tr>
+</tbody>
+</table>
+<p>API authentication example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Obtain an OAuth2 access token</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://tpp.corp.example.com/vedauth/authorize/oauth<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s1">    &quot;client_id&quot;: &quot;vcert-ci&quot;,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s1">    &quot;username&quot;:   &quot;svc-venafi&quot;,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s1">    &quot;password&quot;:   &quot;VaultPassword&quot;,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="s1">    &quot;scope&quot;:      &quot;certificate:manage,delete&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.access_token&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Request a certificate</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://tpp.corp.example.com/vedsdk/certificates/request<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">    &quot;PolicyDN&quot;: &quot;\\VED\\Policy\\Corp\\Servers&quot;,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s1">    &quot;Subject&quot;: &quot;server01.corp.example.com&quot;,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s1">    &quot;SubjectAltNames&quot;: [{&quot;TypeName&quot;:&quot;DNS&quot;,&quot;Name&quot;:&quot;server01.corp.example.com&quot;}],</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s1">    &quot;KeyLength&quot;: 2048</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="log-server">Log Server<a class="headerlink" href="#log-server" title="Permanent link">&para;</a></h3>
+<p>The Log Server aggregates events from all TPP components into a central, searchable audit trail.</p>
+<ul>
+<li>Receives events from the Policy Server, CA connectors, and application drivers</li>
+<li>Stores events in the TPP SQL database</li>
+<li>Feeds into SIEM integrations (Splunk, QRadar) via syslog or REST</li>
+<li>Provides the audit log in the TPP Web UI under <strong>Monitor → Log</strong></li>
+</ul>
+<h3 id="adaptable-applications">Adaptable Applications<a class="headerlink" href="#adaptable-applications" title="Permanent link">&para;</a></h3>
+<p>Adaptable Applications (also called Application Drivers) are PowerShell-based plugins that extend TPP to deploy certificates to target systems that do not have a native connector.</p>
+<ul>
+<li>Written in PowerShell (Adaptable App framework)</li>
+<li>Stored in: <code>C:\Program Files\Venafi\Scripts\AdaptableApp\</code></li>
+<li>Executed by the Policy Server after certificate issuance</li>
+<li>Support pre- and post-issuance hooks for validation and deployment</li>
+</ul>
+<p>Example use cases: deploy certificates to custom web servers, update secrets in HashiCorp Vault, push keys to IoT devices.</p>
+<h3 id="connector-framework">Connector Framework<a class="headerlink" href="#connector-framework" title="Permanent link">&para;</a></h3>
+<p>Connectors link TPP to external CAs and target application platforms. There are two connector types:</p>
+<p><strong>CA Connectors</strong> manage the submission and retrieval of certificate requests to CAs:</p>
+<table>
+<thead>
+<tr>
+<th>CA Type</th>
+<th>Connector</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft ADCS</td>
+<td>Microsoft CA connector (built-in)</td>
+</tr>
+<tr>
+<td>DigiCert CertCentral</td>
+<td>DigiCert connector (built-in)</td>
+</tr>
+<tr>
+<td>Entrust</td>
+<td>Entrust connector (built-in)</td>
+</tr>
+<tr>
+<td>EJBCA</td>
+<td>EJBCA connector (marketplace)</td>
+</tr>
+<tr>
+<td>HashiCorp Vault PKI</td>
+<td>Adaptable CA (PowerShell)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Application Connectors</strong> deploy issued certificates to target platforms:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Connector</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IIS (Windows)</td>
+<td>IIS connector (built-in)</td>
+</tr>
+<tr>
+<td>F5 BIG-IP</td>
+<td>F5 connector (built-in)</td>
+</tr>
+<tr>
+<td>NetScaler / ADC</td>
+<td>Citrix connector (built-in)</td>
+</tr>
+<tr>
+<td>Apache / NGINX</td>
+<td>Agent-based (VCert)</td>
+</tr>
+<tr>
+<td>Kubernetes</td>
+<td>cert-manager + Venafi issuer or VCert</td>
+</tr>
+<tr>
+<td>AWS ACM</td>
+<td>AWS connector (built-in)</td>
+</tr>
+<tr>
+<td>Azure Key Vault</td>
+<td>Azure connector (built-in)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="certificate-lifecycle-flow">Certificate Lifecycle Flow<a class="headerlink" href="#certificate-lifecycle-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Dev as Developer / CI-CD
+    participant API as TPP Web SDK
+    participant PS as Policy Server
+    participant CA as Certificate Authority
+    participant App as Target Application
+
+    Dev-&gt;&gt;API: Request certificate\n(POST /certificates/request)
+    API-&gt;&gt;PS: Validate against policy folder
+    PS--&gt;&gt;API: Policy check passed / failed
+
+    alt Approval workflow enabled
+        PS-&gt;&gt;PS: Wait for approver action
+    end
+
+    PS-&gt;&gt;CA: Submit CSR
+    CA--&gt;&gt;PS: Signed certificate
+
+    PS-&gt;&gt;PS: Store certificate\nin object tree
+
+    PS-&gt;&gt;App: Deploy via Application\nConnector / Adaptable App
+    App--&gt;&gt;PS: Deployment confirmed
+
+    loop Monitoring (configurable interval)
+        PS-&gt;&gt;App: Check certificate expiry
+        App--&gt;&gt;PS: Certificate status
+    end
+
+    PS-&gt;&gt;Dev: Renewal notification\n(email / webhook)
+    Dev-&gt;&gt;API: Trigger renewal
+    PS-&gt;&gt;CA: Submit renewal CSR
+    CA--&gt;&gt;PS: Renewed certificate
+    PS-&gt;&gt;App: Deploy renewed certificate</code></pre>
+<hr />
+<h2 id="vcert-cli">VCert CLI<a class="headerlink" href="#vcert-cli" title="Permanent link">&para;</a></h2>
+<p>VCert is the open-source CLI tool for interacting with TPP (and Venafi as a Service) from workstations and CI/CD pipelines.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vcert<span class="w"> </span>getcred<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--url<span class="w"> </span>https://tpp.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--username<span class="w"> </span>svc-venafi<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--password<span class="w"> </span><span class="s2">&quot;VaultPassword&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--format<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>~/.vcert/token.json
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Request and retrieve a certificate</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vcert<span class="w"> </span>enroll<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--url<span class="w"> </span>https://tpp.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--token<span class="w"> </span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.access_token&#39;</span><span class="w"> </span>~/.vcert/token.json<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--zone<span class="w"> </span><span class="s2">&quot;Corp\\Servers&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--cn<span class="w"> </span><span class="s2">&quot;server01.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--san-dns<span class="w"> </span><span class="s2">&quot;server01.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--key-type<span class="w"> </span>rsa<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--key-size<span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--format<span class="w"> </span>pemfile<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--file<span class="w"> </span>/etc/ssl/server01
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Renew an existing certificate</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>vcert<span class="w"> </span>renew<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--url<span class="w"> </span>https://tpp.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--token<span class="w"> </span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.access_token&#39;</span><span class="w"> </span>~/.vcert/token.json<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>--id<span class="w"> </span><span class="s2">&quot;\VED\Policy\Corp\Servers\server01.corp.example.com&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="discovery-engine">Discovery Engine<a class="headerlink" href="#discovery-engine" title="Permanent link">&para;</a></h2>
+<p>The Discovery Engine scans network ranges and endpoints for installed TLS certificates, identifying unmanaged or expiring certificates.</p>
+<table>
+<thead>
+<tr>
+<th>Discovery Type</th>
+<th>Method</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network scan</td>
+<td>Port scanning (443, 8443, etc.)</td>
+<td>Find unknown certificates on-prem</td>
+</tr>
+<tr>
+<td>Agent-based</td>
+<td>VCert agent on hosts</td>
+<td>Precise inventory including non-443 ports</td>
+</tr>
+<tr>
+<td>Import from CA</td>
+<td>API pull from known CAs</td>
+<td>Reconcile CA-issued vs TPP-managed</td>
+</tr>
+<tr>
+<td>Cloud</td>
+<td>API scan of ACM, AKV, GCP</td>
+<td>Cloud certificate inventory</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="deployment-reference">Deployment Reference<a class="headerlink" href="#deployment-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Install Location</th>
+<th>Typical Server Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Policy Server</td>
+<td><code>C:\Program Files\Venafi\</code></td>
+<td>Dedicated Windows Server VM</td>
+</tr>
+<tr>
+<td>SQL Database</td>
+<td>SQL Server instance</td>
+<td>Dedicated or shared SQL cluster</td>
+</tr>
+<tr>
+<td>Web SDK</td>
+<td>IIS on Policy Server host</td>
+<td>Collocated with Policy Server</td>
+</tr>
+<tr>
+<td>Log Server</td>
+<td>Collocated or separate</td>
+<td>Part of Policy Server install</td>
+</tr>
+<tr>
+<td>VCert Agent</td>
+<td>Target host</td>
+<td>Deployed via configuration mgmt</td>
+</tr>
+<tr>
+<td>Secondary TPP</td>
+<td>Separate VM</td>
+<td>Active/passive HA pair</td>
+</tr>
+</tbody>
+</table>
+<h3 id="minimum-sql-server-requirements">Minimum SQL Server Requirements<a class="headerlink" href="#minimum-sql-server-requirements" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQL Server Version</td>
+<td>2016 SP2 or later (2019 recommended)</td>
+</tr>
+<tr>
+<td>Collation</td>
+<td>SQL_Latin1_General_CP1_CI_AS</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>SQL auth or Windows auth (preferred)</td>
+</tr>
+<tr>
+<td>Database size (initial)</td>
+<td>10 GB (grows with certificate volume)</td>
+</tr>
+<tr>
+<td>TempDB</td>
+<td>4 files, pre-sized to 4 GB each</td>
+</tr>
+</tbody>
+</table>
 
 
 

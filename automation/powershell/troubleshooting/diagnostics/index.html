@@ -699,6 +699,158 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-flowchart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Flowchart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-and-get-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        $Error and Get-Error
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-psdebug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set-PSDebug
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trace-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trace-Command
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transcript-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transcript Logging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Transcript Logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automatic-transcripts-via-group-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic Transcripts via Group Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-logging-and-script-block-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Logging and Script Block Logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#winrm-connectivity-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WinRM Connectivity Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="WinRM Connectivity Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-winrm-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common WinRM Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-policy-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Policy Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-import-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Import Failures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-data-collection-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Data Collection Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -722,7 +874,304 @@
 <p>Part of the <a href="../">PowerShell Troubleshooting</a> reference.</p>
 </blockquote>
 <hr />
-<p><em>Content coming soon.</em></p>
+<h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Script or automation fails]) --&gt; B{Error message available?}
+    B -- Yes --&gt; C[Inspect $Error\[0\] / Get-Error]
+    B -- No --&gt; D[Enable transcript logging]
+    C --&gt; E{Error type?}
+    E -- CommandNotFound --&gt; F[Check module / PATH / execution policy]
+    E -- Remoting / WinRM --&gt; G[Test-WSMan / WSMan trace]
+    E -- AccessDenied --&gt; H[Check permissions / credential delegation]
+    E -- Exception in script --&gt; I[Set-PSDebug -Trace 2\nor Trace-Command]
+    F --&gt; J[Resolve and retest]
+    G --&gt; J
+    H --&gt; J
+    I --&gt; K[Analyse trace output]
+    K --&gt; J
+    D --&gt; L[Reproduce with transcript active]
+    L --&gt; C
+    J --&gt; M{Resolved?}
+    M -- Yes --&gt; N([Document root cause])
+    M -- No --&gt; O([Escalate — see Escalation runbook])
+    style O fill:#c62828,color:#fff
+    style N fill:#2e7d32,color:#fff</code></pre>
+<hr />
+<h2 id="error-and-get-error"><code>$Error</code> and <code>Get-Error</code><a class="headerlink" href="#error-and-get-error" title="Permanent link">&para;</a></h2>
+<p><code>$Error</code> is an automatic variable — a fixed-size circular array (default capacity 256) of <code>ErrorRecord</code> objects. The most recent error is at index <code>0</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Count of errors in current session</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$Error</span><span class="p">.</span><span class="n">Count</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Most recent error — summary</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$Error</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Full structured error detail (PowerShell 7+)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-Error</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Inspect specific error record fields</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$err</span> <span class="p">=</span> <span class="nv">$Error</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$err</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span>        <span class="c"># Human-readable message</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">$err</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">Name</span>  <span class="c"># Exception class</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">$err</span><span class="p">.</span><span class="n">InvocationInfo</span><span class="p">.</span><span class="n">ScriptName</span> <span class="c"># Source script</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nv">$err</span><span class="p">.</span><span class="n">InvocationInfo</span><span class="p">.</span><span class="n">ScriptLineNumber</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nv">$err</span><span class="p">.</span><span class="n">InvocationInfo</span><span class="p">.</span><span class="n">Line</span>       <span class="c"># The actual line of code</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nv">$err</span><span class="p">.</span><span class="n">ScriptStackTrace</span>          <span class="c"># Full stack trace</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># Clear the error variable (useful before a test block)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nv">$Error</span><span class="p">.</span><span class="n">Clear</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="set-psdebug"><code>Set-PSDebug</code><a class="headerlink" href="#set-psdebug" title="Permanent link">&para;</a></h2>
+<p><code>Set-PSDebug</code> enables low-level script tracing. Use <code>Trace 1</code> for statement-level tracing and <code>Trace 2</code> for variable assignments as well.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Trace every statement (level 1)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Set-PSDebug</span> <span class="n">-Trace</span> <span class="n">1</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Trace statements AND variable assignments (level 2)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Set-PSDebug</span> <span class="n">-Trace</span> <span class="n">2</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Disable tracing</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Set-PSDebug</span> <span class="n">-Off</span>
+</code></pre></div>
+<p>Sample trace output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>DEBUG:    1+ &gt;&gt;&gt;&gt; $result = Get-Widget -Name &#39;widget-01&#39;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>DEBUG:    2+ &gt;&gt;&gt;&gt; if ($result.State -eq &#39;Active&#39;) {
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>DEBUG:   Variable: result = @{Name=widget-01; State=Active}
+</code></pre></div>
+<blockquote>
+<p>Warning: <code>-Trace 2</code> is very verbose. Redirect output to a file for scripts with large loops: <code>Set-PSDebug -Trace 2; .\MyScript.ps1 *&gt;&amp;1 | Out-File trace.txt</code></p>
+</blockquote>
+<hr />
+<h2 id="trace-command"><code>Trace-Command</code><a class="headerlink" href="#trace-command" title="Permanent link">&para;</a></h2>
+<p><code>Trace-Command</code> provides targeted tracing of specific PowerShell subsystems without the full overhead of <code>Set-PSDebug</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Trace command discovery (why is a cmdlet not found?)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Trace-Command</span> <span class="n">-Name</span> <span class="n">CommandDiscovery</span> <span class="n">-Expression</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Get-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span> <span class="n">-PSHost</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Trace parameter binding (diagnose binding failures)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Trace-Command</span> <span class="n">-Name</span> <span class="n">ParameterBinding</span> <span class="n">-Expression</span> <span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">Get-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span> <span class="n">-State</span> <span class="n">Active</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span> <span class="n">-PSHost</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Trace module loading</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">Trace-Command</span> <span class="n">-Name</span> <span class="n">Modules</span> <span class="n">-Expression</span> <span class="p">{</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="nb">Import-Module</span> <span class="n">MyModule</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span> <span class="n">-PSHost</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c"># Write trace to file</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nb">Trace-Command</span> <span class="n">-Name</span> <span class="n">ParameterBinding</span> <span class="n">-Expression</span> <span class="p">{</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="nb">Set-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span> <span class="n">-Priority</span> <span class="n">5</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="p">}</span> <span class="n">-FilePath</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">trace</span><span class="p">.</span><span class="n">log</span> <span class="n">-FileAppend</span>
+</code></pre></div>
+<p>Available trace sources (partial list):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-TraceSource</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Description</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Trace Source</th>
+<th>What it traces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CommandDiscovery</code></td>
+<td>How commands are resolved</td>
+</tr>
+<tr>
+<td><code>ParameterBinding</code></td>
+<td>Parameter matching and conversion</td>
+</tr>
+<tr>
+<td><code>Modules</code></td>
+<td>Module load, import, export</td>
+</tr>
+<tr>
+<td><code>PipelineProcessor</code></td>
+<td>Pipeline object flow</td>
+</tr>
+<tr>
+<td><code>TypeConversion</code></td>
+<td>.NET type coercion</td>
+</tr>
+<tr>
+<td><code>ETS</code></td>
+<td>Extended Type System operations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="transcript-logging">Transcript Logging<a class="headerlink" href="#transcript-logging" title="Permanent link">&para;</a></h2>
+<p>Transcripts capture all input and output in a session — the most complete debugging tool available.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Start transcript</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Start-Transcript</span> <span class="n">-Path</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">ps-transcript</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd-HHmmss</span><span class="p">).</span><span class="n">txt</span> <span class="n">-Append</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Run the failing operation</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Stop transcript</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Stop-Transcript</span>
+</code></pre></div>
+<h3 id="automatic-transcripts-via-group-policy">Automatic Transcripts via Group Policy<a class="headerlink" href="#automatic-transcripts-via-group-policy" title="Permanent link">&para;</a></h3>
+<p>For production environments, enforce transcript logging centrally:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Computer Configuration → Administrative Templates → Windows Components →
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Windows PowerShell → Turn on PowerShell Transcription
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  → Enable: Yes
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  → Output Directory: \\fileserver\logs\pstranscripts\%COMPUTERNAME%
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  → Include invocation headers: Yes
+</code></pre></div>
+<h3 id="module-logging-and-script-block-logging">Module Logging and Script Block Logging<a class="headerlink" href="#module-logging-and-script-block-logging" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Enable script block logging (captures deobfuscated code — useful for security)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># Via registry (set in GPO or startup script):</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$path</span> <span class="p">=</span> <span class="s1">&#39;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging&#39;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">New-Item</span> <span class="nv">$path</span> <span class="n">-Force</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Set-ItemProperty</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="n">EnableScriptBlockLogging</span> <span class="n">-Value</span> <span class="n">1</span>
+</code></pre></div>
+<hr />
+<h2 id="winrm-connectivity-diagnostics">WinRM Connectivity Diagnostics<a class="headerlink" href="#winrm-connectivity-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Basic WinRM test (unauthenticated — verifies WinRM is listening)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="n">srv-prod</span><span class="p">-</span><span class="n">01</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Authenticated test</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="n">srv-prod</span><span class="p">-</span><span class="n">01</span> <span class="n">-Authentication</span> <span class="n">Kerberos</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Check WinRM service state on local machine</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Get-Service</span> <span class="n">WinRM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># View WinRM listener configuration</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">winrm</span> <span class="n">enumerate</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">listener</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c"># Check firewall rule</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="nb">Get-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s1">&#39;*Windows Remote Management*&#39;</span> <span class="p">|</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">Direction</span><span class="p">,</span> <span class="n">Profile</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c"># Verify trusted hosts (workgroup environments)</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="nb">Get-Item</span> <span class="n">WSMan</span><span class="p">:\</span><span class="n">localhost</span><span class="p">\</span><span class="n">Client</span><span class="p">\</span><span class="n">TrustedHosts</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c"># Add a host to trusted hosts (when Kerberos not available)</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="nb">Set-Item</span> <span class="n">WSMan</span><span class="p">:\</span><span class="n">localhost</span><span class="p">\</span><span class="n">Client</span><span class="p">\</span><span class="n">TrustedHosts</span> <span class="n">-Value</span> <span class="s1">&#39;srv-prod-01&#39;</span> <span class="n">-Concatenate</span> <span class="n">-Force</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c"># Full WinRM configuration dump</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="n">winrm</span> <span class="n">get</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span>
+</code></pre></div>
+<h3 id="common-winrm-errors">Common WinRM Errors<a class="headerlink" href="#common-winrm-errors" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Likely cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Access is denied</code></td>
+<td>Credential or delegation issue</td>
+<td>Check <code>-Credential</code>, enable CredSSP or Kerberos</td>
+</tr>
+<tr>
+<td><code>The WS-Management service cannot complete the operation</code></td>
+<td>WinRM not started</td>
+<td><code>Start-Service WinRM</code> on target</td>
+</tr>
+<tr>
+<td><code>No such host is known</code></td>
+<td>DNS resolution failure</td>
+<td>Verify DNS, use IP with TrustedHosts</td>
+</tr>
+<tr>
+<td><code>The connection attempt failed</code></td>
+<td>Firewall blocking 5985/5986</td>
+<td>Open port on host and network firewall</td>
+</tr>
+<tr>
+<td><code>The server certificate on the destination computer has the following errors</code></td>
+<td>HTTPS cert mismatch</td>
+<td>Fix cert or use <code>-SkipCACheck -SkipCNCheck</code> (test only)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="execution-policy-diagnostics">Execution Policy Diagnostics<a class="headerlink" href="#execution-policy-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># View effective policy at each scope</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-ExecutionPolicy</span> <span class="n">-List</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Output example:</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Scope          ExecutionPolicy</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># -----          ---------------</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># MachinePolicy  Undefined</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c"># UserPolicy     Undefined</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c"># Process        Bypass</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c"># CurrentUser    RemoteSigned</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c"># LocalMachine   AllSigned</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c"># Check why a script is blocked</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="nb">Get-Item</span> <span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span> <span class="p">|</span> <span class="nb">Get-AuthenticodeSignature</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="p">(</span><span class="nb">Get-Item</span> <span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span><span class="p">).</span><span class="n">Attributes</span>  <span class="c"># Look for Zone.Identifier alternate data stream</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c"># Unblock a downloaded script (removes Zone.Identifier ADS)</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="nb">Unblock-File</span> <span class="n">-Path</span> <span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c"># Bypass for a single invocation (test/CI use)</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="n">PowerShell</span><span class="p">.</span><span class="n">exe</span> <span class="n">-ExecutionPolicy</span> <span class="n">Bypass</span> <span class="o">-File</span> <span class="p">.\</span><span class="n">MyScript</span><span class="p">.</span><span class="n">ps1</span>
+</code></pre></div>
+<hr />
+<h2 id="module-import-failures">Module Import Failures<a class="headerlink" href="#module-import-failures" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Verbose module loading — see exact search paths tried</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Import-Module</span> <span class="n">MyModule</span> <span class="n">-Verbose</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Check module paths</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">$env:PSModulePath</span> <span class="n">-split</span> <span class="no">[IO.Path]</span><span class="p">::</span><span class="n">PathSeparator</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c"># Inspect module manifest for errors</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nb">Test-ModuleManifest</span> <span class="n">-Path</span> <span class="p">.\</span><span class="n">MyModule</span><span class="p">\</span><span class="n">MyModule</span><span class="p">.</span><span class="n">psd1</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c"># List available versions of a module</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nb">Get-Module</span> <span class="n">-Name</span> <span class="n">MyModule</span> <span class="n">-ListAvailable</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">Path</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c"># Force reimport (clears cached version)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nb">Remove-Module</span> <span class="n">MyModule</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nb">Import-Module</span> <span class="n">MyModule</span> <span class="n">-Force</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c"># Check for .NET assembly load failures</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="no">[System.AppDomain]</span><span class="p">::</span><span class="n">CurrentDomain</span><span class="p">.</span><span class="n">GetAssemblies</span><span class="p">()</span> <span class="p">|</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="nb">Where-Object</span> <span class="n">Location</span> <span class="o">-like</span> <span class="s1">&#39;*MyModule*&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="diagnostic-data-collection-script">Diagnostic Data Collection Script<a class="headerlink" href="#diagnostic-data-collection-script" title="Permanent link">&para;</a></h2>
+<p>Use this as a first-response script when a production failure is reported.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">function</span> <span class="nb">Get-PSEnvironmentDiagnostics</span> <span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$OutputPath</span> <span class="p">=</span> <span class="s2">&quot;$env:TEMP\ps-diag-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd-HHmmss</span><span class="p">)</span><span class="s2">.txt&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="nv">$data</span> <span class="p">=</span> <span class="no">[ordered]</span><span class="p">@{</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>        <span class="n">Timestamp</span>       <span class="p">=</span> <span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;o&#39;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>        <span class="n">ComputerName</span>    <span class="p">=</span> <span class="nv">$env:COMPUTERNAME</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="n">PSVersion</span>       <span class="p">=</span> <span class="nv">$PSVersionTable</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>        <span class="n">PSEdition</span>       <span class="p">=</span> <span class="nv">$PSVersionTable</span><span class="p">.</span><span class="n">PSEdition</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        <span class="n">ExecutionPolicy</span> <span class="p">=</span> <span class="nb">Get-ExecutionPolicy</span> <span class="n">-List</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        <span class="n">PSModulePath</span>    <span class="p">=</span> <span class="nv">$env:PSModulePath</span> <span class="n">-split</span> <span class="no">[IO.Path]</span><span class="p">::</span><span class="n">PathSeparator</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>        <span class="n">LoadedModules</span>   <span class="p">=</span> <span class="nb">Get-Module</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        <span class="n">RecentErrors</span>    <span class="p">=</span> <span class="nv">$Error</span><span class="p">[</span><span class="n">0</span><span class="p">..</span><span class="n">4</span><span class="p">]</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>            <span class="no">[ordered]</span><span class="p">@{</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>                <span class="n">Message</span>    <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>                <span class="nb">Type </span>      <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">FullName</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>                <span class="n">Script</span>     <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">InvocationInfo</span><span class="p">.</span><span class="n">ScriptName</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>                <span class="n">Line</span>       <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">InvocationInfo</span><span class="p">.</span><span class="n">ScriptLineNumber</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>                <span class="n">StackTrace</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ScriptStackTrace</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>            <span class="p">}</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>        <span class="p">}</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>        <span class="n">WinRMStatus</span>     <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Service</span> <span class="n">WinRM</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">).</span><span class="n">Status</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    <span class="p">}</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>    <span class="nv">$data</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Tee-Object</span> <span class="n">-FilePath</span> <span class="nv">$OutputPath</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Diagnostics written to: $OutputPath&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="p">}</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="nb">Get-PSEnvironmentDiagnostics</span>
+</code></pre></div>
 
 
 

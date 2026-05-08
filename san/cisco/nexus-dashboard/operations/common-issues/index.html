@@ -699,6 +699,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nd-cluster-node-shows-unhealthy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND Cluster Node Shows Unhealthy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ndfc-cannot-discover-switches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDFC Cannot Discover Switches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zone-activation-fails-in-ndfc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Activation Fails in NDFC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ndfc-performance-data-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDFC Performance Data Missing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ndi-not-receiving-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDI Not Receiving Telemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nd-ui-certificate-warning-after-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND UI Certificate Warning After Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nd-backup-failing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND Backup Failing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-users-cannot-log-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Users Cannot Log In
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +825,256 @@
 
 
 <h1 id="nexus-dashboard-common-issues">Nexus Dashboard — Common Issues<a class="headerlink" href="#nexus-dashboard-common-issues" title="Permanent link">&para;</a></h1>
-<p>Quick reference for common problems and resolutions.</p>
+<blockquote>
+<p>Part of the <a href="../../">Nexus Dashboard</a> reference. For deeper diagnosis, see <a href="../../troubleshooting/common-issues/">Troubleshooting &gt; Common Issues</a>.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Quick reference for operational issues encountered during Nexus Dashboard and NDFC day-to-day management.</p>
+<hr />
+<h2 id="nd-cluster-node-shows-unhealthy">ND Cluster Node Shows Unhealthy<a class="headerlink" href="#nd-cluster-node-shows-unhealthy" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> One or more nodes in <strong>Admin Console &gt; Infrastructure &gt; Nodes</strong> shows <strong>Degraded</strong>, <strong>Unavailable</strong>, or <strong>Unknown</strong>.</p>
+<p><strong>Diagnosis:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Check cluster health</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>acs<span class="w"> </span>health
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Show node detail</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>acs<span class="w"> </span>nodes<span class="w"> </span>list
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check if Kubernetes agrees with ND&#39;s view</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Expected: all nodes Ready</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check failing pods on the affected node</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--field-selector<span class="w"> </span>spec.nodeName<span class="o">=</span>&lt;node-hostname&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running
+</code></pre></div>
+<p><strong>Common causes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node VM has insufficient memory</td>
+<td>Increase VM RAM; check for memory overcommit on hypervisor</td>
+</tr>
+<tr>
+<td>Cluster internal network (app0) unreachable</td>
+<td>Verify L2 connectivity on the cluster VLAN between nodes</td>
+</tr>
+<tr>
+<td>etcd quorum lost (2 of 3 nodes down)</td>
+<td>Restore at least 2 nodes; contact Cisco TAC if etcd is corrupted</td>
+</tr>
+<tr>
+<td>Pod stuck in CrashLoopBackOff</td>
+<td><code>kubectl logs -n &lt;ns&gt; &lt;pod&gt; --previous</code> to view crash reason</td>
+</tr>
+<tr>
+<td>Disk full on node</td>
+<td><code>df -h</code> on the node; purge old logs or expand storage</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ndfc-cannot-discover-switches">NDFC Cannot Discover Switches<a class="headerlink" href="#ndfc-cannot-discover-switches" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> After adding a seed switch in NDFC, the fabric shows only the seed switch or no switches at all.</p>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Verify SSH from the ND data network to the switch management IP:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>acs<span class="w"> </span>network<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--host<span class="w"> </span>&lt;switch-ip&gt;<span class="w"> </span>--port<span class="w"> </span><span class="m">22</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># If this fails: routing or firewall issue on the data network</span>
+</code></pre></div></li>
+<li>Verify the <code>ndfc_mgmt</code> account has <code>network-admin</code> role on the switch:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the MDS switch (NX-OS CLI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>user-account<span class="w"> </span>ndfc_mgmt
+</code></pre></div></li>
+<li>Verify SNMPv3 credentials match:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the MDS switch</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>snmp<span class="w"> </span>user
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Confirm dcnm_poll (or ndfc_poll) user is present with correct auth/priv protocols</span>
+</code></pre></div></li>
+<li>Check NDFC discovery logs:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>deployment/ndfc-discovery-manager<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|&lt;switch-ip&gt;&quot;</span>
+</code></pre></div></li>
+</ol>
+<hr />
+<h2 id="zone-activation-fails-in-ndfc">Zone Activation Fails in NDFC<a class="headerlink" href="#zone-activation-fails-in-ndfc" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Zone set activation from NDFC returns an error or the zone set does not propagate to all switches.</p>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Navigate to <strong>NDFC &gt; Fabrics &gt; [Fabric] &gt; Zoning &gt; Zone Status</strong> — check for merge conflicts.</li>
+<li>Check on the principal MDS switch:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Check: Mode, Default-zone, Merge Status</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>show<span class="w"> </span>zone<span class="w"> </span>merge-failure<span class="w"> </span>vsan<span class="w"> </span>&lt;vsan-id&gt;
+</code></pre></div></li>
+<li>If a merge conflict is reported:</li>
+<li>Identify the switch with the conflicting zone database</li>
+<li>Trigger a zone re-sync from NDFC: <strong>Fabrics &gt; [Fabric] &gt; Deploy All</strong> to re-push the NDFC zone set</li>
+<li>Verify the <code>ndfc_mgmt</code> account has <code>network-admin</code> role (required for zone operations)</li>
+</ol>
+<hr />
+<h2 id="ndfc-performance-data-missing">NDFC Performance Data Missing<a class="headerlink" href="#ndfc-performance-data-missing" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <strong>NDFC &gt; Monitor &gt; Performance</strong> shows no data or stale data.</p>
+<p><strong>Resolution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check Performance Manager pod status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>pm
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Should be Running</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check PM logs for polling errors</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndfc<span class="w"> </span>deployment/ndfc-pm<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|timeout\|fail&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Restart PM pod</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment/ndfc-pm<span class="w"> </span>-n<span class="w"> </span>ndfc
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/ndfc-pm<span class="w"> </span>-n<span class="w"> </span>ndfc
+</code></pre></div>
+<p>Common causes:
+- SNMP credentials changed on switches: update in NDFC fabric settings
+- Switch SNMP ACL blocking ND data IP: update switch ACL
+- PM database full: navigate to <strong>NDFC &gt; Settings &gt; Data Retention</strong> and reduce retention</p>
+<hr />
+<h2 id="ndi-not-receiving-telemetry">NDI Not Receiving Telemetry<a class="headerlink" href="#ndi-not-receiving-telemetry" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> NDI dashboard shows no flow data or anomaly data is stale (&gt; 30 minutes).</p>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Verify the streaming telemetry connection from managed switches to ND:</li>
+<li>For MDS (SAN Insights): telemetry is pulled via NDFC, not streamed directly; verify NDFC-to-switch connectivity</li>
+<li>
+<p>For ACI: verify APIC connectivity to ND</p>
+</li>
+<li>
+<p>Check NDI flow collector pods:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>collector
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-flow-collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error&quot;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Verify the NDI license is applied:</p>
+</li>
+<li>
+<p>Navigate to <strong>Admin Console &gt; System &gt; Licensing</strong> — confirm NDI Insights license is valid</p>
+</li>
+<li>
+<p>For ACI sites: verify the APIC is registered in NDI:</p>
+</li>
+<li>Navigate to <strong>NDI &gt; Manage &gt; Sites</strong> — confirm site status is <strong>Online</strong></li>
+</ol>
+<hr />
+<h2 id="nd-ui-certificate-warning-after-upgrade">ND UI Certificate Warning After Upgrade<a class="headerlink" href="#nd-ui-certificate-warning-after-upgrade" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> After an ND upgrade, browsers show a certificate warning on the ND management URL.</p>
+<p><strong>Cause:</strong> ND upgrades may reset the TLS certificate to a self-signed default in some versions.</p>
+<p><strong>Resolution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Check the current active certificate</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>acs<span class="w"> </span>certificates<span class="w"> </span>show
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># If it shows the ND self-signed cert: the custom cert was lost</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Re-import the corporate CA certificate</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>acs<span class="w"> </span>certificates<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>--key<span class="w"> </span>/tmp/nd.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>--cert<span class="w"> </span>/tmp/nd-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>--name<span class="w"> </span>nd-dc1-cert
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Activate the certificate</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>acs<span class="w"> </span>certificates<span class="w"> </span>activate<span class="w"> </span>--name<span class="w"> </span>nd-dc1-cert
+</code></pre></div>
+<p>Maintain copies of the ND certificate key and signed certificate on a secure file share or vault. They are needed after every major ND upgrade if the cert is not preserved.</p>
+<hr />
+<h2 id="nd-backup-failing">ND Backup Failing<a class="headerlink" href="#nd-backup-failing" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Scheduled backup does not complete; backup history shows errors.</p>
+<p><strong>Resolution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Test remote backup connectivity</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Check backup status and last error</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>acs<span class="w"> </span>backup<span class="w"> </span>status
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Check backup logs</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>acs<span class="w"> </span>system<span class="w"> </span>logs<span class="w"> </span>--component<span class="w"> </span>backup<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
+<p>Common causes:</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH key authentication to backup server expired</td>
+<td>Rotate SSH key; update in backup configuration</td>
+</tr>
+<tr>
+<td>Remote backup path does not exist</td>
+<td>Create the path on the backup server</td>
+</tr>
+<tr>
+<td>Remote backup disk full</td>
+<td>Free space on the backup server or reduce ND retention count</td>
+</tr>
+<tr>
+<td>ND data volume full</td>
+<td><code>kubectl exec</code> into a pod to check <code>/data</code> usage; purge NDI telemetry</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ldap-users-cannot-log-in">LDAP Users Cannot Log In<a class="headerlink" href="#ldap-users-cannot-log-in" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Users get "Invalid credentials" with AD accounts; local accounts work.</p>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Navigate to <strong>Admin Console &gt; Security &gt; Authentication &gt; Login Domains &gt; [LDAP domain] &gt; Test</strong>.</li>
+<li>Enter an AD username and password to test.</li>
+<li>Review the test output for the specific error.</li>
+</ol>
+<p>Common errors:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connection refused / timeout</td>
+<td>Port 636 blocked</td>
+<td>Open firewall from ND mgmt to LDAP server</td>
+</tr>
+<tr>
+<td>Invalid bind credentials</td>
+<td>Bind DN password changed</td>
+<td>Update in ND LDAP configuration</td>
+</tr>
+<tr>
+<td>User not found</td>
+<td>Wrong search base or filter</td>
+<td>Verify OU and user attribute setting</td>
+</tr>
+<tr>
+<td>SSL handshake failed</td>
+<td>CA cert not imported</td>
+<td>Import CA cert into ND via <code>acs certificates</code> or Admin Console</td>
+</tr>
+<tr>
+<td>Group not mapped</td>
+<td>AD group not in role mapping table</td>
+<td>Add group under <strong>Security &gt; Roles</strong></td>
+</tr>
+</tbody>
+</table>
 
 
 

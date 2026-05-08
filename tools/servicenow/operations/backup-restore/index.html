@@ -699,6 +699,191 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#instance-clone-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance Clone Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-clone-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Clone Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-clone-excluders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring Clone Excluders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initiating-a-clone-on-demand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initiating a Clone (On-Demand)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduling-recurring-clones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduling Recurring Clones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-clone-validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Clone Validation Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Post-Clone Validation Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functional-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functional Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-export-via-export-sets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Export via Export Sets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Export via Export Sets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-an-export-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating an Export Set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reimporting-from-xml-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reimporting from XML Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicenow-backup-infrastructure-hi-managed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow Backup Infrastructure (HI-Managed)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +903,279 @@
 
 
 <h1 id="servicenow-backup-restore">ServiceNow — Backup &amp; Restore<a class="headerlink" href="#servicenow-backup-restore" title="Permanent link">&para;</a></h1>
-<p><em>Content coming soon.</em></p>
+<p>ServiceNow cloud instances do not expose direct database backup access. The primary mechanisms for instance protection and data recovery are <strong>Instance Cloning</strong> (for sub-production refresh and disaster recovery testing) and <strong>Export Sets</strong> (for selective data export). This page covers both in detail.</p>
+<hr />
+<h2 id="instance-clone-overview">Instance Clone Overview<a class="headerlink" href="#instance-clone-overview" title="Permanent link">&para;</a></h2>
+<p>Instance cloning copies the full data and configuration of a source instance to a target instance. The most common use case is refreshing a sub-production instance with a recent production snapshot.</p>
+<pre class="mermaid"><code>flowchart LR
+    PROD["Production Instance\n(source)"]
+    UAT["UAT Instance\n(target)"]
+    DEV["Dev Instance\n(target)"]
+
+    PROD -- "Scheduled Clone\n(weekly)" --&gt; UAT
+    PROD -- "On-demand Clone\n(before major release)" --&gt; DEV</code></pre>
+<p><strong>What is cloned:</strong>
+- All table data (records)
+- System configuration (properties, business rules, workflows)
+- Update Sets (in Complete or In Progress state)
+- Attachments and stored files</p>
+<p><strong>What is excluded by default:</strong>
+- Instance-specific integration credentials (replaced by excluder)
+- Email notification settings (can be suppressed post-clone)
+- MID Server configuration records (MID re-registers after clone)</p>
+<hr />
+<h2 id="pre-clone-checklist">Pre-Clone Checklist<a class="headerlink" href="#pre-clone-checklist" title="Permanent link">&para;</a></h2>
+<p>Before initiating a clone, complete all items:</p>
+<ul>
+<li>[ ] Confirm clone target instance is not in active use (coordinate with development team)</li>
+<li>[ ] Export any in-progress Update Sets from the target that have not been promoted to production</li>
+<li>[ ] Note any custom scheduled jobs or integration URLs configured on the target — these will be overwritten</li>
+<li>[ ] Confirm the Clone Excluder list is up to date (see below)</li>
+<li>[ ] Verify clone target has adequate storage (ServiceNow manages this; confirm with ServiceNow support if target is smaller)</li>
+<li>[ ] Schedule clone during a low-activity window (clones take 2–8 hours depending on instance size)</li>
+<li>[ ] Notify affected teams via Change Request</li>
+</ul>
+<hr />
+<h2 id="configuring-clone-excluders">Configuring Clone Excluders<a class="headerlink" href="#configuring-clone-excluders" title="Permanent link">&para;</a></h2>
+<p>Clone excluders preserve specific records on the target instance, preventing them from being overwritten by the source data.</p>
+<p>Navigate to: <strong>System Clone &gt; Exclude Tables</strong></p>
+<p>Recommended excluders for sub-production targets:</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Field</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sys_properties</code></td>
+<td><code>name LIKE 'mid.%'</code></td>
+<td>Preserve MID Server config</td>
+</tr>
+<tr>
+<td><code>sys_properties</code></td>
+<td><code>name LIKE 'glide.email%'</code></td>
+<td>Prevent production emails from sub-production</td>
+</tr>
+<tr>
+<td><code>sys_email_account</code></td>
+<td>All</td>
+<td>Suppress email sending</td>
+</tr>
+<tr>
+<td><code>ecc_agent</code></td>
+<td>All</td>
+<td>MID Server registrations</td>
+</tr>
+<tr>
+<td><code>oauth_entity</code></td>
+<td>All</td>
+<td>OAuth tokens (replace post-clone)</td>
+</tr>
+<tr>
+<td><code>sys_certificate</code></td>
+<td>All</td>
+<td>Instance certificates</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="initiating-a-clone-on-demand">Initiating a Clone (On-Demand)<a class="headerlink" href="#initiating-a-clone-on-demand" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Log in to the <strong>target</strong> sub-production instance as an administrator</li>
+<li>Navigate to <strong>System Clone &gt; Request Clone</strong></li>
+<li>Fill in the clone request form:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source instance</td>
+<td><code>&lt;prod-instance-name&gt;</code></td>
+</tr>
+<tr>
+<td>Target instance</td>
+<td>(current instance — pre-filled)</td>
+</tr>
+<tr>
+<td>Clone options</td>
+<td>Select appropriate excluder profiles</td>
+</tr>
+<tr>
+<td>Preserve theme</td>
+<td>Optional (recommended: No — take production theme)</td>
+</tr>
+<tr>
+<td>Notify on completion</td>
+<td>Your email address</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Click <strong>Submit</strong></li>
+<li>A clone request is sent to ServiceNow. The instance becomes unavailable during the clone operation.</li>
+<li>ServiceNow sends an email notification when the clone is complete.</li>
+</ol>
+<hr />
+<h2 id="scheduling-recurring-clones">Scheduling Recurring Clones<a class="headerlink" href="#scheduling-recurring-clones" title="Permanent link">&para;</a></h2>
+<p>Recurring clones are configured by raising a request with <strong>ServiceNow Support</strong> (HI portal). You cannot schedule recurring clones from the instance UI directly.</p>
+<p>Information to provide in the HI request:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Subject: Schedule Recurring Clone - &lt;instance-name&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Source instance: &lt;prod-instance&gt;.service-now.com
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Target instance: &lt;dev-instance&gt;.service-now.com
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Frequency: Weekly
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Preferred day/time: Sunday 02:00 UTC
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- Excluder profiles: [list]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>- Notification email: &lt;your-team-dl&gt;
+</code></pre></div>
+<p>Typical schedule options: daily, weekly, bi-weekly, monthly.</p>
+<hr />
+<h2 id="post-clone-validation-checklist">Post-Clone Validation Checklist<a class="headerlink" href="#post-clone-validation-checklist" title="Permanent link">&para;</a></h2>
+<p>After a clone completes, validate the target instance before returning it to use:</p>
+<h3 id="system-health">System Health<a class="headerlink" href="#system-health" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Log in as admin — confirm no errors on homepage</li>
+<li>[ ] Navigate to <strong>System Diagnostics &gt; Stats</strong> — confirm no critical alerts</li>
+<li>[ ] Check <strong>MID Server &gt; MID Servers</strong> — MID Servers should auto-reconnect and show <strong>Up</strong> within 15 minutes</li>
+<li>[ ] Check <strong>System Logs &gt; All</strong> — review for ERROR-level entries from the past hour</li>
+</ul>
+<h3 id="integration-validation">Integration Validation<a class="headerlink" href="#integration-validation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Open <strong>System Properties &gt; Email</strong> — confirm outbound email is <strong>disabled</strong> or pointing to a test mailbox</li>
+<li>[ ] Open each outbound REST Message and verify URLs point to non-production endpoints</li>
+<li>[ ] Review OAuth entity records — rotate or replace credentials as needed</li>
+<li>[ ] Verify LDAP server configuration points to the correct directory (production LDAP is usually acceptable for sub-production)</li>
+</ul>
+<h3 id="functional-validation">Functional Validation<a class="headerlink" href="#functional-validation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Create a test incident and confirm assignment rules, notifications (to test mailbox), and SLA calculation work</li>
+<li>[ ] Run a Discovery scan against a test IP range and confirm CMDB population</li>
+<li>[ ] Execute a sample Flow Designer flow end-to-end</li>
+<li>[ ] Confirm Scheduled Jobs list matches expected configuration (not production)</li>
+</ul>
+<h3 id="data-integrity">Data Integrity<a class="headerlink" href="#data-integrity" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Spot-check record counts in key tables (incidents, changes, CIs) match expected production snapshot</li>
+<li>[ ] Confirm user list is current (LDAP import may need to be re-run)</li>
+</ul>
+<hr />
+<h2 id="data-export-via-export-sets">Data Export via Export Sets<a class="headerlink" href="#data-export-via-export-sets" title="Permanent link">&para;</a></h2>
+<p>For selective data backup or migration, use Export Sets rather than cloning.</p>
+<h3 id="creating-an-export-set">Creating an Export Set<a class="headerlink" href="#creating-an-export-set" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>System Import Sets &gt; Export Sets</strong></li>
+<li>Click <strong>New</strong></li>
+<li>Configure:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Label</td>
+<td><code>Incident Export - 2026-Q2</code></td>
+</tr>
+<tr>
+<td>Table</td>
+<td><code>incident</code></td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>Encoded query (e.g., <code>active=true</code>)</td>
+</tr>
+<tr>
+<td>Export columns</td>
+<td>Select relevant fields</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Click <strong>Export Now</strong> or schedule via Export Schedule</li>
+</ol>
+<h3 id="export-formats">Export Formats<a class="headerlink" href="#export-formats" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XML</td>
+<td>Full fidelity; reimportable via Import Sets</td>
+</tr>
+<tr>
+<td>CSV</td>
+<td>Analysis in Excel / data warehouse</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>REST consumer import</td>
+</tr>
+<tr>
+<td>PDF</td>
+<td>Audit evidence</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td>Reporting</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reimporting-from-xml-export">Reimporting from XML Export<a class="headerlink" href="#reimporting-from-xml-export" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>System Import Sets &gt; Load Data</strong></li>
+<li>Choose <strong>Import from XML file</strong></li>
+<li>Upload the exported XML</li>
+<li>Map to target table (usually auto-detected)</li>
+<li>Run the Transform Map</li>
+<li>Review import log for errors</li>
+</ol>
+<hr />
+<h2 id="servicenow-backup-infrastructure-hi-managed">ServiceNow Backup Infrastructure (HI-Managed)<a class="headerlink" href="#servicenow-backup-infrastructure-hi-managed" title="Permanent link">&para;</a></h2>
+<p>ServiceNow takes automated database snapshots of all customer instances at the infrastructure level. These are not directly accessible to customers but can be requested via the HI portal for specific point-in-time restores.</p>
+<table>
+<thead>
+<tr>
+<th>Backup Type</th>
+<th>Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daily snapshots</td>
+<td>7 days</td>
+</tr>
+<tr>
+<td>Weekly snapshots</td>
+<td>4 weeks</td>
+</tr>
+<tr>
+<td>Monthly snapshots</td>
+<td>12 months</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requesting a HI-level restore:</strong></p>
+<p>This is a last-resort option for catastrophic data loss. Raise a P1 case on the HI portal with:
+- Instance name
+- Target point-in-time (UTC)
+- Description of the data loss event
+- Business justification</p>
+<p>ServiceNow SLA for restore initiation: 4 hours (P1 priority).</p>
 
 
 

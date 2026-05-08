@@ -699,6 +699,197 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data in Transit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data in Transit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web-ui-and-rest-api-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web UI and REST API (HTTPS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web UI and REST API (HTTPS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verify-tls-version-and-ciphers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify TLS Version and Ciphers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replace-the-tls-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace the TLS Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nd-to-managed-switch-communication-ssh-and-snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND to Managed Switch Communication (SSH and SNMP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nd-cluster-internal-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND Cluster Internal Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ldap-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-at-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data at Rest
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data at Rest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stored-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stored Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-secret-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Secret Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vm-level-disk-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM-Level Disk Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -718,7 +909,165 @@
 
 
 <h1 id="nexus-dashboard-encryption">Nexus Dashboard — Encryption<a class="headerlink" href="#nexus-dashboard-encryption" title="Permanent link">&para;</a></h1>
-<p>TLS certificate management and data encryption.</p>
+<blockquote>
+<p>Part of the <a href="../../">Nexus Dashboard</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Nexus Dashboard encrypts all management traffic in transit using TLS. Sensitive configuration data (credentials, LDAP bind passwords) is encrypted at rest. This page covers TLS configuration, credential storage, backup encryption, and certificate management.</p>
+<hr />
+<h2 id="data-in-transit">Data in Transit<a class="headerlink" href="#data-in-transit" title="Permanent link">&para;</a></h2>
+<h3 id="web-ui-and-rest-api-https">Web UI and REST API (HTTPS)<a class="headerlink" href="#web-ui-and-rest-api-https" title="Permanent link">&para;</a></h3>
+<p>All browser and API access uses HTTPS (TLS 1.2 minimum, TLS 1.3 preferred). The ND Nginx ingress handles TLS termination.</p>
+<h4 id="verify-tls-version-and-ciphers">Verify TLS Version and Ciphers<a class="headerlink" href="#verify-tls-version-and-ciphers" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check TLS version accepted</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-tls1<span class="w"> </span>-connect<span class="w"> </span>nd-dc1.corp.example.com:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;alert\|Cipher&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: alert handshake failure (TLS 1.0 rejected)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-tls1_3<span class="w"> </span>-connect<span class="w"> </span>nd-dc1.corp.example.com:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Protocol&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Expected: Protocol: TLSv1.3</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Enumerate ciphers (requires nmap)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>nd-dc1.corp.example.com
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Acceptable: ECDHE+AESGCM, ECDHE+CHACHA20; No RC4, DES, 3DES, NULL</span>
+</code></pre></div>
+<h4 id="replace-the-tls-certificate">Replace the TLS Certificate<a class="headerlink" href="#replace-the-tls-certificate" title="Permanent link">&para;</a></h4>
+<p>See <a href="../authentication/">Authentication</a> for the full certificate import and activation procedure. Summary:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Import new certificate and key</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>acs<span class="w"> </span>certificates<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--key<span class="w"> </span>/tmp/nd-dc1.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--cert<span class="w"> </span>/tmp/nd-dc1-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--name<span class="w"> </span>nd-dc1-corp-cert
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Activate</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>acs<span class="w"> </span>certificates<span class="w"> </span>activate<span class="w"> </span>--name<span class="w"> </span>nd-dc1-corp-cert
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Verify</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>nd-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-servername<span class="w"> </span>nd-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+</code></pre></div>
+<h3 id="nd-to-managed-switch-communication-ssh-and-snmp">ND to Managed Switch Communication (SSH and SNMP)<a class="headerlink" href="#nd-to-managed-switch-communication-ssh-and-snmp" title="Permanent link">&para;</a></h3>
+<p>NDFC uses SSH (port 22) for all configuration push operations to MDS switches. Ensure:
+- SSH v2 enforced on managed switches: <code>show ssh server</code> on each MDS
+- RSA keys ≥ 2048-bit: <code>show crypto key mypubkey rsa</code> on each MDS
+- NDFC stores switch host keys on first connection; if a switch is replaced, remove the old host key from NDFC: <strong>NDFC &gt; Fabrics &gt; [Fabric] &gt; Edit Switch &gt; Reset Host Key</strong></p>
+<p>SNMP polling uses SNMPv3 with <code>authPriv</code> (SHA auth + AES-128 priv). Configure on managed switches per the <a href="../../architecture/standards/">Standards</a> page.</p>
+<h3 id="nd-cluster-internal-communication">ND Cluster Internal Communication<a class="headerlink" href="#nd-cluster-internal-communication" title="Permanent link">&para;</a></h3>
+<p>Inter-node cluster communication (Kubernetes, etcd, Kafka) uses mutual TLS (mTLS) with internally managed certificates. These are managed automatically by ND and do not require operator attention under normal circumstances.</p>
+<h3 id="ldap-traffic">LDAP Traffic<a class="headerlink" href="#ldap-traffic" title="Permanent link">&para;</a></h3>
+<p>Use port 636 (LDAPS) for all LDAP connections. Import the corporate CA certificate to ensure proper trust chain validation. Never use plain LDAP port 389 in production — it transmits bind credentials in cleartext.</p>
+<hr />
+<h2 id="data-at-rest">Data at Rest<a class="headerlink" href="#data-at-rest" title="Permanent link">&para;</a></h2>
+<h3 id="stored-credentials">Stored Credentials<a class="headerlink" href="#stored-credentials" title="Permanent link">&para;</a></h3>
+<p>ND stores the following sensitive data encrypted at rest in its internal database (Keycloak + PostgreSQL):
+- LDAP bind DN password
+- TACACS+ shared key
+- Switch SSH usernames and passwords (via NDFC)
+- SNMPv3 auth and priv passwords (via NDFC)
+- SMTP authentication credentials
+- Backup encryption passphrase</p>
+<p>Encryption keys are managed by the ND platform's internal key management service (Vault). Keys are tied to the cluster instance and are included in cluster backups.</p>
+<h3 id="kubernetes-secret-encryption">Kubernetes Secret Encryption<a class="headerlink" href="#kubernetes-secret-encryption" title="Permanent link">&para;</a></h3>
+<p>ND stores application credentials and configuration in Kubernetes Secrets. Kubernetes Secrets are base64-encoded by default, but ND enables etcd encryption at rest for Secrets using AES-GCM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Verify etcd encryption is enabled (should be configured by ND platform)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>encryptionconfig<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;aes\|secretbox&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Expected: encryption configuration present</span>
+</code></pre></div>
+<h3 id="backup-encryption">Backup Encryption<a class="headerlink" href="#backup-encryption" title="Permanent link">&para;</a></h3>
+<p>ND backups are encrypted with a passphrase using AES-256 when encryption is enabled. Configure under <strong>Admin Console &gt; Operations &gt; Backup &gt; Settings &gt; Enable Encryption</strong>:</p>
+<ol>
+<li>Set a strong encryption passphrase (20+ characters, stored in vault).</li>
+<li>Click <strong>Save</strong>.</li>
+</ol>
+<p><strong>Critical:</strong> The passphrase is required at restore time. Without it, the backup cannot be decrypted. Store the passphrase in vault immediately after setting it.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># The passphrase can also be set via CLI</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>acs<span class="w"> </span>backup<span class="w"> </span>settings<span class="w"> </span>--encryption-passphrase-file<span class="w"> </span>/home/ndadmin/.nd-backup-pass
+</code></pre></div>
+<h3 id="vm-level-disk-encryption">VM-Level Disk Encryption<a class="headerlink" href="#vm-level-disk-encryption" title="Permanent link">&para;</a></h3>
+<p>The ND nodes' local storage is not encrypted at the OS level by default. Add encryption at the hypervisor layer:
+- <strong>VMware</strong>: enable vSphere VM Encryption on the ND VM datastore. This encrypts all VM disks including the ND data volumes.
+- <strong>Physical appliance</strong>: the Cisco UCS C220 M6 appliance supports self-encrypting drives (SED) with Cisco SafeStore.</p>
+<hr />
+<h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
+<p>Track the ND UI certificate expiry to ensure renewal well before expiry:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check certificate expiry</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>nd-dc1.corp.example.com:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-servername<span class="w"> </span>nd-dc1.corp.example.com<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Days until expiry</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">from datetime import datetime</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">import subprocess, re</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">r = subprocess.run([&#39;openssl&#39;,&#39;s_client&#39;,&#39;-connect&#39;,&#39;nd-dc1.corp.example.com:443&#39;,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">  &#39;-servername&#39;,&#39;nd-dc1.corp.example.com&#39;], capture_output=True, input=b&#39;&#39;)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">c = subprocess.run([&#39;openssl&#39;,&#39;x509&#39;,&#39;-noout&#39;,&#39;-enddate&#39;],</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">  input=r.stdout, capture_output=True).stdout.decode()</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">d = re.search(r&#39;notAfter=(.*)&#39;, c).group(1).strip()</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">exp = datetime.strptime(d, &#39;%b %d %H:%M:%S %Y %Z&#39;)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">print(f&#39;Certificate expires in {(exp - datetime.utcnow()).days} days ({exp.date()})&#39;)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">&quot;</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Alert when &lt; 60 days remaining; renew by &lt; 30 days</span>
+</code></pre></div>
+<p>Add this check to the weekly health check procedure and configure monitoring alerts for certificate expiry.</p>
+<hr />
+<h2 id="encryption-summary">Encryption Summary<a class="headerlink" href="#encryption-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Category</th>
+<th>Encryption</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web UI / REST API traffic</td>
+<td>TLS 1.2/1.3 (HTTPS port 443)</td>
+<td>Nginx ingress</td>
+</tr>
+<tr>
+<td>Switch management (NDFC)</td>
+<td>SSH v2</td>
+<td>RSA 2048+</td>
+</tr>
+<tr>
+<td>LDAP authentication traffic</td>
+<td>TLS (LDAPS port 636)</td>
+<td></td>
+</tr>
+<tr>
+<td>SNMP polling traffic</td>
+<td>AES-128 (SNMPv3 authPriv)</td>
+<td></td>
+</tr>
+<tr>
+<td>Cluster inter-node traffic</td>
+<td>mTLS (mutual TLS)</td>
+<td>Kubernetes / etcd</td>
+</tr>
+<tr>
+<td>Stored credentials (DB)</td>
+<td>AES-GCM (Kubernetes Secrets + etcd encryption)</td>
+<td>ND internal key mgmt</td>
+</tr>
+<tr>
+<td>Backup archives</td>
+<td>AES-256 (passphrase-based)</td>
+<td>ND backup encryption</td>
+</tr>
+<tr>
+<td>VM disks</td>
+<td>vSphere VM Encryption or SED</td>
+<td>Hypervisor / hardware</td>
+</tr>
+</tbody>
+</table>
 
 
 
