@@ -1,29 +1,25 @@
 # VMware Platform
 
-The VMware platform is the core virtualization layer used to run, manage, protect, and operate virtual machines across enterprise infrastructure. The main components usually include **vCenter**, **ESXi**, **vSAN**, **NSX**, and sometimes **VMware Cloud Foundation**.
+<div class="kb-summary">
+VMware platform knowledge base covering the full VMware stack — vCenter, ESXi, vSAN, NSX, VCF, VxRail, Horizon, SRM, vSphere Replication, and the Aria Suite. Includes architecture references, operational procedures, CLI commands, health checks, lifecycle management, and troubleshooting guides.
+</div>
 
-<div class="kb-grid kb-grid-11">
-
+<div class="kb-grid kb-grid-3">
 <a class="kb-card" href="vmware-cloud-foundation/"><strong>VMware Cloud Foundation</strong><span>Full-stack SDDC — SDDC Manager, workload domains, lifecycle, and operations.</span></a>
 <a class="kb-card" href="vcenter/"><strong>vCenter</strong><span>Inventory, permissions, alarms, certificates, backup, and lifecycle.</span></a>
 <a class="kb-card" href="esxi/"><strong>ESXi</strong><span>Host health, networking, storage paths, logs, maintenance, and patching.</span></a>
+<a class="kb-card" href="vxrail/"><strong>VxRail</strong><span>HCI appliance — VxRail Manager, lifecycle, hardware, operations, and troubleshooting.</span></a>
 <a class="kb-card" href="vsan/"><strong>vSAN</strong><span>Storage policies, disk groups, capacity, resync, health, and performance.</span></a>
 <a class="kb-card" href="nsx/"><strong>NSX</strong><span>Segments, gateways, distributed firewall, routing, and edge nodes.</span></a>
+<a class="kb-card" href="horizon/"><strong>Horizon (VDI)</strong><span>Virtual desktop infrastructure — connection brokers, pools, session management, and troubleshooting.</span></a>
+<a class="kb-card" href="vsphere-replication/"><strong>vSphere Replication</strong><span>VM replication — configuration, scheduling, RPO management, and failover.</span></a>
+<a class="kb-card" href="srm/"><strong>Site Recovery Manager</strong><span>DR orchestration — recovery plans, failover, failback, and testing.</span></a>
 <a class="kb-card" href="aria-operations/"><strong>Aria Operations</strong><span>Performance monitoring, capacity management, and compliance across the vSphere platform.</span></a>
 <a class="kb-card" href="aria-automation/"><strong>Aria Automation</strong><span>Infrastructure automation, service catalogue, and IaC pipeline integration.</span></a>
 <a class="kb-card" href="aria-suite-lifecycle/"><strong>Aria Suite Lifecycle</strong><span>Deployment, patching, certificate management, and upgrade orchestration for all Aria products.</span></a>
 <a class="kb-card" href="aria-operations-for-logs/"><strong>Aria Ops for Logs</strong><span>Log ingestion, querying, alerting, and integration for VMware infrastructure logs.</span></a>
-
-
-<a class="kb-card" href="health-checks/">
-  <strong>Health Checks</strong>
-  <span>Health check procedures and validation steps.</span>
-</a>
-
-<a class="kb-card" href="topics/">
-  <strong>Topics</strong>
-  <span>Topics notes, checks, commands, and references.</span>
-</a>
+<a class="kb-card" href="aria-operations-for-networks/"><strong>Aria Operations for Networks</strong><span>Network visibility, flow analysis, troubleshooting, and compliance across virtual and physical networks.</span></a>
+<a class="kb-card" href="tanzu/"><strong>Tanzu</strong><span>VMware Kubernetes platform — cluster management, workload deployment, and integration with vSphere.</span></a>
 </div>
 ## Key Components
 
