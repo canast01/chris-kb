@@ -1,5 +1,22 @@
 # Active Directory — Diagnostics
 
+## DC Diagnostic Tool Map
+
+```mermaid
+graph TD
+    diag["AD Diagnostics"]
+    diag --> dcdiag["dcdiag /test:all /v\n(DC health — services, DNS,\nreplication, connectivity)"]
+    diag --> repadmin["repadmin /replsummary\n(replication partner health)"]
+    diag --> nltest["nltest /dsgetdc\nnltest /sc_verify\n(DC locator + secure channel)"]
+    diag --> eventLogs["Event Log queries\n(Directory Service / Security / System)"]
+    diag --> ldapTest["LDAP diagnostics\nldapsearch / openssl s_client :636"]
+    diag --> dnsTest["DNS checks\nnslookup SRV records\ndcdiag /test:dns"]
+
+    dcdiag --> replication["Identifies: replication\nDNS registration, connectivity"]
+    repadmin --> replErrors["Identifies: error codes\n1722 / 8453 / 8614"]
+    eventLogs --> kerbErrors["Event 4768/4769/4771\n(Kerberos) / 4624/4625 (logon)\n2889 (LDAP unsigned bind)"]
+```
+
 ## Dcdiag Tests
 
 ```cmd

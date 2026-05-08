@@ -250,12 +250,47 @@ group start-resync --gname <cg_name>
 
 Set alerts at the RPMA level and forward events to SIEM via syslog.
 
-| Threshold | Action |
-|---|---|
-| > 70% | Warning alert; review write rate and link bandwidth |
-| > 80% | Critical alert; plan immediate journal expansion |
-| > 90% | Emergency; expand journal before replication halts |
-| 100% | Replication halted; full resync required after expansion |
+| Threshold | Action | Why |
+|---|---|---|
+| > 70% | Warning alert; review write rate and link bandwidth | Early warning allows journal expansion before emergency action |
+| > 80% | Critical alert; plan immediate journal expansion | Journal drain rate must exceed write rate to prevent overflow |
+| > 90% | Emergency; expand journal before replication halts | At 100%, RP halts replication and a full resync is required |
+| 100% | Replication halted; full resync required after expansion | Full overflow destroys the recovery window — full resync is the only recovery path |
+
+```mermaid
+flowchart TD
+    journalFill["Journal Fill Level\n(monitor continuously)"]
+    level70{"Fill Level?"}
+    ok["OK\n< 70% — Normal operation"]
+    warning["Warning\n70–80%\nReview write rate and link"]
+    critical["Critical\n80–90%\nPlan immediate expansion"]
+    emergency["Emergency\n> 90%\nExpand now or replication halts"]
+    halted["Replication Halted\n100% — Full resync required"]
+
+    checkLink["Check Link Bandwidth\nlinks statistics"]
+    expandJournal["Expand Journal LUN\non Storage Array"]
+    fullResync["Force Full Resync\ngroup start-resync"]
+
+    journalFill --> level70
+    level70 -->|"< 70%"| ok
+    level70 -->|"70–80%"| warning
+    level70 -->|"80–90%"| critical
+    level70 -->|"> 90%"| emergency
+    level70 -->|"100%"| halted
+
+    warning --> checkLink
+    critical --> expandJournal
+    emergency --> expandJournal
+    halted --> expandJournal
+    expandJournal --> fullResync
+
+    style ok fill:#15803d,color:#fff
+    style warning fill:#b45309,color:#fff
+    style critical fill:#be123c,color:#fff
+    style emergency fill:#be123c,color:#fff
+    style halted fill:#6b7280,color:#fff
+    style fullResync fill:#7c3aed,color:#fff
+```
 
 ```bash
 # Set journal alarm threshold (via RPMA / boxmgmt)

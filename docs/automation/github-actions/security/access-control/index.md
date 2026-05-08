@@ -8,7 +8,23 @@ Content to be added.
 
 ## Secrets Management
 
-Secrets are encrypted environment variables stored in GitHub and injected into workflow runs.
+```mermaid
+flowchart TD
+    wfTrigger(["Workflow triggered\non: push / pull_request"])
+    jobCtx["Job context\nruns-on: ubuntu-24.04\nenvironment: production"]
+    secretCtx["Secrets context\n${{ secrets.PROD_DB_PASSWORD }}"]
+    envSecret["Environment secret\nRepo Settings → Environments → production\nRequired reviewers enforced"]
+    repoSecret["Repository secret\nRepo Settings → Secrets\nAll workflows in repo"]
+    orgSecret["Organisation secret\nOrg Settings → Secrets\nGranted repos only"]
+    step["Step execution\nenv: VAR=${{ secrets.X }}\nmasked in logs as ***"]
+
+    wfTrigger --> jobCtx
+    jobCtx --> secretCtx
+    envSecret --> secretCtx
+    repoSecret --> secretCtx
+    orgSecret --> secretCtx
+    secretCtx --> step
+```
 
 ```yaml
 # Reference a secret in a workflow step

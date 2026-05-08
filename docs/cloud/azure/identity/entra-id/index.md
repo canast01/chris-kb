@@ -2,6 +2,25 @@
 
 Microsoft Entra ID (formerly Azure Active Directory) is the cloud-based identity and access management service. It provides authentication, authorisation, and directory services for Azure resources, Microsoft 365, and integrated SaaS applications.
 
+## Entra ID Identity Architecture
+
+```mermaid
+flowchart TD
+    onpremAD["On-Premises AD\nSource of truth"]
+    adConnect["Azure AD Connect\nDelta sync every 30 min"]
+    entraId["Microsoft Entra ID\nCloud identity plane"]
+    sso["SSO\nMicrosoft 365 · SaaS · Azure"]
+    ca["Conditional Access\nMFA · compliant device · location"]
+    pim["PIM\nJIT privileged access"]
+    mfa["MFA\nAuthenticator · FIDO2"]
+
+    onpremAD -->|"Hybrid sync"| adConnect --> entraId
+    entraId --> sso
+    entraId --> ca
+    entraId --> pim
+    ca --> mfa
+```
+
 ## Tenant Overview
 
 ```bash

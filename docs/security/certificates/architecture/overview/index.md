@@ -23,6 +23,26 @@ graph TB
   class CRL mgmt
 ```
 
+## Certificate Lifecycle Flow
+
+```mermaid
+flowchart TD
+    csrGen["CSR Generation\n(key pair on target host / HSM)"]
+    csrGen --> submit["Submit CSR to CA\n(ADCS / DigiCert / Venafi)"]
+    submit --> caSign["CA validates and signs\n(issues certificate)"]
+    caSign --> deploy["Deploy to target service\n(nginx / IIS / F5 / Java keystore)"]
+    deploy --> monitor["Continuous expiry monitoring\n(Venafi / openssl / Prometheus)"]
+    monitor --> renewWindow{"Within renewal\nwindow?"}
+    renewWindow -->|"yes — 30 days"| renewDecision{"Automated\nrenewal?"}
+    renewWindow -->|"no"| monitor
+    renewDecision -->|"yes — Venafi / ACME"| csrGen
+    renewDecision -->|"no — manual"| manualRenew["Manual renewal procedure\n(owner notified)"]
+    manualRenew --> csrGen
+    monitor -->|"key compromise\nor decommission"| revoke["Revoke via CA\nPublish CRL + OCSP update"]
+```
+
+---
+
 ## ADCS Role Components
 
 | Component | Description |

@@ -2,6 +2,22 @@
 
 An Azure Virtual Network (VNet) is the fundamental building block for private networking in Azure. Resources in a VNet can communicate with each other, with on-premises networks, and with the internet, all controlled by routing and security policies.
 
+## Hub-and-Spoke VNet Topology
+
+```mermaid
+flowchart TD
+    onprem["On-Premises\nExpressRoute / VPN"]
+    hub["Hub VNet\nAzure Firewall · Bastion · VPN GW · DNS"]
+    spoke1["Spoke VNet 1\nWorkload A — app · db"]
+    spoke2["Spoke VNet 2\nWorkload B — app · db"]
+    spoke3["Spoke VNet 3\nShared Services"]
+
+    onprem <-->|"ER / VPN"| hub
+    hub <-->|"VNet Peering"| spoke1
+    hub <-->|"VNet Peering"| spoke2
+    hub <-->|"VNet Peering"| spoke3
+```
+
 ## VNet Creation
 
 ```bash

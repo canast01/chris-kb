@@ -28,6 +28,23 @@ The token expires when the workflow job finishes. Grant only the permissions nee
 
 ## OIDC — Keyless Cloud Authentication
 
+```mermaid
+sequenceDiagram
+    participant WF as Workflow Job\n(GitHub Runner)
+    participant GH as GitHub Actions\nOIDC Provider
+    participant AWS as AWS IAM / GCP WIF\nCloud Provider
+    participant App as AWS CLI / GCP SDK\nActual API call
+
+    WF->>GH: Request OIDC token\n(permissions: id-token: write)
+    GH-->>WF: Short-lived JWT token\n(sub: repo:org/repo:ref:refs/heads/main)
+    WF->>AWS: AssumeRoleWithWebIdentity\n(JWT + role ARN)
+    AWS->>AWS: Validate JWT signature\nCheck sub / aud claims against trust policy
+    AWS-->>WF: Temporary credentials\n(access key + secret + session token)
+    WF->>App: AWS CLI / API call\nusing temporary credentials
+    App-->>WF: Response
+    Note over WF,AWS: No long-lived secrets stored in GitHub
+```
+
 OIDC lets workflows authenticate to cloud providers without storing long-lived credentials as secrets.
 
 ```yaml
@@ -80,3 +97,16 @@ PATs are used when `GITHUB_TOKEN` lacks sufficient scope (e.g., cross-repository
 | OIDC | Cloud provider | Token per request | AWS, GCP, Azure — no stored secrets |
 | Fine-grained PAT | Selected repos | Days to years | Cross-repo, admin operations |
 | Classic PAT | All repos | Set by user | Legacy — avoid where possible |
+
+```mermaid
+flowchart LR
+    githubToken["GITHUB_TOKEN\nAuto-generated per run\nScoped to repo"]
+    oidc["OIDC JWT\nShort-lived token\nno stored secrets"]
+    pat["Fine-grained PAT\nStored as repo secret\nDays to years"]
+    classicPat["Classic PAT\nBroad scope\nAvoid — legacy"]
+
+    githubToken -->|"best for: default API\npackages write"| ghApi["GitHub API\nGHCR / Releases"]
+    oidc -->|"best for: cloud deploy"| cloudProv["AWS / GCP / Azure"]
+    pat -->|"best for: cross-repo\noperations"| otherRepo["Other repos\nadmin ops"]
+    classicPat -.->|"avoid"| legacy["Legacy only"]
+```
