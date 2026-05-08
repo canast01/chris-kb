@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snmp-v3-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -713,6 +724,140 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="SNMP v3 Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#remove-default-snmp-community-strings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove Default SNMP Community Strings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-snmp-v3-from-monitoring-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test SNMP v3 from Monitoring Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SSH Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disable-telnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable Telnet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssh-host-key-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Host Key Rotation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#https-tls-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTPS / TLS Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTPS / TLS Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tls-certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Certificate Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLS Certificate Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate-a-certificate-signing-request-csr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate a Certificate Signing Request (CSR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-a-signed-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import a Signed Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -725,13 +870,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Disable Unused Protocols">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocol-compliance-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Compliance Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#encryption-standards" class="md-nav__link">
+  <a href="#encryption-standards-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Encryption Standards
+        Encryption Standards Summary
       
     </span>
   </a>
@@ -739,10 +901,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#tls-and-certificate-management" class="md-nav__link">
+  <a href="#related-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TLS and Certificate Management
+        Related Configuration
       
     </span>
   </a>
@@ -774,61 +936,261 @@
 <p>Part of the <a href="../">Security</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Encryption in Brocade FabricOS applies to the management plane — protecting switch management traffic (SSH, HTTPS, SNMP v3) and ensuring data confidentiality for audit logs in transit to a SIEM. FC data frames in the SAN fabric itself are not encrypted at the switch level (fabric-layer FC encryption is handled by inline encryption appliances or host-based encryption).</p>
+<p>Key areas:</p>
+<ul>
+<li><strong>SNMP v3</strong> — encrypted and authenticated SNMP (replacing SNMPv1/v2c)</li>
+<li><strong>SSH</strong> — management access; Telnet must be disabled</li>
+<li><strong>HTTPS</strong> — web management (Web Tools / REST API); HTTP must be disabled</li>
+<li><strong>TLS certificates</strong> — certificate management for HTTPS and inter-switch authentication</li>
+<li><strong>Secure Fabric OS</strong> — optional policy for encrypting management plane communications between switches</li>
+</ul>
+<hr />
 <h2 id="snmp-v3-configuration">SNMP v3 Configuration<a class="headerlink" href="#snmp-v3-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Configure SNMP v3 interactively</span>
+<p>SNMP v3 provides authentication (SHA) and privacy (AES-128) for switch monitoring. All monitoring platforms (SANnav, Nagios, Zabbix, etc.) must use SNMP v3 — never SNMPv1 or SNMPv2c.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Configure SNMP v3 interactively (recommended — avoids passwords in shell history)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>mibCapability
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Follow prompts to configure:</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># - User name</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># - Authentication type: SHA</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># - Authentication password</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># - Privacy type: AES-128</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># - Privacy password</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># - Access level: readOnly or readWrite</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Verify SNMP configuration</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>snmpconfig<span class="w"> </span>--show
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># The interactive wizard prompts for:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># - SNMP v3 user name</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># - Authentication protocol: SHA (required — do not select MD5)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># - Authentication password (minimum 8 characters)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># - Privacy protocol: AES-128 (required — do not select DES)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># - Privacy password (minimum 8 characters)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># - Access level: readOnly (monitoring) or readWrite (management)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Verify SNMP configuration</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>snmpconfig<span class="w"> </span>--show
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Verify SNMP v3 traps are enabled</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>snmpconfig<span class="w"> </span>--show<span class="w"> </span>traps
+</code></pre></div>
+<h3 id="remove-default-snmp-community-strings">Remove Default SNMP Community Strings<a class="headerlink" href="#remove-default-snmp-community-strings" title="Permanent link">&para;</a></h3>
+<p>Legacy community strings (<code>public</code>, <code>private</code>) are present by default on factory switches. Remove them before connecting to any network.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show current community strings</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snmpconfig<span class="w"> </span>--show<span class="w"> </span>snmpv1
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Remove default community strings (replace &#39;public&#39; with actual string names)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snmpconfig<span class="w"> </span>--delete<span class="w"> </span>snmpv1<span class="w"> </span>-user<span class="w"> </span>public
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>snmpconfig<span class="w"> </span>--delete<span class="w"> </span>snmpv1<span class="w"> </span>-user<span class="w"> </span>private
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Verify no community strings remain</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>snmpconfig<span class="w"> </span>--show<span class="w"> </span>snmpv1
+</code></pre></div>
+<h3 id="test-snmp-v3-from-monitoring-server">Test SNMP v3 from Monitoring Server<a class="headerlink" href="#test-snmp-v3-from-monitoring-server" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From the monitoring server — verify SNMP v3 connectivity</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;snmp-username&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-l<span class="w"> </span>authPriv<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>&lt;switch-ip&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.1.1.0
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expected: sysDescr value showing FabricOS and switch platform</span>
+</code></pre></div>
+<hr />
+<h2 id="ssh-configuration">SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permanent link">&para;</a></h2>
+<p>SSH is the only permitted management protocol for CLI access. Telnet must be disabled on all production switches.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check SSH status and configuration</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sshutil<span class="w"> </span>--show
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Generate or regenerate SSH host keys (RSA 2048-bit minimum)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Generate an ECDSA host key (preferred for newer FOS versions)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>ecdsa
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify Telnet is disabled (check sshutil output for telnetd state)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>sshutil<span class="w"> </span>--show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>telnet
+</code></pre></div>
+<h3 id="disable-telnet">Disable Telnet<a class="headerlink" href="#disable-telnet" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Disable Telnet via configure (requires admin role)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>configure
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># At &quot;Fabric parameters&quot; prompt: press Enter (no change)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># At &quot;System services&quot; prompt: enter Y</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># At &quot;Telnet service&quot; prompt: enter 0 (disable)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Complete configure wizard</span>
+</code></pre></div>
+<p>Verify Telnet is disabled by attempting a Telnet connection from a management workstation — the connection should be refused.</p>
+<h3 id="ssh-host-key-rotation">SSH Host Key Rotation<a class="headerlink" href="#ssh-host-key-rotation" title="Permanent link">&para;</a></h3>
+<p>Rotate SSH host keys annually or after any suspected key compromise:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate new RSA host key</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># After key rotation, update known_hosts on all management workstations</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># and jump hosts that connect to this switch</span>
+</code></pre></div>
+<hr />
+<h2 id="https-tls-configuration">HTTPS / TLS Configuration<a class="headerlink" href="#https-tls-configuration" title="Permanent link">&para;</a></h2>
+<p>Web Tools and the FabricOS REST API use HTTPS. HTTP must be disabled so that management traffic cannot be intercepted.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disable HTTP and enable HTTPS</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>httpcfg<span class="w"> </span>--set<span class="w"> </span>-https<span class="w"> </span><span class="m">1</span><span class="w">    </span><span class="c1"># Enable HTTPS</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>httpcfg<span class="w"> </span>--set<span class="w"> </span>-http<span class="w"> </span><span class="m">0</span><span class="w">     </span><span class="c1"># Disable HTTP</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify HTTP/HTTPS state</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>httpcfg<span class="w"> </span>--show
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check the current TLS certificate in use</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>seccertmgmt<span class="w"> </span>--show
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Show certificate details (subject, expiry)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https
+</code></pre></div>
+<h3 id="tls-certificate-management">TLS Certificate Management<a class="headerlink" href="#tls-certificate-management" title="Permanent link">&para;</a></h3>
+<p>Brocade FOS supports self-signed certificates (default) and CA-signed certificates. Use CA-signed certificates in environments with automated certificate validation.</p>
+<h4 id="generate-a-certificate-signing-request-csr">Generate a Certificate Signing Request (CSR)<a class="headerlink" href="#generate-a-certificate-signing-request-csr" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Generate a CSR for the HTTPS certificate</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>seccertmgmt<span class="w"> </span>--action<span class="w"> </span>gencsr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-type<span class="w"> </span>https<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-country<span class="w"> </span>GB<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-state<span class="w"> </span><span class="s2">&quot;England&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>-locality<span class="w"> </span><span class="s2">&quot;London&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-org<span class="w"> </span><span class="s2">&quot;Company Name&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>-orgunit<span class="w"> </span><span class="s2">&quot;Infrastructure&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>-cn<span class="w"> </span>&lt;switch-fqdn&gt;
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># The CSR is saved to flash — export it</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>seccertmgmt<span class="w"> </span>--export<span class="w"> </span>-type<span class="w"> </span>csr<span class="w"> </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/switch.csr
+</code></pre></div>
+<h4 id="import-a-signed-certificate">Import a Signed Certificate<a class="headerlink" href="#import-a-signed-certificate" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Import the CA-signed certificate</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>seccertmgmt<span class="w"> </span>--import<span class="w"> </span>-type<span class="w"> </span>https<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/switch.crt
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Import the CA certificate chain (if required by the CA)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>seccertmgmt<span class="w"> </span>--import<span class="w"> </span>-type<span class="w"> </span>ca<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/ca-chain.crt
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Activate the new certificate (requires web service restart)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>seccertmgmt<span class="w"> </span>--activate<span class="w"> </span>-type<span class="w"> </span>https
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Verify the certificate is active</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https
+</code></pre></div>
+<h4 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h4>
+<p>Track certificate expiry dates in CMDB. MAPS does not natively alert on certificate expiry — monitor via SANnav or an external certificate monitoring tool.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># View current certificate expiry</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>expir
 </code></pre></div>
 <hr />
 <h2 id="disable-unused-protocols">Disable Unused Protocols<a class="headerlink" href="#disable-unused-protocols" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Disable Telnet</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Via configure:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>configure
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># At &quot;Secure mode&quot; prompt: enable</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Disable HTTP (enable HTTPS only)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>httpd<span class="w"> </span>--disable<span class="w">   </span><span class="c1"># Disables the web server</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>httpcfg<span class="w"> </span>--set<span class="w"> </span>-https<span class="w"> </span><span class="m">1</span><span class="w">  </span><span class="c1"># Enable HTTPS</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify active services</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>portshow<span class="w">   </span><span class="c1"># Review management service ports</span>
+<p>Reduce the management attack surface by disabling all unnecessary services.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify all management protocol states</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sshutil<span class="w"> </span>--show<span class="w">      </span><span class="c1"># SSH: should be enabled; Telnet: should be disabled</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>httpcfg<span class="w"> </span>--show<span class="w">      </span><span class="c1"># HTTP: disabled; HTTPS: enabled</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>snmpconfig<span class="w"> </span>--show<span class="w">   </span><span class="c1"># SNMP v3 configured; v1/v2c community strings removed</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Disable RSH (remote shell — insecure legacy protocol)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>configure
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># At &quot;RSH service&quot; prompt: enter 0 (disable)</span>
 </code></pre></div>
+<h3 id="protocol-compliance-table">Protocol Compliance Table<a class="headerlink" href="#protocol-compliance-table" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Required State</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH</td>
+<td>Enabled</td>
+<td><code>sshutil --show</code></td>
+</tr>
+<tr>
+<td>Telnet</td>
+<td>Disabled</td>
+<td><code>sshutil --show</code>; confirm refused connections</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>Disabled</td>
+<td><code>httpcfg --show</code></td>
+</tr>
+<tr>
+<td>HTTPS</td>
+<td>Enabled</td>
+<td><code>httpcfg --show</code></td>
+</tr>
+<tr>
+<td>SNMP v3</td>
+<td>Enabled</td>
+<td><code>snmpconfig --show</code></td>
+</tr>
+<tr>
+<td>SNMP v1/v2c</td>
+<td>Disabled / no community strings</td>
+<td><code>snmpconfig --show snmpv1</code></td>
+</tr>
+<tr>
+<td>RSH</td>
+<td>Disabled</td>
+<td><code>configure</code> output</td>
+</tr>
+<tr>
+<td>FTP</td>
+<td>Disabled (use SCP)</td>
+<td><code>configure</code> output</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="encryption-standards">Encryption Standards<a class="headerlink" href="#encryption-standards" title="Permanent link">&para;</a></h2>
+<h2 id="encryption-standards-summary">Encryption Standards Summary<a class="headerlink" href="#encryption-standards-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Control</th>
 <th>Standard</th>
+<th>Verification Command</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>Management CLI</td>
+<td>SSH only — Telnet disabled</td>
+<td><code>sshutil --show</code></td>
+</tr>
+<tr>
+<td>Web management</td>
+<td>HTTPS only — HTTP disabled</td>
+<td><code>httpcfg --show</code></td>
+</tr>
+<tr>
 <td>SNMP</td>
-<td>SNMPv3 only; community strings in vault; quarterly rotation</td>
+<td>SNMPv3 (SHA auth, AES-128 priv) — v1/v2c disabled</td>
+<td><code>snmpconfig --show</code></td>
 </tr>
 <tr>
-<td>Management access</td>
-<td>SSH only; Telnet disabled</td>
+<td>SSH key type</td>
+<td>RSA 2048+ or ECDSA</td>
+<td><code>sshutil --show</code></td>
 </tr>
 <tr>
-<td>HTTPS</td>
-<td>HTTP disabled; HTTPS enforced</td>
+<td>TLS certificate</td>
+<td>CA-signed preferred; self-signed acceptable for internal</td>
+<td><code>seccertmgmt --show</code></td>
+</tr>
+<tr>
+<td>Password rotation</td>
+<td>SNMP passwords rotated quarterly; stored in vault</td>
+<td>Vault policy</td>
+</tr>
+<tr>
+<td>Config backup transfer</td>
+<td>SCP only — not FTP</td>
+<td><code>configupload</code> SCP syntax</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="tls-and-certificate-management">TLS and Certificate Management<a class="headerlink" href="#tls-and-certificate-management" title="Permanent link">&para;</a></h2>
-<p>Add TLS certificate configuration and renewal procedures here as they are defined.</p>
+<h2 id="related-configuration">Related Configuration<a class="headerlink" href="#related-configuration" title="Permanent link">&para;</a></h2>
+<p>Encryption settings work in conjunction with:</p>
+<ul>
+<li><a href="../authentication/">Authentication</a> — RADIUS/TACACS+ for central identity</li>
+<li><a href="../access-control/">Access Control</a> — IPfilter to limit management plane reachability</li>
+<li><a href="../hardening/">Hardening</a> — Full hardening checklist referencing all security controls</li>
+</ul>
 
 
 

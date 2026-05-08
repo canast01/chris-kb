@@ -717,10 +717,160 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#onefs-distributed-file-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OneFS Distributed File System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OneFS Distributed File System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-global-namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single Global Namespace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distributed-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#locking-and-coherence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Locking and Coherence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ha-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
         HA Topology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HA Topology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protection-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Levels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-pool-and-tier-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Pool and Tier Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#front-end-client-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Front-End (Client) Network
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#back-end-cluster-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Back-End (Cluster) Network
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smartconnect-dns-load-balancing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SmartConnect — DNS Load Balancing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Zones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Path
       
     </span>
   </a>
@@ -732,6 +882,34 @@
     <span class="md-ellipsis">
       
         Connectivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connectivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-design-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Design Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-hardware-families" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Hardware Families
       
     </span>
   </a>
@@ -773,50 +951,348 @@
   class N1,N2,N3,NN ctrl
   class INT,SC net
   class NFS,SMB,HDFS host</code></pre>
+<hr />
+<h2 id="onefs-distributed-file-system">OneFS Distributed File System<a class="headerlink" href="#onefs-distributed-file-system" title="Permanent link">&para;</a></h2>
+<p>OneFS is the operating system that runs identically on every node in the cluster. There is no single primary node or metadata controller — all nodes share responsibility for metadata, data, and client I/O. Key architectural properties:</p>
+<h3 id="single-global-namespace">Single Global Namespace<a class="headerlink" href="#single-global-namespace" title="Permanent link">&para;</a></h3>
+<p>All data lives under <code>/ifs</code>. There are no volumes, LUNs, or mount points within the cluster file system — the entire cluster is one flat namespace. Directories under <code>/ifs</code> can span multiple node pools and be managed with different protection levels, tiering policies, and quotas without any partitioning visible to clients.</p>
+<h3 id="distributed-metadata">Distributed Metadata<a class="headerlink" href="#distributed-metadata" title="Permanent link">&para;</a></h3>
+<p>File metadata (inode information, block maps, directory entries) is distributed across all nodes using the same erasure-coded protection as file data. No single node holds all the metadata for a directory — this is what prevents OneFS from having a metadata bottleneck as the cluster grows.</p>
+<h3 id="locking-and-coherence">Locking and Coherence<a class="headerlink" href="#locking-and-coherence" title="Permanent link">&para;</a></h3>
+<p>OneFS implements a distributed locking mechanism to maintain cache coherence. When a client modifies a file, the lock is held on a specific node (the owning node for that I/O operation), and data is written through to the cluster. NFS write caching and SMB opportunistic locks (oplocks) are managed within this distributed locking framework.</p>
+<hr />
 <h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
 <p>OneFS implements redundancy at the file system level rather than through a primary/secondary controller model:</p>
 <ul>
-<li><strong>N+1 / N+2 / N+3 protection</strong>: Data is protected using a distributed Reed-Solomon-like scheme. Protection level (N+1 to N+4) is set per directory or at the pool level. N+2 can survive two simultaneous node or drive failures.</li>
+<li><strong>N+1 / N+2 / N+3 protection</strong>: Data is protected using a distributed Reed-Solomon-like erasure coding scheme. Protection level (N+1 to N+4) is set per directory or at the pool level. N+2 can survive two simultaneous node or drive failures without data loss.</li>
 <li><strong>No single controller</strong>: All nodes are symmetric. Losing a single node triggers a <strong>SMARTFAIL</strong> process where OneFS rebalances the data from the failed node across remaining nodes.</li>
-<li><strong>Intra-cluster network (back-end)</strong>: Nodes are connected via a dedicated back-end InfiniBand or 10/25 GbE network for inter-node data and metadata traffic. This is separate from the front-end client network.</li>
-<li><strong>Quorum</strong>: OneFS requires a strict majority of nodes to be online for writes. Read access continues with fewer nodes but write quorum must be maintained.</li>
-<li><strong>FlexProtect</strong>: Dynamic protection rebalancing; continuously adjusts data layout as nodes are added or removed.</li>
+<li><strong>Intra-cluster network (back-end)</strong>: Nodes are connected via a dedicated back-end InfiniBand or 10/25 GbE network for inter-node data and metadata traffic. This network must be isolated from client (front-end) traffic.</li>
+<li><strong>Quorum</strong>: OneFS requires a strict majority of nodes to be online for write operations. Read access continues with fewer nodes, but write quorum must be maintained to prevent split-brain.</li>
+<li><strong>FlexProtect</strong>: Dynamic protection rebalancing; continuously adjusts data layout as nodes are added, removed, or SmartFailed.</li>
 </ul>
+<h3 id="protection-levels">Protection Levels<a class="headerlink" href="#protection-levels" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Survives</th>
+<th>Overhead</th>
+<th>Recommended Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N+1</td>
+<td>1 node or drive failure</td>
+<td>~33% (for 3-node cluster)</td>
+<td>Minimum for any production cluster</td>
+</tr>
+<tr>
+<td>N+2</td>
+<td>2 simultaneous failures</td>
+<td>Variable; lower on larger clusters</td>
+<td>Standard recommendation for production</td>
+</tr>
+<tr>
+<td>N+3</td>
+<td>3 simultaneous failures</td>
+<td>Higher; suitable for large clusters</td>
+<td>High-value data; archive clusters</td>
+</tr>
+<tr>
+<td>N+4</td>
+<td>4 simultaneous failures</td>
+<td>Highest</td>
+<td>Regulatory or compliance data</td>
+</tr>
+<tr>
+<td>2x (mirroring)</td>
+<td>Any 1 full copy lost</td>
+<td>100%</td>
+<td>Small clusters or metadata-heavy workloads</td>
+</tr>
+</tbody>
+</table>
+<p>Protection level is set on a directory basis using the <code>isi set</code> command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># View the protection level of a directory</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>get<span class="w"> </span>-D<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>protection
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Set N+2 protection on a directory</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-R<span class="w"> </span>-p<span class="w"> </span>+2<span class="w"> </span>/ifs/data/project1
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Set 2x mirroring on a directory (e.g., for metadata-heavy paths)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-R<span class="w"> </span>-p<span class="w"> </span>2x<span class="w"> </span>/ifs/data/critical-metadata/
+</code></pre></div>
+<h3 id="node-pool-and-tier-architecture">Node Pool and Tier Architecture<a class="headerlink" href="#node-pool-and-tier-architecture" title="Permanent link">&para;</a></h3>
+<p>Nodes of the same hardware generation and type form a <strong>node pool</strong>. Multiple node pools of different types (SSD, SAS, SATA/NL-SAS) can be grouped into <strong>tiers</strong>. File pool policies (SmartPools) control which tier data is placed on based on access time, file type, or custom criteria.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cluster
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── Tier: Performance
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   └── Node Pool: F-series NVMe (6 nodes)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>├── Tier: Capacity
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   └── Node Pool: H-series SAS+SSD (12 nodes)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>└── Tier: Archive
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    └── Node Pool: A-series NL-SAS (6 nodes)
+</code></pre></div>
+<p>Data written to a directory is placed in the node pool designated by the file pool policy for that path. SmartPools automatically migrates data between tiers as it ages (based on last-access time or modification time).</p>
+<hr />
+<h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="front-end-client-network">Front-End (Client) Network<a class="headerlink" href="#front-end-client-network" title="Permanent link">&para;</a></h3>
+<p>Each node has one or more front-end network interfaces (10 GbE or 25 GbE) that carry client NFS, SMB, S3, and HDFS traffic. All front-end interfaces across all nodes participate in SmartConnect, which distributes client connections across nodes using DNS-based load balancing.</p>
+<p>Front-end interfaces are assigned to <strong>IP pools</strong> within <strong>subnets</strong>. Each <strong>access zone</strong> is associated with one or more IP pools, creating a logical boundary between client groups.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all configured subnets</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>network<span class="w"> </span>subnets<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List all IP pools and their zone assignments</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List all network interfaces (front-end and back-end)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list
+</code></pre></div>
+<h3 id="back-end-cluster-network">Back-End (Cluster) Network<a class="headerlink" href="#back-end-cluster-network" title="Permanent link">&para;</a></h3>
+<p>The back-end network is dedicated to inter-node communication: distributed locking, metadata updates, data block replication, and management. This network must be on a physically separate switch or VLAN from client traffic. Back-end interfaces are not exposed to clients and are not configurable by the administrator once the cluster is built — they are managed entirely by OneFS.</p>
+<table>
+<thead>
+<tr>
+<th>Generation</th>
+<th>Back-End Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gen 6 nodes (H600, F800, A2000 series)</td>
+<td>40 GbE or InfiniBand</td>
+</tr>
+<tr>
+<td>Gen 7 nodes (H7000, F910, A300 series)</td>
+<td>25/100 GbE</td>
+</tr>
+<tr>
+<td>Gen 8 / PowerScale F600, F900, H700, H7000</td>
+<td>25/100 GbE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="smartconnect-dns-load-balancing">SmartConnect — DNS Load Balancing<a class="headerlink" href="#smartconnect-dns-load-balancing" title="Permanent link">&para;</a></h3>
+<p>SmartConnect uses DNS to distribute client connection requests across the IP addresses in a pool. When a client resolves the SmartConnect zone name (e.g., <code>nfs.lon.storage.example.com</code>), the cluster's DNS service returns one of the pool IPs based on the configured load balancing policy.</p>
+<p><strong>Setup requirements:</strong>
+1. The parent DNS zone (e.g., <code>lon.storage.example.com</code>) must have an NS record delegating the SmartConnect sub-zone to the cluster's nodes.
+2. The SmartConnect service runs on all cluster nodes — any node can answer DNS queries for the SmartConnect zone.
+3. Each access zone must have at least one IP pool with at least 3 IPs for effective load balancing.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View SmartConnect zone configuration for a pool</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>view<span class="w"> </span>&lt;pool_name&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Test SmartConnect DNS resolution</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>nslookup<span class="w"> </span>nfs.lon.storage.example.com<span class="w"> </span>&lt;cluster-node-ip&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List all IP pools and their SmartConnect zone names</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|SC Zone|Policy&quot;</span>
+</code></pre></div>
+<p><strong>Load balancing policies:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Behaviour</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>round-robin</code></td>
+<td>Rotates IPs sequentially across DNS responses</td>
+<td>General-purpose; equal workload distribution</td>
+</tr>
+<tr>
+<td><code>cpu-usage</code></td>
+<td>Directs new connections to the node with lowest CPU</td>
+<td>CPU-bound workloads (heavy NFS operations)</td>
+</tr>
+<tr>
+<td><code>throughput</code></td>
+<td>Directs new connections to the lowest-throughput node</td>
+<td>Throughput-bound workloads (large file transfers)</td>
+</tr>
+<tr>
+<td><code>connection-count</code></td>
+<td>Directs to the node with the fewest active connections</td>
+<td>Many short-lived connections</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="access-zones">Access Zones<a class="headerlink" href="#access-zones" title="Permanent link">&para;</a></h2>
+<p>Access zones are logical partitions of the cluster namespace. Each access zone has:</p>
+<ul>
+<li>Its own root path under <code>/ifs</code></li>
+<li>Its own set of NFS exports, SMB shares, and HDFS settings</li>
+<li>Its own authentication providers (AD, LDAP, local)</li>
+<li>Its own IP pool assignment (SmartConnect zone)</li>
+</ul>
+<p>Access zones enable multi-tenancy on a single physical cluster without requiring separate hardware per tenant.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all access zones</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># View an access zone configuration</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Create an access zone</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>create<span class="w"> </span>MediaZone<span class="w"> </span>--path<span class="w"> </span>/ifs/media
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Assign an IP pool to an access zone</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>modify<span class="w"> </span>&lt;pool_name&gt;<span class="w"> </span>--access-zone<span class="w"> </span>MediaZone
+</code></pre></div>
+<p>Typical access zone design:</p>
+<table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>Path</th>
+<th>Clients</th>
+<th>Auth Provider</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>System</code></td>
+<td><code>/ifs</code></td>
+<td>Administrators</td>
+<td>Local OneFS</td>
+</tr>
+<tr>
+<td><code>MediaZone</code></td>
+<td><code>/ifs/media</code></td>
+<td>Media production hosts</td>
+<td>AD: MEDIA.EXAMPLE.COM</td>
+</tr>
+<tr>
+<td><code>AnalyticsZone</code></td>
+<td><code>/ifs/analytics</code></td>
+<td>Hadoop cluster</td>
+<td>LDAP</td>
+</tr>
+<tr>
+<td><code>BackupZone</code></td>
+<td><code>/ifs/backup</code></td>
+<td>Backup servers</td>
+<td>AD: CORP.EXAMPLE.COM</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="data-path">Data Path<a class="headerlink" href="#data-path" title="Permanent link">&para;</a></h2>
+<p>When a client performs a write operation over NFS or SMB:</p>
+<ol>
+<li>The client connects to a node IP from the SmartConnect pool (via DNS).</li>
+<li>The receiving node (the <strong>initiator node</strong>) accepts the request and determines which nodes hold the stripes for the target file based on the current data layout.</li>
+<li>The initiator node distributes data blocks to the appropriate <strong>storage nodes</strong> across the cluster via the back-end network.</li>
+<li>Parity blocks are computed and written to additional nodes per the configured protection level.</li>
+<li>When all stripes and parity blocks are confirmed written, the write is acknowledged to the client.</li>
+</ol>
+<p>For read operations, the initiator node fetches data from whichever nodes hold the relevant stripes and returns the data to the client. If a node holding required stripes is unavailable, OneFS reconstructs the data from the parity blocks on the remaining nodes.</p>
+<hr />
 <h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Protocol</th>
+<th>Port</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>NFS v3/v4</td>
+<td>NFS v3</td>
+<td>TCP/UDP 2049</td>
 <td>Primary Unix/Linux client protocol; exposed per access zone</td>
 </tr>
 <tr>
+<td>NFS v4</td>
+<td>TCP 2049</td>
+<td>NFSv4 with optional Kerberos security flavors</td>
+</tr>
+<tr>
 <td>SMB 2.x/3.x</td>
+<td>TCP 445</td>
 <td>Windows file sharing; per access zone</td>
 </tr>
 <tr>
 <td>HDFS</td>
+<td>TCP 8020</td>
 <td>Hadoop workloads; maps <code>/ifs</code> paths as HDFS volumes</td>
 </tr>
 <tr>
 <td>S3</td>
-<td>Object storage API over S3-compatible interface; per access zone</td>
+<td>TCP 9020 (HTTP) / 9021 (HTTPS)</td>
+<td>Object storage API; per access zone</td>
 </tr>
 <tr>
 <td>FTP/FTPS</td>
+<td>TCP 21 / 990</td>
 <td>Supported but not recommended for high-throughput workloads</td>
+</tr>
+<tr>
+<td>Management API (PAPI)</td>
+<td>TCP 8080 (HTTP) / 8081 (HTTPS)</td>
+<td>REST API for automation and management</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>TCP 22</td>
+<td>CLI access; restrict to management VLAN</td>
+</tr>
+<tr>
+<td>SNMP</td>
+<td>UDP 161</td>
+<td>Monitoring integration; use SNMP v3 only</td>
+</tr>
+<tr>
+<td>SyncIQ</td>
+<td>TCP 7722</td>
+<td>Cluster-to-cluster replication traffic</td>
 </tr>
 </tbody>
 </table>
-<p>Network design:
-- Front-end client network: 10 or 25 GbE per node; aggregate bandwidth scales linearly with nodes.
-- Back-end cluster network: dedicated InfiniBand (older nodes) or 25/100 GbE; must be isolated from client traffic.
-- SmartConnect DNS delegation: parent zone must delegate the SmartConnect zone to the cluster's back-end node IPs.</p>
+<h3 id="network-design-summary">Network Design Summary<a class="headerlink" href="#network-design-summary" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Front-end client network: 10 or 25 GbE per node; aggregate bandwidth scales linearly with node count.</li>
+<li>Back-end cluster network: dedicated InfiniBand (older nodes) or 25/100 GbE; must be isolated from client traffic.</li>
+<li>SmartConnect DNS delegation: parent zone must have an NS record delegating the SmartConnect zone to the cluster's node IPs.</li>
+<li>Management network: separate or shared with front-end; restrict access via firewall to management VLAN source IPs.</li>
+</ul>
+<hr />
+<h2 id="node-hardware-families">Node Hardware Families<a class="headerlink" href="#node-hardware-families" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Storage Type</th>
+<th>Primary Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-series (F600, F900)</td>
+<td>All-NVMe SSD</td>
+<td>High-IOPS workloads: EDA, genomics, databases</td>
+</tr>
+<tr>
+<td>H-series (H700, H7000)</td>
+<td>NVMe + SAS HDD hybrid</td>
+<td>Mixed workloads: home directories, general NAS</td>
+</tr>
+<tr>
+<td>A-series (A300, A3000)</td>
+<td>NL-SAS (high-density)</td>
+<td>Archive and cold data; long-term retention</td>
+</tr>
+<tr>
+<td>B-series (B100)</td>
+<td>Balanced hybrid</td>
+<td>Entry-level; smaller deployments</td>
+</tr>
+</tbody>
+</table>
+<p>Node pools must contain at least 3 nodes of the same hardware type. Mixing node types within a pool is not supported; mixed-type clusters use separate pools per hardware type.</p>
 
 
 

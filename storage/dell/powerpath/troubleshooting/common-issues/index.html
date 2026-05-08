@@ -728,10 +728,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#device-not-visible" class="md-nav__link">
+  <a href="#device-not-visible-after-lun-provisioning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Device Not Visible
+        Device Not Visible After LUN Provisioning
       
     </span>
   </a>
@@ -772,6 +772,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configuration-not-persisting-across-reboots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Not Persisting Across Reboots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-flapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Flapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dm-multipath-conflict-on-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DM-Multipath Conflict on Linux
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-issues-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -804,58 +837,295 @@
 
 <h1 id="powerpath-common-issues">PowerPath — Common Issues<a class="headerlink" href="#powerpath-common-issues" title="Permanent link">&para;</a></h1>
 <h2 id="dead-paths">Dead Paths<a class="headerlink" href="#dead-paths" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <code>powermt display dev=all</code> shows one or more paths in <code>dead</code> state for a pseudo device.</p>
+<p><strong>Impact:</strong> Reduced path redundancy. I/O continues on surviving <code>alive</code> paths, but failover capacity is reduced. If all paths to a device go dead, I/O to that device will fail.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Identify dead paths</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>dead
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B<span class="w"> </span><span class="m">2</span><span class="w"> </span>dead
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Attempt automatic path restore</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Attempt automatic path restore (forces PowerPath to retry all dead paths immediately)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>powermt<span class="w"> </span>restore
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Force re-check of all paths</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>powermt<span class="w"> </span>check_registration
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Confirm dead path count after restore</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span>dead
 </code></pre></div>
-<p>If paths remain dead after <code>powermt restore</code>:
-1. Check HBA port state on the host (<code>systool -c fc_host -v</code> on Linux)
-2. Check SAN switch port state (Cisco: <code>show interface fc x/x</code>, Brocade: <code>portshow x</code>)
-3. Check array port state on the storage array console</p>
-<h2 id="all-paths-dead-to-a-device">All Paths Dead to a Device<a class="headerlink" href="#all-paths-dead-to-a-device" title="Permanent link">&para;</a></h2>
-<p>If all paths to a device are dead:</p>
+<p>If paths remain dead after <code>powermt restore</code>:</p>
 <ol>
-<li>Confirm LUN masking is still in place on the array</li>
-<li>Confirm host HBA WWNs still match the masking configuration</li>
-<li>Check SAN fabric for zoning changes</li>
-<li>Reboot HBA driver if needed: <code>echo 1 &gt; /sys/class/fc_host/hostX/issue_lip</code></li>
-</ol>
-<h2 id="device-not-visible">Device Not Visible<a class="headerlink" href="#device-not-visible" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Rescan after new LUN provisioned</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>powermt<span class="w"> </span>config
+<li>
+<p>Check HBA port state on the host:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Linux — check FC HBA port state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;port_name|port_state|speed&quot;</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># If still missing, rescan HBA</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/hostX/scan
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Confirm array has presented the LUN to this host</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Confirm expected HBA ports are online</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_state
 </code></pre></div>
-<h2 id="incorrect-path-count">Incorrect Path Count<a class="headerlink" href="#incorrect-path-count" title="Permanent link">&para;</a></h2>
-<p>Expected 4 paths, seeing 2:
-- Check both SAN fabrics are connected (dual-fabric design)
-- Verify both HBA ports are online
-- Verify zoning includes both initiator ports on both fabrics</p>
-<h2 id="wrong-load-balance-policy">Wrong Load Balance Policy<a class="headerlink" href="#wrong-load-balance-policy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Reset policy to CLAROpt (Active/Optimized)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>co<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>policy
+</li>
+<li>
+<p>Check SAN switch port state (Brocade and Cisco examples):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Brocade — check the switch port connected to the HBA</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>portshow<span class="w"> </span>&lt;port_number&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Look for: No_Light, No_Sync, or Offline state</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Cisco MDS</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Look for: (notconnected), (err-disabled), or (down)</span>
 </code></pre></div>
-<h2 id="powerpath-not-starting-after-reboot">PowerPath Not Starting After Reboot<a class="headerlink" href="#powerpath-not-starting-after-reboot" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check service status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
+</li>
+<li>
+<p>Check array port state on the storage array management console:</p>
+<ul>
+<li>Confirm the array front-end port is online and the fabric login from the host initiator is visible</li>
+<li>On Unity: <strong>Access</strong> &gt; <strong>FC Ports</strong> — confirm the port shows "Online"</li>
+<li>On PowerMax Unisphere: <strong>Connectivity</strong> &gt; <strong>Ports</strong> — confirm port status</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="all-paths-dead-to-a-device">All Paths Dead to a Device<a class="headerlink" href="#all-paths-dead-to-a-device" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> A pseudo device shows zero <code>alive</code> paths. I/O to the device has failed. Applications on this host have lost access to the storage.</p>
+<p><strong>Immediate actions:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Confirm the device state</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;pseudo-device&gt;
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check kernel module loaded</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>emcp
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 2. Attempt restore immediately</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>powermt<span class="w"> </span>restore
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Re-load module manually</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>modprobe<span class="w"> </span>emcp
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 3. If no recovery, check array-side LUN masking</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># (Verify at the array console that the LUN is still masked to this host)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 4. Check HBA port logins — trigger a LIP to force fabric re-login</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/fc_host/host0/issue_lip
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/fc_host/host1/issue_lip
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 5. After LIP, rescan for devices</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>powermt<span class="w"> </span>config
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># 6. Attempt restore again</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>powermt<span class="w"> </span>restore
 </code></pre></div>
+<p>Check these causes in order:
+- <strong>Array-side</strong>: LUN masking removed, or storage view/masking view deleted accidentally
+- <strong>Fabric-side</strong>: Zoning change removed this initiator from the zone set; switch port offline
+- <strong>Host-side</strong>: Both HBA ports offline (driver crash, hardware failure, or power issue)</p>
+<hr />
+<h2 id="device-not-visible-after-lun-provisioning">Device Not Visible After LUN Provisioning<a class="headerlink" href="#device-not-visible-after-lun-provisioning" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> A new LUN has been provisioned at the array and masked to this host, but it does not appear in <code>powermt display dev=all</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Rescan the SCSI bus at the HBA level to make the OS see the new LUN</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Repeat for each HBA host adapter</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host0/scan
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host1/scan
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># On RHEL/OEL — use the rescan utility if installed</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>/usr/bin/rescan-scsi-bus.sh<span class="w"> </span>-a
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># 2. Run powermt config to discover newly visible devices</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>powermt<span class="w"> </span>config
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># 3. Confirm the new pseudo device appears</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># 4. Verify path count on the new device</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;new-pseudo-device&gt;
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># 5. Set policy and persist</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>CLAROpt<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>powermt<span class="w"> </span>save
+</code></pre></div>
+<p>If the device still does not appear after HBA rescan and <code>powermt config</code>:
+- Confirm at the array that the LUN is in a ready/online state (not provisioning or in error)
+- Confirm the host HBA WWN or iSCSI IQN is registered in the correct host group
+- Confirm the new LUN is included in the masking view — adding a LUN to the array but forgetting to include it in the masking view is a common error</p>
+<hr />
+<h2 id="incorrect-path-count">Incorrect Path Count<a class="headerlink" href="#incorrect-path-count" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <code>powermt display dev=all</code> shows fewer paths per device than the expected design baseline (e.g., seeing 2 paths when 4 are expected).</p>
+<p><strong>Expected path count by design:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Fabric Design</th>
+<th>Expected Paths per LUN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single fabric, single HBA port</td>
+<td>1 (no redundancy — avoid)</td>
+</tr>
+<tr>
+<td>Dual fabric, one HBA port per fabric</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Dual fabric, two HBA ports per fabric</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Dual fabric, two HBA ports × two array ports per fabric</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check path count per device</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Compare against baseline</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cat<span class="w"> </span>&lt;hostname&gt;-powermt-baseline-&lt;date&gt;.txt
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Identify which specific path is missing</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device&gt;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Note the HBA port and target port for each path — identify which is absent</span>
+</code></pre></div>
+<p><strong>Causes of low path count:</strong></p>
+<ul>
+<li>One SAN fabric is unavailable (switch power failure, ISL failure)</li>
+<li>One HBA port is offline (cable disconnected, SFP failure, HBA hardware failure)</li>
+<li>Array FA port offline (array maintenance, port failure)</li>
+<li>Zoning change removed one initiator-target pair from the active zone set</li>
+<li>PowerPath ran <code>powermt config</code> before all HBA ports had logged into the fabric after a reboot</li>
+</ul>
+<p><strong>Resolution:</strong> Identify which path is missing using the device detail output. Trace the missing path from HBA port through the fabric to the array port. Check the SAN switch for the missing path's port state and zone membership.</p>
+<hr />
+<h2 id="wrong-load-balance-policy">Wrong Load Balance Policy<a class="headerlink" href="#wrong-load-balance-policy" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <code>powermt display options</code> or per-device <code>powermt display dev=all | grep policy</code> shows <code>RoundRobin</code>, <code>BasicFailover</code>, or another policy instead of <code>CLAROpt</code> on Dell/EMC arrays.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check current global policy</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check per-device policy</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>policy
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Apply CLAROpt to all devices</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>CLAROpt<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># For specific storage class only</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>CLAROpt<span class="w"> </span><span class="nv">class</span><span class="o">=</span>clariion
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>CLAROpt<span class="w"> </span><span class="nv">class</span><span class="o">=</span>symmetrix
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Confirm the change applied</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Persist — do not skip this step</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>powermt<span class="w"> </span>save
+</code></pre></div>
+<p><strong>Why policy matters:</strong> <code>RoundRobin</code> sends I/O over non-optimised (standby storage processor) paths on active/passive arrays like Unity and older CLARiiON. The array must trespass those I/Os to the owning SP, adding latency. CLAROpt is ALUA-aware and only uses optimised paths under normal conditions.</p>
+<hr />
+<h2 id="powerpath-not-starting-after-reboot">PowerPath Not Starting After Reboot<a class="headerlink" href="#powerpath-not-starting-after-reboot" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> After host reboot, <code>powermt display dev=all</code> returns an error ("cannot connect to PowerPath daemon" or "powermt: command not found errors"). The <code>/dev/emcpower*</code> devices are missing.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check PowerPath service status</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>PowerPath
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check if the kernel module is loaded</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>emcp
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check for module load errors in dmesg</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|emcpower\|PowerPath&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Attempt to load the module manually</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>modprobe<span class="w"> </span>emcp
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># If modprobe fails with &quot;Module not found&quot;, the module is missing for this kernel</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Check available modules</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>find<span class="w"> </span>/lib/modules/<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;emcp*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># If not found: a kernel update invalidated the existing module</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="c1"># Rebuild via DKMS (if PowerPath was installed with DKMS support)</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>dkms<span class="w"> </span>status
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>dkms<span class="w"> </span>autoinstall
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="c1"># If DKMS is not in use, reinstall the PowerPath package for the current kernel</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="c1"># (download matching package from Dell support portal for this kernel version)</span>
+</code></pre></div>
+<p><strong>After resolving the module issue:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Start the service</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>PowerPath
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify devices are visible</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Restore paths and policy</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>powermt<span class="w"> </span>restore
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Confirm path count and policy</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+</code></pre></div>
+<hr />
+<h2 id="configuration-not-persisting-across-reboots">Configuration Not Persisting Across Reboots<a class="headerlink" href="#configuration-not-persisting-across-reboots" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> After a reboot, <code>powermt display options</code> shows a default policy (not CLAROpt), or previously discovered devices need <code>powermt config</code> to be run again.</p>
+<p><strong>Cause:</strong> <code>powermt save</code> was not run after the last configuration change, so <code>powermt.custom</code> is stale or missing.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check if powermt.custom exists</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/etc/powermt.custom
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check the last-modified date — if it predates the last change, save was missed</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>stat<span class="w"> </span>/etc/powermt.custom
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Set policy and save immediately</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>powermt<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span>CLAROpt<span class="w"> </span><span class="nv">class</span><span class="o">=</span>all
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>powermt<span class="w"> </span>save
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Confirm by viewing the options</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>powermt<span class="w"> </span>display<span class="w"> </span>options
+</code></pre></div>
+<p><strong>Prevention:</strong> After every <code>powermt config</code>, <code>powermt set policy</code>, or <code>powermt remove</code> operation, always run <code>powermt save</code> as the final step.</p>
+<hr />
+<h2 id="path-flapping">Path Flapping<a class="headerlink" href="#path-flapping" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> The host OS syslog shows repeated path dead and path restored messages for the same path. Application I/O shows intermittent latency spikes. The path state in <code>powermt display dev=all</code> alternates between <code>alive</code> and <code>dead</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check for repeated path events in syslog</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;emcp\|path dead\|path restored\|powerpath&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check HBA error statistics for the affected port</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>cat<span class="w"> </span>/sys/class/fc_host/host0/statistics/link_failure_count
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>cat<span class="w"> </span>/sys/class/fc_host/host0/statistics/loss_of_signal_count
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>cat<span class="w"> </span>/sys/class/fc_host/host0/statistics/error_frames
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Identify the affected path and its switch port from powermt output</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>&lt;device&gt;
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Note the HBA port ID and target port for the flapping path</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Check the SAN switch for the affected port</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Brocade:</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>portshow<span class="w"> </span>&lt;port&gt;<span class="w">      </span><span class="c1"># look for Link_Failures, Loss_of_Signal</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>errdump<span class="w">              </span><span class="c1"># recent error log</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Cisco MDS:</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4<span class="w">  </span><span class="c1"># look for link_failures, sync_loss</span>
+</code></pre></div>
+<p><strong>Root cause and resolution:</strong> Path flapping is a physical layer symptom. Common causes:
+- Marginal SFP (transmit power below threshold intermittently)
+- Damaged or contaminated FC cable or connector
+- Oversubscribed switch port (BBCR/BBSCN issues)
+- HBA SFP compatibility issue with the switch optic</p>
+<p>Replace the suspect SFP or cable. After the physical fix, run <code>powermt restore</code> and monitor for 30–60 minutes.</p>
+<hr />
+<h2 id="dm-multipath-conflict-on-linux">DM-Multipath Conflict on Linux<a class="headerlink" href="#dm-multipath-conflict-on-linux" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Both <code>multipathd</code> and PowerPath are running on the same host. Duplicate devices appear (<code>/dev/emcpower*</code> and <code>/dev/mapper/*</code> for the same LUN). I/O errors or inconsistency may occur.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Confirm multipathd is running</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>multipathd
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check if Dell/EMC devices are claimed by DM-Multipath</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;DGC|EMC|SYMMETRIX&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Add blacklist entries to /etc/multipath.conf</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># (Edit the file and add the following inside the blacklist section)</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># blacklist {</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1">#     device {</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1">#         vendor &quot;DGC&quot;</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1">#         product &quot;.*&quot;</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1">#     }</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1">#     device {</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1">#         vendor &quot;EMC&quot;</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1">#         product &quot;SYMMETRIX&quot;</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1">#     }</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># }</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># Reload multipathd to apply blacklist</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>multipathd
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="c1"># Confirm Dell/EMC devices are no longer in multipath -ll</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;DGC|EMC|SYMMETRIX&quot;</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="c1"># If multipathd is not needed on this host</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>multipathd
+</code></pre></div>
+<hr />
 <h2 id="common-issues-reference">Common Issues Reference<a class="headerlink" href="#common-issues-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -868,38 +1138,53 @@
 <tbody>
 <tr>
 <td>Dead paths after reboot</td>
-<td>HBA driver load order</td>
-<td>Run <code>powermt restore</code> after boot</td>
+<td>HBA login timing</td>
+<td><code>powermt restore</code>; check HBA port state</td>
 </tr>
 <tr>
-<td>Device missing</td>
-<td>LUN not presented or rescan needed</td>
-<td><code>powermt config</code></td>
+<td>All paths dead to a device</td>
+<td>Array masking or fabric failure</td>
+<td>Verify LUN masking at array; check fabric zones</td>
 </tr>
 <tr>
-<td>Performance issues</td>
-<td>Suboptimal path policy</td>
-<td><code>powermt set policy=co dev=all</code></td>
-</tr>
-<tr>
-<td>Path flapping</td>
-<td>SAN fabric instability</td>
-<td>Check switch and cable</td>
-</tr>
-<tr>
-<td>multipathd conflict</td>
-<td>Both multipath stacks active</td>
-<td>Disable <code>multipathd</code></td>
+<td>New LUN not visible</td>
+<td>HBA not rescanned</td>
+<td>Rescan SCSI bus; <code>powermt config</code></td>
 </tr>
 <tr>
 <td><code>unlic</code> paths</td>
 <td>License expired or not applied</td>
-<td>Run <code>powermt check_registration</code></td>
+<td><code>powermt check_registration</code>; re-register</td>
 </tr>
 <tr>
-<td>Unbalanced path I/O</td>
-<td>Wrong policy</td>
-<td><code>powermt set policy=co dev=all</code></td>
+<td>Wrong policy (RoundRobin, BasicFailover)</td>
+<td>Not set or not persisted</td>
+<td><code>powermt set policy=CLAROpt class=all</code>; <code>powermt save</code></td>
+</tr>
+<tr>
+<td>Fewer paths than expected</td>
+<td>One fabric or HBA port offline</td>
+<td>Check switch port state; check HBA port login</td>
+</tr>
+<tr>
+<td>Path flapping</td>
+<td>Marginal SFP, cable, or switch port</td>
+<td>Check switch error counters; replace SFP or cable</td>
+</tr>
+<tr>
+<td>DM-Multipath conflict</td>
+<td><code>multipathd</code> claiming same devices</td>
+<td>Blacklist Dell/EMC devices in <code>multipath.conf</code></td>
+</tr>
+<tr>
+<td>PowerPath service not starting</td>
+<td>Module not loaded; kernel update</td>
+<td><code>modprobe emcp</code>; rebuild DKMS module</td>
+</tr>
+<tr>
+<td>Configuration not persisting</td>
+<td><code>powermt save</code> not run</td>
+<td><code>powermt save</code> after every change</td>
 </tr>
 </tbody>
 </table>

@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#data-in-transit" class="md-nav__link">
+  <a href="#encryption-scope-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data in Transit
+        Encryption Scope Summary
       
     </span>
   </a>
@@ -725,13 +725,108 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Data at Rest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-encryption-on-back-end-arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enabling Encryption on Back-End Arrays
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#tls-certificate-management" class="md-nav__link">
+  <a href="#management-traffic-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TLS Certificate Management
+        Management Traffic Encryption
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Management Traffic Encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ssh-vplexcli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH (vplexcli)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#https-tls-unisphere-for-vplex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTPS / TLS (Unisphere for VPLEX)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTPS / TLS (Unisphere for VPLEX)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replacing-the-unisphere-tls-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replacing the Unisphere TLS Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-lifecycle-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Lifecycle Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fibre-channel-layer-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fibre Channel Layer Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#icl-encryption-metro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ICL Encryption (Metro)
       
     </span>
   </a>
@@ -759,28 +854,197 @@
 
 
 <h1 id="dell-vplex-encryption">Dell VPLEX — Encryption<a class="headerlink" href="#dell-vplex-encryption" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>TLS certificate management and data encryption for Dell VPLEX.</p>
-</blockquote>
-<h2 id="data-in-transit">Data in Transit<a class="headerlink" href="#data-in-transit" title="Permanent link">&para;</a></h2>
-<ul>
-<li>VPLEX management traffic between VMS and directors uses encrypted protocols</li>
-<li>Unisphere for VPLEX web UI uses HTTPS (TLS); replace the default self-signed certificate with a certificate signed by the corporate CA</li>
-<li><code>vplexcli</code> access is via SSH to the VMS; enforce SSH key authentication and disable password-based SSH where possible</li>
-</ul>
+<p>VPLEX itself is a virtualisation and federation layer and does not natively encrypt data in transit between hosts and the directors (Fibre Channel does not provide encryption at the SAN layer). Encryption at rest is delegated to the back-end arrays. Management traffic encryption is handled via TLS and SSH on the management plane.</p>
+<h2 id="encryption-scope-summary">Encryption Scope Summary<a class="headerlink" href="#encryption-scope-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Path</th>
+<th>Encryption</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host → VPLEX front-end ports (FC)</td>
+<td>Not encrypted (standard FC)</td>
+<td>SAN encryption switch if required</td>
+</tr>
+<tr>
+<td>VPLEX → back-end array (FC)</td>
+<td>Not encrypted (standard FC)</td>
+<td>SAN encryption switch if required</td>
+</tr>
+<tr>
+<td>VPLEX ICL (Metro cluster-to-cluster)</td>
+<td>Not encrypted at the VPLEX layer</td>
+<td>WAN encryption (MACsec, IPsec at the network layer)</td>
+</tr>
+<tr>
+<td>Data at rest on back-end arrays</td>
+<td>Yes (array-managed)</td>
+<td>Back-end array (PowerMax DAR, Unity encryption)</td>
+</tr>
+<tr>
+<td>Management: vplexcli (SSH)</td>
+<td>Yes (SSH TLS)</td>
+<td>VMS — enforce key-only auth</td>
+</tr>
+<tr>
+<td>Management: Unisphere web GUI</td>
+<td>Yes (HTTPS/TLS)</td>
+<td>VMS — replace self-signed cert</td>
+</tr>
+<tr>
+<td>Management: VPLEX director ↔ VMS</td>
+<td>Encrypted</td>
+<td>GeoSynchrony internal</td>
+</tr>
+</tbody>
+</table>
 <h2 id="data-at-rest">Data at Rest<a class="headerlink" href="#data-at-rest" title="Permanent link">&para;</a></h2>
-<p>VPLEX itself does not perform data-at-rest encryption — encryption at rest is the responsibility of the backend storage arrays:</p>
+<p>VPLEX is transparent to back-end array encryption. Volumes encrypted at the array level are presented through VPLEX and to hosts without any modification — hosts and VPLEX see encrypted blocks, but the encryption key management and AES operations happen entirely within the array.</p>
+<h3 id="enabling-encryption-on-back-end-arrays">Enabling Encryption on Back-End Arrays<a class="headerlink" href="#enabling-encryption-on-back-end-arrays" title="Permanent link">&para;</a></h3>
+<p><strong>Dell PowerMax (D@RE — Data at Rest Encryption):</strong></p>
+<p>PowerMax D@RE encrypts all data on the array using AES-256 with FIPS 140-2 validated key management. Encryption is enabled at the array level and covers all storage groups, LUNs, and system metadata.</p>
 <ul>
-<li>Enable encryption on backend PowerMax, Unity, or PowerStore arrays as appropriate for compliance requirements</li>
-<li>Verify encryption is active on the backend array before claiming storage volumes into VPLEX</li>
-<li>VPLEX is transparent to backend array encryption; encrypted volumes are presented and virtualised without modification</li>
+<li>Verify D@RE status before claiming volumes into VPLEX: confirm with PowerMax management that the array is encryption-enabled.</li>
+<li>No VPLEX configuration changes are required to use an encrypted back-end volume.</li>
 </ul>
-<h2 id="tls-certificate-management">TLS Certificate Management<a class="headerlink" href="#tls-certificate-management" title="Permanent link">&para;</a></h2>
+<p><strong>Dell Unity XT (Encryption):</strong></p>
+<p>Unity supports drive-level encryption (D@RE) using self-encrypting drives (SED) or software encryption depending on the model.</p>
 <ul>
-<li>Replace the Unisphere for VPLEX self-signed certificate with a corporate CA-signed certificate on initial deployment</li>
-<li>Monitor certificate expiry; renew at least 30 days before the expiry date</li>
-<li>Store certificate private keys in a secrets management system</li>
+<li>Confirm encryption is enabled in Unisphere for Unity before presenting LUNs to VPLEX.</li>
 </ul>
+<p><strong>Verification before claiming volumes:</strong></p>
+<p>Before claiming a new storage volume into VPLEX, confirm with the array administrator that:</p>
+<ol>
+<li>The back-end array has encryption enabled (D@RE or equivalent).</li>
+<li>The specific LUN being claimed is covered by the encryption policy.</li>
+<li>Key management (local or external KMIP key manager) is configured and the keys are being backed up.</li>
+</ol>
+<h2 id="management-traffic-encryption">Management Traffic Encryption<a class="headerlink" href="#management-traffic-encryption" title="Permanent link">&para;</a></h2>
+<h3 id="ssh-vplexcli">SSH (vplexcli)<a class="headerlink" href="#ssh-vplexcli" title="Permanent link">&para;</a></h3>
+<p>All <code>vplexcli</code> access is via SSH to the VMS. SSH provides strong encryption for the management session.</p>
+<p><strong>SSH hardening for VMS:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Recommended settings in /etc/ssh/sshd_config on VMS:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Disable weak authentication methods</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ChallengeResponseAuthentication<span class="w"> </span>no
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>PermitEmptyPasswords<span class="w"> </span>no
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Restrict to strong key exchange algorithms</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>KexAlgorithms<span class="w"> </span>curve25519-sha256,diffie-hellman-group-exchange-sha256
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Ciphers<span class="w"> </span>aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes128-gcm@openssh.com
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>MACs<span class="w"> </span>hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Restrict to specific management hosts (if IP range is known)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>AllowUsers<span class="w"> </span>service@&lt;MGMT_SUBNET&gt;
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Session timeout</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ClientAliveCountMax<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Restart sshd after changes</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+</code></pre></div>
+<p>Verify the active SSH configuration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;passwordauthentication|permitempty|ciphers|kexalgorithms&#39;</span>
+</code></pre></div>
+<h3 id="https-tls-unisphere-for-vplex">HTTPS / TLS (Unisphere for VPLEX)<a class="headerlink" href="#https-tls-unisphere-for-vplex" title="Permanent link">&para;</a></h3>
+<p>Unisphere for VPLEX ships with a self-signed TLS certificate. Replace this with a certificate signed by the corporate CA before production use.</p>
+<h4 id="replacing-the-unisphere-tls-certificate">Replacing the Unisphere TLS Certificate<a class="headerlink" href="#replacing-the-unisphere-tls-certificate" title="Permanent link">&para;</a></h4>
+<p><strong>Step 1: Generate a CSR on the VMS</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to VMS as admin</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@&lt;VMS_IP&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Generate a private key and CSR</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-keyout<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-out<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=vplex-mgmt.example.com/O=Example Corp/C=US&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Review the CSR to confirm the subject</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>openssl<span class="w"> </span>req<span class="w"> </span>-text<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>/opt/vplex/certs/vplex_mgmt.csr
+</code></pre></div>
+<p><strong>Step 2: Submit the CSR to the corporate CA</strong></p>
+<p>Submit <code>vplex_mgmt.csr</code> to the corporate certificate authority. Request a certificate with:</p>
+<ul>
+<li>Subject Alternative Name (SAN): include the VMS FQDN and IP address</li>
+<li>Key usage: Digital Signature, Key Encipherment</li>
+<li>Extended key usage: Server Authentication (1.3.6.1.5.5.7.3.1)</li>
+<li>Validity: 1–2 years (align with the organisation's certificate renewal cycle)</li>
+</ul>
+<p><strong>Step 3: Install the signed certificate</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Copy the signed cert chain to VMS</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>scp<span class="w"> </span>vplex_mgmt.crt<span class="w"> </span>admin@&lt;VMS_IP&gt;:/opt/vplex/certs/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>scp<span class="w"> </span>corporate_ca_chain.crt<span class="w"> </span>admin@&lt;VMS_IP&gt;:/opt/vplex/certs/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Import the certificate into the VPLEX keystore via Unisphere:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Settings → Security → Certificate → Import Certificate</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Upload the .key file and the signed .crt chain</span>
+</code></pre></div>
+<p>Alternatively, import through Unisphere → Settings → Security → Certificates if a GUI-based import is supported on the installed GeoSynchrony version.</p>
+<p><strong>Step 4: Verify the certificate</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From an external host, verify the presented certificate</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;VMS_IP&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Subject\|Validity\|SAN&quot;</span>
+</code></pre></div>
+<h4 id="certificate-lifecycle-management">Certificate Lifecycle Management<a class="headerlink" href="#certificate-lifecycle-management" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Activity</th>
+<th>Timing</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Certificate renewal request</td>
+<td>30 days before expiry</td>
+<td>Storage team</td>
+</tr>
+<tr>
+<td>CSR generation and CA submission</td>
+<td>21 days before expiry</td>
+<td>Storage team</td>
+</tr>
+<tr>
+<td>Certificate installation</td>
+<td>Within maintenance window</td>
+<td>Storage team</td>
+</tr>
+<tr>
+<td>Certificate expiry monitoring</td>
+<td>Automated (SIEM/monitoring alert)</td>
+<td>Operations</td>
+</tr>
+</tbody>
+</table>
+<p>Configure an automated certificate expiry alert in the monitoring platform targeting the VMS HTTPS endpoint:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check certificate expiry from a monitoring host</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;VMS_IP&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+</code></pre></div>
+<p>Alert when fewer than 30 days remain before expiry.</p>
+<h2 id="fibre-channel-layer-encryption">Fibre Channel Layer Encryption<a class="headerlink" href="#fibre-channel-layer-encryption" title="Permanent link">&para;</a></h2>
+<p>VPLEX Fibre Channel data paths (host-to-VPLEX and VPLEX-to-array) are not encrypted at the VPLEX layer. If FC encryption is required (e.g., for compliance with PCI DSS on shared fabric segments), implement it at the SAN switch level using:</p>
+<ul>
+<li><strong>Brocade Encryption Switch</strong> or <strong>Brocade FS8-18 blade</strong> — blade-level FC encryption for in-flight data</li>
+<li><strong>Cisco MDS 9000 Storage Media Encryption (SME)</strong> — port-based FC encryption</li>
+</ul>
+<p>FC layer encryption is transparent to VPLEX and requires no VPLEX configuration changes.</p>
+<h2 id="icl-encryption-metro">ICL Encryption (Metro)<a class="headerlink" href="#icl-encryption-metro" title="Permanent link">&para;</a></h2>
+<p>The Inter-Cluster Link between Metro clusters carries synchronous write data. If the ICL traverses untrusted WAN infrastructure, encrypt at the network layer:</p>
+<ul>
+<li><strong>MACsec (IEEE 802.1AE)</strong> — Layer 2 encryption; appropriate for dark fibre or carrier Ethernet ICL</li>
+<li><strong>IPsec</strong> — Layer 3 encryption; appropriate for IP-based WAN ICL</li>
+<li>Implement WAN encryption on the routing/switching equipment at each site; VPLEX requires no reconfiguration</li>
+</ul>
+<p>Confirm ICL encryption does not add RTT that would push the cluster-to-cluster latency above the 5ms Metro requirement. Measure RTT before and after enabling WAN encryption.</p>
 
 
 

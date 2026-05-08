@@ -739,8 +739,41 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#example-bucket-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Bucket Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applying-and-reviewing-bucket-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying and Reviewing Bucket Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#namespace-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace Isolation
+      
+    </span>
+  </a>
   
 </li>
       
@@ -749,6 +782,17 @@
     <span class="md-ellipsis">
       
         Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-review-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Review Procedure
       
     </span>
   </a>
@@ -791,33 +835,241 @@
 <tr>
 <td>System Admin</td>
 <td>Global</td>
-<td>Full system configuration, hardware management, VDC management</td>
+<td>Full system configuration, hardware management, VDC management, user management, software upgrades</td>
 </tr>
 <tr>
 <td>System Monitor</td>
 <td>Global</td>
-<td>Read-only access to system health, capacity, and alerts</td>
+<td>Read-only access to system health, capacity, alerts, and monitoring dashboards</td>
 </tr>
 <tr>
 <td>Namespace Admin</td>
-<td>Namespace</td>
-<td>Create and manage buckets, IAM users, and lifecycle policies within the namespace</td>
+<td>Per namespace</td>
+<td>Create and manage buckets, IAM users, and lifecycle policies within the assigned namespace</td>
 </tr>
 <tr>
 <td>Namespace User</td>
-<td>Namespace</td>
-<td>Read-only namespace management; cannot create or delete buckets</td>
+<td>Per namespace</td>
+<td>Read-only namespace management; cannot create, modify, or delete buckets or IAM users</td>
 </tr>
 </tbody>
 </table>
+<p>Management roles are assigned to users in ECS Portal → Users → Management Users. Local users or LDAP-mapped users can be assigned roles.</p>
 <h3 id="object-data-access-via-iam-policies">Object (Data) Access via IAM Policies<a class="headerlink" href="#object-data-access-via-iam-policies" title="Permanent link">&para;</a></h3>
-<p>ECS supports S3-style IAM bucket policies and object ACLs. Best practices:</p>
+<p>ECS supports S3-style IAM bucket policies and object ACLs for controlling data-plane access. Object users authenticate with S3 access key / secret key pairs and are restricted by bucket policies and ACLs.</p>
+<p><strong>S3 actions supported in bucket policies:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s3:ListBucket</code></td>
+<td>List objects in a bucket</td>
+</tr>
+<tr>
+<td><code>s3:GetObject</code></td>
+<td>Download an object</td>
+</tr>
+<tr>
+<td><code>s3:PutObject</code></td>
+<td>Upload an object</td>
+</tr>
+<tr>
+<td><code>s3:DeleteObject</code></td>
+<td>Delete an object</td>
+</tr>
+<tr>
+<td><code>s3:GetBucketVersioning</code></td>
+<td>Read versioning configuration</td>
+</tr>
+<tr>
+<td><code>s3:PutBucketVersioning</code></td>
+<td>Modify versioning configuration</td>
+</tr>
+<tr>
+<td><code>s3:GetLifecycleConfiguration</code></td>
+<td>Read lifecycle policy</td>
+</tr>
+<tr>
+<td><code>s3:PutLifecycleConfiguration</code></td>
+<td>Create or modify lifecycle policy</td>
+</tr>
+<tr>
+<td><code>s3:GetBucketPolicy</code></td>
+<td>Read bucket policy</td>
+</tr>
+<tr>
+<td><code>s3:PutBucketPolicy</code></td>
+<td>Create or modify bucket policy</td>
+</tr>
+<tr>
+<td><code>s3:GetObjectRetention</code></td>
+<td>Read Object Lock retention on an object</td>
+</tr>
+<tr>
+<td><code>s3:PutObjectRetention</code></td>
+<td>Set Object Lock retention on an object</td>
+</tr>
+<tr>
+<td><code>s3:BypassGovernanceRetention</code></td>
+<td>Override Governance-mode Object Lock (privileged; never assign to app users)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Principle of least privilege — apply these rules:</strong></p>
 <ul>
-<li>Grant the minimum required S3 actions (<code>s3:GetObject</code>, <code>s3:PutObject</code>) per application</li>
-<li>Do not use wildcard (<code>*</code>) actions on production buckets</li>
-<li>Prefer bucket policies over ACLs for maintainability</li>
-<li>Create one IAM object user per application or service; do not share credentials</li>
+<li>Grant the minimum required S3 actions per application; never use <code>Action: "*"</code> on production buckets</li>
+<li>Prefer bucket policies over ACLs for maintainability and auditability</li>
+<li>Create one IAM object user per application or service; never share S3 credentials between applications</li>
+<li>Scope bucket policies to specific object user principals using <code>urn:ecs:iam::&lt;namespace&gt;:user/&lt;username&gt;</code> format</li>
 </ul>
+<h3 id="example-bucket-policies">Example Bucket Policies<a class="headerlink" href="#example-bucket-policies" title="Permanent link">&para;</a></h3>
+<p><strong>Read-only access for a reporting application:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ReadOnly&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;urn:ecs:iam::analytics-prod:user/svc-reports-prod&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="s2">&quot;s3:ListBucket&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="s2">&quot;s3:GetObject&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="s2">&quot;arn:aws:s3:::analytics-prod-raw&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="s2">&quot;arn:aws:s3:::analytics-prod-raw/*&quot;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="p">]</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Read-write access for an application with lifecycle management:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AppReadWrite&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nt">&quot;AWS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;urn:ecs:iam::analytics-prod:user/svc-spark-prod&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="s2">&quot;s3:ListBucket&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="s2">&quot;s3:DeleteObject&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="s2">&quot;s3:GetBucketVersioning&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="s2">&quot;s3:GetLifecycleConfiguration&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">        </span><span class="s2">&quot;arn:aws:s3:::analytics-prod-raw&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span><span class="s2">&quot;arn:aws:s3:::analytics-prod-raw/*&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">      </span><span class="p">]</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Deny all unless from a specific CIDR (network-based restriction):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DenyExternalAccess&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">&quot;Principal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="s2">&quot;arn:aws:s3:::compliance-immutable&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="s2">&quot;arn:aws:s3:::compliance-immutable/*&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="nt">&quot;NotIpAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">          </span><span class="nt">&quot;aws:SourceIp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.10.0.0/16&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;10.20.0.0/16&quot;</span><span class="p">]</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="applying-and-reviewing-bucket-policies">Applying and Reviewing Bucket Policies<a class="headerlink" href="#applying-and-reviewing-bucket-policies" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Apply a bucket policy from a local JSON file</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--bucket<span class="w"> </span>analytics-prod-raw<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--policy<span class="w"> </span>file://bucket-policy.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-s3-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># View the current bucket policy</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--bucket<span class="w"> </span>analytics-prod-raw<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-s3-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Delete a bucket policy (reverts to default — namespace-level IAM only)</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>aws<span class="w"> </span>s3api<span class="w"> </span>delete-bucket-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--bucket<span class="w"> </span>analytics-prod-raw<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-s3-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># View bucket ACL</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-acl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span>--bucket<span class="w"> </span>analytics-prod-raw<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-s3-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div>
+<h2 id="namespace-isolation">Namespace Isolation<a class="headerlink" href="#namespace-isolation" title="Permanent link">&para;</a></h2>
+<p>Namespaces are the primary multi-tenancy isolation boundary in ECS. Each namespace has independent:</p>
+<ul>
+<li>IAM object users and S3 access keys</li>
+<li>Replication group assignment (data placement)</li>
+<li>Quota (capacity limit)</li>
+<li>Encryption-at-rest configuration</li>
+<li>LDAP/AD authentication domain</li>
+<li>Bucket collection</li>
+</ul>
+<p>An object user in namespace <code>analytics-prod</code> cannot access buckets in namespace <code>finance-prod</code> regardless of bucket policy — namespace boundaries are enforced at the data service layer.</p>
+<p><strong>Best practices for namespace design:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Practice</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One namespace per team or application</td>
+<td>Prevents cross-team capacity contention and simplifies IAM auditing</td>
+</tr>
+<tr>
+<td>Set a hard quota on every namespace</td>
+<td>Prevents one tenant consuming cluster-wide capacity</td>
+</tr>
+<tr>
+<td>Use separate IAM users per application</td>
+<td>Enables per-application access revocation without impacting other apps</td>
+</tr>
+<tr>
+<td>Do not place compliance and non-compliance data in the same namespace</td>
+<td>Compliance namespaces have stricter controls that affect all buckets in the namespace</td>
+</tr>
+<tr>
+<td>Document namespace-to-team ownership in CMDB</td>
+<td>Required for capacity chargeback and access review processes</td>
+</tr>
+</tbody>
+</table>
 <h2 id="compliance">Compliance<a class="headerlink" href="#compliance" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -829,23 +1081,53 @@
 <tbody>
 <tr>
 <td>WORM / SEC 17a-4</td>
-<td>S3 Object Lock in Compliance mode; immutable retention enforced at object level</td>
+<td>S3 Object Lock in Compliance mode; immutable retention enforced at object level; cannot be shortened or removed even by sysadmin</td>
 </tr>
 <tr>
 <td>GDPR</td>
-<td>Object-level deletion capability; namespace-scoped data residency via VDC assignment</td>
+<td>Object-level deletion capability for data subject requests; namespace-scoped data residency via VDC assignment; access logging for audit</td>
 </tr>
 <tr>
 <td>PCI DSS</td>
-<td>Encryption at rest and in transit; audit logging; IAM least-privilege enforcement</td>
+<td>Encryption at rest (AES-256) and in transit (TLS 1.2+); audit logging; IAM least-privilege enforcement; network segmentation of management and data endpoints</td>
 </tr>
 <tr>
 <td>HIPAA</td>
-<td>Encryption at rest; access logging; RBAC namespace isolation</td>
+<td>Encryption at rest; access logging per bucket; RBAC namespace isolation; automatic retention via Object Lock</td>
 </tr>
 </tbody>
 </table>
-<p>For compliance deployments, always use Compliance mode Object Lock (not Governance mode) — Governance mode can be overridden by a privileged user.</p>
+<p>For compliance deployments:</p>
+<ul>
+<li>Use <strong>Compliance mode</strong> Object Lock, not Governance mode — Governance mode can be overridden by a user with <code>s3:BypassGovernanceRetention</code>; Compliance mode cannot be shortened or deleted by any user</li>
+<li>Enable bucket-level access logging and forward logs to a SIEM</li>
+<li>Restrict namespace and bucket creation to authorized change records</li>
+<li>Review IAM user access quarterly; remove users that are no longer associated with active applications</li>
+</ul>
+<h2 id="access-review-procedure">Access Review Procedure<a class="headerlink" href="#access-review-procedure" title="Permanent link">&para;</a></h2>
+<p>Perform quarterly access reviews for all ECS namespaces:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all object users per namespace</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ecscli<span class="w"> </span>user<span class="w"> </span>list-object-users<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List access keys per user (key IDs only)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>list<span class="w"> </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check bucket policy for each bucket</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># List all namespaces</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>ecscli<span class="w"> </span>namespace<span class="w"> </span>list
+</code></pre></div>
+<p>For each access review:
+1. Confirm each object user maps to an active application or service in the CMDB
+2. Confirm bucket policies grant only the minimum required actions
+3. Remove object users for decommissioned applications
+4. Rotate any access keys that have not been rotated within 12 months
+5. Verify no object user has wildcard <code>s3:*</code> permissions on production buckets</p>
 
 
 

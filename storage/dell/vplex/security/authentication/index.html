@@ -714,16 +714,83 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ldap-active-directory" class="md-nav__link">
+    <nav class="md-nav" aria-label="Local Accounts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#password-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LDAP / Active Directory
+        Password Policy
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssh-key-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Key Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-active-directory-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP / Active Directory Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LDAP / Active Directory Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Configurations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-ldap-in-unisphere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring LDAP in Unisphere
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group-to-role-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Group-to-Role Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -732,6 +799,34 @@
     <span class="md-ellipsis">
       
         Audit Logging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audit Logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forwarding-logs-to-siem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forwarding Logs to SIEM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Management
       
     </span>
   </a>
@@ -759,30 +854,254 @@
 
 
 <h1 id="dell-vplex-authentication">Dell VPLEX — Authentication<a class="headerlink" href="#dell-vplex-authentication" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>SSO, LDAP, local accounts, and identity sources for Dell VPLEX.</p>
-</blockquote>
+<p>Authentication for VPLEX management is split across two interfaces: SSH-based <code>vplexcli</code> access (local VMS accounts only) and the Unisphere for VPLEX web GUI (local accounts or LDAP/AD-integrated accounts).</p>
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
-<p>VPLEX management access is provided through local accounts on the VPLEX Management Server (VMS):</p>
+<p>VPLEX management access is provided through local accounts on the VPLEX Management Server (VMS).</p>
+<table>
+<thead>
+<tr>
+<th>Account</th>
+<th>Purpose</th>
+<th>Access Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service</code></td>
+<td>Primary CLI management account; used for <code>vplexcli</code> access</td>
+<td>SSH to VMS, then <code>vplexcli</code></td>
+</tr>
+<tr>
+<td><code>admin</code></td>
+<td>VMS OS-level administrative access</td>
+<td>SSH to VMS OS shell; restrict to break-glass use</td>
+</tr>
+<tr>
+<td>Custom automation accounts</td>
+<td>Named accounts for scripts and monitoring</td>
+<td>SSH key authentication; no interactive login</td>
+</tr>
+</tbody>
+</table>
+<h3 id="password-policy">Password Policy<a class="headerlink" href="#password-policy" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>service</strong>: The primary SSH user for <code>vplexcli</code> access; used for all CLI-based management operations</li>
-<li><strong>admin</strong>: Administrative user for VMS OS-level access; restrict to break-glass use only</li>
-<li>Change default passwords immediately after deployment</li>
-<li>Create named service accounts for automation; do not use shared credentials</li>
+<li>Change all default passwords immediately after initial VPLEX deployment.</li>
+<li>Enforce minimum password length of 16 characters for VMS local accounts.</li>
+<li>Rotate the <code>service</code> account password after any personnel change for staff with access.</li>
+<li>Store credentials in a privileged access management (PAM) system or secrets manager — not in plain-text runbooks.</li>
+<li>Do not share the <code>service</code> account interactively; use named accounts for individual operators where possible.</li>
 </ul>
-<h2 id="ldap-active-directory">LDAP / Active Directory<a class="headerlink" href="#ldap-active-directory" title="Permanent link">&para;</a></h2>
-<p>VPLEX supports LDAP/AD integration for Unisphere for VPLEX web UI authentication. Configure under Unisphere → Settings → Authentication.</p>
-<ul>
-<li>CLI access (<code>vplexcli</code> via SSH) always uses local VMS accounts</li>
-<li>LDAP integration applies to the Unisphere web interface only</li>
-<li>Map LDAP groups to VPLEX management roles</li>
-</ul>
+<h3 id="ssh-key-authentication">SSH Key Authentication<a class="headerlink" href="#ssh-key-authentication" title="Permanent link">&para;</a></h3>
+<p>Configure SSH key authentication for the <code>service</code> account and any automation accounts:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On the operator/automation host: generate an SSH key pair (if not already done)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;vplex-automation@example.com&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/vplex_ed25519
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Copy the public key to the VMS (first-time setup requires password authentication)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519.pub<span class="w"> </span>service@&lt;VMS_IP&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify key-based login works</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519<span class="w"> </span>service@&lt;VMS_IP&gt;<span class="w"> </span><span class="s2">&quot;vplexcli -q -e &#39;health-check&#39;&quot;</span>
+</code></pre></div>
+<p>After SSH key authentication is confirmed to work for all operators and automation accounts, disable password-based SSH authentication on the VMS:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On VMS (as admin): edit /etc/ssh/sshd_config</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ChallengeResponseAuthentication<span class="w"> </span>no
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Restart sshd to apply</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+</code></pre></div>
+<p>Verify the change does not lock out any account before closing the session.</p>
+<h2 id="ldap-active-directory-integration">LDAP / Active Directory Integration<a class="headerlink" href="#ldap-active-directory-integration" title="Permanent link">&para;</a></h2>
+<p>VPLEX supports LDAP and Active Directory integration for authentication to the Unisphere for VPLEX web GUI. <code>vplexcli</code> via SSH always uses local VMS accounts regardless of LDAP configuration.</p>
+<h3 id="supported-configurations">Supported Configurations<a class="headerlink" href="#supported-configurations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active Directory (via LDAP)</td>
+<td>Supported for Unisphere web GUI</td>
+</tr>
+<tr>
+<td>OpenLDAP</td>
+<td>Supported for Unisphere web GUI</td>
+</tr>
+<tr>
+<td>LDAPS (LDAP over TLS)</td>
+<td>Recommended; requires the AD/LDAP server certificate to be trusted by VMS</td>
+</tr>
+<tr>
+<td>SAML / SSO</td>
+<td>Not natively supported; manage access via LDAP group mapping</td>
+</tr>
+</tbody>
+</table>
+<h3 id="configuring-ldap-in-unisphere">Configuring LDAP in Unisphere<a class="headerlink" href="#configuring-ldap-in-unisphere" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Log in to Unisphere for VPLEX (<code>https://&lt;VMS_IP&gt;/</code>) with a local administrator account.</li>
+<li>Navigate to <strong>Settings → Authentication → Directory Services</strong>.</li>
+<li>Click <strong>Add</strong> and enter:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Directory service type</td>
+<td>Active Directory or LDAP</td>
+</tr>
+<tr>
+<td>Server address</td>
+<td>FQDN or IP of domain controller / LDAP server</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>389 (LDAP) or 636 (LDAPS)</td>
+</tr>
+<tr>
+<td>Base DN</td>
+<td>e.g., <code>DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Bind DN</td>
+<td>Service account DN, e.g., <code>CN=vplex-bind,OU=ServiceAccounts,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Bind password</td>
+<td>Service account password</td>
+</tr>
+<tr>
+<td>User search base</td>
+<td>OU containing VPLEX users</td>
+</tr>
+<tr>
+<td>User attribute</td>
+<td><code>sAMAccountName</code> (AD) or <code>uid</code> (OpenLDAP)</td>
+</tr>
+<tr>
+<td>Group search base</td>
+<td>OU containing VPLEX groups</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Test the LDAP connection before saving.</li>
+<li>Map LDAP groups to VPLEX roles under <strong>Settings → Authentication → Roles</strong>.</li>
+</ol>
+<h3 id="group-to-role-mapping">Group-to-Role Mapping<a class="headerlink" href="#group-to-role-mapping" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>LDAP Group</th>
+<th>VPLEX Role</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vplex-admins</code></td>
+<td>Administrator</td>
+<td>Full read/write access</td>
+</tr>
+<tr>
+<td><code>vplex-operators</code></td>
+<td>Monitor</td>
+<td>Read-only; no configuration changes</td>
+</tr>
+<tr>
+<td><code>vplex-automation</code></td>
+<td>Service</td>
+<td>CLI access via local account only</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommendation</strong>: maintain at least one local administrator account that is not dependent on LDAP, for break-glass access when AD is unavailable.</p>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<p>All VPLEX management actions are logged on the VMS. These logs are the authoritative audit trail for change management and incident investigation.</p>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Path</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vplexcli command history</td>
+<td><code>/var/log/VPlex/cli/vplexcli.log</code></td>
+<td>Every CLI command with timestamp and result</td>
+</tr>
+<tr>
+<td>VPLEX management events</td>
+<td><code>/var/log/VPlex/vplexmanagement.log</code></td>
+<td>Configuration changes, director events, health state changes</td>
+</tr>
+<tr>
+<td>Unisphere web access</td>
+<td><code>/var/log/VPlex/</code></td>
+<td>HTTP access log including authenticated user</td>
+</tr>
+<tr>
+<td>VMS OS auth log</td>
+<td><code>/var/log/secure</code> or <code>/var/log/auth.log</code></td>
+<td>SSH login attempts, PAM events</td>
+</tr>
+</tbody>
+</table>
+<h3 id="forwarding-logs-to-siem">Forwarding Logs to SIEM<a class="headerlink" href="#forwarding-logs-to-siem" title="Permanent link">&para;</a></h3>
+<p>Configure syslog forwarding from VMS to the centralised SIEM immediately after deployment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On VMS (as admin), create /etc/rsyslog.d/vplex-siem.conf:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Forward all VPLEX logs to the SIEM</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;vplexcli&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;vplexmanagement&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>*.*<span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Apply the configuration</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+</code></pre></div>
+<p>Verify log ingestion in the SIEM within 24 hours of configuration. Set up SIEM alerts for:</p>
 <ul>
-<li>VPLEX management actions are logged in VMS logs: <code>/var/log/VPlex/vplexmanagement.log</code></li>
-<li>CLI command history is logged in: <code>/var/log/VPlex/cli/vplexcli.log</code></li>
-<li>Forward VMS syslog to a centralised SIEM for management action auditing</li>
+<li>Multiple failed SSH login attempts to VMS (brute-force indicator)</li>
+<li>Storage view creation or deletion (host access changes)</li>
+<li>Consistency group detach or suspend events (potential I/O impact)</li>
+<li>Director hardware fault events</li>
 </ul>
+<h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH session timeout</td>
+<td>Configure <code>ClientAliveInterval 300</code> and <code>ClientAliveCountMax 3</code> in <code>/etc/ssh/sshd_config</code> to terminate idle sessions after 15 minutes</td>
+</tr>
+<tr>
+<td>Unisphere session timeout</td>
+<td>Configure via Unisphere → Settings → Session; set to 15–30 minutes for production</td>
+</tr>
+<tr>
+<td>Concurrent sessions</td>
+<td>Limit concurrent SSH sessions to VMS to reduce exposure; enforce via PAM if required</td>
+</tr>
+<tr>
+<td>MFA for SSH</td>
+<td>Configure if the PAM infrastructure supports it (e.g., Duo PAM module); not natively provided by VPLEX</td>
+</tr>
+</tbody>
+</table>
 
 
 

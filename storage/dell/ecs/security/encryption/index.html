@@ -725,13 +725,91 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="TLS Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-version-and-cipher-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Version and Cipher Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-disablement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Disablement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
+  <a href="#data-at-rest-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data at Rest Encryption
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data at Rest Encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-encryption-on-a-namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enabling Encryption on a Namespace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#key-management" class="md-nav__link">
     <span class="md-ellipsis">
       
         Key Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Monitoring
       
     </span>
   </a>
@@ -772,7 +850,7 @@
 <tr>
 <td>Data in transit</td>
 <td>TLS 1.2+</td>
-<td>Enforced on S3 (443), Management API (4443); configure minimum TLS version in ECS Portal → Settings → Security</td>
+<td>Enforced on S3 (443/9021), Swift (9024), Management API (4443); configure minimum TLS version in ECS Portal → Settings → Security</td>
 </tr>
 <tr>
 <td>Data at rest</td>
@@ -782,28 +860,218 @@
 <tr>
 <td>Key management</td>
 <td>Internal ECS KMS or external KMIP server</td>
-<td>For compliance, use an external KMIP-compatible KMS (e.g., Dell PowerProtect Data Manager, HashiCorp Vault)</td>
+<td>For compliance, use an external KMIP-compatible KMS (e.g., HashiCorp Vault, Thales CipherTrust)</td>
 </tr>
 </tbody>
 </table>
-<p>Enable encryption at rest on namespaces that hold regulated data (PCI, HIPAA, GDPR). Note that enabling encryption on an existing namespace does not retroactively encrypt already-stored objects.</p>
+<p>Enable encryption at rest on namespaces that hold regulated data (PCI, HIPAA, GDPR). Note that enabling encryption on an existing namespace does not retroactively encrypt already-stored objects — only objects written after encryption is enabled are encrypted.</p>
 <h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Minimum TLS version: TLS 1.2; disable TLS 1.0 and 1.1 in ECS Portal → Settings → Security</li>
-<li>Replace self-signed certificates on the Management API (4443) and S3 endpoint (443) with certificates signed by the corporate CA</li>
-<li>Disable HTTP (port 9021) in production; require HTTPS for all S3 access</li>
-<li>Monitor certificate expiry: renew TLS certificates at least 30 days before expiry (ECS Portal → Settings → Certificates)</li>
-</ul>
-<h2 id="key-management">Key Management<a class="headerlink" href="#key-management" title="Permanent link">&para;</a></h2>
+<h3 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h3>
+<p>ECS ships with self-signed certificates for both the Management API (port 4443) and the S3 endpoint (port 443/9021). Replace these with certificates signed by your corporate CA before go-live.</p>
+<p><strong>Certificate locations in ECS Portal:</strong>
+- ECS Portal → Settings → Certificates → Management Certificate (for port 4443)
+- ECS Portal → Settings → Certificates → Object Virtual Pool Certificate (for S3 endpoint)</p>
+<p><strong>Certificate requirements:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Key type</td>
+<td>RSA 2048-bit minimum; RSA 4096-bit or ECDSA P-256 recommended</td>
+</tr>
+<tr>
+<td>Signature algorithm</td>
+<td>SHA-256 or stronger</td>
+</tr>
+<tr>
+<td>Subject Alternative Names</td>
+<td>Must include all node FQDNs and the load balancer FQDN / VIP</td>
+</tr>
+<tr>
+<td>Validity period</td>
+<td>Maximum 2 years recommended (1 year preferred for compliance)</td>
+</tr>
+<tr>
+<td>Key Usage</td>
+<td>Digital Signature, Key Encipherment</td>
+</tr>
+<tr>
+<td>Extended Key Usage</td>
+<td>TLS Web Server Authentication</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Certificate renewal procedure:</strong></p>
+<ol>
+<li>Generate a CSR from ECS Portal → Settings → Certificates → Generate CSR</li>
+<li>Submit the CSR to your corporate CA and obtain a signed certificate</li>
+<li>Upload the signed certificate to ECS Portal → Settings → Certificates → Upload Certificate</li>
+<li>ECS applies the certificate to the endpoint; no service restart required for certificate updates in ECS 3.8+</li>
+<li>Verify the new certificate is served on the endpoint:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:4443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject<span class="w"> </span>-issuer
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-s3-endpoint&gt;:9021<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject<span class="w"> </span>-issuer
+</code></pre></div></li>
+<li>Confirm consuming applications can connect without SSL errors</li>
+<li>Update monitoring to track the new certificate expiry date</li>
+</ol>
+<h3 id="tls-version-and-cipher-configuration">TLS Version and Cipher Configuration<a class="headerlink" href="#tls-version-and-cipher-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ECS Portal → Settings → Security → SSL/TLS Settings
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  - Minimum TLS version: TLS 1.2 (disable TLS 1.0 and 1.1)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  - Cipher suites: Remove RC4, DES, 3DES, and NULL ciphers
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  - Prefer: TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+</code></pre></div>
+<p>Verify cipher configuration from a Linux host:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check which TLS versions and ciphers the endpoint accepts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">9021</span><span class="w"> </span>&lt;ecs-node&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify TLS 1.0 is rejected</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>-tls1<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;CONNECTED|handshake failure&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify TLS 1.2 succeeds</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>-tls1_2<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;CONNECTED|Protocol&quot;</span>
+</code></pre></div>
+<h3 id="http-disablement">HTTP Disablement<a class="headerlink" href="#http-disablement" title="Permanent link">&para;</a></h3>
+<p>Disable HTTP (port 9021 plain HTTP) in production. Only HTTPS should be accessible for S3 clients.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ECS Portal → Settings → Security → Object Access
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  - Disable HTTP access: enabled
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  - Force HTTPS only: enabled
+</code></pre></div>
+<p>Verify port 9021 (plain HTTP) is not responding externally. The HTTPS port remains 9021 for S3 when using the non-standard S3 port; ensure firewall rules allow only 443 or 9021 from authorised source networks.</p>
+<h2 id="data-at-rest-encryption">Data at Rest Encryption<a class="headerlink" href="#data-at-rest-encryption" title="Permanent link">&para;</a></h2>
+<h3 id="enabling-encryption-on-a-namespace">Enabling Encryption on a Namespace<a class="headerlink" href="#enabling-encryption-on-a-namespace" title="Permanent link">&para;</a></h3>
+<p>Encryption at rest is configured per namespace. Enable it at namespace creation for new namespaces; enabling it on existing namespaces only encrypts objects written after the change.</p>
+<p><strong>Via ECS Portal:</strong>
+1. Navigate to ECS Portal → Manage → Namespaces → New Namespace (or select existing → Edit)
+2. Enable <strong>Encryption</strong> in the namespace configuration
+3. Select the key management type: <strong>Internal ECS KMS</strong> or <strong>External KMIP</strong>
+4. Save; new objects written to buckets in this namespace will be encrypted with AES-256</p>
+<p><strong>Via Management REST API:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable encryption on a new namespace</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/object/namespaces/namespace&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    &quot;id&quot;: &quot;compliance-data&quot;,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">    &quot;default_data_services_vpool&quot;: &quot;&lt;replication-group-id&gt;&quot;,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">    &quot;is_encryption_enabled&quot;: true,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">    &quot;is_compliance_enabled&quot;: true</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<h3 id="key-management">Key Management<a class="headerlink" href="#key-management" title="Permanent link">&para;</a></h3>
 <p><strong>Internal ECS KMS:</strong>
 - Default key management built into the ECS cluster
-- Keys are stored within the ECS cluster itself
-- Suitable for environments without an external KMS requirement</p>
+- Encryption keys are stored within the ECS metadata store (Cassandra)
+- Suitable for environments without a regulatory requirement for external key management
+- Risk: if all ECS nodes are simultaneously compromised or destroyed, keys may be unrecoverable — acceptable for most enterprise environments</p>
 <p><strong>External KMIP KMS:</strong>
-- Required for compliance environments (PCI DSS, HIPAA)
-- Supported KMS platforms: Dell PowerProtect Data Manager, HashiCorp Vault, Thales CipherTrust, and other KMIP-compatible servers
-- Configure in ECS Portal → Settings → Key Management
-- Verify connectivity to the KMIP server before enabling encryption on production namespaces</p>
+- Required for PCI DSS, HIPAA, and other regulated environments that mandate external key custody
+- ECS communicates with the KMIP server to retrieve encryption keys at object read/write time
+- Supported KMIP-compatible servers:
+  - HashiCorp Vault (with KMIP Secrets Engine)
+  - Thales CipherTrust Manager
+  - Entrust KeyControl
+  - Dell PowerProtect Data Manager
+  - Unbound CORE (formerly Unbound Tech)</p>
+<p><strong>External KMIP configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ECS Portal → Settings → Key Management
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  - KMIP server hostname/IP: &lt;kmip-server-fqdn&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  - KMIP port: 5696 (standard KMIP port)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  - Client certificate: &lt;ECS-KMIP-client-cert.pem&gt;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  - Client key: &lt;ECS-KMIP-client-key.pem&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  - CA certificate: &lt;KMIP-server-CA.pem&gt; (for server validation)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  - Test connection before saving
+</code></pre></div>
+<p><strong>Key management operational considerations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KMIP availability</td>
+<td>The KMIP server must be reachable for ECS to read encrypted objects; KMIP unavailability blocks reads on encrypted namespaces</td>
+</tr>
+<tr>
+<td>Key backup</td>
+<td>Back up KMIP server data and encryption key material independently; key loss makes encrypted objects unrecoverable</td>
+</tr>
+<tr>
+<td>Network path</td>
+<td>Dedicate a low-latency, reliable network path between ECS nodes and the KMIP server; KMIP latency adds to every object I/O on encrypted namespaces</td>
+</tr>
+<tr>
+<td>Certificate rotation</td>
+<td>KMIP client certificates (ECS-to-KMIP TLS) must be rotated before expiry; certificate expiry causes KMIP communication failure</td>
+</tr>
+</tbody>
+</table>
+<h2 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h2>
+<p>Track all ECS certificate expiry dates in your monitoring system. Certificates should be renewed at least 30 days before expiry.</p>
+<table>
+<thead>
+<tr>
+<th>Certificate</th>
+<th>Location</th>
+<th>Typical Validity</th>
+<th>Renewal Lead Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management API TLS cert</td>
+<td>ECS Portal → Settings → Certificates</td>
+<td>1–2 years</td>
+<td>30 days</td>
+</tr>
+<tr>
+<td>S3 endpoint TLS cert</td>
+<td>ECS Portal → Settings → Certificates</td>
+<td>1–2 years</td>
+<td>30 days</td>
+</tr>
+<tr>
+<td>KMIP client cert (if used)</td>
+<td>KMIP KMS and ECS key management config</td>
+<td>1–3 years</td>
+<td>60 days</td>
+</tr>
+<tr>
+<td>LDAP/LDAPS CA cert (if used)</td>
+<td>ECS namespace LDAP config</td>
+<td>1–10 years</td>
+<td>60 days</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check certificate expiry on the Management API endpoint</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:4443<span class="w"> </span>-servername<span class="w"> </span>&lt;ecs-node&gt;<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check certificate expiry on the S3 endpoint</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:9021<span class="w"> </span>-servername<span class="w"> </span>&lt;ecs-node&gt;<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Alert if certificate expires within 30 days (for use in monitoring scripts)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nv">EXPIRY</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;ecs-node&gt;:4443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nv">EXPIRY_EPOCH</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPIRY</span><span class="s2">&quot;</span><span class="w"> </span>+%s<span class="k">)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">NOW_EPOCH</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nv">DAYS_LEFT</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="o">(</span><span class="nv">EXPIRY_EPOCH</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">NOW_EPOCH</span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">86400</span><span class="w"> </span><span class="k">))</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Certificate expires in </span><span class="nv">$DAYS_LEFT</span><span class="s2"> days&quot;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="o">[[</span><span class="w"> </span><span class="nv">$DAYS_LEFT</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARNING: Certificate renewal required&quot;</span>
+</code></pre></div>
 
 
 

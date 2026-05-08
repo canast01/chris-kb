@@ -717,6 +717,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#data-durability-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Durability Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration-backup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -724,6 +735,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Configuration Backup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scripted-configuration-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scripted Configuration Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -736,13 +764,74 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Restoring Object Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-failure-within-a-vdc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Failure (Within a VDC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vdc-failure-geo-replication-configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VDC Failure (Geo-Replication Configured)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accidental-object-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accidental Object Deletion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-lock-worm-protected-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Lock (WORM) Protected Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
+  <a href="#veeam-backup-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation
+        Veeam Backup Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-after-restore-or-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation After Restore or Failover
       
     </span>
   </a>
@@ -770,87 +859,287 @@
 
 
 <h1 id="dell-ecs-backup-restore">Dell ECS — Backup &amp; Restore<a class="headerlink" href="#dell-ecs-backup-restore" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Backup configuration, restore procedures, and validation for Dell ECS.</p>
-</blockquote>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell ECS is an object storage platform. Data protection is primarily delivered through:</p>
 <ul>
 <li><strong>Geo-replication</strong>: Objects are replicated across VDCs via replication groups. This is the primary mechanism for data durability and site-level recovery.</li>
 <li><strong>Erasure coding</strong>: Within a VDC, objects are protected against disk and node failure through erasure coding (typically 12+4).</li>
-<li><strong>S3 Object Lock (WORM)</strong>: Immutable retention for compliance and backup data.</li>
+<li><strong>S3 Object Lock (WORM)</strong>: Immutable retention for compliance and backup data; prevents deletion or overwrite within the retention period.</li>
 </ul>
 <p>ECS does not have a traditional backup agent. Configuration backup covers the management layer; data is protected by replication and erasure coding.</p>
+<h2 id="data-durability-model">Data Durability Model<a class="headerlink" href="#data-durability-model" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Protection Layer</th>
+<th>Scope</th>
+<th>Failure Domain Covered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Erasure coding (12+4)</td>
+<td>Within a single VDC</td>
+<td>Protects against up to 4 simultaneous disk/node failures within a VDC</td>
+</tr>
+<tr>
+<td>Geo-replication (async)</td>
+<td>Cross-VDC</td>
+<td>Protects against VDC-level site failure with RPO governed by replication lag</td>
+</tr>
+<tr>
+<td>Geo-replication (sync)</td>
+<td>Cross-VDC</td>
+<td>Zero-RPO VDC-level protection; requires sufficient WAN bandwidth</td>
+</tr>
+<tr>
+<td>Object Lock (WORM)</td>
+<td>Per-object, per-bucket</td>
+<td>Prevents accidental or malicious deletion/overwrite within the retention window</td>
+</tr>
+<tr>
+<td>Bucket versioning</td>
+<td>Per-bucket</td>
+<td>Allows point-in-time recovery of individual objects to previous versions</td>
+</tr>
+</tbody>
+</table>
 <h2 id="configuration-backup">Configuration Backup<a class="headerlink" href="#configuration-backup" title="Permanent link">&para;</a></h2>
-<p>Back up the following ECS configuration artefacts regularly:</p>
+<p>Back up the following ECS configuration artefacts regularly. Configuration is not backed up by erasure coding or geo-replication — it must be captured separately.</p>
 <table>
 <thead>
 <tr>
 <th>Artefact</th>
 <th>Location</th>
-<th>Method</th>
+<th>Backup Method</th>
+<th>Frequency</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Replication group topology</td>
 <td>ECS Portal → Settings</td>
-<td>Document in runbook; export via Management API</td>
+<td><code>GET /vdc/data-service/vpools</code> — save JSON output</td>
+<td>Weekly</td>
 </tr>
 <tr>
-<td>Namespace and bucket configuration</td>
-<td><code>ecscli namespace get</code> / <code>ecscli bucket get</code></td>
+<td>Namespace configuration</td>
+<td><code>ecscli namespace get --name &lt;ns&gt;</code></td>
 <td>Script-based export via REST API</td>
+<td>Weekly</td>
 </tr>
 <tr>
-<td>IAM users and access keys</td>
-<td>ECS Portal → Namespace → IAM Users</td>
-<td>Document; keys cannot be retrieved after creation</td>
+<td>Bucket configuration</td>
+<td><code>ecscli bucket get --namespace &lt;ns&gt; --name &lt;bucket&gt;</code></td>
+<td>Script-based export via REST API</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>IAM users (object user names)</td>
+<td><code>ecscli user list-object-users --namespace &lt;ns&gt;</code></td>
+<td>Script-based export — keys cannot be retrieved after creation</td>
+<td>Weekly</td>
 </tr>
 <tr>
 <td>TLS certificates</td>
 <td>ECS Portal → Settings → Certificates</td>
-<td>Export and store in secrets management</td>
+<td>Export certificate files; store private key in secrets management</td>
+<td>Before rotation</td>
 </tr>
 <tr>
-<td>Syslog / SNMP configuration</td>
+<td>Syslog and SNMP configuration</td>
 <td>ECS Portal → Settings</td>
 <td>Document in runbook</td>
+<td>On change</td>
+</tr>
+<tr>
+<td>Bucket policies</td>
+<td><code>aws s3api get-bucket-policy --bucket &lt;bucket&gt;</code></td>
+<td>Script-based export per bucket</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Lifecycle policies</td>
+<td><code>aws s3api get-bucket-lifecycle-configuration --bucket &lt;bucket&gt;</code></td>
+<td>Script-based export per bucket</td>
+<td>Weekly</td>
 </tr>
 </tbody>
 </table>
-<h2 id="restoring-object-data">Restoring Object Data<a class="headerlink" href="#restoring-object-data" title="Permanent link">&para;</a></h2>
-<p>Object data restore depends on the failure scenario:</p>
-<p><strong>Node failure (within a VDC):</strong>
-- ECS automatically rebuilds erasure coding stripes to surviving nodes
-- No manual restore required; monitor rebuild progress in ECS Portal → Hardware → Disks</p>
-<p><strong>VDC failure (geo-replication configured):</strong>
-1. Update client S3 endpoints to point to the surviving VDC
-2. Confirm data is accessible: <code>aws s3 ls s3://&lt;bucket&gt;/ --endpoint-url https://&lt;secondary-vdc&gt;</code>
-3. Check replication lag at the time of failure to understand RPO exposure
-4. When the failed VDC recovers, re-add it to the replication group and allow data to resync</p>
-<p><strong>Accidental object deletion:</strong>
-- If bucket versioning is enabled, restore a previous version via the S3 API:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List object versions to find the version to restore</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-object-versions<span class="w"> </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;<span class="w"> </span>--no-verify-ssl
+<h3 id="scripted-configuration-export">Scripted Configuration Export<a class="headerlink" href="#scripted-configuration-export" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Export key ECS configuration artefacts to a local directory</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Usage: ECS_HOST=ecs01.example.com ECS_USER=sysadmin ECS_PASS=secret ./ecs_config_export.sh</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Copy the desired version back as the current object</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>aws<span class="w"> </span>s3api<span class="w"> </span>copy-object<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--copy-source<span class="w"> </span><span class="s2">&quot;&lt;bucket&gt;/&lt;key&gt;?versionId=&lt;version-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--key<span class="w"> </span>&lt;key&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;<span class="w"> </span>--no-verify-ssl
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">ECS_HOST</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS_HOST</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">ECS_USER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS_USER</span><span class="k">:-</span><span class="nv">sysadmin</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">ECS_PASS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ECS_PASS</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">OUTDIR</span><span class="o">=</span><span class="s2">&quot;./ecs-config-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">ECS</span><span class="o">=</span><span class="s2">&quot;https://</span><span class="nv">$ECS_HOST</span><span class="s2">:4443&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS_USER</span><span class="s2">:</span><span class="nv">$ECS_PASS</span><span class="s2">&quot;</span><span class="w"> </span>-D<span class="w"> </span>-<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\r&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ERROR: Authentication failed.&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>api<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Export VDC info, nodes, alerts, capacity</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>api<span class="w"> </span><span class="s2">&quot;/vdc/capacity&quot;</span><span class="w">          </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">/vdc_capacity.json&quot;</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>api<span class="w"> </span><span class="s2">&quot;/vdc/nodes&quot;</span><span class="w">             </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">/vdc_nodes.json&quot;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>api<span class="w"> </span><span class="s2">&quot;/vdc/data-service/vpools&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">/replication_groups.json&quot;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>api<span class="w"> </span><span class="s2">&quot;/object/namespaces&quot;</span><span class="w">     </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">/namespaces.json&quot;</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Export per-namespace bucket list</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="nv">NAMESPACES</span><span class="o">=</span><span class="k">$(</span>api<span class="w"> </span><span class="s2">&quot;/object/namespaces&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span><span class="s2">&quot;import sys,json; [print(n[&#39;name&#39;]) for n in json.load(sys.stdin).get(&#39;namespace&#39;,[])]&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="k">for</span><span class="w"> </span>NS<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$NAMESPACES</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span>api<span class="w"> </span><span class="s2">&quot;/object/bucket?namespace=</span><span class="nv">$NS</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">/buckets_</span><span class="si">${</span><span class="nv">NS</span><span class="si">}</span><span class="s2">.json&quot;</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="k">done</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ECS</span><span class="s2">/logout&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Configuration exported to </span><span class="nv">$OUTDIR</span><span class="s2">&quot;</span>
 </code></pre></div>
-- If versioning is not enabled, the object is unrecoverable unless present on a remote VDC with lower replication lag</p>
-<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
-<p>After any restore or VDC failover, validate the following:</p>
+<h2 id="restoring-object-data">Restoring Object Data<a class="headerlink" href="#restoring-object-data" title="Permanent link">&para;</a></h2>
+<p>Object data restore depends on the failure scenario.</p>
+<h3 id="node-failure-within-a-vdc">Node Failure (Within a VDC)<a class="headerlink" href="#node-failure-within-a-vdc" title="Permanent link">&para;</a></h3>
+<p>ECS automatically rebuilds erasure coding stripes to surviving nodes when a node or disk fails.</p>
 <ul>
-<li>[ ] S3 endpoint functional test: <code>HeadBucket</code> or <code>ListBuckets</code> succeeds</li>
-<li>[ ] <code>ecscli namespace list</code> — all expected namespaces present</li>
-<li>[ ] Spot-check a sample of critical objects with <code>HeadObject</code> to confirm accessibility</li>
-<li>[ ] Confirm geo-replication is running and lag is at zero between all VDCs</li>
-<li>[ ] Application teams confirm S3 workloads are running normally</li>
+<li>No manual restore required</li>
+<li>Monitor rebuild progress: ECS Portal → Hardware → Disks — <code>REBUILDING</code> state progresses to <code>GOOD</code> when complete</li>
+<li>Rebuild duration depends on the amount of data on the failed disk and available cluster bandwidth; typically 8–24 hours for a dense node</li>
+<li>Do not attempt any planned maintenance (upgrades, node additions) while a rebuild is in progress</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Monitor overall node and disk state during a rebuild</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Watch capacity to ensure the cluster has sufficient headroom for the rebuild</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/vdc/capacity&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<h3 id="vdc-failure-geo-replication-configured">VDC Failure (Geo-Replication Configured)<a class="headerlink" href="#vdc-failure-geo-replication-configured" title="Permanent link">&para;</a></h3>
+<p>When a VDC becomes unavailable:</p>
+<ol>
+<li>Update client S3 endpoints to point to the surviving VDC IP/FQDN</li>
+<li>Confirm data is accessible:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;secondary-vdc&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div></li>
+<li>Check replication lag at the time of failure to understand RPO exposure — the geo-monitoring lag value at the moment of failure represents the maximum data loss window</li>
+<li>Communicate RPO status to application owners; for asynchronous replication, objects written in the lag window may not be present on the surviving VDC</li>
+<li>When the failed VDC recovers, re-add it to the replication group and allow data to resync before sending writes back to it</li>
+<li>Monitor resync progress in ECS Portal → Geo Monitoring; wait for lag to return to zero before considering recovery complete</li>
+</ol>
+<h3 id="accidental-object-deletion">Accidental Object Deletion<a class="headerlink" href="#accidental-object-deletion" title="Permanent link">&para;</a></h3>
+<p><strong>With bucket versioning enabled:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all versions and delete markers for an object</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-object-versions<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--prefix<span class="w"> </span>&lt;object-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Remove the delete marker to restore the object to the latest version</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>aws<span class="w"> </span>s3api<span class="w"> </span>delete-object<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--key<span class="w"> </span>&lt;object-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--version-id<span class="w"> </span>&lt;delete-marker-version-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Alternatively, restore a specific previous version by copying it as the current object</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>aws<span class="w"> </span>s3api<span class="w"> </span>copy-object<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>--copy-source<span class="w"> </span><span class="s2">&quot;&lt;bucket&gt;/&lt;object-key&gt;?versionId=&lt;version-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span>--key<span class="w"> </span>&lt;object-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div>
+<p><strong>Without versioning enabled:</strong>
+- The object is unrecoverable unless it exists on a remote VDC with replication lag less than the time of deletion
+- Immediately check the remote VDC:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>aws<span class="w"> </span>s3api<span class="w"> </span>head-object<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--key<span class="w"> </span>&lt;object-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;remote-vdc&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div>
+- If found on the remote VDC, copy it back:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>s3://&lt;bucket&gt;/&lt;object-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>s3://&lt;bucket&gt;/&lt;object-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--source-region<span class="w"> </span>us-east-1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--copy-props<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;remote-vdc&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div></p>
+<h3 id="object-lock-worm-protected-objects">Object Lock (WORM) Protected Objects<a class="headerlink" href="#object-lock-worm-protected-objects" title="Permanent link">&para;</a></h3>
+<p>Objects within their Object Lock retention period cannot be deleted or overwritten. This is expected behaviour for compliance deployments.</p>
+<ul>
+<li>To verify the retention status of an object:
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-object-retention<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--key<span class="w"> </span>&lt;object-key&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div></li>
+<li>Compliance mode locks cannot be shortened or removed even by <code>sysadmin</code>; they expire automatically when the <code>RetainUntilDate</code> passes</li>
+<li>Governance mode locks can be overridden by a user with the <code>s3:BypassGovernanceRetention</code> permission — do not use Governance mode for regulated compliance workloads</li>
+</ul>
+<h2 id="veeam-backup-integration">Veeam Backup Integration<a class="headerlink" href="#veeam-backup-integration" title="Permanent link">&para;</a></h2>
+<p>ECS serves as an S3-compatible target for Veeam Backup &amp; Replication (Capacity Tier or Scale-out Backup Repository). ECS retains Veeam backup data; Veeam manages its own restore procedures.</p>
+<p><strong>ECS configuration for Veeam:</strong></p>
+<ol>
+<li>Create a dedicated namespace: <code>veeam-prod</code></li>
+<li>Create a dedicated bucket: <code>veeam-prod-offload</code> with Object Lock enabled (if immutable backups are required)</li>
+<li>Create a dedicated object user: <code>svc-veeam-prod</code> with read/write access to the bucket</li>
+<li>Set a hard quota on the namespace equal to the planned Veeam storage allocation + 20% buffer</li>
+<li>In Veeam: Backup Infrastructure → Add Backup Repository → Object Storage → S3 Compatible</li>
+<li>Endpoint: <code>https://&lt;ecs-load-balancer&gt;:9021</code></li>
+<li>Credentials: access key and secret key for <code>svc-veeam-prod</code></li>
+<li>Bucket: <code>veeam-prod-offload</code></li>
+<li>Enable immutability if Object Lock was enabled on the bucket</li>
+</ol>
+<p><strong>Validating Veeam backup data on ECS:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm backup data is present on ECS</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://veeam-prod-offload/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--recursive<span class="w"> </span>--human-readable<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check bucket size and object count</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-objects-v2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--bucket<span class="w"> </span>veeam-prod-offload<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;length(Contents)&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>https://&lt;ecs-endpoint&gt;:9021<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>--no-verify-ssl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>--profile<span class="w"> </span>ecs
+</code></pre></div>
+<h2 id="validation-after-restore-or-failover">Validation After Restore or Failover<a class="headerlink" href="#validation-after-restore-or-failover" title="Permanent link">&para;</a></h2>
+<p>After any restore or VDC failover, validate the following before declaring recovery complete:</p>
+<ul>
+<li>[ ] S3 endpoint functional test: <code>HeadBucket</code> or <code>ListBuckets</code> succeeds from the primary consuming application</li>
+<li>[ ] <code>ecscli namespace list</code> — all expected namespaces present on the surviving VDC</li>
+<li>[ ] Spot-check a sample of critical objects with <code>HeadObject</code> to confirm accessibility and correct size</li>
+<li>[ ] For versioned buckets: verify expected versions are present with <code>list-object-versions</code></li>
+<li>[ ] Confirm geo-replication is running and lag is at zero between all VDCs (after VDC recovery)</li>
+<li>[ ] Application teams confirm S3 workloads are running normally with no authentication or connectivity errors</li>
+<li>[ ] No new <code>FAILED</code> or <code>DEGRADED</code> nodes in <code>GET /vdc/nodes</code></li>
+<li>[ ] Capacity utilisation is within expected range; no unexpected jump from rebalancing</li>
 </ul>
 
 

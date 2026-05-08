@@ -1118,10 +1118,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#finding-the-right-alarm-or-event" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Finding the Right Alarm or Event
       
     </span>
   </a>
@@ -1129,10 +1129,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#filtering-events-by-type-and-time" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Filtering Events by Type and Time
       
     </span>
   </a>
@@ -1140,43 +1140,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#common-alarm-noise-and-tuning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#operational-tasks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Operational Tasks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#upgrade-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
+        Common Alarm Noise and Tuning
       
     </span>
   </a>
@@ -1489,125 +1456,78 @@
 - <code>/var/log/vmware/applmgmt/applmgmt.log</code>
 - <code>/var/log/vmware/applmgmt/software-packages.log</code></p>
 <h2 id="alarms-and-events">Alarms and Events<a class="headerlink" href="#alarms-and-events" title="Permanent link">&para;</a></h2>
-<p>Alarm review, event history, alert tuning, noise reduction, and useful operational signals.</p>
-<h3 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Review active alarms.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Check recent failed tasks.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Confirm service health.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Confirm capacity and performance are normal.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Check recent changes.</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Add environment-specific commands here</span>
+<h3 id="finding-the-right-alarm-or-event">Finding the Right Alarm or Event<a class="headerlink" href="#finding-the-right-alarm-or-event" title="Permanent link">&para;</a></h3>
+<p>vCenter alarms are visible under the <strong>Alarms</strong> tab on any inventory object (datacenter, cluster, host, VM). Triggered alarms surface the affected object, the alarm definition, and the time of the trigger.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># List all VMs with active triggered alarms</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">TriggeredAlarmState</span><span class="p">.</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;AlarmCount&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">TriggeredAlarmState</span><span class="p">.</span><span class="n">Count</span><span class="p">}}</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c"># Get alarm details for a specific VM</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="s2">&quot;app-server-01&quot;</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="nv">$vm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">TriggeredAlarmState</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        <span class="n">Alarm</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Alarm</span><span class="p">.</span><span class="n">ToString</span><span class="p">()</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="n">Status</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OverallStatus</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        <span class="n">Time</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Time</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>    <span class="p">}</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="p">}</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c"># Acknowledge all alarms on a specific host</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="nv">$host</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.corp.local&quot;</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="nv">$host</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">TriggeredAlarmState</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>    <span class="nv">$alarmMgr</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">AlarmManager</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>    <span class="nv">$alarmMgr</span><span class="p">.</span><span class="n">AcknowledgeAlarm</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Alarm</span><span class="p">,</span> <span class="nv">$host</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="p">}</span>
 </code></pre></div>
-<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Failed or stuck tasks.</li>
-<li>Certificate, DNS, or authentication issues.</li>
-<li>Capacity pressure.</li>
-<li>Service health warnings.</li>
-<li>Version mismatch after maintenance.</li>
-<li>Monitoring gaps.</li>
-</ul>
-<h3 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h3>
+<h3 id="filtering-events-by-type-and-time">Filtering Events by Type and Time<a class="headerlink" href="#filtering-events-by-type-and-time" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># All error-level events in the last 24 hours</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Get-VIEvent</span> <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;Error|Fault&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="nb">Select-Object</span> <span class="n">CreatedTime</span><span class="p">,</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">FullFormattedMessage</span> <span class="p">|</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="nb">Sort-Object</span> <span class="n">CreatedTime</span> <span class="n">-Descending</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c"># Events for a specific cluster</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="nb">Get-VIEvent</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span><span class="p">)</span> <span class="n">-MaxSamples</span> <span class="n">200</span> <span class="p">|</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="nb">Select-Object</span> <span class="n">CreatedTime</span><span class="p">,</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">FullFormattedMessage</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c"># Login/logout events</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">500</span> <span class="p">|</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;Login|Logout&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    <span class="nb">Select-Object</span> <span class="n">CreatedTime</span><span class="p">,</span> <span class="n">UserName</span><span class="p">,</span> <span class="n">FullFormattedMessage</span>
+</code></pre></div>
+<h3 id="common-alarm-noise-and-tuning">Common Alarm Noise and Tuning<a class="headerlink" href="#common-alarm-noise-and-tuning" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Task</th>
-<th>Command</th>
+<th>Alarm</th>
+<th>Common False Positive Cause</th>
+<th>Tuning Action</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Review alarms and events.</td>
-<td></td>
+<td>Host memory usage &gt; threshold</td>
+<td>Memory balloon during low activity</td>
+<td>Raise threshold to 85% or add host-level override</td>
 </tr>
 <tr>
-<td>Confirm ownership and support notes.</td>
-<td></td>
+<td>Datastore disk usage &gt; threshold</td>
+<td>Snapshot growth or thin-provisioning</td>
+<td>Set threshold to 80%; alert on trend not point-in-time</td>
 </tr>
 <tr>
-<td>Validate dependencies.</td>
-<td></td>
+<td>Virtual machine CPU ready &gt; threshold</td>
+<td>Low-vCPU-count VMs in high-density clusters</td>
+<td>Tune threshold per workload type</td>
 </tr>
 <tr>
-<td>Document changes.</td>
-<td></td>
-</tr>
-<tr>
-<td>Confirm monitoring coverage.</td>
-<td></td>
+<td>SSH enabled on host</td>
+<td>Break-glass or maintenance</td>
+<td>Add suppression or use alarm action to auto-disable SSH after X hours</td>
 </tr>
 </tbody>
 </table>
-<h3 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Confirm compatibility.</li>
-<li>Review known issues.</li>
-<li>Confirm rollback plan.</li>
-<li>Validate health before and after the change.</li>
-</ul>
-<h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Recommendation</th>
-<th>Detail</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Keep naming consistent.</td>
-<td>Keep naming consistent.</td>
-</tr>
-<tr>
-<td>Keep versions aligned.</td>
-<td>Keep versions aligned.</td>
-</tr>
-<tr>
-<td>Avoid unsupported version combinations.</td>
-<td>Avoid unsupported version combinations.</td>
-</tr>
-<tr>
-<td>Document exceptions.</td>
-<td>Document exceptions.</td>
-</tr>
-<tr>
-<td>Validate after every change.</td>
-<td>Validate after every change.</td>
-</tr>
-</tbody>
-</table>
+<p>Alarm definitions are managed at <strong>vCenter → Configure → Alarm Definitions</strong>. Each alarm has configurable thresholds, trigger conditions, and actions (send email, run script, send SNMP trap).</p>
 
 
 

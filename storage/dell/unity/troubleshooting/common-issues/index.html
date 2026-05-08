@@ -706,21 +706,121 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
+  <a href="#common-issues-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Issues
+        Common Issues Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-storage-fc-iscsi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block Storage (FC / iSCSI)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#nas-file-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident Triage
+        NAS / File Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pool-and-capacity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool and Capacity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-processors-and-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Processors and Hardware
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#management-and-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management and Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#incident-triage-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Triage Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Incident Triage Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#incident-data-collection-form" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Data Collection Form
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-behaviours-not-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Behaviours (Not Bugs)
       
     </span>
   </a>
@@ -748,74 +848,303 @@
 
 
 <h1 id="unity-common-issues">Unity — Common Issues<a class="headerlink" href="#unity-common-issues" title="Permanent link">&para;</a></h1>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<h2 id="common-issues-reference">Common Issues Reference<a class="headerlink" href="#common-issues-reference" title="Permanent link">&para;</a></h2>
+<h3 id="block-storage-fc-iscsi">Block Storage (FC / iSCSI)<a class="headerlink" href="#block-storage-fc-iscsi" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Symptom</th>
 <th>Likely Cause</th>
-<th>Action</th>
+<th>Diagnostic Steps</th>
+<th>Resolution</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>LUN not visible to FC host</td>
-<td>Host not registered in Unisphere, or FC zoning incomplete</td>
-<td>Register the host and its initiator WWNs in Unisphere &gt; Hosts; confirm FC zone is active and contains both host and Unity SP ports</td>
+<td>LUN not visible to FC host after provisioning</td>
+<td>Host not registered, FC zone not active, or LUN not mapped</td>
+<td>Check <code>uemcli /remote/host show</code> for the host; check <code>uemcli /stor/config/lunacl show</code> for LUN access</td>
+<td>Register host and initiator WWNs in Unisphere &gt; Hosts; verify FC zone contains both host HBA WWNs and Unity SP port WWNs; confirm LUN ACL maps to the host</td>
 </tr>
 <tr>
 <td>LUN not visible to iSCSI host</td>
-<td>iSCSI IQN not registered in Unisphere, or iSCSI portal unreachable</td>
-<td>Add host IQN in Unisphere &gt; Hosts; verify iSCSI portal IP is reachable from host; confirm iSCSI initiator login</td>
+<td>IQN not registered, iSCSI portal unreachable, or CHAP mismatch</td>
+<td><code>uemcli /remote/host show -detail</code>; <code>uemcli /net/if show</code> for iSCSI interface IPs; check iSCSI initiator connection log on host</td>
+<td>Add host IQN in Unisphere &gt; Hosts; confirm iSCSI portal IP is reachable from host; verify CHAP credentials match between host and Unity</td>
 </tr>
 <tr>
-<td>Replication session in Error or Paused state</td>
-<td>Network interruption between source and destination arrays, or destination pool full</td>
-<td>Check <code>uemcli /rep/session show</code>; verify network reachability; resolve capacity issue; resume with <code>uemcli /rep/session -id &lt;id&gt; resume</code></td>
+<td>LUN disappeared from host (not a planned failover)</td>
+<td>SP failover — host I/O redirected to peer SP; multipath driver may not have recovered</td>
+<td><code>uemcli /env/sp show</code> — is one SP offline? <code>uemcli /env/health show -filter "health.value ne OK"</code></td>
+<td>If SP failover, wait for multipath to re-path (30–60 seconds); rescan HBAs on host; if SP remains offline, open Dell support case</td>
 </tr>
 <tr>
-<td>NAS server not responding</td>
-<td>SP failover in progress, NAS server in error state, or network interface issue</td>
-<td>Check Unisphere health dashboard; verify NAS server status with <code>uemcli /net/nas show</code>; confirm the NAS server IP is on the active SP</td>
+<td>LUN visible to host but I/O errors</td>
+<td>Pool degraded, disk fault in RAID group, or cache issue</td>
+<td><code>uemcli /stor/config/pool show -detail</code>; <code>uemcli /stor/config/dg show -detail</code>; check Unisphere alerts</td>
+<td>Resolve disk fault or pool degradation; check RAID rebuild progress; do not expand or change pool during rebuild</td>
 </tr>
 <tr>
-<td>Pool approaching capacity</td>
-<td>Snapshot accumulation, or thin LUNs consuming more than expected</td>
-<td>Run <code>uemcli /stor/pool show -detail</code>; delete unneeded snapshots with <code>uemcli /stor/snap delete</code>; expand pool or thin-provision additional capacity</td>
+<td>Cannot expand LUN</td>
+<td>Pool does not have sufficient free space</td>
+<td><code>uemcli /stor/config/pool show -detail | grep -E "Size|Free"</code></td>
+<td>Expand the pool by adding disk groups; delete unneeded LUNs or snapshots to reclaim space</td>
 </tr>
 <tr>
-<td>SP fault (SP offline)</td>
-<td>Hardware failure — memory, CPU, SSD, or power module</td>
-<td>Check fault LED on SP chassis; run <code>uemcli /env/health show -filter "health.value ne OK"</code>; peer SP takes over automatically; open Dell support case immediately</td>
-</tr>
-<tr>
-<td>Write cache dirty warning</td>
-<td>SP peer communication lost; cache cannot mirror to partner</td>
-<td>Verify both SPs are online and the SP interconnect link is healthy; resolve SP communication fault before further I/O accumulates</td>
-</tr>
-<tr>
-<td>Disk fault in pool</td>
-<td>Physical drive failure</td>
-<td>Check <code>uemcli /env/health show -filter "health.value ne OK"</code>; identify faulted drive; replace physical drive; Unity automatically rebuilds if a hot spare or free drive is available</td>
-</tr>
-<tr>
-<td>Unisphere GUI unreachable</td>
-<td>SP management NIC fault, or management service crashed</td>
-<td>Try the peer SP's management IP; restart the Unisphere service via <code>uemcli /sys/service start -svc unisphere</code> if accessible via uemcli</td>
+<td>LUN delete fails</td>
+<td>LUN is still mapped to a host or has dependent snapshots</td>
+<td><code>uemcli /stor/config/lunacl show</code>; <code>uemcli /prot/snap show -res &lt;lun_id&gt;</code></td>
+<td>Remove all host access entries; delete all snapshots; then delete the LUN</td>
 </tr>
 </tbody>
 </table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p>When a host reports I/O errors or a LUN is inaccessible, work through this sequence before escalating:</p>
-<ul>
-<li>[ ] Check Unisphere health dashboard for any active alerts in the last 30 minutes</li>
-<li>[ ] Run <code>uemcli /env/health show -filter "health.value ne OK"</code> to identify any faulted components</li>
-<li>[ ] Verify both SP A and SP B are active: <code>uemcli /env/sp show</code></li>
-<li>[ ] Check pool health and capacity: <code>uemcli /stor/pool show -detail</code></li>
-<li>[ ] Review replication session state: <code>uemcli /rep/session show</code></li>
-<li>[ ] Check host registration and LUN access: <code>uemcli /remote/host show</code> and <code>uemcli /stor/config/lunacl show</code></li>
-<li>[ ] Review the Unisphere event log: System → Events → filter by time of incident</li>
-</ul>
+<h3 id="nas-file-storage">NAS / File Storage<a class="headerlink" href="#nas-file-storage" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Diagnostic Steps</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFS mount fails with "No route to host"</td>
+<td>NAS server interface IP unreachable</td>
+<td>Ping the NAS server IP from client; <code>uemcli /net/nas/if show -detail</code></td>
+<td>Confirm NAS file interface IP is configured and the port is up; check VLAN and routing between client and NAS server</td>
+</tr>
+<tr>
+<td>NFS mount fails with "Permission denied"</td>
+<td>NFS export access control does not include client IP</td>
+<td><code>uemcli /prot/nfs show -detail</code> — check <code>rwHosts</code>, <code>roHosts</code></td>
+<td>Add client IP or subnet to the export access list</td>
+</tr>
+<tr>
+<td>NFS stale file handle after maintenance</td>
+<td>Client cached SP IP that has moved to peer SP, or NAS server restarted</td>
+<td>Check current NAS server IP with <code>uemcli /net/nas/if show</code></td>
+<td>Remount the NFS export on affected clients; use the NAS server hostname (DNS-resolvable) rather than a hard-coded IP</td>
+</tr>
+<tr>
+<td>SMB share inaccessible</td>
+<td>NAS server lost AD connectivity or Kerberos tickets expired</td>
+<td><code>uemcli /nas/ad show</code>; check domain controller reachability from NAS server IP</td>
+<td>Verify DNS resolves AD domain; check DC connectivity; re-join AD if the machine account was reset</td>
+</tr>
+<tr>
+<td>File system full — cannot write</td>
+<td>File system has hit its provisioned size limit</td>
+<td><code>uemcli /stor/config/fs show -detail | grep -E "Size|Used"</code></td>
+<td>Expand the file system: <code>uemcli /stor/config/fs -id &lt;fs_id&gt; set -size &lt;new_size&gt;</code></td>
+</tr>
+<tr>
+<td>NAS server not responding after SP failover</td>
+<td>NAS file interfaces moved to peer SP; client DNS or cached IP still points to old SP</td>
+<td><code>uemcli /nas/server show | grep SP</code> — confirm NAS server SP ownership</td>
+<td>Wait 30–60 seconds for NAS to come online on the peer SP; remount NFS or reconnect SMB from clients</td>
+</tr>
+<tr>
+<td>CIFS/SMB access denied despite correct AD credentials</td>
+<td>Time skew &gt; 5 minutes between client, NAS server, and domain controller</td>
+<td>Check system time on Unity; <code>uemcli /sys/ntp show</code></td>
+<td>Sync NTP on Unity and clients; ensure all systems use the same NTP source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Diagnostic Steps</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Replication session in Error state</td>
+<td>Network interruption between source and destination; destination array unreachable</td>
+<td><code>uemcli /prot/rep/session -id &lt;id&gt; show -detail</code>; ping destination array management IP from source; check Unisphere alerts</td>
+<td>Resolve network connectivity issue; resume session: <code>uemcli /prot/rep/session -id &lt;id&gt; resume</code></td>
+</tr>
+<tr>
+<td>Replication session in Paused state</td>
+<td>Manual pause by operator, or destination pool full</td>
+<td><code>uemcli /prot/rep/session show -detail</code></td>
+<td>Resume if pause was unintended: <code>uemcli /prot/rep/session -id &lt;id&gt; resume</code>; or resolve pool capacity at destination before resuming</td>
+</tr>
+<tr>
+<td>Replication lag growing</td>
+<td>Network bandwidth insufficient, or source write rate exceeds replication throughput</td>
+<td>Check network utilisation between source and destination; <code>uemcli /prot/rep/session -id &lt;id&gt; show -detail | grep -i lag</code></td>
+<td>Evaluate bandwidth; consider QoS or scheduling replication during lower-activity periods; review RPO requirements</td>
+</tr>
+<tr>
+<td>Cannot create replication session</td>
+<td>No replication connection between source and destination; license not installed</td>
+<td><code>uemcli /prot/rep/connect show</code></td>
+<td>Create a replication connection to the destination array; verify replication license with <code>uemcli /sys/lic show</code></td>
+</tr>
+<tr>
+<td>Destination LUN is not accessible after failover</td>
+<td>LUN is in replica (read-only) state until failover is complete</td>
+<td><code>uemcli /prot/rep/session show -detail</code> — check failover state</td>
+<td>Complete the failover operation: <code>uemcli /prot/rep/session -id &lt;id&gt; failover</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="pool-and-capacity">Pool and Capacity<a class="headerlink" href="#pool-and-capacity" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Diagnostic Steps</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pool health = Degraded</td>
+<td>Drive failure in a RAID group; rebuild in progress</td>
+<td><code>uemcli /stor/config/disk show -detail | grep -v Normal</code>; <code>uemcli /stor/config/dg show -detail</code></td>
+<td>Identify faulted drive; arrange physical replacement; monitor rebuild progress in Unisphere</td>
+</tr>
+<tr>
+<td>Pool over-subscribed warning</td>
+<td>Sum of thin LUN allocated sizes exceeds physical pool capacity</td>
+<td><code>uemcli /stor/config/pool show -detail | grep -E "Subscribed|Total"</code></td>
+<td>Reclaim space by deleting unneeded LUNs/snapshots; expand pool; enforce allocation controls on new LUN requests</td>
+</tr>
+<tr>
+<td>Pool capacity alert at 80%</td>
+<td>Snapshot accumulation or LUN growth consuming space faster than expected</td>
+<td><code>uemcli /prot/snap show -detail | grep Size</code>; check LUN consumption vs. provisioned size</td>
+<td>Delete expired snapshots; expand pool; add disk groups</td>
+</tr>
+<tr>
+<td>Unity auto-deleted snapshots</td>
+<td>Pool free space fell below 5%; Unity protection mechanism triggered</td>
+<td>Check Unisphere alerts for snapshot auto-deletion events</td>
+<td>Immediate: add capacity or delete large LUNs; preventive: set alerts at 70% and 80% to catch this before Unity intervenes</td>
+</tr>
+<tr>
+<td>FAST Cache health degraded</td>
+<td>A FAST Cache drive has failed</td>
+<td><code>uemcli /stor/config/disk show -detail | grep -i fast</code></td>
+<td>Replace the failed FAST Cache drive; Unity rebuilds FAST Cache automatically</td>
+</tr>
+</tbody>
+</table>
+<h3 id="storage-processors-and-hardware">Storage Processors and Hardware<a class="headerlink" href="#storage-processors-and-hardware" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Diagnostic Steps</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One SP offline</td>
+<td>Hardware failure (memory, CPU, power), OE software panic, or planned maintenance</td>
+<td><code>uemcli /env/sp show</code>; <code>uemcli /env/health show -filter "health.value ne OK"</code>; check SP fault LEDs on chassis</td>
+<td>Peer SP takes over automatically; open Dell support case for unplanned SP offline; for planned maintenance, verify peer SP is healthy before starting</td>
+</tr>
+<tr>
+<td>Write cache warning — "Write cache dirty"</td>
+<td>SP interconnect link lost; cache cannot mirror to partner</td>
+<td><code>uemcli /env/health show</code>; check SP interconnect port status</td>
+<td>Restore SP interconnect; if both SPs are up and interconnect is up but alert persists, open support case</td>
+</tr>
+<tr>
+<td>Both SPs offline (system completely unavailable)</td>
+<td>Power loss (both SPs lost power simultaneously), or a cascading software fault</td>
+<td>Check physical power — UPS, PDU, and power supply status; check management network</td>
+<td>Restore power; if both SPs come back and pool is degraded, run <code>uemcli /env/health show</code> for detail; open P1 support case</td>
+</tr>
+<tr>
+<td>SP temperature alert</td>
+<td>Inadequate airflow, ambient temperature too high, or blocked air filters</td>
+<td>Check Unisphere &gt; System &gt; Hardware for temperature readings; <code>uemcli /env/sp show -detail | grep -i temp</code></td>
+<td>Verify datacenter cooling; check/clean air filters on enclosure; ensure front-to-back airflow is unobstructed</td>
+</tr>
+<tr>
+<td>Battery (BBU) low or failed</td>
+<td>BBU has reached end of life or charging circuit fault</td>
+<td><code>uemcli /sys/battery show -detail</code></td>
+<td>Replace BBU module; Unity will restrict write cache usage until BBU is replaced (writes still complete but may be slower)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="management-and-connectivity">Management and Connectivity<a class="headerlink" href="#management-and-connectivity" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Diagnostic Steps</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unisphere GUI unreachable</td>
+<td>SP management NIC fault, management service crash, or network change</td>
+<td>Try the peer SP's management IP; ping the management IP; check management VLAN</td>
+<td>Restart Unisphere service: <code>uemcli /sys/service start -svc unisphere</code>; if unreachable via CLI, check management port connectivity physically</td>
+</tr>
+<tr>
+<td>uemcli connection refused</td>
+<td>Wrong IP, wrong port, or management service down</td>
+<td>Verify the IP; try HTTPS to port 443 from a browser</td>
+<td>Confirm management IP with <code>ping</code>; try the peer SP IP; check management network VLAN</td>
+</tr>
+<tr>
+<td>REST API returns 401 Unauthorized</td>
+<td>Incorrect credentials or expired session</td>
+<td>Test with Basic auth: <code>curl -k -u admin:&lt;pass&gt; -H "X-EMC-REST-CLIENT: true" https://&lt;ip&gt;/api/types/system/instances</code></td>
+<td>Verify credentials; re-authenticate and get a new session cookie</td>
+</tr>
+<tr>
+<td>SupportAssist not calling home</td>
+<td>Network path from Unity to Dell blocked at firewall</td>
+<td><code>uemcli /sys/esrs show</code> — check connectivity status; try <code>uemcli /sys/esrs callhome -type heartbeat</code></td>
+<td>Allow outbound HTTPS (port 443) from the Unity management IP to <code>*.dell.com</code> at the firewall</td>
+</tr>
+</tbody>
+</table>
+<h2 id="incident-triage-sequence">Incident Triage Sequence<a class="headerlink" href="#incident-triage-sequence" title="Permanent link">&para;</a></h2>
+<p>When a host reports I/O errors or a LUN is inaccessible, work through this sequence:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Step 1 — determine if the array is healthy</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/env/health<span class="w"> </span>show<span class="w"> </span>-filter<span class="w"> </span><span class="s2">&quot;health.value ne OK&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Step 2 — are both SPs online?</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/env/sp<span class="w"> </span>show
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Step 3 — are the pools healthy and is there free space?</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Step 4 — are there active alerts? (check the last 2 hours)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prac/alert<span class="w"> </span>show
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Step 5 — is the host registered and does it have LUN access?</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/remote/host<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/lunacl<span class="w"> </span>show
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Step 6 — for NAS issues, check NAS server health and file interfaces</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/nas/server<span class="w"> </span>show<span class="w"> </span>-detail
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/net/nas/if<span class="w"> </span>show
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Step 7 — check replication sessions (a failed session may indicate broader connectivity issues)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/prot/rep/session<span class="w"> </span>show
+</code></pre></div>
+<h3 id="incident-data-collection-form">Incident Data Collection Form<a class="headerlink" href="#incident-data-collection-form" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -825,7 +1154,15 @@
 </thead>
 <tbody>
 <tr>
-<td>Which hosts are affected and what LUN names?</td>
+<td>Which hosts are affected and what LUN/share names?</td>
+<td></td>
+</tr>
+<tr>
+<td>When did the issue start (approximate time)?</td>
+<td></td>
+</tr>
+<tr>
+<td>Were any changes made in the 48 hours before the fault?</td>
 <td></td>
 </tr>
 <tr>
@@ -833,16 +1170,56 @@
 <td></td>
 </tr>
 <tr>
-<td>Is the pool healthy and have capacity?</td>
+<td>Is the pool healthy and have sufficient capacity?</td>
 <td></td>
 </tr>
 <tr>
-<td>Are there active alerts at the time of the incident?</td>
+<td>Are there active CRITICAL or ERROR alerts at the time of the incident?</td>
 <td></td>
 </tr>
 <tr>
 <td>Has the replication session state changed?</td>
 <td></td>
+</tr>
+<tr>
+<td>Is the issue affecting all hosts or a subset?</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Fill in this form before opening a Dell support case or escalating internally. It reduces mean time to resolution by ensuring all relevant context is available to the first responder.</p>
+<h2 id="known-behaviours-not-bugs">Known Behaviours (Not Bugs)<a class="headerlink" href="#known-behaviours-not-bugs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Behaviour</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LUN briefly inaccessible during SP failover</td>
+<td>Expected — SP failover takes ~30 seconds; host multipath re-paths automatically</td>
+</tr>
+<tr>
+<td>NFS mounts hang briefly after SP restart</td>
+<td>Expected — the NAS server is restarting on the peer SP; NFS clients will reconnect within 60–90 seconds</td>
+</tr>
+<tr>
+<td>Snapshot schedule misses one run after a major OE upgrade</td>
+<td>Expected — the upgrade restarts both SPs sequentially; schedules resume after upgrade completes</td>
+</tr>
+<tr>
+<td>Pool subscription &gt; 100% (thin provisioning)</td>
+<td>Expected behaviour for thin-provisioned pools — subscription &gt; physical capacity is allowed; monitor actual consumption, not subscribed size</td>
+</tr>
+<tr>
+<td>Write performance drops briefly after pool expansion</td>
+<td>Expected — Unity rebalances data and FAST Cache after a disk group addition; temporary performance impact</td>
+</tr>
+<tr>
+<td>Alert generated when a disk in a disk group is replaced</td>
+<td>Expected — Unity logs a disk replacement event and tracks rebuild progress; this is informational</td>
 </tr>
 </tbody>
 </table>

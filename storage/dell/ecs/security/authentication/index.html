@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#user-model-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Model Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#local-accounts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -770,40 +781,260 @@
 
 
 <h1 id="dell-ecs-authentication">Dell ECS — Authentication<a class="headerlink" href="#dell-ecs-authentication" title="Permanent link">&para;</a></h1>
+<h2 id="user-model-overview">User Model Overview<a class="headerlink" href="#user-model-overview" title="Permanent link">&para;</a></h2>
+<p>ECS has two distinct authentication contexts: <strong>management plane</strong> (portal/API administration) and <strong>data plane</strong> (S3/Swift/CAS object access). These use different identity sources and credential types.</p>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>User Type</th>
+<th>Credential Type</th>
+<th>Identity Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management plane</td>
+<td>System Admin, System Monitor</td>
+<td>Username + password</td>
+<td>Local ECS accounts or LDAP/AD</td>
+</tr>
+<tr>
+<td>Namespace management</td>
+<td>Namespace Admin, Namespace User</td>
+<td>Username + password</td>
+<td>Local ECS accounts or LDAP/AD (per namespace)</td>
+</tr>
+<tr>
+<td>Data plane (S3/Swift)</td>
+<td>Object User</td>
+<td>Access Key + Secret Key</td>
+<td>Local ECS only (S3 sigv4)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
 <p>ECS provides built-in local management accounts:</p>
 <ul>
-<li><strong>sysadmin</strong>: Default system administrator account. Change the default password immediately after deployment and restrict use to break-glass scenarios only.</li>
-<li><strong>Management service accounts</strong>: Create named service accounts (e.g., <code>svc-ecs-mgmt</code>) for automation and API access. Do not use <code>sysadmin</code> in automation scripts.</li>
+<li><strong>sysadmin</strong>: Default system administrator account. Change the default password immediately after deployment and restrict use to break-glass scenarios only. Do not embed <code>sysadmin</code> credentials in automation scripts.</li>
+<li><strong>Management service accounts</strong>: Create named service accounts (e.g., <code>svc-ecs-mgmt</code>) for automation and API access via ECS Portal → Users → Management Users → Add User.</li>
 </ul>
+<p><strong>Password policy recommendations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum length</td>
+<td>16 characters</td>
+</tr>
+<tr>
+<td>Complexity</td>
+<td>Mixed case, digits, symbols</td>
+</tr>
+<tr>
+<td>Rotation</td>
+<td>Every 90 days for management accounts</td>
+</tr>
+<tr>
+<td>Break-glass accounts</td>
+<td><code>sysadmin</code> stored in a physical vault or privileged access workstation (PAW); audited on each use</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate to the Management REST API with a named service account</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;svc-ecs-mgmt:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-D<span class="w"> </span>-<span class="w"> </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\r&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Verify which user the token belongs to</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/user/whoami&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Invalidate the session token when done</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-SDS-AUTH-TOKEN: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;ecs-node&gt;:4443/logout&quot;</span>
+</code></pre></div>
 <h2 id="ldap-active-directory">LDAP / Active Directory<a class="headerlink" href="#ldap-active-directory" title="Permanent link">&para;</a></h2>
-<p>ECS can delegate IAM user authentication to an external LDAP or Active Directory service for namespace-level access. Configure under ECS Portal → Namespace → Edit → Authentication Domain.</p>
-<ul>
-<li>Object users with S3 access keys always authenticate locally — LDAP integration applies to management console users only</li>
-<li>LDAP is configured per namespace; multiple namespaces can reference different LDAP domains</li>
-<li>Supported protocols: LDAP (TCP 389) and LDAPS (TCP 636)</li>
-</ul>
-<p><strong>Configuration steps:</strong>
-1. Navigate to ECS Portal → Namespace → Edit → Authentication Domain
-2. Enter the LDAP server address, base DN, and bind credentials
-3. Map LDAP groups to ECS namespace roles (Namespace Admin, Namespace User)
-4. Test authentication before saving</p>
+<p>ECS can delegate management user authentication to an external LDAP or Active Directory service for namespace-level access. This is configured per namespace and enables existing AD groups to be mapped to ECS roles without creating individual local accounts.</p>
+<p><strong>Key facts:</strong>
+- LDAP integration applies to management console users only — S3 object users always authenticate with local access keys
+- LDAP is configured independently per namespace; different namespaces can reference different LDAP domains
+- Supported protocols: LDAP (TCP 389) and LDAPS (TCP 636)
+- Group-to-role mapping is defined per namespace: AD groups map to Namespace Admin or Namespace User roles</p>
+<p><strong>Configuration steps:</strong></p>
+<ol>
+<li>Navigate to ECS Portal → Manage → Namespaces → select namespace → Edit</li>
+<li>Open the <strong>Authentication Domain</strong> section</li>
+<li>Enter the LDAP server address and port (use LDAPS port 636 for encrypted LDAP)</li>
+<li>Enter the Base DN for the user search (e.g., <code>OU=ECS-Users,DC=corp,DC=example,DC=com</code>)</li>
+<li>Enter bind credentials (a read-only service account in AD with permission to search the OU)</li>
+<li>Map AD group names to ECS namespace roles:</li>
+<li><code>ECS-Namespace-Admins</code> → Namespace Admin</li>
+<li><code>ECS-Namespace-Viewers</code> → Namespace User</li>
+<li>Use the <strong>Test</strong> button to validate authentication before saving</li>
+</ol>
+<p><strong>LDAP configuration parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Server URL</td>
+<td>LDAP/LDAPS endpoint</td>
+<td><code>ldaps://dc01.corp.example.com:636</code></td>
+</tr>
+<tr>
+<td>Base DN</td>
+<td>Root of the user search</td>
+<td><code>OU=ServiceAccounts,DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Bind DN</td>
+<td>Service account for LDAP queries</td>
+<td><code>CN=svc-ecs-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Bind password</td>
+<td>Password for the bind account</td>
+<td>Stored in ECS (encrypted at rest)</td>
+</tr>
+<tr>
+<td>Group attribute</td>
+<td>Attribute containing group membership</td>
+<td><code>memberOf</code></td>
+</tr>
+<tr>
+<td>Name attribute</td>
+<td>Attribute containing the username</td>
+<td><code>sAMAccountName</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="s3-object-user-authentication">S3 Object User Authentication<a class="headerlink" href="#s3-object-user-authentication" title="Permanent link">&para;</a></h2>
-<p>S3 access to ECS is authenticated using access key / secret key pairs (IAM-style):</p>
+<p>S3 access to ECS is authenticated using AWS Signature Version 4 (SigV4) with access key / secret key pairs (IAM-style):</p>
 <ul>
-<li>Object users and their keys are managed per namespace in ECS Portal → Namespace → IAM Users</li>
-<li>Each application or service should have its own dedicated object user</li>
-<li>Secret keys are shown only once at creation; store securely in a secrets manager</li>
-<li>Rotate secret keys every 12 months per policy</li>
+<li>Object users and their keys are managed per namespace in ECS Portal → Manage → Users → Object Users</li>
+<li>Each application or service should have its own dedicated object user — do not share S3 credentials</li>
+<li>Secret keys are shown only once at creation; store them immediately in a secrets manager (HashiCorp Vault, AWS Secrets Manager, or equivalent)</li>
+<li>Rotate secret keys every 12 months per policy, or immediately upon suspected compromise</li>
 </ul>
+<p><strong>Key lifecycle procedure:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Step 1: Create a new secret key alongside the existing one</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--name<span class="w"> </span>svc-spark-prod
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Record the new access key and secret key from the output</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Step 2: Update the application or secrets manager with the new key</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Step 3: Verify the application is successfully using the new key (check S3 access logs)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Step 4: Delete the old key (replace &lt;old-key-id&gt; with the key ID from list output)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--name<span class="w"> </span>svc-spark-prod
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ecscli<span class="w"> </span>user<span class="w"> </span>secret-key<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--namespace<span class="w"> </span>analytics-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--name<span class="w"> </span>svc-spark-prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--secret-key<span class="w"> </span>&lt;old-key-id&gt;
+</code></pre></div>
+<p><strong>Object user restrictions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Restriction</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Namespace scope</td>
+<td>Object users exist within a single namespace; they cannot cross namespace boundaries</td>
+</tr>
+<tr>
+<td>Bucket policies</td>
+<td>Use bucket policies to restrict which buckets and actions an object user can access</td>
+</tr>
+<tr>
+<td>Maximum keys per user</td>
+<td>ECS supports up to 2 active access keys per object user — enables zero-downtime key rotation</td>
+</tr>
+<tr>
+<td>No console access</td>
+<td>Object users cannot log in to the ECS Portal; they are data-plane only</td>
+</tr>
+</tbody>
+</table>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>ECS generates audit logs for all administrative actions (namespace/bucket create/modify/delete, IAM changes) and optionally for object access.</p>
-<ul>
-<li><strong>Management audit log</strong>: ECS Portal → Monitoring → Audit — export for compliance reviews</li>
-<li><strong>Access log</strong>: Enable per-bucket via ECS Portal → Buckets → Edit → Access Logging; logs are written to a designated audit bucket</li>
-<li><strong>Syslog forwarding</strong>: Configure in ECS Portal → Settings → Syslog; forward to a SIEM for real-time alerting on privileged actions</li>
-<li>Retain access logs per the organisation's data retention policy; ECS does not enforce audit log retention itself</li>
-</ul>
+<p>ECS generates audit logs for all administrative actions and optionally for object access.</p>
+<p><strong>Management audit log:</strong>
+- Location: ECS Portal → Monitoring → Audit
+- Covers: namespace/bucket create/modify/delete, IAM changes, user login/logout, system configuration changes
+- Export as CSV or JSON for compliance reviews
+- Forward via syslog to SIEM for real-time alerting on privileged actions</p>
+<p><strong>Object access log:</strong>
+- Enable per-bucket: ECS Portal → Manage → Buckets → select bucket → Edit → Access Logging
+- Access log records are written to a designated audit bucket (must exist before enabling)
+- Log format: S3-compatible access log format (compatible with standard log parsing tools)
+- Retention: ECS does not enforce audit log retention — configure lifecycle policies on the audit bucket</p>
+<p><strong>Syslog forwarding:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ECS Portal → Settings → Syslog
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  - Syslog server: &lt;SIEM-IP-or-FQDN&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  - Port: 514 (UDP) or 514/TCP
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  - Protocol: UDP or TCP
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  - Severity filter: INFO and above (for all events); WARNING and above (for alerts only)
+</code></pre></div>
+<p><strong>Key events to alert on in the SIEM:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Severity</th>
+<th>Alert Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sysadmin</code> login</td>
+<td>WARNING</td>
+<td>Verify break-glass access; investigate if unexpected</td>
+</tr>
+<tr>
+<td>IAM user created or deleted</td>
+<td>INFO</td>
+<td>Validate against change record</td>
+</tr>
+<tr>
+<td>Bucket policy modified</td>
+<td>INFO</td>
+<td>Validate against change record</td>
+</tr>
+<tr>
+<td>Node status change to DEGRADED</td>
+<td>ERROR</td>
+<td>Immediate investigation</td>
+</tr>
+<tr>
+<td>Certificate expiry warning</td>
+<td>WARNING</td>
+<td>Schedule certificate renewal</td>
+</tr>
+<tr>
+<td>Namespace quota exceeded</td>
+<td>WARNING</td>
+<td>Increase quota or expire data</td>
+</tr>
+</tbody>
+</table>
 
 
 

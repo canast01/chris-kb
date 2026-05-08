@@ -706,32 +706,138 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#management-roles" class="md-nav__link">
+  <a href="#management-plane-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Management Roles
+        Management Plane Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Management Plane Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-assignment-in-unisphere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Assignment in Unisphere
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#host-access-control" class="md-nav__link">
+  <a href="#data-plane-access-control-storage-views" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Host Access Control
+        Data Plane Access Control — Storage Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Plane Access Control — Storage Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-view-access-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage View Access Model
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#zoning" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-storage-view-step-by-step" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zoning
+        Creating a Storage View (Step-by-Step)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-view-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage View Design Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-view-audit-and-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage View Audit and Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#san-fabric-zoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAN Fabric Zoning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SAN Fabric Zoning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#zoning-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zoning Design Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verifying-zoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Zoning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privileged-access-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privileged Access Management
       
     </span>
   </a>
@@ -759,52 +865,236 @@
 
 
 <h1 id="dell-vplex-access-control">Dell VPLEX — Access Control<a class="headerlink" href="#dell-vplex-access-control" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Roles, permissions, and least privilege access for Dell VPLEX.</p>
-</blockquote>
-<h2 id="management-roles">Management Roles<a class="headerlink" href="#management-roles" title="Permanent link">&para;</a></h2>
-<p>VPLEX access control is managed through Unisphere for VPLEX and VMS local accounts:</p>
+<p>VPLEX access control operates at two layers: management plane access (who can change configuration) and data plane access (which hosts can access which volumes).</p>
+<h2 id="management-plane-roles">Management Plane Roles<a class="headerlink" href="#management-plane-roles" title="Permanent link">&para;</a></h2>
+<p>VPLEX management roles govern what operations each user can perform through Unisphere for VPLEX and <code>vplexcli</code>.</p>
 <table>
 <thead>
 <tr>
 <th>Role</th>
 <th>Access Level</th>
-<th>Notes</th>
+<th>Typical Assignee</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Administrator</td>
-<td>Full read/write access to all VPLEX configuration</td>
-<td>Assign only to storage administrators</td>
+<td>Full read/write access to all VPLEX configuration, provisioning, and lifecycle operations</td>
+<td>Storage administrators</td>
 </tr>
 <tr>
 <td>Monitor</td>
-<td>Read-only access to cluster health, volumes, and configuration</td>
-<td>Suitable for operations teams</td>
+<td>Read-only access to cluster health, volumes, storage views, and configuration</td>
+<td>Operations teams, NOC, monitoring</td>
 </tr>
 <tr>
 <td>Service</td>
-<td>SSH-based <code>vplexcli</code> access for CLI management</td>
-<td>Default service account for automation</td>
+<td>SSH-based <code>vplexcli</code> access for CLI management; used for automation and scripted operations</td>
+<td>Automation service accounts</td>
 </tr>
 </tbody>
 </table>
-<h2 id="host-access-control">Host Access Control<a class="headerlink" href="#host-access-control" title="Permanent link">&para;</a></h2>
-<p>Host access to VPLEX virtual volumes is controlled via storage views:</p>
-<ul>
-<li>Each storage view maps specific virtual volumes to specific host initiator ports (WWNs)</li>
-<li>Hosts can only see volumes included in a storage view to which their HBA WWN is registered</li>
-<li>Follow least-privilege: only map the volumes a host needs; do not create catch-all storage views</li>
-<li>Review storage view membership after any host decommission to remove orphaned initiators</li>
-</ul>
-<h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
-<p>Fibre Channel zoning enforces access at the SAN level before VPLEX storage views:</p>
-<ul>
-<li>Zone each host HBA to only the VPLEX front-end ports required for its storage views</li>
-<li>Do not zone hosts directly to backend array ports; all host access should pass through VPLEX</li>
-<li>Implement single-initiator, multiple-target zoning for clarity and security</li>
-</ul>
+<p><strong>Least-privilege principle</strong>: assign Monitor role to any account that does not need to make configuration changes. Reserve Administrator role for accounts that actively provision or modify VPLEX objects.</p>
+<h3 id="role-assignment-in-unisphere">Role Assignment in Unisphere<a class="headerlink" href="#role-assignment-in-unisphere" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Log in to Unisphere as an Administrator.</li>
+<li>Navigate to <strong>Settings → Users and Roles</strong>.</li>
+<li>Create a new local user or map an LDAP group to a role.</li>
+<li>Verify the assigned role by logging in as the new account and confirming expected access.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From vplexcli, list management users (if supported by the GeoSynchrony version)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /management/accounts&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /management/accounts/&lt;username&gt;/&quot;</span>
+</code></pre></div>
+<h2 id="data-plane-access-control-storage-views">Data Plane Access Control — Storage Views<a class="headerlink" href="#data-plane-access-control-storage-views" title="Permanent link">&para;</a></h2>
+<p>Host access to VPLEX virtual volumes is exclusively controlled via storage views. A host can only see volumes that are:</p>
+<ol>
+<li>Present in a storage view the host's HBA WWN is registered in, <strong>and</strong></li>
+<li>Presented through a VPLEX front-end port that is also in that storage view, <strong>and</strong></li>
+<li>Zoned (at the SAN fabric level) between the host HBA and the VPLEX front-end port.</li>
+</ol>
+<h3 id="storage-view-access-model">Storage View Access Model<a class="headerlink" href="#storage-view-access-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Host HBA (WWN)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    → FC Zone (SAN fabric)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        → VPLEX Front-End Port
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>            → Storage View
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                → Virtual Volume(s) presented to this host
+</code></pre></div>
+<p>All three layers must be aligned for a host to access a volume. Missing any layer results in the host not seeing the volume.</p>
+<h3 id="creating-a-storage-view-step-by-step">Creating a Storage View (Step-by-Step)<a class="headerlink" href="#creating-a-storage-view-step-by-step" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1: Confirm the host HBA WWN</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># (Obtain from host: cat /sys/class/fc_host/host*/port_name  or  systool -c fc_host -v)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Step 2: Register the host initiator port with VPLEX</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;initiator-port register \</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">  --cluster /clusters/cluster-1 \</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">  --port-wwn 10:00:00:00:c9:ab:cd:ef \</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">  --name db_prod_01_hba0&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Step 3: Create the storage view</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view create \</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">  --name sv_db_prod_01 \</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">  --cluster /clusters/cluster-1&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Step 4: Add VPLEX front-end ports to the view</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Identify available front-end ports:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/ports&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-ports \</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s2">  --ports /clusters/cluster-1/exports/ports/A0-FC00,/clusters/cluster-1/exports/ports/B0-FC00&quot;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Step 5: Add the host initiator port to the view</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-initiator-ports \</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="s2">  --initiator-ports /clusters/cluster-1/exports/initiator-ports/db_prod_01_hba0&quot;</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># Step 6: Add virtual volumes to the view</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view add-virtual-volumes \</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="s2">  --virtual-volumes /virtual-volumes/vv_oracle_prod_01,/virtual-volumes/vv_oracle_prod_02&quot;</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1"># Verify the completed storage view</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/sv_db_prod_01/&quot;</span>
+</code></pre></div>
+<h3 id="storage-view-design-principles">Storage View Design Principles<a class="headerlink" href="#storage-view-design-principles" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One storage view per host</td>
+<td>Create individual storage views per host rather than shared views; this prevents one host from accessing another's volumes</td>
+</tr>
+<tr>
+<td>Minimum volume membership</td>
+<td>Only include volumes that the host actually needs; do not add spare or shared volumes speculatively</td>
+</tr>
+<tr>
+<td>Port balance</td>
+<td>Assign front-end ports from both directors in the pair to each storage view; ensures path redundancy if one director fails</td>
+</tr>
+<tr>
+<td>Document immediately</td>
+<td>Record storage view name, initiator WWNs, front-end ports, and virtual volumes in the CMDB after every change</td>
+</tr>
+<tr>
+<td>Review on host decommission</td>
+<td>Remove the host's storage view and unregister its initiators when the host is decommissioned; orphaned initiators consume VPLEX resources</td>
+</tr>
+</tbody>
+</table>
+<h3 id="storage-view-audit-and-cleanup">Storage View Audit and Cleanup<a class="headerlink" href="#storage-view-audit-and-cleanup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all storage views on all clusters</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/*/exports/storage-views/&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List all registered initiator ports (check for orphaned/unrecognised WWNs)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/initiator-ports&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;/&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Unregister an orphaned initiator port</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;initiator-port unregister \</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">  --cluster /clusters/cluster-1 \</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">  --initiator-port /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Remove a virtual volume from a storage view (before decommissioning the volume)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view remove-virtual-volumes \</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 \</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">  --virtual-volumes /virtual-volumes/vv_oracle_prod_01&quot;</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Destroy a storage view when a host is decommissioned</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;storage-view destroy \</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s2">  --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 --force&quot;</span>
+</code></pre></div>
+<p><strong>Quarterly review task</strong>: list all storage views and cross-reference initiator WWNs against the CMDB. Remove any views for decommissioned hosts and unregister their initiators.</p>
+<h2 id="san-fabric-zoning">SAN Fabric Zoning<a class="headerlink" href="#san-fabric-zoning" title="Permanent link">&para;</a></h2>
+<p>SAN fabric zoning is the enforcement layer at the fibre channel switch level, separate from VPLEX storage views. Both layers must be correctly configured for host-to-volume access.</p>
+<h3 id="zoning-design-rules">Zoning Design Rules<a class="headerlink" href="#zoning-design-rules" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single-initiator zoning</td>
+<td>Zone each host HBA to target ports individually; prevents one host's HBA from seeing another host's target ports</td>
+</tr>
+<tr>
+<td>Zone hosts to VPLEX front-end ports only</td>
+<td>Hosts must never be zoned directly to back-end array ports; all host access must go through VPLEX</td>
+</tr>
+<tr>
+<td>Zone VPLEX back-end ports to array ports separately</td>
+<td>Back-end zones (VPLEX → array) should be entirely separate from front-end zones (host → VPLEX)</td>
+</tr>
+<tr>
+<td>Dual-fabric redundancy</td>
+<td>Each host HBA should be zoned on a separate fabric to a separate VPLEX director for full redundancy</td>
+</tr>
+<tr>
+<td>Do not over-zone</td>
+<td>Only include the VPLEX front-end ports relevant to the host's storage view; no catch-all zones</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verifying-zoning">Verifying Zoning<a class="headerlink" href="#verifying-zoning" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On the SAN switch (Brocade example): show active zone configuration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>zoneshow<span class="w"> </span>--active
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># On the SAN switch: show zones containing a specific WWN</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>zoneshow<span class="w"> </span>--name<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># On a Linux host: verify visible VPLEX paths</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># On a Linux host (Device Mapper): check path count and status</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>multipathd<span class="w"> </span>show<span class="w"> </span>paths
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># On VMware ESXi: list storage adapters and paths</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># On a host using EMC PowerPath: list all paths</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+</code></pre></div>
+<h2 id="privileged-access-management">Privileged Access Management<a class="headerlink" href="#privileged-access-management" title="Permanent link">&para;</a></h2>
+<p>For production environments handling sensitive workloads:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PAM vault for VMS credentials</td>
+<td>Store the <code>service</code> account credentials in a PAM vault (e.g., CyberArk, HashiCorp Vault); require checkout before use</td>
+</tr>
+<tr>
+<td>Just-in-time access</td>
+<td>Grant elevated VMS access only during active maintenance windows; revoke automatically after the window closes</td>
+</tr>
+<tr>
+<td>Session recording</td>
+<td>Record interactive vplexcli sessions using a session recording proxy or PAM session recording capability</td>
+</tr>
+<tr>
+<td>Dual approval for destructive operations</td>
+<td>Require a second administrator to approve storage-view deletions or virtual-volume destruction in production</td>
+</tr>
+<tr>
+<td>Change management integration</td>
+<td>Require a change record number before granting VMS access for non-routine operations</td>
+</tr>
+</tbody>
+</table>
 
 
 

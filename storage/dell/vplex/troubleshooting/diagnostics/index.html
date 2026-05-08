@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
+  <a href="#initial-triage-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Diagnostic Commands
+        Initial Triage Sequence
       
     </span>
   </a>
@@ -717,10 +717,88 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
+  <a href="#distributed-device-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Log Locations
+        Distributed Device Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distributed Device Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#out-of-sync-distributed-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out-of-Sync Distributed Device
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#degraded-distributed-device-one-leg-unreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Degraded Distributed Device (One Leg Unreachable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suspended-distributed-device-io-halted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suspended Distributed Device (I/O Halted)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#director-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Director Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Director Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#director-health-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Director Health States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#icl-diagnostics-metro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ICL Diagnostics (Metro)
       
     </span>
   </a>
@@ -728,6 +806,40 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#storage-view-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage View Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Log Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vms-log-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMS Log Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#collecting-a-support-bundle" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -737,12 +849,28 @@
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#before-calling-support" class="md-nav__link">
+  <a href="#geosynchrony-version-and-system-information" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Before Calling Support
+        GeoSynchrony Version and System Information
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-support-call-data-collection-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Support-Call Data Collection Checklist
       
     </span>
   </a>
@@ -770,87 +898,298 @@
 
 
 <h1 id="dell-vplex-diagnostics">Dell VPLEX — Diagnostics<a class="headerlink" href="#dell-vplex-diagnostics" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Diagnostic procedures and log analysis for Dell VPLEX.</p>
-</blockquote>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Full system health check</span>
+<p>Systematic diagnostic procedures for VPLEX faults. Work through the relevant section based on the reported symptom. Collect all outputs before calling Dell Support — they will ask for this data.</p>
+<h2 id="initial-triage-sequence">Initial Triage Sequence<a class="headerlink" href="#initial-triage-sequence" title="Permanent link">&para;</a></h2>
+<p>Run these commands in order at the start of any VPLEX investigation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Overall system health — quickest way to identify faulted components</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;health-check --full&quot;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Cluster health indications</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Cluster health indications — which cluster has entered a non-ok state</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/*/health-indications/&quot;</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Distributed device health and sync state</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Distributed device sync state — identifies Metro out-of-sync or degraded devices</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/*/health-indications/&quot;</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Director hardware health across all engines</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 4. Director hardware health — identifies hardware faults on specific directors</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/*/hardware/&quot;</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Witness connectivity (Metro)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /metro-node/*/witness/&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Consistency group state</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/consistency-groups/&quot;</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Storage view initiator and volume bindings</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/*/exports/storage-views/&quot;</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># GeoSynchrony firmware version</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/system-volumes/version/&quot;</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Backend array inventory</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 5. Witness status (Metro) — identifies quorum risk</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># 6. Consistency group state — identifies suspended or faulted CGs</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/consistency-groups/&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># 7. Storage view integrity — confirms host access objects are intact</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/*/exports/storage-views/&quot;</span>
 </code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
+<p>Record the output of each command with a timestamp before making any changes.</p>
+<h2 id="distributed-device-diagnostics">Distributed Device Diagnostics<a class="headerlink" href="#distributed-device-diagnostics" title="Permanent link">&para;</a></h2>
+<h3 id="out-of-sync-distributed-device">Out-of-Sync Distributed Device<a class="headerlink" href="#out-of-sync-distributed-device" title="Permanent link">&para;</a></h3>
+<p>An out-of-sync distributed device means one leg is not receiving writes — the most common cause is an ICL interruption between Metro clusters.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show all distributed devices and their sync states</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/*/health-indications/&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show full detail of the affected device (note: active-leg, rebuild-progress)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check inter-cluster link status</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/communication/inter-cluster-links/&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check which leg is the active (winning) leg</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;active-leg\|service-status&quot;</span>
+</code></pre></div>
+<p><strong>Resolution sequence:</strong></p>
+<ol>
+<li>Confirm the ICL is healthy (see ICL Diagnostics below).</li>
+<li>Once the ICL is restored, VPLEX begins automatic resync — monitor with:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Monitor resync progress (repeat until rebuild-progress: 100%)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health-state\|rebuild-progress\|service-status&quot;</span>
+</code></pre></div>
+<ol>
+<li>Do not interrupt a rebuild in progress — allow it to complete before any further maintenance.</li>
+<li>If the device does not begin resyncing automatically after the ICL is restored, initiate manually:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;device rebuild \</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="s2">  --device /distributed-storage/distributed-devices/&lt;device_name&gt;&quot;</span>
+</code></pre></div>
+<h3 id="degraded-distributed-device-one-leg-unreachable">Degraded Distributed Device (One Leg Unreachable)<a class="headerlink" href="#degraded-distributed-device-one-leg-unreachable" title="Permanent link">&para;</a></h3>
+<p>A degraded device means one cluster leg is unreachable — I/O continues on the surviving leg only.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Identify which leg is unreachable</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check the affected cluster&#39;s health</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/&lt;affected_cluster&gt;/health-indications/&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check director health on the affected cluster</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/*/hardware/&quot;</span>
+</code></pre></div>
+<p>If the cluster is unreachable due to a site failure and the Witness has granted quorum to the surviving cluster, I/O continues normally. After site recovery: restore ICL, confirm Witness connectivity, then allow the distributed device to rebuild automatically.</p>
+<h3 id="suspended-distributed-device-io-halted">Suspended Distributed Device (I/O Halted)<a class="headerlink" href="#suspended-distributed-device-io-halted" title="Permanent link">&para;</a></h3>
+<p>A suspended device indicates VPLEX could not determine a safe winner — typically ICL down with Witness also unreachable.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm the device is suspended and identify the cause</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /distributed-storage/distributed-devices/&lt;device_name&gt;/&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check Witness status from both clusters</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check ICL status</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;</span>
+</code></pre></div>
+<p><strong>Do not manually resume I/O until the cause of suspension is understood.</strong> Resuming a suspended distributed device without verifying which leg has the most recent writes risks data divergence.</p>
+<p>Recovery procedure:</p>
+<ol>
+<li>Restore the ICL (if it was interrupted).</li>
+<li>Restore Witness connectivity.</li>
+<li>Once both ICL and Witness are healthy, VPLEX typically resumes automatically.</li>
+<li>If manual resume is required (after confirming the active leg with Dell support):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Resume I/O on the confirmed active leg only</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;device resume \</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s2">  --device /distributed-storage/distributed-devices/&lt;device_name&gt;&quot;</span>
+</code></pre></div>
+<h2 id="director-diagnostics">Director Diagnostics<a class="headerlink" href="#director-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all engines and their directors</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Show hardware detail for a specific engine</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Show all hardware components on a director (fans, PSU, cache module, ports)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># List and show status of all FE/BE ports on a director</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/&quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Show a specific port&#39;s status and WWN</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/A0-FC00/&quot;</span>
+</code></pre></div>
+<h3 id="director-health-states">Director Health States<a class="headerlink" href="#director-health-states" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ok</code></td>
+<td>Director fully operational</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td><code>minor-failure</code></td>
+<td>A component is degraded but director is operational</td>
+<td>Investigate the specific component; plan replacement</td>
+</tr>
+<tr>
+<td><code>major-failure</code></td>
+<td>Director is impaired; redundancy reduced</td>
+<td>Escalate to Dell support; plan director replacement</td>
+</tr>
+<tr>
+<td><code>unknown</code></td>
+<td>Director is not responding to management queries</td>
+<td>Check management network connectivity to the director; escalate</td>
+</tr>
+</tbody>
+</table>
+<p>A single director failure within a pair does not interrupt I/O — the surviving director continues serving hosts with cache mirroring on the surviving NVRAM. However, the pair is now in a degraded state with no fault tolerance until the failed director is replaced.</p>
+<h2 id="icl-diagnostics-metro">ICL Diagnostics (Metro)<a class="headerlink" href="#icl-diagnostics-metro" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show inter-cluster link status and latency</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/communication/inter-cluster-links/&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/communication/inter-cluster-links/&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check current ICL link bandwidth and utilisation</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># (Available in Unisphere for VPLEX → Metro → ICL Status)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Ping between cluster management interfaces (from VMS)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;cluster-2-mgmt-IP&gt;
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Measure ICL RTT using a test (from VMS or network equipment)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>-i<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span>&lt;cluster-2-ICL-IP&gt;
+</code></pre></div>
+<p><strong>ICL RTT threshold</strong>: Metro requires ≤5ms round-trip latency. If RTT consistently exceeds this:</p>
+<ol>
+<li>Check for network congestion on the WAN or dark fibre segment.</li>
+<li>Check for ICL port errors: <code>ll /engines/*/directors/*/hardware/ports/</code> — look for ICL ports.</li>
+<li>Engage the WAN/network team to investigate the carrier circuit.</li>
+<li>If RTT exceeds 5ms during a period of sustained high write I/O, check ICL bandwidth — the circuit may be saturated.</li>
+</ol>
+<h2 id="storage-view-diagnostics">Storage View Diagnostics<a class="headerlink" href="#storage-view-diagnostics" title="Permanent link">&para;</a></h2>
+<p>If a host reports it cannot see a VPLEX volume:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Confirm the storage view exists for this host</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/storage-views&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Show the specific storage view&#39;s initiators, ports, and volumes</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Confirm the host&#39;s HBA WWN is registered as an initiator port</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /clusters/cluster-1/exports/initiator-ports&quot;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/initiator-ports/&lt;initiator_name&gt;/&quot;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Confirm the expected volume is in the storage view</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/exports/storage-views/&lt;view_name&gt;/&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;virtual-volumes&quot;</span>
+</code></pre></div>
+<p>Host-side verification steps:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Linux (Device Mapper Multipath): list all known paths</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Linux: rescan for new volumes after storage view changes</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*/<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="si">${</span><span class="nv">host</span><span class="si">}</span>scan<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># VMware ESXi: rescan storage adapters</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># EMC PowerPath: display all known device paths</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Confirm SAN zoning includes this host HBA → VPLEX FE port</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># (From the SAN switch management console)</span>
+</code></pre></div>
+<p>If the zone is active, the storage view is correctly configured, and the host still cannot see the volume, check that the virtual volume's <code>operational-status</code> is <code>ok</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /virtual-volumes/&lt;volume_name&gt;/&quot;</span>
+</code></pre></div>
+<h2 id="log-analysis">Log Analysis<a class="headerlink" href="#log-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="vms-log-files">VMS Log Files<a class="headerlink" href="#vms-log-files" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Log</th>
-<th>Location</th>
-<th>Content</th>
+<th>Path</th>
+<th>Key Content</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>vplexcli command history</td>
-<td><code>/var/log/VPlex/cli/vplexcli.log</code> on VMS</td>
-<td>All CLI commands executed</td>
+<td><code>/var/log/VPlex/cli/vplexcli.log</code></td>
+<td>All CLI commands with timestamps — search for recent config changes</td>
 </tr>
 <tr>
-<td>VPLEX management log</td>
-<td><code>/var/log/VPlex/vplexmanagement.log</code> on VMS</td>
-<td>Management events, configuration changes</td>
+<td>Management events</td>
+<td><code>/var/log/VPlex/vplexmanagement.log</code></td>
+<td>Health state changes, director events, configuration updates</td>
 </tr>
 <tr>
-<td>Unisphere web UI log</td>
-<td><code>/var/log/VPlex/</code> on VMS</td>
-<td>Web UI access and API calls</td>
+<td>Unisphere web log</td>
+<td><code>/var/log/VPlex/</code></td>
+<td>Web UI access and API activity</td>
 </tr>
 <tr>
-<td>Director system log</td>
-<td>Collected via support bundle</td>
-<td>Director-level hardware and software events</td>
+<td>VMS OS auth log</td>
+<td><code>/var/log/secure</code> or <code>/var/log/auth.log</code></td>
+<td>SSH login events</td>
 </tr>
 </tbody>
 </table>
-<h2 id="collecting-a-support-bundle">Collecting a Support Bundle<a class="headerlink" href="#collecting-a-support-bundle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From within vplexcli</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>collect-support-log<span class="w"> </span>-f<span class="w"> </span>/var/log/support_bundle.tar.gz
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Copy from VMS to a jump host</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>scp<span class="w"> </span>service@&lt;VMS_IP&gt;:/var/log/support_bundle.tar.gz<span class="w"> </span>admin@&lt;jump_host&gt;:/tmp/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># SSH to VMS and review recent management log events</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>service@&lt;VMS_IP&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/VPlex/vplexmanagement.log
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Search for recent health state change events</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;health-state\|major-failure\|degraded\|suspended&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>/var/log/VPlex/vplexmanagement.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Search for recent storage view modifications</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;storage-view\|initiator&quot;</span><span class="w"> </span>/var/log/VPlex/cli/vplexcli.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Identify who ran recent vplexcli commands</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>/var/log/VPlex/cli/vplexcli.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
-<h2 id="before-calling-support">Before Calling Support<a class="headerlink" href="#before-calling-support" title="Permanent link">&para;</a></h2>
-<p>Gather the following before opening a Dell Support case:</p>
+<h3 id="collecting-a-support-bundle">Collecting a Support Bundle<a class="headerlink" href="#collecting-a-support-bundle" title="Permanent link">&para;</a></h3>
+<p>Always collect a support bundle before Dell Support engagement and before any invasive recovery action:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># From within vplexcli (interactive session)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>collect-support-log<span class="w"> </span>-f<span class="w"> </span>/var/log/support_bundle.tar.gz
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># From VMS OS shell (one-shot):</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>ssh<span class="w"> </span>service@&lt;VMS_IP&gt;<span class="w"> </span><span class="s2">&quot;vplexcli -q -e &#39;collect-support-log -f /var/log/support_bundle.tar.gz&#39;&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Copy the bundle off the VMS to a jump host</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>scp<span class="w"> </span>service@&lt;VMS_IP&gt;:/var/log/support_bundle.tar.gz<span class="w"> </span>admin@&lt;jump_host&gt;:/tmp/vplex_support_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.tar.gz
+</code></pre></div>
+<p>The support bundle contains: director firmware versions, hardware inventory, GeoSynchrony version, current configuration snapshot, recent logs from all directors, and health check output.</p>
+<h2 id="geosynchrony-version-and-system-information">GeoSynchrony Version and System Information<a class="headerlink" href="#geosynchrony-version-and-system-information" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Show GeoSynchrony (firmware) version on cluster-1</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/system-volumes/version/&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Show back-end array inventory</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Show detailed information about a back-end array</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /storage-elements/storage-arrays/array-A/&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># List all unclaimed storage volumes on a back-end array</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ls /storage-elements/storage-arrays/array-A/storage-volumes&quot;</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># Show VPLEX engine serial numbers and hardware revision (for support case)</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/engine-1-1/&quot;</span>
+</code></pre></div>
+<h2 id="pre-support-call-data-collection-checklist">Pre-Support-Call Data Collection Checklist<a class="headerlink" href="#pre-support-call-data-collection-checklist" title="Permanent link">&para;</a></h2>
+<p>Gather all of the following before opening a Dell Support case:</p>
 <ul>
-<li>GeoSynchrony version: <code>vplexcli -q -e "ll /clusters/cluster-1/system-volumes/version/"</code></li>
-<li>Full health check output: <code>vplexcli -q -e "health-check --full"</code></li>
-<li>Distributed device health: <code>vplexcli -q -e "ll /distributed-storage/distributed-devices/*/health-indications/"</code></li>
-<li>Consistency group state: <code>vplexcli -q -e "ll /distributed-storage/consistency-groups/"</code></li>
-<li>Support bundle: <code>collect-support-log -f /var/log/support_bundle.tar.gz</code></li>
-<li>Approximate time the issue started</li>
-<li>Description of any recent changes (GeoSynchrony upgrade, backend array changes, zoning changes, host additions)</li>
-<li>Output from hosts: <code>powermt display dev=all</code> or <code>multipath -ll</code></li>
+<li>[ ] GeoSynchrony version: <code>ll /clusters/cluster-1/system-volumes/version/</code></li>
+<li>[ ] Full health check output: <code>health-check --full</code></li>
+<li>[ ] Cluster health indications: <code>ll /clusters/*/health-indications/</code></li>
+<li>[ ] Distributed device health: <code>ll /distributed-storage/distributed-devices/*/health-indications/</code></li>
+<li>[ ] Director hardware health: <code>ll /engines/*/directors/*/hardware/</code></li>
+<li>[ ] Witness status: <code>ll /clusters/*/cluster-witness/</code></li>
+<li>[ ] Consistency group state: <code>ll /distributed-storage/consistency-groups/</code></li>
+<li>[ ] ICL status: <code>ll /clusters/*/communication/inter-cluster-links/</code></li>
+<li>[ ] Storage view list: <code>ll /clusters/*/exports/storage-views/</code></li>
+<li>[ ] Support bundle: <code>collect-support-log -f /var/log/support_bundle.tar.gz</code></li>
+<li>[ ] Approximate time the issue started (UTC)</li>
+<li>[ ] Description of any recent changes (upgrades, array changes, zoning, host additions)</li>
+<li>[ ] Host-side path output: <code>powermt display dev=all</code> or <code>multipath -ll</code> from affected hosts</li>
+<li>[ ] VMS management log excerpt covering the incident timeframe</li>
 </ul>
 
 

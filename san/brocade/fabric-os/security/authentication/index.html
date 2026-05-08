@@ -706,6 +706,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#radius-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -714,16 +725,44 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#radius-role-mapping" class="md-nav__link">
+    <nav class="md-nav" aria-label="RADIUS Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-radius" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RADIUS Role Mapping
+        Configure RADIUS
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#role-mapping-via-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Mapping via RADIUS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-radius-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test RADIUS Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -736,6 +775,84 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="TACACS+ Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-tacacs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure TACACS+
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tacacs-vs-radius-choosing-between-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TACACS+ vs RADIUS — Choosing Between Them
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Accounts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Local Accounts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manage-local-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manage Local Accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#built-in-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#break-glass-account-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Break-Glass Account Standards
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -746,6 +863,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="SSH Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ssh-key-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Key Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disabling-telnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disabling Telnet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -761,10 +906,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-account-standards" class="md-nav__link">
+  <a href="#authentication-troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Account Standards
+        Authentication Troubleshooting
       
     </span>
   </a>
@@ -796,49 +941,298 @@
 <p>Part of the <a href="../">Security</a> reference.</p>
 </blockquote>
 <hr />
-<h2 id="radius-authentication">RADIUS Authentication<a class="headerlink" href="#radius-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Configure RADIUS server</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aaaconfig<span class="w"> </span>--add<span class="w"> </span>&lt;radius-server-ip&gt;<span class="w"> </span>-conf<span class="w"> </span>radius<span class="w"> </span>-p<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;shared-secret&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Set authentication order: RADIUS primary, local fallback</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aaaconfig<span class="w"> </span>--authorder<span class="w"> </span>RADIUS<span class="p">;</span>LOCAL
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify RADIUS is configured</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aaaconfig<span class="w"> </span>--show
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Test RADIUS authentication</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>aaaconfig<span class="w"> </span>--validate<span class="w"> </span>-user<span class="w"> </span>&lt;test-user&gt;
-</code></pre></div>
-<p><strong>Local fallback account</strong> — retain the local <code>admin</code> account as break-glass. Store the password in the enterprise vault.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Brocade FabricOS supports three authentication methods for management access:</p>
+<ol>
+<li><strong>Local accounts</strong> — stored on the switch; used for break-glass access only in production</li>
+<li><strong>RADIUS</strong> — recommended for enterprise environments; integrates with Active Directory via NPS</li>
+<li><strong>TACACS+</strong> — alternative to RADIUS; provides per-command authorization</li>
+</ol>
+<p>All production switches must be configured with RADIUS or TACACS+ as the primary authentication method, with local accounts as a fallback. Local account credentials for break-glass must be stored in the enterprise vault (CyberArk, HashiCorp Vault, etc.) and rotated quarterly.</p>
 <hr />
-<h2 id="radius-role-mapping">RADIUS Role Mapping<a class="headerlink" href="#radius-role-mapping" title="Permanent link">&para;</a></h2>
-<p>RADIUS-authenticated users receive their role from the RADIUS server via the <code>Foundry-User-Priv</code> AV-pair or the configured role-mapping on the switch.</p>
+<h2 id="radius-authentication">RADIUS Authentication<a class="headerlink" href="#radius-authentication" title="Permanent link">&para;</a></h2>
+<h3 id="configure-radius">Configure RADIUS<a class="headerlink" href="#configure-radius" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Add primary RADIUS server</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aaaconfig<span class="w"> </span>--add<span class="w"> </span>&lt;radius-server-ip&gt;<span class="w"> </span>-conf<span class="w"> </span>radius<span class="w"> </span>-p<span class="w"> </span><span class="m">1812</span><span class="w"> </span>-s<span class="w"> </span>&lt;shared-secret&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Add secondary RADIUS server (failover)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aaaconfig<span class="w"> </span>--add<span class="w"> </span>&lt;radius-server2-ip&gt;<span class="w"> </span>-conf<span class="w"> </span>radius<span class="w"> </span>-p<span class="w"> </span><span class="m">1812</span><span class="w"> </span>-s<span class="w"> </span>&lt;shared-secret&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Set authentication order: RADIUS primary, local accounts as fallback</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aaaconfig<span class="w"> </span>--authorder<span class="w"> </span>RADIUS<span class="p">;</span>LOCAL
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Verify RADIUS configuration</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>aaaconfig<span class="w"> </span>--show
+</code></pre></div>
+<h3 id="role-mapping-via-radius">Role Mapping via RADIUS<a class="headerlink" href="#role-mapping-via-radius" title="Permanent link">&para;</a></h3>
+<p>RADIUS users receive their FabricOS role from the RADIUS server via the VSA (Vendor-Specific Attribute) <code>Foundry-Privilege-Level</code> or a role-map configured on the switch.</p>
+<p><strong>Brocade VSA (Vendor ID 1588):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Value</th>
+<th>FabricOS Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Foundry-Privilege-Level</td>
+<td>2</td>
+<td><code>admin</code> — full access</td>
+</tr>
+<tr>
+<td>Foundry-Privilege-Level</td>
+<td>3</td>
+<td><code>switchadmin</code> — switch operations</td>
+</tr>
+<tr>
+<td>Foundry-Privilege-Level</td>
+<td>5</td>
+<td><code>zoneadmin</code> — zone management only</td>
+</tr>
+<tr>
+<td>Foundry-Privilege-Level</td>
+<td>6</td>
+<td><code>operator</code> — read-only</td>
+</tr>
+</tbody>
+</table>
+<p>Configure the RADIUS server (Microsoft NPS / FreeRADIUS) to return the VSA based on Active Directory group membership:</p>
+<ul>
+<li>AD Group: <code>SAN-Admins</code> → <code>Foundry-Privilege-Level = 2</code></li>
+<li>AD Group: <code>SAN-Operators</code> → <code>Foundry-Privilege-Level = 6</code></li>
+</ul>
+<h3 id="test-radius-authentication">Test RADIUS Authentication<a class="headerlink" href="#test-radius-authentication" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Validate RADIUS connection and user authentication</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aaaconfig<span class="w"> </span>--validate<span class="w"> </span>-user<span class="w"> </span>&lt;test-username&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># The switch connects to the RADIUS server and authenticates — output shows SUCCESS or failure reason</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Show RADIUS server reachability (from switch)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># The switch must have IP connectivity to the RADIUS server on the management VLAN</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ping<span class="w"> </span>&lt;radius-server-ip&gt;
+</code></pre></div>
+<p>If RADIUS authentication fails, the fallback to <code>LOCAL</code> authentication ensures break-glass access remains available. Always test RADIUS before relying on it.</p>
 <hr />
 <h2 id="tacacs-authentication">TACACS+ Authentication<a class="headerlink" href="#tacacs-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Configure TACACS+</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aaaConfig<span class="w"> </span>--add<span class="w"> </span>&lt;server_ip&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;port&gt;<span class="w"> </span>-s<span class="w"> </span>&lt;secret&gt;<span class="w"> </span>-t<span class="w"> </span>tacacs+
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show auth settings</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>authUtil<span class="w"> </span>--show
+<p>TACACS+ provides finer-grained authorization than RADIUS — it can enforce per-command authorization in addition to per-user role assignment.</p>
+<h3 id="configure-tacacs">Configure TACACS+<a class="headerlink" href="#configure-tacacs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add TACACS+ server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aaaconfig<span class="w"> </span>--add<span class="w"> </span>&lt;tacacs-server-ip&gt;<span class="w"> </span>-conf<span class="w"> </span>tacacs+<span class="w"> </span>-p<span class="w"> </span><span class="m">49</span><span class="w"> </span>-s<span class="w"> </span>&lt;shared-secret&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set authentication order: TACACS+ primary, local fallback</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>aaaconfig<span class="w"> </span>--authorder<span class="w"> </span>TACACS+<span class="p">;</span>LOCAL
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show current AAA configuration</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aaaconfig<span class="w"> </span>--show
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>authutil<span class="w"> </span>--show
 </code></pre></div>
+<h3 id="tacacs-vs-radius-choosing-between-them">TACACS+ vs RADIUS — Choosing Between Them<a class="headerlink" href="#tacacs-vs-radius-choosing-between-them" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>RADIUS</th>
+<th>TACACS+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authentication</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Authorization (per-command)</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Accounting</td>
+<td>Limited</td>
+<td>Full</td>
+</tr>
+<tr>
+<td>Transport</td>
+<td>UDP</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>Password only</td>
+<td>Full packet</td>
+</tr>
+<tr>
+<td>Common use</td>
+<td>Most enterprise SANs</td>
+<td>Environments requiring audit of individual commands</td>
+</tr>
+</tbody>
+</table>
+<p>If the environment uses Cisco ISE or ClearPass as the AAA platform, check whether it supports TACACS+ for device administration (most do). Either is acceptable for Brocade switch authentication.</p>
+<hr />
+<h2 id="local-accounts">Local Accounts<a class="headerlink" href="#local-accounts" title="Permanent link">&para;</a></h2>
+<p>Local accounts are stored on the switch. They bypass RADIUS/TACACS+ and authenticate directly against the switch credential store.</p>
+<h3 id="manage-local-accounts">Manage Local Accounts<a class="headerlink" href="#manage-local-accounts" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all local accounts and their roles</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>userconfig<span class="w"> </span>--show
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create a local account with a specific role</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>userconfig<span class="w"> </span>--add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>&lt;role&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Modify an existing account&#39;s role</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>userconfig<span class="w"> </span>--change<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-r<span class="w"> </span>&lt;role&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Delete a local account</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>userconfig<span class="w"> </span>--delete<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Change a password</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>passwd<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># List available roles</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>roleconfig<span class="w"> </span>--show
+</code></pre></div>
+<h3 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>admin</code></td>
+<td>Full switch and chassis access — all commands</td>
+</tr>
+<tr>
+<td><code>switchadmin</code></td>
+<td>Switch-level operations — port management, diagnostics, no security config</td>
+</tr>
+<tr>
+<td><code>fabricadmin</code></td>
+<td>Fabric-level operations — can manage all switches in fabric</td>
+</tr>
+<tr>
+<td><code>zoneadmin</code></td>
+<td>Zone management only — cannot change port config or security settings</td>
+</tr>
+<tr>
+<td><code>operator</code></td>
+<td>Read-only access — all show commands, no modifications</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>Minimal read access — very limited show commands</td>
+</tr>
+<tr>
+<td><code>securityadmin</code></td>
+<td>Security configuration only — certificates, IPfilter, policies</td>
+</tr>
+</tbody>
+</table>
+<h3 id="break-glass-account-standards">Break-Glass Account Standards<a class="headerlink" href="#break-glass-account-standards" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The local <code>admin</code> account on every switch must have a strong, unique password stored in the enterprise vault.</li>
+<li>Break-glass accounts must not be used for day-to-day operations — all regular access via RADIUS/TACACS+.</li>
+<li>Break-glass password retrieval must be logged in the vault and reviewed quarterly.</li>
+<li>After any break-glass use, rotate the local admin password and update the vault entry.</li>
+</ul>
 <hr />
 <h2 id="ssh-configuration">SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show SSH status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sshUtil<span class="w"> </span>--show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Generate SSH host keys</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sshUtil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
+<h3 id="ssh-key-management">SSH Key Management<a class="headerlink" href="#ssh-key-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show current SSH configuration and enabled services</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sshutil<span class="w"> </span>--show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Generate RSA host key (2048-bit minimum; 4096-bit recommended)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Generate ECDSA host key (preferred on FOS 9.x)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>ecdsa
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Import an authorized public key for key-based authentication</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>sshutil<span class="w"> </span>--add<span class="w"> </span>-user<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-host<span class="w"> </span>&lt;management-server-ip&gt;<span class="w"> </span>-file<span class="w"> </span>/path/to/id_rsa.pub
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Show imported public keys</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>sshutil<span class="w"> </span>--show<span class="w"> </span>-user<span class="w"> </span>&lt;username&gt;
+</code></pre></div>
+<h3 id="disabling-telnet">Disabling Telnet<a class="headerlink" href="#disabling-telnet" title="Permanent link">&para;</a></h3>
+<p>Telnet must be disabled on all production switches. Verify after every new switch deployment and firmware upgrade.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable Telnet via configure</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>configure
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Navigate to: System Services → Telnet → enter 0 (disable)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify Telnet is disabled</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sshutil<span class="w"> </span>--show
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Expected: &quot;telnetd&quot; = disabled</span>
 </code></pre></div>
 <hr />
 <h2 id="ntp-requirement">NTP Requirement<a class="headerlink" href="#ntp-requirement" title="Permanent link">&para;</a></h2>
-<p>NTP must be configured and synced — required for log correlation and certificate-based authentication.</p>
-<hr />
-<h2 id="local-account-standards">Local Account Standards<a class="headerlink" href="#local-account-standards" title="Permanent link">&para;</a></h2>
+<p>NTP synchronisation is mandatory for:</p>
 <ul>
-<li>Root account password changed; stored in vault; break-glass use only</li>
-<li>All non-break-glass access via RADIUS with local as fallback only</li>
-<li>Password policy enforced: minimum length, complexity, expiry</li>
+<li>Accurate log timestamps — required for security incident correlation</li>
+<li>Certificate-based authentication — certificates fail validation if the clock is wrong</li>
+<li>RADIUS authentication — some RADIUS servers enforce time-based token validation</li>
 </ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure NTP server (minimum two servers for redundancy)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tsclockserver<span class="w"> </span><span class="s2">&quot;&lt;ntp-server-1&gt; &lt;ntp-server-2&gt;&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify NTP synchronisation</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>tsclockserver<span class="w">              </span><span class="c1"># Show configured NTP servers</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>date<span class="w">                       </span><span class="c1"># Check current system time against expected</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check NTP sync status (FOS 9.x)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ntpshow
+</code></pre></div>
+<p>NTP servers should be on the management network, reachable from the switch management IP. Use internal NTP stratum 2 servers — do not rely on public internet NTP from a SAN switch.</p>
+<hr />
+<h2 id="authentication-troubleshooting">Authentication Troubleshooting<a class="headerlink" href="#authentication-troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Triage</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RADIUS login fails for all users</td>
+<td><code>ping &lt;radius-server-ip&gt;</code> from switch</td>
+<td>Verify network path; check RADIUS server is running</td>
+</tr>
+<tr>
+<td>RADIUS login fails for one user</td>
+<td>Test user account on RADIUS server directly</td>
+<td>Check AD group membership; verify VSA attribute</td>
+</tr>
+<tr>
+<td>Local fallback not working</td>
+<td><code>aaaconfig --show</code> — check order is <code>RADIUS;LOCAL</code></td>
+<td>Confirm <code>authorder</code> includes LOCAL</td>
+</tr>
+<tr>
+<td>Account locked after failed attempts</td>
+<td>Account lock threshold hit</td>
+<td>Unlock via local console or another admin account</td>
+</tr>
+<tr>
+<td>SSH connection refused</td>
+<td><code>sshutil --show</code> — SSH enabled?</td>
+<td>Enable SSH; check IPfilter is not blocking port 22</td>
+</tr>
+<tr>
+<td>Certificate errors on SSH connection</td>
+<td>Host key changed (after regen)</td>
+<td>Clear known_hosts entry on management workstation</td>
+</tr>
+<tr>
+<td>TACACS+ authentication slow</td>
+<td>TCP connection timeout</td>
+<td>Check TACACS+ server reachability; firewall rules on port 49</td>
+</tr>
+</tbody>
+</table>
 
 
 

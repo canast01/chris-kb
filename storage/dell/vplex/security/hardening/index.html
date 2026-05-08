@@ -714,6 +714,133 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Hardening Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identity-and-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity and Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-and-management-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network and Management Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-and-certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS and Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-and-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit and Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-and-patching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software and Patching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-and-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup and Recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssh-hardening-reference-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Hardening — Reference Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Segmentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance Alignment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-checks-after-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Checks After Hardening
+      
+    </span>
+  </a>
+  
 </li>
       
     </ul>
@@ -737,23 +864,195 @@
 
 
 <h1 id="dell-vplex-hardening">Dell VPLEX — Hardening<a class="headerlink" href="#dell-vplex-hardening" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Security baselines and compliance configuration for Dell VPLEX.</p>
-</blockquote>
+<p>Security baseline for VPLEX deployments. Apply all items before production go-live and validate against this checklist after any significant configuration change or GeoSynchrony upgrade.</p>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<h3 id="identity-and-authentication">Identity and Authentication<a class="headerlink" href="#identity-and-authentication" title="Permanent link">&para;</a></h3>
 <ul>
-<li>[ ] Change default VMS local account passwords immediately after deployment</li>
-<li>[ ] Replace the default self-signed TLS certificate on Unisphere for VPLEX with a corporate CA-signed certificate</li>
-<li>[ ] Enforce SSH key authentication for VMS access; disable password-based SSH for the <code>service</code> account in production</li>
-<li>[ ] Restrict VMS management access to the management network VLAN; block direct internet access to VMS</li>
-<li>[ ] Create named service accounts for automation; do not use the <code>service</code> account interactively for routine tasks</li>
-<li>[ ] Enable syslog forwarding from VMS to the SIEM for management action auditing</li>
-<li>[ ] Remove or disable unused local accounts on VMS</li>
-<li>[ ] Keep GeoSynchrony firmware on a supported release; refer to the version matrix in Install &amp; Upgrade</li>
-<li>[ ] Review storage views quarterly to remove orphaned initiators from decommissioned hosts</li>
-<li>[ ] Back up the VMS VM before every change; verify backup integrity</li>
-<li>[ ] Ensure the Witness VM is deployed in a separate failure domain and managed on a separate management network segment from the VPLEX clusters</li>
+<li>[ ] Change all default VMS local account passwords immediately after deployment; store in a PAM vault</li>
+<li>[ ] Configure SSH key authentication for the <code>service</code> account; disable password-based SSH (<code>PasswordAuthentication no</code> in <code>/etc/ssh/sshd_config</code>)</li>
+<li>[ ] Disable root SSH login (<code>PermitRootLogin no</code>)</li>
+<li>[ ] Create named service accounts for automation and monitoring; do not use the shared <code>service</code> account for scripted operations</li>
+<li>[ ] Map LDAP/AD groups to VPLEX management roles in Unisphere; maintain at least one local admin account as break-glass</li>
+<li>[ ] Enable Unisphere session timeout (15–30 minutes)</li>
 </ul>
+<h3 id="network-and-management-access">Network and Management Access<a class="headerlink" href="#network-and-management-access" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Restrict VMS management access to the dedicated management VLAN; block all traffic from production or guest VLANs to the VMS management IP</li>
+<li>[ ] Restrict SSH access to VMS to specific management jump hosts or subnets (<code>AllowUsers service@&lt;MGMT_SUBNET&gt;</code> in sshd_config)</li>
+<li>[ ] Block direct internet access to the VMS; all outbound access for CloudIQ telemetry must route through an authenticated proxy</li>
+<li>[ ] Ensure the Witness VM is on a management network segment isolated from both VPLEX cluster sites; the Witness must be reachable from both clusters but must not share a failure domain with either</li>
+</ul>
+<h3 id="tls-and-certificate-management">TLS and Certificate Management<a class="headerlink" href="#tls-and-certificate-management" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Replace the default self-signed TLS certificate on Unisphere for VPLEX with a corporate CA-signed certificate before production use</li>
+<li>[ ] Configure automated monitoring for Unisphere TLS certificate expiry; alert at 30 days before expiry</li>
+<li>[ ] Store TLS private keys in a secrets management system; do not leave private keys in <code>/tmp</code> or home directories</li>
+</ul>
+<h3 id="host-access-control">Host Access Control<a class="headerlink" href="#host-access-control" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Implement single-initiator SAN zoning; zone each host HBA only to the VPLEX front-end ports required for its storage views</li>
+<li>[ ] Never zone hosts directly to back-end array ports; all host access must pass through VPLEX</li>
+<li>[ ] Create individual storage views per host; do not create catch-all views</li>
+<li>[ ] Only include required volumes in each storage view; remove volumes no longer needed by the host</li>
+<li>[ ] Review and clean up storage views quarterly; unregister initiators for decommissioned hosts</li>
+</ul>
+<h3 id="audit-and-monitoring">Audit and Monitoring<a class="headerlink" href="#audit-and-monitoring" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Forward VMS syslog to the centralised SIEM; include <code>/var/log/VPlex/vplexcli.log</code> and <code>/var/log/VPlex/vplexmanagement.log</code></li>
+<li>[ ] Configure SIEM alerts for: failed SSH attempts to VMS, storage view deletions, consistency group suspend/detach events, director hardware faults</li>
+<li>[ ] Enable SNMP traps or API-based alerting to the NMS for VPLEX health state changes</li>
+<li>[ ] Verify VPLEX logs are being received in the SIEM monthly</li>
+</ul>
+<h3 id="software-and-patching">Software and Patching<a class="headerlink" href="#software-and-patching" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Maintain GeoSynchrony firmware on a supported release; refer to the version matrix in <a href="../../operations/install-upgrade/">Install &amp; Upgrade</a></li>
+<li>[ ] Subscribe to Dell security advisories for VPLEX; review advisories before host OS or back-end array firmware upgrades</li>
+<li>[ ] Upgrade GeoSynchrony and back-end array firmware in separate maintenance windows; do not combine changes that could interact</li>
+<li>[ ] Test GeoSynchrony upgrades in a non-production environment or staging cluster before applying to production</li>
+</ul>
+<h3 id="backup-and-recovery">Backup and Recovery<a class="headerlink" href="#backup-and-recovery" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Take a VMS VM snapshot before every configuration change and at a minimum weekly</li>
+<li>[ ] Verify VMS snapshot or backup restorability quarterly by restoring to a test VM</li>
+<li>[ ] Maintain an export of the storage view inventory and distributed device mapping in the CMDB after every provisioning change</li>
+</ul>
+<hr />
+<h2 id="ssh-hardening-reference-configuration">SSH Hardening — Reference Configuration<a class="headerlink" href="#ssh-hardening-reference-configuration" title="Permanent link">&para;</a></h2>
+<p>Apply the following to <code>/etc/ssh/sshd_config</code> on the VMS:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Disable password and empty-password authentication
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>PasswordAuthentication no
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ChallengeResponseAuthentication no
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>PermitEmptyPasswords no
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Disable root login
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>PermitRootLogin no
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Restrict to management hosts
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>AllowUsers service@&lt;MGMT_JUMP_HOST_IP&gt;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Use strong algorithms only
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>KexAlgorithms curve25519-sha256,diffie-hellman-group-exchange-sha256
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Ciphers aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes128-gcm@openssh.com
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Idle session timeout (5 minutes × 3 intervals = 15 minutes)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ClientAliveInterval 300
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ClientAliveCountMax 3
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Disable X11 forwarding and agent forwarding (unnecessary on VMS)
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>X11Forwarding no
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>AllowAgentForwarding no
+</code></pre></div>
+<p>After editing, test the configuration and restart:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test sshd config for syntax errors</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sshd<span class="w"> </span>-t
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Restart sshd (keep existing session open until confirmed)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify new session can authenticate with key before closing existing session</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519<span class="w"> </span>service@&lt;VMS_IP&gt;<span class="w"> </span><span class="s2">&quot;vplexcli -q -e &#39;health-check&#39;&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="network-segmentation">Network Segmentation<a class="headerlink" href="#network-segmentation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Contents</th>
+<th>Access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPLEX management VLAN</td>
+<td>VMS, Witness VM management interface</td>
+<td>Jump hosts, storage admins only; no production servers</td>
+</tr>
+<tr>
+<td>VPLEX front-end SAN fabric</td>
+<td>Host HBAs, VPLEX FE ports</td>
+<td>Strictly zoned per storage view; no back-end array ports</td>
+</tr>
+<tr>
+<td>VPLEX back-end SAN fabric</td>
+<td>VPLEX BE ports, back-end array target ports</td>
+<td>No host HBAs; VPLEX BE ports only</td>
+</tr>
+<tr>
+<td>ICL WAN segment</td>
+<td>VPLEX ICL ports (Metro)</td>
+<td>Dedicated WAN circuit or VLAN; no other traffic; encrypt if traversing untrusted carrier</td>
+</tr>
+</tbody>
+</table>
+<p>Separation of the front-end and back-end SAN fabrics is critical. If a host HBA were accidentally zoned to a back-end array port, the host could bypass VPLEX and access the raw LUN without VPLEX access controls.</p>
+<hr />
+<h2 id="compliance-alignment">Compliance Alignment<a class="headerlink" href="#compliance-alignment" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Applicable Standard</th>
+<th>VPLEX Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Encryption at rest</td>
+<td>PCI DSS 3.4, ISO 27001 A.10.1</td>
+<td>Enable D@RE on PowerMax / Unity back-end arrays</td>
+</tr>
+<tr>
+<td>Access control</td>
+<td>PCI DSS 7, SOC 2 CC6</td>
+<td>Role-based access in Unisphere; storage views for host access</td>
+</tr>
+<tr>
+<td>Audit logging</td>
+<td>PCI DSS 10, SOC 2 CC7</td>
+<td>vplexcli logs forwarded to SIEM</td>
+</tr>
+<tr>
+<td>Patch management</td>
+<td>PCI DSS 6, CIS Controls</td>
+<td>GeoSynchrony on supported release; Dell advisories subscribed</td>
+</tr>
+<tr>
+<td>Network segmentation</td>
+<td>PCI DSS 1, CIS Controls</td>
+<td>Separate management, FE, BE, ICL segments as above</td>
+</tr>
+<tr>
+<td>Privileged access management</td>
+<td>SOC 2 CC6, ISO 27001 A.9.2</td>
+<td>PAM vault for VMS credentials; SSH key auth; named accounts</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="validation-checks-after-hardening">Validation Checks After Hardening<a class="headerlink" href="#validation-checks-after-hardening" title="Permanent link">&para;</a></h2>
+<p>Run these after applying the hardening configuration to confirm nothing has broken:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm SSH key authentication works (from management jump host)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519<span class="w"> </span>service@&lt;VMS_IP&gt;<span class="w"> </span><span class="s2">&quot;vplexcli -q -e &#39;health-check&#39;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm Unisphere HTTPS is using the corporate CA certificate</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;VMS_IP&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-enddate
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Confirm all directors healthy post-hardening</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /engines/*/directors/*/hardware/&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Confirm Witness connectivity intact</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-1/cluster-witness/&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/cluster-2/cluster-witness/&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Confirm storage views and initiator memberships unchanged</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;ll /clusters/*/exports/storage-views/&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Run full health check</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>vplexcli<span class="w"> </span>-q<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;health-check --full&quot;</span>
+</code></pre></div>
 
 
 

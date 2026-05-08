@@ -760,6 +760,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#name-server-and-fabric-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Name Server and Fabric Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zoning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isl-trunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISL Trunking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-fabrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Fabrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maps-monitoring-and-alerting-policy-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAPS — Monitoring and Alerting Policy Suite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fcip-fibre-channel-over-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FCIP — Fibre Channel over IP
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -874,6 +940,140 @@
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># At &quot;Domain:&quot; prompt, enter the desired domain ID</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># At &quot;Fabric parameters&quot; prompt, set &quot;insistDomainId&quot; to 1</span>
 </code></pre></div>
+<hr />
+<h2 id="name-server-and-fabric-services">Name Server and Fabric Services<a class="headerlink" href="#name-server-and-fabric-services" title="Permanent link">&para;</a></h2>
+<p>The name server is a distributed fabric service that runs on every switch but is coordinated by the principal switch. When a device (host HBA or storage target) logs into the fabric, it registers its WWPN, WWNN, FC4 type, and port symbolic name with the name server. Other devices query the name server to discover targets.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show all devices registered in the local switch name server</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nsshow
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Show name server across the entire fabric (all domains)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>nsallshow
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Look up a specific device by WWPN</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>nslookup<span class="w"> </span>&lt;wwpn&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Show FLOGI (Fabric Login) database — devices that have logged in</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>portloginshow
+</code></pre></div>
+<p>The FDMI (Fabric Device Management Interface) service stores additional device metadata — HBA model, driver version, OS version — that SANnav and other management tools use for inventory.</p>
+<hr />
+<h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
+<p>Zoning is enforced by the fabric — not by the connected devices. The active zone set is distributed to all switches in the fabric by the principal switch when <code>cfgenable</code> is run. Each switch enforces the zone policy for frames passing through its ports.</p>
+<p><strong>Zone types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Zone Type</th>
+<th>Definition</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Soft zoning (WWN)</td>
+<td>Zone membership by WWPN</td>
+<td>Preferred for production — portable across port moves</td>
+</tr>
+<tr>
+<td>Hard zoning (port-based)</td>
+<td>Zone membership by domain ID and port number</td>
+<td>Use only when WWN flexibility is not required</td>
+</tr>
+<tr>
+<td>Peer zone</td>
+<td>Multiple initiators share targets without seeing each other</td>
+<td>Multi-host shared-target environments</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Zoning model — single-initiator:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Zone: esxi01_hba0__pure_ct0_p0
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Member: esxi01_hba0   (WWPN: 10:00:00:00:c9:12:34:56)  &lt;- one initiator only
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Member: pure_ct0_p0   (WWPN: 52:4a:93:7c:00:00:00:01)  &lt;- one or more targets
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Zone: esxi01_hba1__pure_ct1_p0
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  Member: esxi01_hba1   (WWPN: 10:00:00:00:c9:12:34:57)  &lt;- separate zone for HBA1
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  Member: pure_ct1_p0   (WWPN: 52:4a:93:7c:00:00:00:11)
+</code></pre></div>
+<p>Never place two initiator WWPNs in the same zone. This creates a blast radius risk — if one host has a software fault and probes aggressively, it can disturb the other host in the same zone.</p>
+<hr />
+<h2 id="isl-trunking">ISL Trunking<a class="headerlink" href="#isl-trunking" title="Permanent link">&para;</a></h2>
+<p>ISLs (Inter-Switch Links) connect Brocade switches within a fabric. Multiple physical ISL ports between the same pair of switches are grouped into a trunk, which acts as a single logical high-bandwidth link.</p>
+<p><strong>Trunk requirements:</strong>
+- All ISL ports in a trunk must run at the same speed
+- All ISL ports must connect the same pair of switches
+- <code>porttrunkarea</code> must be configured identically on both ends</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show ISL status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>islshow
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show trunk group membership and master port</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>trunkshow
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Show ISL throughput</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>portperfshow
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Configure trunk area (required before forming trunks)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>porttrunkarea<span class="w"> </span>--enable<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Verify trunk formed correctly</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>trunkshow<span class="w">    </span><span class="c1"># Should show MASTER and SLAVE ports in the same trunk group</span>
+</code></pre></div>
+<p>ICLs (Inter-Chassis Links) are used to connect director-class chassis (X7-8 to X7-8) using special ICL cables and ports. ICLs are not ISLs — they use a dedicated backplane-like connection and have different configuration requirements.</p>
+<hr />
+<h2 id="virtual-fabrics">Virtual Fabrics<a class="headerlink" href="#virtual-fabrics" title="Permanent link">&para;</a></h2>
+<p>Virtual Fabrics (VF) partition a single physical chassis into multiple independent logical switches, each with its own Fabric ID (FID) and isolated fabric. This allows a single X7-8 director to participate in Fabric A, Fabric B, and a replication fabric simultaneously.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List logical switches and their FIDs</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>lscfg<span class="w"> </span>--show
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Switch CLI context to a specific logical switch FID</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>setContext<span class="w"> </span>&lt;fid&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Assign a port to a logical switch</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>lscfg<span class="w"> </span>--config<span class="w"> </span>&lt;fid&gt;<span class="w"> </span>-port<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Create a new logical switch</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>lscfg<span class="w"> </span>--create<span class="w"> </span>&lt;fid&gt;
+</code></pre></div>
+<p>Logical switches share physical hardware (backplane, power, cooling) but have completely isolated fabric services — separate domain IDs, separate zone databases, separate name servers. Ports are assigned to exactly one logical switch at a time.</p>
+<hr />
+<h2 id="maps-monitoring-and-alerting-policy-suite">MAPS — Monitoring and Alerting Policy Suite<a class="headerlink" href="#maps-monitoring-and-alerting-policy-suite" title="Permanent link">&para;</a></h2>
+<p>MAPS provides threshold-based, automated SAN health monitoring. It replaces the older Fabric Watch feature and integrates with SANnav for centralised alerting.</p>
+<p>MAPS monitors:</p>
+<ul>
+<li>Port error counters (CRC, ITW, loss of sync, loss of signal)</li>
+<li>ISL utilization and C3 discard rates</li>
+<li>BB credit zero conditions (slow drain)</li>
+<li>Switch environment (temperature, fan, PSU)</li>
+<li>Fabric events (principal switch change, domain loss)</li>
+<li>Security events (failed logins, policy violations)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Current MAPS health dashboard</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mapsdashboard<span class="w"> </span>--show
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># All triggered MAPS alerts</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>mapsdb<span class="w"> </span>--show
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Active MAPS policy</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>mapspolicy<span class="w"> </span>--show
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Default MAPS policies</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>mapspolicy<span class="w"> </span>--show<span class="w"> </span>-predefined
+</code></pre></div>
+<p>MAPS policies are pre-defined by Broadcom (defaulted to <code>dflt_conservative_policy</code> or <code>dflt_aggressive_policy</code>) and can be customised with site-specific thresholds. The policy is configured per logical switch.</p>
+<hr />
+<h2 id="fcip-fibre-channel-over-ip">FCIP — Fibre Channel over IP<a class="headerlink" href="#fcip-fibre-channel-over-ip" title="Permanent link">&para;</a></h2>
+<p>FCIP extends a Fibre Channel fabric over an IP WAN connection. It is used for long-distance replication (SRDF, RecoverPoint) where a direct ISL is not possible. Brocade 7810/7840 extension platforms provide FCIP gateway functionality.</p>
+<p>FCIP tunnels encapsulate FC frames in TCP/IP packets. The IP network must provide adequate bandwidth and latency — FCIP is sensitive to packet loss and high latency (target: &lt;5ms one-way for synchronous replication).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Show FCIP tunnel status (on 7810/7840 extension platforms)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>fciptunnel<span class="w"> </span>--show
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Show FCIP circuit status</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>fcipcircuit<span class="w"> </span>--show
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Show FCIP statistics</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>fcipcircuit<span class="w"> </span>--show<span class="w"> </span>-perf
+</code></pre></div>
+<p>FCIP is configured with QoS on the IP network to protect replication bandwidth from being consumed by other traffic. Work with the network team to confirm DSCP marking is applied to FCIP traffic and honoured across all WAN hops.</p>
 
 
 

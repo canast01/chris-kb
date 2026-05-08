@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
+  <a href="#built-in-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RBAC
+        Built-in Roles
       
     </span>
   </a>
@@ -717,10 +717,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#assigning-roles" class="md-nav__link">
+  <a href="#assigning-roles-to-local-accounts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Assigning Roles
+        Assigning Roles to Local Accounts
       
     </span>
   </a>
@@ -728,10 +728,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-tokens" class="md-nav__link">
+  <a href="#assigning-roles-to-directory-service-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Tokens
+        Assigning Roles to Directory Service Groups
       
     </span>
   </a>
@@ -739,10 +739,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#least-privilege-guidelines" class="md-nav__link">
+  <a href="#api-token-access-control" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Least Privilege Guidelines
+        API Token Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#least-privilege-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least Privilege Implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#account-lifecycle-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Account Lifecycle Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Account Lifecycle Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#onboarding-a-new-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Onboarding a New Admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offboarding-an-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offboarding an Admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#periodic-access-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Periodic Access Review
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snmp-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SNMP Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-network-access-restriction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Network Access Restriction
       
     </span>
   </a>
@@ -770,73 +853,272 @@
 
 
 <h1 id="flasharray-access-control">FlashArray — Access Control<a class="headerlink" href="#flasharray-access-control" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Roles, permissions, and least privilege access.</p>
-</blockquote>
-<h2 id="rbac">RBAC<a class="headerlink" href="#rbac" title="Permanent link">&para;</a></h2>
-<p>Purity//FA uses a fixed set of built-in roles. Custom roles are not supported — map AD groups to these roles based on the principle of least privilege.</p>
+<p>FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported. All human admin accounts should be mapped through directory service groups (AD or LDAP); individual named local accounts should be limited to break-glass scenarios and service accounts.</p>
+<hr />
+<h2 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Role</th>
-<th>Permissions</th>
-<th>Use Case</th>
+<th>Write Access</th>
+<th>Restrictions</th>
+<th>Recommended For</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>array_admin</code></td>
-<td>Full read/write access to all array configuration, user management, and data operations</td>
-<td>Storage team leads; break-glass admin accounts</td>
+<td>Full array configuration, user management, all data operations</td>
+<td>None — full control including account creation, SafeMode, and array-level settings</td>
+<td>Storage team leads; break-glass admin accounts; Purity upgrade operators</td>
 </tr>
 <tr>
 <td><code>storage_admin</code></td>
-<td>Read/write access to volumes, hosts, host groups, protection groups, and snapshots; cannot modify array-level configuration or user accounts</td>
-<td>Storage administrators performing day-to-day provisioning</td>
+<td>Volumes, hosts, host groups, protection groups, snapshots, replication</td>
+<td>Cannot modify array-level configuration (network, NTP, DNS, alerts); cannot manage user accounts</td>
+<td>Storage admins performing day-to-day provisioning and data management</td>
 </tr>
 <tr>
 <td><code>ops_admin</code></td>
-<td>Read/write access to operational tasks (start/stop replication, acknowledge alerts, run diagnostics); cannot modify provisioning or array config</td>
-<td>Operations team; on-call engineers</td>
+<td>Start/stop replication, acknowledge alerts, run diagnostics, view all configuration</td>
+<td>Cannot provision volumes; cannot modify array config; cannot manage user accounts</td>
+<td>Operations team; on-call engineers who respond to alerts</td>
 </tr>
 <tr>
 <td><code>readonly</code></td>
-<td>Read-only access to all array data and configuration; no ability to make changes</td>
-<td>Monitoring integrations; audit accounts; read-only access for application teams</td>
+<td>None — read-only access to all array data and configuration</td>
+<td>Cannot make any changes</td>
+<td>Monitoring integrations; SIEM accounts; read-only access for application teams and auditors</td>
 </tr>
 </tbody>
 </table>
-<h2 id="assigning-roles">Assigning Roles<a class="headerlink" href="#assigning-roles" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Assign a local account to a role</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>&lt;username&gt;
+<hr />
+<h2 id="assigning-roles-to-local-accounts">Assigning Roles to Local Accounts<a class="headerlink" href="#assigning-roles-to-local-accounts" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a local account with a specific role</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>jsmith
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Map an AD group to a role</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-ops,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Change an existing account&#39;s role</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>jsmith<span class="w"> </span>--role<span class="w"> </span>ops_admin
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all admin accounts and their roles</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pureadmin<span class="w"> </span>list
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Downgrade to read-only</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>jsmith<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List all accounts and their current roles</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pureadmin<span class="w"> </span>list
 </code></pre></div>
-<h2 id="api-tokens">API Tokens<a class="headerlink" href="#api-tokens" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a service account with API token</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span>svc-monitoring
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-monitoring
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Copy the token and store in a secrets manager</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># List API tokens</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
+<hr />
+<h2 id="assigning-roles-to-directory-service-groups">Assigning Roles to Directory Service Groups<a class="headerlink" href="#assigning-roles-to-directory-service-groups" title="Permanent link">&para;</a></h2>
+<p>Groups in Active Directory or LDAP are mapped to Purity roles. When a user logs in, Purity checks which AD groups they are a member of and applies the highest-privilege role from the mapped groups.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Map an AD group to array_admin role</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-array-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Map an AD group to storage_admin role</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-storage-admins,OU=Groups,DC=example,DC=com&quot;</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Delete an API token</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-monitoring<span class="w"> </span>--api-token
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Map an AD group to ops_admin role</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-ops,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Map an AD group to read-only role</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># List all mapped groups and their roles</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>pureadmin<span class="w"> </span>list
 </code></pre></div>
-<h2 id="least-privilege-guidelines">Least Privilege Guidelines<a class="headerlink" href="#least-privilege-guidelines" title="Permanent link">&para;</a></h2>
+<p><strong>Group design guidance:</strong></p>
 <ul>
-<li>Use <code>storage_admin</code> for day-to-day provisioning tasks — avoid using <code>array_admin</code> for routine work</li>
-<li>Use <code>readonly</code> for monitoring integrations (SNMP, Pure1, SIEM integrations)</li>
-<li>Use <code>ops_admin</code> for on-call engineers who need to acknowledge alerts and run diagnostics but should not make configuration changes</li>
-<li>Create named accounts for individuals — no shared <code>pureuser</code> credentials in production</li>
-<li>Disable the default <code>pureuser</code> account after AD/LDAP authentication is validated</li>
-<li>Review and rotate API tokens quarterly; disable tokens for decommissioned service accounts</li>
+<li>Use one AD group per Purity role — do not add the same user to multiple role groups; Purity grants the highest role if a user is in more than one mapped group</li>
+<li>Nest the Purity role groups under a parent OU for easy ACL reporting and audit</li>
+<li>Apply AD group membership reviews quarterly — remove members who have changed roles or left the organisation</li>
 </ul>
+<hr />
+<h2 id="api-token-access-control">API Token Access Control<a class="headerlink" href="#api-token-access-control" title="Permanent link">&para;</a></h2>
+<p>API tokens provide programmatic access without interactive authentication. They inherit the role of the account they belong to.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a monitoring service account (read-only)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>svc-monitoring
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-monitoring
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create a provisioning service account for Terraform / Ansible</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>svc-automation
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-automation
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Create an account for Veeam FlashArray integration</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>svc-veeam
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-veeam
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># List all accounts and whether they have API tokens</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Revoke a token without deleting the account</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-old<span class="w"> </span>--api-token
+</code></pre></div>
+<p><strong>Token access matrix:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>Recommended Role</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pure1 phone-home (built-in)</td>
+<td>Managed by Purity</td>
+<td>No token needed — automatic</td>
+</tr>
+<tr>
+<td>Veeam / Commvault backup</td>
+<td><code>storage_admin</code></td>
+<td>Needs to create/delete snapshots and protection groups</td>
+</tr>
+<tr>
+<td>Terraform provider</td>
+<td><code>storage_admin</code></td>
+<td>Needs to create volumes, hosts, protection groups</td>
+</tr>
+<tr>
+<td>Ansible <code>purefa_info</code> module</td>
+<td><code>readonly</code></td>
+<td>Read-only inventory collection</td>
+</tr>
+<tr>
+<td>Monitoring (SNMP, Prometheus)</td>
+<td><code>readonly</code></td>
+<td>No write access required</td>
+</tr>
+<tr>
+<td>vCenter VASA provider</td>
+<td><code>storage_admin</code></td>
+<td>Needs to create and manage vVols</td>
+</tr>
+<tr>
+<td>Custom automation (provisioning)</td>
+<td><code>storage_admin</code></td>
+<td>Apply scope restriction at the application layer</td>
+</tr>
+<tr>
+<td>Audit/compliance tool</td>
+<td><code>readonly</code></td>
+<td>Read-only audit collection</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="least-privilege-implementation">Least Privilege Implementation<a class="headerlink" href="#least-privilege-implementation" title="Permanent link">&para;</a></h2>
+<p>Purity does not support resource-level access control (i.e., limiting a <code>storage_admin</code> to specific volumes or protection groups). The role grants access to all objects of that type. Compensate for this limitation through:</p>
+<ol>
+<li><strong>Process controls:</strong> require change requests for all provisioning; ops team approves requests before storage admins execute</li>
+<li><strong>Audit log review:</strong> forward audit logs to SIEM and alert on unexpected destructive operations (volume destroy, protection group delete, snapshot eradication)</li>
+<li><strong>Separate environments:</strong> use separate FlashArrays (or separate Pure1 organisations) for production and non-production if strict separation is required</li>
+<li><strong>Named accounts only:</strong> never share a <code>pureuser</code> credential for routine work — every admin action must be attributable to a named user in the audit log</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Audit all admin actions in the last 24 hours</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>time-<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Find all volume delete (destroy) operations</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purevol&quot; and subcommand=&quot;destroy&quot;&#39;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Find all snapshot eradication operations</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;puresnap&quot; and subcommand=&quot;eradicate&quot;&#39;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Find all protection group schedule changes</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepgroup&quot; and subcommand=&quot;schedule&quot;&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="account-lifecycle-management">Account Lifecycle Management<a class="headerlink" href="#account-lifecycle-management" title="Permanent link">&para;</a></h2>
+<h3 id="onboarding-a-new-admin">Onboarding a New Admin<a class="headerlink" href="#onboarding-a-new-admin" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Add the new admin's account to the appropriate AD security group for their role</li>
+<li>Verify they can log into the array with their domain account</li>
+<li>Confirm their role is correct: <code>pureadmin list</code> and check the role column</li>
+<li>If they need API access, create a named service account or provide them a personal API token tied to their account</li>
+</ol>
+<h3 id="offboarding-an-admin">Offboarding an Admin<a class="headerlink" href="#offboarding-an-admin" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># If using AD: remove the user from the relevant AD group — their next login attempt will fail</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Invalidate any active sessions immediately:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># If they had a local account, delete it:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>jsmith
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># If they had a personal API token:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>jsmith<span class="w"> </span>--api-token
+</code></pre></div>
+<p>If the departing admin had access to any shared credentials (e.g., the vaulted <code>pureuser</code> password), rotate those credentials immediately after their departure.</p>
+<h3 id="periodic-access-review">Periodic Access Review<a class="headerlink" href="#periodic-access-review" title="Permanent link">&para;</a></h3>
+<p>Run quarterly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Export all admin accounts and roles to CSV for access review</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>pureuser@&lt;array_ip&gt;<span class="w"> </span><span class="s2">&quot;pureadmin list --csv&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>admin_review_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Export API token inventory</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ssh<span class="w"> </span>pureuser@&lt;array_ip&gt;<span class="w"> </span><span class="s2">&quot;pureadmin list --api-token --csv&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>admin_review_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+</code></pre></div>
+<p>Review output and action:</p>
+<ul>
+<li>Remove AD group memberships for any accounts that should no longer have access</li>
+<li>Revoke API tokens for decommissioned service accounts or integrations</li>
+<li>Confirm that no accounts have <code>array_admin</code> that should be <code>storage_admin</code></li>
+</ul>
+<hr />
+<h2 id="snmp-access-control">SNMP Access Control<a class="headerlink" href="#snmp-access-control" title="Permanent link">&para;</a></h2>
+<p>FlashArray supports SNMPv3 for monitoring integrations. Always use SNMPv3 — never SNMPv1 or SNMPv2c in production.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure SNMPv3 community (authPriv — SHA auth + AES encryption)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>puresnmp<span class="w"> </span>create<span class="w"> </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--user<span class="w"> </span>monitoring-user<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>siem-snmp
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># List SNMP configuration</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>puresnmp<span class="w"> </span>list
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Configure SNMP trap destination</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>puresnmptrap<span class="w"> </span>create<span class="w"> </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span>--user<span class="w"> </span>monitoring-user<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">    </span>--host<span class="w"> </span>&lt;trap_receiver_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span>nms-trap
+</code></pre></div>
+<p>SNMPv3 is read-only by design on FlashArray — it cannot be used to make configuration changes.</p>
+<hr />
+<h2 id="management-network-access-restriction">Management Network Access Restriction<a class="headerlink" href="#management-network-access-restriction" title="Permanent link">&para;</a></h2>
+<p>FlashArray does not provide built-in IP-based ACLs for management plane access. Restrict access at the network layer:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Firewall / ACL on management VLAN</td>
+<td>Allow SSH (22) and HTTPS (443) only from admin jump hosts and monitoring systems; deny all other inbound</td>
+</tr>
+<tr>
+<td>Dedicated management VLAN</td>
+<td>Place the array management interface on a VLAN separate from data traffic; apply the ACL at the access layer switch</td>
+</tr>
+<tr>
+<td>Jump host requirement</td>
+<td>Require all admin access to originate from a bastion/jump host; the jump host should enforce MFA at the host level</td>
+</tr>
+<tr>
+<td>SSH key restriction</td>
+<td>If using local accounts for CLI access, use SSH key authentication and disable password-based SSH on the jump host (not on the array itself — Purity does not support SSH key auth natively)</td>
+</tr>
+</tbody>
+</table>
+<p>Document the allowed source IP ranges in the firewall change log and review them annually.</p>
 
 
 

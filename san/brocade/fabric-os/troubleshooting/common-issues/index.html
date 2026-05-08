@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#triage-approach" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Triage Approach
       
     </span>
   </a>
@@ -717,10 +717,109 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#incident-notes-template" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Incident Notes Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-is-offline-no_light" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Is Offline / No_Light
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-cannot-see-storage-lun-access-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Cannot See Storage (LUN Access Failure)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-flapping-high-error-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Flapping / High Error Counts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Segmentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#principal-switch-changed-unexpectedly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principal Switch Changed Unexpectedly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zone-change-not-persisting-after-reboot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Change Not Persisting After Reboot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maps-alert-firing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAPS Alert Firing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slow-drain-device-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slow Drain Device Detection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switch-showing-marginal-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switch Showing MARGINAL Status
       
     </span>
   </a>
@@ -763,31 +862,422 @@
 <p>Part of the <a href="../">Troubleshooting</a> reference.</p>
 </blockquote>
 <hr />
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
+<h2 id="triage-approach">Triage Approach<a class="headerlink" href="#triage-approach" title="Permanent link">&para;</a></h2>
+<p>Start every investigation with a fast baseline capture. Run all commands before making any changes — the state you see now is evidence.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Fast baseline — run immediately on opening an incident</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>switchstatusshow<span class="w">      </span><span class="c1"># Overall health — HEALTHY / MARGINAL / DOWN</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>switchshow<span class="w">            </span><span class="c1"># All ports and states</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>fabricshow<span class="w">            </span><span class="c1"># Fabric membership and principal switch</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>islshow<span class="w">               </span><span class="c1"># ISL status</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>porterrshow<span class="w">           </span><span class="c1"># Error counter summary</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>errshow<span class="w">               </span><span class="c1"># Error log — look for timestamps matching the incident</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>cfgshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30<span class="w">    </span><span class="c1"># Active zone set name and members</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>sensorshow<span class="w">            </span><span class="c1"># Environmental — fan, PSU, temperature</span>
+</code></pre></div>
+<p>Document the output of each command in the incident record before proceeding.</p>
 <hr />
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
+<h2 id="incident-notes-template">Incident Notes Template<a class="headerlink" href="#incident-notes-template" title="Permanent link">&para;</a></h2>
+<p>Capture these fields at the start of every incident:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symptom</td>
+<td>What is failing — host can't see storage, port offline, fabric segmented</td>
+</tr>
+<tr>
+<td>Start time</td>
+<td>When the problem began (and timezone)</td>
+</tr>
+<tr>
+<td>Impact</td>
+<td>Which hosts, LUNs, or workloads are affected</td>
+</tr>
+<tr>
+<td>Switch/port</td>
+<td>Affected switch hostname, domain ID, slot/port</td>
+</tr>
+<tr>
+<td>Error message</td>
+<td>Exact text from <code>errshow</code> or SANnav alert</td>
+</tr>
+<tr>
+<td>Recent changes</td>
+<td>Any changes in the previous 24 hours — firmware, cabling, zoning</td>
+</tr>
+<tr>
+<td>What was checked</td>
+<td>Commands run and output summary</td>
+</tr>
+<tr>
+<td>Next action</td>
+<td>What you are doing next</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="port-is-offline-no_light">Port Is Offline / No_Light<a class="headerlink" href="#port-is-offline-no_light" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> <code>switchshow</code> shows a port in <code>No_Light</code>, <code>No_Module</code>, or <code>Offline</code> state. The connected host or storage device is not logging into the fabric.</p>
+<p><strong>Triage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check port state and detail</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>portshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check if port is administratively disabled</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>portshow<span class="w"> </span>&lt;slot/port&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>admin
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check SFP optical levels — power in/out should be within spec</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sfpshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check port error log for recent events</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>portlogshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check port error counters</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>portstatsshow<span class="w"> </span>&lt;slot/port&gt;
+</code></pre></div>
+<p><strong>Resolution steps:</strong></p>
+<ol>
+<li>Confirm SFP is fully seated — remove and re-seat if in doubt.</li>
+<li>Check the cable at both ends — particularly if the port was recently cabled.</li>
+<li>For <code>No_Light</code>: no optical signal is reaching the switch. Check the remote end — HBA or storage controller — is powered and the port is enabled.</li>
+<li>For <code>Offline (Admin)</code>: the port was administratively disabled. Enable it:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>portpersistentenable<span class="w"> </span>&lt;slot/port&gt;<span class="w">   </span><span class="c1"># persistent enable (survives reboot)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>portenable<span class="w"> </span>&lt;slot/port&gt;<span class="w">             </span><span class="c1"># temporary enable only</span>
+</code></pre></div></li>
+<li>If the SFP shows <code>Alarm</code> or <code>Warning</code> on receive power, the SFP or cable is degraded — replace SFP first.</li>
+<li>If the port still does not come online after re-seating SFP and verifying cable, run a port diagnostic:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>portdisable<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>porttest<span class="w"> </span>&lt;slot/port&gt;<span class="w">    </span><span class="c1"># internal loopback test — pass = switch port hardware is OK</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>portenable<span class="w"> </span>&lt;slot/port&gt;
+</code></pre></div></li>
+</ol>
+<hr />
+<h2 id="host-cannot-see-storage-lun-access-failure">Host Cannot See Storage (LUN Access Failure)<a class="headerlink" href="#host-cannot-see-storage-lun-access-failure" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> A host HBA is logged into the fabric (visible in <code>nsshow</code>) but cannot see any LUNs on the storage array. Host multipath shows 0 paths.</p>
+<p><strong>Triage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm host HBA WWPN is logged into the name server</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;partial-wwpn&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>nsallshow<span class="w">               </span><span class="c1"># Check across all domains in the fabric</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check the zone the host is in</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>zoneshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;alias-or-wwpn&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Confirm the zone is in the active configuration</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>cfgshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;zone-name&gt;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check that alias WWPNs match actual logged-in WWPNs</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>alishow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;alias-name&gt;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;expected-wwpn&gt;
+</code></pre></div>
+<p><strong>Common causes and fixes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host WWPN not in any zone</td>
+<td>Create alias and zone; <code>cfgenable</code></td>
+</tr>
+<tr>
+<td>Zone not in active zone set</td>
+<td><code>cfgadd &lt;cfgname&gt; &lt;zone&gt;; cfgenable &lt;cfgname&gt;; cfgsave</code></td>
+</tr>
+<tr>
+<td>Alias WWPN does not match actual host WWPN</td>
+<td>Delete alias, recreate with correct WWPN from <code>nsshow</code></td>
+</tr>
+<tr>
+<td>Wrong zone set active</td>
+<td><code>cfgenable &lt;correct-zoneset&gt;; cfgsave</code></td>
+</tr>
+<tr>
+<td>FLOGI not completed</td>
+<td>Check HBA driver and port state; <code>portlogshow</code> for FLOGI events</td>
+</tr>
+<tr>
+<td>Zoning is correct but array has not presented LUNs</td>
+<td>Check array-side masking (Unisphere, Pure, ONTAP)</td>
+</tr>
+</tbody>
+</table>
+<p>If the host WWPN is missing from <code>nsshow</code>, the issue is at the physical or login layer — not a zoning problem. Check the port the HBA is connected to:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;slot/port&gt;<span class="w">     </span><span class="c1"># confirm port is Online</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>portshow<span class="w"> </span>&lt;slot/port&gt;<span class="w">              </span><span class="c1"># confirm logged-in WWN matches host HBA</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>portlogshow<span class="w"> </span>&lt;slot/port&gt;<span class="w">           </span><span class="c1"># look for FLOGI, PLOGI events</span>
+</code></pre></div>
+<hr />
+<h2 id="port-flapping-high-error-counts">Port Flapping / High Error Counts<a class="headerlink" href="#port-flapping-high-error-counts" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> A port repeatedly toggles between <code>Online</code> and <code>No_Light</code> or <code>No_Sync</code>. <code>porterrshow</code> shows incrementing <code>loss_sync</code>, <code>loss_sig</code>, or <code>enc_in</code> counters.</p>
+<p><strong>Triage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check error counters — note which counters are incrementing</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>porterrshow
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>portstatsshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check SFP optical levels — Tx and Rx power</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>sfpshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check port event log — timestamps of link events</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>portlogshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check port configuration</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>portcfgshow<span class="w"> </span>&lt;slot/port&gt;
+</code></pre></div>
+<p><strong>Resolution steps:</strong></p>
+<ol>
+<li>Replace the SFP on the switch port first — SFPs are the most common cause of signal quality errors.</li>
+<li>If the error rate does not drop after SFP replacement, replace the cable.</li>
+<li>If the remote end is a storage array or server, check the HBA SFP and the host port is configured for the correct speed (do not mix auto-negotiate with fixed speed on ISLs).</li>
+<li>Clean fibre connectors with appropriate fibre cleaning kit — dust contamination causes intermittent errors.</li>
+<li>If errors continue after SFP and cable replacement, disable the port and run <code>porttest</code> to verify switch hardware:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>portdisable<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>porttest<span class="w"> </span>&lt;slot/port&gt;
+</code></pre></div></li>
+<li>If <code>porttest</code> fails, the switch port itself may be faulty — escalate to Broadcom TAC and open a hardware SR.</li>
+</ol>
+<hr />
+<h2 id="fabric-segmentation">Fabric Segmentation<a class="headerlink" href="#fabric-segmentation" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> <code>fabricshow</code> shows fewer switches than expected. One or more switches are missing. Some hosts or storage targets are unreachable.</p>
+<p><strong>Triage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check for segmented domains</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>fabricshow<span class="w">            </span><span class="c1"># Missing domain IDs indicate segmentation</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check ISL state</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>islshow<span class="w">               </span><span class="c1"># Is the ISL between the affected switch and the fabric down?</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Confirm ISL port state</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>E_Port
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check for domain ID conflict — duplicate domain IDs cause segmentation</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>fabricshow<span class="w">            </span><span class="c1"># Look for two entries with the same domain ID</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Domain
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Check for E_Port isolation</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>portshow<span class="w"> </span>&lt;isl-port&gt;<span class="w">   </span><span class="c1"># Look for &quot;Disabled (Incompatible)&quot; or &quot;E_Port Isolated&quot;</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>portlogshow<span class="w"> </span>&lt;isl-port&gt;
+</code></pre></div>
+<p><strong>Common causes and fixes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ISL cable disconnected or SFP failed</td>
+<td>Restore physical connection; check SFP</td>
+</tr>
+<tr>
+<td>Domain ID conflict</td>
+<td>Change one switch's domain ID (<code>configure</code>), reconnect ISL</td>
+</tr>
+<tr>
+<td>Fabric parameters mismatch (BB credit, trunking)</td>
+<td>Match fabric parameters on both switches</td>
+</tr>
+<tr>
+<td>Zone database conflict</td>
+<td>Run <code>cfgtransabort</code> on both switches, then re-merge</td>
+</tr>
+<tr>
+<td>Secure Fabric OS policy rejection</td>
+<td>Check <code>secpolicyshow SCC_POLICY</code> — new switch may be blocked</td>
+</tr>
+</tbody>
+</table>
+<p>If a switch is isolated with domain ID conflict:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># On the isolated switch — set a unique domain ID before reconnecting</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>configure
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># At &quot;Fabric parameters&quot; prompt: set insistDomainId = 1</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># At &quot;Domain:&quot; prompt: enter the unique domain ID assigned in the SAN design register</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Reconnect the ISL cable — the switch should re-join</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>fabricshow<span class="w">    </span><span class="c1"># Confirm the switch appears with the new domain ID</span>
+</code></pre></div>
+<hr />
+<h2 id="principal-switch-changed-unexpectedly">Principal Switch Changed Unexpectedly<a class="headerlink" href="#principal-switch-changed-unexpectedly" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> <code>fabricshow</code> shows a different switch has been elected as principal. This may be accompanied by a brief fabric disruption and re-registration of devices.</p>
+<p><strong>Triage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Identify current principal switch (marked with &gt;)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>fabricshow
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check domain priority on all switches</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Priority
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Review fabric event log</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>rasshow<span class="w"> </span>-l<span class="w"> </span><span class="m">100</span>
+</code></pre></div>
+<p><strong>Cause:</strong> The previous principal switch went offline (reboot, power loss, ISL failure), triggering a new principal election. The switch with the highest priority (lowest priority value) or lowest WWN becomes the new principal.</p>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Identify which switch should be the permanent principal — typically the core director.</li>
+<li>Set the principal priority explicitly:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>fabricprincipal<span class="w"> </span>--priority<span class="w"> </span><span class="m">1</span><span class="w"> </span>--enable<span class="w">   </span><span class="c1"># run on the intended principal switch</span>
+</code></pre></div></li>
+<li>To force a re-election (requires brief fabric disruption), disable and re-enable the E_Ports on the current unwanted principal.</li>
+<li>Document the intended principal switch in the SAN design register.</li>
+</ol>
+<hr />
+<h2 id="zone-change-not-persisting-after-reboot">Zone Change Not Persisting After Reboot<a class="headerlink" href="#zone-change-not-persisting-after-reboot" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Zoning changes made during a maintenance window are missing after a switch reboot.</p>
+<p><strong>Cause:</strong> <code>cfgenable</code> was run to activate the zone set, but <code>cfgsave</code> was not run to persist the zone database to flash storage.</p>
+<p><strong>Fix:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Confirm what is currently active</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>cfgshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Re-apply the correct zone set from the working buffer</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>cfgenable<span class="w"> </span>&lt;zoneset-name&gt;
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Save to flash — mandatory after every cfgenable</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>cfgsave
+</code></pre></div>
+<p>Prevent this in future: always include <code>cfgsave</code> in zoning SOPs and verify the zone database was saved before closing the change window.</p>
+<hr />
+<h2 id="maps-alert-firing">MAPS Alert Firing<a class="headerlink" href="#maps-alert-firing" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> SANnav or SNMP trap shows a MAPS threshold alert — typically for port errors, ISL utilization, or switch health.</p>
+<p><strong>Triage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Show current MAPS dashboard</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>mapsdashboard<span class="w"> </span>--show
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Show recent MAPS alerts and which rule triggered</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>mapsdb<span class="w"> </span>--show
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Show MAPS policy in use</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>mapspolicy<span class="w"> </span>--show
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Show MAPS rule thresholds</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>mapsrule<span class="w"> </span>--show
+</code></pre></div>
+<p><strong>Common MAPS alerts and actions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Alert</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRC error threshold</td>
+<td>CRC errors on a port exceeded policy limit</td>
+<td><code>sfpshow</code>; replace SFP or cable</td>
+</tr>
+<tr>
+<td>ITW (Invalid Transmission Word)</td>
+<td>Signal quality errors</td>
+<td>Replace SFP; check cable integrity</td>
+</tr>
+<tr>
+<td>State change (port flap)</td>
+<td>Port toggled online/offline multiple times</td>
+<td>Investigate SFP and cable</td>
+</tr>
+<tr>
+<td>BB credit zero</td>
+<td>Buffer-to-buffer credits exhausted (slow drain)</td>
+<td>Identify slow drain device; check <code>portbufshow</code></td>
+</tr>
+<tr>
+<td>ISL utilization</td>
+<td>ISL above configured bandwidth threshold</td>
+<td>Add ISL capacity; check for slow drain</td>
+</tr>
+<tr>
+<td>Fan / PSU / temperature</td>
+<td>Environmental failure</td>
+<td>Physical investigation; replacement if failed</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="slow-drain-device-detection">Slow Drain Device Detection<a class="headerlink" href="#slow-drain-device-detection" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> High I/O latency reported by hosts. <code>islshow</code> shows ISL utilization is high. Some ports show C3 discards (<code>disc_c3</code> in <code>portstatsshow</code>).</p>
+<p>A slow drain device is a host or storage port that is not consuming FC frames fast enough, causing buffer credit starvation upstream. This can cascade across the fabric.</p>
+<p><strong>Triage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check C3 discards — indicates congestion (frames dropped waiting for credits)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>porterrshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>disc_c3
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Check BB credit status on suspect ports</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>portbufshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Identify bottleneck — which port is generating zero-credit conditions</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>bottleneckmon<span class="w"> </span>--show
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Check ISL utilization</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>islshow
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>portperfshow
+</code></pre></div>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Identify the specific port showing zero BB credits or highest C3 discards.</li>
+<li>The device connected to that port is likely the slow drain device.</li>
+<li>Disable the slow drain device's port temporarily if it is causing fabric-wide impact:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>portdisable<span class="w"> </span>&lt;slot/port&gt;<span class="w">    </span><span class="c1"># isolate the problematic port</span>
+</code></pre></div></li>
+<li>Check the slow drain device (HBA, storage controller) — look for driver issues, queue depth misconfiguration, or resource exhaustion.</li>
+<li>Enable MAPS slow drain policy to automatically detect and quarantine future slow drain events.</li>
+</ol>
+<hr />
+<h2 id="switch-showing-marginal-status">Switch Showing MARGINAL Status<a class="headerlink" href="#switch-showing-marginal-status" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> <code>switchstatusshow</code> returns <code>MARGINAL</code> instead of <code>HEALTHY</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Show why the switch is marginal</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>switchstatusshow<span class="w">      </span><span class="c1"># Check which component is in warning state</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>errshow<span class="w">               </span><span class="c1"># Review error log for hardware events</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>sensorshow<span class="w">            </span><span class="c1"># Check all environmental sensors</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>fanshow<span class="w">               </span><span class="c1"># Fan status</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>psshow<span class="w">                </span><span class="c1"># Power supply status</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>tempshow<span class="w">              </span><span class="c1"># Temperature thresholds</span>
+</code></pre></div>
+<p><strong>Common causes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fan failure</td>
+<td>Replace fan module; escalate if dual redundant fans fail</td>
+</tr>
+<tr>
+<td>PSU failure</td>
+<td>Check power input to PSU; replace if faulty</td>
+</tr>
+<tr>
+<td>High temperature</td>
+<td>Check data centre cooling; verify airflow around chassis</td>
+</tr>
+<tr>
+<td>Port in Faulty state</td>
+<td><code>porttest</code> to isolate; replace blade if hardware fault confirmed</td>
+</tr>
+<tr>
+<td>SFP alarm</td>
+<td>Replace affected SFP</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>MARGINAL</code> status should not be left unresolved. Escalate to Broadcom TAC if hardware replacement is required.</p>
 <hr />
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Document operational known issues here as they are encountered. Include:</p>
+<ul>
+<li>FOS version affected</li>
+<li>Symptom and trigger</li>
+<li>Brocade Field Notice or defect reference</li>
+<li>Workaround and resolution path</li>
+</ul>
 
 
 
