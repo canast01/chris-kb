@@ -2,6 +2,23 @@
 
 Azure ExpressRoute provides dedicated private connectivity between on-premises networks and Azure, bypassing the public internet. It offers predictable latency, higher bandwidth options, and built-in redundancy through dual circuits.
 
+## ExpressRoute Connectivity Model
+
+```mermaid
+flowchart LR
+    onprem["On-Premises\nNetwork"]
+    cePE["CE Router\nCustomer Edge"]
+    provider["Connectivity Provider\nEquinix · Megaport"]
+    msPE["Microsoft Edge Router\nMEE"]
+    subgraph azure["Azure"]
+        ergw["ExpressRoute GW\nhub VNet"]
+        hub["Hub VNet"]
+        spokes["Spoke VNets\nvia peering"]
+    end
+
+    onprem --> cePE -->|"Dual circuits\n(redundancy)"| provider --> msPE --> ergw --> hub --> spokes
+```
+
 ## Circuit Creation
 
 ```bash

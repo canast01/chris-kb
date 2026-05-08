@@ -49,3 +49,23 @@ Do not open a general support SR for licensing — use the licensing portal dire
 2. If no resolution within SLA: comment in SR "Request escalation to Tier 2"
 3. For critical issues, call Superna's emergency support line (listed on the support portal)
 4. For account-level escalation: contact Superna account manager
+
+```mermaid
+flowchart TD
+    issue(["Eyeglass issue\ncannot self-resolve"])
+    bundle["Download support bundle\nAdmin UI → Admin → Support Bundle"]
+    openSR["Open SR at support.superna.net\nAttach bundle\nSet severity level"]
+    sev1{Severity 1?\nFailover blocked}
+    emergency["Call Superna emergency\nsupport line\n(on support portal)"]
+    tier1["Await Tier 1 assignment\nSev 2: same business day"]
+    progress{Resolution\nwithin SLA?}
+    escalate["Comment in SR:\nRequest escalation to Tier 2"]
+    accMgr["Contact Superna\naccount manager"]
+    resolved(["Issue resolved"])
+
+    issue --> bundle --> openSR --> sev1
+    sev1 -->|Yes| emergency --> progress
+    sev1 -->|No| tier1 --> progress
+    progress -->|Yes| resolved
+    progress -->|No| escalate --> accMgr --> resolved
+```

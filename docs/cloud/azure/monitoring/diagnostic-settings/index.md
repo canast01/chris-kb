@@ -2,6 +2,26 @@
 
 Diagnostic settings control which resource logs and metrics are exported from an Azure resource and where they are sent. Each resource supports its own set of log categories; enabling them is a prerequisite for log-based alerting, compliance archival, and operational analysis.
 
+## Diagnostic Settings Routing
+
+```mermaid
+flowchart LR
+    resource["Azure Resource\nVM · KeyVault · NSG · Firewall"]
+    diagSetting["Diagnostic Setting\nselected log categories + metrics"]
+    subgraph destinations["Destinations (1–4 per resource)"]
+        la["Log Analytics Workspace\nKQL · alerts · workbooks"]
+        storage["Storage Account\nlong-term archival"]
+        eventhub["Event Hub\nstream to SIEM · Splunk"]
+        partnersol["Partner Solution\ne.g. Datadog"]
+    end
+
+    resource --> diagSetting
+    diagSetting --> la
+    diagSetting --> storage
+    diagSetting --> eventhub
+    diagSetting --> partnersol
+```
+
 ## Enabling Diagnostic Settings
 
 ```bash

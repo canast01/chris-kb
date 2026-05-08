@@ -2,6 +2,26 @@
 
 An Azure subscription is a logical unit of Azure services that links to an Azure account. Subscriptions are the primary billing and access control boundary. Understanding subscription types, limits, and management operations is essential for scalable Azure governance.
 
+## Azure Subscription Governance Model
+
+```mermaid
+flowchart TD
+    tenant["Azure Tenant\nEntra ID"]
+    mg["Management Group\nhierarchy"]
+    sub["Subscription\nbilling + access boundary"]
+    rg["Resource Groups\nlifecycle grouping"]
+    resources["Resources\nVMs · Storage · Network · etc."]
+
+    subgraph controls["Governance Controls (all inherited downward)"]
+        policies["Azure Policy\ndeny · audit · remediate"]
+        rbac["RBAC\nrole assignments"]
+        budgets["Cost Budgets\nalerts"]
+    end
+
+    tenant --> mg --> sub --> rg --> resources
+    controls -->|"applied at any scope"| sub
+```
+
 ## Subscription Types
 
 | Type | Description | Use Case |

@@ -40,3 +40,22 @@ gh api /repos/OWNER/REPO/actions/runners  # runner availability
 - [ ] Reproduced the issue or confirmed it is consistent
 - [ ] Checked GitHub Community discussions for similar reports
 - [ ] Raised a support ticket with run ID, repo name, and log excerpt
+
+```mermaid
+flowchart TD
+    issue(["Workflow issue\ncannot self-resolve"])
+    statusPage["Check githubstatus.com\nPlatform incident?"]
+    incident{Platform\nincident?}
+    waitResolve["Wait for GitHub\nto resolve"]
+    collectData["Collect data\ngh run view RUN_ID --log\ngh run list --workflow ci.yml"]
+    community["Search GitHub Community\nDiscussions for similar reports"]
+    found{Solution\nfound?}
+    openTicket["Open GitHub Support ticket\nRun ID + repo name + log excerpt\nEnterprise plan: SLA-backed"]
+    done(["Issue resolved"])
+
+    issue --> statusPage --> incident
+    incident -->|Yes| waitResolve --> done
+    incident -->|No| collectData --> community --> found
+    found -->|Yes| done
+    found -->|No| openTicket --> done
+```

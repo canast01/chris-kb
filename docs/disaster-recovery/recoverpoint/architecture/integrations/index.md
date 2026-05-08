@@ -4,6 +4,32 @@
 
 ---
 
+## Splitter Topology
+
+```mermaid
+graph TD
+    subgraph esxiHost ["ESXi Host (RP4VM)"]
+        vmApp["Protected VM"]
+        softSplitter["Software Splitter\n(vSphere Kernel Module)"]
+        vmdk["VMDK — Datastore"]
+        vmApp -->|"write I/O"| softSplitter
+        softSplitter -->|"pass-through write"| vmdk
+        softSplitter -->|"capture copy"| rpaA
+    end
+
+    subgraph powermax ["PowerMax Array"]
+        hwSplitter["Hardware Splitter\n(Array Microcode)"]
+        prodLUN["Production LUN"]
+        hwSplitter -->|"pass-through"| prodLUN
+        hwSplitter -->|"capture copy"| rpaA
+    end
+
+    rpaA["RPA Cluster Site A"]
+    rpaA -->|"WAN replication"| rpaB["RPA Cluster Site B"]
+    rpaB --> drJournal["DR Journal Volumes"]
+    drJournal --> drReplica["DR Replica Volumes"]
+```
+
 ## RecoverPoint for VMs (RP4VM) — vCenter Plugin
 
 RP4VM integrates directly with vCenter, installing a vSphere plugin and a splitter component that intercepts VM writes at the VMDK level.
@@ -71,11 +97,11 @@ SRM recovery plans reference RecoverPoint CGs — failover steps include:
 
 ## Storage Array Integration
 
-| Array | Splitter Type | Notes |
-|---|---|---|
-| Dell PowerMax | Array-based (XtremIO or SRDF co-existence) | Integrates via Unisphere |
-| Dell Unity | Array-based splitter | Native Unity support |
-| VMware vSphere | Software splitter (RP4VM) | VMDK-level — no array integration needed |
+| Array | Splitter Type | Notes | Why preferred |
+|---|---|---|---|
+| Dell PowerMax | Array-based (XtremIO or SRDF co-existence) | Integrates via Unisphere | No host agent overhead; best performance |
+| Dell Unity | Array-based splitter | Native Unity support | Embedded in array; managed from Unity Unisphere |
+| VMware vSphere | Software splitter (RP4VM) | VMDK-level — no array integration needed | Works with any underlying storage — most flexible |
 
 ---
 

@@ -1,5 +1,21 @@
 # Certificates — Authentication
 
+## Root CA Lifecycle — Offline Operation Flow
+
+```mermaid
+flowchart TD
+    rootNormal["Root CA — powered off\n(air-gapped — HSM keys secured)"]
+    rootNormal -->|"trigger: new sub-CA needed\nor Root CA renewal"| powerOn["Power on Root CA\nin secure ceremony room\n(2+ witnesses required)"]
+    powerOn --> submitCSR["Receive Subordinate CA CSR\n(from Issuing CA)"]
+    submitCSR --> signCert["Sign Subordinate CA certificate\n(certreq -submit SubCA template)"]
+    signCert --> publishAD["Publish new CA cert to AD\n(certutil -dspublish SubCA)"]
+    publishAD --> powerOff["Power off Root CA immediately\n(Stop-Computer -Force)"]
+    powerOff --> rootNormal
+    signCert -. "only event type" .-> trigger1["Issue Sub-CA cert"]
+    signCert -. "only event type" .-> trigger2["Renew Root CA cert"]
+    signCert -. "only event type" .-> trigger3["Update Root CA CRL"]
+```
+
 ## Root CA Offline Procedure
 
 The Root CA is powered on only for these specific events:

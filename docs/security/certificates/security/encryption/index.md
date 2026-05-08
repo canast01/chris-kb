@@ -1,5 +1,16 @@
 # Certificates — Encryption
 
+## CA Key Protection Hierarchy
+
+```mermaid
+graph TD
+    rootCA[("Root CA Private Key\nHSM — FIPS 140-2 Level 3\n(offline / air-gapped)")] --> issuingCA["Issuing CA Private Key\nHSM or TPM-backed\n(online — issues end-entity certs)"]
+    issuingCA --> endEntity["End-Entity Private Key\nSoftware key acceptable\n(generated on target host — never exported)"]
+
+    hsmBackup["HSM Key Backup\n(M-of-N quorum cards\n3-of-5 ceremony)"] -. "protects" .-> rootCA
+    cyberArk["CyberArk\n(stores high-value keys:\nwildcard / code signing)"] -. "optional HSM alternative" .-> endEntity
+```
+
 ## CA Key Protection
 
 Root CA and Issuing CA private keys must be protected by HSMs — software-only key storage is not acceptable for CA keys.

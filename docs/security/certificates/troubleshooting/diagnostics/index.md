@@ -1,5 +1,18 @@
 # Certificates — Diagnostics
 
+## Certificate Diagnostic Tool Map
+
+```mermaid
+graph TD
+    diag{"Certificate diagnostic task"}
+    diag -->|"inspect cert fields"| inspect["openssl x509 -in cert.pem -noout -text\n(subject / issuer / SANs / expiry / key size)"]
+    diag -->|"test live TLS"| tlsTest["openssl s_client -connect host:443 -showcerts\n(chain / cipher / protocol version)"]
+    diag -->|"verify chain"| chainVerify["openssl verify -CAfile root.pem\n-untrusted intermediate.pem cert.pem"]
+    diag -->|"check CRL freshness"| crlCheck["openssl crl -in IssuingCA.crl -inform DER\n-noout -text | grep 'Next Update'"]
+    diag -->|"check OCSP"| ocspCheck["openssl s_client -connect host:443 -status\ngrep 'OCSP Response'"]
+    diag -->|"Windows store"| winCheck["Get-ChildItem Cert:\\LocalMachine\\My\nTest-Certificate\ncertutil -ping\nsc query certsvc"]
+```
+
 ## Useful Commands
 
 ```bash

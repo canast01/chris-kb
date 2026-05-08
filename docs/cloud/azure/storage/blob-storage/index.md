@@ -4,6 +4,22 @@
 
 Azure Blob Storage is Microsoft's object store for unstructured data. Blobs are organised into containers within Storage Accounts. Three access tiers (Hot, Cool, Archive) control cost versus retrieval latency. Blob versioning, soft delete, and lifecycle management provide data protection and cost control.
 
+## Blob Lifecycle Management Flow
+
+```mermaid
+flowchart LR
+    upload["Blob Upload\nHot Tier"]
+    cool["Cool Tier\nafter 30 days"]
+    cold["Cold Tier\nafter 90 days"]
+    archive["Archive Tier\nafter 180 days"]
+    rehydrate["Rehydrate\nhours latency"]
+    delete["Delete\nafter retention period"]
+
+    upload -->|"Lifecycle rule"| cool -->|"Lifecycle rule"| cold -->|"Lifecycle rule"| archive
+    archive -->|"access needed"| rehydrate --> cool
+    archive -->|"Lifecycle rule"| delete
+```
+
 ## Access Tiers
 
 | Tier | Access Latency | Storage Cost | Access Cost | Best For |

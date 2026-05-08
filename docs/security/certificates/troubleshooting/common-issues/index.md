@@ -1,5 +1,23 @@
 # Certificates — Common Issues
 
+## Certificate Issue Triage Flow
+
+```mermaid
+flowchart TD
+    issue["Certificate error reported\n(TLS failure / untrusted / expired)"]
+    issue --> checkExpiry{"Is the certificate\nexpired?"}
+    checkExpiry -->|"yes"| expiredPath["Emergency renewal\n(P1 if external — 1 hour SLA)"]
+    checkExpiry -->|"no"| checkChain{"Chain validation\nfails?"}
+    checkChain -->|"yes"| chainFix["Intermediate not sent by server\nAdd intermediate to TLS config\nopenssl verify to confirm"]
+    checkChain -->|"no"| checkTrust{"Root CA trusted\nby client?"}
+    checkTrust -->|"no"| addRoot["Distribute root CA cert\nvia GPO / system trust store"]
+    checkTrust -->|"yes"| checkRevoke{"Certificate\nrevoked?"}
+    checkRevoke -->|"yes — CRL / OCSP"| replaceRevoked["Replace with new cert\nIssue on clean host"]
+    checkRevoke -->|"no"| checkSAN{"CN / SAN matches\nhostname?"}
+    checkSAN -->|"no"| newCert["Request new cert with\ncorrect CN and SANs"]
+    checkSAN -->|"yes"| deepDiag["Further diagnostics:\nopenssl s_client full output\ncertutil -verify -urlfetch"]
+```
+
 ## Common checks
 
 - Confirm current health

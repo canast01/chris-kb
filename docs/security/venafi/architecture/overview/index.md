@@ -135,17 +135,15 @@ flowchart TD
 
 Venafi TPP is deployed as a primary + secondary pair sharing a common Microsoft SQL Server backend.
 
-```
-[Client / API consumer]
-         |
-         | HTTPS (443)
-         v
-[Load Balancer / VIP]
-    /           \
-[TPP Primary]  [TPP Secondary]
-         \           /
-          [SQL Server]
-          (Always On AG preferred)
+```mermaid
+graph TD
+    client["API Consumers\n(CI-CD / scripts / UI)"] -->|"HTTPS 443"| lb["Load Balancer / VIP\n(venafi.corp.example.com)"]
+    lb --> tppPrimary["TPP Primary Node\n(active)"]
+    lb --> tppSecondary["TPP Secondary Node\n(active)"]
+    tppPrimary --> sqlAG["SQL Server\n(Always On AG preferred)"]
+    tppSecondary --> sqlAG
+    edgeProxy["Edge Proxy\n(segmented network)"] -->|"HTTPS 443"| lb
+    admin["Security Admin\n(portal)"] -->|"HTTPS 443"| lb
 ```
 
 - Both nodes are active; the load balancer distributes requests.

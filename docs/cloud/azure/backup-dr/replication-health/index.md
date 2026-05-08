@@ -4,6 +4,26 @@ Monitoring ASR replication health is critical for validating that DR protection 
 
 ---
 
+## Replication Health Monitoring Flow
+
+```mermaid
+flowchart TD
+    asr["ASR Replicated Item"]
+    healthCheck["Replication Health Check\nRPO · sync lag · cache utilisation"]
+    normal["Normal\nRPO within threshold"]
+    warning["Warning\nRPO breach · minor issue"]
+    critical["Critical\nReplication stopped"]
+    notConfigured["None\nNo protection"]
+    investigateWarning["Investigate\ncheck cache storage · network"]
+    investigateCritical["Immediate action\ncheck agent · connectivity · vault"]
+
+    asr --> healthCheck
+    healthCheck --> normal
+    healthCheck --> warning --> investigateWarning
+    healthCheck --> critical --> investigateCritical
+    healthCheck --> notConfigured
+```
+
 ## Health States and Meanings
 
 | State | Meaning | Action Required |

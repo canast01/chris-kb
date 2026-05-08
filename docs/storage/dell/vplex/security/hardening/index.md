@@ -2,6 +2,34 @@
 
 Security baseline for VPLEX deployments. Apply all items before production go-live and validate against this checklist after any significant configuration change or GeoSynchrony upgrade.
 
+```mermaid
+flowchart TD
+    subgraph "Identity and Authentication"
+        sshKey["SSH key auth for service account\nPasswordAuthentication no"]
+        namedAccounts["Named service accounts\nfor automation — no shared service account"]
+        ldapMap["LDAP/AD group → VPLEX role mapping\nBreak-glass local admin retained"]
+    end
+    subgraph "Network Segmentation"
+        mgmtVlan["VPLEX management VLAN\nVMS + Witness — no production servers"]
+        fefabric["Front-end SAN fabric\nHost HBAs ↔ VPLEX FE ports only"]
+        befabric["Back-end SAN fabric\nVPLEX BE ports ↔ Array target ports only"]
+        iclSeg["ICL WAN segment\nDedicated circuit — MACsec/IPsec if untrusted"]
+    end
+    subgraph "TLS and Certificates"
+        corpCert["Replace self-signed cert\nCorporate CA-signed TLS for Unisphere"]
+        certMonitor["Automated expiry monitoring\nAlert at 30 days"]
+    end
+    subgraph "Audit and SIEM"
+        syslogFwd["Syslog to SIEM\nvplexcli.log + vplexmanagement.log"]
+        snmpAlerts["SNMP to NMS\nDirector faults + health state changes"]
+    end
+
+    sshKey --> namedAccounts --> ldapMap
+    mgmtVlan --> fefabric --> befabric --> iclSeg
+    corpCert --> certMonitor
+    syslogFwd --> snmpAlerts
+```
+
 ## Hardening Checklist
 
 ### Identity and Authentication

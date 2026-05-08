@@ -8,11 +8,45 @@
 
 RecoverPoint management interfaces:
 
-| Interface | Access | Purpose |
-|---|---|---|
-| `boxmgmt` CLI | SSH to RPA appliance | Menu-driven system management |
-| RPAPI REST | HTTPS to cluster IP | Automation, CG control, status |
-| Unisphere for RecoverPoint | Web UI | GUI management |
+| Interface | Access | Purpose | When to use |
+|---|---|---|---|
+| `boxmgmt` CLI | SSH to RPA appliance | Menu-driven system management | On-call triage; image access; manual failover |
+| RPAPI REST | HTTPS to cluster IP | Automation, CG control, status | Scripted DR tests; monitoring integrations |
+| Unisphere for RecoverPoint | Web UI | GUI management | Configuration, visual health checks |
+
+## Image Access Flow
+
+```mermaid
+flowchart TD
+    drTestStart["DR Test or Recovery Initiated"]
+    listCGs["List CG State\ngroupsStatus"]
+    cgHealthy{"CGs ACTIVE\nand Journal < 70%?"}
+    createBookmark["Create Pre-Test Bookmark\ngroup create_bookmark --gname cgname\n--name dr-test-date"]
+    enableAccess["Enable Image Access\ngroup enable-image-access\n--copy DR_Copy --image latest --access-mode virtual"]
+    confirmAccess["Confirm ImageAccess State\ngroup status --gname cgname"]
+    mountVolumes["Mount DR Volumes at DR Site\n(SAN / vSphere step)"]
+    validate["Validate Application Data\n(app team confirms)"]
+    disableAccess["Disable Image Access\ngroup disable-image-access --gname cgname"]
+    confirmActive["Confirm CG ACTIVE\ngroups status"]
+    abortTest["Do Not Proceed\nResolve CG issues first"]
+
+    drTestStart --> listCGs
+    listCGs --> cgHealthy
+    cgHealthy -->|"Yes"| createBookmark
+    cgHealthy -->|"No"| abortTest
+    createBookmark --> enableAccess
+    enableAccess --> confirmAccess
+    confirmAccess --> mountVolumes
+    mountVolumes --> validate
+    validate --> disableAccess
+    disableAccess --> confirmActive
+
+    style drTestStart fill:#2563eb,color:#fff
+    style confirmActive fill:#15803d,color:#fff
+    style abortTest fill:#be123c,color:#fff
+    style enableAccess fill:#b45309,color:#fff
+    style disableAccess fill:#b45309,color:#fff
+```
 
 ---
 

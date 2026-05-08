@@ -2,6 +2,25 @@
 
 Use this page for practical Venafi troubleshooting notes, checks, commands, change notes, and field references.
 
+## Venafi Diagnostic Flow
+
+```mermaid
+flowchart TD
+    issue["Venafi issue reported\n(cert not issuing / renewal failed / UI unavailable)"]
+    issue --> svcCheck["Check Venafi services:\nGet-Service -Name 'Venafi*'"]
+    svcCheck --> svcRunning{"All services\nrunning?"}
+    svcRunning -->|"no"| startSvc["Start-Service Venafi*\nCheck Windows Event Log"]
+    svcRunning -->|"yes"| sqlCheck["Test SQL connectivity:\nNew-Object SqlConnection + Open()"]
+    startSvc --> sqlCheck
+    sqlCheck --> sqlOK{"SQL connection\nok?"}
+    sqlOK -->|"no"| fixSQL["Fix SQL connectivity:\nFirewall / credentials / AG failover"]
+    sqlOK -->|"yes"| caCheck["Test CA connector:\nTPP UI → Config → CAs → Test Connection"]
+    fixSQL --> caCheck
+    caCheck --> caOK{"CA connector\nhealthy?"}
+    caOK -->|"no"| caFix["Fix CA connectivity:\nADCS CES URL / DigiCert API key / network"]
+    caOK -->|"yes"| logReview["Collect TPP logs:\nVdcLogFile*.log in ProgramData\\Venafi\\log"]
+```
+
 ## Common Checks
 
 - Confirm current health

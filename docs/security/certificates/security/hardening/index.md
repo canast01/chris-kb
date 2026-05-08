@@ -1,5 +1,24 @@
 # Certificates — Hardening
 
+## OCSP Stapling Flow
+
+```mermaid
+sequenceDiagram
+    participant nginx as nginx / Web Server
+    participant ocsp as OCSP Responder
+    participant client as TLS Client
+
+    note over nginx: Server startup / cert load
+    nginx->>ocsp: OCSP request for its own certificate
+    ocsp-->>nginx: OCSP response (cached — staple)
+    note over nginx: Response stapled to TLS handshake
+
+    client->>nginx: TLS ClientHello
+    nginx-->>client: ServerHello + Certificate + Stapled OCSP response
+    client->>client: Verify stapled OCSP signature (no external request)
+    client->>nginx: TLS handshake complete (faster + private)
+```
+
 ## OCSP Stapling
 
 Enforce OCSP stapling on all public TLS endpoints to avoid privacy leakage and improve connection performance.

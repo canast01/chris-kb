@@ -2,6 +2,20 @@
 
 A policy assignment connects a policy definition or initiative (policy set) to a specific scope in the Azure hierarchy. The assignment is the mechanism that makes a policy active and enforceable.
 
+## Policy Assignment Scope Hierarchy
+
+```mermaid
+flowchart TD
+    mgScope["Management Group Scope\nbroadest — all child subs inherit"]
+    subScope["Subscription Scope\napplies to all RGs in subscription"]
+    rgScope["Resource Group Scope\napplies to all resources in RG"]
+    resourceScope["Resource Scope\nnarrowest — single resource only"]
+    exempt["Exemption\nwaiver for specific scope or resource"]
+
+    mgScope -->|"inherits down"| subScope -->|"inherits down"| rgScope -->|"inherits down"| resourceScope
+    resourceScope -.->|"override"| exempt
+```
+
 ## Creating a Policy Assignment
 
 ```bash

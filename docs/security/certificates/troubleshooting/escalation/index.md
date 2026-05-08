@@ -131,6 +131,25 @@ Check current rate limit status: **crt.sh** — search for your domain to see re
 
 ---
 
+## Escalation Path by Vendor
+
+```mermaid
+flowchart TD
+    issue["Certificate / CA issue requiring vendor support"]
+    issue --> vendor{"Which CA\n/ vendor?"}
+    vendor -->|"ADCS"| msSupport["Microsoft — support.microsoft.com\n(Premier / Unified Support for Sev A/B)\nPre-collect: event logs, certutil -ping, ca-dump.txt"]
+    vendor -->|"DigiCert"| dgSupport["DigiCert — digicert.com/support\n24/7 for critical; portal + phone\nPre-collect: Order Number, Serial, domain validation method"]
+    vendor -->|"Entrust"| enSupport["Entrust — entrust.com/support\nPortal; phone for P1\nPre-collect: Certificate ID, issuance date, error"]
+    vendor -->|"Let's Encrypt"| leSupport["Let's Encrypt — community.letsencrypt.org\nCommunity only — no paid support\nRun: certbot renew --dry-run first"]
+    vendor -->|"Venafi"| venafiSupport["Venafi — see Venafi vendor-support page"]
+
+    msSupport --> preCollect["Run pre-collection checklist\nbefore opening case"]
+    dgSupport --> preCollect
+    enSupport --> preCollect
+```
+
+---
+
 ## Certificate Emergency Response
 
 ### Suspected Key Compromise

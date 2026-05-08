@@ -2,6 +2,33 @@
 
 Conditional Access (CA) policies are the enforcement engine of Zero Trust in Microsoft Entra ID. They evaluate signals (user, location, device, app, risk) and grant, block, or require additional controls (MFA, compliant device) before granting access.
 
+## Conditional Access Evaluation Flow
+
+```mermaid
+flowchart TD
+    signIn["Sign-in Attempt"]
+    signals["Signals Evaluated\nuser · location · device · app · risk"]
+    policiesEval["All matching CA policies evaluated"]
+    block{"Any policy\nresult = Block?"}
+    mfaReq{"Any policy\nrequires MFA?"}
+    compliantReq{"Compliant device\nrequired?"}
+    mfaComplete{"MFA\ncompleted?"}
+    blocked["Access BLOCKED"]
+    granted["Access GRANTED\ntoken issued"]
+
+    signIn --> signals --> policiesEval
+    policiesEval --> block
+    block -- Yes --> blocked
+    block -- No --> mfaReq
+    mfaReq -- Yes --> mfaComplete
+    mfaComplete -- Yes --> compliantReq
+    mfaComplete -- No --> blocked
+    mfaReq -- No --> compliantReq
+    compliantReq -- Yes (compliant) --> granted
+    compliantReq -- No (non-compliant) --> blocked
+    compliantReq -- No requirement --> granted
+```
+
 ## CA Policy Creation
 
 Conditional Access policies are primarily managed through the Entra ID portal or Microsoft Graph API. The `az` CLI covers some operations via the `az ad` extension and `az rest`.

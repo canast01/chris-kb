@@ -2,6 +2,22 @@
 
 Azure Application Gateway is a Layer 7 load balancer that provides SSL termination, URL-based routing, Web Application Firewall (WAF), and autoscaling. It operates at the application layer and is the preferred entry point for HTTP/HTTPS workloads.
 
+## Application Gateway Traffic Flow
+
+```mermaid
+flowchart LR
+    client["Internet Client\nHTTP / HTTPS"]
+    pip["Public IP\nStatic · Standard SKU"]
+    waf["WAF Policy\nOWASP rules · custom rules"]
+    listener["Listener\nHTTP :80 · HTTPS :443"]
+    routing["Routing Rules\nURL path · host header"]
+    backendPool["Backend Pool\nVMs · VMSS · AKS · App Service"]
+    healthProbe["Health Probe\nHTTP · HTTPS · custom"]
+
+    client --> pip --> waf --> listener --> routing --> backendPool
+    healthProbe -->|"monitors"| backendPool
+```
+
 ## Creating an Application Gateway
 
 ```bash

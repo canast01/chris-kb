@@ -1,5 +1,27 @@
 # Certificates — Access Control
 
+## Emergency Revocation Sequence
+
+```mermaid
+sequenceDiagram
+    participant secTeam as Security Team
+    participant adcs as ADCS Issuing CA
+    participant venafi as Venafi TPP
+    participant siem as SIEM
+
+    secTeam->>adcs: certutil -revoke <serial> 1 (Key Compromise)
+    adcs-->>secTeam: Certificate revoked
+    secTeam->>adcs: certutil -CRL (publish updated CRL)
+    adcs-->>siem: Event 4870 — certificate revoked
+    secTeam->>venafi: POST /vedsdk/certificates/revoke
+    venafi-->>secTeam: Venafi inventory updated
+    secTeam->>secTeam: Notify service owner to replace cert
+    secTeam->>secTeam: Audit which services used revoked cert
+    secTeam->>adcs: Issue replacement cert on clean host
+```
+
+---
+
 ## Audit Logging
 
 ```powershell

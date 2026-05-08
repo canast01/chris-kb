@@ -62,6 +62,31 @@ Attach these before or immediately after case creation. Dell Support will ask fo
 
 Use this path when a case is not progressing at the expected pace.
 
+```mermaid
+flowchart TD
+    issue(["VPLEX issue\ncannot self-resolve"])
+    collectData["Collect diagnostic data\ncollect-support-log\nhealth-check --full\nhost path output"]
+    openCase["Open Dell Support case\ndell.com/support\nAttach support bundle\nSet severity level"]
+    sev1{Severity 1?\nI/O fully suspended}
+    missCall["Call Mission Critical line\n(ProSupport Mission Critical)"]
+    sev2Wait["Await Tier 1 response\nSev 2: 2h SLA"]
+    progressing{Case making\nprogress?}
+    escalateComment["Request escalation\nin case comments"]
+    accountMgr["Contact Dell TAM\n/ account manager"]
+    exec{Sev 1 unresolved\n> 4 hours?}
+    execEsc["Executive escalation\nDell EMC Services management"]
+    resolved(["Issue resolved\nClose case"])
+
+    issue --> collectData --> openCase
+    openCase --> sev1
+    sev1 -->|Yes| missCall --> progressing
+    sev1 -->|No| sev2Wait --> progressing
+    progressing -->|Yes| resolved
+    progressing -->|No| escalateComment --> accountMgr --> exec
+    exec -->|Yes| execEsc --> resolved
+    exec -->|No| resolved
+```
+
 ### Step 1 — Case Update Request
 
 Add a detailed comment to the open case requesting escalation. Include:

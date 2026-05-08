@@ -19,13 +19,58 @@ boxmgmt system status
 
 **Common causes:**
 
-| Cause | Resolution |
-|---|---|
-| Journal volume full | Expand journal LUN or reduce retention window |
-| WAN link down | Restore connectivity; RP will resume replication automatically once link recovers |
-| Splitter communication failure | See Splitter section below |
-| RPA node offline | Check RPA cluster health; redistribute CGs if node is failed |
-| Storage path failure | Verify zoning and array paths to journal volumes |
+| Cause | Why it happens | Resolution |
+|---|---|---|
+| Journal volume full | Write rate exceeds journal drain rate (link or bandwidth issue) | Expand journal LUN or reduce retention window |
+| WAN link down | Inter-site network outage; writes accumulate in local journal | Restore connectivity; RP will resume replication automatically once link recovers |
+| Splitter communication failure | Splitter lost contact with RPA due to network or array issue | See Splitter section below |
+| RPA node offline | Hardware fault or hypervisor issue on the RPA VM | Check RPA cluster health; redistribute CGs if node is failed |
+| Storage path failure | Zoning or masking change removed RPA access to journal LUNs | Verify zoning and array paths to journal volumes |
+
+```mermaid
+flowchart TD
+    cgError["CG in ERROR State"]
+    checkAlarms["Check RPA Alarms\nalarms list"]
+    alarmPresent{"Active\nAlarms?"}
+    checkJournal["Check Journal\njournals list"]
+    journalFull{"Journal > 90%\nor Full?"}
+    checkLink["Check Inter-site Link\nlinks statistics"]
+    linkDown{"Link\nDown?"}
+    checkSplitter["Check Splitter\nboxmgmt splitter status"]
+    splitterFault{"Splitter\nFault?"}
+    checkRPA["Check RPA Node Health\nsystem status"]
+    expandJournal["Expand Journal\nand resume replication"]
+    restoreLink["Restore Network Connectivity\nRP resumes automatically"]
+    fixSplitter["Restart Splitter\nor rezone initiators"]
+    fixRPA["Redistribute CGs\nto healthy RPA nodes"]
+    resolveAlarm["Resolve Alarm\nper alarm detail"]
+    monitorCG["Monitor CG Return\nto ACTIVE state"]
+
+    cgError --> checkAlarms
+    checkAlarms --> alarmPresent
+    alarmPresent -->|"Yes"| resolveAlarm
+    alarmPresent -->|"No"| checkJournal
+    resolveAlarm --> monitorCG
+    checkJournal --> journalFull
+    journalFull -->|"Yes"| expandJournal
+    journalFull -->|"No"| checkLink
+    expandJournal --> monitorCG
+    checkLink --> linkDown
+    linkDown -->|"Yes"| restoreLink
+    linkDown -->|"No"| checkSplitter
+    restoreLink --> monitorCG
+    checkSplitter --> splitterFault
+    splitterFault -->|"Yes"| fixSplitter
+    splitterFault -->|"No"| checkRPA
+    fixSplitter --> monitorCG
+    checkRPA --> fixRPA
+    fixRPA --> monitorCG
+
+    style cgError fill:#be123c,color:#fff
+    style monitorCG fill:#15803d,color:#fff
+    style expandJournal fill:#b45309,color:#fff
+    style restoreLink fill:#b45309,color:#fff
+```
 
 ---
 

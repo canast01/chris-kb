@@ -2,6 +2,24 @@
 
 Azure Monitor Alerts proactively notify you when conditions in your monitored resources are met. Alert rules evaluate signals — metrics, log queries, or activity log events — and fire when thresholds are crossed. Action groups define who gets notified and how.
 
+## Alert Flow
+
+```mermaid
+flowchart LR
+    signal["Signal Source\nMetric · Log · Activity Log"]
+    alertRule["Alert Rule\nthreshold · window · frequency"]
+    fired{"Condition\nmet?"}
+    actionGroup["Action Group\nemail · SMS · webhook · Logic App"]
+    notify["Notification\nOps team notified"]
+    suppress["Suppressed\n(alert processing rule)"]
+    resolved["Alert Resolved\nauto or manual"]
+
+    signal --> alertRule --> fired
+    fired -- Yes --> actionGroup --> notify --> resolved
+    fired -- Yes, but suppressed --> suppress
+    fired -- No --> signal
+```
+
 ## Alert Rule Types
 
 | Rule Type          | Signal Source          | Typical Use Case                          |

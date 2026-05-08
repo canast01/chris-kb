@@ -2,6 +2,24 @@
 
 Use this page for practical CyberArk troubleshooting notes, checks, commands, change notes, and field references.
 
+## CyberArk Diagnostic Flow
+
+```mermaid
+flowchart TD
+    issue["CyberArk issue reported\n(login failure / rotation failed / session error)"]
+    issue --> component{"Which component?"}
+    component -->|"can't log in to PVWA"| pvwaCheck["Check PVWA IIS app pool\nGet-WebApplication PasswordVault\nVerify PVWA → Vault :1858"]
+    component -->|"password rotation failed"| cpmCheck["Check CPM service\nGet-Service 'CyberArk Central Policy Manager'\nReview pm.log for error code"]
+    component -->|"PSM session fails"| psmCheck["Check PSM service\nGet-Service 'Cyber-Ark Privileged Session Manager'\nReview PSMConsole.log"]
+    component -->|"LDAP / MFA issues"| authCheck["Test LDAPS :636 from PVWA\nTest RADIUS :1812 to Duo Proxy\nCheck PVWA auth configuration"]
+    pvwaCheck --> vaultConn["Test-NetConnection vault01 -Port 1858"]
+    cpmCheck --> vaultConn
+    psmCheck --> vaultConn
+    vaultConn --> vaultOK{"Vault reachable?"}
+    vaultOK -->|"no"| networkFix["Check firewall rules\nbetween component and Vault"]
+    vaultOK -->|"yes"| logsReview["Review component logs\nCheck SIEM for audit events"]
+```
+
 ## Common Checks
 
 - Confirm current health

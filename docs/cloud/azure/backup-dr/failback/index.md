@@ -4,6 +4,21 @@ Failback is the process of returning protected workloads from the DR (recovery) 
 
 ---
 
+## ASR Failover and Failback Flow
+
+```mermaid
+flowchart LR
+    primary["Primary Region\nVM running (protected)"]
+    replication["Continuous Replication\nASR — RPO ~30s"]
+    failover["Failover\nDR Region VM starts"]
+    commit["Commit Failover\ncut primary loose"]
+    reprotect["Re-protect\nreplicate DR → Primary"]
+    failback["Planned Failover\nback to Primary"]
+    reprotectFwd["Re-protect Forward\nresume Primary → DR"]
+
+    primary --> replication --> failover --> commit --> reprotect --> failback --> reprotectFwd
+```
+
 ## Failback Prerequisites
 
 Before initiating failback, confirm:

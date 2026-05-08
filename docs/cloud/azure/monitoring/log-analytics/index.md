@@ -2,6 +2,31 @@
 
 Azure Log Analytics is the primary platform for collecting, querying, and alerting on log data in Azure Monitor. Data is stored in a Log Analytics workspace and queried using KQL (Kusto Query Language).
 
+## Log Analytics Data Flow
+
+```mermaid
+flowchart LR
+    subgraph ingest["Data Ingestion"]
+        diagSettings["Diagnostic Settings\nplatform logs + metrics"]
+        dcr["Data Collection Rules\nVM guest OS logs"]
+        customApi["Custom Logs\nData Collector API"]
+        sentinel["Microsoft Sentinel\nconnectors"]
+    end
+    workspace["Log Analytics Workspace\nKQL engine · retention"]
+    subgraph consume["Consumption"]
+        kql["KQL Queries\nLog search"]
+        alertRules["Alert Rules\nlog search alerts"]
+        workbooksOut["Workbooks\nvisualisation"]
+        grafanaOut["Managed Grafana"]
+    end
+
+    diagSettings --> workspace
+    dcr --> workspace
+    customApi --> workspace
+    sentinel --> workspace
+    workspace --> kql & alertRules & workbooksOut & grafanaOut
+```
+
 ## Workspace Configuration
 
 ```bash
