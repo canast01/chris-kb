@@ -781,6 +781,67 @@ body,
   opacity: 0.92;
 }
 
+/* ── Neon h2 glow (dark mode) ── */
+
+[data-md-color-scheme="slate"] .md-typeset h2 {
+  text-shadow:
+    0 0 18px rgba(56, 189, 248, 0.35),
+    0 0 48px rgba(56, 189, 248, 0.12);
+}
+
+/* ── Animated gradient card border ── */
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes card-border-spin {
+  to { --border-angle: 360deg; }
+}
+
+.kb-card:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(rgba(255,255,255,0.52), rgba(255,255,255,0.52)) padding-box,
+    conic-gradient(from var(--border-angle), #38bdf8, #818cf8, #34d399, #f59e0b, #f43f5e, #38bdf8) border-box;
+  animation: card-border-spin 3s linear infinite;
+}
+
+[data-md-color-scheme="slate"] .kb-card:hover {
+  background:
+    linear-gradient(rgba(15,23,42,0.45), rgba(15,23,42,0.45)) padding-box,
+    conic-gradient(from var(--border-angle), #38bdf8, #818cf8, #34d399, #f59e0b, #f43f5e, #38bdf8) border-box;
+}
+
+/* ── Page transitions ── */
+
+.md-content__inner {
+  animation: kb-fade-in 0.28s ease;
+}
+
+.md-content__inner.kb-fade-out {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+/* ── Spotlight overlay ── */
+
+.kb-spotlight {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.kb-spotlight.kb-spotlight--on {
+  opacity: 1;
+}
+
 /* ── Inline code badges ── */
 
 .md-typeset code:not(.highlight code):not([class]) {
