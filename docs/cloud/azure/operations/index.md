@@ -1,4 +1,38 @@
-# Operations
+# Azure — Operations
+
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Azure CLI commands, syntax, and quick reference.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Service health, VM status, load balancer health, and monitor alert review.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Day-to-day operational tasks across compute, storage, and networking.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>VM image management, patching via Azure Update Manager, and service upgrades.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Azure Backup jobs, restore procedures, and Recovery Services vault management.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts and reusable Azure CLI code.</span>
+</a>
+
+</div>
 
 > Part of the [Azure](../) reference.
 

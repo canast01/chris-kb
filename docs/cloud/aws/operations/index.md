@@ -1,4 +1,38 @@
-# Operations
+# AWS — Operations
+
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>AWS CLI commands, syntax, and quick reference.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Service health, EC2 status, RDS availability, and CloudWatch alarm review.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Day-to-day operational tasks across compute, storage, and networking.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>AMI management, patching via Systems Manager, and service upgrades.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>AWS Backup jobs, restore procedures, and snapshot management.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts and reusable AWS CLI code.</span>
+</a>
+
+</div>
 
 > Part of the [AWS](../) reference.
 

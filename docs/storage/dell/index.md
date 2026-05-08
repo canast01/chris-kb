@@ -1,74 +1,16 @@
 # Dell Storage
 
 <div class="kb-summary">
-Dell Storage knowledge base articles, operational references, troubleshooting notes, and procedures.
+Dell storage knowledge base covering PowerMax, PowerScale, PowerStore, Unity, VPLEX, Data Domain, ECS, and PowerPath. Includes architecture references, operational procedures, CLI commands, replication, data protection, and troubleshooting guides across Dell block, file, and object storage platforms.
 </div>
 
-## Articles
-
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="powermax/">
-  <strong>PowerMax</strong>
-  <span>Enterprise block storage operations.</span>
-</a>
-
-<a class="kb-card" href="powerstore/">
-  <strong>PowerStore</strong>
-  <span>Midrange and enterprise all-flash block and file storage.</span>
-</a>
-
-<a class="kb-card" href="powerscale/">
-  <strong>PowerScale</strong>
-  <span>Scale-out NAS operations.</span>
-</a>
-
-<a class="kb-card" href="ecs/">
-  <strong>ECS</strong>
-  <span>Object storage operations.</span>
-</a>
-
-<a class="kb-card" href="data-domain/">
-  <strong>Data Domain</strong>
-  <span>Backup target and deduplication storage.</span>
-</a>
-
-<a class="kb-card" href="unity/">
-  <strong>Unity</strong>
-  <span>Midrange block and file storage.</span>
-</a>
-
-<a class="kb-card" href="vplex/">
-  <strong>VPLEX</strong>
-  <span>Storage virtualization and mobility.</span>
-</a>
-
-<a class="kb-card" href="powerpath/">
-  <strong>PowerPath</strong>
-  <span>Host multipathing.</span>
-</a>
-
-<a class="kb-card" href="cloudiq/">
-  <strong>CloudIQ</strong>
-  <span>AIOps platform for proactive health scoring, capacity forecasting, and anomaly detection across Dell infrastructure.</span>
-</a>
-
-<a class="kb-card" href="cod/">
-  <strong>Capacity on Demand</strong>
-  <span>Pre-installed reserve capacity that can be activated on demand without hardware changes.</span>
-</a>
-
-<a class="kb-card" href="fod/">
-  <strong>Flex on Demand</strong>
-  <span>Consumption-based capacity model billed on actual usage rather than installed capacity.</span>
-</a>
-
-<a class="kb-card" href="secure-connect-gateway/">
-  <strong>Secure Connect Gateway</strong>
-  <span>Secure telemetry and remote support connectivity between Dell systems and Dell support.</span>
-</a>
-
-<a class="kb-card" href="apex-storage-as-a-service/">
-  <strong>APEX Storage</strong>
-  <span>Dell APEX as-a-service storage consumption model for block, file, and object workloads.</span>
-</a>
+<a class="kb-card" href="powermax/"><strong>PowerMax</strong><span>High-end all-flash array — SRDF replication, NVMe, multicloud, and enterprise performance.</span></a>
+<a class="kb-card" href="powerscale/"><strong>PowerScale</strong><span>Scale-out NAS — OneFS, SmartQuotas, SyncIQ, and multi-protocol file services.</span></a>
+<a class="kb-card" href="powerstore/"><strong>PowerStore</strong><span>Mid-range all-flash — unified block and file with AppsON and intelligent automation.</span></a>
+<a class="kb-card" href="unity/"><strong>Unity XT</strong><span>Unified storage — block, file, and VMware integration for mid-range workloads.</span></a>
+<a class="kb-card" href="vplex/"><strong>VPLEX</strong><span>Storage federation and active-active data mobility across arrays and sites.</span></a>
+<a class="kb-card" href="data-domain/"><strong>Data Domain</strong><span>Purpose-built backup appliance — deduplication, replication, and long-term retention.</span></a>
+<a class="kb-card" href="ecs/"><strong>ECS</strong><span>Object storage platform — S3-compatible, geo-distribution, and compliance retention.</span></a>
+<a class="kb-card" href="powerpath/"><strong>PowerPath</strong><span>Multipathing software — path management, load balancing, and failover for Dell arrays.</span></a>
 </div>

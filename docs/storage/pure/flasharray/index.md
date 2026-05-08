@@ -1,58 +1,33 @@
 # Pure FlashArray
 
-<div class="kb-grid kb-grid-5">
+<div class="kb-summary">
+All-flash block storage running Purity//FA — ActiveDR, ActiveCluster, NVMe/FC, NVMe/RoCE, snapshots, protection groups, and Pure1 cloud management for tier-1 and mission-critical block workloads.
+</div>
 
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>purevol, purehost, purehgroup, purepod, pureport, pureadmin, and more.</span>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Overview, components, integrations, and standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
-  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
-</a>
-
-<a class="kb-card" href="architecture/">
-  <strong>Architecture</strong>
-  <span>Architecture overview, components, and design patterns.</span>
-</a>
-
-<a class="kb-card" href="health-checks/">
-  <strong>Health Checks</strong>
-  <span>Health check procedures and validation steps.</span>
-</a>
-
-<a class="kb-card" href="lifecycle/">
-  <strong>Lifecycle</strong>
-  <span>Installation, upgrades, patching, and decommission.</span>
-</a>
-
-<a class="kb-card" href="protection-groups/">
-  <strong>Protection Groups</strong>
-  <span>Snapshot scheduling, replication, and retention policies.</span>
+  <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>
 </a>
 
 <a class="kb-card" href="security/">
   <strong>Security</strong>
-  <span>Security configuration, hardening, and access control.</span>
+  <span>Authentication, access control, encryption, and hardening.</span>
 </a>
 
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Configuration standards, naming conventions, and baselines.</span>
-</a>
-
-<a class="kb-card" href="scripts/">
-  <strong>Scripts</strong>
-  <span>Python REST API health check, ActiveCluster monitor, Bash volume report, and Ansible playbook.</span>
-</a>
-
-<a class="kb-card" href="vendor-support/">
-  <strong>Vendor Support</strong>
-  <span>Support bundles, case management, and escalation paths.</span>
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostics, and escalation.</span>
 </a>
 
 </div>
+
 ## Overview
 
 Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS, available in the //X series (NVMe-based, highest performance), //C series (QLC flash, capacity-optimized), and //E series (maximum density). All models run in an active-active dual-controller configuration with no single point of failure, and support FC, iSCSI, NVMe/FC, NVMe/RoCE, and NVMe/TCP host protocols. Fleet-wide monitoring, AI-driven analytics, and workload planning are delivered via Pure1 cloud management without requiring on-premises management infrastructure.

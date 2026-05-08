@@ -1,53 +1,33 @@
 # Dell VPLEX
 
-<div class="kb-grid kb-grid-9">
+<div class="kb-summary">
+Storage federation and virtualization platform — active-active LUN access (VPLEX Local), synchronous metro mirroring (VPLEX Metro), and data mobility across heterogeneous arrays without host disruption.
+</div>
 
-<a class="kb-card" href="scripts/">
-  <strong>Scripts</strong>
-  <span>Bash distributed device health check, Perl Metro consistency group monitor, and director status scripts.</span>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Overview, components, integrations, and standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
-  <span>Daily checks, health check, change readiness, incident triage, maintenance window, and post-change validation.</span>
+  <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>
 </a>
 
-<a class="kb-card" href="cli-reference/">
-  <strong>CLI Reference</strong>
-  <span>vplexcli commands: cluster health, virtual volumes, distributed devices, storage views, and migration.</span>
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>Authentication, access control, encryption, and hardening.</span>
 </a>
 
-
-<a class="kb-card" href="architecture/">
-  <strong>Architecture</strong>
-  <span>Architecture overview, components, and design patterns.</span>
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Common issues, diagnostics, and escalation.</span>
 </a>
 
-<a class="kb-card" href="health-checks/">
-  <strong>Health Checks</strong>
-  <span>Health check procedures and validation steps.</span>
-</a>
-
-<a class="kb-card" href="lifecycle/">
-  <strong>Lifecycle</strong>
-  <span>Installation, upgrades, patching, and decommission.</span>
-</a>
-
-<a class="kb-card" href="metro-operations/">
-  <strong>Metro Operations</strong>
-  <span>Metro Operations notes, checks, commands, and references.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Configuration standards, naming conventions, and baselines.</span>
-</a>
-
-<a class="kb-card" href="virtual-volumes/">
-  <strong>Virtual Volumes</strong>
-  <span>Virtual Volumes notes, checks, commands, and references.</span>
-</a>
 </div>
+
 ## Overview
 
 Dell VPLEX is a storage virtualization platform that presents a federated storage layer across heterogeneous arrays, abstracting physical storage into virtual volumes accessible to hosts. VPLEX Local provides active-active LUN access within a single data center across two arrays; VPLEX Metro extends this across two data centers up to ~10ms RTT with synchronous mirroring and transparent failover; VPLEX Geo adds asynchronous replication for greater distances using RecoverPoint. Management is via the `vplexcli` command-line interface or Unisphere for VPLEX.

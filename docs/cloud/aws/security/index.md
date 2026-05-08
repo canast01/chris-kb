@@ -1,35 +1,25 @@
-# AWS Security
+# AWS — Security
 
 <div class="kb-grid kb-grid-3">
 
-<a class="kb-card" href="kms/">
-  <strong>KMS</strong>
-  <span>Keys, key policy, encryption usage, rotation, and access checks.</span>
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>IAM Identity Center, SSO, MFA, and federated access.</span>
 </a>
 
-<a class="kb-card" href="secrets-manager/">
-  <strong>Secrets Manager</strong>
-  <span>Secrets, rotation, access control, and audit checks.</span>
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>IAM roles, policies, SCPs, and permission boundaries.</span>
 </a>
 
-<a class="kb-card" href="security-hub/">
-  <strong>Security Hub</strong>
-  <span>Security findings, standards, integrations, and remediation tracking.</span>
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>KMS, Secrets Manager, data-at-rest, and data-in-transit controls.</span>
 </a>
 
-<a class="kb-card" href="guardduty/">
-  <strong>GuardDuty</strong>
-  <span>Threat findings, alert review, and response workflow.</span>
-</a>
-
-<a class="kb-card" href="inspector/">
-  <strong>Inspector</strong>
-  <span>Vulnerability scanning, findings, and remediation tracking.</span>
-</a>
-
-<a class="kb-card" href="certificate-manager/">
-  <strong>Certificate Manager</strong>
-  <span>Certificates, renewals, validation, and TLS usage.</span>
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Security Hub, GuardDuty, Inspector, and AWS security baselines.</span>
 </a>
 
 </div>

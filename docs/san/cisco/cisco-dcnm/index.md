@@ -1,32 +1,29 @@
-# Cisco Dcnm
+# Cisco DCNM
 
-Cisco Dcnm operational notes and deep-dive references.
+<div class="kb-summary">
+Cisco Data Center Network Manager knowledge base covering SAN fabric management, discovery, inventory, alerts, and monitoring for Cisco Fibre Channel environments.
+</div>
 
-<div class="kb-grid kb-grid-5">
+<div class="kb-grid kb-grid-3">
 
-<a class="kb-card" href="discovery/">
-  <strong>Discovery</strong>
-  <span>Discovery notes, checks, commands, troubleshooting, and validation.</span>
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>Overview, components, integrations, and standards.</span>
 </a>
 
-<a class="kb-card" href="alerts/">
-  <strong>Alerts</strong>
-  <span>Alerts notes, checks, commands, troubleshooting, and validation.</span>
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>
 </a>
 
-<a class="kb-card" href="inventory/">
-  <strong>Inventory</strong>
-  <span>Inventory notes, checks, commands, troubleshooting, and validation.</span>
-</a>
-
-<a class="kb-card" href="reports/">
-  <strong>Reports</strong>
-  <span>Reports notes, checks, commands, troubleshooting, and validation.</span>
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>Authentication, access control, encryption, and hardening.</span>
 </a>
 
 <a class="kb-card" href="troubleshooting/">
   <strong>Troubleshooting</strong>
-  <span>Troubleshooting notes, checks, commands, troubleshooting, and validation.</span>
+  <span>Common issues, diagnostics, and escalation.</span>
 </a>
 
 </div>
