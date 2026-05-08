@@ -21,7 +21,7 @@
     
     
       
-        <title>Operations - Chris KB</title>
+        <title>RecoverPoint — Operations - Chris KB</title>
       
     
     
@@ -63,10 +63,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Operations · Chris KB">
+  <meta property="og:title" content="RecoverPoint — Operations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Operations · Chris KB">
+  <meta name="twitter:title" content="RecoverPoint — Operations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#operations" class="md-skip">
+        <a href="#recoverpoint-operations" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Operations
+              RecoverPoint — Operations
             
           </span>
         </div>
@@ -699,80 +699,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-readiness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Change Readiness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#incident-triage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incident Triage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-window" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance Window
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -791,223 +717,40 @@
 
 
 
-<h1 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">RecoverPoint</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] All Consistency Groups (CGs) are in ACTIVE replication state</td>
-<td></td>
-<td>none suspended, in error, or paused without a corresponding change ticket</td>
-</tr>
-<tr>
-<td>[ ] All RPA nodes are online and clustered</td>
-<td></td>
-<td>no degraded or faulted RPA</td>
-</tr>
-<tr>
-<td>[ ] Journal capacity</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Replication lag / RPO is within the acceptable threshold (typicall</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] No image access sessions are left enabled from a previous DR test</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Confirm both production and DR site RecoverPoint clusters are reac</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to the RPA management IP</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;rpa_cluster_ip&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show overall system status (RPA nodes, cluster state)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>system<span class="w"> </span>status
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show all Consistency Group states (expect ACTIVE for all production CGs)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>groups<span class="w"> </span>status
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show detailed CG status including RPO and journal utilization</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>groups<span class="w"> </span>status<span class="w"> </span>detail
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show RPA alarms (any active hardware or software alarms)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>alarms<span class="w"> </span>list
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show journal capacity for all CGs</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>journals<span class="w"> </span>list
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Show replication link statistics (latency, bandwidth)</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>links<span class="w"> </span>statistics
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># REST API: get cluster summary (run from automation host)</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nv">RPAPI</span><span class="o">=</span><span class="s2">&quot;https://&lt;rpa_mgmt_ip&gt;/rest/v1&quot;</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nv">RP_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;base64_encoded_credentials&gt;&quot;</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="si">${</span><span class="nv">RP_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RPAPI</span><span class="si">}</span><span class="s2">/clusters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.clusters[] | {name: .name, health: .healthState}&#39;</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># REST API: list all CGs and their replication state</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="si">${</span><span class="nv">RP_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RPAPI</span><span class="si">}</span><span class="s2">/groups&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.innerSets[] | {name: .name, state: .replicationState, rpo: .RPO}&#39;</span>
-</code></pre></div>
-<h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All CGs are in a Consistent state before beginning any storage-side or server-side maintenance</li>
-<li>[ ] Current RPO for each production CG has been noted as a pre-change baseline</li>
-<li>[ ] Journal capacity has sufficient headroom to absorb the expected I/O during the maintenance window (rule of thumb: journal should be &lt; 50% at start of window)</li>
-<li>[ ] RecoverPoint CLI access (SSH to RPA) is confirmed and credentials are available</li>
-<li>[ ] DR site RecoverPoint cluster is reachable and healthy</li>
-<li>[ ] Maintenance window duration has been agreed and does not exceed the journal protection window</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Status</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All CGs in Consistent state</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Pre-change RPO baseline recorded</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Journal headroom sufficient (&lt; 50% at window start)</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>RPA CLI access confirmed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>DR site cluster healthy and reachable</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Window duration within journal protection window</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="incident-triage">Incident Triage<a class="headerlink" href="#incident-triage" title="Permanent link">&para;</a></h2>
-<p><strong>On alert or issue:</strong>
-1. SSH to the RPA cluster and run <code>groups status detail</code> to identify which CGs are not replicating and their current error state
-2. Run <code>alarms list</code> to check for active hardware or software alarms on the RPA nodes
-3. Run <code>links statistics</code> to check for inter-site network issues (high latency, packet loss, zero bandwidth)
-4. If a journal is full (<code>journals list</code>), the CG replication will be paused — immediately reduce I/O to the protected volumes or increase journal allocation
-5. If image access is left on from a previous DR test, disable it immediately: <code>group disable-image-access --gname &lt;cg_name&gt;</code>
-6. If an RPA node is down, check the RPA hardware health and the underlying network/storage connectivity for that node</p>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CG in ERROR or PAUSED state (not manually paused)</td>
-<td>Journal full, network failure, or storage issue</td>
-<td>Run <code>journals list</code> to check journal; run <code>links statistics</code> to check network; check RPA alarms</td>
-</tr>
-<tr>
-<td>Journal above 80%</td>
-<td>Write rate exceeding journal drain rate or link down</td>
-<td>Check link bandwidth with <code>links statistics</code>, reduce write I/O if possible, expand journal allocation</td>
-</tr>
-<tr>
-<td>RPO breach alert (lag &gt; SLA threshold)</td>
-<td>Link congestion or insufficient bandwidth</td>
-<td>Check <code>links statistics</code>, check WAN QoS for RP replication traffic on port 4460</td>
-</tr>
-<tr>
-<td>Image access left active after DR test</td>
-<td>DR test was not properly cleaned up</td>
-<td>Run <code>group disable-image-access --gname &lt;cg_name&gt;</code> immediately, then verify CG returns to ACTIVE</td>
-</tr>
-<tr>
-<td>RPA node down</td>
-<td>Hardware failure or network issue</td>
-<td>Check RPA hardware state with <code>system status</code>, check physical/VM health, open Dell support case</td>
-</tr>
-<tr>
-<td>CG in MIXED state</td>
-<td>Partial subset of volumes replicating</td>
-<td>Run <code>groups status detail</code> to identify affected volumes, check initiator zones and storage connectivity</td>
-</tr>
-</tbody>
-</table>
-<h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<p><strong>Pausing replication for a storage or server maintenance window:</strong></p>
-<ol>
-<li>Confirm all CGs are in Consistent state before pausing</li>
-<li>Pause the relevant CGs:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Pause a specific CG</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>group<span class="w"> </span>disable-replication<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Or pause all CGs in a group set</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>groups<span class="w"> </span>disable-replication
-</code></pre></div></li>
-<li>Perform the maintenance on the protected storage or servers</li>
-<li>Resume replication after maintenance is complete:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>group<span class="w"> </span>enable-replication<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
-</code></pre></div></li>
-<li>Monitor replication resync — watch <code>groups status detail</code> until all CGs return to ACTIVE/Consistent state</li>
-<li>Confirm RPO returns to within SLA after resync</li>
-</ol>
-<p><strong>DR test image access procedure:</strong></p>
-<ol>
-<li>Enable image access on the target copy at the desired point-in-time bookmark:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>group<span class="w"> </span>enable-image-access<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;<span class="w"> </span>--copy<span class="w"> </span>DR<span class="w"> </span>--image<span class="w"> </span>&lt;bookmark_or_timestamp&gt;
-</code></pre></div></li>
-<li>Perform DR test workload validation</li>
-<li>Disable image access immediately after testing is complete:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>group<span class="w"> </span>disable-image-access<span class="w"> </span>--gname<span class="w"> </span>&lt;cg_name&gt;
-</code></pre></div></li>
-<li>Confirm CG returns to ACTIVE replication state</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[ ] All CGs have returned to ACTIVE replication state (<code>groups status</code>)</li>
-<li>[ ] RPO for all production CGs is back within SLA threshold (typically &lt; 15 minutes)</li>
-<li>[ ] Journal consumption has returned to the pre-change baseline (<code>journals list</code>)</li>
-<li>[ ] No image access sessions are active</li>
-<li>[ ] <code>alarms list</code> shows no new active alarms</li>
-<li>[ ] DR site cluster is healthy and reachable</li>
-</ul>
+<h1 id="recoverpoint-operations">RecoverPoint — Operations<a class="headerlink" href="#recoverpoint-operations" title="Permanent link">&para;</a></h1>
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>boxmgmt CLI and REST API command reference.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Daily checks, RPO compliance, and journal utilization monitoring.</span>
+</a>
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Failover, recovery, maintenance windows, and change readiness.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Version matrix, upgrade path, and lifecycle planning.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Configuration backup and restore procedures.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for health checks, DR tests, and RPO reporting.</span>
+</a>
+
+</div>
 
 
 
