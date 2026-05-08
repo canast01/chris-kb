@@ -3,6 +3,12 @@
 
 <div class="kb-grid kb-grid-1">
 
+<a class="kb-card" href="cloud-practitioner/">
+  <strong>Cloud Practitioner CLF-C02</strong>
+  <span>14-day study plan — 3 hrs/day, 50 Q&A per day. Covers all 4 domains.</span>
+</a>
+
+
 <a class="kb-card" href="exam-tracking/">
   <strong>Exam Tracking</strong>
   <span>Exam scheduling, scores, and certification tracking.</span>
