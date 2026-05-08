@@ -1,5 +1,29 @@
 # Certificates — Procedures
 
+## Certificate Renewal and Revocation Workflow
+
+```mermaid
+flowchart TD
+    renewTrigger["Renewal trigger\n(80% validity elapsed or expiry alert)"]
+    renewTrigger --> checkAuto{"Automated\nrenewal?"}
+    checkAuto -->|"Venafi / ACME / cert-manager"| autoRenew["Automated renewal flow\nNew CSR generated and submitted"]
+    checkAuto -->|"manual"| manualRenew["Generate new key pair + CSR\non target host"]
+    autoRenew --> caIssue["CA issues new certificate"]
+    manualRenew --> submitCA["Submit CSR via Venafi / ADCS portal"]
+    submitCA --> caIssue
+    caIssue --> install["Install on target service\n(verify key matches cert)"]
+    install --> tlsTest["TLS validation:\nopenssl s_client + openssl verify"]
+    tlsTest --> done["Renewal complete\nUpdate inventory"]
+
+    revokeTrigger["Revocation trigger\n(key compromise / decommission)"] --> revokeCA["Revoke via ADCS:\ncertutil -revoke serial 1"]
+    revokeCA --> publishCRL["Publish updated CRL:\ncertutil -CRL"]
+    publishCRL --> ocspUpdate["OCSP responder updated\n(auto from CA database)"]
+    ocspUpdate --> replaceCert["Generate new key + cert\non clean host"]
+    replaceCert --> auditDoc["Document incident\nand root cause"]
+```
+
+---
+
 ## Renewal
 
 Certificate renewal should be initiated at 80% of the certificate's validity period (e.g., for a 2-year certificate, renew after ~20 months).

@@ -6,6 +6,28 @@
 
 ## Common Failures
 
+```mermaid
+flowchart TD
+    failure(["Workflow failure\nor unexpected behaviour"])
+    noTrigger{"Did the workflow\ntrigger at all?"}
+    checkPaths["Check on.paths filter\nDoes it match the changed files?"]
+    stepFail{"Which step\nfailed?"}
+    permErr["Resource not accessible\n→ Add permissions: block to job"]
+    ctxErr["Context access invalid\n→ Fix ${{ }} expression syntax"]
+    exitErr["Exit code 1\n→ Check step output in logs"]
+    secretErr["Secret is empty\n→ Check repo vs env vs org scope"]
+    wdErr["No such file\n→ Add working-directory: or cd"]
+
+    failure --> noTrigger
+    noTrigger -->|No| checkPaths
+    noTrigger -->|Yes| stepFail
+    stepFail --> permErr
+    stepFail --> ctxErr
+    stepFail --> exitErr
+    stepFail --> secretErr
+    stepFail --> wdErr
+```
+
 | Error | Cause | Fix |
 |---|---|---|
 | `Context access might be invalid` | Wrong expression syntax | Check `${{ }}` vs `$( )` usage |

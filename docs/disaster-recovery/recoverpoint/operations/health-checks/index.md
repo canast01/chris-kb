@@ -105,6 +105,51 @@ for r in data.get('innerSet', []):
 
 ---
 
+## RPO Violation Triage Decision Tree
+
+```mermaid
+flowchart TD
+    rpoAlert["RPO Violation Alert\nLag exceeds threshold"]
+    checkCGState["Check CG State\ngroups status detail"]
+    cgActive{"CG\nState?"}
+    cgError["CG in ERROR\nor PAUSED"]
+    cgActive2["CG ACTIVE\nbut lagging"]
+    checkJournal["Check Journal Utilization\njournals list"]
+    journalHigh{"Journal > 70%?"}
+    checkLink["Check Inter-site Link\nlinks statistics"]
+    linkSaturated{"Link Bandwidth\nSaturated?"}
+    checkWriteRate["Check Write Rate\nIdentify high-write application"]
+    expandJournal["Expand Journal\nor reduce retention window"]
+    engageNetwork["Engage Network Team\nIncrease WAN bandwidth or QoS"]
+    checkRPALoad["Check RPA Load\nsystem status\nDistribute CGs if overloaded"]
+    monitorRPO["Monitor RPO Recovery\nevery 5 minutes"]
+    resolved["RPO Within SLA\nClose Alert"]
+
+    rpoAlert --> checkCGState
+    checkCGState --> cgActive
+    cgActive -->|"ERROR / PAUSED"| cgError
+    cgActive -->|"ACTIVE"| cgActive2
+    cgError --> checkJournal
+    cgActive2 --> checkLink
+    checkJournal --> journalHigh
+    journalHigh -->|"Yes"| expandJournal
+    journalHigh -->|"No"| checkLink
+    expandJournal --> monitorRPO
+    checkLink --> linkSaturated
+    linkSaturated -->|"Yes"| engageNetwork
+    linkSaturated -->|"No"| checkWriteRate
+    engageNetwork --> monitorRPO
+    checkWriteRate --> checkRPALoad
+    checkRPALoad --> monitorRPO
+    monitorRPO -->|"RPO recovering"| resolved
+
+    style rpoAlert fill:#be123c,color:#fff
+    style resolved fill:#15803d,color:#fff
+    style cgError fill:#be123c,color:#fff
+    style expandJournal fill:#b45309,color:#fff
+    style engageNetwork fill:#b45309,color:#fff
+```
+
 ## RPO Compliance Check
 
 ```bash

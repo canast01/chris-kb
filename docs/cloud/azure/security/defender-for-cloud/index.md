@@ -2,6 +2,30 @@
 
 Microsoft Defender for Cloud (formerly Security Center / Azure Defender) is a cloud security posture management (CSPM) and cloud workload protection platform (CWPP). It provides security recommendations, threat protection, regulatory compliance assessment, and attack path analysis.
 
+## Defender for Cloud Coverage
+
+```mermaid
+flowchart TD
+    dfc["Defender for Cloud"]
+    subgraph cspm["CSPM — Posture Management"]
+        secScore["Secure Score\nrecommendations"]
+        compAssess["Compliance Assessment\nCIS · NIST · PCI DSS"]
+        attackPath["Attack Path Analysis"]
+    end
+    subgraph cwpp["CWPP — Workload Protection"]
+        defVMs["Defender for Servers\nMDI + Qualys / MDVM"]
+        defSQL["Defender for SQL"]
+        defStorage["Defender for Storage"]
+        defContainers["Defender for Containers\nAKS runtime"]
+    end
+    subgraph remediation["Remediation"]
+        govRules["Governance Rules\nowner assignment"]
+        workflowAuto["Workflow Automation\nLogic App trigger"]
+    end
+
+    dfc --> cspm & cwpp & remediation
+```
+
 ## Security Posture Overview
 
 ```bash
