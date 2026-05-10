@@ -2,6 +2,180 @@
 
 > Part of the [Ansible Troubleshooting](../) reference.
 
----
+## When to Escalate
 
-Content to be added.
+Escalate when any of the following are true and cannot be resolved with standard diagnostics:
+
+- Ansible module producing incorrect results with correct inputs (potential module bug)
+- AWX/AAP platform-level failure (database corruption, operator crash, license issue)
+- Execution Environment image pull failures from Red Hat registry
+- Unexpected behaviour after ansible-core or collection upgrade
+- Vault decryption failures not explained by password/key issues
+- SSH transport bugs (pipelining, ControlMaster, ControlPersist edge cases)
+
+## Internal Escalation Path
+
+```mermaid
+flowchart LR
+    L1[L1 Ops\nRun diagnostics\nCheck logs] --> L2[L2 Automation Engineering\nModule-level debug\nvvv trace + stack trace]
+    L2 --> L3[Platform Team / SME\nAWX admin access\nExecution environment rebuild]
+    L3 --> Vendor[Red Hat Support\nor GitHub issue]
+```
+
+| Level | Owns | Contact |
+|---|---|---|
+| L1 Ops | Day-to-day playbook failures | Ops team Slack / ticket |
+| L2 Automation | Module bugs, collection issues | automation-team@example.com |
+| L3 Platform | AWX/AAP infrastructure | infra-platform@example.com |
+| Red Hat Support | AAP bugs, licensed product issues | access.redhat.com case |
+| Community | ansible-core / community collections | GitHub Issues / Forum |
+
+## Information to Gather Before Escalating
+
+```bash
+# 1. Ansible version
+ansible --version
+ansible-galaxy collection list | grep -E "vmware|amazon|community.general"
+
+# 2. Full playbook run with maximum verbosity
+ansible-playbook -i inventory/ site.yml -vvvv 2>&1 | tee /tmp/escalation-$(date +%F).log
+
+# 3. Python versions
+python3 --version
+pip show ansible-core | grep Version
+
+# 4. Environment variables that may affect Ansible
+env | grep -i ansible | sort
+
+# 5. SSH trace (for connection issues)
+ssh -vvv -i ~/.ssh/ansible_ed25519 ansible@failing-host.example.com 2>&1 | head -60
+
+# 6. Module debug output (for module-level failures)
+ANSIBLE_DEBUG=1 ansible-playbook -i inventory/ site.yml 2>&1 | grep -A 20 "TASK \[failing task\]"
+```
+
+## AWX / AAP Escalation Data
+
+```bash
+# AWX version and configuration
+curl -H "Authorization: Bearer $AWX_TOKEN" \
+  https://awx.example.com/api/v2/config/ | python3 -m json.tool
+
+# Failed job details
+curl -H "Authorization: Bearer $AWX_TOKEN" \
+  "https://awx.example.com/api/v2/jobs/$JOB_ID/" | python3 -m json.tool
+
+# Job stdout (full output)
+curl -H "Authorization: Bearer $AWX_TOKEN" \
+  "https://awx.example.com/api/v2/jobs/$JOB_ID/stdout/?format=txt" > /tmp/job-stdout.txt
+
+# Kubernetes pod logs (for AWX operator deployments)
+kubectl logs deployment/awx-prod-web -n awx --tail=200 > /tmp/awx-web.log
+kubectl logs deployment/awx-prod-task -n awx --tail=200 > /tmp/awx-task.log
+kubectl describe pod -l app.kubernetes.io/name=awx-web -n awx > /tmp/awx-pod.txt
+```
+
+## Red Hat Support (AAP)
+
+### Opening a Case
+
+1. Go to [access.redhat.com](https://access.redhat.com) → Cases → Open a New Case
+2. Select product: **Red Hat Ansible Automation Platform**
+3. Set severity:
+   - **Sev 1**: Production down — no workaround
+   - **Sev 2**: Major function impaired — workaround exists
+   - **Sev 3**: Minor issue — workaround exists
+   - **Sev 4**: Feature request / documentation
+
+### Required Attachments
+
+```bash
+# Generate sosreport on AWX controller node
+sosreport --batch --tmp-dir /tmp/ \
+  -o ansible,process,networking,kubernetes
+
+# Attach:
+# - sosreport archive
+# - /tmp/escalation-$(date +%F).log (vvvv run)
+# - /tmp/awx-web.log + /tmp/awx-task.log
+# - /tmp/job-stdout.txt
+# - ansible --version output
+# - ansible-galaxy collection list output
+```
+
+## Community Escalation (Open Source)
+
+### ansible-core Bugs
+
+```bash
+# Check existing issues first
+# https://github.com/ansible/ansible/issues
+
+# Minimal reproduction case
+cat > /tmp/repro.yml <<'EOF'
+- name: Reproduction case
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Failing task
+      ansible.builtin.MODULE:
+        arg: value
+EOF
+
+ansible-playbook /tmp/repro.yml -vvv 2>&1 | tee /tmp/repro.log
+```
+
+Include in the GitHub issue:
+- `ansible --version` output
+- Python version
+- OS version
+- Minimal reproduction playbook
+- Full `-vvv` output
+
+### Collection Bugs
+
+| Collection | Issue Tracker |
+|---|---|
+| `community.vmware` | github.com/ansible-collections/community.vmware |
+| `amazon.aws` | github.com/ansible-collections/amazon.aws |
+| `community.general` | github.com/ansible-collections/community.general |
+| `cisco.ios` | github.com/ansible-collections/cisco.ios |
+| `servicenow.itsm` | github.com/ServiceNowITOM/servicenow-ansible |
+
+## Workarounds While Awaiting Fix
+
+```yaml
+# Pin to last known-good collection version
+collections:
+  - name: community.vmware
+    version: "4.2.0"   # pinned until bug fixed in 4.3.x
+
+# Use raw/command module as fallback when a declarative module has a bug
+- name: Workaround — create vlan via command until module fixed
+  ansible.builtin.command:
+    cmd: "esxcli network vswitch standard portgroup add -v 'VLAN100' -p vSwitch0"
+  delegate_to: esxi01
+  changed_when: true
+
+# Add ignore_errors with manual check as last resort
+- name: Idempotency workaround
+  ansible.builtin.command:
+    cmd: /opt/app/configure.sh
+  register: config_result
+  ignore_errors: true
+  changed_when: config_result.rc == 0
+  failed_when: config_result.rc not in [0, 1]
+```
+
+## Escalation Checklist
+
+| Step | Done |
+|---|---|
+| Reproduced with `--check` and `--diff` | ☐ |
+| Ran with `-vvv` and saved output | ☐ |
+| Verified ansible-core and collection versions | ☐ |
+| Checked GitHub issues for known bug | ☐ |
+| Tested with latest collection version | ☐ |
+| Gathered AWX pod logs (if AWX issue) | ☐ |
+| Prepared minimal reproduction case | ☐ |
+| Opened support case or GitHub issue | ☐ |

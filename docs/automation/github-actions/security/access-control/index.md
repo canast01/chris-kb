@@ -2,21 +2,17 @@
 
 > Part of the [GitHub Actions Security](../) reference.
 
----
-
-Content to be added.
-
 ## Secrets Management
 
 ```mermaid
 flowchart TD
-    wfTrigger(["Workflow triggered\non: push / pull_request"])
-    jobCtx["Job context\nruns-on: ubuntu-24.04\nenvironment: production"]
-    secretCtx["Secrets context\n${{ secrets.PROD_DB_PASSWORD }}"]
-    envSecret["Environment secret\nRepo Settings → Environments → production\nRequired reviewers enforced"]
-    repoSecret["Repository secret\nRepo Settings → Secrets\nAll workflows in repo"]
-    orgSecret["Organisation secret\nOrg Settings → Secrets\nGranted repos only"]
-    step["Step execution\nenv: VAR=${{ secrets.X }}\nmasked in logs as ***"]
+    wfTrigger(["Workflow triggered"])
+    jobCtx["Job context\nenvironment: production"]
+    envSecret["Environment secret\nRequired reviewers enforced"]
+    repoSecret["Repository secret\nAll workflows in repo"]
+    orgSecret["Organisation secret\nGranted repos only"]
+    secretCtx["${{ secrets.X }}"]
+    step["Step — value masked as *** in logs"]
 
     wfTrigger --> jobCtx
     jobCtx --> secretCtx
@@ -27,130 +23,204 @@ flowchart TD
 ```
 
 ```yaml
-# Reference a secret in a workflow step
-- name: Deploy to server
+- name: Deploy
   run: ./deploy.sh
   env:
     SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
     API_TOKEN: ${{ secrets.API_TOKEN }}
-    DB_URL: ${{ secrets.DATABASE_URL }}
 ```
 
-Managing secrets via `gh` CLI:
-
 ```bash
-# Set a repository secret
+# Manage secrets via CLI
 gh secret set DEPLOY_SSH_KEY < ~/.ssh/deploy_key
-
-# Set from a value
-echo "mytoken123" | gh secret set API_TOKEN
-
-# List all secrets (names only — values are never shown)
 gh secret list
-
-# Delete a secret
 gh secret delete OLD_TOKEN
-
-# Set an organisation-level secret
+gh secret set PROD_DB_PASSWORD --env production
 gh secret set SHARED_TOKEN --org myorg
 ```
 
-### OIDC — Keyless Authentication
+### Secret Scopes
+
+| Scope | Where set | Accessible by |
+|---|---|---|
+| Repository | Repo Settings → Secrets | All workflows in that repo |
+| Environment | Repo Settings → Environments | Jobs targeting that environment |
+| Organisation | Org Settings → Secrets | Repos granted access |
+| `GITHUB_TOKEN` | Auto-generated | All jobs (scoped to the run) |
+
+## OIDC — Keyless Authentication
 
 ```mermaid
 sequenceDiagram
     participant Job as Workflow Job
-    participant GH as GitHub OIDC Provider
-    participant Cloud as Cloud Provider\nAWS IAM / GCP WIF
+    participant GH as GitHub OIDC
+    participant Cloud as Cloud Provider
 
     Job->>GH: Request OIDC JWT\n(permissions: id-token: write)
-    GH-->>Job: Signed JWT\n(iss: token.actions.githubusercontent.com\nsub: repo:org/repo:ref:...)
-    Job->>Cloud: Exchange JWT for credentials\n(AssumeRoleWithWebIdentity)
-    Cloud->>Cloud: Validate JWT signature and claims
-    Cloud-->>Job: Temporary credentials\n(expire automatically)
-    Note over Job,Cloud: No long-lived secret stored in GitHub
+    GH-->>Job: Signed JWT\n(sub: repo:org/repo:ref:...)
+    Job->>Cloud: Exchange JWT for credentials
+    Cloud-->>Job: Temporary credentials\n(auto-expire)
 ```
 
-OIDC lets workflows authenticate to cloud providers without storing long-lived credentials as secrets.
-
 ```yaml
-# AWS OIDC setup
 permissions:
   id-token: write
   contents: read
 
 steps:
-  - name: Configure AWS credentials via OIDC
-    uses: aws-actions/configure-aws-credentials@v4
+  - uses: aws-actions/configure-aws-credentials@v4
     with:
       role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
       aws-region: eu-west-1
 
-  - name: Use AWS CLI
-    run: aws s3 ls s3://my-bucket
+  - uses: azure/login@v2
+    with:
+      client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 ```
 
+## Workflow Permissions
+
 ```yaml
-# GCP OIDC setup
-- name: Authenticate to GCP
-  uses: google-github-actions/auth@v2
-  with:
-    workload_identity_provider: projects/123/locations/global/workloadIdentityPools/github/providers/github
-    service_account: deploy@myproject.iam.gserviceaccount.com
+# Minimal permissions — default deny, grant explicitly
+permissions:
+  contents: read
+  id-token: write    # only for OIDC jobs
+  packages: write    # only for jobs pushing to GHCR
+
+# Never use:
+# permissions: write-all
 ```
 
-### Environment Secrets
+!!! warning "Fork PRs and secrets"
+    Workflows triggered by pull requests from forks do NOT have access to secrets by default. Only use `pull_request_target` (with extreme care) if secrets are needed from fork PRs. Prefer `pull_request` without secrets for untrusted code.
 
-Environment secrets are only available to jobs that target a named environment. They support required reviewers and deployment gates.
+## Environment Protection Rules
 
 ```yaml
+# Workflow — reference environment to trigger protection
 jobs:
-  deploy:
+  deploy-prod:
+    environment: production     # triggers protection rules + reviewer gate
     runs-on: ubuntu-24.04
-    environment: production     # triggers protection rules
-
     steps:
-      - name: Deploy
-        run: ./deploy.sh
+      - run: ./deploy.sh
         env:
-          PROD_DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
+          DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
 ```
 
-### Secret Types and Scopes
+Configure in **Repo Settings → Environments → production**:
 
-| Scope | Where set | Accessible by |
-|---|---|---|
-| Repository secret | Repo Settings → Secrets | All workflows in that repo |
-| Environment secret | Repo Settings → Environments | Jobs targeting that environment |
-| Organisation secret | Org Settings → Secrets | Repos granted access |
-| `GITHUB_TOKEN` | Auto-generated per run | All jobs, scoped to the run |
+| Setting | Value |
+|---|---|
+| Required reviewers | 1–6 people who must approve |
+| Wait timer | Minutes to wait before deployment starts |
+| Allowed branches | `main` only (prevent deploy from feature branches) |
+| Prevent self-review | Deployer cannot be their own approver |
 
-### Secret Scanning and Rotation
+## `GITHUB_TOKEN` Permissions
 
-GitHub automatically scans pushed commits for common secret patterns and alerts when found.
+```yaml
+# Restrict GITHUB_TOKEN to read-only by default (org or repo setting)
+# Then grant write only where needed
+
+permissions:
+  contents: write       # only for release creation
+  pull-requests: write  # only for PR comment bots
+  issues: write         # only for issue management workflows
+  packages: write       # only for container image publish
+```
 
 ```bash
-# Enable secret scanning via CLI
-gh api --method PATCH /repos/OWNER/REPO \
-  -f security_and_analysis.secret_scanning.status=enabled \
-  -f security_and_analysis.secret_scanning_push_protection.status=enabled
-
-# List secret scanning alerts
-gh api /repos/OWNER/REPO/secret-scanning/alerts
+# Set default token permissions at org level
+gh api --method PATCH orgs/ORG \
+  -f members_can_create_repositories=false \
+  --field default_workflow_permissions=read
 ```
 
-Best practices:
+## Self-Hosted Runner Security
 
 ```yaml
-# Mask a dynamically generated value in logs
-- name: Get token
+# Restrict which workflows can use self-hosted runners
+# Settings → Actions → Runner groups → Restrict to selected repositories
+
+# In workflow — target runner groups
+runs-on:
+  group: prod-runners          # named runner group
+  labels: [self-hosted, linux]
+```
+
+!!! warning "Self-hosted runner risks"
+    Self-hosted runners in public repositories are a high-risk attack surface. Malicious PRs can execute arbitrary code on the runner host. Restrict self-hosted runners to private repositories or trusted workflow triggers only.
+
+```yaml
+# Safe pattern — only run privileged jobs on self-hosted for protected branches
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: [self-hosted, linux, prod]
+```
+
+### Runner Hardening
+
+```bash
+# Run runner as a dedicated non-root user
+useradd -r -s /sbin/nologin -m -d /home/github-runner github-runner
+
+# Ephemeral runners — register, run one job, deregister
+./config.sh --ephemeral ...
+# Prevents state accumulation between jobs
+
+# Restrict runner network access (only allow required endpoints)
+# github.com, api.github.com, objects.githubusercontent.com, *.actions.githubusercontent.com
+```
+
+## Secret Scanning
+
+```bash
+# Enable secret scanning and push protection via API
+gh api --method PATCH repos/ORG/REPO \
+  -f 'security_and_analysis[secret_scanning][status]=enabled' \
+  -f 'security_and_analysis[secret_scanning_push_protection][status]=enabled'
+
+# List alerts
+gh api repos/ORG/REPO/secret-scanning/alerts | jq '.[] | {state, secret_type, html_url}'
+```
+
+## Audit Log
+
+```bash
+# Org audit log — all Actions-related events
+gh api orgs/ORG/audit-log \
+  --paginate \
+  -f phrase="action:workflows" \
+  -f per_page=100 \
+  | jq '.[] | {action, actor, repo, created_at}'
+
+# Filter for secret access events
+gh api orgs/ORG/audit-log \
+  -f phrase="action:org.actions_secret" \
+  | jq '.[] | {action, actor, name: .config.secret_name}'
+```
+
+## Preventing Secret Leaks
+
+```yaml
+# Mask a dynamically generated value
+- name: Generate and mask token
   id: auth
   run: |
     TOKEN=$(get-token.sh)
     echo "::add-mask::$TOKEN"
     echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
 
-# Never echo a secret directly — it will appear as ***
-# but the pattern is still bad practice:
-# run: echo ${{ secrets.MY_SECRET }}  # avoid this
+# Never echo secrets directly — even masked, the pattern is bad
+# run: echo ${{ secrets.MY_SECRET }}   # ← avoid
+
+# Use intermediate env vars
+- name: Use secret safely
+  run: ./script.sh
+  env:
+    SECRET: ${{ secrets.MY_SECRET }}   # referenced as $SECRET in script
 ```

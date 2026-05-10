@@ -2,11 +2,9 @@
 
 > Part of the [Ansible Security](../) reference.
 
----
+## Ansible Vault
 
-Content to be added.
-
-## Vault Encryption Flow
+Ansible Vault encrypts sensitive data at rest using AES-256-CBC. Encrypted content lives alongside plaintext YAML in the same repository — safely committed to Git.
 
 ```mermaid
 graph LR
@@ -25,84 +23,85 @@ graph LR
     playbook -->|over SSH| managedHost["Managed Host"]
 ```
 
-## Vault Secrets
-
-Vault encrypts sensitive data at rest. Any YAML file or string value can be encrypted.
+### Vault Commands
 
 ```bash
-# Encrypt a new file (opens editor)
-ansible-vault create secrets.yml
+# Encrypt a file
+ansible-vault encrypt group_vars/prod/vault.yml
 
-# Encrypt an existing plaintext file
-ansible-vault encrypt group_vars/all/vault.yml
+# Create new encrypted file
+ansible-vault create group_vars/prod/vault.yml
 
-# Decrypt to plaintext (use with care)
-ansible-vault decrypt group_vars/all/vault.yml
+# View without decrypting to disk
+ansible-vault view group_vars/prod/vault.yml
 
-# View encrypted file without decrypting on disk
-ansible-vault view group_vars/all/vault.yml
+# Edit in place
+ansible-vault edit group_vars/prod/vault.yml
 
-# Edit encrypted file in place
-ansible-vault edit group_vars/all/vault.yml
-
-# Re-encrypt with a new password
-ansible-vault rekey group_vars/all/vault.yml
-```
-
-### Vault IDs and Multiple Passwords
-
-Vault IDs let you use different passwords for different secrets within the same project.
-
-```bash
-# Create a vault with a named ID
-ansible-vault create --vault-id dev@prompt secrets/dev.yml
-ansible-vault create --vault-id prod@~/.vault_pass_prod secrets/prod.yml
-
-# Run playbook supplying multiple vault passwords
-ansible-playbook site.yml \
-  --vault-id dev@prompt \
-  --vault-id prod@~/.vault_pass_prod
-
-# Store password in a file (restrict permissions)
-echo "mysecretpassword" > ~/.vault_pass
-chmod 600 ~/.vault_pass
-
-# Reference password file in ansible.cfg
-# [defaults]
-# vault_password_file = ~/.vault_pass
+# Rotate the vault password
+ansible-vault rekey group_vars/prod/vault.yml
 ```
 
 ### Inline Encrypted Strings
 
-Encrypt individual values to embed directly in plaintext YAML files.
-
 ```bash
-# Generate an encrypted inline string
-ansible-vault encrypt_string 'db_password_value' \
+ansible-vault encrypt_string 'prod-db-password' \
   --name 'vault_db_password' \
   --vault-id prod@~/.vault_pass_prod
 ```
 
-This outputs a block you paste directly into a vars file:
+Paste the output directly into a plaintext YAML file:
 
 ```yaml
-# group_vars/all/main.yml
+# group_vars/prod/main.yml
 vault_db_password: !vault |
   $ANSIBLE_VAULT;1.2;AES256;prod
-  33626536396435663839316562313065353933303664663134303863633266643263
+  62313365396662343061393463336135623131376139323936656566366135363262363164376234
   ...
 ```
 
-### Vault in CI/CD Integration
+### Recommended Layout
 
-| Method | How it works | When to use |
-|---|---|---|
-| File on runner | Password file written by CI secret | Simple pipelines |
-| Environment variable | `ANSIBLE_VAULT_PASSWORD_FILE` or `ANSIBLE_VAULT_IDENTITY_LIST` | CI with secret masking |
-| Vault ID with script | Custom script fetches password from secrets manager | HashiCorp Vault / AWS Secrets Manager |
+```
+group_vars/
+└── prod/
+    ├── main.yml    # plaintext — references vault_ vars
+    └── vault.yml   # encrypted — actual secret values
+```
 
 ```yaml
-# GitHub Actions example
+# vault.yml (encrypted)
+vault_db_password: "prod-db-pass"
+vault_api_key: "sk-prod-abc123"
+
+# main.yml (plaintext)
+db_password: "{{ vault_db_password }}"
+api_key: "{{ vault_api_key }}"
+```
+
+### Multiple Vault IDs
+
+```bash
+# Encrypt per environment
+ansible-vault encrypt group_vars/prod/vault.yml --vault-id prod@~/.vault_pass_prod
+ansible-vault encrypt group_vars/staging/vault.yml --vault-id staging@~/.vault_pass_staging
+
+# Run with multiple IDs
+ansible-playbook site.yml \
+  --vault-id prod@~/.vault_pass_prod \
+  --vault-id staging@~/.vault_pass_staging
+```
+
+### CI/CD Integration
+
+| Method | How | When |
+|---|---|---|
+| File on runner | CI writes secret to temp file | Simple pipelines |
+| Environment variable | `ANSIBLE_VAULT_PASSWORD_FILE` | CI with secret masking |
+| Script | Fetches password from secrets manager at runtime | HashiCorp Vault / AWS Secrets Manager |
+
+```yaml
+# GitHub Actions
 - name: Write vault password
   run: echo "${{ secrets.VAULT_PASSWORD }}" > ~/.vault_pass && chmod 600 ~/.vault_pass
 
@@ -112,45 +111,77 @@ vault_db_password: !vault |
     ANSIBLE_VAULT_PASSWORD_FILE: ~/.vault_pass
 ```
 
-### Recommended Vault File Layout
-
-```bash
-group_vars/
-  all/
-    main.yml        # plaintext — references vault_ prefixed vars
-    vault.yml       # encrypted — stores vault_ prefixed values
-  webservers/
-    main.yml
-    vault.yml
-host_vars/
-  db01.example.com/
-    main.yml
-    vault.yml       # host-specific secrets
-```
+## TLS Certificate Management
 
 ```yaml
-# Plaintext main.yml references vault values by convention
-db_password: "{{ vault_db_password }}"
-api_key:     "{{ vault_api_key }}"
+- name: Generate ECC private key
+  community.crypto.openssl_privatekey:
+    path: /etc/ssl/private/app.key
+    type: ECC
+    curve: secp384r1
+    mode: '0640'
 
-# Encrypted vault.yml holds the real values
-vault_db_password: "realpassword123"
-vault_api_key:     "abc-xyz-456"
+- name: Generate CSR
+  community.crypto.openssl_csr:
+    path: /etc/ssl/csr/app.csr
+    privatekey_path: /etc/ssl/private/app.key
+    common_name: "{{ ansible_fqdn }}"
+    subject_alt_name: "DNS:{{ ansible_fqdn }}"
+
+- name: Deploy cert from HashiCorp Vault PKI
+  community.hashi_vault.hashi_vault:
+    path: pki/issue/web-role
+    method: POST
+    data:
+      common_name: "{{ ansible_fqdn }}"
+      ttl: "720h"
+  register: vault_cert
+  no_log: true
+
+- name: Write certificate and key
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - content: "{{ vault_cert.data.data.certificate }}"
+      dest: /etc/ssl/certs/app.crt
+      mode: '0644'
+    - content: "{{ vault_cert.data.data.private_key }}"
+      dest: /etc/ssl/private/app.key
+      mode: '0640'
+  no_log: true
 ```
 
-### Common Vault Commands Quick Reference
+## SSH Transport Encryption
 
-```bash
-# Decrypt and show a vault file
-ansible-vault view group_vars/all/vault.yml --vault-id @prompt
-
-# Check if a file is encrypted
-head -1 group_vars/all/vault.yml
-# Should start with: $ANSIBLE_VAULT;1.1;AES256
-
-# Run playbook and prompt for vault password
-ansible-playbook site.yml --ask-vault-pass
-
-# Run with password file
-ansible-playbook site.yml --vault-password-file ~/.vault_pass
+```ini
+# ansible.cfg — enforce strong ciphers
+[ssh_connection]
+ssh_args = -C -o ControlMaster=auto -o ControlPersist=60s \
+           -o Ciphers=chacha20-poly1305@openssh.com,aes256-gcm@openssh.com \
+           -o MACs=hmac-sha2-256-etm@openssh.com \
+           -o KexAlgorithms=curve25519-sha256
 ```
+
+## Sensitive Task Output
+
+```yaml
+# Suppress output for tasks handling secrets
+- name: Set database password
+  ansible.builtin.command:
+    cmd: "mysql -u root -e \"ALTER USER 'app'@'%' IDENTIFIED BY '{{ db_password }}';\""
+  no_log: true
+  changed_when: true
+```
+
+## Encryption Standards Summary
+
+| Data Category | Method |
+|---|---|
+| Secrets at rest (vars files) | Ansible Vault AES-256-CBC |
+| SSH transport | Ed25519 keys + AES-256-GCM |
+| WinRM transport | HTTPS TLS 1.2+ |
+| TLS certificates | ECC P-384 or RSA 4096 |
+| AWX credential storage | AES-256 (Django Fernet) |
+| HashiCorp Vault secrets | AES-256-GCM (Transit engine) |
