@@ -1,43 +1,95 @@
-# Communities
+# SNMP Communities
 
-## Purpose
+An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base (MIB). Community strings provide no encryption.
 
-Use this page for practical SNMP Communities notes, checks, troubleshooting, commands, standards, and field references.
+!!! warning "SNMPv2c security"
+    Community strings are transmitted in plaintext and are visible in packet captures. Treat them as secrets and use SNMPv3 for any environment with compliance requirements or sensitive data. SNMPv2c is acceptable only on isolated management VLANs with strict ACLs.
 
-## Common checks
+## Community Types
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+| Community | Access | Typical name | Risk |
+|---|---|---|---|
+| **Read-only (RO)** | GET, GETNEXT, GETBULK | `public`, `ro-community` | Data exposure |
+| **Read-write (RW)** | All RO + SET | `private`, `rw-community` | Device misconfiguration |
 
-## Incident notes
+Never use default community strings (`public` / `private`) in production.
 
-Capture:
+## Configuring Communities — Linux (snmpd)
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+```bash
+# /etc/snmp/snmpd.conf
+rocommunity  monitoring-ro  10.0.0.0/8    # read-only, restricted to management network
+rocommunity6 monitoring-ro  ::1/128
 
-## Change notes
+# Remove default "public" if present
+# Comment out: rocommunity public default
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+systemctl restart snmpd
 
-## Useful commands or references
+# Test locally
+snmpwalk -v2c -c monitoring-ro localhost system
+```
 
-Add tested commands, links, or notes here.
+## Cisco IOS
 
-## Known issues
+```
+# Read-only community with ACL restriction
+ip access-list standard SNMP-MGMT
+ permit 10.10.0.0 0.0.255.255
 
-Add known issues here as they come up.
+snmp-server community <community-string> RO SNMP-MGMT
+snmp-server community <rw-string> RW SNMP-MGMT
+
+# Remove defaults
+no snmp-server community public
+no snmp-server community private
+
+# Verify
+show snmp community
+```
+
+## Arista EOS
+
+```
+snmp-server community <community-string> ro
+snmp-server community <community-string> view system-view ro
+show snmp community
+```
+
+## Brocade FOS
+
+```
+snmpconfig --set snmpv1
+# Follow prompts to set community strings and access list
+snmpconfig --show snmpv1
+```
+
+## Testing Community Access
+
+```bash
+# Test from NMS / monitoring server
+snmpget  -v2c -c <community> <device-ip> sysDescr.0
+snmpwalk -v2c -c <community> <device-ip> system
+
+# If no response — check:
+# 1. Community string correct
+# 2. NMS IP in ACL on device
+# 3. UDP 161 not blocked by firewall
+```
+
+## Community String Standards
+
+- Minimum 16 characters, mixed alphanumeric
+- Different strings for RO and RW
+- Store in CyberArk or secrets manager — never in plaintext config files
+- Rotate annually or when staff leave
+- Scope with ACLs to management network ONLY
+
+## Common Issues
+
+| Symptom | Cause | Check |
+|---|---|---|
+| `Timeout: No Response` | Wrong community or UDP 161 blocked | Test with `snmpget`; check firewall |
+| No response from new device | Community not configured | Verify `show snmp community` on device |
+| NMS sees wrong data | RW community accidentally used for RO polling | Use separate strings for read and write |
+| Community string visible in Wireshark | SNMPv2c by design | Migrate to SNMPv3 for sensitive environments |

@@ -1,43 +1,76 @@
-# Targets
+# iSCSI Targets
 
-## Purpose
+An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway, or software target — that presents LUNs to initiators.
 
-Use this page for practical iSCSI Targets notes, checks, troubleshooting, commands, standards, and field references.
+## Target Address Format
 
-## Common checks
+```
+iqn.2020-01.com.purestorage:flasharray-m70-ct0   (target IQN)
+192.168.10.10:3260                                 (portal — IP:port)
+```
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+TCP port 3260 is the standard iSCSI port.
 
-## Incident notes
+## Target Portal Groups
 
-Capture:
+A **Target Portal Group (TPG)** is a set of IP addresses (portals) through which a target is reachable. Arrays typically present multiple portals for load distribution and redundancy.
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+```bash
+# Linux — show discovered targets and their portals
+iscsiadm -m node -o show
 
-## Change notes
+# Show all portal addresses for a discovered target
+iscsiadm -m node --targetname <IQN> -o show | grep portal
+```
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Discovery Methods
 
-## Useful commands or references
+| Method | How it works | Use case |
+|---|---|---|
+| **SendTargets** | Initiator queries a portal; portal returns all targets | Most common — use for dedicated storage networks |
+| **iSNS** | Central iSNS server registers and serves target info | Large environments with many targets |
+| **Static** | Targets entered manually | Simple/lab environments |
 
-Add tested commands, links, or notes here.
+```bash
+# Linux — SendTargets discovery
+iscsiadm -m discovery -t sendtargets -p <target-ip>:3260
 
-## Known issues
+# Linux — list discovered targets
+iscsiadm -m node
 
-Add known issues here as they come up.
+# Linux — remove stale target record
+iscsiadm -m node -o delete -T <IQN> -p <ip>:3260
+```
+
+## Host / Initiator Group Mapping
+
+All storage arrays require the initiator IQN to be registered in a host or initiator group before a LUN is visible:
+
+| Array | Where to configure |
+|---|---|
+| Pure FlashArray | Storage → Hosts → Add Host (iSCSI IQN) |
+| NetApp ONTAP | `igroup create -protocol iscsi -ostype vmware` |
+| Dell PowerStore | Hosts → Create Host → iSCSI Initiators |
+| Dell Unity | Hosts → Create Host → iSCSI Initiators |
+
+## Verifying Target Connectivity
+
+```bash
+# Check target portal is reachable (TCP handshake)
+nc -zv <target-ip> 3260
+
+# Discover targets
+iscsiadm -m discovery -t sendtargets -p <target-ip>
+
+# Show active sessions to a target
+iscsiadm -m session -P 3 | grep -A10 <IQN>
+```
+
+## Common Issues
+
+| Symptom | Cause | Action |
+|---|---|---|
+| No targets returned from discovery | Wrong portal IP or TCP 3260 blocked | `nc -zv <ip> 3260` — check firewall |
+| Target visible but LUN not seen | Initiator IQN not in host group | Add IQN to storage host/initiator group |
+| Target disappears after reboot | Non-persistent login | Use `iscsiadm -m node -l -o automatic` |
+| Multiple targets seen unexpectedly | iSNS or SendTargets returning unrelated targets | Scope discovery to dedicated storage VLAN |

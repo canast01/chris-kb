@@ -1,43 +1,94 @@
-# Sessions
+# iSCSI Sessions
 
-## Purpose
+An iSCSI session is a logical connection between an initiator and a target, established after discovery. Each session can carry multiple connections (TCP streams) for performance.
 
-Use this page for practical iSCSI Sessions notes, checks, troubleshooting, commands, standards, and field references.
+## Session Lifecycle
 
-## Common checks
+```mermaid
+flowchart LR
+    A[Discovery] --> B[Login]
+    B --> C[Session Active]
+    C --> D{I/O or Idle}
+    D -->|I/O| C
+    D -->|Logout| E[Session Closed]
+    C -->|Error / timeout| F[Session Recovery]
+    F --> C
+```
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+## Viewing Sessions — Linux
 
-## Incident notes
+```bash
+# List all active sessions (brief)
+iscsiadm -m session
 
-Capture:
+# Detailed session info (connections, state, target IQN)
+iscsiadm -m session -P 3
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# Show session parameters (timeouts, queue depth)
+iscsiadm -m session -P 3 | grep -E "Target|State|Recovery|Queue"
 
-## Change notes
+# Session stats (bytes tx/rx, retries)
+iscsiadm -m session -s
+```
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+## Key Session Parameters
 
-## Useful commands or references
+| Parameter | Location | Notes |
+|---|---|---|
+| `node.session.timeo.replacement_timeout` | `/etc/iscsi/iscsid.conf` | How long to wait before failing a session (default 120s) |
+| `node.conn.timeo.login_timeout` | iscsid.conf | TCP login attempt timeout |
+| `node.session.queue_depth` | iscsid.conf | Outstanding commands per session (default 32) |
+| `node.session.nr_sessions` | iscsid.conf | Sessions per target (set >1 for throughput) |
 
-Add tested commands, links, or notes here.
+## Login / Logout
 
-## Known issues
+```bash
+# Login to all discovered targets (persistent)
+iscsiadm -m node --login
 
-Add known issues here as they come up.
+# Login to a specific target
+iscsiadm -m node -T <IQN> -p <ip>:3260 --login
+
+# Make login persistent across reboots
+iscsiadm -m node -T <IQN> -p <ip>:3260 -o update -n node.startup -v automatic
+
+# Logout from a target
+iscsiadm -m node -T <IQN> -p <ip>:3260 --logout
+
+# Logout all sessions
+iscsiadm -m node --logoutall=all
+```
+
+## Multiple Sessions Per Target
+
+For throughput, configure multiple sessions per target (each using a different NIC):
+
+```bash
+# /etc/iscsi/iscsid.conf
+node.session.nr_sessions = 2
+
+# Or per-node override
+iscsiadm -m node -T <IQN> -p <ip> -o update -n node.session.nr_sessions -v 2
+```
+
+## Session Recovery
+
+When a session encounters an error (network drop, array reboot), iSCSI attempts recovery before failing I/O to the OS. The `replacement_timeout` controls how long it waits.
+
+```bash
+# Check session state during recovery
+iscsiadm -m session -P 3 | grep -i state
+
+# Force session re-establishment
+iscsiadm -m node -T <IQN> -p <ip>:3260 --logout
+iscsiadm -m node -T <IQN> -p <ip>:3260 --login
+```
+
+## Common Issues
+
+| Symptom | Cause | Check |
+|---|---|---|
+| Session not established after login | TCP port blocked or target not responding | `nc -zv <ip> 3260` |
+| Session drops intermittently | Network instability or MTU mismatch | Check switch port errors, verify jumbo frames end-to-end |
+| `replacement_timeout` alarms | Array or network outage > 120s | Adjust timeout or investigate root cause |
+| High retries in session stats | Packet loss or congestion on storage network | Isolate iSCSI to dedicated VLAN, check QoS |

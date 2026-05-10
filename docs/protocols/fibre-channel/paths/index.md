@@ -1,43 +1,103 @@
-# Paths
+# FC Paths
 
-## Purpose
+A path is a complete end-to-end connection from an HBA port through the fabric to a storage target port. Multipath I/O (MPIO) uses multiple paths simultaneously for redundancy and load distribution.
 
-Use this page for practical Fibre Channel Paths notes, checks, troubleshooting, commands, standards, and field references.
+## Path Architecture
 
-## Common checks
+```
+Host HBA0 (WWPN-A) → Fabric A → Array Port CT-A0 → LUN
+Host HBA1 (WWPN-B) → Fabric B → Array Port CT-B0 → LUN
+```
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+Minimum for production: 2 paths per LUN across independent fabrics.
 
-## Incident notes
+## Path States
 
-Capture:
+| State | Meaning |
+|---|---|
+| **Active (I/O)** | Path is in use and carrying I/O |
+| **Active (no I/O)** | Path is healthy but standby |
+| **Dead / Failed** | Path is down — I/O not possible |
+| **Standby** | Path available but not preferred |
+| **Transitioning** | Path state changing — transient |
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+## Checking Paths
 
-## Change notes
+### Linux — DM-Multipath
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+```bash
+# Show all paths and their state
+multipath -ll
 
-## Useful commands or references
+# Show path count per device
+multipath -ll | grep -E "^[a-z]|policy|status"
 
-Add tested commands, links, or notes here.
+# Path details
+dmsetup ls --tree
 
-## Known issues
+# Reload multipath config
+multipath -r
 
-Add known issues here as they come up.
+# Blacklist check
+cat /etc/multipath.conf | grep -A5 blacklist
+```
+
+### ESXi
+
+```bash
+# List all paths for all datastores
+esxcli storage core path list
+
+# Paths for a specific device
+esxcli storage core path list -d naa.<id>
+
+# Active path count
+esxcli storage core path list | grep -c "Active (I/O)"
+
+# Path claim rules
+esxcli storage core claimrule list
+```
+
+### Windows — MPIO
+
+```powershell
+# Show MPIO paths
+Get-MSDSMSupportedHW
+Get-MPIOAvailableHW
+
+# MPIO disk paths
+Get-Disk | Get-MpioDisk | Select-Object -ExpandProperty MpioDeviceAttributes
+```
+
+## Path Policies
+
+| Policy | Behaviour | Best for |
+|---|---|---|
+| **Round Robin** | Distributes I/O across all active paths | Active-active arrays (Pure, VPLEX) |
+| **Fixed / Most Recently Used** | Sticks to preferred path; failover on failure | Active-passive arrays |
+| **Least Queue Depth** | Sends I/O to path with fewest outstanding requests | High-latency mixed workloads |
+
+## Common Path Issues
+
+| Symptom | Cause | Check |
+|---|---|---|
+| Single path only | Dual-fabric not configured / zone missing on Fabric B | Verify zoning on both fabrics |
+| All paths dead | HBA failure, fabric outage, or storage port down | Check HBA link, `portshow`, storage port state |
+| Path flapping | SFP degraded or loose cable | `porterrshow` — look for high CRC or signal loss |
+| Paths shown but I/O failing | LUN not mapped in storage host group | Verify LUN masking on array |
+| Uneven I/O across paths | Round-robin not configured, using fixed policy | Set multipath policy to round-robin |
+
+## Re-scanning for New Paths
+
+```bash
+# Linux — rescan HBAs
+echo "- - -" > /sys/class/scsi_host/host0/scan
+echo "- - -" > /sys/class/scsi_host/host1/scan
+multipath -r
+
+# ESXi — rescan all HBAs
+esxcli storage core adapter rescan --all
+
+# Windows
+Update-StorageProviderCache -DiscoveryLevel Full
+```

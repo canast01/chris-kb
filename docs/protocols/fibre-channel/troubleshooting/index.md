@@ -1,43 +1,85 @@
-# Troubleshooting
+# FC Troubleshooting
 
-## Purpose
+## Diagnostic Flow
 
-Use this page for practical Fibre Channel Troubleshooting notes, checks, troubleshooting, commands, standards, and field references.
+```mermaid
+flowchart TD
+    A[Host cannot see LUN] --> B{Physical link up?}
+    B -->|No| C[Check SFP, cable, port state]
+    B -->|Yes| D{FLOGI in nameserver?}
+    D -->|No| E[HBA not logged in — driver, speed, SFP]
+    D -->|Yes| F{Zoning correct?}
+    F -->|No| G[Fix zone — add missing WWPN, activate]
+    F -->|Yes| H{LUN mapped in host group?}
+    H -->|No| I[Add host to storage host group]
+    H -->|Yes| J{Multipath sees paths?}
+    J -->|No| K[Rescan HBAs, reload multipath]
+    J -->|Yes| L[Check OS disk/filesystem layer]
+```
 
-## Common checks
+## Quick Diagnostics
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+```bash
+# Brocade — overall fabric health
+fabricshow
+switchshow
+porterrshow
 
-## Incident notes
+# Brocade — nameserver (who is logged in)
+nsshow
+nsallshow
 
-Capture:
+# Brocade — zone config
+cfgshow
+zoneshow
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# Cisco MDS — fabric login table
+show flogi database vsan 10
+show fcns database vsan 10
+show zoneset active vsan 10
 
-## Change notes
+# Linux — multipath state
+multipath -ll
+cat /proc/scsi/scsi
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+# ESXi — path state
+esxcli storage core path list
+esxcli storage core adapter list
+```
 
-## Useful commands or references
+## Common Issues Reference
 
-Add tested commands, links, or notes here.
+| Symptom | Likely cause | First check |
+|---|---|---|
+| Host sees no LUNs | FLOGI failed or zone missing | `nsshow` — is WWPN registered? |
+| LUNs disappeared suddenly | Link down or SFP fault | `portshow` / switch LED / `porterrshow` |
+| Intermittent path drops | Marginal SFP or cable | `porterrshow` — CRC errors, loss-of-sync |
+| Slow I/O on FC | Port congestion (BB_Credit exhaustion) | `portbuffershow` on Brocade |
+| Only one of two paths active | Zone missing on second fabric | Check both fabric A and B zoning independently |
+| New server cannot see storage | Zone not created / activated | Create zone, add to cfgsave, activate |
+| Zone exists but still no access | WWPN typo in zone | `zoneshow` — compare WWPNs character by character |
+| HBA not seen after reboot | Driver not loading or HBA disabled | `dmesg | grep -i qla` or `lpfc` |
 
-## Known issues
+## Error Counter Interpretation (Brocade)
 
-Add known issues here as they come up.
+```bash
+porterrshow
+```
+
+| Counter | Acceptable | Investigate if |
+|---|---|---|
+| CRC | 0 | > 0 in last hour |
+| Loss of Signal | 0 | Any increment |
+| Loss of Sync | 0 | > 5 in last hour |
+| Encoding Errors | 0 | Any increment |
+| Too Many RDYs | 0 | Any — BB_Credit issue |
+
+## Log Locations
+
+| Platform | Log |
+|---|---|
+| Brocade | `raslog` (CLI) / Brocade SANnav |
+| Cisco MDS | `show logging` / DCNM |
+| Linux HBA (QLogic) | `/var/log/messages` — `qla2xxx` |
+| Linux HBA (Emulex) | `/var/log/messages` — `lpfc` |
+| ESXi | `esxcli storage core path list` / `vmkwarning.log` |

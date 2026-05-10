@@ -1,43 +1,97 @@
-# Firewalls
+# NTP Firewall Rules
 
-## Purpose
+NTP uses **UDP port 123** for all client-server and peer communication. If this port is blocked between a host and its NTP server, the clock will not synchronise.
 
-Use this page for practical NTP Firewalls notes, checks, troubleshooting, commands, standards, and field references.
+## Required Firewall Rules
 
-## Common checks
+| Direction | Source | Destination | Port | Protocol |
+|---|---|---|---|---|
+| Outbound | All servers | NTP server(s) | 123 | UDP |
+| Inbound (on NTP server) | All clients | NTP server | 123 | UDP |
+| Inbound response | NTP server | Client (ephemeral port) | 123 | UDP |
 
-- Confirm current state
-- Review recent changes
-- Check logs, alerts, or history
-- Confirm dependencies
-- Capture findings
-- Document next action
+NTP responses use UDP source port 123. Stateful firewalls handle the return traffic automatically. Stateless ACLs need both directions explicit.
 
-## Incident notes
+## Linux — firewalld
 
-Capture:
+```bash
+# Allow NTP client (outbound to NTP servers)
+firewall-cmd --permanent --add-service=ntp
+firewall-cmd --reload
 
-- Symptom
-- Start time
-- Impact
-- System or service
-- What changed
-- What was checked
-- Action taken
-- Follow-up owner
+# If the host IS an NTP server — allow clients to reach it
+firewall-cmd --permanent --add-service=ntp
+firewall-cmd --reload
 
-## Change notes
+# Restrict NTP access to specific source network
+firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.0.0.0/8" service name="ntp" accept'
+firewall-cmd --reload
 
-- Confirm approval
-- Confirm scope
-- Confirm rollback plan
-- Capture current state
-- Validate after the change
+# Verify
+firewall-cmd --list-services
+firewall-cmd --list-rich-rules
+```
 
-## Useful commands or references
+## Linux — iptables
 
-Add tested commands, links, or notes here.
+```bash
+# Allow outbound NTP
+iptables -A OUTPUT -p udp --dport 123 -j ACCEPT
+iptables -A INPUT  -p udp --sport 123 -j ACCEPT
 
-## Known issues
+# Save
+iptables-save > /etc/iptables/rules.v4
+```
 
-Add known issues here as they come up.
+## Windows Firewall
+
+```powershell
+# Allow outbound NTP (client)
+New-NetFirewallRule -DisplayName "NTP Outbound" -Direction Outbound `
+  -Protocol UDP -RemotePort 123 -Action Allow
+
+# Allow inbound NTP (if this server serves time to others)
+New-NetFirewallRule -DisplayName "NTP Inbound" -Direction Inbound `
+  -Protocol UDP -LocalPort 123 -Action Allow
+```
+
+## Cisco ASA / Firepower
+
+```
+# Outbound NTP from inside
+access-list INSIDE_OUT extended permit udp any host <ntp-server> eq 123
+
+# Inbound response (stateful — handled automatically by connection tracking)
+# If stateless — also permit:
+access-list OUTSIDE_IN extended permit udp host <ntp-server> eq 123 any
+```
+
+## Testing Connectivity
+
+```bash
+# Test UDP 123 reachability (requires ntpdate or nmap)
+ntpdate -q <ntp-server>       # query without adjusting clock
+
+# Using nmap
+nmap -sU -p 123 <ntp-server>
+
+# Direct NTP packet probe
+chronyc -h <ntp-server> tracking 2>/dev/null && echo "Reachable"
+
+# Check current sources — ? means blocked
+chronyc sources | grep "?"
+
+# Watch source reach register — should reach 377 if packets are getting through
+watch -n 10 'chronyc sources'
+```
+
+## NTP Server Access Control (chrony)
+
+If a host acts as an NTP server for other hosts, restrict which clients can query it:
+
+```bash
+# /etc/chrony.conf — on the NTP server
+allow 10.0.0.0/8           # allow internal network
+allow 192.168.0.0/16
+deny all                   # deny everyone else
+```
