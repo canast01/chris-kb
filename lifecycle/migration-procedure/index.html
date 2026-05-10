@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#migration-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Migration Types
       
     </span>
   </a>
@@ -796,10 +796,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#migration-steps" class="md-nav__link">
+  <a href="#phase-1-planning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Migration Steps
+        Phase 1 — Planning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Planning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dependency-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-pre-migration-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Pre-Migration Preparation
       
     </span>
   </a>
@@ -807,10 +835,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-commands" class="md-nav__link">
+  <a href="#phase-3-data-synchronisation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation Commands
+        Phase 3 — Data Synchronisation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Data Synchronisation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vmware-vmotion-svmotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware vMotion / svMotion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsync-based-file-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rsync-Based File Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-array-cutover-netapp-snapmirror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Array Cutover (NetApp SnapMirror)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-cutover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Cutover
       
     </span>
   </a>
@@ -818,10 +896,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#completion-criteria" class="md-nav__link">
+  <a href="#phase-5-post-migration-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Completion Criteria
+        Phase 5 — Post-Migration Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Checklist
       
     </span>
   </a>
@@ -849,27 +949,288 @@
 
 
 <h1 id="system-migration-procedure">System Migration Procedure<a class="headerlink" href="#system-migration-procedure" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This procedure defines steps to migrate systems or workloads between platforms, sites, or environments.</p>
-<h2 id="migration-steps">Migration Steps<a class="headerlink" href="#migration-steps" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm source system health</li>
-<li>Prepare destination environment</li>
-<li>Perform data synchronization</li>
-<li>Execute cutover</li>
-<li>Validate services</li>
-</ol>
-<h2 id="validation-commands">Validation Commands<a class="headerlink" href="#validation-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>rsync<span class="w"> </span>-av<span class="w"> </span><span class="nb">source</span><span class="w"> </span>destination
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ping<span class="w"> </span>destination-host
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>systemctl<span class="w"> </span>status
+<p>Structured procedure for migrating workloads between platforms, hypervisors, data centres, or cloud environments — covering planning through post-migration validation and cleanup.</p>
+<h2 id="migration-types">Migration Types<a class="headerlink" href="#migration-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Examples</th>
+<th>Downtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cold migration</td>
+<td>VM moved while powered off</td>
+<td>Yes — minutes to hours</td>
+</tr>
+<tr>
+<td>Live migration (vMotion)</td>
+<td>VM moved between ESXi hosts</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Storage migration (svMotion)</td>
+<td>VM disks moved between datastores</td>
+<td>None</td>
+</tr>
+<tr>
+<td>P2V</td>
+<td>Physical server → VM</td>
+<td>Hours — OS conversion required</td>
+</tr>
+<tr>
+<td>V2V</td>
+<td>VMware → Hyper-V or KVM</td>
+<td>Hours — driver conversion</td>
+</tr>
+<tr>
+<td>Data migration</td>
+<td>Storage array replication cutover</td>
+<td>Minimal — flash cutover</td>
+</tr>
+<tr>
+<td>Lift and shift</td>
+<td>On-premises → cloud</td>
+<td>Hours — varies by size</td>
+</tr>
+</tbody>
+</table>
+<h2 id="phase-1-planning">Phase 1 — Planning<a class="headerlink" href="#phase-1-planning" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Migration Plan — &lt;HOSTNAME&gt; / &lt;WORKLOAD&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Source:           &lt;platform, host, location&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Destination:      &lt;platform, host, location&gt;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Workload:         &lt;application and purpose&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Owner:            &lt;team / contact&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Migration type:   &lt;cold / live / data&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Max downtime:     &lt;N minutes&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Migration window: &lt;date, time, duration&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Rollback window:  &lt;how long can we roll back&gt;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Dependencies:     &lt;external services / integrations&gt;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Data volume:      &lt;GB / TB&gt;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 </code></pre></div>
-<h2 id="completion-criteria">Completion Criteria<a class="headerlink" href="#completion-criteria" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Data synchronized</li>
-<li>Services running</li>
-<li>Users confirmed functionality</li>
-</ul>
+<h3 id="dependency-mapping">Dependency Mapping<a class="headerlink" href="#dependency-mapping" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ss<span class="w"> </span>-tnp<span class="w">                          </span><span class="c1"># outbound connections from source</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ss<span class="w"> </span>-tnlp<span class="w">                         </span><span class="c1"># listening ports (inbound dependencies)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;hostname\|host\|server\|endpoint\|url&quot;</span><span class="w"> </span>/opt/app/config/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;.pyc&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cat<span class="w"> </span>/etc/hosts
+</code></pre></div>
+<h2 id="phase-2-pre-migration-preparation">Phase 2 — Pre-Migration Preparation<a class="headerlink" href="#phase-2-pre-migration-preparation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Take backup immediately before migration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Start-VBRJob<span class="w"> </span>-Job<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. Take VM snapshot</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;pre-migration-</span><span class="k">$(</span>Get-Date<span class="w"> </span>-Format<span class="w"> </span>yyyyMMdd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-Quiesce<span class="w"> </span>-Memory:<span class="nv">$false</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># 3. Document current state</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>uname<span class="w"> </span>-a<span class="p">;</span><span class="w"> </span>hostname<span class="w"> </span>-f<span class="p">;</span><span class="w"> </span>ip<span class="w"> </span>addr<span class="p">;</span><span class="w"> </span>ip<span class="w"> </span>route
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>df<span class="w"> </span>-h<span class="p">;</span><span class="w"> </span>systemctl<span class="w"> </span>list-units<span class="w"> </span>--state<span class="o">=</span>running<span class="w"> </span>--type<span class="o">=</span>service
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>rpm<span class="w"> </span>-qa<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-migration-packages.txt
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># 4. Lower DNS TTL to 60s (24h before migration)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Allows fast DNS cutover with minimal propagation delay</span>
+</code></pre></div>
+<h2 id="phase-3-data-synchronisation">Phase 3 — Data Synchronisation<a class="headerlink" href="#phase-3-data-synchronisation" title="Permanent link">&para;</a></h2>
+<h3 id="vmware-vmotion-svmotion">VMware vMotion / svMotion<a class="headerlink" href="#vmware-vmotion-svmotion" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Live migration — no downtime</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;HOSTNAME&quot;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi02.example.com&quot;</span><span class="p">)</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Storage migration</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;HOSTNAME&quot;</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;SSD-DataStore-01&quot;</span><span class="p">)</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Combined move</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;HOSTNAME&quot;</span> <span class="p">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi02.example.com&quot;</span><span class="p">)</span> <span class="p">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;SSD-DataStore-01&quot;</span><span class="p">)</span> <span class="p">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># Monitor progress</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;RelocateVM_Task&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PercentComplete</span><span class="p">,</span> <span class="n">State</span>
+</code></pre></div>
+<h3 id="rsync-based-file-migration">rsync-Based File Migration<a class="headerlink" href="#rsync-based-file-migration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Initial sync (run multiple times to reduce delta)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>--progress<span class="w"> </span>--delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="s2">&quot;ssh -i ~/.ssh/migration_key&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>/data/source/<span class="w"> </span>migrationuser@&lt;destination&gt;:/data/destination/
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Verify counts match</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>find<span class="w"> </span>/data/source/<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ssh<span class="w"> </span>&lt;destination&gt;<span class="w"> </span><span class="s2">&quot;find /data/destination/ -type f | wc -l&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/source/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ssh<span class="w"> </span>&lt;destination&gt;<span class="w"> </span><span class="s2">&quot;du -sh /data/destination/&quot;</span>
+</code></pre></div>
+<h3 id="storage-array-cutover-netapp-snapmirror">Storage Array Cutover (NetApp SnapMirror)<a class="headerlink" href="#storage-array-cutover-netapp-snapmirror" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Quiesce and break SnapMirror relationship for cutover</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol-dest&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>&lt;svm&gt;:&lt;vol-dest&gt;
+</code></pre></div>
+<h2 id="phase-4-cutover">Phase 4 — Cutover<a class="headerlink" href="#phase-4-cutover" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant App as Application Team
+    participant Ops as Migration Lead
+    participant Source as Source System
+    participant Dest as Destination
+    participant DNS as DNS
+
+    App-&gt;&gt;Ops: Confirm application quiesced
+    Ops-&gt;&gt;Source: Final rsync / snapshot
+    Ops-&gt;&gt;Dest: Start services on destination
+    Ops-&gt;&gt;Dest: Validate all checks pass
+    Ops-&gt;&gt;DNS: Update A record → new IP
+    Ops-&gt;&gt;App: Confirm cutover complete
+    App-&gt;&gt;Ops: Application confirmed OK
+    Ops-&gt;&gt;Source: Power off source</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Quiesce application</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>myapp
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. Final sync</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>--checksum<span class="w"> </span>--delete<span class="w"> </span>/data/source/<span class="w"> </span>user@destination:/data/
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 3. Start services on destination</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ssh<span class="w"> </span>destination<span class="w"> </span><span class="s2">&quot;systemctl start myapp&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ssh<span class="w"> </span>destination<span class="w"> </span><span class="s2">&quot;curl -sk https://localhost/health&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># 4. Update DNS</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>nsupdate<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s">server dns.example.com</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s">update delete &lt;hostname&gt;.example.com A</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s">update add &lt;hostname&gt;.example.com 60 A &lt;new-ip&gt;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="s">send</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="s">EOF</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Verify propagation</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>dig<span class="w"> </span>+short<span class="w"> </span>&lt;hostname&gt;.example.com<span class="w"> </span>@dns.example.com
+</code></pre></div>
+<h2 id="phase-5-post-migration-validation">Phase 5 — Post-Migration Validation<a class="headerlink" href="#phase-5-post-migration-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Platform health on destination</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>uptime<span class="p">;</span><span class="w"> </span>systemctl<span class="w"> </span>--failed
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Application health</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;hostname&gt;/health
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{time_total}&quot;</span><span class="w"> </span>https://&lt;hostname&gt;/
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Confirm monitoring shows new host</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=up{instance=&#39;&lt;new-ip&gt;:9100&#39;}&quot;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Add to backup job at destination and run first backup</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>Start-VBRJob<span class="w"> </span>-Job<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
+</code></pre></div>
+<h2 id="phase-6-cleanup">Phase 6 — Cleanup<a class="headerlink" href="#phase-6-cleanup" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Remove pre-migration snapshot (after 48h stability)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;pre-migration-*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Remove-Snapshot<span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Remove old DNS entry</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>nsupdate<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s">server dns.example.com</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s">update delete &lt;old-hostname&gt;.example.com A</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s">send</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s">EOF</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Decommission source (follow decommission procedure)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Update CMDB — new host, IP, location, platform</span>
+</code></pre></div>
+<h2 id="migration-checklist">Migration Checklist<a class="headerlink" href="#migration-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Step</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Planning</td>
+<td>Requirements documented</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Planning</td>
+<td>Dependencies mapped</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Planning</td>
+<td>Change approved</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Pre-migration</td>
+<td>Backup taken</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Pre-migration</td>
+<td>Snapshot taken</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Pre-migration</td>
+<td>Destination ready</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Pre-migration</td>
+<td>DNS TTL reduced</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Cutover</td>
+<td>Application quiesced</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Cutover</td>
+<td>Final sync complete</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Cutover</td>
+<td>DNS updated</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Application health confirmed</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Monitoring shows new host</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Dependent systems confirmed OK</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Cleanup</td>
+<td>Snapshot removed</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Cleanup</td>
+<td>Source decommissioned</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Cleanup</td>
+<td>CMDB updated</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Cleanup</td>
+<td>Change ticket closed</td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#pre-upgrade-gate-criteria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Pre-Upgrade Gate Criteria
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pre-upgrade-checks" class="md-nav__link">
+  <a href="#1-change-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-Upgrade Checks
+        1. Change Management
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-commands" class="md-nav__link">
+  <a href="#2-backup-verification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation Commands
+        2. Backup Verification
       
     </span>
   </a>
@@ -818,10 +818,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#go-no-go-criteria" class="md-nav__link">
+  <a href="#3-system-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Go / No-Go Criteria
+        3. System Health Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-network-and-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Network and Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-vendor-compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Vendor Compatibility Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-pre-upgrade-snapshot-vms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Pre-Upgrade Snapshot (VMs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-rollback-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Rollback Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-no-go-sign-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go / No-Go Sign-Off
       
     </span>
   </a>
@@ -849,29 +904,287 @@
 
 
 <h1 id="upgrade-readiness-checklist">Upgrade Readiness Checklist<a class="headerlink" href="#upgrade-readiness-checklist" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This checklist validates that infrastructure is ready for a safe upgrade before changes begin.</p>
-<h2 id="pre-upgrade-checks">Pre-Upgrade Checks<a class="headerlink" href="#pre-upgrade-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm maintenance window approval</li>
-<li>Verify backups completed successfully</li>
-<li>Confirm rollback plan documented</li>
-<li>Validate monitoring coverage</li>
-<li>Confirm vendor compatibility matrix</li>
-</ul>
-<h2 id="validation-commands">Validation Commands<a class="headerlink" href="#validation-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>df<span class="w"> </span>-h
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uptime
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ping<span class="w"> </span>gateway
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>systemctl<span class="w"> </span>--failed
+<p>Validates that infrastructure is in a safe state before any upgrade or patching activity begins. Complete all checks and obtain explicit go/no-go sign-off before proceeding.</p>
+<h2 id="pre-upgrade-gate-criteria">Pre-Upgrade Gate Criteria<a class="headerlink" href="#pre-upgrade-gate-criteria" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    A[Change Approved\nin ITSM] --&gt; B[Backups\nVerified]
+    B --&gt; C[Rollback Plan\nDocumented]
+    C --&gt; D[Health Checks\nPassing]
+    D --&gt; E[Maintenance Window\nCommunicated]
+    E --&gt; F{Go / No-Go\nDecision}
+    F --&gt;|Go| G[Proceed with Upgrade]
+    F --&gt;|No-Go| H[Defer — remediate\nblocker first]</code></pre>
+<h2 id="1-change-management">1. Change Management<a class="headerlink" href="#1-change-management" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Criteria</th>
+<th>Verified By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Change ticket approved</td>
+<td>CAB approval in ITSM</td>
+<td>Change Manager</td>
+</tr>
+<tr>
+<td>Maintenance window scheduled</td>
+<td>Communicated ≥48h in advance</td>
+<td>Owner</td>
+</tr>
+<tr>
+<td>Stakeholders notified</td>
+<td>Email / ticket sent</td>
+<td>Owner</td>
+</tr>
+<tr>
+<td>Vendor support available</td>
+<td>TAC case open if high-risk</td>
+<td>Owner</td>
+</tr>
+<tr>
+<td>Rollback plan documented</td>
+<td>Step-by-step with time estimate</td>
+<td>Engineer</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-backup-verification">2. Backup Verification<a class="headerlink" href="#2-backup-verification" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">No upgrade without verified backup</p>
+<p>A backup that has not been tested is not a backup. Verify restore capability, not just job completion.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Veeam — verify last backup job succeeded</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Get-VBRSession<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.JobName<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*HOSTNAME*&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># NetBackup</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>bperror<span class="w"> </span>-backstat<span class="w"> </span>-l<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;24 hours ago&#39;</span><span class="w"> </span>+<span class="s1">&#39;%m/%d/%Y %H:%M:%S&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Confirm VM snapshot exists pre-upgrade</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot
 </code></pre></div>
-<h2 id="go-no-go-criteria">Go / No-Go Criteria<a class="headerlink" href="#go-no-go-criteria" title="Permanent link">&para;</a></h2>
-<ul>
-<li>All health checks passing</li>
-<li>Backup verified</li>
-<li>Support contacts available</li>
-<li>Change approved</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Backup Type</th>
+<th>Required Age</th>
+<th>Verified</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full VM backup / BMR</td>
+<td>&lt; 24 hours</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Application-consistent backup</td>
+<td>&lt; 24 hours</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Database backup</td>
+<td>&lt; 4 hours (if DB host)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Config export (network device)</td>
+<td>&lt; 7 days</td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-system-health-checks">3. System Health Checks<a class="headerlink" href="#3-system-health-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Linux</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uptime<span class="w">                              </span><span class="c1"># load &lt; 2x CPU count</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>df<span class="w"> </span>-h<span class="w">                               </span><span class="c1"># disk usage &lt; 80%</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>free<span class="w"> </span>-h<span class="w">                             </span><span class="c1"># available memory &gt; 20%</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span>--failed<span class="w">                  </span><span class="c1"># no failed units</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>journalctl<span class="w"> </span>-p<span class="w"> </span>err<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager<span class="w"> </span><span class="c1"># no critical errors</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check for pending reboots (RHEL/Rocky)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>needs-restarting<span class="w"> </span>-r<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot pending&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot pending&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Windows</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Get-EventLog<span class="w"> </span>-LogName<span class="w"> </span>System<span class="w"> </span>-EntryType<span class="w"> </span>Error<span class="w"> </span>-Newest<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="o">(</span>Get-PendingReboot<span class="o">)</span>.IsRebootPending
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># VMware ESXi</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>esxcli<span class="w"> </span>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>get
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Active (I/O)&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Health Check</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU load</td>
+<td>&lt; 80% sustained</td>
+</tr>
+<tr>
+<td>Memory free</td>
+<td>&gt; 20%</td>
+</tr>
+<tr>
+<td>Disk free</td>
+<td>&gt; 20% on all volumes</td>
+</tr>
+<tr>
+<td>Failed services</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Error log (last 1h)</td>
+<td>No critical / hardware errors</td>
+</tr>
+<tr>
+<td>HW alarms</td>
+<td>No active hardware alerts</td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>Within SLA</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-network-and-connectivity">4. Network and Connectivity<a class="headerlink" href="#4-network-and-connectivity" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;gateway&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;dns-server&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>&lt;ntp-server&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># NTP sync (drift &lt; 1s)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># DNS resolution</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>nslookup<span class="w"> </span>&lt;hostname&gt;.example.com
+</code></pre></div>
+<h2 id="5-vendor-compatibility-matrix">5. Vendor Compatibility Matrix<a class="headerlink" href="#5-vendor-compatibility-matrix" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># VMware HCL — check driver/firmware compatibility before ESXi upgrade</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;bnx|igb|i40e|lpfc|nfnic|enic&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>firmware<span class="w"> </span>get
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Current Version</th>
+<th>Compatible With Upgrade</th>
+<th>Checked</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hypervisor version</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Driver versions</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Firmware versions</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Application compatibility</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Storage array interop</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-pre-upgrade-snapshot-vms">6. Pre-Upgrade Snapshot (VMs)<a class="headerlink" href="#6-pre-upgrade-snapshot-vms" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Take quiesced snapshot immediately before change</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-CHG-XXXX-</span><span class="k">$(</span>Get-Date<span class="w"> </span>-Format<span class="w"> </span>yyyyMMdd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-Description<span class="w"> </span><span class="s2">&quot;Pre-upgrade snapshot — CHG-XXXX&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-Quiesce<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-Memory:<span class="nv">$false</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Verify</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Created,<span class="w"> </span>SizeMB
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Snapshot retention</p>
+<p>Remove pre-upgrade snapshots within 48 hours of successful completion. Stale snapshots degrade VM performance and consume datastore space.</p>
+</div>
+<h2 id="7-rollback-plan">7. Rollback Plan<a class="headerlink" href="#7-rollback-plan" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Rollback Plan — CHG-XXXX
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>System:           &lt;hostname&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Upgrade:          &lt;from version&gt; → &lt;to version&gt;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Rollback method:  [ ] Snapshot  [ ] Backup restore  [ ] Config revert
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Snapshot name:    pre-upgrade-CHG-XXXX-YYYY-MM-DD
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Estimated time:   &lt;X&gt; minutes
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Rollback trigger: Service fails to start / error rate &gt; 5% / app team reports failures
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Decision authority: &lt;name / role&gt;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</code></pre></div>
+<h2 id="go-no-go-sign-off">Go / No-Go Sign-Off<a class="headerlink" href="#go-no-go-sign-off" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Status</th>
+<th>Signed Off By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Change approved</td>
+<td>☐ Go / ☐ No-Go</td>
+<td></td>
+</tr>
+<tr>
+<td>Backup verified</td>
+<td>☐ Go / ☐ No-Go</td>
+<td></td>
+</tr>
+<tr>
+<td>Rollback plan documented</td>
+<td>☐ Go / ☐ No-Go</td>
+<td></td>
+</tr>
+<tr>
+<td>System health passing</td>
+<td>☐ Go / ☐ No-Go</td>
+<td></td>
+</tr>
+<tr>
+<td>Vendor compatibility confirmed</td>
+<td>☐ Go / ☐ No-Go</td>
+<td></td>
+</tr>
+<tr>
+<td>Maintenance window active</td>
+<td>☐ Go / ☐ No-Go</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Final Decision</strong></td>
+<td>☐ <strong>GO</strong> / ☐ <strong>NO-GO</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 
 
 
