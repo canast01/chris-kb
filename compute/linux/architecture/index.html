@@ -21,7 +21,7 @@
     
     
       
-        <title>Linux — Architecture - Chris KB</title>
+        <title>Linux — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Linux — Architecture · Chris KB">
+  <meta property="og:title" content="Linux — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Linux — Architecture · Chris KB">
+  <meta name="twitter:title" content="Linux — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#linux-architecture" class="md-skip">
+        <a href="#linux-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Linux — Architecture
+              Linux — Overview
             
           </span>
         </div>
@@ -778,6 +778,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#server-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-role-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server Role Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,9 +837,87 @@
 
 
 
-<h1 id="linux-architecture">Linux — Architecture<a class="headerlink" href="#linux-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="linux-overview">Linux — Overview<a class="headerlink" href="#linux-overview" title="Permanent link">&para;</a></h1>
+<p>Architecture overview, design principles, and topology.</p>
+<h2 id="server-roles">Server Roles<a class="headerlink" href="#server-roles" title="Permanent link">&para;</a></h2>
+<p>Linux servers fulfill multiple infrastructure roles:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Typical OS</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application server</td>
+<td>RHEL 8/9, Ubuntu 22.04</td>
+<td>4–16</td>
+<td>8–64 GB</td>
+<td>Primary workload host</td>
+</tr>
+<tr>
+<td>Automation node (Ansible)</td>
+<td>RHEL 9</td>
+<td>4</td>
+<td>8 GB</td>
+<td>Ansible control plane; no inbound access</td>
+</tr>
+<tr>
+<td>Monitoring server</td>
+<td>Ubuntu 22.04</td>
+<td>8</td>
+<td>16 GB</td>
+<td>Prometheus, Grafana, exporters</td>
+</tr>
+<tr>
+<td>NFS/SMB file host</td>
+<td>RHEL 9</td>
+<td>4</td>
+<td>16 GB</td>
+<td>Shared storage; LVM on SAN-backed LUNs</td>
+</tr>
+<tr>
+<td>Container host</td>
+<td>RHEL 9</td>
+<td>8–32</td>
+<td>16–128 GB</td>
+<td>Podman/Docker workloads</td>
+</tr>
+<tr>
+<td>Backup proxy (Linux)</td>
+<td>RHEL 9</td>
+<td>8</td>
+<td>16 GB</td>
+<td>Veeam proxy or NetBackup media server</td>
+</tr>
+</tbody>
+</table>
+<h2 id="server-role-topology">Server Role Topology<a class="headerlink" href="#server-role-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  KERNEL["Linux Kernel\nRHEL / Ubuntu / SLES"]
+  KERNEL --&gt; STORAGE["Storage Stack\nlvm2 · dm-multipath · xfs/ext4"]
+  KERNEL --&gt; NET["Network Stack\nnm · bonding · firewalld"]
+  KERNEL --&gt; SVCS["systemd Services\nsshd · rsyslog · cron"]
+  KERNEL --&gt; SEC["Security\nSELinux / AppArmor · auditd · PAM"]
+  STORAGE --&gt; DISK[("Block Devices\n/dev/sd* / /dev/mapper/*")]
+  NET --&gt; NIC["Physical NICs\neth0 / bond0 / enp*"]
+  ADMIN(["Sysadmin"]) --&gt;|"SSH / console"| KERNEL
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class KERNEL ctrl
+  class STORAGE,SVCS,SEC net
+  class DISK store
+  class NIC,NET net
+  class ADMIN host</code></pre>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
 <a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
 <a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>

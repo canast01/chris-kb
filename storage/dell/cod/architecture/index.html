@@ -21,7 +21,7 @@
     
     
       
-        <title>COD — Architecture - Chris KB</title>
+        <title>COD — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="COD — Architecture · Chris KB">
+  <meta property="og:title" content="COD — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="COD — Architecture · Chris KB">
+  <meta name="twitter:title" content="COD — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cod-architecture" class="md-skip">
+        <a href="#cod-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              COD — Architecture
+              COD — Overview
             
           </span>
         </div>
@@ -778,6 +778,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-on-demand-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity on Demand Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-cod-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How COD Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ha-and-redundancy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HA and Redundancy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#activation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activation Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dr-site-cod-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Site COD Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,9 +881,66 @@
 
 
 
-<h1 id="cod-architecture">COD — Architecture<a class="headerlink" href="#cod-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="cod-overview">COD — Overview<a class="headerlink" href="#cod-overview" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../../">COD</a> reference.</p>
+</blockquote>
+<hr />
+<p>Capacity on Demand (COD) is a software-defined capacity licensing model for Dell PowerMax and VMAX arrays. Physical drives are physically installed in the array chassis at the factory or during a hardware add, but the capacity is logically locked at the array controller level until a COD license is applied. No truck roll or hardware change is required to activate reserved capacity — the unlock is entirely software-driven through SYMCLI or Unisphere.</p>
+<h2 id="capacity-on-demand-model">Capacity on Demand Model<a class="headerlink" href="#capacity-on-demand-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  ARRAY["Dell Array\nPowerStore / PowerMax\n(on-premises)"] &lt;--&gt;|"Dell APEX portal\ncapacity-on-demand"| APEX["Dell APEX\nCloud Console"]
+  ADMIN(["Storage Admin"]) --&gt;|"portal"| APEX
+  APEX --&gt; BILL["Usage-based Billing\n&amp; Reporting"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ARRAY ctrl
+  class APEX,BILL cloud
+  class ADMIN host</code></pre>
+<h2 id="how-cod-works">How COD Works<a class="headerlink" href="#how-cod-works" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>PowerMax Array Chassis
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Active Capacity (licensed)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   └── Available to Storage Groups and Thin Pools
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── COD Reserved Capacity (installed but locked)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    └── Appears in hardware inventory but unavailable for use
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>         └── On COD license activation → instantly joins active capacity pool
+</code></pre></div>
+<p>The drives are physically present and spin up normally. The array firmware prevents them from being allocated to any storage pool until the COD entitlement is applied. Activation is instantaneous — there is no data movement or rebuild required to bring COD capacity online.</p>
+<h2 id="capacity-model">Capacity Model<a class="headerlink" href="#capacity-model" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Total Installed Capacity (physical drives in chassis)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── Committed Active Capacity (baseline purchased)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    │       └── Available immediately — allocated to thin pools
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    └── COD Reserved Capacity (pre-installed, license locked)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            └── Unlocked in increments by applying COD license keys
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                Each COD increment typically: 10–50 TiB raw depending on drive type
+</code></pre></div>
+<p>Capacity pools grow instantly on license activation. No array reboot or reconfiguration is needed. After activation, the newly available drives must be bound into a thin pool or storage group to be usable by hosts.</p>
+<h2 id="ha-and-redundancy">HA and Redundancy<a class="headerlink" href="#ha-and-redundancy" title="Permanent link">&para;</a></h2>
+<p>COD does not change the HA characteristics of the PowerMax array. The underlying array's redundancy (RAID, director mirroring, engine failover) applies equally to COD capacity once activated. COD capacity is subject to the same dual-director, dual-engine architecture as baseline capacity.</p>
+<h2 id="activation-flow">Activation Flow<a class="headerlink" href="#activation-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Identify capacity need → check symcfg / Unisphere for current pool utilisation
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Purchase COD increment → Dell account team issues license key tied to array SID
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Download license file from Dell License Portal
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>4. Apply license via SYMCLI or Unisphere
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>5. Array discovers new capacity → new devices become available
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>6. Bind new devices to appropriate thin pool
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>7. Verify via symcfg that pool capacity has increased
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>8. Raise change ticket — record activation in CMDB
+</code></pre></div>
+<h2 id="dr-site-cod-architecture">DR Site COD Architecture<a class="headerlink" href="#dr-site-cod-architecture" title="Permanent link">&para;</a></h2>
+<p>A common use pattern is to pre-install COD capacity at the DR site equal to the production site's expected peak. Under normal operations only the baseline DR capacity is active (lower cost). In a failover or declared DR test, COD is activated at the DR site to match full production capacity. This eliminates the risk of insufficient DR capacity during an actual event.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Production Site          DR Site
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>────────────────         ──────────────────────────────
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Active: 500 TiB    ──→   Active baseline: 200 TiB
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                          COD reserved:   300 TiB  (activated on DR failover)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                          Total after activation: 500 TiB
+</code></pre></div>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
 <a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
 <a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>

@@ -21,7 +21,7 @@
     
     
       
-        <title>NetApp Keystone — Architecture - Chris KB</title>
+        <title>Keystone — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="NetApp Keystone — Architecture · Chris KB">
+  <meta property="og:title" content="Keystone — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="NetApp Keystone — Architecture · Chris KB">
+  <meta name="twitter:title" content="Keystone — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#netapp-keystone-architecture" class="md-skip">
+        <a href="#keystone-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              NetApp Keystone — Architecture
+              Keystone — Overview
             
           </span>
         </div>
@@ -778,6 +778,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#staas-consumption-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        STaaS Consumption Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,9 +870,71 @@
 
 
 
-<h1 id="netapp-keystone-architecture">NetApp Keystone — Architecture<a class="headerlink" href="#netapp-keystone-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="keystone-overview">Keystone — Overview<a class="headerlink" href="#keystone-overview" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">Keystone Architecture</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>NetApp Keystone is a Storage as a Service (STaaS) subscription that delivers on-premises NetApp hardware — AFF/FAS for block and file, StorageGRID for object — on an OpEx consumption model. NetApp installs, owns, and manages the hardware either at the customer's data center or in a colocation facility. The customer commits to a minimum capacity per service tier and pays for committed capacity plus any burst usage above that commitment. A Keystone Collector agent deployed on-premises reports consumption telemetry to NetApp for billing.</p>
+<h2 id="staas-consumption-model">STaaS Consumption Model<a class="headerlink" href="#staas-consumption-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  ONTAP["NetApp ONTAP\n(on-premises / colocation)"] --&gt;|"telemetry"| KS["NetApp Keystone\n(STaaS portal)"]
+  KS --&gt; COMMIT["Committed Capacity Tier"]
+  KS --&gt; BURST["Burst Capacity\n(on-demand)"]
+  KS --&gt; BILL["Monthly Billing"]
+  ADMIN(["Customer Admin"]) --&gt;|"portal"| KS
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ONTAP ctrl
+  class KS,COMMIT,BURST,BILL cloud
+  class ADMIN host</code></pre>
+<h2 id="service-tiers">Service Tiers<a class="headerlink" href="#service-tiers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Protocol</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extreme</td>
+<td>NVMe-AF (all-flash NVMe)</td>
+<td>Latency-sensitive databases, high-IOPS transactional workloads</td>
+</tr>
+<tr>
+<td>Premium</td>
+<td>AFF (all-flash SAS/NVMe)</td>
+<td>Mixed workloads, virtualization, general-purpose high-performance</td>
+</tr>
+<tr>
+<td>Standard</td>
+<td>FAS (hybrid or capacity flash)</td>
+<td>File storage, backup targets, less latency-sensitive workloads</td>
+</tr>
+<tr>
+<td>Object</td>
+<td>StorageGRID</td>
+<td>Unstructured data, backups, archives, S3-compatible object storage</td>
+</tr>
+</tbody>
+</table>
+<p>Customers select one or more tiers per subscription; each tier has a committed capacity minimum and a defined performance SLA (IOPS/TB and latency).</p>
+<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
+<p>Storage protocols are identical to the underlying platform: NFS, SMB/CIFS, iSCSI, FC, and S3 (StorageGRID). There is no change to how hosts connect to storage compared to a standard NetApp deployment. The Keystone Collector VM requires outbound HTTPS (port 443) to <code>keystone.netapp.com</code> for telemetry reporting — no inbound ports are required. If the Collector cannot reach the NetApp endpoint, consumption reporting stops and billing data gaps occur.</p>
+<h2 id="capacity-model">Capacity Model<a class="headerlink" href="#capacity-model" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Committed capacity</strong> — the minimum monthly capacity the customer contracts for per service tier; billed whether used or not</li>
+<li><strong>Burst capacity</strong> — available headroom above committed capacity up to a defined burst limit; billed at a higher per-TB rate when consumed</li>
+<li><strong>True-up cadence</strong> — monthly; consumption report from the Collector is reconciled and the invoice reflects committed capacity plus burst usage for the period</li>
+<li>Committed capacity can be increased mid-term but cannot be decreased; plan initial sizing conservatively and use burst for growth headroom</li>
+</ul>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
 <a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
 <a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>

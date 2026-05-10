@@ -21,7 +21,7 @@
     
     
       
-        <title>RASR — Architecture - Chris KB</title>
+        <title>RASR — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="RASR — Architecture · Chris KB">
+  <meta property="og:title" content="RASR — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="RASR — Architecture · Chris KB">
+  <meta name="twitter:title" content="RASR — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rasr-architecture" class="md-skip">
+        <a href="#rasr-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RASR — Architecture
+              RASR — Overview
             
           </span>
         </div>
@@ -778,6 +778,136 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-rasr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is RASR?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#winpe-boot-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WinPE Boot Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-dell-server-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Dell Server Hardware
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Dell Server Hardware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-dell-server-generations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Dell Server Generations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rasr-vs-alternative-recovery-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RASR vs Alternative Recovery Methods
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +926,197 @@
 
 
 
-<h1 id="rasr-architecture">RASR — Architecture<a class="headerlink" href="#rasr-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="rasr-overview">RASR — Overview<a class="headerlink" href="#rasr-overview" title="Permanent link">&para;</a></h1>
+<h2 id="what-is-rasr">What is RASR?<a class="headerlink" href="#what-is-rasr" title="Permanent link">&para;</a></h2>
+<p><strong>RASR (Recovery and System Restore)</strong> is Dell's bare-metal recovery tool for Windows Server, shipped as a component of the <strong>Dell OpenManage</strong> suite. RASR allows administrators to capture a full system image of a Windows Server — including the OS volume, boot partition, and system state — and restore that image to either the original hardware or equivalent replacement hardware, without requiring a pre-installed OS.</p>
+<p>RASR is particularly relevant in environments where:</p>
+<ul>
+<li>Physical servers must be recovered after a hardware failure without a spare pre-staged OS.</li>
+<li>Rapid recovery is required for servers that are not virtualized.</li>
+<li>Regulatory or operational requirements mandate a complete, validated OS image for each server.</li>
+</ul>
+<p>RASR is distinct from file-level backup tools — it operates at the disk/partition image level and restores the complete system state in a single operation.</p>
+<hr />
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<h3 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RASR Agent</strong></td>
+<td>Windows service (<code>RASRAgent</code>) installed on the protected server; orchestrates image capture and communicates with OpenManage</td>
+</tr>
+<tr>
+<td><strong>RASR Media</strong></td>
+<td>Bootable WinPE-based USB drive or ISO; used to boot the server for bare-metal recovery</td>
+</tr>
+<tr>
+<td><strong>Recovery Image</strong></td>
+<td>A compressed, sector-level snapshot of the system volume(s), stored in <code>.wim</code> or proprietary RASR format on a network share or local media</td>
+</tr>
+<tr>
+<td><strong>RASR Console</strong></td>
+<td>GUI interface within Windows for initiating backups and managing recovery media</td>
+</tr>
+<tr>
+<td><strong>Network Recovery Share</strong></td>
+<td>NAS/SMB share where recovery images are stored and retrieved during restoration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="deployment-topology">Deployment Topology<a class="headerlink" href="#deployment-topology" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Windows Server
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── RASR Agent (Windows Service)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── OS Volume Image captured → Network Share (SMB/NFS)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── iDRAC virtual media → RASR Boot ISO
+</code></pre></div>
+<h3 id="winpe-boot-environment">WinPE Boot Environment<a class="headerlink" href="#winpe-boot-environment" title="Permanent link">&para;</a></h3>
+<p>RASR recovery runs within <strong>Windows Preinstallation Environment (WinPE)</strong>. The WinPE image bundled with RASR includes:</p>
+<ul>
+<li>Network drivers (Broadcom, Intel, Mellanox) for the target Dell hardware generation.</li>
+<li>Storage controller drivers (PERC, HBA) for accessing local disks.</li>
+<li>RASR recovery engine and wizard UI.</li>
+<li>Tools: <code>diskpart</code>, <code>net use</code>, <code>wpeutil</code>, <code>notepad</code>, <code>regedit</code>.</li>
+</ul>
+<p>The WinPE session has no persistent state — all recovery configuration (image path, credentials, target disk) is entered at boot time.</p>
+<hr />
+<h2 id="recovery-workflow">Recovery Workflow<a class="headerlink" href="#recovery-workflow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A([Server Failure Detected]) --&gt; B{Server boots?}
+    B --&gt; |Yes| C[Boot Windows normally\nor Safe Mode]
+    B --&gt; |No - hardware failure| D[Boot from RASR Media\nUSB / Virtual ISO via iDRAC]
+
+    C --&gt; E[Launch RASR Console\nStart Recovery from OS]
+    D --&gt; F[WinPE Environment Loads]
+
+    F --&gt; G[Map Network Share\nnet use Z: \\\\nas\\rasr-images]
+    G --&gt; H[Select Recovery Image\nfrom share]
+
+    H --&gt; I{Restore target?}
+    I --&gt; |Same hardware| J[In-Place Restore\nto original disks]
+    I --&gt; |New/replacement hardware| K[Bare-Metal Restore\nwith driver injection]
+
+    E --&gt; L[Select Image &amp; Restore Point]
+    J --&gt; M[Image written to disk\nPartition table restored]
+    K --&gt; M
+
+    L --&gt; M
+    M --&gt; N[Reboot server]
+    N --&gt; O[Windows starts from restored image]
+    O --&gt; P[Post-restore validation]
+    P --&gt; Q([Recovery Complete])</code></pre>
+<hr />
+<h2 id="integration-with-dell-server-hardware">Integration with Dell Server Hardware<a class="headerlink" href="#integration-with-dell-server-hardware" title="Permanent link">&para;</a></h2>
+<p>RASR is designed specifically for Dell PowerEdge servers. It benefits from:</p>
+<ul>
+<li><strong>iDRAC Virtual Media</strong> — boot the RASR ISO from iDRAC without physical USB, enabling remote bare-metal recovery.</li>
+<li><strong>PERC Storage Controller</strong> support — WinPE includes current PERC drivers, ensuring the recovery environment can see all local disks.</li>
+<li><strong>Lifecycle Controller</strong> — RASR can optionally be invoked from within the iDRAC Lifecycle Controller interface on compatible servers (R750, R650, R740 and later).</li>
+<li><strong>OpenManage Integration</strong> — RASR Agent status appears within the OpenManage Server Administrator dashboard.</li>
+</ul>
+<h3 id="supported-dell-server-generations">Supported Dell Server Generations<a class="headerlink" href="#supported-dell-server-generations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Server Generation</th>
+<th>WinPE Driver Pack</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerEdge 14G (R740, R640)</td>
+<td>WinPE 10</td>
+<td>Full PERC H730/H740 support</td>
+</tr>
+<tr>
+<td>PowerEdge 15G (R750, R650)</td>
+<td>WinPE 10/11</td>
+<td>PERC H755, HBA355</td>
+</tr>
+<tr>
+<td>PowerEdge 16G (R760, R660)</td>
+<td>WinPE 11</td>
+<td>PERC H965i, BOSS-N1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rasr-vs-alternative-recovery-methods">RASR vs Alternative Recovery Methods<a class="headerlink" href="#rasr-vs-alternative-recovery-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>RASR</th>
+<th>Windows Server Backup</th>
+<th>Commvault BMR</th>
+<th>Veeam BMR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bare-metal to physical</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Dell hardware driver integration</td>
+<td>Native</td>
+<td>Manual</td>
+<td>Manual</td>
+<td>Manual</td>
+</tr>
+<tr>
+<td>iDRAC boot integration</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Agent-less image capture</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Application-aware backup</td>
+<td>No</td>
+<td>Limited</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Granular file restore</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Suitable for DR-only physical</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No (licensed)</td>
+<td>No (licensed)</td>
+</tr>
+</tbody>
+</table>
+<p>RASR is best used as the last-resort bare-metal recovery mechanism for physical Dell servers, complementing an enterprise backup solution that handles file-level and application recovery.</p>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>RASR architecture overview and recovery design.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>RASR media, boot environment, and recovery components.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with Dell appliances and platform services.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>RASR media standards and recovery planning baselines.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

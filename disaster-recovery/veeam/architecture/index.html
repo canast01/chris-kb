@@ -21,7 +21,7 @@
     
     
       
-        <title>Veeam — Architecture - Chris KB</title>
+        <title>Veeam — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Veeam — Architecture · Chris KB">
+  <meta property="og:title" content="Veeam — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Veeam — Architecture · Chris KB">
+  <meta name="twitter:title" content="Veeam — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#veeam-architecture" class="md-skip">
+        <a href="#veeam-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Veeam — Architecture
+              Veeam — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Proxy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scale-out-backup-repository-sobr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale-Out Backup Repository (SOBR)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nas-backup-file-share-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAS Backup (File Share Backup)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +859,75 @@
 
 
 
-<h1 id="veeam-architecture">Veeam — Architecture<a class="headerlink" href="#veeam-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="veeam-architecture-overview">Veeam — Architecture Overview<a class="headerlink" href="#veeam-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>Veeam provides backup, replication, recovery, and disaster recovery capabilities for virtual, physical, and cloud workloads.</p>
+<h2 id="architecture-diagram">Architecture Diagram<a class="headerlink" href="#architecture-diagram" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  VBR["Veeam Backup &amp; Replication Server"] --&gt; PROXY["Backup Proxy\n(data mover)"]
+  PROXY --&gt; REPO[("Backup Repository\nSOBR / immutable")]
+  VCTR(["VMware vCenter\nsource VMs"]) --&gt; PROXY
+  REPO --&gt;|"capacity tier"| OBJ[("Object Storage\nS3 / Azure Blob")]
+  REPO --&gt;|"tape offload"| TAPE[("Tape Library")]
+  ADMIN(["Backup Admin"]) --&gt;|"console"| VBR
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  class VBR,PROXY ctrl
+  class REPO,TAPE store
+  class VCTR,ADMIN host
+  class OBJ cloud</code></pre>
+<h2 id="backup-proxy">Backup Proxy<a class="headerlink" href="#backup-proxy" title="Permanent link">&para;</a></h2>
+<p>The proxy is the workhorse of Veeam — it reads VM data and writes to the repository:</p>
+<ul>
+<li><strong>Transport modes</strong> (VMware):</li>
+<li>Hot-add (SAN): proxy VM attached to the production datastore — highest throughput</li>
+<li>Direct NFS: for NFS datastores — bypasses ESXi, directly reads NFS</li>
+<li>Network (NBD): fallback when SAN/NFS not available — slowest</li>
+<li>Deploy minimum 2 proxies per site for redundancy and parallel job capacity</li>
+<li>Proxies auto-selected by Veeam based on available throughput — no manual assignment needed for most cases</li>
+</ul>
+<h2 id="scale-out-backup-repository-sobr">Scale-Out Backup Repository (SOBR)<a class="headerlink" href="#scale-out-backup-repository-sobr" title="Permanent link">&para;</a></h2>
+<p>SOBR provides tiered storage without managing individual repository capacity.</p>
+<pre class="mermaid"><code>flowchart LR
+    job(["Backup Job\n(daily run)"])
+
+    subgraph sobr [Scale-Out Backup Repository]
+        direction TB
+        pe1[("Performance Extent 1\nfast disk — NFS / XFS\n0-14 days")]
+        pe2[("Performance Extent 2\nfast disk — second node\n0-14 days")]
+        ct[("Capacity Tier\nS3-compatible object storage\n14+ days — immutable")]
+        pe1 --&gt;|"auto-offload\nafter threshold"| ct
+        pe2 --&gt;|"auto-offload"| ct
+    end
+
+    job --&gt; pe1
+    job --&gt; pe2
+
+    ct --&gt;|"archive tier\nS3 Glacier"| glacier[("Glacier / Archive\nyearly retention")]
+
+    classDef peNode fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef ctNode fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef archNode fill:#0f766e,stroke:#0d5f58,color:#fff
+    classDef src fill:#15803d,stroke:#166534,color:#fff
+    class pe1,pe2 peNode
+    class ct ctNode
+    class glacier archNode
+    class job src</code></pre>
+<p>Configure SOBR offload: Backup Infrastructure → Scale-Out Repositories → right-click → Properties → Capacity Tier.</p>
+<h2 id="nas-backup-file-share-backup">NAS Backup (File Share Backup)<a class="headerlink" href="#nas-backup-file-share-backup" title="Permanent link">&para;</a></h2>
+<p>Veeam 12+ supports backup of SMB/NFS shares via dedicated File Share backup jobs:</p>
+<ul>
+<li>Creates a dedicated File Backup Proxy and cache repository</li>
+<li>Processes changed files using VSS or NAS snapshot integration</li>
+<li>Restore granularity: individual files, folder-level, or point-in-time snapshot</li>
+</ul>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, design principles, and topology.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>VBR server, proxies, repositories, and core components.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with VMware, storage arrays, and cloud platforms.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Sizing guidelines, design standards, and naming conventions.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

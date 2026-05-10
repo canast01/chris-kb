@@ -21,7 +21,7 @@
     
     
       
-        <title>vCenter — Architecture - Chris KB</title>
+        <title>vCenter Architecture — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="vCenter — Architecture · Chris KB">
+  <meta property="og:title" content="vCenter Architecture — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="vCenter — Architecture · Chris KB">
+  <meta name="twitter:title" content="vCenter Architecture — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vcenter-architecture" class="md-skip">
+        <a href="#vcenter-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              vCenter — Architecture
+              vCenter Architecture — Overview
             
           </span>
         </div>
@@ -778,6 +778,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-cluster-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Cluster Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-ha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter HA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-ports-and-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Ports and Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logical-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logical Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-level-failure-domains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Level Failure Domains
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +903,246 @@
 
 
 
-<h1 id="vcenter-architecture">vCenter — Architecture<a class="headerlink" href="#vcenter-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="vcenter-architecture-overview">vCenter Architecture — Overview<a class="headerlink" href="#vcenter-architecture-overview" title="Permanent link">&para;</a></h1>
+<h2 id="vsphere-cluster-topology">vSphere Cluster Topology<a class="headerlink" href="#vsphere-cluster-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  VCSA["vCenter Server Appliance\n(VCSA)"] --&gt; CL["vSphere Cluster\nDRS · HA enabled"]
+  VCSA --&gt; LCM["Lifecycle Manager\n(patching)"]
+  VCSA --&gt; NSX["NSX Manager\n(optional)"]
+  CL --&gt; ESX1["ESXi-01"] &amp; ESX2["ESXi-02"] &amp; ESX3["ESXi-03"] &amp; ESX4["ESXi-04"]
+  ESX1 &amp; ESX2 &amp; ESX3 &amp; ESX4 --&gt; VDS["vSphere Distributed Switch\nVM Net · vMotion · Storage · Mgmt"]
+  VDS --&gt; STORE["Shared Storage\nFlashArray · vSAN · NFS"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class VCSA,LCM,NSX mgmt
+  class CL,VDS net
+  class ESX1,ESX2,ESX3,ESX4 ctrl
+  class STORE store</code></pre>
+<h2 id="deployment-model">Deployment Model<a class="headerlink" href="#deployment-model" title="Permanent link">&para;</a></h2>
+<p>vCenter Server is delivered as the <strong>vCenter Server Appliance (VCSA)</strong> — a Photon OS-based virtual appliance. Since vCenter 7.0, the Platform Services Controller (PSC) is embedded directly in the appliance (external PSC is deprecated). The embedded database is PostgreSQL.</p>
+<p>A single VCSA manages the full vSphere inventory: datacenters, clusters, hosts, VMs, datastores, networks, and policies.</p>
+<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter Server</td>
+<td>Core management service — inventory, scheduling, HA/DRS orchestration</td>
+</tr>
+<tr>
+<td>Embedded PSC</td>
+<td>Authentication, SSO, certificate authority (VMCA), licensing</td>
+</tr>
+<tr>
+<td>PostgreSQL (embedded)</td>
+<td>vCenter inventory and events database</td>
+</tr>
+<tr>
+<td>vSphere Client (HTML5)</td>
+<td>Primary management UI — <code>https://&lt;vcenter&gt;/ui</code></td>
+</tr>
+<tr>
+<td>vSphere API</td>
+<td>REST and SOAP API endpoints for automation</td>
+</tr>
+<tr>
+<td>Update Manager (vLCM)</td>
+<td>Patch and lifecycle management for ESXi hosts</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vcenter-ha">vCenter HA<a class="headerlink" href="#vcenter-ha" title="Permanent link">&para;</a></h2>
+<p>vCenter HA (VCHA) provides active/passive failover for the VCSA itself. It requires three nodes:</p>
+<ul>
+<li><strong>Active</strong> — serves all management traffic</li>
+<li><strong>Passive</strong> — hot standby, continuously replicates from active</li>
+<li><strong>Witness</strong> — tie-breaker for split-brain scenarios; can be a small VM (2 vCPU / 1 GB RAM)</li>
+</ul>
+<p>Shared storage is <strong>not</strong> required — replication is network-based over a dedicated HA network (typically a /24). Failover is automatic on active node failure; RPO is near-zero, RTO is typically under 60 seconds.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Active VCSA ──── HA network ────▶ Passive VCSA
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>       │                               │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       └──────── Witness VCSA ─────────┘
+</code></pre></div>
+<pre class="mermaid"><code>graph LR
+    clients["vSphere Clients\n&amp; API consumers"]
+    active["Active VCSA\n(serves all traffic)"]
+    passive["Passive VCSA\n(hot standby)"]
+    witness["Witness VCSA\n(2 vCPU / 1 GB — tie-breaker)"]
+
+    clients --&gt;|"port 443"| active
+    active --&gt;|"continuous replication\n(HA network)"| passive
+    active -.-&gt;|"heartbeat"| witness
+    passive -.-&gt;|"heartbeat"| witness
+
+    classDef active fill:#15803d,stroke:#166534,color:#fff
+    classDef standby fill:#b45309,stroke:#92400e,color:#fff
+    classDef witness fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef client fill:#2563eb,stroke:#1d4ed8,color:#fff
+
+    class active active
+    class passive standby
+    class witness witness
+    class clients client</code></pre>
+<h2 id="key-ports-and-connectivity">Key Ports and Connectivity<a class="headerlink" href="#key-ports-and-connectivity" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>vSphere Client, API, SSO</td>
+</tr>
+<tr>
+<td>902</td>
+<td>TCP/UDP</td>
+<td>ESXi host agent (heartbeat)</td>
+</tr>
+<tr>
+<td>9443</td>
+<td>TCP</td>
+<td>vSphere Web Client (legacy, ≤ vSphere 6.7)</td>
+</tr>
+<tr>
+<td>5480</td>
+<td>TCP</td>
+<td>VCSA VAMI (appliance management)</td>
+</tr>
+<tr>
+<td>8443</td>
+<td>TCP</td>
+<td>vCenter HA replication</td>
+</tr>
+<tr>
+<td>389</td>
+<td>TCP</td>
+<td>LDAP (SSO)</td>
+</tr>
+<tr>
+<td>636</td>
+<td>TCP</td>
+<td>LDAPS (SSO)</td>
+</tr>
+</tbody>
+</table>
+<p>All ESXi hosts must reach vCenter on 443 and vCenter must reach ESXi on 902.</p>
+<h2 id="sizing">Sizing<a class="headerlink" href="#sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Deployment Size</th>
+<th>Max Hosts</th>
+<th>Max VMs</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Disk (OS + DB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tiny (lab)</td>
+<td>10</td>
+<td>100</td>
+<td>2</td>
+<td>12 GB</td>
+<td>415 GB</td>
+</tr>
+<tr>
+<td>Small</td>
+<td>100</td>
+<td>1,000</td>
+<td>4</td>
+<td>19 GB</td>
+<td>480 GB</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>400</td>
+<td>4,000</td>
+<td>8</td>
+<td>28 GB</td>
+<td>700 GB</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>1,000</td>
+<td>10,000</td>
+<td>16</td>
+<td>37 GB</td>
+<td>1,065 GB</td>
+</tr>
+<tr>
+<td>X-Large</td>
+<td>2,000</td>
+<td>35,000</td>
+<td>24</td>
+<td>56 GB</td>
+<td>1,805 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Sizing is set at deploy time and can be changed by modifying vCPU/RAM after deployment (requires reboot). Disk partitions can be expanded online.</p>
+<h2 id="logical-hierarchy">Logical Hierarchy<a class="headerlink" href="#logical-hierarchy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter Server
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>└── Datacenter (DC-&lt;site&gt;)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── Cluster (CL-&lt;site&gt;-&lt;function&gt;)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    │   ├── ESXi Host (esxi-01.&lt;domain&gt;)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    │   │   └── VMs
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    │   └── vSAN Datastore / VMFS / NFS
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    └── Standalone Host (uncommon in production)
+</code></pre></div>
+<p>Resource pools, vSphere tags, and content libraries are vCenter-level constructs applied within this hierarchy.</p>
+<pre class="mermaid"><code>graph TD
+    vc["vCenter Server"]
+    dc["Datacenter\n(DC-site)"]
+    cl["Cluster\n(CL-site-function)"]
+    rp["Resource Pool\n(RP-tier-team)"]
+    host["ESXi Host\n(esxi-nn.domain)"]
+    vm["Virtual Machines"]
+    ds["Datastore\n(vSAN / VMFS / NFS)"]
+
+    vc --&gt; dc
+    dc --&gt; cl
+    cl --&gt; rp
+    cl --&gt; host
+    rp --&gt; vm
+    host --&gt; vm
+    host --&gt; ds
+
+    classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+    classDef infra fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef compute fill:#15803d,stroke:#166534,color:#fff
+    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class vc,dc mgmt
+    class cl,rp infra
+    class host,vm compute
+    class ds storage</code></pre>
+<h2 id="high-level-failure-domains">High-Level Failure Domains<a class="headerlink" href="#high-level-failure-domains" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>vCenter failure</strong> — hosts and VMs continue running; HA/DRS stop working; no management plane until vCenter recovers</li>
+<li><strong>PSC/SSO failure</strong> — authentication failures; vSphere Client inaccessible; hosts in lockdown mode become inaccessible via API</li>
+<li><strong>Database failure</strong> — vCenter services crash; restore from last backup required</li>
+<li><strong>VCHA passive failure</strong> — no impact to active; witness still provides quorum; repair passive before next failover test</li>
+</ul>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, topology, and how it fits in the stack.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Core services, ports, dependencies, and internals.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with other platforms and services.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Naming conventions, design rules, and configuration baselines.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

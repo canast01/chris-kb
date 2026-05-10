@@ -21,7 +21,7 @@
     
     
       
-        <title>MDS — Architecture - Chris KB</title>
+        <title>MDS — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="MDS — Architecture · Chris KB">
+  <meta property="og:title" content="MDS — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="MDS — Architecture · Chris KB">
+  <meta name="twitter:title" content="MDS — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#mds-architecture" class="md-skip">
+        <a href="#mds-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              MDS — Architecture
+              MDS — Overview
             
           </span>
         </div>
@@ -778,6 +778,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cisco-mds-fabric-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cisco MDS Fabric Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSAN Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fc-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,9 +881,215 @@
 
 
 
-<h1 id="mds-architecture">MDS — Architecture<a class="headerlink" href="#mds-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="mds-overview">MDS — Overview<a class="headerlink" href="#mds-overview" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../../">Cisco MDS</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="cisco-mds-fabric-topology">Cisco MDS Fabric Topology<a class="headerlink" href="#cisco-mds-fabric-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  H1A(["esxi-01  HBA0"]) --&gt; MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
+  H2A(["esxi-02  HBA0"]) --&gt; MDSA
+  H1B(["esxi-01  HBA1"]) --&gt; MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
+  H2B(["esxi-02  HBA1"]) --&gt; MDSB
+
+  MDSA &lt;--&gt;|"4× 100G ISL"| MDSB
+
+  MDSA --&gt; FA_CT0[("FlashArray CT0")]
+  MDSA --&gt; PM_A[("PowerMax Dir A")]
+  MDSA --&gt; NA_N1[("NetApp AFF Node 1")]
+  MDSB --&gt; FA_CT1[("FlashArray CT1")]
+  MDSB --&gt; PM_B[("PowerMax Dir B")]
+  MDSB --&gt; NA_N2[("NetApp AFF Node 2")]
+
+  classDef switch fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+  class MDSA,MDSB switch
+  class H1A,H2A,H1B,H2B host
+  class FA_CT0,PM_A,NA_N1,FA_CT1,PM_B,NA_N2 storage</code></pre>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC) and FCoE. The core isolation mechanism is the <strong>VSAN (Virtual SAN)</strong> — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.</p>
+<hr />
+<h2 id="platform-reference">Platform Reference<a class="headerlink" href="#platform-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Type</th>
+<th>Max FC Ports</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MDS 9132T</td>
+<td>Fixed</td>
+<td>32x 32G FC</td>
+<td>Entry/mid-range</td>
+</tr>
+<tr>
+<td>MDS 9148T</td>
+<td>Fixed</td>
+<td>48x 32G FC</td>
+<td>Mid-range</td>
+</tr>
+<tr>
+<td>MDS 9396T</td>
+<td>Fixed</td>
+<td>96x 32G FC</td>
+<td>High-density fixed</td>
+</tr>
+<tr>
+<td>MDS 9706</td>
+<td>Director</td>
+<td>Up to 384 FC</td>
+<td>Modular director</td>
+</tr>
+<tr>
+<td>MDS 9710</td>
+<td>Director</td>
+<td>Up to 576 FC</td>
+<td>Large-scale director</td>
+</tr>
+</tbody>
+</table>
+<p>Directors (9706/9710) support ISSU (In-Service Software Upgrade), making them the preferred platform for environments requiring zero-downtime maintenance.</p>
+<hr />
+<h2 id="fabric-design">Fabric Design<a class="headerlink" href="#fabric-design" title="Permanent link">&para;</a></h2>
+<p>Typical enterprise deployment uses a <strong>dual-fabric</strong> architecture — each host HBA port connects to a separate switch, with storage targets dual-homed across both fabrics. A failure of one fabric does not impact the other.</p>
+<p>Each fabric is completely independent — a failure of one fabric does not impact the other. All hosts and storage targets are connected to both fabrics for redundancy.</p>
+<p><strong>ISLs (Inter-Switch Links):</strong> Used when multiple MDS switches form a fabric. ISLs are configured as port-channel trunks (minimum 2 links). All VSANs allowed on the ISL must be explicitly permitted.</p>
+<hr />
+<h2 id="vsan-design">VSAN Design<a class="headerlink" href="#vsan-design" title="Permanent link">&para;</a></h2>
+<p>VSANs segment the fabric logically. Common VSAN allocation:</p>
+<table>
+<thead>
+<tr>
+<th>VSAN</th>
+<th>Purpose</th>
+<th>Fabric A</th>
+<th>Fabric B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td>ESXi hosts → storage</td>
+<td>10</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>SRDF/A or SnapMirror</td>
+<td>20</td>
+<td>21</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Out-of-band fabric mgmt</td>
+<td>99</td>
+<td>99</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>graph TB
+  subgraph "Physical MDS Switch"
+    subgraph vsan10 ["VSAN 10 — Production (Fabric A)"]
+      V10NS["FC Name Server"]
+      V10Z["Zone DB"]
+      V10D["Domain ID: 1"]
+    end
+    subgraph vsan20 ["VSAN 20 — Replication (Fabric A)"]
+      V20NS["FC Name Server"]
+      V20Z["Zone DB"]
+      V20D["Domain ID: 2"]
+    end
+    subgraph vsan99 ["VSAN 99 — Management"]
+      V99NS["FC Name Server"]
+      V99Z["Zone DB"]
+      V99D["Domain ID: 3"]
+    end
+  end
+
+  H1["ESXi Host\n(HBA0 — fc1/1)"] --&gt;|"VSAN 10"| vsan10
+  SA["FlashArray CT0\n(fc1/8)"] --&gt;|"VSAN 10"| vsan10
+  SRDF1["PowerMax FA Dir A\n(fc1/9)"] --&gt;|"VSAN 20"| vsan20
+  SRDF2["PowerMax FA Dir B\n(fc1/10)"] --&gt;|"VSAN 20"| vsan20
+
+  classDef vsanBox fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef device fill:#15803d,stroke:#166534,color:#fff
+  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class vsan10,vsan20,vsan99 vsanBox
+  class H1 device
+  class SA,SRDF1,SRDF2 storage</code></pre>
+<p>Each VSAN has its own:
+- FC Name Server (FCNS)
+- Domain ID space
+- Zone database
+- FLOGI/PLOGI table</p>
+<p>VSAN 1 is the default VSAN — do not use VSAN 1 for production; all production traffic should be in dedicated VSANs.</p>
+<hr />
+<h2 id="fc-services">FC Services<a class="headerlink" href="#fc-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FCNS (Name Server)</td>
+<td>Registers all devices (hosts and storage) that FLOGI into the fabric</td>
+</tr>
+<tr>
+<td>FSPF</td>
+<td>Fabric Shortest Path First — routing protocol for FC fabrics</td>
+</tr>
+<tr>
+<td>FLOGI DB</td>
+<td>Records all fabric login events (WWN, FCID, port)</td>
+</tr>
+<tr>
+<td>Zoning</td>
+<td>Controls which initiators can communicate with which targets</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>sequenceDiagram
+  participant HBA as Host HBA
+  participant SW as MDS Switch
+  participant NS as FC Name Server
+  participant TGT as Storage Target
+
+  HBA-&gt;&gt;SW: FLOGI (Fabric Login)&lt;br/&gt;sends WWPN + WWNN
+  SW--&gt;&gt;HBA: FLOGI Accept&lt;br/&gt;assigns FCID (3-byte address)
+  HBA-&gt;&gt;NS: PLOGI to Name Server (0xFFFFFC)&lt;br/&gt;registers port type, WWPN, FCID
+  NS--&gt;&gt;HBA: LS_ACC (registration accepted)
+  HBA-&gt;&gt;NS: GNN_FT / GID_FT&lt;br/&gt;query targets in VSAN
+  NS--&gt;&gt;HBA: Return list of target FCIDs
+  HBA-&gt;&gt;TGT: PLOGI (Port Login)&lt;br/&gt;establish session
+  TGT--&gt;&gt;HBA: PLOGI Accept
+  HBA-&gt;&gt;TGT: PRLI (Process Login)&lt;br/&gt;negotiate SCSI / NVMe service
+  TGT--&gt;&gt;HBA: PRLI Accept — I/O ready</code></pre>
+<p><strong>Key commands:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all devices logged into a VSAN</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show all FLOGI entries</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>show<span class="w"> </span>flogi<span class="w"> </span>database
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show fabric shortest path</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>show<span class="w"> </span>fspf<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Show port status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
+</code></pre></div>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
 <a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
 <a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>

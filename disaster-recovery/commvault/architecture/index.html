@@ -21,7 +21,7 @@
     
     
       
-        <title>Commvault — Architecture - Chris KB</title>
+        <title>Commvault — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Commvault — Architecture · Chris KB">
+  <meta property="og:title" content="Commvault — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Commvault — Architecture · Chris KB">
+  <meta name="twitter:title" content="Commvault — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#commvault-architecture" class="md-skip">
+        <a href="#commvault-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Commvault — Architecture
+              Commvault — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#component-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scale-out-with-hyperscale-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale-Out with Hyperscale X
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-site-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Site Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +870,123 @@
 
 
 
-<h1 id="commvault-architecture">Commvault — Architecture<a class="headerlink" href="#commvault-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="commvault-architecture-overview">Commvault — Architecture Overview<a class="headerlink" href="#commvault-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>Commvault provides enterprise backup, recovery, replication, archive, and data protection management.</p>
+<h2 id="component-topology">Component Topology<a class="headerlink" href="#component-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  CS["CommServe\n(command &amp; control)"] --&gt; WEBCON["Web Console\n&amp; Command Center"]
+  MA1["Media Agent 1\n(data mover)"] &amp; MA2["Media Agent 2"] --&gt; CS
+  SRC(["Source — VMs / DBs / Files"]) --&gt; MA1 &amp; MA2
+  MA1 &amp; MA2 --&gt; DISK[("Disk Library\nDDB dedup")]
+  DISK --&gt;|"aux copy"| TAPE[("Tape / Object\nlong-term retention")]
+  ADMIN(["Backup Admin"]) --&gt; WEBCON
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class CS,MA1,MA2 ctrl
+  class DISK,TAPE store
+  class SRC,ADMIN host
+  class WEBCON mgmt</code></pre>
+<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Client (backup agent)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ▼ CVLT network (TCP 8403)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>MediaAgent (reads data, applies dedup, writes to storage)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ├── Primary copy (disk/dedup, performance tier)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    └── Secondary copy (offsite/cloud/tape, retention tier)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>CommServe (orchestrates job, tracks metadata in SQL DB)
+</code></pre></div>
+<h2 id="scale-out-with-hyperscale-x">Scale-Out with Hyperscale X<a class="headerlink" href="#scale-out-with-hyperscale-x" title="Permanent link">&para;</a></h2>
+<p>Hyperscale X integrates CommServe + MediaAgent + storage into scale-out nodes:
+- Minimum 3-node cluster; add nodes for capacity/throughput
+- Built-in object storage using erasure coding
+- Managed via Command Center — no separate storage administration</p>
+<h2 id="port-requirements">Port Requirements<a class="headerlink" href="#port-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clients</td>
+<td>CommServe</td>
+<td>8400</td>
+<td>Job requests</td>
+</tr>
+<tr>
+<td>Clients</td>
+<td>MediaAgent</td>
+<td>8403</td>
+<td>Data movement</td>
+</tr>
+<tr>
+<td>CommServe</td>
+<td>MediaAgent</td>
+<td>8400</td>
+<td>Job orchestration</td>
+</tr>
+<tr>
+<td>Browser (admin)</td>
+<td>Command Center</td>
+<td>443</td>
+<td>Web UI</td>
+</tr>
+</tbody>
+</table>
+<h2 id="multi-site-topology">Multi-Site Topology<a class="headerlink" href="#multi-site-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph primarySite [Primary Site]
+        cs["CommServe\n(command &amp; control)"]
+        ma1["MediaAgent\ndc1-ma-01"]
+        diskLib1[("Disk Library\nDDB — Primary")]
+        clients1(["VMs / DBs / Files\nSite A"])
+        clients1 --&gt; ma1
+        ma1 --&gt; diskLib1
+        ma1 --&gt; cs
+    end
+
+    subgraph drSite [DR / Secondary Site]
+        ma2["MediaAgent\ndc2-ma-01"]
+        diskLib2[("Disk Library\nDDB — DR copy")]
+        clients2(["VMs / DBs / Files\nSite B"])
+        clients2 --&gt; ma2
+        ma2 --&gt; diskLib2
+        ma2 --&gt; cs
+    end
+
+    subgraph cloudTier [Cloud / Tape Tier]
+        cloud[("Cloud Library\nS3 / Azure Blob\nlong-term retention")]
+        tape[("Tape Library\narchival / compliance")]
+    end
+
+    diskLib1 --&gt;|"aux copy\n(scheduled)"| diskLib2
+    diskLib2 --&gt;|"aux copy\n(scheduled)"| cloud
+    diskLib1 --&gt;|"aux copy"| tape
+
+    cs --&gt; webUI["Command Center\nWeb UI — port 443"]
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+    class cs,ma1,ma2 ctrl
+    class diskLib1,diskLib2,tape store
+    class clients1,clients2 host
+    class cloud,webUI cloud</code></pre>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, design principles, and topology.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>CommServe, MediaAgents, clients, and storage policies.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with VMware, storage arrays, and external systems.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Sizing guidelines, design standards, and naming conventions.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

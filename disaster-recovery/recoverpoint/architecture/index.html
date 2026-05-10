@@ -21,7 +21,7 @@
     
     
       
-        <title>RecoverPoint — Architecture - Chris KB</title>
+        <title>RecoverPoint — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="RecoverPoint — Architecture · Chris KB">
+  <meta property="og:title" content="RecoverPoint — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="RecoverPoint — Architecture · Chris KB">
+  <meta name="twitter:title" content="RecoverPoint — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#recoverpoint-architecture" class="md-skip">
+        <a href="#recoverpoint-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RecoverPoint — Architecture
+              RecoverPoint — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splitter-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splitter Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Arrays
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sizing-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +892,86 @@
 
 
 
-<h1 id="recoverpoint-architecture">RecoverPoint — Architecture<a class="headerlink" href="#recoverpoint-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="recoverpoint-architecture-overview">RecoverPoint — Architecture Overview<a class="headerlink" href="#recoverpoint-architecture-overview" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../../">RecoverPoint</a> &gt; <a href="../">Architecture</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell EMC RecoverPoint provides continuous data protection (CDP) and continuous remote replication (CRR) through journal-based replication. RPA (RecoverPoint Appliance) clusters at each site intercept writes via splitters and maintain a rolling journal that enables point-in-time recovery to any point within the journal window.</p>
+<h2 id="splitter-types">Splitter Types<a class="headerlink" href="#splitter-types" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>PowerMax / VMAX Hardware Splitter</strong> — embedded in the array microcode; preferred for PowerMax environments; no host-side agent required</li>
+<li><strong>Software Splitter (vRPA)</strong> — ESXi kernel module used in RecoverPoint for VMs (RP4VM) deployments; installed per host</li>
+<li><strong>iSCSI Splitter</strong> — used where FC splitters are unavailable</li>
+</ul>
+<h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  RPA1["RPA Cluster\nSite A"] --&gt; STG_A[("Storage A\nProduction LUNs")]
+  RPA2["RPA Cluster\nSite B"] --&gt; STG_B[("Storage B\nReplica + Journal")]
+  RPA1 &lt;--&gt;|"WAN — compressed replication"| RPA2
+  STG_A --&gt;|"captured writes"| RPA1
+  H_A(["Production Hosts"]) --&gt; STG_A
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class RPA1 ctrl
+  class RPA2 dr
+  class STG_A,STG_B store
+  class H_A host</code></pre>
+<h2 id="replication-modes">Replication Modes<a class="headerlink" href="#replication-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>RPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CDP (Continuous Data Protection)</td>
+<td>Local journal; recover to any point in time</td>
+<td>~0 seconds</td>
+</tr>
+<tr>
+<td>CRR (Continuous Remote Replication)</td>
+<td>Async replication to DR site</td>
+<td>Seconds to minutes</td>
+</tr>
+<tr>
+<td>CLR (Concurrent Local and Remote)</td>
+<td>Simultaneous local CDP + remote CRR</td>
+<td>Per-copy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="supported-arrays">Supported Arrays<a class="headerlink" href="#supported-arrays" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Dell PowerMax / VMAX All Flash</li>
+<li>Dell Unity</li>
+<li>Dell VPLEX (journal can reside on VPLEX volumes)</li>
+<li>RecoverPoint for VMs (RP4VM) — any VMFS/NFS datastore</li>
+</ul>
+<h2 id="sizing-considerations">Sizing Considerations<a class="headerlink" href="#sizing-considerations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>RPA cluster sizing is driven by write rate (MB/s) across all protected CGs</li>
+<li>Journal volume should be sized for at least the desired recovery window multiplied by the average write rate</li>
+<li>Minimum 2 RPAs per cluster for HA; 4+ for large environments</li>
+<li>WAN bandwidth must sustain steady-state replication throughput; bursts buffered in journal</li>
+</ul>
+<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
+<ul>
+<li>RPA clusters operate in active-active within a site; an RPA failure causes automatic redistribution of CGs to surviving RPAs</li>
+<li>Quorum is maintained within the cluster; loss of majority halts replication to protect data consistency</li>
+</ul>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Replication modes, topology, supported arrays, and sizing.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>RPA clusters, consistency groups, journals, and splitters.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>RP4VM, VPLEX, VMware SRM, storage arrays, and API.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Naming conventions, configuration baseline, and RPO tiers.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

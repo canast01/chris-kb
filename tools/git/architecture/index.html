@@ -21,7 +21,7 @@
     
     
       
-        <title>Git — Architecture - Chris KB</title>
+        <title>Git — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Git — Architecture · Chris KB">
+  <meta property="og:title" content="Git — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Git — Architecture · Chris KB">
+  <meta name="twitter:title" content="Git — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#git-architecture" class="md-skip">
+        <a href="#git-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Git — Architecture
+              Git — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,181 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distributed Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Concepts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#git-object-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Git Object Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Git Object Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#object-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#refs-and-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refs and Branches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Refs and Branches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#special-refs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special Refs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-enterprise-gitlab-self-managed-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Enterprise / GitLab Self-Managed Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHub Enterprise / GitLab Self-Managed Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#github-enterprise-server-ghes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Enterprise Server (GHES)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitlab-self-managed-omnibus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitLab Self-Managed (Omnibus)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-server-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Server Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-git-push" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow — git push
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +971,342 @@
 
 
 
-<h1 id="git-architecture">Git — Architecture<a class="headerlink" href="#git-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="git-architecture-overview">Git — Architecture Overview<a class="headerlink" href="#git-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>Git is a distributed version control system where every working copy is a full repository with complete history. This page covers the object model, ref system, and enterprise platform topology.</p>
+<hr />
+<h2 id="distributed-model">Distributed Model<a class="headerlink" href="#distributed-model" title="Permanent link">&para;</a></h2>
+<p>Unlike centralised VCS tools, every Git clone contains the entire repository history. There is no single "canonical" server — by convention teams designate one (GitHub, GitLab, Bitbucket) as the integration point.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph "Developer A"
+        WTA[Working Tree] --&gt; LA[Local Repo&lt;br/&gt;.git/]
+    end
+    subgraph "Developer B"
+        WTB[Working Tree] --&gt; LB[Local Repo&lt;br/&gt;.git/]
+    end
+    subgraph "Developer C — Fork"
+        WTC[Working Tree] --&gt; LC[Local Repo&lt;br/&gt;.git/]
+    end
+
+    LA --&gt;|git push| REMOTE[Remote — origin&lt;br/&gt;github.com / gitlab.com]
+    LB --&gt;|git push| REMOTE
+    REMOTE --&gt;|git pull / fetch| LA
+    REMOTE --&gt;|git pull / fetch| LB
+
+    REMOTE --&gt;|fork| FORK[Fork Remote&lt;br/&gt;github.com/user/repo]
+    FORK --&gt;|git push| LC
+    LC --&gt;|git push| FORK
+    FORK --&gt;|Pull Request / MR| REMOTE</code></pre>
+<h3 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Working Tree</strong></td>
+<td>Files currently checked out on disk</td>
+</tr>
+<tr>
+<td><strong>Index / Staging Area</strong></td>
+<td>Snapshot being prepared for the next commit</td>
+</tr>
+<tr>
+<td><strong>Local Repository</strong></td>
+<td><code>.git/</code> directory containing the full object database</td>
+</tr>
+<tr>
+<td><strong>Remote</strong></td>
+<td>Named reference to another repository URL (<code>origin</code>, <code>upstream</code>)</td>
+</tr>
+<tr>
+<td><strong>Fork</strong></td>
+<td>Server-side clone owned by a different user/org</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="git-object-model">Git Object Model<a class="headerlink" href="#git-object-model" title="Permanent link">&para;</a></h2>
+<p>Everything stored by Git is content-addressed — identified by the SHA-1 (or SHA-256 in newer repos) hash of its content.</p>
+<pre class="mermaid"><code>graph BT
+    B1[blob&lt;br/&gt;README.md content]
+    B2[blob&lt;br/&gt;main.go content]
+    B3[blob&lt;br/&gt;go.mod content]
+
+    T1[tree&lt;br/&gt;root/]
+    T2[tree&lt;br/&gt;src/]
+
+    C1[commit&lt;br/&gt;abc1234&lt;br/&gt;Initial commit]
+    C2[commit&lt;br/&gt;def5678&lt;br/&gt;Add feature X]
+
+    TAG[annotated tag&lt;br/&gt;v1.0.0]
+
+    B1 --&gt; T1
+    T2 --&gt; T1
+    B2 --&gt; T2
+    B3 --&gt; T1
+    T1 --&gt; C1
+    C1 --&gt; C2
+    TAG --&gt; C2</code></pre>
+<h3 id="object-types">Object Types<a class="headerlink" href="#object-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Description</th>
+<th>Storage Key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>blob</strong></td>
+<td>Raw file content; no filename or path</td>
+<td><code>SHA1(content)</code></td>
+</tr>
+<tr>
+<td><strong>tree</strong></td>
+<td>Directory listing — maps names to blob/tree SHAs and modes</td>
+<td><code>SHA1(tree_data)</code></td>
+</tr>
+<tr>
+<td><strong>commit</strong></td>
+<td>Points to a tree; records author, committer, message, parent commits</td>
+<td><code>SHA1(commit_data)</code></td>
+</tr>
+<tr>
+<td><strong>tag</strong></td>
+<td>Annotated reference to another object (usually a commit); stores tagger and message</td>
+<td><code>SHA1(tag_data)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Objects are stored in <code>.git/objects/</code> either as loose files or packed into <code>.git/objects/pack/</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Inspect any object by type</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>git<span class="w"> </span>cat-file<span class="w"> </span>-t<span class="w"> </span>&lt;sha&gt;<span class="w">     </span><span class="c1"># print type</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>git<span class="w"> </span>cat-file<span class="w"> </span>-p<span class="w"> </span>&lt;sha&gt;<span class="w">     </span><span class="c1"># pretty-print content</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List all objects in a pack</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>git<span class="w"> </span>verify-pack<span class="w"> </span>-v<span class="w"> </span>.git/objects/pack/*.idx<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k3<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Show tree for HEAD</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>git<span class="w"> </span>ls-tree<span class="w"> </span>-r<span class="w"> </span>--name-only<span class="w"> </span>HEAD
+</code></pre></div>
+<hr />
+<h2 id="refs-and-branches">Refs and Branches<a class="headerlink" href="#refs-and-branches" title="Permanent link">&para;</a></h2>
+<p>Refs are human-readable names that resolve to object SHAs. They live under <code>.git/refs/</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.git/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── HEAD                    → ref: refs/heads/main
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── refs/
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   ├── heads/              → local branches
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │   ├── main            → abc1234...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │   └── feature/xyz     → def5678...
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   ├── remotes/
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │   └── origin/
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │       ├── main        → abc1234...
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │       └── HEAD        → ref: refs/remotes/origin/main
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └── tags/
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│       └── v1.0.0          → annotated tag SHA
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>└── packed-refs             → bulk storage for many refs
+</code></pre></div>
+<h3 id="special-refs">Special Refs<a class="headerlink" href="#special-refs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HEAD</code></td>
+<td>Currently checked-out commit or branch pointer</td>
+</tr>
+<tr>
+<td><code>ORIG_HEAD</code></td>
+<td>Previous HEAD before a merge/rebase/reset</td>
+</tr>
+<tr>
+<td><code>MERGE_HEAD</code></td>
+<td>The commit being merged in</td>
+</tr>
+<tr>
+<td><code>FETCH_HEAD</code></td>
+<td>Last fetched commit from a remote</td>
+</tr>
+<tr>
+<td><code>CHERRY_PICK_HEAD</code></td>
+<td>Commit being cherry-picked</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show where HEAD points</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>.git/HEAD
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>symbolic-ref<span class="w"> </span>HEAD<span class="w">         </span><span class="c1"># if on a branch</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD<span class="w">            </span><span class="c1"># resolve to SHA</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># List all refs</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>git<span class="w"> </span>show-ref
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>git<span class="w"> </span><span class="k">for</span>-each-ref<span class="w"> </span>--format<span class="o">=</span><span class="s1">&#39;%(refname) %(objectname:short) %(subject)&#39;</span><span class="w"> </span>refs/heads/
+</code></pre></div>
+<hr />
+<h2 id="github-enterprise-gitlab-self-managed-architecture">GitHub Enterprise / GitLab Self-Managed Architecture<a class="headerlink" href="#github-enterprise-gitlab-self-managed-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="github-enterprise-server-ghes">GitHub Enterprise Server (GHES)<a class="headerlink" href="#github-enterprise-server-ghes" title="Permanent link">&para;</a></h3>
+<p>GHES runs as a single appliance VM or in a High-Availability pair.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph "Clients"
+        DEV[Developers]
+        CI[CI Runners]
+    end
+
+    subgraph "GHES Primary Appliance"
+        HAPROXY[HAProxy / Load Balancer]
+        NGINX[Nginx — HTTPS / SSH]
+        GITALY[Gitaly&lt;br/&gt;Git RPC service]
+        RAILS[GitHub Rails App]
+        MYSQL[(MySQL — Metadata)]
+        REDIS[(Redis — Cache / Queues)]
+        ELASTIC[(Elasticsearch — Search)]
+        STORAGE[(NFS / Block Storage&lt;br/&gt;Git Object Data)]
+    end
+
+    subgraph "GHES Replica — HA"
+        REPLICA[Passive Replica&lt;br/&gt;Continuous replication]
+    end
+
+    DEV --&gt;|HTTPS / SSH| HAPROXY
+    CI --&gt;|HTTPS| HAPROXY
+    HAPROXY --&gt; NGINX
+    NGINX --&gt; RAILS
+    NGINX --&gt; GITALY
+    RAILS --&gt; MYSQL
+    RAILS --&gt; REDIS
+    RAILS --&gt; ELASTIC
+    GITALY --&gt; STORAGE
+    STORAGE -.-&gt;|rsync / drbd| REPLICA</code></pre>
+<h3 id="gitlab-self-managed-omnibus">GitLab Self-Managed (Omnibus)<a class="headerlink" href="#gitlab-self-managed-omnibus" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    subgraph "GitLab Server"
+        NGINX2[Nginx]
+        PUMA[Puma — Rails Web/API]
+        SIDEKIQ[Sidekiq — Background Jobs]
+        GITALY2[Gitaly]
+        WORKHORSE[GitLab Workhorse&lt;br/&gt;Large uploads / Git HTTP]
+        PG[(PostgreSQL)]
+        REDIS2[(Redis)]
+        MINIO[(MinIO / Object Storage&lt;br/&gt;LFS, artifacts, uploads)]
+        REPOS2[/var/opt/gitlab/git-data]
+    end
+
+    subgraph "GitLab Geo — DR Site"
+        GEO[Geo Secondary&lt;br/&gt;Read replica]
+    end
+
+    CLIENTS[Clients] --&gt;|HTTPS / SSH| NGINX2
+    NGINX2 --&gt; WORKHORSE
+    WORKHORSE --&gt; PUMA
+    WORKHORSE --&gt; GITALY2
+    PUMA --&gt; PG
+    PUMA --&gt; REDIS2
+    SIDEKIQ --&gt; PG
+    SIDEKIQ --&gt; REDIS2
+    GITALY2 --&gt; REPOS2
+    REPOS2 -.-&gt;|Geo replication| GEO
+    MINIO -.-&gt;|object sync| GEO</code></pre>
+<h3 id="key-server-components">Key Server Components<a class="headerlink" href="#key-server-components" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Gitaly</strong></td>
+<td>gRPC service that owns all Git repository access; no direct disk access from other services</td>
+</tr>
+<tr>
+<td><strong>Puma / Rails</strong></td>
+<td>Web application, API, and business logic</td>
+</tr>
+<tr>
+<td><strong>Sidekiq</strong></td>
+<td>Asynchronous job processing (webhooks, emails, CI scheduling)</td>
+</tr>
+<tr>
+<td><strong>Workhorse</strong></td>
+<td>Reverse proxy for large payloads (git push/pull, uploads); offloads from Rails</td>
+</tr>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td>Relational metadata (users, projects, MRs, CI records)</td>
+</tr>
+<tr>
+<td><strong>Redis</strong></td>
+<td>Session cache, queues, rate limiting, ActionCable</td>
+</tr>
+<tr>
+<td><strong>Elasticsearch / Zoekt</strong></td>
+<td>Full-text code search</td>
+</tr>
+<tr>
+<td><strong>MinIO / S3</strong></td>
+<td>Object storage for LFS, CI artifacts, container registry layers</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="data-flow-git-push">Data Flow — git push<a class="headerlink" href="#data-flow-git-push" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Dev as Developer
+    participant Git as Git client
+    participant SSH as SSH / HTTPS endpoint
+    participant WH as Workhorse
+    participant Gitaly as Gitaly
+    participant Rails as Rails App
+    participant PG as PostgreSQL
+
+    Dev-&gt;&gt;Git: git push origin main
+    Git-&gt;&gt;SSH: pack-objects stream
+    SSH-&gt;&gt;WH: forward stream
+    WH-&gt;&gt;Gitaly: SmartHTTP / SSHUploadPack RPC
+    Gitaly-&gt;&gt;Gitaly: receive-pack, update refs
+    Gitaly--&gt;&gt;WH: success
+    WH-&gt;&gt;Rails: POST /internal/allowed (auth check)
+    Rails-&gt;&gt;PG: validate permissions, record push event
+    Rails--&gt;&gt;WH: 200 OK
+    WH--&gt;&gt;Git: remote refs updated
+    Rails-&gt;&gt;Rails: trigger webhooks / CI pipelines (async)</code></pre>
+<hr />
+<h2 id="storage-layout">Storage Layout<a class="headerlink" href="#storage-layout" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># GitLab on-disk layout (default Omnibus)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/var/opt/gitlab/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├──<span class="w"> </span>git-data/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│<span class="w">   </span>└──<span class="w"> </span>repositories/
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│<span class="w">       </span>└──<span class="w"> </span>&lt;namespace&gt;/
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│<span class="w">           </span>└──<span class="w"> </span>&lt;project&gt;.git/<span class="w">          </span><span class="c1"># bare repo</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│<span class="w">               </span>├──<span class="w"> </span>objects/
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│<span class="w">               </span>├──<span class="w"> </span>refs/
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│<span class="w">               </span>├──<span class="w"> </span>config
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│<span class="w">               </span>└──<span class="w"> </span>hooks/
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>├──<span class="w"> </span>gitlab-rails/
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│<span class="w">   </span>└──<span class="w"> </span>uploads/
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>└──<span class="w"> </span>gitlab-workhorse/
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># GHES on-disk layout</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>/data/
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>├──<span class="w"> </span>repositories/
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│<span class="w">   </span>└──<span class="w"> </span>&lt;org&gt;/&lt;repo&gt;.git/
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>└──<span class="w"> </span>git-hooks/
+</code></pre></div>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Platform overview and architecture summary.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Repository structure and core components.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>External integrations and connected systems.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Commit conventions and tagging standards.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

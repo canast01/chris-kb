@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerStore — Architecture - Chris KB</title>
+        <title>PowerStore — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerStore — Architecture · Chris KB">
+  <meta property="og:title" content="PowerStore — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerStore — Architecture · Chris KB">
+  <meta name="twitter:title" content="PowerStore — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#powerstore-architecture" class="md-skip">
+        <a href="#powerstore-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerStore — Architecture
+              PowerStore — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,146 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#platform-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appliance-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scale-out-powerstore-t-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale-Out (PowerStore T only)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-reduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Reduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metro-volume-synchronous-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metro Volume (Synchronous Replication)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nas-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAS Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appson-x-series" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AppsOn (X-series)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#physical-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#redundancy-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redundancy Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +936,189 @@
 
 
 
-<h1 id="powerstore-architecture">PowerStore — Architecture<a class="headerlink" href="#powerstore-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="powerstore-architecture-overview">PowerStore — Architecture Overview<a class="headerlink" href="#powerstore-architecture-overview" title="Permanent link">&para;</a></h1>
+<h2 id="platform-summary">Platform Summary<a class="headerlink" href="#platform-summary" title="Permanent link">&para;</a></h2>
+<p>Dell PowerStore is a mid-range all-flash storage platform released in 2020, built on an active-active appliance architecture with an NVMe-based storage fabric. It replaces the Unity and SC (Compellent) product lines. PowerStore runs <strong>PowerStoreOS (PSTROS)</strong>, a purpose-built operating system derived from a microservices architecture with containerized workloads.</p>
+<p>There are two hardware families:</p>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Models</th>
+<th>Primary Differentiator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerStore T (Technology)</td>
+<td>500T, 1000T, 3000T, 5000T, 7000T, 9000T</td>
+<td>Scale-out capable; NVMe SSDs; standard appliance form factor</td>
+</tr>
+<tr>
+<td>PowerStore X (eXtreme)</td>
+<td>500X, 1000X, 3000X, 5000X, 7000X, 9000X</td>
+<td>Includes AppsOn — runs containerized VMs and apps on the array nodes directly using vSphere</td>
+</tr>
+</tbody>
+</table>
+<p>Both families support block (iSCSI, Fibre Channel, NVMe-oF), file (NFS, SMB, FTP), and vVols. All models ship with NVMe-based SSDs; there are no spinning-disk configurations.</p>
+<h2 id="appliance-architecture">Appliance Architecture<a class="headerlink" href="#appliance-architecture" title="Permanent link">&para;</a></h2>
+<p>Each PowerStore system consists of one or more <strong>appliances</strong>. Each appliance contains:</p>
+<ul>
+<li>Two storage nodes (Node A and Node B) — active-active; both serve I/O simultaneously</li>
+<li>An NVMe storage enclosure containing SSDs</li>
+<li>Front-end I/O modules (Fibre Channel, iSCSI 10/25/100GbE, NVMe-oF/RoCE)</li>
+<li>Back-end NVMe fabric connecting nodes to drives</li>
+</ul>
+<p>Nodes communicate over a dedicated internal NVMe fabric — this is the foundation for the active-active controller design. Unlike dual-active architectures that own LUNs per controller, PowerStore volumes are served by both nodes simultaneously with distributed ownership arbitrated at the NVMe layer.</p>
+<h2 id="scale-out-powerstore-t-only">Scale-Out (PowerStore T only)<a class="headerlink" href="#scale-out-powerstore-t-only" title="Permanent link">&para;</a></h2>
+<p>Up to four appliances can be combined into a single PowerStore cluster, sharing a unified management plane. Cross-appliance scaling allows:</p>
+<ul>
+<li>Linear increase in capacity and performance across appliances</li>
+<li>Unified data management across the cluster through a single PowerStore Manager instance</li>
+<li>Non-disruptive data migration between appliances within the cluster</li>
+<li>Dynamic rebalancing of volumes across appliances (storage auto-tiering equivalent)</li>
+</ul>
+<p>The X-series does not support cluster scale-out — it is designed for a single appliance deployment with the AppsOn workload co-residency model.</p>
+<h2 id="storage-services">Storage Services<a class="headerlink" href="#storage-services" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>PowerStoreOS Services Stack
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Block Storage (iSCSI / FC / NVMe-oF)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── Volumes
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── Host mappings (equivalent to masking views)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └── vVols (VMware Virtual Volumes)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── File Storage
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── NAS servers (NFS v3/v4.1, SMB 2.x/3.x)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ├── File systems
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └── Quotas, access zones
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>├── Data Reduction (inline)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ├── Compression (always on)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └── Deduplication (pool-level)
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>├── Protection
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ├── Snapshots (block and file)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ├── Protection policies (schedule + retention)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ├── Replication (async and Metro Volume sync)
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   └── Import (from Unity, SC, VNX, VNXe)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└── AppsOn (X-series only)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    └── Embedded vSphere / Kubernetes workloads
+</code></pre></div>
+<h2 id="data-reduction">Data Reduction<a class="headerlink" href="#data-reduction" title="Permanent link">&para;</a></h2>
+<p>PowerStore applies inline data reduction to all data — there is no tiering or caching layer to manage. The reduction approach:</p>
+<ul>
+<li><strong>Compression</strong>: Always enabled at write; LZ-based algorithm optimized for NVMe latency</li>
+<li><strong>Deduplication</strong>: Pool-wide deduplication; block-level; on by default; can be disabled per volume group if the workload is known to be incompressible (e.g., pre-encrypted backup data)</li>
+<li><strong>Reported as</strong>: Data Reduction Ratio (DRR) — shown per volume group and system-wide in PowerStore Manager</li>
+</ul>
+<p>Typical effective DRR for mixed database/VM workloads: 3–5:1. Encrypted data or pre-compressed media will show DRR near 1:1.</p>
+<h2 id="metro-volume-synchronous-replication">Metro Volume (Synchronous Replication)<a class="headerlink" href="#metro-volume-synchronous-replication" title="Permanent link">&para;</a></h2>
+<p>Metro Volume provides zero RPO synchronous replication between two PowerStore appliances across a stretched campus or metro distance (typically up to 100 km / 5 ms RTT):</p>
+<ul>
+<li>Both sites maintain an active copy; hosts write to a primary site, which replicates synchronously to the secondary before acknowledging</li>
+<li>Mediator (a lightweight VM deployed at a third site or on a cloud instance) breaks split-brain on site failure</li>
+<li>Automatic failover: if the primary site loses connectivity, the mediator grants the secondary site authority; host I/O resumes within seconds</li>
+<li>Stretched host access (e.g., VMware HA clusters) can be configured to continue I/O from the surviving site without administrator intervention</li>
+</ul>
+<p>Metro Volume is licensed separately from base PowerStore software.</p>
+<h2 id="nas-architecture">NAS Architecture<a class="headerlink" href="#nas-architecture" title="Permanent link">&para;</a></h2>
+<p>PowerStore NAS is delivered through <strong>NAS servers</strong> — logical entities that aggregate file protocols and networking for a set of file systems. Key design points:</p>
+<ul>
+<li>Each NAS server is active on one node at a time (unlike block, which is active-active)</li>
+<li>NAS server failover to the peer node is automatic on node failure</li>
+<li>NAS servers support SMB 2.x/3.x (Windows/Linux), NFS v3 and v4.1, and multi-protocol (SMB + NFS simultaneously on the same file system)</li>
+<li>File system quotas, access zones, and CIFS shadow copies are managed per NAS server</li>
+</ul>
+<h2 id="appson-x-series">AppsOn (X-series)<a class="headerlink" href="#appson-x-series" title="Permanent link">&para;</a></h2>
+<p>On PowerStore X-series appliances, storage nodes also run VMware ESXi as the host OS. This enables virtual machines and containerized applications to run on the array hardware itself:</p>
+<ul>
+<li>PowerStore X ships with a bundled vSphere instance pre-configured on the nodes</li>
+<li>VMs are stored on local PowerStore volumes — eliminating the need for a separate compute tier for management workloads</li>
+<li>Intended workloads: edge compute, branch office consolidation, secondary applications that benefit from low-latency shared storage</li>
+<li>Production database VMs requiring deterministic low latency should still be placed on dedicated compute hosts with external PowerStore block storage</li>
+</ul>
+<h2 id="management-interfaces">Management Interfaces<a class="headerlink" href="#management-interfaces" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Access Method</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerStore Manager</td>
+<td>HTTPS on management IP</td>
+<td>Primary web UI — provisioning, monitoring, protection</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>HTTPS <code>https://&lt;mgmt-ip&gt;/api/rest/</code></td>
+<td>Full API for automation and integration</td>
+</tr>
+<tr>
+<td>pstcli</td>
+<td>Binary installed on a management host</td>
+<td>CLI wrapper for REST API; suitable for scripting</td>
+</tr>
+<tr>
+<td>vSphere Plugin</td>
+<td>vCenter extension</td>
+<td>VM-centric provisioning of vVols and datastores</td>
+</tr>
+<tr>
+<td>CloudIQ</td>
+<td>SaaS (cloud) via SCG</td>
+<td>Predictive analytics, health scoring, capacity forecasting</td>
+</tr>
+<tr>
+<td>SupportAssist</td>
+<td>Outbound to Dell SRS</td>
+<td>Automated support and proactive monitoring</td>
+</tr>
+</tbody>
+</table>
+<h2 id="physical-connectivity">Physical Connectivity<a class="headerlink" href="#physical-connectivity" title="Permanent link">&para;</a></h2>
+<p>Front-end host connectivity options (I/O modules are field-replaceable):</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Interface</th>
+<th>Speed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fibre Channel</td>
+<td>FC 32Gb/16Gb</td>
+<td>32 Gbps or 16 Gbps per port</td>
+</tr>
+<tr>
+<td>iSCSI</td>
+<td>10GbE / 25GbE / 100GbE</td>
+<td>10/25/100 Gbps per port</td>
+</tr>
+<tr>
+<td>NVMe-oF (RoCE)</td>
+<td>25GbE / 100GbE</td>
+<td>25/100 Gbps per port; requires RoCE-capable NICs and switches</td>
+</tr>
+</tbody>
+</table>
+<p>Back-end: NVMe PCIe fabric internal to the appliance — not customer-configurable.</p>
+<h2 id="redundancy-model">Redundancy Model<a class="headerlink" href="#redundancy-model" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Power</strong>: dual power supplies per node; dual PSUs per drive enclosure</li>
+<li><strong>Cooling</strong>: N+1 fans per node</li>
+<li><strong>Networking</strong>: redundant management and data paths; recommend dual-fabric SAN zoning for block hosts</li>
+<li><strong>Drive failure</strong>: NVMe SSDs in RAID 5 (3+1) or RAID 6 (4+2) pools depending on configured protection level; PowerStore automatically chooses protection level at pool creation based on drive count</li>
+<li><strong>Node failure</strong>: peer node assumes all I/O within seconds (block); NAS server fail-over completes within seconds</li>
+</ul>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, design principles, and topology.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Core components, services, and technical specifications.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with VMware, backup platforms, and external systems.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Sizing guidelines, design standards, and naming conventions.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

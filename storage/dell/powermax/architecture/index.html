@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerMax — Architecture - Chris KB</title>
+        <title>PowerMax — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerMax — Architecture · Chris KB">
+  <meta property="og:title" content="PowerMax — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerMax — Architecture · Chris KB">
+  <meta name="twitter:title" content="PowerMax — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#powermax-architecture" class="md-skip">
+        <a href="#powermax-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerMax — Architecture
+              PowerMax — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ha-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HA Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +837,42 @@
 
 
 
-<h1 id="powermax-architecture">PowerMax — Architecture<a class="headerlink" href="#powermax-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="powermax-architecture-overview">PowerMax — Architecture Overview<a class="headerlink" href="#powermax-architecture-overview" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell PowerMax is an enterprise NVMe-oF all-flash array engineered for mission-critical tier-1 workloads. It is available in two models: <strong>PowerMax 2000</strong> (1–4 engines) and <strong>PowerMax 8000</strong> (1–8 engines). All flash media is NVMe, data is served over NVMe-oF (NVMe over Fibre Channel or NVMe/TCP) or traditional FC/iSCSI, and latency is consistently sub-millisecond at scale. The array runs PowerMaxOS (formerly Enginuity/HYPERMAX OS) and is managed via Unisphere for PowerMax or SYMCLI (Solutions Enabler).</p>
+<pre class="mermaid"><code>graph TB
+  FA1["FA Director A\nFC / NVMe-oF"] &amp; FA2["FA Director B\nFC / NVMe-oF"] --&gt; XB["Crossbar Interconnect"]
+  SR1["SRDF Director A"] &amp; SR2["SRDF Director B"] --&gt; XB
+  XB --&gt; FLASH[("NVMe Flash\nNVMe-SCM / eTLC")]
+  FA1 &amp; FA2 --&gt; FAB["SAN Fabric\n(Brocade / Cisco)"]
+  FAB --&gt; H(["Hosts — Oracle / SQL / SAP"])
+  SR1 &amp; SR2 --&gt;|"SRDF/S or SRDF/A"| REMOTE["Remote PowerMax"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  class FA1,FA2,SR1,SR2 ctrl
+  class XB,FAB net
+  class FLASH store
+  class H host
+  class REMOTE dr</code></pre>
+<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
+<p>PowerMax is architected around no single point of failure:</p>
+<ul>
+<li><strong>Director redundancy</strong>: Every engine has two directors (A and B). If one director fails, the peer director takes over all I/O for that engine without host disruption.</li>
+<li><strong>Global memory mirroring</strong>: Write cache is mirrored across both directors of an engine. A director failure does not result in data loss.</li>
+<li><strong>Multi-pathing</strong>: Hosts connect to ports on both directors. PowerPath or native MPIO ensures automatic path failover on director or port failure.</li>
+<li><strong>NVMe drive protection</strong>: Data is protected by RAID-5 (3+1), RAID-6 (6+2 or 8+2), or SRDF-based site-level redundancy. No single drive loss causes data unavailability.</li>
+<li><strong>SRDF (Symmetrix Remote Data Facility)</strong>: Synchronous (SRDF/S) and asynchronous (SRDF/A) replication to a remote array. SRDF/S provides zero RPO and is used for metropolitan DR; SRDF/A tolerates higher RTT for longer-distance DR with a bounded RPO.</li>
+<li><strong>Power and cooling</strong>: Dual redundant power feeds and N+1 cooling fans per engine.</li>
+</ul>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, design principles, and topology.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Core components, services, and technical specifications.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with VMware, backup platforms, and external systems.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Sizing guidelines, design standards, naming conventions, and best practices.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

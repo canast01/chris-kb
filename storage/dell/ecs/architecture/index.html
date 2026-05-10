@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell ECS — Architecture - Chris KB</title>
+        <title>Dell ECS — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Dell ECS — Architecture · Chris KB">
+  <meta property="og:title" content="Dell ECS — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dell ECS — Architecture · Chris KB">
+  <meta name="twitter:title" content="Dell ECS — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dell-ecs-architecture" class="md-skip">
+        <a href="#dell-ecs-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell ECS — Architecture
+              Dell ECS — Overview
             
           </span>
         </div>
@@ -778,6 +778,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scale-out-object-storage-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale-Out Object Storage Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erasure-coding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erasure Coding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-data-centers-vdc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Data Centers (VDC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-groups-and-geo-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Groups and Geo-Distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#namespace-and-bucket-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace and Bucket Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity-and-integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity and Integration Points
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-path-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Path Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-api-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported API Protocols
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,12 +914,284 @@
 
 
 
-<h1 id="dell-ecs-architecture">Dell ECS — Architecture<a class="headerlink" href="#dell-ecs-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="dell-ecs-overview">Dell ECS — Overview<a class="headerlink" href="#dell-ecs-overview" title="Permanent link">&para;</a></h1>
+<p>Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform built on commodity x86 nodes. It exposes S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs over standard HTTPS. The software stack runs entirely on commodity hardware and provides geo-distribution across sites via Virtual Data Centers (VDCs) linked into replication groups.</p>
+<h2 id="scale-out-object-storage-topology">Scale-Out Object Storage Topology<a class="headerlink" href="#scale-out-object-storage-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  CLT(["S3 / Swift / Atmos Clients"]) --&gt; GW["Load Balancer\n(optional)"]
+  GW --&gt; N1["ECS Node 1"] &amp; N2["ECS Node 2"] &amp; N3["ECS Node 3"] &amp; NN["Node N…"]
+  N1 &amp; N2 &amp; N3 &amp; NN --&gt; RING[("Object Ring\ndistributed erasure coding")]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class N1,N2,N3,NN ctrl
+  class GW,RING net
+  class CLT host</code></pre>
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>ECS writes incoming objects by chunking them into fixed-size chunks, applying erasure coding (typically 12+4 or 10+2 depending on node count and VDC span), and distributing coded fragments across nodes. For geo-replication, ECS asynchronously or synchronously replicates chunk journals to remote VDCs according to the replication group policy.</p>
+<ul>
+<li><strong>Single-site deployment</strong>: All nodes in one VDC. Erasure coding protects against disk and node failure. No geographic redundancy.</li>
+<li><strong>Multi-site (geo) deployment</strong>: Two or more VDCs in a replication group. Active-active writes are possible; object consistency uses a geo-replication journal. VDC-level failures do not cause data loss if replication lag is near zero.</li>
+<li><strong>Temporary Site Failure (TSF) mode</strong>: When a VDC is unreachable, the remaining VDC enters TSF mode, continues serving data from local copies, and queues a replication backlog to replay on reconnection.</li>
+</ul>
+<h2 id="erasure-coding">Erasure Coding<a class="headerlink" href="#erasure-coding" title="Permanent link">&para;</a></h2>
+<p>ECS uses erasure coding (EC) rather than replication for within-VDC data protection. Erasure coding breaks each object into data fragments and generates parity fragments; the cluster can reconstruct the original object even when a defined number of fragments are lost.</p>
+<table>
+<thead>
+<tr>
+<th>EC Scheme</th>
+<th>Data Fragments</th>
+<th>Parity Fragments</th>
+<th>Minimum Nodes</th>
+<th>Tolerated Failures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12+4 (default)</td>
+<td>12</td>
+<td>4</td>
+<td>16</td>
+<td>Up to 4 simultaneous node/disk failures</td>
+</tr>
+<tr>
+<td>10+2</td>
+<td>10</td>
+<td>2</td>
+<td>12</td>
+<td>Up to 2 simultaneous failures</td>
+</tr>
+<tr>
+<td>4+2 (small cluster)</td>
+<td>4</td>
+<td>2</td>
+<td>6</td>
+<td>Up to 2 simultaneous failures</td>
+</tr>
+</tbody>
+</table>
+<p>The EC scheme is selected automatically based on VDC node count. Clusters with fewer than 16 nodes use a narrower EC scheme. Adding nodes to an existing VDC does not immediately change the EC scheme; ECS rebalances data in the background after expansion.</p>
+<p><strong>Capacity overhead</strong>: A 12+4 scheme has 1.33× raw-to-usable overhead ratio. For every 133 TB of raw disk, approximately 100 TB is usable after EC parity. Additionally, ECS reserves a further ~30% overhead for metadata, journals, and temporary rebuild workspace. Plan usable capacity accordingly.</p>
+<h2 id="virtual-data-centers-vdc">Virtual Data Centers (VDC)<a class="headerlink" href="#virtual-data-centers-vdc" title="Permanent link">&para;</a></h2>
+<p>A VDC is the fundamental administrative and fault boundary in ECS. All nodes in a VDC reside at a single physical site and share a single cluster management plane.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VDC</td>
+<td>A single-site logical cluster of ECS nodes. Each VDC is independently manageable and can serve S3 requests autonomously.</td>
+</tr>
+<tr>
+<td>VDC Quorum</td>
+<td>ECS requires a majority of VDC nodes to be online to maintain the management and data planes. A VDC with an even number of nodes requires <code>(n/2)+1</code> nodes for quorum.</td>
+</tr>
+<tr>
+<td>Temporary Site Failure (TSF)</td>
+<td>When a VDC in a multi-VDC replication group loses connectivity to peer VDCs, it enters TSF mode, continues accepting writes locally, and queues a replication backlog. On reconnection, the backlog is replayed and the VDC resynchronises.</td>
+</tr>
+<tr>
+<td>VDC Federation</td>
+<td>Multiple VDCs are federated into a single management domain by peering them through the ECS Portal. This enables cross-VDC replication group configuration and geo monitoring from a single pane of glass.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="replication-groups-and-geo-distribution">Replication Groups and Geo-Distribution<a class="headerlink" href="#replication-groups-and-geo-distribution" title="Permanent link">&para;</a></h2>
+<p>Replication groups are named policy objects that define which VDCs participate in geo-replication and how objects are distributed. Every namespace is assigned to a replication group, which determines where its objects are stored and replicated.</p>
+<pre class="mermaid"><code>graph LR
+  subgraph "Site A — VDC 1"
+    NS1["Namespace: analytics-prod"]
+    B1["Bucket: analytics-prod-raw"]
+  end
+  subgraph "Site B — VDC 2"
+    NS2["Namespace: analytics-prod (replica)"]
+    B2["Bucket: analytics-prod-raw (replica)"]
+  end
+  RG["Replication Group\nlon01-ams01-rg1\n(Async, 15 min RPO)"]
+  NS1 --&gt; RG --&gt; NS2</code></pre>
+<p>Replication groups support three replication modes:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Consistency</th>
+<th>RPO</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synchronous</td>
+<td>Strong — write acknowledged after confirmed on all VDCs</td>
+<td>Near-zero</td>
+<td>Compliance, financial records</td>
+</tr>
+<tr>
+<td>Asynchronous</td>
+<td>Eventual — write acknowledged locally; replicated in background</td>
+<td>Minutes (configurable)</td>
+<td>General workloads, backup targets</td>
+</tr>
+<tr>
+<td>Metered</td>
+<td>Asynchronous with WAN bandwidth throttling</td>
+<td>Longer (depends on throttle)</td>
+<td>WAN-constrained environments</td>
+</tr>
+</tbody>
+</table>
+<h2 id="namespace-and-bucket-hierarchy">Namespace and Bucket Hierarchy<a class="headerlink" href="#namespace-and-bucket-hierarchy" title="Permanent link">&para;</a></h2>
+<p>ECS organises data in a two-level hierarchy below the VDC: namespaces and buckets.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VDC
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── Namespace (multi-tenancy boundary)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Assigned to one Replication Group
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ├── Quota (hard or advisory)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ├── IAM Users (object users with S3 access keys)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    └── Bucket (object container)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        ├── Versioning enabled/disabled
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ├── Lifecycle policy (expiration, transitions)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        ├── Access policy (bucket policy, ACLs)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        └── Object Lock (WORM, compliance or governance mode)
+</code></pre></div>
+<ul>
+<li><strong>Namespace</strong>: The top-level multi-tenancy boundary. Separate namespaces isolate teams, applications, or compliance zones. Each namespace has its own IAM users, quotas, and replication group assignment.</li>
+<li><strong>Bucket</strong>: An object container within a namespace. Buckets are the S3-visible unit. Versioning, lifecycle, and access policy are configured per bucket.</li>
+<li><strong>Object</strong>: The individual data item stored in a bucket, identified by a key (path-like string). Objects can carry custom metadata tags used by the metadata search API.</li>
+</ul>
+<h2 id="connectivity-and-integration-points">Connectivity and Integration Points<a class="headerlink" href="#connectivity-and-integration-points" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Protocol / Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3 API endpoint</td>
+<td>HTTPS 443 or 9021</td>
+<td>Object read/write for applications and backup tools</td>
+</tr>
+<tr>
+<td>Swift API endpoint</td>
+<td>HTTPS 9024</td>
+<td>OpenStack-compatible object access</td>
+</tr>
+<tr>
+<td>Management REST API</td>
+<td>HTTPS 4443</td>
+<td>Administration, monitoring, and automation</td>
+</tr>
+<tr>
+<td>ECS Portal</td>
+<td>HTTPS 443</td>
+<td>Web-based administration console</td>
+</tr>
+<tr>
+<td>Geo-replication</td>
+<td>TCP 9100</td>
+<td>Inter-VDC replication traffic between nodes</td>
+</tr>
+<tr>
+<td>LDAP/AD</td>
+<td>TCP 389 / 636</td>
+<td>Optional namespace-level user authentication</td>
+</tr>
+<tr>
+<td>Syslog</td>
+<td>UDP/TCP 514</td>
+<td>External log forwarding for SIEM integration</td>
+</tr>
+<tr>
+<td>HDFS</td>
+<td>TCP 9003</td>
+<td>Hadoop ecosystem access via ECS HDFS connector</td>
+</tr>
+<tr>
+<td>KMIP</td>
+<td>TCP 5696</td>
+<td>External key management for encryption at rest</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-path-summary">Data Path Summary<a class="headerlink" href="#data-path-summary" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Client sends an S3 PUT request to the ECS load balancer (or directly to a node).</li>
+<li>The receiving node acts as the request coordinator for this object.</li>
+<li>The coordinator chunks the object, applies erasure coding, and distributes coded fragments across data nodes according to the EC scheme.</li>
+<li>Once the local write is complete (all fragments placed), the coordinator acknowledges the write to the client.</li>
+<li>The geo-replication journal records the new object. The replication service picks up journal entries and transmits them to peer VDCs according to the replication group mode (sync/async).</li>
+<li>On the remote VDC, fragments are written and the replication journal is updated. The remote VDC can now serve the object to readers.</li>
+</ol>
+<pre class="mermaid"><code>sequenceDiagram
+  participant CLT as "S3 Client"
+  participant LB as "Load Balancer"
+  participant COORD as "Coordinator Node"
+  participant DATA as "Data Nodes (N-3)"
+  participant JRNL as "Geo-Rep Journal"
+  participant REMOTE as "Remote VDC"
+  CLT-&gt;&gt;LB: PUT /bucket/key
+  LB-&gt;&gt;COORD: route request
+  COORD-&gt;&gt;COORD: chunk + erasure code
+  COORD-&gt;&gt;DATA: write EC fragments (12+4)
+  DATA--&gt;&gt;COORD: fragments committed
+  COORD--&gt;&gt;CLT: 200 OK (write acknowledged)
+  COORD-&gt;&gt;JRNL: record new object
+  JRNL-&gt;&gt;REMOTE: replicate (async/sync)
+  REMOTE--&gt;&gt;JRNL: replicated OK</code></pre>
+<h2 id="supported-api-protocols">Supported API Protocols<a class="headerlink" href="#supported-api-protocols" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Use Case</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3</td>
+<td>General-purpose object access, backup, analytics</td>
+<td>Primary API; widest client support</td>
+</tr>
+<tr>
+<td>Swift</td>
+<td>OpenStack integration</td>
+<td>Supported but less commonly deployed in new installations</td>
+</tr>
+<tr>
+<td>CAS (Centera)</td>
+<td>Fixed-content, WORM compliance storage</td>
+<td>Atmos/Centera API compatibility for migration from legacy EMC Centera</td>
+</tr>
+<tr>
+<td>Atmos</td>
+<td>Legacy EMC Atmos workloads</td>
+<td>Maintained for backward compatibility; not recommended for new deployments</td>
+</tr>
+<tr>
+<td>HDFS</td>
+<td>Hadoop/Spark workloads</td>
+<td>Requires ECS HDFS connector JAR on compute nodes</td>
+</tr>
+<tr>
+<td>NFS (ECS 3.8+)</td>
+<td>POSIX namespace access</td>
+<td>Namespace-level NFS export; requires NFS gateway configuration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
 <a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Unity — Architecture - Chris KB</title>
+        <title>Unity — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Unity — Architecture · Chris KB">
+  <meta property="og:title" content="Unity — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Unity — Architecture · Chris KB">
+  <meta name="twitter:title" content="Unity — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#unity-architecture" class="md-skip">
+        <a href="#unity-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Unity — Architecture
+              Unity — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,168 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dual-storage-processor-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dual Storage Processor Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ha-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HA Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sp-interconnect-and-write-cache-mirroring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SP Interconnect and Write Cache Mirroring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-layout-typical-xt-480" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Layout (Typical XT 480)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-pools-and-drive-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Pools and Drive Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fast-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAST Cache
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unityvsa-virtual-appliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UnityVSA (Virtual Appliance)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +958,376 @@
 
 
 
-<h1 id="unity-architecture">Unity — Architecture<a class="headerlink" href="#unity-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="unity-architecture-overview">Unity — Architecture Overview<a class="headerlink" href="#unity-architecture-overview" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell Unity XT is a mid-range unified storage platform delivering block (Fibre Channel, iSCSI) and file (NFS, SMB) storage from a single system. It uses a dual storage processor (SP A / SP B) architecture with automatic I/O failover between processors. Unity XT is available as purpose-built hardware in the 380, 480, 680, and 880 models and as a software-defined virtual appliance (UnityVSA). Administration is via the Unisphere for Unity web GUI or the <code>uemcli</code> command-line interface.</p>
+<h2 id="dual-storage-processor-architecture">Dual Storage Processor Architecture<a class="headerlink" href="#dual-storage-processor-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  SPA["Storage Processor A\n(active for pool set A)"] &lt;--&gt;|"HA heartbeat"| SPB["Storage Processor B\n(standby / active)"]
+  SPA &amp; SPB --&gt; POOL[("Drive Pool\nSSD / NL-SAS / SAS")]
+  SPA --&gt; NAS["NFS · SMB · FTP\nData Mover"]
+  SPA --&gt; SAN["iSCSI · FC\nBlock LUNs"]
+  SPB --&gt; NAS &amp; SAN
+  NAS --&gt; NH(["NAS Clients"])
+  SAN --&gt; SH(["SAN Hosts"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class SPA,SPB ctrl
+  class POOL store
+  class NH,SH host</code></pre>
+<p>Both storage processors are active simultaneously. LUN and NAS server ownership is distributed across SP A and SP B, but each resource is owned by exactly one SP at a time. Resources can be manually rebalanced or fail over automatically to the peer SP.</p>
+<h2 id="hardware-models">Hardware Models<a class="headerlink" href="#hardware-models" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Max Raw Capacity</th>
+<th>Max SSD</th>
+<th>Drive Slots</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unity XT 380</td>
+<td>~2 PB</td>
+<td>NVMe</td>
+<td>25-drive DPE + DAEs</td>
+<td>Entry mid-range; hybrid or all-flash configurations</td>
+</tr>
+<tr>
+<td>Unity XT 480</td>
+<td>~4 PB</td>
+<td>NVMe</td>
+<td>25-drive DPE + DAEs</td>
+<td>Mid-range; higher SP performance than 380</td>
+</tr>
+<tr>
+<td>Unity XT 680</td>
+<td>~8 PB</td>
+<td>NVMe</td>
+<td>25-drive DPE + DAEs</td>
+<td>High-end mid-range; suitable for large database environments</td>
+</tr>
+<tr>
+<td>Unity XT 880</td>
+<td>~12 PB</td>
+<td>NVMe</td>
+<td>25-drive DPE + DAEs</td>
+<td>Top-of-range; maximum scale for mid-range</td>
+</tr>
+<tr>
+<td>Unity 300F / 380F / 480F / 680F / 880F</td>
+<td>All-flash variants</td>
+<td>NVMe/SAS Flash</td>
+<td>Varies</td>
+<td>No spinning disk; optimised for low-latency workloads</td>
+</tr>
+<tr>
+<td>UnityVSA</td>
+<td>Software-defined</td>
+<td>N/A</td>
+<td>Virtual disks</td>
+<td>ESXi-hosted; for dev/test and small environments</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
+<p>Unity XT uses an active-active dual-SP model where LUN and filesystem ownership is distributed across both SPs. Each resource is owned by only one SP at a time.</p>
+<ul>
+<li>Both SPs are powered on and connected to the same storage enclosures and host FC/iSCSI fabric.</li>
+<li>Each SP independently serves I/O for the LUNs and NAS servers assigned to it.</li>
+<li>If an SP fails, the peer SP automatically takes ownership of all resources within approximately 30 seconds. No data loss occurs because write cache is mirrored between SPs over the SP interconnect link.</li>
+<li>During SP failover, host multipath drivers (PowerPath, MPIO, DM-MPIO) redirect I/O to the surviving SP's ports automatically.</li>
+<li>The system remains fully operational from a host perspective; the surviving SP handles all I/O until the faulted SP is repaired and returned to service.</li>
+</ul>
+<h2 id="sp-interconnect-and-write-cache-mirroring">SP Interconnect and Write Cache Mirroring<a class="headerlink" href="#sp-interconnect-and-write-cache-mirroring" title="Permanent link">&para;</a></h2>
+<p>Each SP contains DRAM write cache that absorbs host writes before they are committed to persistent drives. To protect against SP failure, write cache is continuously mirrored between SP A and SP B over a dedicated internal interconnect (not visible to hosts). If one SP fails:</p>
+<ul>
+<li>The surviving SP has a complete copy of all in-flight write data from both SPs.</li>
+<li>No acknowledged writes are lost — the system honours its write completion guarantee to hosts.</li>
+<li>Once the faulted SP is replaced or rebooted, the surviving SP resynchronises cache state.</li>
+</ul>
+<p>Battery-backed units (BBUs) on each SP protect write cache during power loss; they hold the cache long enough for destage to drives to complete.</p>
+<h2 id="networking-architecture">Networking Architecture<a class="headerlink" href="#networking-architecture" title="Permanent link">&para;</a></h2>
+<p>Unity uses separate networks for host data, management, and (optionally) replication:</p>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Protocol</th>
+<th>Purpose</th>
+<th>Typical Interface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host block (FC)</td>
+<td>Fibre Channel</td>
+<td>FC LUN access</td>
+<td>8/16/32 Gb FC HBAs</td>
+</tr>
+<tr>
+<td>Host block (iSCSI)</td>
+<td>iSCSI</td>
+<td>iSCSI LUN access</td>
+<td>10/25 GbE Ethernet</td>
+</tr>
+<tr>
+<td>Host file (NAS)</td>
+<td>NFS / SMB</td>
+<td>NAS file access</td>
+<td>10/25 GbE Ethernet (NAS file interface IPs)</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>HTTPS / SSH</td>
+<td>Unisphere GUI, uemcli</td>
+<td>1 GbE management port per SP</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>TCP</td>
+<td>Inter-array replication</td>
+<td>Data or dedicated replication interface</td>
+</tr>
+</tbody>
+</table>
+<p>Management traffic uses a dedicated 1 GbE port on each SP. SP A and SP B each have their own management IP. A management virtual IP (shared between SPs) can be configured to follow the active management SP automatically.</p>
+<h2 id="port-layout-typical-xt-480">Port Layout (Typical XT 480)<a class="headerlink" href="#port-layout-typical-xt-480" title="Permanent link">&para;</a></h2>
+<p>Each SP A and SP B provides:</p>
+<table>
+<thead>
+<tr>
+<th>Port Type</th>
+<th>Count (per SP)</th>
+<th>Speed</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FC host ports</td>
+<td>4</td>
+<td>16 Gb</td>
+<td>Block storage hosts via FC fabric</td>
+</tr>
+<tr>
+<td>10/25 GbE host ports</td>
+<td>4</td>
+<td>10/25 GbE</td>
+<td>iSCSI hosts and NAS clients</td>
+</tr>
+<tr>
+<td>Management port</td>
+<td>1</td>
+<td>1 GbE</td>
+<td>Unisphere GUI and uemcli</td>
+</tr>
+<tr>
+<td>SP interconnect</td>
+<td>Internal</td>
+<td>Internal</td>
+<td>Write cache mirroring and HA heartbeat</td>
+</tr>
+</tbody>
+</table>
+<p>Exact port counts vary by model and I/O module configuration. Refer to the Dell Unity XT Technical Specifications for the specific model.</p>
+<h2 id="storage-pools-and-drive-architecture">Storage Pools and Drive Architecture<a class="headerlink" href="#storage-pools-and-drive-architecture" title="Permanent link">&para;</a></h2>
+<p>Storage pools are the fundamental unit of capacity allocation. A pool contains one or more disk groups (RAID sets); LUNs and file systems are allocated from pool capacity.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Unity Array
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └── Storage Pool (e.g., pool-performance)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       ├── Disk Group 1 — RAID-5 (4+1), SAS SSD drives
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>       ├── Disk Group 2 — RAID-5 (4+1), SAS SSD drives
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>       └── Disk Group 3 — RAID-10, NVMe drives
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            └── LUN or File System allocations
+</code></pre></div>
+<pre class="mermaid"><code>graph TD
+  subgraph "Unity Array"
+    subgraph "Storage Pool"
+      DG1["Disk Group 1\nRAID-5 (4+1) · SAS SSD"]
+      DG2["Disk Group 2\nRAID-5 (4+1) · NL-SAS"]
+      DG3["Disk Group 3\nRAID-10 · NVMe"]
+    end
+    LUN["Block LUN\n(thin-provisioned)"]
+    FS["File System\n(NFS / SMB)"]
+    SNAP["Snapshot\n(redirect-on-write)"]
+  end
+  DG1 &amp; DG2 &amp; DG3 --&gt; LUN
+  DG1 &amp; DG2 &amp; DG3 --&gt; FS
+  LUN -. "snap" .-&gt; SNAP
+  FS -. "snap" .-&gt; SNAP
+  classDef dg fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef res fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef snap fill:#b45309,stroke:#92400e,color:#fff
+  class DG1,DG2,DG3 dg
+  class LUN,FS res
+  class SNAP snap</code></pre>
+<table>
+<thead>
+<tr>
+<th>Drive Type</th>
+<th>Tier</th>
+<th>Typical Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVMe SSD</td>
+<td>Tier 0</td>
+<td>Ultra-low latency; FAST VP performance tier</td>
+</tr>
+<tr>
+<td>SAS SSD</td>
+<td>Tier 1</td>
+<td>High IOPS; performance tier in hybrid pools</td>
+</tr>
+<tr>
+<td>10K/15K SAS</td>
+<td>Tier 2</td>
+<td>Mid-range IOPS; general purpose workloads</td>
+</tr>
+<tr>
+<td>7.2K NL-SAS</td>
+<td>Tier 3</td>
+<td>High capacity, lower IOPS; archive and backup targets</td>
+</tr>
+</tbody>
+</table>
+<p>Pools can contain a single drive tier (all-flash) or multiple tiers (hybrid). When multiple tiers are present and FAST VP (Fully Automated Storage Tiering) is licensed, the array automatically moves frequently accessed data to the faster tier and cold data to the slower tier.</p>
+<h2 id="fast-cache">FAST Cache<a class="headerlink" href="#fast-cache" title="Permanent link">&para;</a></h2>
+<p>FAST Cache is an optional SSD-based read/write cache layer that sits above the pool drives and below the DRAM write cache. It extends effective random I/O performance for hybrid pools without requiring a full all-flash configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drive type</td>
+<td>SAS Flash (dedicated FAST Cache drives, not pool drives)</td>
+</tr>
+<tr>
+<td>Minimum</td>
+<td>2 drives per SP (RAID-1 pair)</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>Model-dependent; up to several TB of cache</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Random I/O workloads — databases, VM datastores</td>
+</tr>
+<tr>
+<td>Avoid for</td>
+<td>Sequential workloads — backup streams, large video files</td>
+</tr>
+</tbody>
+</table>
+<p>FAST Cache is enabled at the pool level. Check status:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/stor/config/pool<span class="w"> </span>show<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fast cache&quot;</span>
+</code></pre></div>
+<h2 id="data-services">Data Services<a class="headerlink" href="#data-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inline deduplication</td>
+<td>Eliminates duplicate data blocks within a pool; all-flash pools only</td>
+</tr>
+<tr>
+<td>Inline compression</td>
+<td>Compresses data blocks before writing to disk; all-flash pools only</td>
+</tr>
+<tr>
+<td>FAST VP</td>
+<td>Automated sub-LUN tiering between drive tiers within a pool</td>
+</tr>
+<tr>
+<td>FAST Cache</td>
+<td>SSD read/write cache acceleration for hybrid pools</td>
+</tr>
+<tr>
+<td>Native snapshots</td>
+<td>Space-efficient, redirect-on-write snapshots at LUN and filesystem level</td>
+</tr>
+<tr>
+<td>Thin provisioning</td>
+<td>LUNs and filesystems allocated from pool only as data is written</td>
+</tr>
+<tr>
+<td>Consistency groups</td>
+<td>Group multiple LUNs for crash-consistent snapshot operations</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Asynchronous or synchronous replication to a remote Unity or PowerStore</td>
+</tr>
+</tbody>
+</table>
+<h2 id="management-interfaces">Management Interfaces<a class="headerlink" href="#management-interfaces" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Access Method</th>
+<th>URL / Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unisphere GUI</td>
+<td>Web browser (HTTPS)</td>
+<td><code>https://&lt;sp-mgmt-ip&gt;</code></td>
+</tr>
+<tr>
+<td>UEMCLI</td>
+<td>Command-line (SSH or local)</td>
+<td><code>uemcli -d &lt;ip&gt; -u admin</code></td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>HTTP/HTTPS client</td>
+<td><code>https://&lt;sp-ip&gt;/api/types/</code></td>
+</tr>
+<tr>
+<td>vCenter Plugin</td>
+<td>vSphere Web Client</td>
+<td>Dell Unity Plugin installed in vCenter</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unityvsa-virtual-appliance">UnityVSA (Virtual Appliance)<a class="headerlink" href="#unityvsa-virtual-appliance" title="Permanent link">&para;</a></h2>
+<p>UnityVSA runs the Unity Operating Environment (OE) as a virtual machine on VMware ESXi. It provides the same Unisphere management interface and REST API as physical Unity XT hardware, making it suitable for:</p>
+<ul>
+<li>Development and test environments where Unity behaviour needs to be validated.</li>
+<li>Small branch offices or remote sites with limited data footprint.</li>
+<li>Learning and lab environments.</li>
+</ul>
+<p>UnityVSA does not support physical drive trays, FAST Cache, or the same I/O performance profile as Unity XT hardware. It is not recommended for production workloads requiring high IOPS or guaranteed latency.</p>
+<h2 id="software-versioning">Software Versioning<a class="headerlink" href="#software-versioning" title="Permanent link">&para;</a></h2>
+<p>Unity OE (Operating Environment) is the storage operating system. Releases follow a major.minor.patch scheme. Non-disruptive upgrades (NDU) allow OE upgrades with host I/O continuing while each SP is upgraded sequentially.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current OE version</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/sw<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Detailed version information</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>/sys/sw/version<span class="w"> </span>show
+</code></pre></div>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, design principles, and topology.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Core components, services, and technical specifications.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with VMware, backup platforms, and external systems.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Sizing guidelines, design standards, naming conventions, and best practices.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

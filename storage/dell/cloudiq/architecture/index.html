@@ -21,7 +21,7 @@
     
     
       
-        <title>CloudIQ — Architecture - Chris KB</title>
+        <title>CloudIQ — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="CloudIQ — Architecture · Chris KB">
+  <meta property="og:title" content="CloudIQ — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CloudIQ — Architecture · Chris KB">
+  <meta name="twitter:title" content="CloudIQ — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cloudiq-architecture" class="md-skip">
+        <a href="#cloudiq-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CloudIQ — Architecture
+              CloudIQ — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#data-pipeline-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Pipeline Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +837,36 @@
 
 
 
-<h1 id="cloudiq-architecture">CloudIQ — Architecture<a class="headerlink" href="#cloudiq-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="cloudiq-architecture-overview">CloudIQ — Architecture Overview<a class="headerlink" href="#cloudiq-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.</p>
+<h2 id="data-pipeline-topology">Data Pipeline Topology<a class="headerlink" href="#data-pipeline-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  ARRAYS["Dell Arrays\nPowerMax · Unity · PowerScale · PowerStore"] --&gt;|"secure telemetry HTTPS"| CLOUDIQ["Dell CloudIQ\n(SaaS analytics)"]
+  CLOUDIQ --&gt; HEALTH["Health Score &amp; Alerts"]
+  CLOUDIQ --&gt; CAP["Capacity Forecasting"]
+  CLOUDIQ --&gt; REC["AI Recommendations"]
+  ADMIN(["IT Admin"]) --&gt;|"web portal"| CLOUDIQ
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ARRAYS ctrl
+  class CLOUDIQ,HEALTH,CAP,REC cloud
+  class ADMIN host</code></pre>
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Each on-premises Dell storage system is registered to an SCG appliance</li>
+<li>The SCG polls the registered systems for telemetry (capacity metrics, performance counters, hardware health) and forwards the data to the Dell CloudIQ back-end over outbound HTTPS (port 443)</li>
+<li>CloudIQ ingests the telemetry, applies ML-based health scoring, and generates alerts when scores drop or anomalies are detected</li>
+<li>Users access results via the CloudIQ web dashboard or the REST API</li>
+<li>Notifications are sent via email or webhook based on configured notification rules</li>
+</ol>
+<p>CloudIQ health scores range from 0 to 100. Scores below 80 indicate a condition requiring attention; scores below 60 are typically active hardware or configuration alerts.</p>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, design principles, and topology.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Core components, services, and technical specifications.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with other platforms and external systems.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Sizing guidelines, design standards, and best practices.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

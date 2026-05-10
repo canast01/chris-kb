@@ -21,7 +21,7 @@
     
     
       
-        <title>FOD — Architecture - Chris KB</title>
+        <title>FOD — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FOD — Architecture · Chris KB">
+  <meta property="og:title" content="FOD — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FOD — Architecture · Chris KB">
+  <meta name="twitter:title" content="FOD — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fod-architecture" class="md-skip">
+        <a href="#fod-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FOD — Architecture
+              FOD — Overview
             
           </span>
         </div>
@@ -778,6 +778,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-fod-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How FOD Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,9 +848,70 @@
 
 
 
-<h1 id="fod-architecture">FOD — Architecture<a class="headerlink" href="#fod-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="fod-overview">FOD — Overview<a class="headerlink" href="#fod-overview" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../../">Flex on Demand</a> reference.</p>
+</blockquote>
+<hr />
+<p>Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD provides the cost efficiency of a cloud-like model on-premises without requiring physical capacity additions. It is available on PowerMax, PowerStore, and PowerScale platforms.</p>
+<h2 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Environments with variable workload patterns where paying for peak capacity all the time is wasteful</td>
+</tr>
+<tr>
+<td>Dev/test environments that need burst capacity periodically but a low committed baseline</td>
+</tr>
+<tr>
+<td>Businesses that want to avoid capital expenditure on storage but remain on-premises</td>
+</tr>
+<tr>
+<td>Organisations running APEX Flex on Demand subscriptions as part of a broader APEX agreement</td>
+</tr>
+<tr>
+<td>Situations where procurement lead times are too long to meet workload growth demands</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-fod-works">How FOD Works<a class="headerlink" href="#how-fod-works" title="Permanent link">&para;</a></h2>
+<p>A base capacity is licensed outright. Burst capacity above the committed level is metered and billed monthly. FOD contracts define a <strong>base</strong> commitment and a <strong>burst ceiling</strong>. Usage between base and ceiling is billed monthly. Usage above the burst ceiling may trigger over-usage charges or require an immediate license upgrade.</p>
+<p>Metering is based on the <strong>maximum capacity used in any hour</strong> during the billing month (peak-hour metering).</p>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Set the committed baseline conservatively at contract start and adjust upward at renewal</td>
+<td>it is easier to raise a baseline than recover overbilled burst charges</td>
+</tr>
+<tr>
+<td>Monitor CloudIQ capacity trends weekly</td>
+<td>burst events visible before the end-of-month bill</td>
+</tr>
+<tr>
+<td>Ensure Secure Connect Gateway redundancy</td>
+<td>a single SCG failure that causes telemetry gaps can complicate billing disputes</td>
+</tr>
+<tr>
+<td>Automate monthly usage extraction via CloudIQ API</td>
+<td>feed it into a finance reporting system to eliminate manual reconciliation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="overview/"><strong>Overview</strong><span>Architecture overview, design principles, and topology.</span></a>
 <a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
 <a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>

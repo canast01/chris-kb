@@ -21,7 +21,7 @@
     
     
       
-        <title>SRDF/S — Architecture - Chris KB</title>
+        <title>SRDF/S — Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SRDF/S — Architecture · Chris KB">
+  <meta property="og:title" content="SRDF/S — Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SRDF/S — Architecture · Chris KB">
+  <meta name="twitter:title" content="SRDF/S — Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#srdfs-architecture" class="md-skip">
+        <a href="#srdfs-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SRDF/S — Architecture
+              SRDF/S — Overview
             
           </span>
         </div>
@@ -778,6 +778,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-commit-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Commit Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +848,43 @@
 
 
 
-<h1 id="srdfs-architecture">SRDF/S — Architecture<a class="headerlink" href="#srdfs-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="srdfs-overview">SRDF/S — Overview<a class="headerlink" href="#srdfs-overview" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Part of the <a href="../">SRDF/S Architecture</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SRDF/S (Synchronous) provides zero-data-loss replication between two PowerMax arrays. Every host write is committed to both the source (R1) and target (R2) before an acknowledgement is returned to the host. This guarantees <strong>RPO = 0</strong> at the cost of write latency, which is directly proportional to the inter-site round-trip time (RTT).</p>
+<p><strong>Use case:</strong> Applications that cannot tolerate any data loss — financial transaction systems, active-active cluster workloads, and DR configurations where RPO = 0 is contractually required.</p>
+<hr />
+<h2 id="write-commit-model">Write Commit Model<a class="headerlink" href="#write-commit-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  PM_A["PowerMax Primary\nSite A — R1"] --&gt;|"SRDF/S synchronous\n(≤10ms RTT)"| PM_B["PowerMax Secondary\nSite B — R2"]
+  PM_A --&gt; HA(["Production Hosts\nSite A"])
+  PM_B -.-&gt;|"read-only\n(Synchronized state)"| HB(["Standby Hosts\nSite B"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class PM_A ctrl
+  class PM_B dr
+  class HA host
+  class HB dr</code></pre>
+<p>This provides:
+- Zero data loss between production and metro DR
+- Cost-effective remote protection without requiring synchronous WAN bandwidth to the remote site</p>
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<ul>
+<li>SRDF/S license required on both arrays (separate from SRDF/A license)</li>
+<li>SRDF director ports must be licensed for synchronous replication</li>
+<li>SRDF/Metro (active-active SRDF/S variant) requires an additional license</li>
+</ul>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Write commit model, topology, and licensing.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Array roles, directors, pair states, and key elements.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>VMware SRM, vMSC, Aria Operations, REST API, and backup from R2.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>RTT budgets, group design rules, sizing, and test frequency.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 

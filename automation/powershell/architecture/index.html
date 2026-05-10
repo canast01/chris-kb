@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerShell — Architecture - Chris KB</title>
+        <title>PowerShell — Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerShell — Architecture · Chris KB">
+  <meta property="og:title" content="PowerShell — Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerShell — Architecture · Chris KB">
+  <meta name="twitter:title" content="PowerShell — Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#powershell-architecture" class="md-skip">
+        <a href="#powershell-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerShell — Architecture
+              PowerShell — Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,153 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#powershell-core-vs-windows-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Core vs Windows PowerShell
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Engine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Execution Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remoting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remoting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Remoting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#winrm-windows-remote-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WinRM (Windows Remote Management)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssh-remoting-powershell-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Remoting (PowerShell 7+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-manifest-key-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Manifest Key Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runspace-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runspace Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-automatic-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Automatic Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-this-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In this section
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,29 +943,259 @@
 
 
 
-<h1 id="powershell-architecture">PowerShell — Architecture<a class="headerlink" href="#powershell-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="powershell-architecture-overview">PowerShell — Architecture Overview<a class="headerlink" href="#powershell-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>PowerShell is a cross-platform task automation shell built on .NET. Understanding its internals is essential for building reliable, maintainable automation at enterprise scale.</p>
+<hr />
+<h2 id="powershell-core-vs-windows-powershell">PowerShell Core vs Windows PowerShell<a class="headerlink" href="#powershell-core-vs-windows-powershell" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Windows PowerShell</th>
+<th>PowerShell Core / PowerShell 7+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Runtime</td>
+<td>.NET Framework 4.x</td>
+<td>.NET 6 / 7 / 8 (cross-platform)</td>
+</tr>
+<tr>
+<td>Platforms</td>
+<td>Windows only</td>
+<td>Windows, Linux, macOS</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>5.1 (final, no new features)</td>
+<td>7.x (active development)</td>
+</tr>
+<tr>
+<td>Module support</td>
+<td>Full Windows module library</td>
+<td>Some Windows-only modules unavailable</td>
+</tr>
+<tr>
+<td>Remoting</td>
+<td>WinRM only</td>
+<td>WinRM + SSH</td>
+</tr>
+<tr>
+<td>Release cadence</td>
+<td>Security patches only</td>
+<td>Active feature releases</td>
+</tr>
+<tr>
+<td>Config location</td>
+<td><code>%APPDATA%\Microsoft\Windows\PowerShell</code></td>
+<td><code>~/.config/powershell</code></td>
+</tr>
+<tr>
+<td><code>$PSVersionTable.PSEdition</code></td>
+<td><code>Desktop</code></td>
+<td><code>Core</code></td>
+</tr>
+</tbody>
+</table>
+<p>Windows PowerShell 5.1 remains the default on all Windows Server versions. PowerShell 7 must be installed separately and runs side-by-side. Always target PowerShell 7 for new automation unless a dependency is hard-bound to Desktop edition.</p>
+<hr />
+<h2 id="execution-engine">Execution Engine<a class="headerlink" href="#execution-engine" title="Permanent link">&para;</a></h2>
+<p>The PowerShell execution engine processes input through a well-defined sequence. Each statement passes through the <strong>parser</strong>, is compiled to an <strong>AST (Abstract Syntax Tree)</strong>, and is evaluated by the <strong>runtime</strong> against the active <strong>runspace</strong>.</p>
+<pre class="mermaid"><code>flowchart LR
+    A([Input&lt;br/&gt;stdin / script / command]) --&gt; B[Lexer &amp; Parser]
+    B --&gt; C[AST\nAbstract Syntax Tree]
+    C --&gt; D[Binder\nType resolution]
+    D --&gt; E[Compiled Script Block]
+    E --&gt; F{Runspace}
+    F --&gt; G[Command Discovery\nAlias → Function → Cmdlet → Native]
+    G --&gt; H[Parameter Binding]
+    H --&gt; I[Pipeline Processor]
+    I --&gt; J[Output / Objects]
+    J --&gt; K([stdout / next cmdlet / $null])
+    I --&gt; L([Error Stream\n$Error / Write-Error])
+    style F fill:#1565c0,color:#fff
+    style I fill:#2e7d32,color:#fff</code></pre>
+<h3 id="pipeline-processing">Pipeline Processing<a class="headerlink" href="#pipeline-processing" title="Permanent link">&para;</a></h3>
+<p>The pipeline is the fundamental unit of composition. Objects flow between cmdlets without serialisation — full .NET objects pass in memory between pipeline stages.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Each stage receives full .NET objects</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Process</span> <span class="p">|</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CPU</span> <span class="o">-gt</span> <span class="n">10</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">CPU</span> <span class="p">|</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="n">high_cpu</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+</code></pre></div>
+<p>Key pipeline mechanics:</p>
+<ul>
+<li><code>begin {}</code> block runs once before pipeline input arrives</li>
+<li><code>process {}</code> block runs once per input object (<code>$_</code> / <code>$PSItem</code>)</li>
+<li><code>end {}</code> block runs once after all input is consumed</li>
+<li><code>$input</code> automatic variable accumulates all pipeline input in non-pipeline functions</li>
+</ul>
+<hr />
+<h2 id="remoting">Remoting<a class="headerlink" href="#remoting" title="Permanent link">&para;</a></h2>
+<h3 id="winrm-windows-remote-management">WinRM (Windows Remote Management)<a class="headerlink" href="#winrm-windows-remote-management" title="Permanent link">&para;</a></h3>
+<p>WinRM is the default remoting transport on Windows. It uses HTTP (5985) or HTTPS (5986) and SOAP/WSMan.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Enable WinRM on a target (run as admin on target)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Enable-PSRemoting</span> <span class="n">-Force</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Test connectivity</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="n">srv-prod</span><span class="p">-</span><span class="n">01</span> <span class="n">-Authentication</span> <span class="k">Default</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># One-off remote command</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="n">srv-prod</span><span class="p">-</span><span class="n">01</span> <span class="n">-ScriptBlock</span> <span class="p">{</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">WinRM</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Persistent session (reuse for multiple commands)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="n">srv-prod</span><span class="p">-</span><span class="n">01</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$session</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="n">hostname</span> <span class="p">}</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">Remove-PSSession</span> <span class="nv">$session</span>
+</code></pre></div>
+<h3 id="ssh-remoting-powershell-7">SSH Remoting (PowerShell 7+)<a class="headerlink" href="#ssh-remoting-powershell-7" title="Permanent link">&para;</a></h3>
+<p>SSH remoting works across platforms and does not require WinRM.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Requires PowerShell 7 on both ends; sshd configured with PowerShell subsystem</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># /etc/ssh/sshd_config: Subsystem powershell /usr/bin/pwsh -sshs -NoLogo</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-HostName</span> <span class="n">linux-host</span><span class="p">-</span><span class="n">01</span> <span class="n">-UserName</span> <span class="n">svcaccount</span> <span class="n">-SSHTransport</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$session</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="n">uname</span> <span class="n">-a</span> <span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="module-system">Module System<a class="headerlink" href="#module-system" title="Permanent link">&para;</a></h2>
+<p>Modules are the primary packaging unit. A module is a directory containing a manifest (<code>.psd1</code>) and one or more script files (<code>.psm1</code>) or binary DLLs (<code>.dll</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>MyModule/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── MyModule.psd1      # Manifest: metadata, exports, dependencies
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── MyModule.psm1      # Root module: dot-sources private functions
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├── Public/            # Exported functions
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   ├── Get-Widget.ps1
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   └── Set-Widget.ps1
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>└── Private/           # Internal helpers (not exported)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    └── Invoke-WidgetApi.ps1
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Module discovery paths (ordered)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$env:PSModulePath</span> <span class="n">-split</span> <span class="no">[IO.Path]</span><span class="p">::</span><span class="n">PathSeparator</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Install from PSGallery</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">PSFramework</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span> <span class="n">-Repository</span> <span class="n">PSGallery</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Import with explicit version</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Import-Module</span> <span class="n">MyModule</span> <span class="n">-RequiredVersion</span> <span class="n">2</span><span class="p">.</span><span class="n">3</span><span class="p">.</span><span class="n">1</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Inspect what a module exports</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-Module</span> <span class="n">MyModule</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">ExportedFunctions</span>
+</code></pre></div>
+<h3 id="module-manifest-key-fields">Module Manifest Key Fields<a class="headerlink" href="#module-manifest-key-fields" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">@{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">ModuleVersion</span>   <span class="p">=</span> <span class="s1">&#39;2.3.1&#39;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">GUID</span>            <span class="p">=</span> <span class="s1">&#39;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&#39;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">Author</span>          <span class="p">=</span> <span class="s1">&#39;Platform Automation Team&#39;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">Description</span>     <span class="p">=</span> <span class="s1">&#39;Widget management automation&#39;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">PowerShellVersion</span> <span class="p">=</span> <span class="s1">&#39;7.2&#39;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">RequiredModules</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;PSFramework&#39;</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">FunctionsToExport</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;Get-Widget&#39;</span><span class="p">,</span><span class="s1">&#39;Set-Widget&#39;</span><span class="p">,</span><span class="s1">&#39;Remove-Widget&#39;</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">PrivateData</span>     <span class="p">=</span> <span class="p">@{</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="n">PSData</span> <span class="p">=</span> <span class="p">@{</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>            <span class="n">Tags</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;Widget&#39;</span><span class="p">,</span><span class="s1">&#39;Automation&#39;</span><span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="p">}</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="p">}</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="runspace-model">Runspace Model<a class="headerlink" href="#runspace-model" title="Permanent link">&para;</a></h2>
+<p>A <strong>runspace</strong> is an isolated instance of the PowerShell execution environment. Each session has one default runspace. For parallelism, multiple runspaces can be created and managed via runspace pools.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Parallel processing with runspace pool (more efficient than ForEach-Object -Parallel for large sets)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$pool</span> <span class="p">=</span> <span class="no">[RunspaceFactory]</span><span class="p">::</span><span class="n">CreateRunspacePool</span><span class="p">(</span><span class="n">1</span><span class="p">,</span> <span class="n">8</span><span class="p">)</span>  <span class="c"># min 1, max 8 concurrent</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$pool</span><span class="p">.</span><span class="n">Open</span><span class="p">()</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$jobs</span> <span class="p">=</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$server</span> <span class="k">in</span> <span class="nv">$servers</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="nv">$ps</span> <span class="p">=</span> <span class="no">[PowerShell]</span><span class="p">::</span><span class="n">Create</span><span class="p">()</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="nv">$ps</span><span class="p">.</span><span class="n">RunspacePool</span> <span class="p">=</span> <span class="nv">$pool</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="no">[void]</span><span class="nv">$ps</span><span class="p">.</span><span class="n">AddScript</span><span class="p">({</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="k">param</span><span class="p">(</span><span class="nv">$s</span><span class="p">)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$s</span> <span class="n">-Count</span> <span class="n">1</span> <span class="n">-Quiet</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="p">}).</span><span class="n">AddArgument</span><span class="p">(</span><span class="nv">$server</span><span class="p">)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="n">Server</span>    <span class="p">=</span> <span class="nv">$server</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        <span class="n">PowerShell</span> <span class="p">=</span> <span class="nv">$ps</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        <span class="n">Handle</span>    <span class="p">=</span> <span class="nv">$ps</span><span class="p">.</span><span class="n">BeginInvoke</span><span class="p">()</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="p">}</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="p">}</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="nv">$results</span> <span class="p">=</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$job</span> <span class="k">in</span> <span class="nv">$jobs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>        <span class="n">Server</span> <span class="p">=</span> <span class="nv">$job</span><span class="p">.</span><span class="n">Server</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>        <span class="n">Online</span> <span class="p">=</span> <span class="nv">$job</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">EndInvoke</span><span class="p">(</span><span class="nv">$job</span><span class="p">.</span><span class="n">Handle</span><span class="p">)[</span><span class="n">0</span><span class="p">]</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>    <span class="p">}</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>    <span class="nv">$job</span><span class="p">.</span><span class="n">PowerShell</span><span class="p">.</span><span class="n">Dispose</span><span class="p">()</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="p">}</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="nv">$pool</span><span class="p">.</span><span class="n">Close</span><span class="p">()</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="nv">$pool</span><span class="p">.</span><span class="n">Dispose</span><span class="p">()</span>
+</code></pre></div>
+<p>PowerShell 7 also exposes <code>ForEach-Object -Parallel</code> as a simpler surface for moderate parallelism:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">$servers</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="n">-Parallel</span> <span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$_</span> <span class="n">-Count</span> <span class="n">1</span> <span class="n">-Quiet</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">}</span> <span class="n">-ThrottleLimit</span> <span class="n">10</span>
+</code></pre></div>
+<hr />
+<h2 id="key-automatic-variables">Key Automatic Variables<a class="headerlink" href="#key-automatic-variables" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$_</code> / <code>$PSItem</code></td>
+<td>Current pipeline object</td>
+</tr>
+<tr>
+<td><code>$PSVersionTable</code></td>
+<td>Runtime version information</td>
+</tr>
+<tr>
+<td><code>$Error</code></td>
+<td>Array of recent error records (newest at index 0)</td>
+</tr>
+<tr>
+<td><code>$LASTEXITCODE</code></td>
+<td>Exit code of the last native command</td>
+</tr>
+<tr>
+<td><code>$PSCommandPath</code></td>
+<td>Full path of the running script file</td>
+</tr>
+<tr>
+<td><code>$PSScriptRoot</code></td>
+<td>Directory containing the running script</td>
+</tr>
+<tr>
+<td><code>$env:PSModulePath</code></td>
+<td>Colon/semicolon-separated module search paths</td>
+</tr>
+<tr>
+<td><code>$ConfirmPreference</code></td>
+<td>Threshold for automatic <code>-Confirm</code> prompts</td>
+</tr>
+<tr>
+<td><code>$ErrorActionPreference</code></td>
+<td>Default action on non-terminating errors</td>
+</tr>
+<tr>
+<td><code>$VerbosePreference</code></td>
+<td>Controls <code>Write-Verbose</code> output</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Architecture overview, design principles, and environment role.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>Core modules, providers, and technical specifications.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>Integration with VMware, Windows, and external systems.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Coding standards, naming conventions, and best practices.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
 
 
