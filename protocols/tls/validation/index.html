@@ -21,7 +21,7 @@
     
     
       
-        <title>Validation - Chris KB</title>
+        <title>TLS Validation - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Validation · Chris KB">
+  <meta property="og:title" content="TLS Validation · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Validation · Chris KB">
+  <meta name="twitter:title" content="TLS Validation · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#validation" class="md-skip">
+        <a href="#tls-validation" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Validation
+              TLS Validation
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#quick-validation-live-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Quick Validation — Live Endpoint
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#certificate-validity-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Certificate Validity Checks
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#chain-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Chain Validation
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#protocol-and-cipher-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Protocol and Cipher Checks
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#curl-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        curl Validation
       
     </span>
   </a>
@@ -840,10 +840,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#validating-a-certificate-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Validating a Certificate File
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ocsp-revocation-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCSP / Revocation Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprehensive-scan-testsslsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprehensive Scan — testssl.sh
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Errors
       
     </span>
   </a>
@@ -870,42 +914,196 @@
 
 
 
-<h1 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical TLS Validation notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="tls-validation">TLS Validation<a class="headerlink" href="#tls-validation" title="Permanent link">&para;</a></h1>
+<p>Use these commands to verify TLS configuration on servers, check certificate validity, diagnose handshake failures, and confirm correct chain presentation.</p>
+<h2 id="quick-validation-live-endpoint">Quick Validation — Live Endpoint<a class="headerlink" href="#quick-validation-live-endpoint" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Full TLS handshake details</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Key fields to check in output:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Verify return code: 0 (ok)     ← chain verified</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Protocol: TLSv1.3              ← protocol version</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Cipher: TLS_AES_256_GCM_SHA384 ← cipher negotiated</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># depth=2 CN=Root CA             ← chain depth (0=server, 1=intermediate, 2=root)</span>
+</code></pre></div>
+<h2 id="certificate-validity-checks">Certificate Validity Checks<a class="headerlink" href="#certificate-validity-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Expiry date</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Subject and SANs (verify hostname coverage)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-ext<span class="w"> </span>subjectAltName
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Issuer (confirm correct CA)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-issuer
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Full certificate text</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text
+</code></pre></div>
+<h2 id="chain-validation">Chain Validation<a class="headerlink" href="#chain-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show the full chain presented</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Verify chain against a specific CA bundle</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-certificates.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-verify_return_error
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Expected: Verify return code: 0 (ok)</span>
+</code></pre></div>
+<h2 id="protocol-and-cipher-checks">Protocol and Cipher Checks<a class="headerlink" href="#protocol-and-cipher-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Force specific TLS version (test what the server accepts)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-tls1_2
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-tls1_3
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm TLS 1.0/1.1 is rejected (should fail)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-tls1_1
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Expected: alert handshake failure</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Enumerate all ciphers (nmap)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>&lt;hostname&gt;
+</code></pre></div>
+<h2 id="curl-validation">curl Validation<a class="headerlink" href="#curl-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Standard HTTPS request (uses system CA trust)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sv<span class="w"> </span>https://&lt;hostname&gt;/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Specify CA bundle (useful for internal CA)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>--cacert<span class="w"> </span>/path/to/internal-ca.pem<span class="w"> </span>https://&lt;hostname&gt;/
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Show only TLS details</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-sv<span class="w"> </span>https://&lt;hostname&gt;/<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;SSL|TLS|certificate|expire|issuer&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Ignore certificate errors (testing only — never production)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://&lt;hostname&gt;/
+</code></pre></div>
+<h2 id="validating-a-certificate-file">Validating a Certificate File<a class="headerlink" href="#validating-a-certificate-file" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check cert file is valid PEM</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-text
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check private key matches certificate</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-modulus<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-modulus<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>key.pem<span class="w">  </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Both md5 values must match</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check CSR matches certificate</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>openssl<span class="w"> </span>req<span class="w">  </span>-modulus<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>request.csr<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-modulus<span class="w"> </span>-noout<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w">    </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Verify cert against CA</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>ca.crt<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.crt<span class="w"> </span>cert.pem
+</code></pre></div>
+<h2 id="ocsp-revocation-check">OCSP / Revocation Check<a class="headerlink" href="#ocsp-revocation-check" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get OCSP URL from certificate</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>cert.pem<span class="w"> </span>-noout<span class="w"> </span>-ocsp_uri
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Query OCSP responder</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>openssl<span class="w"> </span>ocsp<span class="w"> </span>-issuer<span class="w"> </span>intermediate.crt<span class="w"> </span>-cert<span class="w"> </span>cert.pem<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-url<span class="w"> </span>&lt;ocsp-url&gt;<span class="w"> </span>-resp_text
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Expected: &quot;cert.pem: good&quot;</span>
+</code></pre></div>
+<h2 id="comprehensive-scan-testsslsh">Comprehensive Scan — testssl.sh<a class="headerlink" href="#comprehensive-scan-testsslsh" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Install</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/drwetter/testssl.sh
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">cd</span><span class="w"> </span>testssl.sh
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Full scan</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>./testssl.sh<span class="w"> </span>&lt;hostname&gt;:443
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Key output sections:</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># - Protocol support (TLS versions)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># - Cipher categories (forward secrecy, AEAD, weak ciphers)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># - Certificate (expiry, chain, SAN)</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># - Vulnerabilities (POODLE, BEAST, ROBOT, SWEET32, etc.)</span>
+</code></pre></div>
+<h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Pass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verify return code 0</td>
+<td><code>openssl s_client</code></td>
+<td><code>Verify return code: 0 (ok)</code></td>
+</tr>
+<tr>
+<td>Protocol TLS 1.2+</td>
+<td><code>openssl s_client</code></td>
+<td><code>Protocol: TLSv1.2</code> or <code>TLSv1.3</code></td>
+</tr>
+<tr>
+<td>Hostname in SAN</td>
+<td><code>openssl x509 -ext subjectAltName</code></td>
+<td>Hostname listed</td>
+</tr>
+<tr>
+<td>Cert not expired</td>
+<td><code>openssl x509 -dates</code></td>
+<td><code>notAfter</code> in the future</td>
+</tr>
+<tr>
+<td>Chain complete</td>
+<td>depth 0, 1, 2 in s_client</td>
+<td><code>depth=2</code> shows root</td>
+</tr>
+<tr>
+<td>Key matches cert</td>
+<td><code>md5sum</code> comparison</td>
+<td>Both hashes identical</td>
+</tr>
+<tr>
+<td>TLS 1.0/1.1 rejected</td>
+<td><code>openssl s_client -tls1_1</code></td>
+<td>Connection fails</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-errors">Common Errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Meaning</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>certificate has expired</code></td>
+<td>Past <code>notAfter</code></td>
+<td>Renew and deploy certificate</td>
+</tr>
+<tr>
+<td><code>certificate verify failed</code></td>
+<td>Chain untrusted</td>
+<td>Install CA cert; check chain bundle</td>
+</tr>
+<tr>
+<td><code>hostname mismatch</code></td>
+<td>CN/SAN doesn't match</td>
+<td>Reissue cert with correct SAN</td>
+</tr>
+<tr>
+<td><code>handshake failure</code></td>
+<td>No common cipher/protocol</td>
+<td>Adjust cipher list or TLS version config</td>
+</tr>
+<tr>
+<td><code>key values mismatch</code></td>
+<td>Key and cert don't match</td>
+<td>Use the key that was generated with this cert's CSR</td>
+</tr>
+</tbody>
+</table>
 
 
 

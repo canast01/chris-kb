@@ -21,7 +21,7 @@
     
     
       
-        <title>Traps - Chris KB</title>
+        <title>SNMP Traps - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Traps · Chris KB">
+  <meta property="og:title" content="SNMP Traps · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Traps · Chris KB">
+  <meta name="twitter:title" content="SNMP Traps · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#traps" class="md-skip">
+        <a href="#snmp-traps" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Traps
+              SNMP Traps
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#trap-vs-inform" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Trap vs Inform
       
     </span>
   </a>
@@ -796,10 +796,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#configuring-trap-destinations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Configuring Trap Destinations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring Trap Destinations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-snmpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linux (snmpd)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cisco-ios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cisco IOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arista-eos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arista EOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brocade-fos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brocade FOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-trap-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Trap Delivery
       
     </span>
   </a>
@@ -807,10 +868,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#common-trap-oids" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Common Trap OIDs
       
     </span>
   </a>
@@ -818,10 +879,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#trap-receiver-snmptrapd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Trap Receiver — snmptrapd
       
     </span>
   </a>
@@ -829,21 +890,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Common Issues
       
     </span>
   </a>
@@ -870,42 +920,164 @@
 
 
 
-<h1 id="traps">Traps<a class="headerlink" href="#traps" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SNMP Traps notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="snmp-traps">SNMP Traps<a class="headerlink" href="#snmp-traps" title="Permanent link">&para;</a></h1>
+<p>SNMP traps are unsolicited notifications sent from a device to a trap receiver (NMS) when an event occurs — a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.</p>
+<h2 id="trap-vs-inform">Trap vs Inform<a class="headerlink" href="#trap-vs-inform" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Acknowledgement</th>
+<th>Reliability</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Trap</strong></td>
+<td>None</td>
+<td>Fire-and-forget</td>
+<td>v1, v2c, v3</td>
+</tr>
+<tr>
+<td><strong>Inform</strong></td>
+<td>Manager sends ACK</td>
+<td>Reliable delivery</td>
+<td>v2c, v3</td>
+</tr>
+</tbody>
+</table>
+<p>Use Informs where delivery confirmation matters (e.g. critical hardware alarms).</p>
+<h2 id="configuring-trap-destinations">Configuring Trap Destinations<a class="headerlink" href="#configuring-trap-destinations" title="Permanent link">&para;</a></h2>
+<h3 id="linux-snmpd">Linux (snmpd)<a class="headerlink" href="#linux-snmpd" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># /etc/snmp/snmpd.conf</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># SNMPv2c trap destination</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>trapsink<span class="w">    </span>&lt;nms-ip&gt;<span class="w">  </span>&lt;community&gt;<span class="w">  </span><span class="m">162</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># SNMPv2c inform destination</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>trap2sink<span class="w">   </span>&lt;nms-ip&gt;<span class="w">  </span>&lt;community&gt;<span class="w">  </span><span class="m">162</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># SNMPv3 trap</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>trapsess<span class="w"> </span>-v<span class="w"> </span><span class="m">3</span><span class="w"> </span>-u<span class="w"> </span>trapuser<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;authpass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;privpass&gt;<span class="w"> </span>&lt;nms-ip&gt;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>snmpd
+</code></pre></div>
+<h3 id="cisco-ios">Cisco IOS<a class="headerlink" href="#cisco-ios" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>snmp-server enable traps
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snmp-server host &lt;nms-ip&gt; version 2c &lt;community&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Specific trap types
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snmp-server enable traps snmp linkdown linkup
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>snmp-server enable traps envmon
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>snmp-server enable traps bgp
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Verify
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>show snmp host
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>show snmp trap
+</code></pre></div>
+<h3 id="arista-eos">Arista EOS<a class="headerlink" href="#arista-eos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>snmp-server host &lt;nms-ip&gt; version 2c &lt;community&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snmp-server enable traps
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show snmp host
+</code></pre></div>
+<h3 id="brocade-fos">Brocade FOS<a class="headerlink" href="#brocade-fos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>snmpconfig --set mibCapability
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a># Enable trap categories via prompts
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>snmpconfig --set snmpv1
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a># Set trap recipient IP and community
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>snmpconfig --show mibCapability
+</code></pre></div>
+<h2 id="testing-trap-delivery">Testing Trap Delivery<a class="headerlink" href="#testing-trap-delivery" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Send a test trap from Linux to NMS</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmptrap<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;nms-ip&gt;<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="m">1</span>.3.6.1.6.3.1.1.5.3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="m">1</span>.3.6.1.2.1.2.2.1.1.1<span class="w"> </span>i<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Or use snmptrapd to listen and verify locally</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>snmptrapd<span class="w"> </span>-f<span class="w"> </span>-Lo<span class="w"> </span>-c<span class="w"> </span>/etc/snmp/snmptrapd.conf
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check NMS received the trap</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># → Zabbix: Monitoring → Latest Data → filter by host</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># → Prometheus: check alertmanager log for SNMP trap receiver</span>
+</code></pre></div>
+<h2 id="common-trap-oids">Common Trap OIDs<a class="headerlink" href="#common-trap-oids" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Trap</th>
+<th>OID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Link Down</td>
+<td>1.3.6.1.6.3.1.1.5.3</td>
+</tr>
+<tr>
+<td>Link Up</td>
+<td>1.3.6.1.6.3.1.1.5.4</td>
+</tr>
+<tr>
+<td>Cold Start</td>
+<td>1.3.6.1.6.3.1.1.5.1</td>
+</tr>
+<tr>
+<td>Warm Start</td>
+<td>1.3.6.1.6.3.1.1.5.2</td>
+</tr>
+<tr>
+<td>Authentication Failure</td>
+<td>1.3.6.1.6.3.1.1.5.5</td>
+</tr>
+</tbody>
+</table>
+<h2 id="trap-receiver-snmptrapd">Trap Receiver — snmptrapd<a class="headerlink" href="#trap-receiver-snmptrapd" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># /etc/snmp/snmptrapd.conf</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>authCommunity<span class="w"> </span>log,execute,net<span class="w"> </span>&lt;community&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Log all traps</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>logOption<span class="w"> </span>f<span class="w"> </span>/var/log/snmptrapd.log
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Forward to syslog</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>traphandle<span class="w"> </span>default<span class="w"> </span>/usr/sbin/snmptrapd-handler
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>snmptrapd
+</code></pre></div>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No traps received at NMS</td>
+<td>Destination IP/port wrong or UDP 162 blocked</td>
+<td><code>tcpdump -i any udp port 162</code> at NMS</td>
+</tr>
+<tr>
+<td>Traps arrive but NMS ignores</td>
+<td>Community mismatch</td>
+<td>Verify community on device matches NMS config</td>
+</tr>
+<tr>
+<td>Trap storm</td>
+<td>Device sending traps in a loop</td>
+<td>Check device state; apply trap rate limiting</td>
+</tr>
+<tr>
+<td>Inform not acknowledged</td>
+<td>NMS not configured for informs</td>
+<td>Check NMS SNMP inform handling</td>
+</tr>
+</tbody>
+</table>
 
 
 

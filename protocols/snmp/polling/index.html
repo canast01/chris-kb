@@ -21,7 +21,7 @@
     
     
       
-        <title>Polling - Chris KB</title>
+        <title>SNMP Polling - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Polling · Chris KB">
+  <meta property="og:title" content="SNMP Polling · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Polling · Chris KB">
+  <meta name="twitter:title" content="SNMP Polling · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#polling" class="md-skip">
+        <a href="#snmp-polling" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Polling
+              SNMP Polling
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#poll-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Poll Operations
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#common-cli-polling-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Common CLI Polling Commands
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#common-oids-for-polling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Common OIDs for Polling
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#polling-intervals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Polling Intervals
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#zabbix-snmp-polling-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Zabbix SNMP Polling Config
       
     </span>
   </a>
@@ -840,10 +840,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#prometheus-snmp-exporter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Prometheus + SNMP Exporter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -870,42 +881,221 @@
 
 
 
-<h1 id="polling">Polling<a class="headerlink" href="#polling" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SNMP Polling notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="snmp-polling">SNMP Polling<a class="headerlink" href="#snmp-polling" title="Permanent link">&para;</a></h1>
+<p>SNMP polling is the process of an NMS periodically querying devices to collect metrics. Unlike traps, polling is initiated by the manager on a schedule.</p>
+<h2 id="poll-operations">Poll Operations<a class="headerlink" href="#poll-operations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td>v1, v2c, v3</td>
+<td>Retrieve a single OID value</td>
+</tr>
+<tr>
+<td><code>GETNEXT</code></td>
+<td>v1, v2c, v3</td>
+<td>Retrieve next OID in MIB tree</td>
+</tr>
+<tr>
+<td><code>GETBULK</code></td>
+<td>v2c, v3</td>
+<td>Retrieve multiple OIDs in one request (efficient for tables)</td>
+</tr>
+<tr>
+<td><code>SET</code></td>
+<td>v1, v2c, v3</td>
+<td>Write a value to a device (requires RW community)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-polling-commands">Common CLI Polling Commands<a class="headerlink" href="#common-cli-polling-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Single OID — system description</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snmpget<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>sysDescr.0
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Walk a MIB subtree</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>system
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>interfaces
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>ifTable
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Bulk walk (faster for large MIBs)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>snmpbulkwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>-Cn0<span class="w"> </span>-Cr25<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>ifTable
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Translate OID to human-readable name</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>snmptranslate<span class="w"> </span>-On<span class="w"> </span>.1.3.6.1.2.1.1.1.0<span class="w">        </span><span class="c1"># numeric → name</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>snmptranslate<span class="w"> </span>.1.3.6.1.2.1.1.1.0<span class="w">            </span><span class="c1"># OID info</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>snmptranslate<span class="w"> </span>-Td<span class="w"> </span>sysDescr<span class="w">                  </span><span class="c1"># detailed MIB info</span>
+</code></pre></div>
+<h2 id="common-oids-for-polling">Common OIDs for Polling<a class="headerlink" href="#common-oids-for-polling" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>OID</th>
+<th>Name</th>
+<th>Metric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1.3.6.1.2.1.1.1.0</code></td>
+<td>sysDescr</td>
+<td>Device description</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.1.3.0</code></td>
+<td>sysUpTime</td>
+<td>Uptime (hundredths of a second)</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.1.5.0</code></td>
+<td>sysName</td>
+<td>Device hostname</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.2.1.0</code></td>
+<td>ifNumber</td>
+<td>Number of interfaces</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.2.2.1.10</code></td>
+<td>ifInOctets</td>
+<td>Interface inbound bytes (counter)</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.2.2.1.16</code></td>
+<td>ifOutOctets</td>
+<td>Interface outbound bytes (counter)</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.2.2.1.8</code></td>
+<td>ifOperStatus</td>
+<td>Interface operational status (1=up, 2=down)</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.4.1.9.9.109.1.1.1.1.3</code></td>
+<td>Cisco CPU utilisation</td>
+<td>CPU % (Cisco)</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.4.1.2021.10.1.3.1</code></td>
+<td>UCD-SNMP 1-min load</td>
+<td>CPU load (Linux)</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.4.1.2021.4.6.0</code></td>
+<td>memAvailReal</td>
+<td>Available memory (Linux)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="polling-intervals">Polling Intervals<a class="headerlink" href="#polling-intervals" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data type</th>
+<th>Recommended interval</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface counters</td>
+<td>60–300s</td>
+<td>Counters roll fast on 10/100G links</td>
+</tr>
+<tr>
+<td>CPU/memory</td>
+<td>60–120s</td>
+<td>Trend useful; sub-minute polling creates load</td>
+</tr>
+<tr>
+<td>Interface status (up/down)</td>
+<td>30–60s</td>
+<td>Quick detection of link events</td>
+</tr>
+<tr>
+<td>Environmental (temp, PSU)</td>
+<td>300s</td>
+<td>Changes slowly</td>
+</tr>
+<tr>
+<td>Uptime</td>
+<td>300–600s</td>
+<td>Only for reboot detection</td>
+</tr>
+</tbody>
+</table>
+<h2 id="zabbix-snmp-polling-config">Zabbix SNMP Polling Config<a class="headerlink" href="#zabbix-snmp-polling-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Zabbix item config (SNMP interface)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNMP agent</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">Key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ifOperStatus[{#SNMPINDEX}]</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">SNMP OID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">Update interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60s</span>
+</code></pre></div>
+<h2 id="prometheus-snmp-exporter">Prometheus + SNMP Exporter<a class="headerlink" href="#prometheus-snmp-exporter" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># snmp_exporter/snmp.yml — generator config snippet</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">modules</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">cisco_ios</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">walk</span><span class="p">:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.2.2</span><span class="w">          </span><span class="c1"># interfaces</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.31.1.1</span><span class="w">       </span><span class="c1"># ifXTable</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ifOperStatus</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="nt">oid</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.2.2.1.8</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gauge</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># prometheus.yml scrape config</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nt">scrape_configs</span><span class="p">:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snmp</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;device-ip&gt;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/snmp</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nt">params</span><span class="p">:</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">      </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">cisco_ios</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nt">relabel_configs</span><span class="p">:</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__address__</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__param_target</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__address__</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">        </span><span class="nt">replacement</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;snmp-exporter-host&gt;:9116</span>
+</code></pre></div>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Timeout: No Response</code></td>
+<td>Community wrong or UDP 161 blocked</td>
+<td><code>snmpget</code> manually; <code>tcpdump</code> on device</td>
+</tr>
+<tr>
+<td>Counter resets</td>
+<td>Interface or device reboot</td>
+<td>Normal — NMS should handle counter wraps</td>
+</tr>
+<tr>
+<td>Slow poll / timeouts</td>
+<td>Device CPU overloaded by SNMP</td>
+<td>Increase poll interval; use GETBULK</td>
+</tr>
+<tr>
+<td>OID not found</td>
+<td>MIB not supported by device</td>
+<td>Check with <code>snmpwalk</code>; use vendor MIB file</td>
+</tr>
+</tbody>
+</table>
 
 
 

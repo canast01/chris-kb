@@ -21,7 +21,7 @@
     
     
       
-        <title>Initiators - Chris KB</title>
+        <title>iSCSI Initiators - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Initiators · Chris KB">
+  <meta property="og:title" content="iSCSI Initiators · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Initiators · Chris KB">
+  <meta name="twitter:title" content="iSCSI Initiators · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#initiators" class="md-skip">
+        <a href="#iscsi-initiators" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Initiators
+              iSCSI Initiators
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#iqn-format" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        IQN Format
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#linux-software-initiator-open-iscsi" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Linux Software Initiator (open-iscsi)
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#windows-iscsi-initiator" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Windows iSCSI Initiator
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#vmware-esxi-software-iscsi" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        VMware ESXi Software iSCSI
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#initiator-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Initiator Standards
       
     </span>
   </a>
@@ -840,10 +840,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Common Issues
       
     </span>
   </a>
@@ -870,42 +870,105 @@
 
 
 
-<h1 id="initiators">Initiators<a class="headerlink" href="#initiators" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical iSCSI Initiators notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="iscsi-initiators">iSCSI Initiators<a class="headerlink" href="#iscsi-initiators" title="Permanent link">&para;</a></h1>
+<p>An iSCSI initiator is the client-side component — typically software on a server OS or a hardware iSCSI HBA — that sends SCSI commands over an IP network to iSCSI targets.</p>
+<h2 id="iqn-format">IQN Format<a class="headerlink" href="#iqn-format" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>iqn.YYYY-MM.reverse-domain:identifier
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>iqn.2024-01.com.example:server01-hba0
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │        │            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │        domain       unique identifier
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   date company adopted iSCSI
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└── iSCSI Qualified Name prefix
+</code></pre></div>
+<h2 id="linux-software-initiator-open-iscsi">Linux Software Initiator (open-iscsi)<a class="headerlink" href="#linux-software-initiator-open-iscsi" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>iscsi-initiator-utils<span class="w">      </span><span class="c1"># RHEL/Rocky</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>apt<span class="w"> </span>install<span class="w"> </span>open-iscsi<span class="w">                 </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Find your initiator IQN</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cat<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Set a custom IQN (edit file, then restart)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;InitiatorName=iqn.2024-01.com.example:server01&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>iscsid
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Configure CHAP (optional, in /etc/iscsi/iscsid.conf)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>node.session.auth.authmethod<span class="w"> </span><span class="o">=</span><span class="w"> </span>CHAP
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>node.session.auth.username<span class="w"> </span><span class="o">=</span><span class="w"> </span>&lt;initiator-username&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>node.session.auth.password<span class="w"> </span><span class="o">=</span><span class="w"> </span>&lt;initiator-password&gt;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Start and enable daemon</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>iscsid
+</code></pre></div>
+<h2 id="windows-iscsi-initiator">Windows iSCSI Initiator<a class="headerlink" href="#windows-iscsi-initiator" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Enable initiator service</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Start-Service</span> <span class="n">MSiSCSI</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Set-Service</span> <span class="n">MSiSCSI</span> <span class="n">-StartupType</span> <span class="n">Automatic</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># View initiator IQN</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="n">root</span><span class="p">\</span><span class="n">wmi</span> <span class="n">-Class</span> <span class="n">MSiSCSIInitiator_MethodClass</span><span class="p">).</span><span class="n">iSCSINodeName</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Discover targets</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">iscsicli</span> <span class="n">ListTargets</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">iscsicli</span> <span class="n">AddTargetPortal</span> <span class="p">&lt;</span><span class="n">target-ip</span><span class="p">&gt;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">iscsicli</span> <span class="n">QAddTargetPortal</span> <span class="p">&lt;</span><span class="n">target-ip</span><span class="p">&gt;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Connect to a target</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">iscsicli</span> <span class="n">PersistentLoginTarget</span> <span class="p">&lt;</span><span class="n">IQN</span><span class="p">&gt;</span> <span class="p">&lt;...&gt;</span>
+</code></pre></div>
+<h2 id="vmware-esxi-software-iscsi">VMware ESXi Software iSCSI<a class="headerlink" href="#vmware-esxi-software-iscsi" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable software iSCSI adapter</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>software<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Get initiator IQN</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Add target portal (send target discovery)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>iscsi<span class="w"> </span>adapter<span class="w"> </span>discovery<span class="w"> </span>sendtarget<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--adapter<span class="w"> </span>vmhba65<span class="w"> </span>--address<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Rescan</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--adapter<span class="w"> </span>vmhba65
+</code></pre></div>
+<h2 id="initiator-standards">Initiator Standards<a class="headerlink" href="#initiator-standards" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>One initiator IQN per HBA port — do not share IQNs across hosts</li>
+<li>Register initiator IQNs in CMDB at provisioning time</li>
+<li>Use CHAP in environments where iSCSI traverses shared networks</li>
+<li>Bind software initiators to dedicated storage NICs — never use management interfaces</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initiator not seen by array</td>
+<td>Discovery not run or wrong target IP</td>
+<td>Run <code>iscsiadm -m discovery</code></td>
+</tr>
+<tr>
+<td>CHAP authentication failure</td>
+<td>Mismatched credentials</td>
+<td>Compare username/password on initiator and target</td>
+</tr>
+<tr>
+<td>Session drops</td>
+<td>MTU mismatch or jumbo frames not end-to-end</td>
+<td>Verify MTU on NIC, switch, and storage port</td>
+</tr>
+<tr>
+<td>IQN rejected by array</td>
+<td>IQN not added to host group</td>
+<td>Add IQN to storage host group / initiator group</td>
+</tr>
+</tbody>
+</table>
 
 
 

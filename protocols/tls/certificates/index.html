@@ -21,7 +21,7 @@
     
     
       
-        <title>Certificates - Chris KB</title>
+        <title>TLS Certificates - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Certificates · Chris KB">
+  <meta property="og:title" content="TLS Certificates · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Certificates · Chris KB">
+  <meta name="twitter:title" content="TLS Certificates · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#certificates" class="md-skip">
+        <a href="#tls-certificates" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Certificates
+              TLS Certificates
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#certificate-components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Certificate Components
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#certificate-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Certificate Types
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#reading-a-certificate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Reading a Certificate
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#generating-a-csr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Generating a CSR
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#certificate-formats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Certificate Formats
       
     </span>
   </a>
@@ -840,10 +840,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#key-sizes-and-algorithms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Key Sizes and Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -870,42 +881,248 @@
 
 
 
-<h1 id="certificates">Certificates<a class="headerlink" href="#certificates" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical TLS Certificates notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="tls-certificates">TLS Certificates<a class="headerlink" href="#tls-certificates" title="Permanent link">&para;</a></h1>
+<p>A TLS certificate is a signed X.509 document that binds a public key to an identity (hostname, IP, or service). The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.</p>
+<h2 id="certificate-components">Certificate Components<a class="headerlink" href="#certificate-components" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Subject</td>
+<td>Identity the cert belongs to</td>
+<td><code>CN=web.example.com</code></td>
+</tr>
+<tr>
+<td>Issuer</td>
+<td>CA that signed the certificate</td>
+<td><code>CN=Example Internal CA</code></td>
+</tr>
+<tr>
+<td>Subject Alternative Names (SANs)</td>
+<td>All hostnames / IPs the cert covers</td>
+<td><code>web.example.com, api.example.com, 10.0.0.10</code></td>
+</tr>
+<tr>
+<td>Not Before / Not After</td>
+<td>Validity window</td>
+<td><code>2026-01-01</code> to <code>2027-01-01</code></td>
+</tr>
+<tr>
+<td>Public Key</td>
+<td>Used for encryption</td>
+<td>RSA 2048/4096 or ECDSA P-256/P-384</td>
+</tr>
+<tr>
+<td>Signature</td>
+<td>CA's digital signature over the cert</td>
+<td>SHA-256 with RSA</td>
+</tr>
+<tr>
+<td>Key Usage</td>
+<td>Permitted operations</td>
+<td><code>Digital Signature, Key Encipherment</code></td>
+</tr>
+<tr>
+<td>Extended Key Usage</td>
+<td>Application-specific use</td>
+<td><code>TLS Web Server Authentication</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="certificate-types">Certificate Types<a class="headerlink" href="#certificate-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Issued to</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DV (Domain Validated)</strong></td>
+<td>Domain owner only</td>
+<td>Public websites (Let's Encrypt)</td>
+</tr>
+<tr>
+<td><strong>OV (Organization Validated)</strong></td>
+<td>Verified organization</td>
+<td>Internal services, public corporate sites</td>
+</tr>
+<tr>
+<td><strong>EV (Extended Validation)</strong></td>
+<td>Full business verification</td>
+<td>High-assurance external portals</td>
+</tr>
+<tr>
+<td><strong>Wildcard</strong></td>
+<td><code>*.example.com</code></td>
+<td>Covers all subdomains at one level</td>
+</tr>
+<tr>
+<td><strong>SAN / Multi-SAN</strong></td>
+<td>Multiple explicit names</td>
+<td>Services with many hostnames</td>
+</tr>
+<tr>
+<td><strong>Client cert</strong></td>
+<td>User or service identity</td>
+<td>Mutual TLS (mTLS)</td>
+</tr>
+<tr>
+<td><strong>Code signing</strong></td>
+<td>Software publisher</td>
+<td>Signing executables</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reading-a-certificate">Reading a Certificate<a class="headerlink" href="#reading-a-certificate" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># View cert details from a file</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>certificate.pem<span class="w"> </span>-noout<span class="w"> </span>-text
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Quick view — subject, issuer, dates, SANs</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>certificate.pem<span class="w"> </span>-noout<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates<span class="w"> </span>-ext<span class="w"> </span>subjectAltName
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># View cert served by a live server</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Check expiry only</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>certificate.pem<span class="w"> </span>-noout<span class="w"> </span>-enddate
+</code></pre></div>
+<h2 id="generating-a-csr">Generating a CSR<a class="headerlink" href="#generating-a-csr" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate private key and CSR together</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>req<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-keyout<span class="w"> </span>server.key<span class="w"> </span>-out<span class="w"> </span>server.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=web.example.com/O=Example Corp/C=GB&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># CSR with SANs (requires config file)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>san.cnf<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s">[req]</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s">req_extensions = v3_req</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s">distinguished_name = dn</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s">[dn]</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s">[v3_req]</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s">subjectAltName = DNS:web.example.com, DNS:api.example.com, IP:10.0.0.10</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s">EOF</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>openssl<span class="w"> </span>req<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-keyout<span class="w"> </span>server.key<span class="w"> </span>-out<span class="w"> </span>server.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>-config<span class="w"> </span>san.cnf<span class="w"> </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=web.example.com&quot;</span>
+</code></pre></div>
+<h2 id="certificate-formats">Certificate Formats<a class="headerlink" href="#certificate-formats" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Extension</th>
+<th>Description</th>
+<th>Convert</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PEM</td>
+<td><code>.pem</code>, <code>.crt</code>, <code>.cer</code></td>
+<td>Base64, human-readable headers</td>
+<td>Default for Linux</td>
+</tr>
+<tr>
+<td>DER</td>
+<td><code>.der</code>, <code>.cer</code></td>
+<td>Binary format</td>
+<td><code>openssl x509 -inform DER</code></td>
+</tr>
+<tr>
+<td>PKCS#12</td>
+<td><code>.pfx</code>, <code>.p12</code></td>
+<td>Cert + key bundled</td>
+<td>Windows / Java</td>
+</tr>
+<tr>
+<td>PKCS#7</td>
+<td><code>.p7b</code>, <code>.p7c</code></td>
+<td>Cert chain, no key</td>
+<td>IIS</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PEM → PKCS#12 (for Windows)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-export<span class="w"> </span>-out<span class="w"> </span>server.pfx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-inkey<span class="w"> </span>server.key<span class="w"> </span>-in<span class="w"> </span>server.crt<span class="w"> </span>-certfile<span class="w"> </span>chain.pem
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># PKCS#12 → PEM</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>server.pfx<span class="w"> </span>-nokeys<span class="w"> </span>-out<span class="w"> </span>cert.pem
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>server.pfx<span class="w"> </span>-nocerts<span class="w"> </span>-nodes<span class="w"> </span>-out<span class="w"> </span>key.pem
+</code></pre></div>
+<h2 id="key-sizes-and-algorithms">Key Sizes and Algorithms<a class="headerlink" href="#key-sizes-and-algorithms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>Minimum</th>
+<th>Recommended</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RSA</td>
+<td>2048 bits</td>
+<td>4096 bits</td>
+<td>Universal compatibility</td>
+</tr>
+<tr>
+<td>ECDSA</td>
+<td>P-256</td>
+<td>P-384</td>
+<td>Smaller keys, faster — prefer for new deployments</td>
+</tr>
+<tr>
+<td>Ed25519</td>
+<td>—</td>
+<td>—</td>
+<td>Not widely supported for TLS certs yet</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Certificate not trusted</code></td>
+<td>Chain incomplete or unknown CA</td>
+<td>Install intermediate CA; check bundle</td>
+</tr>
+<tr>
+<td><code>Name mismatch</code></td>
+<td>Hostname not in SAN or CN</td>
+<td><code>openssl x509 -noout -ext subjectAltName</code></td>
+</tr>
+<tr>
+<td><code>Certificate expired</code></td>
+<td>Past <code>Not After</code> date</td>
+<td>Replace certificate; set up expiry alerts</td>
+</tr>
+<tr>
+<td><code>Wrong key for certificate</code></td>
+<td>Mismatched key and cert</td>
+<td><code>openssl x509 -modulus</code> and <code>openssl rsa -modulus</code> — must match</td>
+</tr>
+</tbody>
+</table>
 
 
 

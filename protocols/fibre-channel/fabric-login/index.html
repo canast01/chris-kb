@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#login-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Login Sequence
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#login-stages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Login Stages
       
     </span>
   </a>
@@ -807,10 +807,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#viewing-login-state" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Viewing Login State
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Viewing Login State">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brocade-fos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brocade FOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cisco-mds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cisco MDS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-login-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Login Failures
       
     </span>
   </a>
@@ -818,32 +857,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#useful-diagnostic-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Useful commands or references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Useful Diagnostic Commands
       
     </span>
   </a>
@@ -871,41 +888,128 @@
 
 
 <h1 id="fabric-login">Fabric Login<a class="headerlink" href="#fabric-login" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Fibre Channel Fabric Login notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Fabric login is the process by which FC ports register with the fabric and establish communication paths. Login failures prevent hosts from seeing storage.</p>
+<h2 id="login-sequence">Login Sequence<a class="headerlink" href="#login-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant HBA as Host HBA
+    participant SW as FC Switch
+    participant NS as Name Server
+    participant TGT as Storage Target
+
+    HBA-&gt;&gt;SW: FLOGI — Fabric Login
+    SW--&gt;&gt;HBA: ACC (fabric parameters: FCID assigned)
+    HBA-&gt;&gt;NS: PLOGI — Port Login to Name Server (0xFFFFFC)
+    NS--&gt;&gt;HBA: ACC
+    HBA-&gt;&gt;NS: RFT_ID — Register FC-4 Types
+    HBA-&gt;&gt;NS: RPN_ID — Register Port Name
+    HBA-&gt;&gt;TGT: PLOGI — Port Login to target WWPN
+    TGT--&gt;&gt;HBA: ACC
+    HBA-&gt;&gt;TGT: PRLI — Process Login (SCSI)
+    TGT--&gt;&gt;HBA: ACC (target ready)</code></pre>
+<h2 id="login-stages">Login Stages<a class="headerlink" href="#login-stages" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Description</th>
+<th>Failure means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FLOGI</strong></td>
+<td>HBA registers with fabric, receives FCID</td>
+<td>No fabric connectivity — check link, SFP, speed</td>
+</tr>
+<tr>
+<td><strong>PLOGI</strong></td>
+<td>Port-to-port login between two FC ports</td>
+<td>Target unreachable — check zoning</td>
+</tr>
+<tr>
+<td><strong>PRLI</strong></td>
+<td>SCSI service parameter exchange</td>
+<td>Upper-layer SCSI issue — driver or firmware</td>
+</tr>
+</tbody>
+</table>
+<h2 id="viewing-login-state">Viewing Login State<a class="headerlink" href="#viewing-login-state" title="Permanent link">&para;</a></h2>
+<h3 id="brocade-fos">Brocade FOS<a class="headerlink" href="#brocade-fos" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show fabric logins on this switch</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nsshow
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show logins across all switches</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>nsallshow
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show FLOGI database (ports logged into this switch&#39;s F_ports)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Online
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Per-port FLOGI details</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>portlogshow<span class="w"> </span>&lt;slot/port&gt;
+</code></pre></div>
+<h3 id="cisco-mds">Cisco MDS<a class="headerlink" href="#cisco-mds" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># FLOGI database — who is logged in to the fabric</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Name server — all registered ports</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># PLOGI state between two ports</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>show<span class="w"> </span>topology
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Detailed port login info</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
+</code></pre></div>
+<h2 id="common-login-failures">Common Login Failures<a class="headerlink" href="#common-login-failures" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Probable cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FLOGI not in <code>nsshow</code></td>
+<td>Physical link down / SFP fault</td>
+<td>Check <code>portshow</code>, clean/reseat SFP</td>
+</tr>
+<tr>
+<td>FLOGI present but PLOGI fails</td>
+<td>Zoning mismatch — target not in same zone</td>
+<td>Verify zone contains both initiator and target WWPN</td>
+</tr>
+<tr>
+<td>PRLI rejected</td>
+<td>Target port in wrong state or driver mismatch</td>
+<td>Check storage array port status and HBA driver version</td>
+</tr>
+<tr>
+<td>FCID conflict after fabric merge</td>
+<td>Duplicate domain IDs</td>
+<td>Resolve domain ID conflict; perform fabric re-merge</td>
+</tr>
+<tr>
+<td>Login loop / repeated FLOGI</td>
+<td>HBA firmware bug or speed mismatch</td>
+<td>Lock port speed on both switch and HBA</td>
+</tr>
+</tbody>
+</table>
+<h2 id="useful-diagnostic-commands">Useful Diagnostic Commands<a class="headerlink" href="#useful-diagnostic-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Brocade — port error counters (CRC, loss-of-sync)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>porterrshow
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Brocade — port statistics</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>portstatshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Cisco MDS — interface counters</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>counters
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify FCID assigned to a WWPN</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwpn-last-4-chars&gt;
+</code></pre></div>
 
 
 

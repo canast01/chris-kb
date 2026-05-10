@@ -21,7 +21,7 @@
     
     
       
-        <title>Sources - Chris KB</title>
+        <title>NTP Sources - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Sources · Chris KB">
+  <meta property="og:title" content="NTP Sources · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Sources · Chris KB">
+  <meta name="twitter:title" content="NTP Sources · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sources" class="md-skip">
+        <a href="#ntp-sources" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Sources
+              NTP Sources
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#stratum-hierarchy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Stratum Hierarchy
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#viewing-sources-chrony-linux" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Viewing Sources — chrony (Linux)
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#source-statistics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Source Statistics
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#configuring-sources-chrony" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Configuring Sources (chrony)
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#windows-w32tm-source-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Windows — w32tm Source Config
       
     </span>
   </a>
@@ -840,10 +840,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#cisco-arista-sources" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Cisco / Arista Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-source-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Source Issues
       
     </span>
   </a>
@@ -870,42 +881,143 @@
 
 
 
-<h1 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical NTP Sources notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="ntp-sources">NTP Sources<a class="headerlink" href="#ntp-sources" title="Permanent link">&para;</a></h1>
+<p>An NTP source is a time server that the local daemon polls to correct the system clock. Source quality determines how accurate the local clock can be.</p>
+<h2 id="stratum-hierarchy">Stratum Hierarchy<a class="headerlink" href="#stratum-hierarchy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Stratum 0 — atomic clock / GPS receiver (hardware reference)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Stratum 1 — directly connected to stratum 0 (public NTP servers)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Stratum 2 — synced from stratum 1 (most enterprise NTP servers)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Stratum 3 — synced from stratum 2 (internal hosts syncing from internal NTP)
+</code></pre></div>
+<p>Production servers should sync to internal stratum 2 servers. Stratum 10+ or <code>unsynchronised</code> is a problem.</p>
+<h2 id="viewing-sources-chrony-linux">Viewing Sources — chrony (Linux)<a class="headerlink" href="#viewing-sources-chrony-linux" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Source list with reach, offset, and jitter</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Output interpretation:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># M — mode: * = current best, + = acceptable, - = excluded, ? = not reached</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Name/IP — source address</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Stratum — source stratum</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Poll — current poll interval (log2 seconds)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Reach — 8-bit shift register (377 = all 8 polls reached)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Last Rx — seconds since last sample</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Last sample — offset and error estimate</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>MS Name/IP address         Stratum Poll Reach Last Rx Last sample
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>==================================================================
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>^* ntp1.example.com              2   6   377    23   -1.2ms[  -1.1ms] +/- 4.5ms
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>^+ ntp2.example.com              2   6   377    24   +0.3ms[  +0.3ms] +/- 6.1ms
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>^- ntp3.example.com              3   6   377    25   +2.1ms[  +2.1ms] +/- 9.0ms
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code></td>
+<td>Currently selected source</td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>Acceptable alternative (will be used if <code>*</code> fails)</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>Discarded by the selection algorithm</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>Source not reachable</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>Falseticker (clock appears wrong)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="source-statistics">Source Statistics<a class="headerlink" href="#source-statistics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Per-source frequency offset and jitter history</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>chronyc<span class="w"> </span>sourcestats<span class="w"> </span>-v
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Show reference ID and source details</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>chronyc<span class="w"> </span>tracking
+</code></pre></div>
+<h2 id="configuring-sources-chrony">Configuring Sources (chrony)<a class="headerlink" href="#configuring-sources-chrony" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/chrony.conf</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>iburst<span class="w"> </span>prefer
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>server<span class="w"> </span>ntp2.example.com<span class="w"> </span>iburst
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>server<span class="w"> </span>ntp3.example.com<span class="w"> </span>iburst
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># iburst — sends 4 packets immediately on startup for faster initial sync</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># prefer — prefer this source over others of similar quality</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># minpoll/maxpoll — override default polling interval (log2 seconds)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>iburst<span class="w"> </span>minpoll<span class="w"> </span><span class="m">4</span><span class="w"> </span>maxpoll<span class="w"> </span><span class="m">8</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Reload without restarting</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>chronyc<span class="w"> </span>reload<span class="w"> </span>sources
+</code></pre></div>
+<h2 id="windows-w32tm-source-config">Windows — w32tm Source Config<a class="headerlink" href="#windows-w32tm-source-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Set NTP sources</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;ntp1.example.com,0x8 ntp2.example.com,0x8&quot;</span> <span class="p">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">update</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Show current peers and their offsets</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Force sync</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
+</code></pre></div>
+<h2 id="cisco-arista-sources">Cisco / Arista Sources<a class="headerlink" href="#cisco-arista-sources" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Cisco IOS</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>prefer
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp2.example.com
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>show<span class="w"> </span>ntp<span class="w"> </span>associations<span class="w">     </span><span class="c1"># sync status per peer</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>show<span class="w"> </span>ntp<span class="w"> </span>status<span class="w">           </span><span class="c1"># current stratum and sync state</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Arista EOS</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp1.example.com<span class="w"> </span>prefer
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ntp<span class="w"> </span>server<span class="w"> </span>ntp2.example.com
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>show<span class="w"> </span>ntp<span class="w"> </span>status
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>show<span class="w"> </span>ntp<span class="w"> </span>associations
+</code></pre></div>
+<h2 id="common-source-issues">Common Source Issues<a class="headerlink" href="#common-source-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All sources <code>?</code></td>
+<td>UDP 123 blocked</td>
+<td>Firewall rules; <code>nc -u &lt;ntp-ip&gt; 123</code></td>
+</tr>
+<tr>
+<td><code>x</code> (falseticker)</td>
+<td>Source clock is wrong</td>
+<td>Remove source; investigate server</td>
+</tr>
+<tr>
+<td>Reach not <code>377</code></td>
+<td>Intermittent packet loss</td>
+<td>Check network path to NTP server</td>
+</tr>
+<tr>
+<td>Only one source available</td>
+<td>Other sources unreachable</td>
+<td>Ensure minimum 3 sources for proper selection</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Communities - Chris KB</title>
+        <title>SNMP Communities - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Communities · Chris KB">
+  <meta property="og:title" content="SNMP Communities · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Communities · Chris KB">
+  <meta name="twitter:title" content="SNMP Communities · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#communities" class="md-skip">
+        <a href="#snmp-communities" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Communities
+              SNMP Communities
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#community-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Community Types
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#configuring-communities-linux-snmpd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Configuring Communities — Linux (snmpd)
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#cisco-ios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Cisco IOS
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#arista-eos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Arista EOS
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#brocade-fos" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Brocade FOS
       
     </span>
   </a>
@@ -840,10 +840,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#testing-community-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Testing Community Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#community-string-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community String Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -870,42 +892,126 @@
 
 
 
-<h1 id="communities">Communities<a class="headerlink" href="#communities" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical SNMP Communities notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="snmp-communities">SNMP Communities<a class="headerlink" href="#snmp-communities" title="Permanent link">&para;</a></h1>
+<p>An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base (MIB). Community strings provide no encryption.</p>
+<div class="admonition warning">
+<p class="admonition-title">SNMPv2c security</p>
+<p>Community strings are transmitted in plaintext and are visible in packet captures. Treat them as secrets and use SNMPv3 for any environment with compliance requirements or sensitive data. SNMPv2c is acceptable only on isolated management VLANs with strict ACLs.</p>
+</div>
+<h2 id="community-types">Community Types<a class="headerlink" href="#community-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Community</th>
+<th>Access</th>
+<th>Typical name</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Read-only (RO)</strong></td>
+<td>GET, GETNEXT, GETBULK</td>
+<td><code>public</code>, <code>ro-community</code></td>
+<td>Data exposure</td>
+</tr>
+<tr>
+<td><strong>Read-write (RW)</strong></td>
+<td>All RO + SET</td>
+<td><code>private</code>, <code>rw-community</code></td>
+<td>Device misconfiguration</td>
+</tr>
+</tbody>
+</table>
+<p>Never use default community strings (<code>public</code> / <code>private</code>) in production.</p>
+<h2 id="configuring-communities-linux-snmpd">Configuring Communities — Linux (snmpd)<a class="headerlink" href="#configuring-communities-linux-snmpd" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># /etc/snmp/snmpd.conf</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>rocommunity<span class="w">  </span>monitoring-ro<span class="w">  </span><span class="m">10</span>.0.0.0/8<span class="w">    </span><span class="c1"># read-only, restricted to management network</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>rocommunity6<span class="w"> </span>monitoring-ro<span class="w">  </span>::1/128
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Remove default &quot;public&quot; if present</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Comment out: rocommunity public default</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>snmpd
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Test locally</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>monitoring-ro<span class="w"> </span>localhost<span class="w"> </span>system
+</code></pre></div>
+<h2 id="cisco-ios">Cisco IOS<a class="headerlink" href="#cisco-ios" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Read-only community with ACL restriction
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ip access-list standard SNMP-MGMT
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a> permit 10.10.0.0 0.0.255.255
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snmp-server community &lt;community-string&gt; RO SNMP-MGMT
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>snmp-server community &lt;rw-string&gt; RW SNMP-MGMT
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Remove defaults
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>no snmp-server community public
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>no snmp-server community private
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Verify
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>show snmp community
+</code></pre></div>
+<h2 id="arista-eos">Arista EOS<a class="headerlink" href="#arista-eos" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>snmp-server community &lt;community-string&gt; ro
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snmp-server community &lt;community-string&gt; view system-view ro
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show snmp community
+</code></pre></div>
+<h2 id="brocade-fos">Brocade FOS<a class="headerlink" href="#brocade-fos" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>snmpconfig --set snmpv1
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a># Follow prompts to set community strings and access list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>snmpconfig --show snmpv1
+</code></pre></div>
+<h2 id="testing-community-access">Testing Community Access<a class="headerlink" href="#testing-community-access" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test from NMS / monitoring server</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmpget<span class="w">  </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>sysDescr.0
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>system
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># If no response — check:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># 1. Community string correct</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># 2. NMS IP in ACL on device</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. UDP 161 not blocked by firewall</span>
+</code></pre></div>
+<h2 id="community-string-standards">Community String Standards<a class="headerlink" href="#community-string-standards" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li>Minimum 16 characters, mixed alphanumeric</li>
+<li>Different strings for RO and RW</li>
+<li>Store in CyberArk or secrets manager — never in plaintext config files</li>
+<li>Rotate annually or when staff leave</li>
+<li>Scope with ACLs to management network ONLY</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Timeout: No Response</code></td>
+<td>Wrong community or UDP 161 blocked</td>
+<td>Test with <code>snmpget</code>; check firewall</td>
+</tr>
+<tr>
+<td>No response from new device</td>
+<td>Community not configured</td>
+<td>Verify <code>show snmp community</code> on device</td>
+</tr>
+<tr>
+<td>NMS sees wrong data</td>
+<td>RW community accidentally used for RO polling</td>
+<td>Use separate strings for read and write</td>
+</tr>
+<tr>
+<td>Community string visible in Wireshark</td>
+<td>SNMPv2c by design</td>
+<td>Migrate to SNMPv3 for sensitive environments</td>
+</tr>
+</tbody>
+</table>
 
 
 

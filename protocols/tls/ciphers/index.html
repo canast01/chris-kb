@@ -21,7 +21,7 @@
     
     
       
-        <title>Ciphers - Chris KB</title>
+        <title>TLS Cipher Suites - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Ciphers · Chris KB">
+  <meta property="og:title" content="TLS Cipher Suites · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Ciphers · Chris KB">
+  <meta name="twitter:title" content="TLS Cipher Suites · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ciphers" class="md-skip">
+        <a href="#tls-cipher-suites" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ciphers
+              TLS Cipher Suites
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#cipher-suite-name-structure-tls-12" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Cipher Suite Name Structure (TLS 1.2)
       
     </span>
   </a>
@@ -796,10 +796,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#recommended-cipher-suites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Recommended Cipher Suites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended Cipher Suites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tls-13-preferred-no-choice-needed-all-are-secure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS 1.3 (preferred — no choice needed, all are secure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-12-allowed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS 1.2 — Allowed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-12-deprecated-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS 1.2 — Deprecated / Avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-ciphers-on-a-live-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Ciphers on a Live Endpoint
       
     </span>
   </a>
@@ -807,10 +857,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#configuring-ciphers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Configuring Ciphers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring Ciphers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nginx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nginx
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apache-httpd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apache httpd
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#haproxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HAProxy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openssl-system-wide-policy-rhelrocky" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenSSL — System-Wide Policy (RHEL/Rocky)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-version-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Version Standards
       
     </span>
   </a>
@@ -818,32 +929,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Useful commands or references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Common Issues
       
     </span>
   </a>
@@ -870,42 +959,174 @@
 
 
 
-<h1 id="ciphers">Ciphers<a class="headerlink" href="#ciphers" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical TLS Ciphers notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="tls-cipher-suites">TLS Cipher Suites<a class="headerlink" href="#tls-cipher-suites" title="Permanent link">&para;</a></h1>
+<p>A cipher suite specifies the algorithms used for key exchange, authentication, encryption, and integrity in a TLS connection. Weak cipher suites allow downgrade attacks or data exposure.</p>
+<h2 id="cipher-suite-name-structure-tls-12">Cipher Suite Name Structure (TLS 1.2)<a class="headerlink" href="#cipher-suite-name-structure-tls-12" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   │         │   │        │   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │         │   │        │   MAC (integrity)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │         │   │        mode
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │         │   key size
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │         bulk cipher (symmetric encryption)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   key exchange + auth
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>TLS protocol prefix
+</code></pre></div>
+<p>TLS 1.3 simplifies this — cipher suites only specify the symmetric cipher and hash:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>TLS_AES_256_GCM_SHA384
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>TLS_CHACHA20_POLY1305_SHA256
+</code></pre></div></p>
+<h2 id="recommended-cipher-suites">Recommended Cipher Suites<a class="headerlink" href="#recommended-cipher-suites" title="Permanent link">&para;</a></h2>
+<h3 id="tls-13-preferred-no-choice-needed-all-are-secure">TLS 1.3 (preferred — no choice needed, all are secure)<a class="headerlink" href="#tls-13-preferred-no-choice-needed-all-are-secure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>TLS_AES_256_GCM_SHA384
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>TLS_AES_128_GCM_SHA256
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>TLS_CHACHA20_POLY1305_SHA256
+</code></pre></div>
+<h3 id="tls-12-allowed">TLS 1.2 — Allowed<a class="headerlink" href="#tls-12-allowed" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+</code></pre></div>
+<p>Key requirements: ECDHE (forward secrecy), GCM (authenticated encryption), SHA-256+.</p>
+<h3 id="tls-12-deprecated-avoid">TLS 1.2 — Deprecated / Avoid<a class="headerlink" href="#tls-12-deprecated-avoid" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cipher element</th>
+<th>Why to avoid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RSA key exchange (no ECDHE)</td>
+<td>No forward secrecy</td>
+</tr>
+<tr>
+<td>DH &lt; 2048 bits</td>
+<td>Logjam attack</td>
+</tr>
+<tr>
+<td>RC4</td>
+<td>Statistically broken</td>
+</tr>
+<tr>
+<td>3DES</td>
+<td>SWEET32 birthday attack</td>
+</tr>
+<tr>
+<td>CBC mode (in TLS 1.2)</td>
+<td>Lucky-13, BEAST — acceptable with mitigations, prefer GCM</td>
+</tr>
+<tr>
+<td>MD5, SHA-1 MAC</td>
+<td>Weak integrity</td>
+</tr>
+</tbody>
+</table>
+<h2 id="checking-ciphers-on-a-live-endpoint">Checking Ciphers on a Live Endpoint<a class="headerlink" href="#checking-ciphers-on-a-live-endpoint" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show TLS version and cipher negotiated</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Protocol|Cipher&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Enumerate all accepted ciphers (nmap)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># testssl.sh — comprehensive cipher and vulnerability scan</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>./testssl.sh<span class="w"> </span>&lt;hostname&gt;:443
+</code></pre></div>
+<h2 id="configuring-ciphers">Configuring Ciphers<a class="headerlink" href="#configuring-ciphers" title="Permanent link">&para;</a></h2>
+<h3 id="nginx">nginx<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">ssl_protocols</span><span class="w"> </span><span class="s">TLSv1.2</span><span class="w"> </span><span class="s">TLSv1.3</span><span class="p">;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">ssl_ciphers</span><span class="w"> </span><span class="s">&#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:!aNULL:!eNULL:!EXPORT:!RC4:!3DES:!MD5&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="apache-httpd">Apache httpd<a class="headerlink" href="#apache-httpd" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">SSLProtocol</span><span class="w"> </span><span class="k">all</span><span class="w"> </span>-SSLv3<span class="w"> </span>-TLSv1<span class="w"> </span>-TLSv1.1
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">SSLCipherSuite</span><span class="w"> </span>ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:!aNULL:!RC4:!3DES
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">SSLHonorCipherOrder</span><span class="w"> </span><span class="k">on</span>
+</code></pre></div>
+<h3 id="haproxy">HAProxy<a class="headerlink" href="#haproxy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>bind *:443 ssl crt /etc/ssl/haproxy.pem \
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384 \
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  no-sslv3 no-tlsv10 no-tlsv11
+</code></pre></div>
+<h3 id="openssl-system-wide-policy-rhelrocky">OpenSSL — System-Wide Policy (RHEL/Rocky)<a class="headerlink" href="#openssl-system-wide-policy-rhelrocky" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Set system-wide crypto policy</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>DEFAULT<span class="w">     </span><span class="c1"># balanced</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>FUTURE<span class="w">      </span><span class="c1"># strict — TLS 1.3 only</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>LEGACY<span class="w">      </span><span class="c1"># allows TLS 1.0 (avoid)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>update-crypto-policies<span class="w"> </span>--show
+</code></pre></div>
+<h2 id="tls-version-standards">TLS Version Standards<a class="headerlink" href="#tls-version-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSL 3.0</td>
+<td>Broken (POODLE)</td>
+<td>Disable immediately</td>
+</tr>
+<tr>
+<td>TLS 1.0</td>
+<td>Deprecated</td>
+<td>Disable — fails PCI DSS</td>
+</tr>
+<tr>
+<td>TLS 1.1</td>
+<td>Deprecated</td>
+<td>Disable</td>
+</tr>
+<tr>
+<td>TLS 1.2</td>
+<td>Acceptable</td>
+<td>Allow with strong ciphers only</td>
+</tr>
+<tr>
+<td>TLS 1.3</td>
+<td>Preferred</td>
+<td>Enable; enforce where possible</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client can't connect</td>
+<td>No cipher overlap between client and server</td>
+<td><code>openssl s_client</code> — compare cipher lists</td>
+</tr>
+<tr>
+<td>Old devices can't connect</td>
+<td>Server too restrictive</td>
+<td>Add limited TLS 1.2 ciphers for legacy support</td>
+</tr>
+<tr>
+<td>BEAST/POODLE alerts</td>
+<td>Old cipher/protocol enabled</td>
+<td>Disable CBC ciphers and TLS &lt; 1.2</td>
+</tr>
+<tr>
+<td><code>handshake failure</code></td>
+<td>Mutual TLS mismatch or no common cipher</td>
+<td>Run <code>nmap --script ssl-enum-ciphers</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

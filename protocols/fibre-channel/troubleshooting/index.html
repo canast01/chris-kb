@@ -21,7 +21,7 @@
     
     
       
-        <title>Troubleshooting - Chris KB</title>
+        <title>FC Troubleshooting - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Troubleshooting · Chris KB">
+  <meta property="og:title" content="FC Troubleshooting · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="FC Troubleshooting · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#fc-troubleshooting" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              FC Troubleshooting
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#diagnostic-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Diagnostic Flow
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#quick-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Quick Diagnostics
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#common-issues-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Common Issues Reference
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#error-counter-interpretation-brocade" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Error Counter Interpretation (Brocade)
       
     </span>
   </a>
@@ -829,21 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#log-locations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Log Locations
       
     </span>
   </a>
@@ -870,42 +859,169 @@
 
 
 
-<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Fibre Channel Troubleshooting notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="fc-troubleshooting">FC Troubleshooting<a class="headerlink" href="#fc-troubleshooting" title="Permanent link">&para;</a></h1>
+<h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A[Host cannot see LUN] --&gt; B{Physical link up?}
+    B --&gt;|No| C[Check SFP, cable, port state]
+    B --&gt;|Yes| D{FLOGI in nameserver?}
+    D --&gt;|No| E[HBA not logged in — driver, speed, SFP]
+    D --&gt;|Yes| F{Zoning correct?}
+    F --&gt;|No| G[Fix zone — add missing WWPN, activate]
+    F --&gt;|Yes| H{LUN mapped in host group?}
+    H --&gt;|No| I[Add host to storage host group]
+    H --&gt;|Yes| J{Multipath sees paths?}
+    J --&gt;|No| K[Rescan HBAs, reload multipath]
+    J --&gt;|Yes| L[Check OS disk/filesystem layer]</code></pre>
+<h2 id="quick-diagnostics">Quick Diagnostics<a class="headerlink" href="#quick-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Brocade — overall fabric health</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>fabricshow
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>switchshow
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>porterrshow
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Brocade — nameserver (who is logged in)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>nsshow
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>nsallshow
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Brocade — zone config</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>cfgshow
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>zoneshow
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Cisco MDS — fabric login table</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Linux — multipath state</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>cat<span class="w"> </span>/proc/scsi/scsi
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># ESXi — path state</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
+</code></pre></div>
+<h2 id="common-issues-reference">Common Issues Reference<a class="headerlink" href="#common-issues-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>First check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host sees no LUNs</td>
+<td>FLOGI failed or zone missing</td>
+<td><code>nsshow</code> — is WWPN registered?</td>
+</tr>
+<tr>
+<td>LUNs disappeared suddenly</td>
+<td>Link down or SFP fault</td>
+<td><code>portshow</code> / switch LED / <code>porterrshow</code></td>
+</tr>
+<tr>
+<td>Intermittent path drops</td>
+<td>Marginal SFP or cable</td>
+<td><code>porterrshow</code> — CRC errors, loss-of-sync</td>
+</tr>
+<tr>
+<td>Slow I/O on FC</td>
+<td>Port congestion (BB_Credit exhaustion)</td>
+<td><code>portbuffershow</code> on Brocade</td>
+</tr>
+<tr>
+<td>Only one of two paths active</td>
+<td>Zone missing on second fabric</td>
+<td>Check both fabric A and B zoning independently</td>
+</tr>
+<tr>
+<td>New server cannot see storage</td>
+<td>Zone not created / activated</td>
+<td>Create zone, add to cfgsave, activate</td>
+</tr>
+<tr>
+<td>Zone exists but still no access</td>
+<td>WWPN typo in zone</td>
+<td><code>zoneshow</code> — compare WWPNs character by character</td>
+</tr>
+<tr>
+<td>HBA not seen after reboot</td>
+<td>Driver not loading or HBA disabled</td>
+<td><code>dmesg | grep -i qla</code> or <code>lpfc</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="error-counter-interpretation-brocade">Error Counter Interpretation (Brocade)<a class="headerlink" href="#error-counter-interpretation-brocade" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>porterrshow
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Counter</th>
+<th>Acceptable</th>
+<th>Investigate if</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CRC</td>
+<td>0</td>
+<td>&gt; 0 in last hour</td>
+</tr>
+<tr>
+<td>Loss of Signal</td>
+<td>0</td>
+<td>Any increment</td>
+</tr>
+<tr>
+<td>Loss of Sync</td>
+<td>0</td>
+<td>&gt; 5 in last hour</td>
+</tr>
+<tr>
+<td>Encoding Errors</td>
+<td>0</td>
+<td>Any increment</td>
+</tr>
+<tr>
+<td>Too Many RDYs</td>
+<td>0</td>
+<td>Any — BB_Credit issue</td>
+</tr>
+</tbody>
+</table>
+<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Log</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Brocade</td>
+<td><code>raslog</code> (CLI) / Brocade SANnav</td>
+</tr>
+<tr>
+<td>Cisco MDS</td>
+<td><code>show logging</code> / DCNM</td>
+</tr>
+<tr>
+<td>Linux HBA (QLogic)</td>
+<td><code>/var/log/messages</code> — <code>qla2xxx</code></td>
+</tr>
+<tr>
+<td>Linux HBA (Emulex)</td>
+<td><code>/var/log/messages</code> — <code>lpfc</code></td>
+</tr>
+<tr>
+<td>ESXi</td>
+<td><code>esxcli storage core path list</code> / <code>vmkwarning.log</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

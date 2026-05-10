@@ -21,7 +21,7 @@
     
     
       
-        <title>Sync State - Chris KB</title>
+        <title>NTP Sync State - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Sync State · Chris KB">
+  <meta property="og:title" content="NTP Sync State · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Sync State · Chris KB">
+  <meta name="twitter:title" content="NTP Sync State · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sync-state" class="md-skip">
+        <a href="#ntp-sync-state" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Sync State
+              NTP Sync State
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#reading-chronyc-tracking-linux" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Reading chronyc tracking (Linux)
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#reading-timedatectl-linux-systemd-timesyncd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Reading timedatectl (Linux — systemd-timesyncd)
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#windows-w32tm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Windows — w32tm
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#network-devices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Network Devices
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#states-and-meanings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        States and Meanings
       
     </span>
   </a>
@@ -840,10 +840,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#force-immediate-sync" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Force Immediate Sync
       
     </span>
   </a>
@@ -870,42 +870,135 @@
 
 
 
-<h1 id="sync-state">Sync State<a class="headerlink" href="#sync-state" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical NTP Sync State notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="ntp-sync-state">NTP Sync State<a class="headerlink" href="#ntp-sync-state" title="Permanent link">&para;</a></h1>
+<p>The sync state tells you whether a system's clock is actively tracking an NTP source and how closely. A drifting or unsynchronised clock causes authentication failures, log correlation errors, and Kerberos breakage.</p>
+<h2 id="reading-chronyc-tracking-linux">Reading <code>chronyc tracking</code> (Linux)<a class="headerlink" href="#reading-chronyc-tracking-linux" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>chronyc<span class="w"> </span>tracking
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Reference ID    : C0A80001 (ntp1.example.com)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Stratum         : 3
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Ref time (UTC)  : Sun May 10 00:00:00 2026
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>System time     : 0.000123456 seconds fast of NTP time
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Last offset     : +0.000001234 seconds
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>RMS offset      : 0.000005678 seconds
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Frequency       : 12.345 ppm fast
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Residual freq   : +0.001 ppm
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Skew            : 0.123 ppm
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Root delay      : 0.001234567 seconds
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Root dispersion : 0.000567890 seconds
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Update interval : 64.4 seconds
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Leap status     : Normal
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Healthy value</th>
+<th>Investigate if</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reference ID</td>
+<td>Shows server name/IP</td>
+<td><code>(0.0.0.0)</code> — not synced</td>
+</tr>
+<tr>
+<td>Stratum</td>
+<td>2–4</td>
+<td>&gt; 10 or <code>unsynchronised</code></td>
+</tr>
+<tr>
+<td>System time</td>
+<td>&lt; 100ms</td>
+<td>&gt; 1 second</td>
+</tr>
+<tr>
+<td>Last offset</td>
+<td>&lt; 10ms</td>
+<td>&gt; 500ms</td>
+</tr>
+<tr>
+<td>Leap status</td>
+<td><code>Normal</code></td>
+<td><code>Not synchronised</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="reading-timedatectl-linux-systemd-timesyncd">Reading <code>timedatectl</code> (Linux — systemd-timesyncd)<a class="headerlink" href="#reading-timedatectl-linux-systemd-timesyncd" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>timedatectl<span class="w"> </span>status
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>               Local time: Sun 2026-05-10 00:00:00 UTC
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>           Universal time: Sun 2026-05-10 00:00:00 UTC
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                 RTC time: Sun 2026-05-10 00:00:00
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                Time zone: UTC (UTC, +0000)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>System clock synchronized: yes        ← key field
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>              NTP service: active
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>          RTC in local TZ: no
+</code></pre></div>
+<h2 id="windows-w32tm">Windows — w32tm<a class="headerlink" href="#windows-w32tm" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check sync status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Resync immediately</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Show peer list</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
+</code></pre></div>
+<h2 id="network-devices">Network Devices<a class="headerlink" href="#network-devices" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Cisco IOS</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>ntp<span class="w"> </span>status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>show<span class="w"> </span>ntp<span class="w"> </span>associations
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Arista EOS</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>show<span class="w"> </span>ntp<span class="w"> </span>status
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>show<span class="w"> </span>ntp<span class="w"> </span>associations
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Expected: system clock is synced to &lt;ntp-server&gt;, stratum 3</span>
+</code></pre></div>
+<h2 id="states-and-meanings">States and Meanings<a class="headerlink" href="#states-and-meanings" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>synchronized</code></td>
+<td>Clock is tracking NTP source</td>
+<td>None — healthy</td>
+</tr>
+<tr>
+<td><code>unsynchronised</code></td>
+<td>No usable source found</td>
+<td>Check sources, firewall (UDP 123), server reachability</td>
+</tr>
+<tr>
+<td><code>stepping</code></td>
+<td>Large offset corrected by step</td>
+<td>Normal after first sync; investigate if recurring</td>
+</tr>
+<tr>
+<td><code>Not synchronised</code> (w32tm)</td>
+<td>Windows has no valid peer</td>
+<td>Check w32tm config and network</td>
+</tr>
+</tbody>
+</table>
+<h2 id="force-immediate-sync">Force Immediate Sync<a class="headerlink" href="#force-immediate-sync" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># chronyd — step clock immediately</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>chronyc<span class="w"> </span>makestep
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># systemd-timesyncd</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-timesyncd
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># ntpd</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ntpdate<span class="w"> </span>-u<span class="w"> </span>&lt;ntp-server&gt;
+</code></pre></div>
 
 
 

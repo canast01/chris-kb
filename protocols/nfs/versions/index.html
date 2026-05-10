@@ -21,7 +21,7 @@
     
     
       
-        <title>Versions - Chris KB</title>
+        <title>NFS Versions - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Versions · Chris KB">
+  <meta property="og:title" content="NFS Versions · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Versions · Chris KB">
+  <meta name="twitter:title" content="NFS Versions · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#versions" class="md-skip">
+        <a href="#nfs-versions" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Versions
+              NFS Versions
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#version-comparison" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Version Comparison
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#recommended-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Recommended Version
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#checking-nfs-version-in-use" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Checking NFS Version in Use
       
     </span>
   </a>
@@ -818,10 +818,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#configuring-nfs-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Configuring NFS Version
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring NFS Version">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mount-client-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mount — Client Side
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nfs-server-enabledisable-versions-rhelrocky" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS Server — Enable/Disable Versions (RHEL/Rocky)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfsv4-id-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFSv4 ID Mapping
       
     </span>
   </a>
@@ -829,21 +868,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#common-version-related-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known issues
+        Common Version-Related Issues
       
     </span>
   </a>
@@ -870,42 +898,161 @@
 
 
 
-<h1 id="versions">Versions<a class="headerlink" href="#versions" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical NFS Versions notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="nfs-versions">NFS Versions<a class="headerlink" href="#nfs-versions" title="Permanent link">&para;</a></h1>
+<h2 id="version-comparison">Version Comparison<a class="headerlink" href="#version-comparison" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>NFSv3</th>
+<th>NFSv4</th>
+<th>NFSv4.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport</td>
+<td>UDP or TCP</td>
+<td>TCP only</td>
+<td>TCP only</td>
+</tr>
+<tr>
+<td>Stateful</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>AUTH_SYS (UID/GID)</td>
+<td>Kerberos, RPCSEC_GSS</td>
+<td>Kerberos, RPCSEC_GSS</td>
+</tr>
+<tr>
+<td>ACLs</td>
+<td>No native ACLs</td>
+<td>NFSv4 ACLs</td>
+<td>NFSv4 ACLs</td>
+</tr>
+<tr>
+<td>Locking</td>
+<td>NLM (separate protocol)</td>
+<td>Built-in</td>
+<td>Built-in</td>
+</tr>
+<tr>
+<td>Multipath (pNFS)</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (pNFS)</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>2049 + portmapper (111)</td>
+<td>2049 fixed</td>
+<td>2049 fixed</td>
+</tr>
+<tr>
+<td>ID mapping</td>
+<td>UID/GID numbers</td>
+<td>user@domain strings</td>
+<td>user@domain strings</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recommended-version">Recommended Version<a class="headerlink" href="#recommended-version" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
+<li><strong>NFSv4.1</strong> — preferred for new deployments. Stateful, single port (2049), pNFS capable, strongest security options.</li>
+<li><strong>NFSv3</strong> — legacy compatibility only. Required for some storage arrays and older clients.</li>
+<li><strong>NFSv4.0</strong> — functional but superseded; prefer 4.1.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h2 id="checking-nfs-version-in-use">Checking NFS Version in Use<a class="headerlink" href="#checking-nfs-version-in-use" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Linux client — show mount options including NFS version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># or</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>cat<span class="w"> </span>/proc/mounts<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Verbose mount info including vers=</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>nfsstat<span class="w"> </span>-m
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Server-side — which versions are enabled</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>cat<span class="w"> </span>/proc/fs/nfsd/versions
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Show active NFS connections and versions</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ss<span class="w"> </span>-tnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:2049
+</code></pre></div>
+<h2 id="configuring-nfs-version">Configuring NFS Version<a class="headerlink" href="#configuring-nfs-version" title="Permanent link">&para;</a></h2>
+<h3 id="mount-client-side">Mount — Client Side<a class="headerlink" href="#mount-client-side" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Force NFSv4.1</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">vers</span><span class="o">=</span><span class="m">4</span>.1,rw<span class="w"> </span>&lt;server&gt;:&lt;export&gt;<span class="w"> </span>/mnt/data
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Force NFSv3</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">vers</span><span class="o">=</span><span class="m">3</span>,tcp<span class="w"> </span>&lt;server&gt;:&lt;export&gt;<span class="w"> </span>/mnt/data
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Persistent in /etc/fstab</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>&lt;server&gt;:/export<span class="w">  </span>/mnt/data<span class="w">  </span>nfs<span class="w">  </span><span class="nv">vers</span><span class="o">=</span><span class="m">4</span>.1,hard,timeo<span class="o">=</span><span class="m">600</span>,rsize<span class="o">=</span><span class="m">1048576</span>,wsize<span class="o">=</span><span class="m">1048576</span><span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<h3 id="nfs-server-enabledisable-versions-rhelrocky">NFS Server — Enable/Disable Versions (RHEL/Rocky)<a class="headerlink" href="#nfs-server-enabledisable-versions-rhelrocky" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/nfs.conf — set which versions the server offers</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">[</span>nfsd<span class="o">]</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">vers3</span><span class="o">=</span>n<span class="w">       </span><span class="c1"># disable NFSv3</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">vers4</span><span class="o">=</span>y
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vers4.0<span class="o">=</span>n<span class="w">     </span><span class="c1"># disable NFSv4.0</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>vers4.1<span class="o">=</span>y
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>vers4.2<span class="o">=</span>y
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>nfs-server
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>cat<span class="w"> </span>/proc/fs/nfsd/versions
+</code></pre></div>
+<h2 id="nfsv4-id-mapping">NFSv4 ID Mapping<a class="headerlink" href="#nfsv4-id-mapping" title="Permanent link">&para;</a></h2>
+<p>NFSv4 maps file ownership using <code>user@domain</code> strings instead of raw UID/GID. Misconfigured ID mapping causes files to appear as <code>nobody</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check idmapd is running</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>rpcidmapd
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># /etc/idmapd.conf</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="o">[</span>General<span class="o">]</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">Domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>example.com<span class="w">   </span><span class="c1"># must match on client and server</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Flush ID mapping cache</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>nfsidmap<span class="w"> </span>-c
+</code></pre></div>
+<h2 id="common-version-related-issues">Common Version-Related Issues<a class="headerlink" href="#common-version-related-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Files owned by <code>nobody</code></td>
+<td>NFSv4 ID mapping mismatch</td>
+<td>Verify <code>Domain =</code> in <code>/etc/idmapd.conf</code> matches on both sides</td>
+</tr>
+<tr>
+<td>Mount hangs / slow</td>
+<td>NFSv4 state recovery after server restart</td>
+<td>Use <code>hard</code> mount option; check <code>nfsstat</code> for retries</td>
+</tr>
+<tr>
+<td>Kerberos auth fails</td>
+<td>Clock skew &gt; 5 minutes</td>
+<td>Verify NTP sync on client and server</td>
+</tr>
+<tr>
+<td>NFSv3 locks not released</td>
+<td>Stale NLM lock</td>
+<td><code>sm-notify</code> restart or server-side lock clear</td>
+</tr>
+<tr>
+<td>Client defaults to NFSv3</td>
+<td>Default mount type</td>
+<td>Explicitly specify <code>vers=4.1</code> in mount options</td>
+</tr>
+</tbody>
+</table>
 
 
 

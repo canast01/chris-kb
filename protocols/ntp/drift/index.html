@@ -21,7 +21,7 @@
     
     
       
-        <title>Drift - Chris KB</title>
+        <title>NTP Drift - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Drift · Chris KB">
+  <meta property="og:title" content="NTP Drift · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Drift · Chris KB">
+  <meta name="twitter:title" content="NTP Drift · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#drift" class="md-skip">
+        <a href="#ntp-drift" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Drift
+              NTP Drift
             
           </span>
         </div>
@@ -785,10 +785,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#drift-concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Drift Concepts
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#reading-drift-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Reading Drift Values
       
     </span>
   </a>
@@ -807,10 +807,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#drift-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Drift File
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#interpreting-drift-history" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Interpreting Drift History
       
     </span>
   </a>
@@ -829,10 +829,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands-or-references" class="md-nav__link">
+  <a href="#drift-after-vm-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands or references
+        Drift After VM Operations
       
     </span>
   </a>
@@ -840,10 +840,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#windows-drift" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Windows Drift
       
     </span>
   </a>
@@ -870,42 +870,114 @@
 
 
 
-<h1 id="drift">Drift<a class="headerlink" href="#drift" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical NTP Drift notes, checks, troubleshooting, commands, standards, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current state</li>
-<li>Review recent changes</li>
-<li>Check logs, alerts, or history</li>
-<li>Confirm dependencies</li>
-<li>Capture findings</li>
-<li>Document next action</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Action taken</li>
-<li>Follow-up owner</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm approval</li>
-<li>Confirm scope</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands-or-references">Useful commands or references<a class="headerlink" href="#useful-commands-or-references" title="Permanent link">&para;</a></h2>
-<p>Add tested commands, links, or notes here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="ntp-drift">NTP Drift<a class="headerlink" href="#ntp-drift" title="Permanent link">&para;</a></h1>
+<p>Clock drift is the natural tendency of a system clock to run fast or slow relative to real time. NTP continuously corrects drift by applying small frequency adjustments (slewing) to keep the clock accurate.</p>
+<h2 id="drift-concepts">Drift Concepts<a class="headerlink" href="#drift-concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Drift / Frequency error</strong></td>
+<td>How many parts-per-million (ppm) the clock runs fast or slow</td>
+</tr>
+<tr>
+<td><strong>Offset</strong></td>
+<td>The current difference between local clock and NTP source</td>
+</tr>
+<tr>
+<td><strong>Slewing</strong></td>
+<td>Gradually adjusting the clock rate to correct offset (max ~500ppm)</td>
+</tr>
+<tr>
+<td><strong>Stepping</strong></td>
+<td>Abrupt clock jump — used only when offset is too large to slew</td>
+</tr>
+<tr>
+<td><strong>Drift file</strong></td>
+<td>Saved frequency correction so the daemon starts with a good estimate</td>
+</tr>
+</tbody>
+</table>
+<p>1 ppm ≈ 0.0864 seconds per day. A 100 ppm drift = ~8.6 seconds per day without NTP.</p>
+<h2 id="reading-drift-values">Reading Drift Values<a class="headerlink" href="#reading-drift-values" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># chronyc — frequency offset and skew</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Frequency|Skew|System time|Last offset&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># System time     :  0.000012345 seconds fast of NTP time</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Last offset     : +0.000001234 seconds</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Frequency       : 12.345 ppm fast   ← clock runs 12.345 ppm fast</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Skew            :  0.123 ppm        ← uncertainty in the frequency estimate</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Healthy range</th>
+<th>Concern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frequency</td>
+<td>±500 ppm</td>
+<td>&gt; ±1000 ppm — hardware issue</td>
+</tr>
+<tr>
+<td>Skew</td>
+<td>&lt; 10 ppm</td>
+<td>&gt; 100 ppm — few or unstable sources</td>
+</tr>
+<tr>
+<td>System time offset</td>
+<td>&lt; 100ms</td>
+<td>&gt; 1s — risk of auth/Kerberos failures</td>
+</tr>
+</tbody>
+</table>
+<h2 id="drift-file">Drift File<a class="headerlink" href="#drift-file" title="Permanent link">&para;</a></h2>
+<p>The drift file stores the last known frequency correction. On startup, the NTP daemon loads this value to avoid large initial offsets.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># chronyd drift file location</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cat<span class="w"> </span>/var/lib/chrony/drift
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># ntpd drift file location</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cat<span class="w"> </span>/var/lib/ntp/drift
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Example content: a single floating-point number (ppm)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 12.345678</span>
+</code></pre></div>
+<p>If the drift file is deleted or corrupt, the daemon will start from zero correction and take longer to converge.</p>
+<h2 id="interpreting-drift-history">Interpreting Drift History<a class="headerlink" href="#interpreting-drift-history" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># chronyc — show drift over time (last N measurements)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>chronyc<span class="w"> </span>sourcestats
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Output columns: Name/IP, N, Polls, Reach, Last_Rx, Last sample, Est offset, Est error</span>
+</code></pre></div>
+<h2 id="drift-after-vm-operations">Drift After VM Operations<a class="headerlink" href="#drift-after-vm-operations" title="Permanent link">&para;</a></h2>
+<p>VMs commonly accumulate clock drift after:
+- <strong>Suspend/resume</strong> — clock stops, then jumps on resume
+- <strong>vMotion</strong> — minor timing discontinuity
+- <strong>High CPU load</strong> — timer interrupts delayed</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Force immediate resync after VM resume</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>chronyc<span class="w"> </span>makestep
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Configure chrony to step on large offsets (in /etc/chrony.conf)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>makestep<span class="w"> </span><span class="m">1</span>.0<span class="w"> </span><span class="m">3</span><span class="w">   </span><span class="c1"># step if offset &gt; 1s on first 3 updates</span>
+</code></pre></div>
+<h2 id="windows-drift">Windows Drift<a class="headerlink" href="#windows-drift" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check frequency offset</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;Frequency&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Adjust max drift allowed (registry)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Config\MaxPosPhaseCorrection</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># HKLM\SYSTEM\CurrentControlSet\Services\W32Time\Config\MaxNegPhaseCorrection</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Default 54000 seconds (15 hours) — reduce for stricter environments</span>
+</code></pre></div>
 
 
 
