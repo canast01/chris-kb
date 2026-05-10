@@ -1,43 +1,133 @@
-# Capacity
-## Purpose
+# Pure1 — Capacity
 
-Use this page for practical Pure1 Capacity notes, checks, troubleshooting, commands, change notes, and field references.
+Pure1 tracks capacity across all registered arrays, showing raw, usable, used, and effective (after data reduction) capacity with historical trends and forecasting.
 
-## Common checks
+## Capacity Concepts
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+| Term | Definition |
+|---|---|
+| **Raw capacity** | Total physical drive capacity before RAID overhead |
+| **Usable capacity** | Capacity available after RAID overhead |
+| **Unique (used)** | Actual data written after deduplication and compression |
+| **Total reduction** | Combined deduplication + compression ratio |
+| **Effective capacity** | How much data the array can hold given current data reduction rates |
+| **Space** | Volume/datastore provisioned capacity (thin) |
 
-## Incident notes
+A FlashArray at 80% used is typically healthier than it looks because effective capacity accounts for data reduction. Monitor **used vs usable**, not provisioned space.
 
-Capture:
+## Capacity in Pure1 UI
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+**Pure1 → Arrays → select array → Capacity tab**
 
-## Change notes
+Shows:
+- Usable capacity gauge
+- Data reduction ratio (dedup + compression)
+- Historical capacity trend chart
+- Projected full date at current growth rate
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+## Capacity via CLI
 
-## Useful commands
+```bash
+ssh pureuser@<flasharray-ip>
 
-Add tested commands here.
+# Array-level capacity summary
+purearray list --space
 
-## Known issues
+# Volume-level capacity
+purevol list --space | sort -k5 -rh | head -20    # top 20 by usage
 
-Add known issues here as they come up.
+# Snapshot space consumption
+puresnapshot list --space | sort -k5 -rh | head -10
+
+# Total space breakdown (unique, snapshots, shared, replication)
+purearray list --space --csv
+```
+
+```bash
+ssh pureuser@<flashblade-ip>
+
+# FlashBlade capacity
+purearray list --space
+
+# File system capacity
+purefs list --space | sort -k4 -rh | head -20
+
+# Object store bucket usage
+purebucket list --space
+```
+
+## Capacity via Pure1 API
+
+```bash
+TOKEN="<pure1-token>"
+
+# All arrays with capacity data
+curl -s "https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space" \
+  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
+
+# Arrays above 80% used
+curl -s "https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,space" \
+  -H "Authorization: Bearer $TOKEN" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+for a in data.get('items', []):
+    space = a.get('space', {})
+    total = a.get('capacity', 0)
+    used  = space.get('unique', 0) + space.get('snapshots', 0)
+    if total > 0 and (used / total) > 0.8:
+        print(f\"{a['name']}: {used/total*100:.1f}% used\")
+"
+```
+
+## Capacity Alerts
+
+Pure1 raises automatic capacity alerts at these thresholds:
+
+| Alert | Default threshold | Severity |
+|---|---|---|
+| Array space warning | 70% usable used | Warning |
+| Array space critical | 80% usable used | Error |
+| Volume nearly full | 90% of volume size | Warning |
+| Snapshot excessive | > 50% of usable used by snapshots | Warning |
+
+Thresholds can be adjusted under **Pure1 → Settings → Alert Policies**.
+
+## Capacity Planning
+
+```bash
+# Pure1 UI: Arrays → Capacity → Forecast
+# Shows projected days to full at current growth rate
+
+# Recommended actions when forecast < 90 days:
+# 1. Review and delete aged snapshots
+# 2. Identify top space consumers (purevol list --space)
+# 3. Check volumes without thin provisioning savings (large unique)
+# 4. Open Evergreen sizing request if expansion needed
+```
+
+## Snapshot Space Management
+
+Stale snapshots are the most common cause of unexpected capacity growth:
+
+```bash
+# List snapshots older than 30 days sorted by size
+puresnapshot list --space | awk 'NR==1 || $6 > 30' | sort -k5 -rh
+
+# Destroy snapshots matching a pattern
+puresnapshot destroy --name "vol01.*" --notail
+
+# Eradicate immediately (skip 24h pending period)
+puresnapshot eradicate --name "vol01.*"
+
+# Show pending eradication queue
+puresnapshot list --pending-only
+```
+
+## Common Capacity Issues
+
+| Symptom | Cause | Action |
+|---|---|---|
+| Used growing faster than expected | Snapshot accumulation | Review snapshot policies; delete stale snapshots |
+| Data reduction ratio dropped | New data type (already-compressed data like video) | Normal — not actionable; pure capacity has grown |
+| Volume space used ≠ array space used | Thin provisioning — volumes report provisioned, array reports actual | Expected behaviour |
+| Forecast shows < 30 days to full | Rapid data growth or snapshot accumulation | Escalate to storage team; open Evergreen expansion request |
