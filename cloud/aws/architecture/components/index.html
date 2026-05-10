@@ -778,6 +778,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#service-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-and-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management and Observability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-port-and-protocol-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Port and Protocol Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -797,12 +893,354 @@
 
 
 <h1 id="aws-architecture-components">AWS — Architecture Components<a class="headerlink" href="#aws-architecture-components" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Architecture</a> section.</p>
-</blockquote>
-<hr />
-<p>Core AWS services, service categories, and platform capabilities used in this environment.</p>
-<!-- Stub — expand with service inventory, dependency maps, and port references. -->
+<p>Core AWS service categories and platform capabilities used in this environment.</p>
+<h2 id="service-map">Service Map<a class="headerlink" href="#service-map" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Networking
+        VPC[VPC + Subnets]
+        TGW[Transit Gateway]
+        DX[Direct Connect]
+        R53[Route 53]
+        CF[CloudFront]
+        ALB[ALB / NLB]
+    end
+    subgraph Compute
+        EC2[EC2]
+        EKS[EKS]
+        ECS[ECS / Fargate]
+        Lambda[Lambda]
+    end
+    subgraph Storage
+        S3[S3]
+        EBS[EBS]
+        EFS[EFS]
+        FSx[FSx]
+    end
+    subgraph Database
+        RDS[RDS / Aurora]
+        DDB[DynamoDB]
+        EC[ElastiCache]
+    end
+    subgraph Security
+        IAM[IAM]
+        KMS[KMS]
+        SM[Secrets Manager]
+        WAF[WAF + Shield]
+        GD[GuardDuty]
+    end
+    subgraph Management
+        CW[CloudWatch]
+        CT[CloudTrail]
+        SSM[Systems Manager]
+        CFN[CloudFormation]
+    end
+
+    DX --&gt; TGW --&gt; VPC
+    VPC --&gt; ALB --&gt; Compute
+    Compute --&gt; Storage
+    Compute --&gt; Database</code></pre>
+<h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+<th>Key config</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VPC</strong></td>
+<td>Isolated virtual network — all resources live inside a VPC</td>
+<td>CIDR, public/private subnets, route tables, NACLs</td>
+</tr>
+<tr>
+<td><strong>Transit Gateway</strong></td>
+<td>Hub connecting multiple VPCs and on-prem via a single gateway</td>
+<td>TGW attachments, route domains</td>
+</tr>
+<tr>
+<td><strong>Direct Connect</strong></td>
+<td>Dedicated private circuit from on-prem to AWS</td>
+<td>VIFs (private/public), BGP, Direct Connect Gateway</td>
+</tr>
+<tr>
+<td><strong>Route 53</strong></td>
+<td>DNS — public/private hosted zones, health checks, traffic routing</td>
+<td>Alias records, resolver endpoints for hybrid DNS</td>
+</tr>
+<tr>
+<td><strong>ALB / NLB</strong></td>
+<td>Layer 7 / Layer 4 load balancing</td>
+<td>Target groups, listener rules, health checks, WAF attachment</td>
+</tr>
+<tr>
+<td><strong>CloudFront</strong></td>
+<td>CDN for static content and API acceleration</td>
+<td>Distributions, origins, cache behaviours, OAC</td>
+</tr>
+<tr>
+<td><strong>Security Groups</strong></td>
+<td>Stateful instance-level firewall</td>
+<td>Inbound/outbound rules by port, protocol, CIDR or SG reference</td>
+</tr>
+<tr>
+<td><strong>NACLs</strong></td>
+<td>Stateless subnet-level ACLs (fallback)</td>
+<td>Applied at subnet; allow/deny by rule number</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compute">Compute<a class="headerlink" href="#compute" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EC2</strong></td>
+<td>Virtual machines</td>
+<td>Instance types, placement groups, Reserved vs On-Demand vs Spot</td>
+</tr>
+<tr>
+<td><strong>Auto Scaling Groups</strong></td>
+<td>Horizontal scaling of EC2 fleets</td>
+<td>Launch templates, scaling policies (target tracking, step)</td>
+</tr>
+<tr>
+<td><strong>EKS</strong></td>
+<td>Managed Kubernetes</td>
+<td>Node groups vs Fargate profiles, OIDC for IRSA</td>
+</tr>
+<tr>
+<td><strong>ECS / Fargate</strong></td>
+<td>Container orchestration — serverless option available</td>
+<td>Task definitions, services, capacity providers</td>
+</tr>
+<tr>
+<td><strong>Lambda</strong></td>
+<td>Serverless functions — event-driven</td>
+<td>15-min max, memory 128MB–10GB, X-Ray tracing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S3</strong></td>
+<td>Object storage</td>
+<td>Bucket policies, versioning, lifecycle rules, replication</td>
+</tr>
+<tr>
+<td><strong>EBS</strong></td>
+<td>Block storage for EC2</td>
+<td>gp3 default; io2/io2 Block Express for high IOPS; snapshots</td>
+</tr>
+<tr>
+<td><strong>EFS</strong></td>
+<td>Shared NFS — multi-AZ</td>
+<td>General Purpose vs Max I/O, Bursting vs Provisioned throughput</td>
+</tr>
+<tr>
+<td><strong>FSx for Windows</strong></td>
+<td>Managed Windows file server (SMB)</td>
+<td>Active Directory integration, DFS replication</td>
+</tr>
+<tr>
+<td><strong>FSx for ONTAP</strong></td>
+<td>Managed NetApp ONTAP</td>
+<td>Multi-protocol, SnapMirror, tiering to S3</td>
+</tr>
+</tbody>
+</table>
+<h2 id="database">Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RDS</strong></td>
+<td>Managed relational DB — MySQL, PostgreSQL, SQL Server, Oracle</td>
+<td>Multi-AZ deployments, read replicas, automated backups</td>
+</tr>
+<tr>
+<td><strong>Aurora</strong></td>
+<td>MySQL/PostgreSQL-compatible — higher throughput</td>
+<td>Aurora Serverless v2 for variable workloads</td>
+</tr>
+<tr>
+<td><strong>DynamoDB</strong></td>
+<td>Managed NoSQL key-value + document</td>
+<td>On-demand vs provisioned capacity, DAX cache, global tables</td>
+</tr>
+<tr>
+<td><strong>ElastiCache</strong></td>
+<td>In-memory cache — Redis or Memcached</td>
+<td>Redis Cluster mode, auth tokens, encryption in transit</td>
+</tr>
+</tbody>
+</table>
+<h2 id="security">Security<a class="headerlink" href="#security" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IAM</strong></td>
+<td>Identity and access management</td>
+<td>Roles, policies, permission boundaries, OIDC federation</td>
+</tr>
+<tr>
+<td><strong>KMS</strong></td>
+<td>Key management — encryption at rest</td>
+<td>CMK vs AWS-managed keys; key policies; key rotation</td>
+</tr>
+<tr>
+<td><strong>Secrets Manager</strong></td>
+<td>Secret rotation and storage</td>
+<td>Auto-rotation for RDS; cross-account access via resource policy</td>
+</tr>
+<tr>
+<td><strong>WAF</strong></td>
+<td>Web Application Firewall</td>
+<td>Rule groups, managed rule sets (AWS Managed Rules + OWASP core)</td>
+</tr>
+<tr>
+<td><strong>Shield</strong></td>
+<td>DDoS protection</td>
+<td>Shield Standard (free); Shield Advanced for L3/L4/L7</td>
+</tr>
+<tr>
+<td><strong>GuardDuty</strong></td>
+<td>Threat detection — VPC flow logs, DNS, CloudTrail</td>
+<td>Findings → EventBridge → SNS/Lambda response</td>
+</tr>
+<tr>
+<td><strong>Security Hub</strong></td>
+<td>Aggregated findings across accounts</td>
+<td>CIS Benchmark, AWS Foundational Security Standard</td>
+</tr>
+</tbody>
+</table>
+<h2 id="management-and-observability">Management and Observability<a class="headerlink" href="#management-and-observability" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CloudWatch</strong></td>
+<td>Metrics, logs, alarms</td>
+<td>Log groups, metric filters, composite alarms, dashboards</td>
+</tr>
+<tr>
+<td><strong>CloudTrail</strong></td>
+<td>API audit log</td>
+<td>Multi-region trail to S3; CloudWatch Logs integration</td>
+</tr>
+<tr>
+<td><strong>AWS Config</strong></td>
+<td>Resource configuration history and compliance</td>
+<td>Config rules, conformance packs, remediation actions</td>
+</tr>
+<tr>
+<td><strong>Systems Manager</strong></td>
+<td>Fleet management without bastion hosts</td>
+<td>Session Manager, Patch Manager, Parameter Store, Run Command</td>
+</tr>
+<tr>
+<td><strong>CloudFormation</strong></td>
+<td>Infrastructure as code</td>
+<td>Stacks, nested stacks, change sets, drift detection</td>
+</tr>
+<tr>
+<td><strong>Trusted Advisor</strong></td>
+<td>Cost, security, and performance recommendations</td>
+<td>Business/Enterprise support required for full checks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-port-and-protocol-reference">Common Port and Protocol Reference<a class="headerlink" href="#common-port-and-protocol-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Protocol</th>
+<th>Port</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EC2 SSH</td>
+<td>TCP</td>
+<td>22</td>
+<td>Inbound (restrict to management CIDR or SSM)</td>
+</tr>
+<tr>
+<td>RDS PostgreSQL</td>
+<td>TCP</td>
+<td>5432</td>
+<td>Inbound from app SG only</td>
+</tr>
+<tr>
+<td>RDS MySQL</td>
+<td>TCP</td>
+<td>3306</td>
+<td>Inbound from app SG only</td>
+</tr>
+<tr>
+<td>ElastiCache Redis</td>
+<td>TCP</td>
+<td>6379</td>
+<td>Inbound from app SG only</td>
+</tr>
+<tr>
+<td>ALB HTTPS</td>
+<td>TCP</td>
+<td>443</td>
+<td>Inbound from 0.0.0.0/0 or CloudFront prefix list</td>
+</tr>
+<tr>
+<td>ALB HTTP redirect</td>
+<td>TCP</td>
+<td>80</td>
+<td>Inbound — redirect to 443</td>
+</tr>
+<tr>
+<td>EFS NFS</td>
+<td>TCP</td>
+<td>2049</td>
+<td>Inbound from compute SG within VPC</td>
+</tr>
+</tbody>
+</table>
 
 
 
