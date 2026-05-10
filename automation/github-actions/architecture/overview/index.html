@@ -21,7 +21,7 @@
     
     
       
-        <title>GitHub Actions — Overview - Chris KB</title>
+        <title>GitHub Actions Architecture Overview - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="GitHub Actions — Overview · Chris KB">
+  <meta property="og:title" content="GitHub Actions Architecture Overview · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="GitHub Actions — Overview · Chris KB">
+  <meta name="twitter:title" content="GitHub Actions Architecture Overview · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#github-actions-overview" class="md-skip">
+        <a href="#github-actions-architecture-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GitHub Actions — Overview
+              GitHub Actions Architecture Overview
             
           </span>
         </div>
@@ -778,6 +778,197 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-execution-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Execution Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#webhook-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-webhook-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-Webhook Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jobs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Jobs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#job-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runners
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runners">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#github-hosted-runners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub-Hosted Runners
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-hosted-runners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Hosted Runners
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actions-runner-controller-arc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actions Runner Controller (ARC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concurrency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concurrency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Artifacts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -796,12 +987,450 @@
 
 
 
-<h1 id="github-actions-overview">GitHub Actions — Overview<a class="headerlink" href="#github-actions-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">GitHub Actions Architecture</a> reference.</p>
-</blockquote>
-<hr />
-<p>Content to be added.</p>
+<h1 id="github-actions-architecture-overview">GitHub Actions Architecture Overview<a class="headerlink" href="#github-actions-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>GitHub Actions is an event-driven CI/CD and automation platform embedded directly into GitHub repositories. It executes workflows in response to repository events, schedules, or external triggers. Understanding the execution model — from event to step — is essential for designing reliable, scalable pipelines.</p>
+<h2 id="core-execution-model">Core Execution Model<a class="headerlink" href="#core-execution-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    E[Repository Event] --&gt; W[Workflow Triggered]
+    W --&gt; Q[Job Queue]
+    Q --&gt; R1[Runner 1\nJob A]
+    Q --&gt; R2[Runner 2\nJob B]
+    R1 --&gt; S1[Step 1: Checkout]
+    R1 --&gt; S2[Step 2: Build]
+    R1 --&gt; S3[Step 3: Test]
+    R2 --&gt; S4[Step 1: Lint]
+    R2 --&gt; S5[Step 2: Scan]
+    S3 --&gt; A[Upload Artifact]
+    S5 --&gt; A
+    A --&gt; NOTIFY[Notification / Downstream Jobs]</code></pre>
+<p>Events fire workflows. Workflows contain jobs. Jobs run on runners. Steps execute sequentially within a job. Artifacts bridge data between jobs.</p>
+<h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">&para;</a></h2>
+<p>Events are the triggers that cause a workflow to execute. GitHub supports over 35 distinct event types.</p>
+<h3 id="webhook-events">Webhook Events<a class="headerlink" href="#webhook-events" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>push</code></td>
+<td>Commits pushed to a branch or tag</td>
+</tr>
+<tr>
+<td><code>pull_request</code></td>
+<td>PR opened, synchronized, or closed</td>
+</tr>
+<tr>
+<td><code>pull_request_target</code></td>
+<td>PR event running in the context of the base branch (elevated trust)</td>
+</tr>
+<tr>
+<td><code>release</code></td>
+<td>Release published, created, or deleted</td>
+</tr>
+<tr>
+<td><code>workflow_run</code></td>
+<td>Another workflow completes</td>
+</tr>
+<tr>
+<td><code>deployment</code></td>
+<td>A deployment is created</td>
+</tr>
+<tr>
+<td><code>registry_package</code></td>
+<td>Package published to GitHub Packages</td>
+</tr>
+<tr>
+<td><code>issue_comment</code></td>
+<td>Comment posted on an issue or PR</td>
+</tr>
+</tbody>
+</table>
+<h3 id="non-webhook-events">Non-Webhook Events<a class="headerlink" href="#non-webhook-events" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schedule</code></td>
+<td>Cron-based timer (UTC, minimum 5-minute interval)</td>
+</tr>
+<tr>
+<td><code>workflow_dispatch</code></td>
+<td>Manual trigger via UI, API, or <code>gh</code> CLI</td>
+</tr>
+<tr>
+<td><code>repository_dispatch</code></td>
+<td>External HTTP POST to GitHub API</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">pull_request_target Risk</p>
+<p><code>pull_request_target</code> runs in the context of the base branch and has access to repository secrets. Never checkout and execute code from the PR head without explicit validation — this is a known attack vector for privilege escalation.</p>
+</div>
+<h2 id="workflows">Workflows<a class="headerlink" href="#workflows" title="Permanent link">&para;</a></h2>
+<p>A workflow is a YAML file stored in <code>.github/workflows/</code>. It defines the automation logic for a repository. Multiple workflows can run concurrently in the same repository.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li>Stored as <code>.github/workflows/&lt;name&gt;.yaml</code></li>
+<li>Evaluated at trigger time from the default branch (or the ref that fired the event)</li>
+<li>Can be disabled at the repository or organisation level</li>
+<li>Each workflow run gets its own run ID and is independently audited in the Actions tab</li>
+</ul>
+<h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
+<p>A job is a set of steps that executes on a single runner. Jobs within a workflow are independent by default and run in parallel. Sequential execution requires explicit <code>needs:</code> dependencies.</p>
+<pre class="mermaid"><code>flowchart LR
+    lint[lint] --&gt; build[build]
+    test[test] --&gt; build
+    build --&gt; deploy[deploy]
+    deploy --&gt; notify[notify]</code></pre>
+<h3 id="job-properties">Job Properties<a class="headerlink" href="#job-properties" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>runs-on</code></td>
+<td>Specifies the runner label or group</td>
+</tr>
+<tr>
+<td><code>needs</code></td>
+<td>Declares upstream job dependencies</td>
+</tr>
+<tr>
+<td><code>if</code></td>
+<td>Conditional execution expression</td>
+</tr>
+<tr>
+<td><code>environment</code></td>
+<td>Links to a protected deployment environment</td>
+</tr>
+<tr>
+<td><code>concurrency</code></td>
+<td>Prevents duplicate runs for the same group</td>
+</tr>
+<tr>
+<td><code>timeout-minutes</code></td>
+<td>Hard deadline for the job (default 360)</td>
+</tr>
+<tr>
+<td><code>continue-on-error</code></td>
+<td>Allow downstream jobs despite this job failing</td>
+</tr>
+<tr>
+<td><code>strategy.matrix</code></td>
+<td>Fan-out across multiple configurations</td>
+</tr>
+<tr>
+<td><code>outputs</code></td>
+<td>Key-value data passed to dependent jobs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
+<p>Steps are the atomic units of execution within a job. Each step runs in sequence and shares the runner filesystem and environment with all other steps in the same job.</p>
+<p>A step is one of two types:</p>
+<ol>
+<li><strong>Run step</strong> — Executes shell commands directly on the runner</li>
+<li><strong>Action step</strong> — Invokes a reusable action via <code>uses:</code></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout repository</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">env</span><span class="p">:</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">NODE_ENV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload coverage</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage/</span>
+</code></pre></div>
+<p>Steps share environment variables set with <code>$GITHUB_ENV</code>, path additions via <code>$GITHUB_PATH</code>, and produce outputs written to <code>$GITHUB_OUTPUT</code>.</p>
+<h2 id="runners">Runners<a class="headerlink" href="#runners" title="Permanent link">&para;</a></h2>
+<p>A runner is a virtual machine or physical host that executes jobs. GitHub provides managed runners, or you can operate your own self-hosted infrastructure.</p>
+<h3 id="github-hosted-runners">GitHub-Hosted Runners<a class="headerlink" href="#github-hosted-runners" title="Permanent link">&para;</a></h3>
+<p>GitHub-hosted runners are provisioned fresh for every job and torn down after completion. They include pre-installed toolchains for common languages and platforms.</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>OS</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Storage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ubuntu-24.04</code> / <code>ubuntu-latest</code></td>
+<td>Ubuntu 24.04 LTS</td>
+<td>4</td>
+<td>16 GB</td>
+<td>14 GB SSD</td>
+</tr>
+<tr>
+<td><code>ubuntu-22.04</code></td>
+<td>Ubuntu 22.04 LTS</td>
+<td>4</td>
+<td>16 GB</td>
+<td>14 GB SSD</td>
+</tr>
+<tr>
+<td><code>windows-2022</code> / <code>windows-latest</code></td>
+<td>Windows Server 2022</td>
+<td>4</td>
+<td>16 GB</td>
+<td>14 GB SSD</td>
+</tr>
+<tr>
+<td><code>macos-15</code> / <code>macos-latest</code></td>
+<td>macOS 15 (ARM, M1)</td>
+<td>4</td>
+<td>14 GB</td>
+<td>14 GB SSD</td>
+</tr>
+<tr>
+<td><code>macos-13</code></td>
+<td>macOS 13 (Intel)</td>
+<td>3</td>
+<td>14 GB</td>
+<td>14 GB SSD</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">ubuntu-latest Resolution</p>
+<p>The <code>ubuntu-latest</code> label resolves to the current stable Ubuntu image. As of 2025, this maps to <code>ubuntu-24.04</code>. GitHub announces image promotions in the <code>actions/runner-images</code> repository at least 60 days in advance.</p>
+</div>
+<p><strong>Larger runners</strong> (GitHub Team and Enterprise Cloud plans) offer configurations up to 64 vCPU / 256 GB RAM, GPU-powered (NVIDIA A10G) hosts, and ARM64 Linux runners. These are registered in organisation runner groups and targeted by custom labels.</p>
+<h3 id="self-hosted-runners">Self-Hosted Runners<a class="headerlink" href="#self-hosted-runners" title="Permanent link">&para;</a></h3>
+<p>Self-hosted runners give full control over the execution environment: OS, installed tools, network access, and hardware. The runner application is installed on a host and polls GitHub via HTTPS long-polling for job assignments.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant R as Runner Agent
+    participant G as GitHub API
+    R-&gt;&gt;G: Register (POST /repos/.../actions/runners/registration-token)
+    loop Long-polling
+        R-&gt;&gt;G: GET next job
+        G--&gt;&gt;R: Job payload (steps, env, secrets)
+        R-&gt;&gt;R: Execute all steps
+        R-&gt;&gt;G: POST logs + results
+    end</code></pre>
+<p><strong>Runner scopes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Registration Level</th>
+<th>Shared Across</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository</td>
+<td>Single repository settings</td>
+<td>That repo only</td>
+</tr>
+<tr>
+<td>Organisation</td>
+<td>Organisation settings</td>
+<td>All repos granted access</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Enterprise settings</td>
+<td>All orgs in the enterprise</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Runner labels</strong> allow jobs to target specific runners by operating system, architecture, or capability:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">self-hosted</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">linux</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">x64</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">production</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Self-Hosted Runner Security</p>
+<p>Never run self-hosted runners on public repositories — a forked PR can execute arbitrary code on the host. For public repos, use GitHub-hosted runners only. For private repos, use ephemeral runners via Actions Runner Controller and enforce environment protection rules on any job touching secrets.</p>
+</div>
+<h3 id="actions-runner-controller-arc">Actions Runner Controller (ARC)<a class="headerlink" href="#actions-runner-controller-arc" title="Permanent link">&para;</a></h3>
+<p>ARC is the Kubernetes-native autoscaling solution for self-hosted runners. It provisions ephemeral runner pods on demand and terminates them after job completion, eliminating persistent runner state and reducing attack surface.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions.github.com/v1alpha1</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AutoscalingRunnerSet</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arc-runner-set</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arc-systems</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">githubConfigUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/my-org/my-repo</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">githubConfigSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arc-github-secret</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">minRunners</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">maxRunners</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runner</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/actions/actions-runner:latest</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">            </span><span class="nt">requests</span><span class="p">:</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">              </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">              </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2Gi</span>
+</code></pre></div>
+<h2 id="concurrency">Concurrency<a class="headerlink" href="#concurrency" title="Permanent link">&para;</a></h2>
+<p>Concurrency groups prevent duplicate workflow runs for the same logical scope (branch, PR, environment). When a new run is triggered for an existing group, the in-progress or queued run is cancelled (if <code>cancel-in-progress: true</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">concurrency</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.workflow }}-${{ github.ref }}</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>group</code></td>
+<td>Unique string identifying the concurrency group</td>
+</tr>
+<tr>
+<td><code>cancel-in-progress: true</code></td>
+<td>Cancel the current queued or running job when a new run starts</td>
+</tr>
+<tr>
+<td><code>cancel-in-progress: false</code></td>
+<td>Queue the new run; wait for the existing run to complete</td>
+</tr>
+</tbody>
+</table>
+<p>Common patterns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Per-branch — cancel superseded CI runs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ci-${{ github.ref_name }}</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Per-PR — cancel stale runs when PR is force-pushed</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pr-${{ github.event.pull_request.number }}</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Environment-scoped — serialise deploys to production</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production-deploy</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
+<h2 id="artifacts">Artifacts<a class="headerlink" href="#artifacts" title="Permanent link">&para;</a></h2>
+<p>Artifacts are files or directories uploaded from a job step and stored by GitHub for a configurable retention period. They are the primary mechanism for passing build outputs between jobs and for making files available to download after a run.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Upload in one job</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist-package</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">retention-days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Download in a subsequent job</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/download-artifact@v4</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist-package</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default retention</td>
+<td>90 days</td>
+</tr>
+<tr>
+<td>Maximum retention (configurable)</td>
+<td>400 days</td>
+</tr>
+<tr>
+<td>Maximum size per artifact</td>
+<td>10 GB</td>
+</tr>
+<tr>
+<td>Maximum total per run</td>
+<td>10 GB</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Artifact vs Cache</p>
+<p>Use <strong>artifacts</strong> for build outputs, test reports, and binaries you want to persist or download. Use <code>actions/cache</code> for dependency directories (<code>.npm</code>, <code>.gradle</code>, <code>vendor/</code>) that accelerate repeated runs. Caches are keyed and shared across runs; artifacts are scoped to a single workflow run.</p>
+</div>
+<h2 id="platform-limits">Platform Limits<a class="headerlink" href="#platform-limits" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>GitHub Free</th>
+<th>GitHub Team</th>
+<th>GitHub Enterprise</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Concurrent jobs (Linux, hosted)</td>
+<td>20</td>
+<td>60</td>
+<td>180</td>
+</tr>
+<tr>
+<td>Job execution timeout</td>
+<td>6 hours</td>
+<td>6 hours</td>
+<td>6 hours</td>
+</tr>
+<tr>
+<td>Workflow run timeout</td>
+<td>35 days</td>
+<td>35 days</td>
+<td>35 days</td>
+</tr>
+<tr>
+<td>Artifact storage included</td>
+<td>500 MB</td>
+<td>2 GB</td>
+<td>50 GB</td>
+</tr>
+<tr>
+<td>Cache storage per repository</td>
+<td>10 GB</td>
+<td>10 GB</td>
+<td>10 GB</td>
+</tr>
+<tr>
+<td>Secrets per repository</td>
+<td>100</td>
+<td>100</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Secrets per organisation</td>
+<td>300</td>
+<td>300</td>
+<td>300</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -778,6 +778,158 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-escalate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Escalate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information-to-gather-before-escalating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information to Gather Before Escalating
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#awx-aap-escalation-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWX / AAP Escalation Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#red-hat-support-aap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Red Hat Support (AAP)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Red Hat Support (AAP)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#opening-a-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening a Case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Attachments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#community-escalation-open-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Escalation (Open Source)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Community Escalation (Open Source)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ansible-core-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ansible-core Bugs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collection-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collection Bugs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workarounds-while-awaiting-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workarounds While Awaiting Fix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -800,8 +952,240 @@
 <blockquote>
 <p>Part of the <a href="../">Ansible Troubleshooting</a> reference.</p>
 </blockquote>
-<hr />
-<p>Content to be added.</p>
+<h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
+<p>Escalate when any of the following are true and cannot be resolved with standard diagnostics:</p>
+<ul>
+<li>Ansible module producing incorrect results with correct inputs (potential module bug)</li>
+<li>AWX/AAP platform-level failure (database corruption, operator crash, license issue)</li>
+<li>Execution Environment image pull failures from Red Hat registry</li>
+<li>Unexpected behaviour after ansible-core or collection upgrade</li>
+<li>Vault decryption failures not explained by password/key issues</li>
+<li>SSH transport bugs (pipelining, ControlMaster, ControlPersist edge cases)</li>
+</ul>
+<h2 id="internal-escalation-path">Internal Escalation Path<a class="headerlink" href="#internal-escalation-path" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    L1[L1 Ops\nRun diagnostics\nCheck logs] --&gt; L2[L2 Automation Engineering\nModule-level debug\nvvv trace + stack trace]
+    L2 --&gt; L3[Platform Team / SME\nAWX admin access\nExecution environment rebuild]
+    L3 --&gt; Vendor[Red Hat Support\nor GitHub issue]</code></pre>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Owns</th>
+<th>Contact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1 Ops</td>
+<td>Day-to-day playbook failures</td>
+<td>Ops team Slack / ticket</td>
+</tr>
+<tr>
+<td>L2 Automation</td>
+<td>Module bugs, collection issues</td>
+<td>automation-team@example.com</td>
+</tr>
+<tr>
+<td>L3 Platform</td>
+<td>AWX/AAP infrastructure</td>
+<td>infra-platform@example.com</td>
+</tr>
+<tr>
+<td>Red Hat Support</td>
+<td>AAP bugs, licensed product issues</td>
+<td>access.redhat.com case</td>
+</tr>
+<tr>
+<td>Community</td>
+<td>ansible-core / community collections</td>
+<td>GitHub Issues / Forum</td>
+</tr>
+</tbody>
+</table>
+<h2 id="information-to-gather-before-escalating">Information to Gather Before Escalating<a class="headerlink" href="#information-to-gather-before-escalating" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Ansible version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ansible<span class="w"> </span>--version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;vmware|amazon|community.general&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># 2. Full playbook run with maximum verbosity</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>site.yml<span class="w"> </span>-vvvv<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/escalation-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 3. Python versions</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>python3<span class="w"> </span>--version
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>pip<span class="w"> </span>show<span class="w"> </span>ansible-core<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Version
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># 4. Environment variables that may affect Ansible</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>ansible<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 5. SSH trace (for connection issues)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ssh<span class="w"> </span>-vvv<span class="w"> </span>-i<span class="w"> </span>~/.ssh/ansible_ed25519<span class="w"> </span>ansible@failing-host.example.com<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-60
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># 6. Module debug output (for module-level failures)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nv">ANSIBLE_DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>site.yml<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;TASK \[failing task\]&quot;</span>
+</code></pre></div>
+<h2 id="awx-aap-escalation-data">AWX / AAP Escalation Data<a class="headerlink" href="#awx-aap-escalation-data" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># AWX version and configuration</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>https://awx.example.com/api/v2/config/<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Failed job details</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/</span><span class="nv">$JOB_ID</span><span class="s2">/&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Job stdout (full output)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/</span><span class="nv">$JOB_ID</span><span class="s2">/stdout/?format=txt&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/job-stdout.txt
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Kubernetes pod logs (for AWX operator deployments)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>deployment/awx-prod-web<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/awx-web.log
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>deployment/awx-prod-task<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/awx-task.log
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>awx-web<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>&gt;<span class="w"> </span>/tmp/awx-pod.txt
+</code></pre></div>
+<h2 id="red-hat-support-aap">Red Hat Support (AAP)<a class="headerlink" href="#red-hat-support-aap" title="Permanent link">&para;</a></h2>
+<h3 id="opening-a-case">Opening a Case<a class="headerlink" href="#opening-a-case" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Go to <a href="https://access.redhat.com">access.redhat.com</a> → Cases → Open a New Case</li>
+<li>Select product: <strong>Red Hat Ansible Automation Platform</strong></li>
+<li>Set severity:</li>
+<li><strong>Sev 1</strong>: Production down — no workaround</li>
+<li><strong>Sev 2</strong>: Major function impaired — workaround exists</li>
+<li><strong>Sev 3</strong>: Minor issue — workaround exists</li>
+<li><strong>Sev 4</strong>: Feature request / documentation</li>
+</ol>
+<h3 id="required-attachments">Required Attachments<a class="headerlink" href="#required-attachments" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate sosreport on AWX controller node</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sosreport<span class="w"> </span>--batch<span class="w"> </span>--tmp-dir<span class="w"> </span>/tmp/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-o<span class="w"> </span>ansible,process,networking,kubernetes
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Attach:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># - sosreport archive</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># - /tmp/escalation-$(date +%F).log (vvvv run)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># - /tmp/awx-web.log + /tmp/awx-task.log</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># - /tmp/job-stdout.txt</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># - ansible --version output</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># - ansible-galaxy collection list output</span>
+</code></pre></div>
+<h2 id="community-escalation-open-source">Community Escalation (Open Source)<a class="headerlink" href="#community-escalation-open-source" title="Permanent link">&para;</a></h2>
+<h3 id="ansible-core-bugs">ansible-core Bugs<a class="headerlink" href="#ansible-core-bugs" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check existing issues first</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># https://github.com/ansible/ansible/issues</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Minimal reproduction case</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/tmp/repro.yml<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s">- name: Reproduction case</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s">  hosts: localhost</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">  gather_facts: false</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">  tasks:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">    - name: Failing task</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s">      ansible.builtin.MODULE:</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s">        arg: value</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s">EOF</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>ansible-playbook<span class="w"> </span>/tmp/repro.yml<span class="w"> </span>-vvv<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/repro.log
+</code></pre></div>
+<p>Include in the GitHub issue:
+- <code>ansible --version</code> output
+- Python version
+- OS version
+- Minimal reproduction playbook
+- Full <code>-vvv</code> output</p>
+<h3 id="collection-bugs">Collection Bugs<a class="headerlink" href="#collection-bugs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Collection</th>
+<th>Issue Tracker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>community.vmware</code></td>
+<td>github.com/ansible-collections/community.vmware</td>
+</tr>
+<tr>
+<td><code>amazon.aws</code></td>
+<td>github.com/ansible-collections/amazon.aws</td>
+</tr>
+<tr>
+<td><code>community.general</code></td>
+<td>github.com/ansible-collections/community.general</td>
+</tr>
+<tr>
+<td><code>cisco.ios</code></td>
+<td>github.com/ansible-collections/cisco.ios</td>
+</tr>
+<tr>
+<td><code>servicenow.itsm</code></td>
+<td>github.com/ServiceNowITOM/servicenow-ansible</td>
+</tr>
+</tbody>
+</table>
+<h2 id="workarounds-while-awaiting-fix">Workarounds While Awaiting Fix<a class="headerlink" href="#workarounds-while-awaiting-fix" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Pin to last known-good collection version</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">collections</span><span class="p">:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">community.vmware</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;4.2.0&quot;</span><span class="w">   </span><span class="c1"># pinned until bug fixed in 4.3.x</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Use raw/command module as fallback when a declarative module has a bug</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Workaround — create vlan via command until module fixed</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;esxcli</span><span class="nv"> </span><span class="s">network</span><span class="nv"> </span><span class="s">vswitch</span><span class="nv"> </span><span class="s">standard</span><span class="nv"> </span><span class="s">portgroup</span><span class="nv"> </span><span class="s">add</span><span class="nv"> </span><span class="s">-v</span><span class="nv"> </span><span class="s">&#39;VLAN100&#39;</span><span class="nv"> </span><span class="s">-p</span><span class="nv"> </span><span class="s">vSwitch0&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nt">delegate_to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">esxi01</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Add ignore_errors with manual check as last resort</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Idempotency workaround</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/app/configure.sh</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config_result</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="nt">ignore_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="nt">changed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config_result.rc == 0</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config_result.rc not in [0, 1]</span>
+</code></pre></div>
+<h2 id="escalation-checklist">Escalation Checklist<a class="headerlink" href="#escalation-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Done</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reproduced with <code>--check</code> and <code>--diff</code></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Ran with <code>-vvv</code> and saved output</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Verified ansible-core and collection versions</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Checked GitHub issues for known bug</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Tested with latest collection version</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Gathered AWX pod logs (if AWX issue)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Prepared minimal reproduction case</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Opened support case or GitHub issue</td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
 
 
 
