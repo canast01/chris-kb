@@ -1,25 +1,71 @@
-# RecoverPoint — Architecture
+# RecoverPoint — Architecture Overview
+
+> Part of the [RecoverPoint](../../) > [Architecture](../) reference.
+
+---
+
+## Overview
+
+Dell EMC RecoverPoint provides continuous data protection (CDP) and continuous remote replication (CRR) through journal-based replication. RPA (RecoverPoint Appliance) clusters at each site intercept writes via splitters and maintain a rolling journal that enables point-in-time recovery to any point within the journal window.
+
+## Splitter Types
+
+- **PowerMax / VMAX Hardware Splitter** — embedded in the array microcode; preferred for PowerMax environments; no host-side agent required
+- **Software Splitter (vRPA)** — ESXi kernel module used in RecoverPoint for VMs (RP4VM) deployments; installed per host
+- **iSCSI Splitter** — used where FC splitters are unavailable
+
+## Topology
+
+```mermaid
+graph LR
+  RPA1["RPA Cluster\nSite A"] --> STG_A[("Storage A\nProduction LUNs")]
+  RPA2["RPA Cluster\nSite B"] --> STG_B[("Storage B\nReplica + Journal")]
+  RPA1 <-->|"WAN — compressed replication"| RPA2
+  STG_A -->|"captured writes"| RPA1
+  H_A(["Production Hosts"]) --> STG_A
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class RPA1 ctrl
+  class RPA2 dr
+  class STG_A,STG_B store
+  class H_A host
+```
+
+## Replication Modes
+
+| Mode | Description | RPO |
+|---|---|---|
+| CDP (Continuous Data Protection) | Local journal; recover to any point in time | ~0 seconds |
+| CRR (Continuous Remote Replication) | Async replication to DR site | Seconds to minutes |
+| CLR (Concurrent Local and Remote) | Simultaneous local CDP + remote CRR | Per-copy |
+
+## Supported Arrays
+
+- Dell PowerMax / VMAX All Flash
+- Dell Unity
+- Dell VPLEX (journal can reside on VPLEX volumes)
+- RecoverPoint for VMs (RP4VM) — any VMFS/NFS datastore
+
+## Sizing Considerations
+
+- RPA cluster sizing is driven by write rate (MB/s) across all protected CGs
+- Journal volume should be sized for at least the desired recovery window multiplied by the average write rate
+- Minimum 2 RPAs per cluster for HA; 4+ for large environments
+- WAN bandwidth must sustain steady-state replication throughput; bursts buffered in journal
+
+## High Availability
+
+- RPA clusters operate in active-active within a site; an RPA failure causes automatic redistribution of CGs to surviving RPAs
+- Quorum is maintained within the cluster; loss of majority halts replication to protect data consistency
+
+---
+
+## In this section
 
 <div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="overview/">
-  <strong>Overview</strong>
-  <span>Replication modes, topology, supported arrays, and sizing.</span>
-</a>
-
-<a class="kb-card" href="components/">
-  <strong>Components</strong>
-  <span>RPA clusters, consistency groups, journals, and splitters.</span>
-</a>
-
-<a class="kb-card" href="integrations/">
-  <strong>Integrations</strong>
-  <span>RP4VM, VPLEX, VMware SRM, storage arrays, and API.</span>
-</a>
-
-<a class="kb-card" href="standards/">
-  <strong>Standards</strong>
-  <span>Naming conventions, configuration baseline, and RPO tiers.</span>
-</a>
-
+<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
 </div>
