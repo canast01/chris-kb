@@ -1,5 +1,11 @@
 # vSAN — Architecture Overview
 
+## VMware Storage Architecture
+
+![VMware Storage Architecture](../../../../assets/vmware-storage-overview.svg)
+
+---
+
 ## Cluster Topology
 
 ```mermaid
