@@ -1,6 +1,13 @@
 # vSAN — Architecture Overview
 
-VMware supports four storage architectures: Direct-Attached Storage (DAS), converged block storage via SAN (Fibre Channel, iSCSI, NVMe-oF), file storage via NAS (NFS, SMB), and Hyper-Converged Infrastructure (HCI) through vSAN. DAS is host-local and cannot be shared; SAN and NAS rely on external storage arrays connected over a dedicated fabric; vSAN pools flash and disk from within the ESXi hosts themselves, eliminating the need for a separate storage array. All three shared models — SAN, NAS, and vSAN — fully support vMotion, HA, and DRS. This section covers vSAN in depth.
+VMware supports four storage architectures. This section covers vSAN in depth.
+
+| Architecture | Storage location | Shared across hosts | vMotion / HA / DRS |
+|---|---|---|---|
+| DAS | Local to host | No | No |
+| SAN (FC / iSCSI / NVMe-oF) | External array | Yes | Yes |
+| NAS (NFS / SMB) | External array | Yes | Yes |
+| vSAN (HCI) | Pooled from hosts | Yes | Yes |
 
 ## VMware Storage Architecture
 
