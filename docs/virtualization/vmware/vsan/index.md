@@ -8,7 +8,7 @@ Technical and operational reference for VMware vSAN. Covers storage policies, di
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>Storage modes, how it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">

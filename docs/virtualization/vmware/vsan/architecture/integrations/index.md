@@ -1,4 +1,4 @@
-# vSAN Architecture — Integrations
+# vSAN — Integrations
 
 ## vCenter (Required)
 
