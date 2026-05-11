@@ -21,7 +21,7 @@
     
     
       
-        <title>Private Link - Chris KB</title>
+        <title>Azure — Private Link - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Private Link · Chris KB">
+  <meta property="og:title" content="Azure — Private Link · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Private Link · Chris KB">
+  <meta name="twitter:title" content="Azure — Private Link · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#private-link" class="md-skip">
+        <a href="#azure-private-link" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Private Link
+              Azure — Private Link
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Concepts
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#traffic-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Traffic Flow
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#creating-a-private-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Creating a Private Endpoint
       
     </span>
   </a>
@@ -1102,10 +1102,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#dns-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        DNS Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNS Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#private-dns-zone-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private DNS Zone setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-registration-via-privatednszonegroup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-registration via privateDnsZoneGroup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#private-dns-zones-by-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private DNS Zones by Service
       
     </span>
   </a>
@@ -1113,10 +1152,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#validating-connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Validating Connectivity
       
     </span>
   </a>
@@ -1124,10 +1163,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#on-premises-access-via-expressroute-vpn" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        On-Premises Access via ExpressRoute / VPN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
       
     </span>
   </a>
@@ -1154,47 +1204,209 @@
 
 
 
-<h1 id="private-link">Private Link<a class="headerlink" href="#private-link" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Azure Security Private Link notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm subscription</li>
-<li>Confirm resource group</li>
-<li>Confirm region</li>
-<li>Review active alerts</li>
-<li>Review recent changes</li>
-<li>Check activity logs</li>
-<li>Check permissions</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>Subscription</li>
-<li>Resource group</li>
-<li>Resource name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested Azure CLI or PowerShell commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<h1 id="azure-private-link">Azure — Private Link<a class="headerlink" href="#azure-private-link" title="Permanent link">&para;</a></h1>
+<p>Azure Private Link enables private connectivity to Azure PaaS services (Storage, Key Vault, SQL, etc.) over a private endpoint in your VNet — eliminating exposure to the public internet.</p>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Private Link Service</strong></td>
+<td>The Azure PaaS service resource being accessed privately</td>
+</tr>
+<tr>
+<td><strong>Private Endpoint</strong></td>
+<td>A NIC with a private IP in your VNet, connected to the Private Link Service</td>
+</tr>
+<tr>
+<td><strong>Private DNS Zone</strong></td>
+<td>Azure DNS zone that resolves the service's public FQDN to the private IP</td>
+</tr>
+<tr>
+<td><strong>DNS zone link</strong></td>
+<td>Association between the Private DNS Zone and a VNet</td>
+</tr>
+</tbody>
+</table>
+<h2 id="traffic-flow">Traffic Flow<a class="headerlink" href="#traffic-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>App (in VNet) → resolves storage.blob.core.windows.net
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                → Private DNS Zone overrides → 10.1.0.5 (private endpoint IP)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                → Traffic stays within VNet / Azure backbone
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                → Never traverses internet
+</code></pre></div>
+<p>Without Private Link, resolution returns a public IP and traffic exits to the internet (even if using a service endpoint).</p>
+<h2 id="creating-a-private-endpoint">Creating a Private Endpoint<a class="headerlink" href="#creating-a-private-endpoint" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Example: Key Vault private endpoint</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># 1. Disable public access on the vault</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>az<span class="w"> </span>keyvault<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--public-network-access<span class="w"> </span>Disabled
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># 2. Create the private endpoint</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az<span class="w"> </span>network<span class="w"> </span>private-endpoint<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;&lt;vault-name&gt;-pe&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--vnet-name<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--subnet<span class="w"> </span>&lt;subnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--private-connection-resource-id<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.KeyVault/vaults/&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--group-id<span class="w"> </span>vault<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--connection-name<span class="w"> </span><span class="s2">&quot;&lt;vault-name&gt;-connection&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># 3. Get the private endpoint NIC IP</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nv">PE_IP</span><span class="o">=</span><span class="k">$(</span>az<span class="w"> </span>network<span class="w"> </span>private-endpoint<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;&lt;vault-name&gt;-pe&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;customDnsConfigs[0].ipAddresses[0]&#39;</span><span class="w"> </span>--output<span class="w"> </span>tsv<span class="k">)</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Private endpoint IP: </span><span class="nv">$PE_IP</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h2 id="dns-configuration">DNS Configuration<a class="headerlink" href="#dns-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="private-dns-zone-setup">Private DNS Zone setup<a class="headerlink" href="#private-dns-zone-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create private DNS zone for Key Vault</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>network<span class="w"> </span>private-dns<span class="w"> </span>zone<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Link DNS zone to VNet</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>az<span class="w"> </span>network<span class="w"> </span>private-dns<span class="w"> </span>link<span class="w"> </span>vnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--zone-name<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;&lt;vnet-name&gt;-link&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--virtual-network<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--registration-enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Add A record pointing to private endpoint IP</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>az<span class="w"> </span>network<span class="w"> </span>private-dns<span class="w"> </span>record-set<span class="w"> </span>a<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--zone-name<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--name<span class="w"> </span>&lt;vault-name&gt;
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>az<span class="w"> </span>network<span class="w"> </span>private-dns<span class="w"> </span>record-set<span class="w"> </span>a<span class="w"> </span>add-record<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--zone-name<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>--record-set-name<span class="w"> </span>&lt;vault-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>--ipv4-address<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PE_IP</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h3 id="auto-registration-via-privatednszonegroup">Auto-registration via <code>privateDnsZoneGroup</code><a class="headerlink" href="#auto-registration-via-privatednszonegroup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Attach private DNS zone group to the endpoint (auto-registers the A record)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>network<span class="w"> </span>private-endpoint<span class="w"> </span>dns-zone-group<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--endpoint-name<span class="w"> </span><span class="s2">&quot;&lt;vault-name&gt;-pe&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;default&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--private-dns-zone<span class="w"> </span>/subscriptions/&lt;sub-id&gt;/resourceGroups/&lt;rg&gt;/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--zone-name<span class="w"> </span><span class="s2">&quot;privatelink.vaultcore.azure.net&quot;</span>
+</code></pre></div>
+<h2 id="private-dns-zones-by-service">Private DNS Zones by Service<a class="headerlink" href="#private-dns-zones-by-service" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Private DNS Zone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Key Vault</td>
+<td><code>privatelink.vaultcore.azure.net</code></td>
+</tr>
+<tr>
+<td>Storage (blob)</td>
+<td><code>privatelink.blob.core.windows.net</code></td>
+</tr>
+<tr>
+<td>Storage (file)</td>
+<td><code>privatelink.file.core.windows.net</code></td>
+</tr>
+<tr>
+<td>Storage (queue)</td>
+<td><code>privatelink.queue.core.windows.net</code></td>
+</tr>
+<tr>
+<td>Azure SQL</td>
+<td><code>privatelink.database.windows.net</code></td>
+</tr>
+<tr>
+<td>Azure Container Registry</td>
+<td><code>privatelink.azurecr.io</code></td>
+</tr>
+<tr>
+<td>AKS API server</td>
+<td><code>&lt;guid&gt;.privatelink.&lt;region&gt;.azmk8s.io</code></td>
+</tr>
+<tr>
+<td>Event Hub / Service Bus</td>
+<td><code>privatelink.servicebus.windows.net</code></td>
+</tr>
+<tr>
+<td>App Service</td>
+<td><code>privatelink.azurewebsites.net</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="validating-connectivity">Validating Connectivity<a class="headerlink" href="#validating-connectivity" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From a VM in the VNet — verify DNS resolves to private IP</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nslookup<span class="w"> </span>&lt;vault-name&gt;.vault.azure.net
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Should return 10.x.x.x (private IP), not 52.x.x.x (public)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test TCP connectivity to private endpoint</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vault-name&gt;.vault.azure.net<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># From outside the VNet (on-premises via VPN/ExpressRoute)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>nslookup<span class="w"> </span>&lt;vault-name&gt;.vault.azure.net<span class="w"> </span>&lt;dns-server-in-vnet&gt;
+</code></pre></div>
+<h2 id="on-premises-access-via-expressroute-vpn">On-Premises Access via ExpressRoute / VPN<a class="headerlink" href="#on-premises-access-via-expressroute-vpn" title="Permanent link">&para;</a></h2>
+<p>For on-premises hosts to reach private endpoints, they must:</p>
+<ol>
+<li>Route traffic over ExpressRoute or VPN to the VNet.</li>
+<li>Resolve the service FQDN to the private IP — either:</li>
+<li>Configure on-prem DNS to forward the <code>privatelink.*</code> zone to Azure DNS (168.63.129.16), or</li>
+<li>Add a static A record in on-prem DNS for the service FQDN pointing to the private endpoint IP.</li>
+</ol>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service still resolves to public IP</td>
+<td>Private DNS zone not linked to VNet</td>
+<td>Verify: <code>az network private-dns link vnet list --zone-name &lt;zone&gt;</code></td>
+</tr>
+<tr>
+<td>403 from VM in same VNet</td>
+<td>Public access disabled but endpoint connection not approved</td>
+<td>Check endpoint connection state: <code>az network private-endpoint show</code> → <code>privateLinkServiceConnectionState.status</code> should be <code>Approved</code></td>
+</tr>
+<tr>
+<td>On-prem hosts cannot reach private endpoint</td>
+<td>DNS not forwarding to Azure; traffic not routing via VPN/ER</td>
+<td>Set up DNS conditional forwarder for <code>privatelink.*</code> zones to 168.63.129.16</td>
+</tr>
+<tr>
+<td>Endpoint works but traffic slow</td>
+<td>NSG on endpoint subnet blocking or hairpinning</td>
+<td>Verify NSG allows traffic from app subnet to private endpoint subnet on required port</td>
+</tr>
+<tr>
+<td>Multiple VNets need access</td>
+<td>DNS zone only linked to one VNet</td>
+<td>Link the private DNS zone to each VNet that needs resolution</td>
+</tr>
+</tbody>
+</table>
 
 
 

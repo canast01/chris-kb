@@ -21,7 +21,7 @@
     
     
       
-        <title>Isolation - Chris KB</title>
+        <title>IRE — Isolation - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Isolation · Chris KB">
+  <meta property="og:title" content="IRE — Isolation · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Isolation · Chris KB">
+  <meta name="twitter:title" content="IRE — Isolation · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#isolation" class="md-skip">
+        <a href="#ire-isolation" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Isolation
+              IRE — Isolation
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#why-isolation-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        Why Isolation Matters
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#network-isolation-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Network Isolation Architecture
       
     </span>
   </a>
@@ -1091,10 +1091,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+  <a href="#network-controls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Network Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#physical-vlan-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical / VLAN Isolation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#azure-ire-isolation-virtual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure IRE Isolation (Virtual)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credential-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Isolation
       
     </span>
   </a>
@@ -1102,10 +1141,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+  <a href="#storage-isolation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Storage Isolation
       
     </span>
   </a>
@@ -1113,10 +1152,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+  <a href="#isolation-verification-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Isolation Verification Checklist
       
     </span>
   </a>
@@ -1124,10 +1163,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Common Issues
       
     </span>
   </a>
@@ -1154,43 +1193,215 @@
 
 
 
-<h1 id="isolation">Isolation<a class="headerlink" href="#isolation" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Use this page for practical Isolated Recovery Environment Ire Isolation notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
+<h1 id="ire-isolation">IRE — Isolation<a class="headerlink" href="#ire-isolation" title="Permanent link">&para;</a></h1>
+<p>The Isolated Recovery Environment (IRE) is a network-isolated, air-gapped environment used for recovering from ransomware and other destructive attacks. Isolation is the foundational control: the IRE must never share network paths, credentials, or management planes with the production environment.</p>
+<h2 id="why-isolation-matters">Why Isolation Matters<a class="headerlink" href="#why-isolation-matters" title="Permanent link">&para;</a></h2>
+<p>Ransomware that has compromised a production environment may still be active during a recovery attempt. If the IRE shares any network connectivity with production, the threat actor can:
+- Detect and destroy clean recovery copies.
+- Pivot from production into the IRE.
+- Re-encrypt or corrupt systems being restored.</p>
+<p>Isolation eliminates these lateral movement paths.</p>
+<h2 id="network-isolation-architecture">Network Isolation Architecture<a class="headerlink" href="#network-isolation-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+    PROD["Production Environment\n(potentially compromised)"]
+    JUMP["Jump Host\n(IRE management access\nMFA required)"]
+    IRE["Isolated Recovery Environment\n(dedicated VLANs / VNet)"]
+    STORE["Immutable Backup Copy\n(air-gapped or vault-locked)"]
+    FW["Perimeter Firewall\n(default deny from PROD)"]
+
+    PROD -.-&gt;|No direct access| IRE
+    JUMP --&gt; FW
+    FW --&gt; IRE
+    STORE --&gt; IRE
+    IRE -.-&gt;|No route back to PROD| PROD</code></pre>
+<h2 id="network-controls">Network Controls<a class="headerlink" href="#network-controls" title="Permanent link">&para;</a></h2>
+<h3 id="physical-vlan-isolation">Physical / VLAN Isolation<a class="headerlink" href="#physical-vlan-isolation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dedicated VLANs</td>
+<td>IRE systems on separate VLANs with no trunked ports to production VLANs</td>
+</tr>
+<tr>
+<td>Separate uplinks</td>
+<td>IRE switches uplinked to a dedicated firewall interface, not the production core</td>
+</tr>
+<tr>
+<td>ACL enforcement</td>
+<td>Firewall ACLs block all inbound and outbound to/from production IP ranges</td>
+</tr>
+<tr>
+<td>No shared routing</td>
+<td>IRE routing table has no routes to production subnets</td>
+</tr>
+</tbody>
+</table>
+<h3 id="azure-ire-isolation-virtual">Azure IRE Isolation (Virtual)<a class="headerlink" href="#azure-ire-isolation-virtual" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create dedicated VNet for IRE</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;ire-vnet&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--resource-group<span class="w"> </span><span class="s2">&quot;ire-rg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--address-prefix<span class="w"> </span><span class="s2">&quot;10.200.0.0/16&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--location<span class="w"> </span>&lt;region&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--vnet-name<span class="w"> </span><span class="s2">&quot;ire-vnet&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--resource-group<span class="w"> </span><span class="s2">&quot;ire-rg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;ire-workloads&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--address-prefix<span class="w"> </span><span class="s2">&quot;10.200.1.0/24&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># No VNet peering to production VNet — isolation is default</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># If peering is required for restore operations, create with strict NSG controls</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># and remove peering immediately after restore is complete</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># NSG: deny all outbound to production CIDRs</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--resource-group<span class="w"> </span><span class="s2">&quot;ire-rg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>--nsg-name<span class="w"> </span><span class="s2">&quot;ire-nsg&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;DenyProdOutbound&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--priority<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--direction<span class="w"> </span>Outbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>--source-address-prefixes<span class="w"> </span><span class="s2">&quot;10.200.0.0/16&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span>--destination-address-prefixes<span class="w"> </span><span class="s2">&quot;10.0.0.0/8&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>--destination-port-ranges<span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>--access<span class="w"> </span>Deny<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span>--protocol<span class="w"> </span><span class="s2">&quot;*&quot;</span>
+</code></pre></div>
+<h2 id="credential-isolation">Credential Isolation<a class="headerlink" href="#credential-isolation" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dedicated IRE admin accounts</td>
+<td>Production accounts may be compromised</td>
+</tr>
+<tr>
+<td>No shared service accounts</td>
+<td>Compromised service account credentials span both environments</td>
+</tr>
+<tr>
+<td>Separate AD/IdP</td>
+<td>IRE domain controllers are not replicas of production AD</td>
+</tr>
+<tr>
+<td>Break-glass accounts</td>
+<td>Dedicated, MFA-protected, stored offline (sealed envelope / PAW)</td>
+</tr>
+<tr>
+<td>No domain trust</td>
+<td>IRE domain has no trust relationship with production domain</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check for domain trusts in IRE AD (should return nothing)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-ADTrust</span> <span class="n">-Filter</span> <span class="p">*</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Verify IRE domain controller has no replication partners outside IRE</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ADReplicationPartnerMetadata</span> <span class="n">-Target</span> <span class="p">(</span><span class="n">hostname</span><span class="p">)</span> <span class="n">-Scope</span> <span class="n">Server</span>
+</code></pre></div>
+<h2 id="storage-isolation">Storage Isolation<a class="headerlink" href="#storage-isolation" title="Permanent link">&para;</a></h2>
+<p>Backup copies used for IRE restoration must be:</p>
 <ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
+<li><strong>Immutable</strong> — write-once, cannot be deleted or modified by any account including backup admins.</li>
+<li><strong>Isolated</strong> — stored in a separate cloud tenant, offline media, or vault-locked object storage.</li>
+<li><strong>Access-controlled</strong> — no production system has read or write access to the backup store.</li>
 </ul>
-<h2 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h2>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h2 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<p>Add tested commands here.</p>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Azure: enable immutable blob storage for backup container</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>storage<span class="w"> </span>container<span class="w"> </span>immutability-policy<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--account-name<span class="w"> </span>&lt;backup-storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--allow-protected-append-writes<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>storage<span class="w"> </span>container<span class="w"> </span>immutability-policy<span class="w"> </span>lock<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--account-name<span class="w"> </span>&lt;backup-storage-account&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--container-name<span class="w"> </span>&lt;container-name&gt;
+</code></pre></div>
+<h2 id="isolation-verification-checklist">Isolation Verification Checklist<a class="headerlink" href="#isolation-verification-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command / Test</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No network route from IRE to production</td>
+<td><code>traceroute &lt;prod-host&gt;</code> from IRE</td>
+<td>Route fails or hits default deny</td>
+</tr>
+<tr>
+<td>No route from production to IRE</td>
+<td><code>ping &lt;ire-host&gt;</code> from prod</td>
+<td>No response</td>
+</tr>
+<tr>
+<td>No shared AD</td>
+<td><code>nltest /dsgetdc:&lt;prod-domain&gt;</code> from IRE</td>
+<td>Returns error</td>
+</tr>
+<tr>
+<td>No shared credentials</td>
+<td>Verify IRE accounts do not exist in prod AD</td>
+<td>Enumeration returns nothing</td>
+</tr>
+<tr>
+<td>Immutable backups</td>
+<td>Check immutability lock state</td>
+<td>Locked, cannot be deleted</td>
+</tr>
+<tr>
+<td>Firewall ACL</td>
+<td>Review firewall ruleset</td>
+<td>Default deny between prod and IRE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IRE VM can ping production host</td>
+<td>Missing ACL or VLAN trunk leak</td>
+<td>Check firewall ACLs and switch port VLAN configuration</td>
+</tr>
+<tr>
+<td>Restore fails because backup store is unreachable</td>
+<td>Backup store IP not whitelisted in IRE firewall</td>
+<td>Add firewall rule: IRE → backup store IP, port 443 only</td>
+</tr>
+<tr>
+<td>Cannot manage IRE systems remotely</td>
+<td>Jump host not in allowed source list</td>
+<td>Update IRE NSG/firewall to allow traffic from jump host subnet only</td>
+</tr>
+<tr>
+<td>AD join required for IRE workloads</td>
+<td>App requires domain membership</td>
+<td>Build dedicated IRE domain; never join production domain</td>
+</tr>
+</tbody>
+</table>
 
 
 

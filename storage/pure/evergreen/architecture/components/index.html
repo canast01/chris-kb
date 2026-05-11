@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#key-components" class="md-nav__link">
+  <a href="#controller-pair-ct0-ct1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Components
+        Controller Pair (CT0 / CT1)
       
     </span>
   </a>
@@ -1080,10 +1080,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
+  <a href="#directflash-modules-dfm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sizing Guidelines
+        DirectFlash Modules (DFM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nvme-shelves-expansion-shelves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NVMe Shelves (Expansion Shelves)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purityfa-operating-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purity//FA Operating System
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-connectivity-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Connectivity Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nvram-write-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NVRAM / Write Cache
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-health-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Health Summary
       
     </span>
   </a>
@@ -1115,64 +1170,258 @@
 <p>Part of the <a href="../">Evergreen Architecture</a> reference.</p>
 </blockquote>
 <hr />
-<blockquote>
-<p>This page is a stub. Core components for the Evergreen FlashArray platform will be documented here, covering controller hardware, DirectFlash Modules, NVMe drive shelves, Purity//FA OS, and subscription tier comparison.</p>
-</blockquote>
-<h2 id="key-components">Key Components<a class="headerlink" href="#key-components" title="Permanent link">&para;</a></h2>
-<p><strong>Controllers</strong></p>
-<p>Each FlashArray runs a pair of active-active controllers. The controller pair handles all I/O, runs the Purity//FA operating system, and manages the NVMe drive shelf. Controllers are replaced as part of the Ever Modern refresh cycle without data migration.</p>
-<p><strong>DirectFlash Modules (DFMs)</strong></p>
-<p>Pure's proprietary NVMe SSDs optimised for the Purity storage stack. DFMs remain in place during controller refreshes and across subscription generations — the subscription model is designed around the longevity of the drive shelf.</p>
-<p><strong>NVMe Drive Shelves</strong></p>
-<p>Expansion shelves attach to the primary controller pair to provide additional capacity. Shelves are supported across controller generations, enabling non-disruptive capacity growth throughout the subscription.</p>
-<p><strong>Subscription Tiers</strong></p>
+<h2 id="controller-pair-ct0-ct1">Controller Pair (CT0 / CT1)<a class="headerlink" href="#controller-pair-ct0-ct1" title="Permanent link">&para;</a></h2>
+<p>FlashArray runs dual active-active controllers. Both controllers handle read and write I/O simultaneously. On single-controller failure, all I/O shifts to the surviving controller within milliseconds.</p>
 <table>
 <thead>
 <tr>
-<th>Tier</th>
+<th>Property</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controller designation</td>
+<td>CT0 (primary) / CT1 (secondary) — symmetric; neither is passive</td>
+</tr>
+<tr>
+<td>I/O model</td>
+<td>Active-active — both process host I/O simultaneously</td>
+</tr>
+<tr>
+<td>Failover time</td>
+<td>&lt; 30 ms for host-transparent failover (with multipathing)</td>
+</tr>
+<tr>
+<td>Controller interconnect</td>
+<td>NVLink or PCIe fabric (internal) for cache coherency and NVRAM mirroring</td>
+</tr>
+<tr>
+<td>Management interface</td>
+<td>Eth0 on each CT — distinct management IPs; VIP used for shared management access</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check controller status from FlashArray CLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>pureuser@&lt;flasharray-ip&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>ct
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Name  Status    Model         Temperature  Voltage</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># CT0   Healthy   FA-X70R4      38°C         OK</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># CT1   Healthy   FA-X70R4      37°C         OK</span>
+</code></pre></div>
+<h2 id="directflash-modules-dfm">DirectFlash Modules (DFM)<a class="headerlink" href="#directflash-modules-dfm" title="Permanent link">&para;</a></h2>
+<p>DirectFlash Modules are Pure Storage's proprietary NVMe flash storage units. Unlike commodity SSDs, they expose raw NAND flash directly to the Purity OS, allowing Pure's software to manage wear levelling, garbage collection, and data placement at the array level.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface</td>
+<td>NVMe (PCIe Gen 4 or Gen 5 depending on platform generation)</td>
+</tr>
+<tr>
+<td>Form factor</td>
+<td>2.5" U.2 or E3 enterprise form factor</td>
+</tr>
+<tr>
+<td>Capacity tiers</td>
+<td>4 TB, 12 TB, 24 TB, 48 TB (varies by FlashArray model)</td>
+</tr>
+<tr>
+<td>RAID equivalent</td>
+<td>Purity RAID-3D (triple parity) — tolerates concurrent multi-DFM failures</td>
+</tr>
+<tr>
+<td>Controller awareness</td>
+<td>DFMs are owned by the array, not individual controllers — both CTs access all DFMs</td>
+</tr>
+<tr>
+<td>Hot-swap</td>
+<td>Yes — non-disruptive replacement under Evergreen support coverage</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check DFM status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show only non-healthy drives</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Healthy
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check drive space usage</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+</code></pre></div>
+<h2 id="nvme-shelves-expansion-shelves">NVMe Shelves (Expansion Shelves)<a class="headerlink" href="#nvme-shelves-expansion-shelves" title="Permanent link">&para;</a></h2>
+<p>Expansion shelves add raw DFM capacity without adding controllers. Shelves attach via SAS or NVMe-oF to the primary controller chassis.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Max shelves</th>
+<th>Drive slots</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>//X</td>
+<td>Up to 3 shelves</td>
+<td>24 per shelf</td>
+<td>SAS-attached DFM expansion</td>
+</tr>
+<tr>
+<td>//XL</td>
+<td>Up to 9 shelves</td>
+<td>24 per shelf</td>
+<td>Higher capacity ceiling</td>
+</tr>
+<tr>
+<td>//C</td>
+<td>Up to 3 shelves</td>
+<td>Cold-tier DFMs</td>
+<td>QLC flash for cost-optimised workloads</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all chassis and shelves</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>shelf
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List drives by location (chassis:slot)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>drive<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k1
+</code></pre></div>
+<h2 id="purityfa-operating-system">Purity//FA Operating System<a class="headerlink" href="#purityfa-operating-system" title="Permanent link">&para;</a></h2>
+<p>Purity//FA is the operating system running on both controllers. It provides the data management, replication, and protocol services.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Evergreen//Forever</td>
-<td>Controller refresh included; upgrades to current-generation controllers at each refresh cycle</td>
+<td><strong>Volume management</strong></td>
+<td>Thin provisioning, snapshots, volume groups</td>
 </tr>
 <tr>
-<td>Evergreen//Flex</td>
-<td>All Forever benefits plus non-disruptive media and capacity changes for FlashBlade deployments</td>
+<td><strong>Data reduction</strong></td>
+<td>Inline deduplication + compression (always-on, no configuration needed)</td>
+</tr>
+<tr>
+<td><strong>Replication</strong></td>
+<td>Async and sync (ActiveCluster) replication to remote arrays</td>
+</tr>
+<tr>
+<td><strong>Protocol services</strong></td>
+<td>FC, iSCSI, NVMe/FC, NVMe/RoCE, NVMe/TCP</td>
+</tr>
+<tr>
+<td><strong>APIs</strong></td>
+<td>REST API v1/v2; Pure1 cloud telemetry</td>
+</tr>
+<tr>
+<td><strong>RBAC</strong></td>
+<td>Local users, AD/LDAP integration, role-based access</td>
 </tr>
 </tbody>
 </table>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<p>Evergreen subscriptions are sized in TiB of usable capacity after data reduction. Pure provides a <strong>data reduction guarantee</strong>: if actual data reduction falls below the contracted ratio, Pure provides additional capacity at no charge.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check Purity version</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check all running services</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pureservice<span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check replication connections</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connect
+</code></pre></div>
+<h2 id="host-connectivity-ports">Host Connectivity Ports<a class="headerlink" href="#host-connectivity-ports" title="Permanent link">&para;</a></h2>
+<p>Each controller has a set of front-end host connectivity ports and back-end storage ports.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all ports and their status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pureport<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Filter by protocol</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pureport<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;FC\|iSCSI\|NVMe&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Show port performance</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>pureport<span class="w"> </span>list<span class="w"> </span>--performance
+</code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Series</th>
-<th>Target Workload</th>
-<th>Performance Profile</th>
+<th>Port type</th>
+<th>Protocol</th>
+<th>Count (typical X70R4)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>FlashArray//X</td>
-<td>High-performance OLTP, VDI, databases</td>
-<td>Highest IOPS and lowest latency; NVMe throughout</td>
+<td>FC</td>
+<td>16/32 Gbps Fibre Channel</td>
+<td>4 per controller (8 total)</td>
 </tr>
 <tr>
-<td>FlashArray//C</td>
-<td>Capacity-optimised workloads, secondary storage, backups</td>
-<td>Higher TiB per £ with QLC media; good for large sequential workloads</td>
+<td>iSCSI / NVMe/TCP</td>
+<td>10/25 GbE</td>
+<td>4 per controller (8 total)</td>
 </tr>
 <tr>
-<td>FlashArray//E</td>
-<td>Archive and bulk cold storage at flash economics</td>
-<td>Lowest cost per TiB; suitable for data that requires fast restore but low access frequency</td>
+<td>NVMe/RoCE</td>
+<td>25/100 GbE</td>
+<td>Optional — addon card</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>1 GbE</td>
+<td>2 per controller (dedicated management)</td>
 </tr>
 </tbody>
 </table>
-<p>Sizing inputs: expected usable TiB (post-reduction), peak IOPS and bandwidth requirements, host protocol, and replication topology. Engage the Pure account team or use Pure1 capacity planning to model growth over the subscription term.</p>
+<h2 id="nvram-write-cache">NVRAM / Write Cache<a class="headerlink" href="#nvram-write-cache" title="Permanent link">&para;</a></h2>
+<p>Each controller contains NVRAM (non-volatile RAM), used as a write cache to acknowledge writes immediately while flushing to flash asynchronously.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVRAM mirroring</td>
+<td>Write acknowledged to NVRAM on CT0 AND CT1 before host ACK — write is safe even if one controller fails</td>
+</tr>
+<tr>
+<td>Flush to DFM</td>
+<td>NVRAM drained to DFM within seconds under normal operation</td>
+</tr>
+<tr>
+<td>Battery / capacitor</td>
+<td>Supercapacitor backed — maintains NVRAM contents through short power loss</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Included in <code>purehw list</code> hardware health output</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check NVRAM component health</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nvram
+</code></pre></div>
+<h2 id="component-health-summary">Component Health Summary<a class="headerlink" href="#component-health-summary" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Full hardware inventory and health</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purehw<span class="w"> </span>list
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Summary of non-healthy components (should return nothing in a healthy array)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purehw<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Healthy\|Name\|---&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Alert-level view — any open hardware alerts</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged
+</code></pre></div>
 
 
 

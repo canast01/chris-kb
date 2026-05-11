@@ -1069,21 +1069,160 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
+  <a href="#backup-failures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common checks
+        Backup Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-service-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent service not starting
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#image-capture-fails-share-unreachable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Image capture fails — share unreachable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#image-capture-completes-but-file-is-corrupted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image capture completes but file is corrupted
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recovery Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#winpe-boots-but-cannot-see-the-network-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WinPE boots but cannot see the network share
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#winpe-cannot-see-local-disks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WinPE cannot see local disks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-completes-but-os-wont-boot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore completes but OS won't boot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-takes-much-longer-than-expected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore takes much longer than expected
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-and-schedule-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent and Schedule Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agent and Schedule Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scheduled-backup-not-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduled backup not running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-log-shows-vss-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup log shows VSS errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issue-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issue Summary
       
     </span>
   </a>
@@ -1111,17 +1250,198 @@
 
 
 <h1 id="rasr-common-issues">RASR — Common Issues<a class="headerlink" href="#rasr-common-issues" title="Permanent link">&para;</a></h1>
-<h2 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h2 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<blockquote>
+<p>Part of the <a href="../">RASR Troubleshooting</a> reference.</p>
+</blockquote>
+<hr />
+<h2 id="backup-failures">Backup Failures<a class="headerlink" href="#backup-failures" title="Permanent link">&para;</a></h2>
+<h3 id="agent-service-not-starting">Agent service not starting<a class="headerlink" href="#agent-service-not-starting" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check service status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Service</span> <span class="n">RASRAgent</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check Windows Event Log for service failure reason</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Message</span> <span class="o">-match</span> <span class="s2">&quot;RASRAgent&quot;</span> <span class="p">}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Common fix: dependencies not started (Workstation service, TCP/IP NetBIOS Helper)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">LanmanWorkstation</span><span class="p">,</span> <span class="n">lmhosts</span> <span class="p">|</span> <span class="nb">Start-Service</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Start-Service</span> <span class="n">RASRAgent</span>
+</code></pre></div>
+<h3 id="image-capture-fails-share-unreachable">Image capture fails — share unreachable<a class="headerlink" href="#image-capture-fails-share-unreachable" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Test share connectivity</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">nas01</span> <span class="n">-Port</span> <span class="n">445</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Test authentication</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">net</span> <span class="n">use</span> <span class="p">\\</span><span class="n">nas01</span><span class="p">\</span><span class="n">rasr-images</span> <span class="p">/</span><span class="n">user</span><span class="p">:</span><span class="n">domain</span><span class="p">\</span><span class="n">rasr-svc</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># If this fails, check: password expiry, account lockout, firewall on port 445</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Check SMB signing compatibility</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-SmbClientConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Mismatch can cause connection failures — align both sides</span>
+</code></pre></div>
+<h3 id="image-capture-completes-but-file-is-corrupted">Image capture completes but file is corrupted<a class="headerlink" href="#image-capture-completes-but-file-is-corrupted" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify image integrity post-capture</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># RASR images can be mounted and verified with DISM</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">dism</span> <span class="p">/</span><span class="nb">Get-ImageInfo</span> <span class="p">/</span><span class="n">ImageFile</span><span class="p">:</span><span class="s2">&quot;\\nas01\rasr-images\prod\app01\app01_prod_20260510_001.wim&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># If this returns an error, the image is corrupt — initiate another capture immediately</span>
+</code></pre></div>
+<hr />
+<h2 id="recovery-failures">Recovery Failures<a class="headerlink" href="#recovery-failures" title="Permanent link">&para;</a></h2>
+<h3 id="winpe-boots-but-cannot-see-the-network-share">WinPE boots but cannot see the network share<a class="headerlink" href="#winpe-boots-but-cannot-see-the-network-share" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> RASR wizard starts, but the network share path returns "path not found" or "access denied".</p>
+<p><strong>Causes and fixes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network driver not loaded</td>
+<td>Verify server generation matches media driver pack; rebuild media for 15G/16G if needed</td>
+</tr>
+<tr>
+<td>No IP assigned in WinPE</td>
+<td>Run <code>wpeutil</code> → check IP; manually assign: <code>netsh interface ip set address "Ethernet" static 10.x.x.x 255.255.255.0 10.x.x.1</code></td>
+</tr>
+<tr>
+<td>Authentication failure</td>
+<td>WinPE cannot use Kerberos — use NTLM/local credentials: <code>net use Z: \\nas01\rasr-images /user:nashost\localuser</code></td>
+</tr>
+<tr>
+<td>Firewall blocking 445</td>
+<td>Confirm no firewall rule blocks SMB from the recovery network VLAN to the NAS</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>:: From WinPE command prompt — test and map share
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ping nas01
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>net use Z: \\nas01\rasr-images\prod\app01 /user:nashost\localuser
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>dir Z:\
+</code></pre></div>
+<h3 id="winpe-cannot-see-local-disks">WinPE cannot see local disks<a class="headerlink" href="#winpe-cannot-see-local-disks" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> RASR shows no disks or RAID array not visible during restore target selection.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>:: In WinPE: check if disks visible to diskpart
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>diskpart
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>list disk
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>exit
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>:: If no disks listed — storage driver not loaded
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>:: Load PERC driver from USB or share:
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>drvload D:\drivers\perc\percsas3i.inf
+</code></pre></div>
+<p>If the disk is still not visible, the RASR media may predate the server generation — rebuild using the correct driver pack.</p>
+<h3 id="restore-completes-but-os-wont-boot">Restore completes but OS won't boot<a class="headerlink" href="#restore-completes-but-os-wont-boot" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Image restored successfully, server reboots, but hangs at boot screen or fails with <code>BOOTMGR is missing</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>:: From WinPE: repair boot record manually
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>bootrec /fixmbr
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>bootrec /fixboot
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>bootrec /rebuildbcd
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>:: If BitLocker was enabled, recovery key required at this point
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>manage-bde -unlock C: -RecoveryPassword &lt;48-digit-key&gt;
+</code></pre></div>
+<p>If the server hardware changed (new PERC controller generation), the restored OS may lack the storage driver. Inject it before rebooting:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Inject missing PERC driver into offline restored OS</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">dism</span> <span class="p">/</span><span class="n">Image</span><span class="p">:</span><span class="n">C</span><span class="p">:\</span> <span class="p">/</span><span class="nb">Add-Driver</span> <span class="p">/</span><span class="n">Driver</span><span class="p">:</span><span class="n">D</span><span class="p">:\</span><span class="n">drivers</span><span class="p">\</span><span class="n">perc</span><span class="p">\</span><span class="n">percsas3i</span><span class="p">.</span><span class="n">inf</span> <span class="p">/</span><span class="n">ForceUnsigned</span>
+</code></pre></div>
+<h3 id="restore-takes-much-longer-than-expected">Restore takes much longer than expected<a class="headerlink" href="#restore-takes-much-longer-than-expected" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Diagnosis</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single network path (no multipath)</td>
+<td>Check NIC teaming in WinPE — only one adapter active</td>
+<td>Manually configure NIC teaming in WinPE if supported</td>
+</tr>
+<tr>
+<td>Share on spinning disk with high latency</td>
+<td>Check NAS I/O during restore</td>
+<td>No fix in-flight; schedule future restores during off-peak</td>
+</tr>
+<tr>
+<td>Image fragmented on share</td>
+<td>Image file has high fragmentation</td>
+<td>Defragment the share after migration; store new images sequentially</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="agent-and-schedule-issues">Agent and Schedule Issues<a class="headerlink" href="#agent-and-schedule-issues" title="Permanent link">&para;</a></h2>
+<h3 id="scheduled-backup-not-running">Scheduled backup not running<a class="headerlink" href="#scheduled-backup-not-running" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Verify RASR schedule is configured</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TaskName</span> <span class="o">-match</span> <span class="s2">&quot;RASR&quot;</span> <span class="p">}</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Check last run time and result</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskName</span> <span class="s2">&quot;RASR_DailyBackup&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># If task exists but not running: check task conditions (power, network, idle conditions)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nv">$task</span> <span class="p">=</span> <span class="nb">Get-ScheduledTask</span> <span class="n">-TaskName</span> <span class="s2">&quot;RASR_DailyBackup&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">$task</span><span class="p">.</span><span class="n">Settings</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RunOnlyIfNetworkAvailable</span><span class="p">,</span> <span class="n">RunOnlyIfIdle</span><span class="p">,</span> <span class="n">WakeToRun</span>
+</code></pre></div>
+<h3 id="backup-log-shows-vss-errors">Backup log shows VSS errors<a class="headerlink" href="#backup-log-shows-vss-errors" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Error: VSS writer reported failure — Microsoft Hyper-V VSS Writer / SQL Server VSS Writer
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Check VSS writer status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">vssadmin</span> <span class="n">list</span> <span class="n">writers</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">&quot;State:|Writer name:&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Restart VSS service and writers</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">VSS</span><span class="p">,</span> <span class="n">vds</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># For SQL VSS writer:</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">SQLWriter</span>
+</code></pre></div>
+<hr />
+<h2 id="common-issue-summary">Common Issue Summary<a class="headerlink" href="#common-issue-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Most likely cause</th>
+<th>First action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup fails nightly</td>
+<td>Share credential expired or account locked</td>
+<td>Reset RASR service account password; unlock account</td>
+</tr>
+<tr>
+<td>WinPE shows no network</td>
+<td>Wrong driver pack for server generation</td>
+<td>Rebuild media using correct Dell driver pack</td>
+</tr>
+<tr>
+<td>WinPE shows no disks</td>
+<td>PERC driver missing from media</td>
+<td>Load PERC driver from USB; rebuild media</td>
+</tr>
+<tr>
+<td>Restore completes, OS won't boot</td>
+<td>BCD corruption or driver mismatch</td>
+<td>Run <code>bootrec /rebuildbcd</code>; inject missing storage driver</td>
+</tr>
+<tr>
+<td>Image file is 0 bytes</td>
+<td>Agent crashed mid-capture</td>
+<td>Check VSS writers; restart agent; re-run capture</td>
+</tr>
+<tr>
+<td>Agent service crashes on start</td>
+<td>Corrupted installation</td>
+<td>Reinstall RASR agent from Dell OpenManage package</td>
+</tr>
+</tbody>
+</table>
 
 
 

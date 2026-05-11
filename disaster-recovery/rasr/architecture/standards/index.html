@@ -1069,74 +1069,101 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#recovery-planning" class="md-nav__link">
+  <a href="#backup-frequency-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recovery Planning
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recovery Planning">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common checks
+        Backup Frequency Standards
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#incident-notes" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#image-naming-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Incident notes
+        Image Naming Convention
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#change-notes" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#network-share-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Change notes
+        Network Share Layout
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#useful-commands" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#storage-sizing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Useful commands
+        Storage Sizing
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#recovery-media-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known issues
+        Recovery Media Standards
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#test-and-validation-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test and Validation Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-control-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-alerting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and Alerting
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1161,42 +1188,261 @@
 
 
 <h1 id="rasr-standards">RASR — Standards<a class="headerlink" href="#rasr-standards" title="Permanent link">&para;</a></h1>
-<h2 id="recovery-planning">Recovery Planning<a class="headerlink" href="#recovery-planning" title="Permanent link">&para;</a></h2>
-<p>Use this section for practical RASR Recovery Planning notes, checks, troubleshooting, commands, change notes, and field references.</p>
-<h3 id="common-checks">Common checks<a class="headerlink" href="#common-checks" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Confirm current health</li>
-<li>Review active alerts</li>
-<li>Check recent changes</li>
-<li>Confirm dependencies</li>
-<li>Check logs, events, and monitoring</li>
-<li>Capture current state before changes</li>
-</ul>
-<h3 id="incident-notes">Incident notes<a class="headerlink" href="#incident-notes" title="Permanent link">&para;</a></h3>
-<p>Capture:</p>
-<ul>
-<li>Symptom</li>
-<li>Start time</li>
-<li>Impact</li>
-<li>System or service name</li>
-<li>Error message</li>
-<li>What changed</li>
-<li>What was checked</li>
-<li>Next action</li>
-</ul>
-<h3 id="change-notes">Change notes<a class="headerlink" href="#change-notes" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Confirm change approval</li>
-<li>Confirm maintenance window</li>
-<li>Confirm rollback plan</li>
-<li>Capture current state</li>
-<li>Make one change at a time</li>
-<li>Validate after the change</li>
-</ul>
-<h3 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h3>
-<p>Add tested commands here.</p>
-<h3 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h3>
-<p>Add known issues here as they come up.</p>
+<blockquote>
+<p>Part of the <a href="../">RASR Architecture</a> reference.</p>
+</blockquote>
+<hr />
+<p>Standards for RASR deployment, image management, testing, and recovery readiness across Dell PowerEdge environments.</p>
+<h2 id="backup-frequency-standards">Backup Frequency Standards<a class="headerlink" href="#backup-frequency-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Server criticality</th>
+<th>Capture frequency</th>
+<th>Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tier 1</strong> — production database/app servers</td>
+<td>Daily, after patch events</td>
+<td>7 daily + 4 weekly</td>
+</tr>
+<tr>
+<td><strong>Tier 2</strong> — secondary production servers</td>
+<td>Weekly</td>
+<td>4 weekly + 2 monthly</td>
+</tr>
+<tr>
+<td><strong>Tier 3</strong> — non-production</td>
+<td>Monthly or post-build</td>
+<td>3 monthly</td>
+</tr>
+<tr>
+<td><strong>Any tier</strong> — after OS change</td>
+<td>Within 24 hours of change</td>
+<td>Retain indefinitely until next planned capture</td>
+</tr>
+</tbody>
+</table>
+<p>Always capture immediately after:
+- OS patching and reboot
+- Driver or firmware updates
+- Application installation on the OS volume
+- System configuration changes</p>
+<h2 id="image-naming-convention">Image Naming Convention<a class="headerlink" href="#image-naming-convention" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Format: &lt;hostname&gt;_&lt;environment&gt;_&lt;date&gt;_&lt;sequence&gt;
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Examples:
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  app01_prod_20260510_001.wim
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  db02_prod_20260503_weekly.wim
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  dc01_prod_20260101_post-patch.wim
+</code></pre></div>
+<h2 id="network-share-layout">Network Share Layout<a class="headerlink" href="#network-share-layout" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>\\nas01\rasr-images\
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  ├── prod\
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  │     ├── app01\
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  │     │     ├── app01_prod_20260510_001.wim   ← current
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  │     │     └── app01_prod_20260503_001.wim   ← previous
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  │     └── db02\
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  │           └── db02_prod_20260510_001.wim
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  ├── staging\
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  │     └── app01\
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  │           └── app01_stg_20260501_001.wim
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  └── archive\
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        └── (images retained &gt; 30 days)
+</code></pre></div>
+<h2 id="storage-sizing">Storage Sizing<a class="headerlink" href="#storage-sizing" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Estimate per server:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Compressed image size = OS volume used space × 0.5
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Retention space = images_kept × compressed_image_size × 1.1 (headroom)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Example:
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Server with 60 GB used on OS volume
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  Compressed image: 60 × 0.5 = 30 GB
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  7 daily + 4 weekly = 11 images
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  Required space: 11 × 30 × 1.1 = 363 GB per server
+</code></pre></div>
+<h2 id="recovery-media-standards">Recovery Media Standards<a class="headerlink" href="#recovery-media-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Media format</td>
+<td>ISO file stored on the recovery share alongside images</td>
+</tr>
+<tr>
+<td>iDRAC mapping</td>
+<td>Pre-mapped and tested quarterly — do not wait until an incident</td>
+</tr>
+<tr>
+<td>WinPE version match</td>
+<td>Media must match the server generation's driver pack (14G/15G/16G)</td>
+</tr>
+<tr>
+<td>Media refresh cycle</td>
+<td>Rebuild media after each RASR agent update</td>
+</tr>
+<tr>
+<td>Physical USB</td>
+<td>One USB per rack; labeled with server generation and last verified date</td>
+</tr>
+</tbody>
+</table>
+<h2 id="test-and-validation-schedule">Test and Validation Schedule<a class="headerlink" href="#test-and-validation-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test type</th>
+<th>Frequency</th>
+<th>Scope</th>
+<th>Evidence required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Boot media test</strong></td>
+<td>Quarterly</td>
+<td>Boot WinPE from iDRAC; confirm network access and share connectivity</td>
+<td>Screenshot of share connection from WinPE</td>
+</tr>
+<tr>
+<td><strong>Full restore test</strong></td>
+<td>Semi-annually</td>
+<td>Restore to an isolated VM; verify OS boots</td>
+<td>Restore completion log + screenshot</td>
+</tr>
+<tr>
+<td><strong>Partial restore test</strong></td>
+<td>Quarterly</td>
+<td>File-level recovery from image</td>
+<td>File hash comparison</td>
+</tr>
+<tr>
+<td><strong>Schedule verification</strong></td>
+<td>Monthly</td>
+<td>Confirm backups are completing per schedule</td>
+<td>Backup log review + OMSA alert check</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Monthly schedule verification script</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;app01&quot;</span><span class="p">,</span> <span class="s2">&quot;db02&quot;</span><span class="p">,</span> <span class="s2">&quot;web01&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$server</span> <span class="k">in</span> <span class="nv">$servers</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nv">$img</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="s2">&quot;\\nas01\rasr-images\prod\$server\&quot;</span> <span class="p">|</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>           <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nv">$age</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="n">Server</span>     <span class="p">=</span> <span class="nv">$server</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">LastImage</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">AgeHours</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$age</span><span class="p">.</span><span class="n">TotalHours</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">Status</span>     <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$age</span><span class="p">.</span><span class="n">TotalHours</span> <span class="o">-lt</span> <span class="n">26</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;OK&quot;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;ALERT — overdue&quot;</span><span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="p">}</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+</code></pre></div>
+<h2 id="access-control-standards">Access Control Standards<a class="headerlink" href="#access-control-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Access type</th>
+<th>Who</th>
+<th>Permission level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recovery share — write</td>
+<td>RASR service account only</td>
+<td>Write to server-specific subfolder</td>
+</tr>
+<tr>
+<td>Recovery share — read</td>
+<td>Recovery operators, DR team</td>
+<td>Read-only across all subfolders</td>
+</tr>
+<tr>
+<td>iDRAC virtual media</td>
+<td>DR team, platform leads</td>
+<td>Map/mount virtual media</td>
+</tr>
+<tr>
+<td>RASR Console</td>
+<td>Server administrators</td>
+<td>Local admin on protected server</td>
+</tr>
+<tr>
+<td>Boot media ISO</td>
+<td>All operators</td>
+<td>Read from share</td>
+</tr>
+</tbody>
+</table>
+<p>The RASR service account must not have local admin rights beyond what RASR requires. It should not have interactive logon rights.</p>
+<h2 id="documentation-requirements">Documentation Requirements<a class="headerlink" href="#documentation-requirements" title="Permanent link">&para;</a></h2>
+<p>For each protected server, maintain:</p>
+<ol>
+<li><strong>Recovery card</strong> — physical or digital record containing:</li>
+<li>Server hostname and iDRAC IP</li>
+<li>Recovery share path</li>
+<li>Last successful backup date</li>
+<li>
+<p>Recovery operator contact</p>
+</li>
+<li>
+<p><strong>Image log</strong> — spreadsheet or CMDB entry tracking:</p>
+</li>
+<li>Image filename</li>
+<li>Capture date</li>
+<li>OS version and patch level at time of capture</li>
+<li>
+<p>Capture trigger (scheduled / post-patch / manual)</p>
+</li>
+<li>
+<p><strong>Test evidence</strong> — for each test:</p>
+</li>
+<li>Date, tester name, test type</li>
+<li>Pass/fail result</li>
+<li>Time to complete restore</li>
+<li>Issues found and resolution</li>
+</ol>
+<h2 id="monitoring-and-alerting">Monitoring and Alerting<a class="headerlink" href="#monitoring-and-alerting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Alert</th>
+<th>Threshold</th>
+<th>Destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backup not completed</td>
+<td>&gt; 26 hours since last successful image</td>
+<td>Email to platform team</td>
+</tr>
+<tr>
+<td>Agent service not running</td>
+<td>RASRAgent stopped</td>
+<td>SNMP trap + email</td>
+</tr>
+<tr>
+<td>Share space &lt; 20%</td>
+<td>Recovery share below 20% free</td>
+<td>Email to storage team</td>
+</tr>
+<tr>
+<td>Test overdue</td>
+<td>&gt; 90 days since last boot test</td>
+<td>Ticketing system (auto-created)</td>
+</tr>
+</tbody>
+</table>
 
 
 
