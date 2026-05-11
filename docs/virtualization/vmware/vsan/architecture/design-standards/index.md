@@ -1,4 +1,4 @@
-# vSAN Architecture — Standards
+# vSAN — Design Standards
 
 ## Cluster Configuration
 
@@ -25,6 +25,88 @@ vmkping -I vmk2 -d -s 8972 <remote-vsan-vmk-ip>
 
 Ping must succeed at the large packet size. If it fails, check switch port MTU, vDS port group MTU, and vmkernel adapter MTU.
 
+---
+
+## Network Architecture
+
+vSAN requires a dedicated VMkernel port (vmk) on every host. All vSAN replication and storage I/O flows over this network.
+
+```
+ESXi Host
+├── vmk0 — Management
+├── vmk1 — vMotion
+├── vmk2 — vSAN (dedicated 10/25 GbE NIC or NIC pair)
+└── vmk3 — VM Traffic (optional, separate pNIC)
+```
+
+**Switch configuration requirements:**
+
+| Setting | Value |
+|---|---|
+| MTU | 9000 (jumbo frames) — switch, vDS, and vmk must all match |
+| Port type | Access (not trunk) for vSAN VLAN |
+| Flow control | Disabled (vSAN handles congestion internally) |
+| Spanning Tree | PortFast / Edge Port on all vSAN-connected ports |
+
+**vDS port group settings for vSAN VMkernel:**
+
+- VLAN: dedicated VLAN (not shared with vMotion or management)
+- Load balancing: Route based on physical NIC load (or LACP if supported)
+- Failover order: Active-Active if two pNICs dedicated to vSAN
+
+**Bandwidth sizing guidance:**
+
+| Traffic type | Minimum | Recommended |
+|---|---|---|
+| vSAN replication (per host) | 10 GbE | 25 GbE |
+| ESA (NVMe-based) | 25 GbE | 25 GbE or 2×10 GbE LACP |
+| Stretched cluster inter-site | 10 GbE | 25 GbE + < 5 ms RTT |
+
+---
+
+## Stretched Cluster Architecture
+
+A vSAN stretched cluster spans two physical sites with a witness at a third location. Each site is a fault domain. FTT=1 RAID-1 places one mirror at each site, with the witness providing quorum arbitration.
+
+```
+Site A (preferred)          Site B (secondary)
+┌─────────────────┐         ┌─────────────────┐
+│ ESXi-01         │         │ ESXi-03         │
+│ ESXi-02         │         │ ESXi-04         │
+│ Component A ────┼─────────┼──► Component B  │
+└─────────────────┘         └─────────────────┘
+         │                          │
+         └──────────┬───────────────┘
+                    │
+              ┌─────┴──────┐
+              │  Witness    │
+              │ (Site C /  │
+              │  vCloud)   │
+              └────────────┘
+```
+
+**Stretched cluster requirements:**
+
+| Item | Requirement |
+|---|---|
+| Minimum hosts | 2 per site (4 total) + 1 witness |
+| Witness | vSAN Witness Appliance (OVA) — not a full ESXi host |
+| Inter-site latency | ≤ 5 ms RTT for standard workloads; ≤ 1 ms for latency-sensitive |
+| Inter-site bandwidth | 10 GbE minimum; size for full resync of one site's data |
+| Witness network | Low-bandwidth sufficient (metadata only — no data I/O) |
+| vCenter | Must be accessible from both sites (deploy on shared management cluster or separate) |
+
+**Failure domain behaviour:**
+
+- **Site A failure:** VMs restart on Site B; witness maintains quorum. RTO depends on HA admission control settings.
+- **Site B failure:** Same as above, reversed.
+- **Witness failure:** Cluster continues operating but loses quorum arbitration capability — fix immediately.
+- **Split-brain (both sites lose connectivity to each other):** vSAN pauses I/O on the site that cannot reach the witness. Preferred site takes precedence if configured.
+
+**VM affinity:** Use VM-to-Host affinity groups to pin VMs to a preferred site. Without affinity, DRS may migrate VMs across sites, increasing cross-site I/O.
+
+---
+
 ## Storage Policy Baseline
 
 Define storage policies in vCenter before provisioning VMs. Assign policies by workload tier.
@@ -42,6 +124,18 @@ Define storage policies in vCenter before provisioning VMs. Assign policies by w
 
 **Checksum:** Enable object checksum on all production storage policies. Checksum detects silent data corruption at the component level and triggers resync automatically.
 
+**Capacity overhead by FTT and RAID method:**
+
+| FTT | RAID Method | Minimum Hosts | Space Overhead |
+|---|---|---|---|
+| 1 | RAID-1 (Mirroring) | 3 | 2× |
+| 1 | RAID-5 (Erasure Coding) | 4 | 1.33× |
+| 2 | RAID-6 (Erasure Coding) | 6 | 1.5× |
+| 2 | RAID-1 (Mirroring) | 5 | 3× |
+| 3 | RAID-1 (Mirroring) | 7 | 4× |
+
+---
+
 ## Naming Conventions
 
 Consistent naming makes multi-cluster environments manageable and aligns with vCenter inventory organisation.
@@ -56,6 +150,8 @@ Consistent naming makes multi-cluster environments manageable and aligns with vC
 | Witness Appliance | `vsanwitness-<site>` | `vsanwitness-lon` |
 
 Disk group components are not individually named in vSAN (managed at the host level). Document the physical disk-to-disk-group mapping in the host build record.
+
+---
 
 ## Capacity Management
 
