@@ -4,52 +4,196 @@
 
 ---
 
-> This page is a stub. Health check procedures for Evergreen FlashArray will be documented here.
+Regular health checks confirm that FlashArray is operating within expected parameters and that the Evergreen support relationship (Phone Home, entitlement, replacement readiness) is functioning.
 
-## Daily Checks
+## Quick Health Check (5 minutes)
 
-| Check | Command | Notes |
-|---|---|---|
-| [ ] Apply standard FlashArray daily checks | `purealert list` | Evergreen is a subscription model; the underlying FlashArray or FlashBlade operations apply |
-| [ ] Run `purearray list --hardware` | `purearray list --hardware` | confirm all hardware components are healthy |
-| [ ] Run `purepod list` | `purepod list` | confirm ActiveCluster pods are stretched and replicating (if configured) |
-| [ ] Verify subscription status is current in the Pure1 portal | | |
-| [ ] Confirm Pure1 phone-home (support tunnel) is active | | Pure Support visibility depends on continuous telemetry |
-| [ ] Check Pure Support contract status | | confirm support is active and the renewal date is tracked |
-| [ ] Review Pure1 for any proactive recommendations or upgrade eligibility | | |
+Run from Pure1 UI or CLI. No impact to production.
 
-## Health Check
+### Via Pure1 UI
 
-- [ ] No active hardware alerts in Pure1 or from `purealert list`
-- [ ] All drives healthy: `puredrive list` — no `failed` or `recovering` drives
-- [ ] Both controllers online and running the same Purity version: `purearray list --controller`
-- [ ] ActiveCluster pods are stretched and `replicating: true`: `purepod list --replicating`
-- [ ] Pure1 phone-home is active (Pure1 portal: Arrays → select array → Support → Phone Home)
-- [ ] Purity software version is within Pure's supported N-2 release window
-- [ ] Subscription expiry date is documented and renewal is tracked with sufficient lead time
+```
+Pure1 → Arrays → select array → Overview tab
+
+Check:
+  ✓ Array status: Green (no active alerts)
+  ✓ Both controllers: Online
+  ✓ All drives: Healthy
+  ✓ Phone Home: Last contact < 24 hours ago
+  ✓ Capacity: < 70% used
+```
+
+### Via CLI
 
 ```bash
-# List array hardware status — controllers, chassis, power, fans
-purearray list --hardware
+ssh pureuser@<flasharray-ip>
 
-# Review all active alerts
-purealert list
+# 1. Overall hardware health
+purehw list | grep -v Healthy
+# Expected: no output (all components healthy)
 
-# Array capacity, used space, and data reduction
+# 2. Active alerts
+purealert list --flagged
+# Expected: no output (no open alerts)
+
+# 3. Controller status
+purehw list --type ct
+# Expected: CT0 and CT1 both Healthy
+
+# 4. Array capacity
+purearray list --space
+# Check: capacity_utilization < 0.70
+
+# 5. Phone Home status
+puresupport list
+# Check: phonehome_enabled = true, last_contact < 24h
+```
+
+## Full Health Check (20 minutes)
+
+Run monthly and before/after Purity upgrades or hardware changes.
+
+### 1. Hardware Inventory
+
+```bash
+# All hardware components with status
+purehw list
+
+# Non-healthy components only
+purehw list | grep -iv "^Name\|healthy\|^---\|^$"
+# Pass: no output
+
+# Drive-specific detail
+purehw list --type drive | awk 'NR<=1 || $3 != "Healthy"'
+```
+
+### 2. Capacity Deep-Dive
+
+```bash
+# Array-level space breakdown
 purearray list --space
 
-# Verify host and host group path status
-purehost list
-purehgroup list
+# Top 10 volumes by space consumption
+purevol list --space | sort -k5 -rh | head -10
 
-# Review ActiveCluster pod and replication status
-purepod list
-purepod list --replicating
-purepod list --failover-preference
+# Snapshot space — top consumers
+puresnapshot list --space | sort -k5 -rh | head -10
 
-# Check current Purity software version
-purearray list
-
-# List snapshot usage (to monitor ahead of controller upgrade)
-puresnap list --space
+# Check data reduction ratio (should be > 2:1 for most workloads)
+purearray list --space | awk 'NR==2 {print "Data reduction ratio: " $7}'
 ```
+
+### 3. Performance Baseline
+
+```bash
+# Current array IOPS, bandwidth, latency
+purearray list --performance
+
+# Per-volume performance — identify any outliers
+purevol list --performance | sort -k4 -rn | head -10   # by read IOPS
+purevol list --performance | sort -k6 -rn | head -10   # by read latency (µs)
+
+# Port utilisation
+pureport list --performance
+# Flag: any port at > 70% bandwidth sustained
+```
+
+### 4. Replication Health
+
+```bash
+# ActiveCluster / async replication status
+purepgroup list --schedule
+purepgroup list --transfer
+
+# Check replication lag
+purepgroup list --transfer | awk 'NR>1 {print $1, $5, $6}'
+# Column 5/6 = bytes pending / time lag
+
+# Protection group snapshots
+purepgroup list --snap | tail -5
+```
+
+### 5. Network and Connectivity
+
+```bash
+# Port errors — check for any non-zero error counters
+pureport list --performance | awk 'NR==1 || $NF != "0"'
+
+# FC path status (if applicable)
+purehost list --performance | head -20
+
+# Phone Home and log forwarding
+puresupport list
+puresupport set --list   # show current support configuration
+```
+
+### 6. Purity Version Check
+
+```bash
+# Current Purity version
+purearray list | grep -i version
+
+# Check for available upgrade (via Pure1 UI)
+# Pure1 → Arrays → select array → Settings → Software
+```
+
+Compare against [Pure Storage EOL/support matrix](https://support.purestorage.com) to confirm the installed version is within support window.
+
+### 7. Host Connectivity
+
+```bash
+# All registered hosts and their volumes
+purehost list
+purevol list --host
+
+# Verify each production host has expected number of paths
+purehostgroup list --connect
+# Expect: each host group connected to expected volume groups
+
+# Check for hosts with only 1 path (multipath misconfiguration risk)
+purehost list --performance | awk 'NR>1 && $2 < 2 {print $1, "WARNING: only " $2 " paths"}'
+```
+
+## Health Check Checklist Template
+
+| Check | Result | Notes |
+|---|---|---|
+| Both controllers Online | | |
+| All drives Healthy | | |
+| 0 flagged alerts | | |
+| Phone Home last contact < 24h | | |
+| Capacity < 70% used | | |
+| Data reduction ratio > 2:1 | | |
+| Array latency < 1ms (read + write) | | |
+| Replication lag within RPO target | | |
+| No port errors | | |
+| All hosts have ≥ 2 paths | | |
+| Purity version within support | | |
+
+## Evergreen Subscription Checks
+
+Validate annually and before a contract renewal:
+
+```bash
+# Confirm Phone Home is enabled and connected
+purearray list --csv | grep phone_home
+
+# Check entitlement and support expiry via Pure1
+# Pure1 → Administration → Subscriptions
+# Verify:
+#   - Subscription tier (Forever / Flex)
+#   - Contract end date
+#   - Capacity entitlement matches deployed capacity
+#   - Controller refresh date (Ever Modern — typically year 3 of subscription)
+```
+
+## Common Issues During Health Checks
+
+| Finding | Action |
+|---|---|
+| Drive not Healthy | Open Pure support case — drive replacement covered by Evergreen; no action needed before Pure ships replacement |
+| Controller Offline | Open Priority 1 support case by phone immediately |
+| Phone Home last contact > 24h | Check firewall rules for TCP 443 outbound to `pure1.purestorage.com`; check proxy config |
+| Capacity > 80% | Review and eradicate stale snapshots; plan Evergreen capacity expansion |
+| Replication lag > RPO | Investigate network bandwidth between sites; check source array load |
+| Host with 1 path | Investigate multipathing on the host; rescan HBA; check zoning |

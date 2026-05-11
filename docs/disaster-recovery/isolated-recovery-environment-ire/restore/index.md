@@ -1,43 +1,135 @@
-# Restore
-## Purpose
+# IRE — Restore
 
-Use this page for practical Isolated Recovery Environment Ire Restore notes, checks, troubleshooting, commands, change notes, and field references.
+Restoration in the IRE follows a staged process: retrieve the backup, restore to isolated staging, validate in the clean room, then reintroduce to production only after sign-off.
 
-## Common checks
+## Restore Workflow
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+```mermaid
+flowchart TD
+    A([Declare IRE activation]) --> B[Identify recovery point\nRTO / RPO target]
+    B --> C[Retrieve backup from immutable store\nto IRE staging]
+    C --> D[Restore VM images / data\nto IRE compute]
+    D --> E[Malware scan in clean room]
+    E --> F{Scan clean?}
+    F --> |No| G[Quarantine\nSelect earlier recovery point]
+    G --> B
+    F --> |Yes| H[Business validation\nApp team testing]
+    H --> I{Validated?}
+    I --> |No| J[Investigate data issues\nSelect earlier point if needed]
+    J --> B
+    I --> |Yes| K[DR lead sign-off]
+    K --> L[Reintroduce to production\nIRE isolation maintained until complete]
+    L --> M([IRE stand-down])
+```
 
-## Incident notes
+## Recovery Point Selection
 
-Capture:
+| RPO target | Backup type to use | Consideration |
+|---|---|---|
+| Minutes | Replication snapshot (synchronous copy) | May be contaminated if attack had long dwell time |
+| Hours | Daily/hourly snapshot | Balance dwell time vs data loss |
+| Days | Weekly full backup | Significant data loss; used when recent backups are compromised |
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+Always check backup timestamps against the estimated attack start time. Backups taken after the initial compromise may contain malware or encrypted data.
 
-## Change notes
+```bash
+# List available recovery points (example: Azure Recovery Services Vault)
+az backup recoverypoint list \
+  --resource-group <rg> \
+  --vault-name <rsv-name> \
+  --container-name <container> \
+  --item-name <backup-item> \
+  --output table
 
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+# List snapshot recovery points (example: Pure Storage)
+puresnapshot list --name "vol01*" | sort -k3 -r | head -20
+```
 
-## Useful commands
+## VM Restore Procedure
 
-Add tested commands here.
+### Azure VM from Recovery Services Vault
 
-## Known issues
+```bash
+# Trigger restore to alternate VM (IRE VNet)
+az backup restore restore-disks \
+  --resource-group <rg> \
+  --vault-name <rsv-name> \
+  --container-name "iaasvmcontainer;iaasvmcontainerv2;<rg>;<vm-name>" \
+  --item-name "vm;<rg>;<vm-name>" \
+  --rp-name <recovery-point-name> \
+  --storage-account <staging-storage-account> \
+  --target-resource-group <ire-rg>
 
-Add known issues here as they come up.
+# Monitor restore job
+az backup job show \
+  --resource-group <rg> \
+  --vault-name <rsv-name> \
+  --name <job-id>
+```
+
+### File/Volume Restore from Snapshot
+
+```bash
+# Pure FlashArray: restore volume from snapshot
+purevol copy --overwrite snap01.vol01 vol01-ire-restore
+
+# Mount restored volume to IRE host (after FC/iSCSI connection)
+ssh pureuser@<flasharray-ip>
+purevol connect vol01-ire-restore --host <ire-host>
+
+# On IRE host: rescan and mount
+iscsiadm -m session --rescan
+# or for FC:
+echo "1" > /sys/class/scsi_host/host0/scan
+
+# Mount read-only for scanning
+mount -o ro /dev/mapper/<device> /mnt/recovery-volume
+```
+
+### Database Restore
+
+```sql
+-- SQL Server: restore to IRE SQL instance (from backup file on shared storage)
+RESTORE DATABASE [recovered_db]
+FROM DISK = '\\ire-fileserver\backups\prod_db_20260510.bak'
+WITH
+  MOVE 'prod_db'     TO 'D:\Data\recovered_db.mdf',
+  MOVE 'prod_db_log' TO 'D:\Log\recovered_db_ldf',
+  NORECOVERY,    -- leave in restoring state for log restore
+  REPLACE;
+
+-- Apply transaction logs
+RESTORE LOG [recovered_db]
+FROM DISK = '\\ire-fileserver\backups\prod_db_log_20260510_2300.bak'
+WITH RECOVERY;  -- bring online after final log
+```
+
+## Reintroduction to Production
+
+Only after clean room sign-off:
+
+1. **Networking** — establish a controlled one-way network path from IRE to production (IRE → prod only; no return path).
+2. **DNS cutover** — update DNS records to point to restored systems.
+3. **Monitoring** — connect restored systems to monitoring before traffic goes live.
+4. **Traffic cutover** — move load balancer / DNS traffic incrementally (canary first if possible).
+5. **IRE decommission** — shut down IRE VMs and revoke all IRE credentials after successful production handover.
+
+## Restore Time Estimates
+
+| Data volume | Backup type | Typical restore time |
+|---|---|---|
+| < 500 GB VM | Azure RSV restore | 1–3 hours |
+| 1 TB database | Full backup + log restore | 2–4 hours |
+| 10 TB NAS volume | Snapshot clone (Pure) | < 30 minutes (metadata only) |
+| 50 TB NAS volume | Tape restore | 8–24 hours |
+
+Snapshot-based restores (Pure, Azure snapshot) are near-instant for the clone operation; time is dominated by malware scanning and validation.
+
+## Common Issues
+
+| Symptom | Cause | Resolution |
+|---|---|---|
+| Restore job fails with storage error | Staging storage account not in IRE VNet / inaccessible | Verify storage account network rules include IRE subnet |
+| Restored VM cannot boot | OS volume corrupted in the backup | Try one recovery point earlier; check backup consistency settings |
+| Database restore leaves DB in restoring state | `NORECOVERY` used without subsequent log restore | Apply remaining logs then `RESTORE DATABASE WITH RECOVERY` |
+| Snapshot clone is instant but data appears wrong | Wrong snapshot selected (post-compromise) | Review snapshot timestamps; select from before estimated attack start |
