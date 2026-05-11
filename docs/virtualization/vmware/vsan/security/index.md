@@ -1,5 +1,9 @@
 # vSAN — Security
 
+<div class="kb-summary">
+Security reference for VMware vSAN. Covers vCenter SSO authentication, role-based access control, data-at-rest encryption, KMS integration, and hardening baselines aligned to VMware security guidance and DISA STIGs.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">
