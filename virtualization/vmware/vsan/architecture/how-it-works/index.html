@@ -21,7 +21,7 @@
     
     
       
-        <title>vSAN Architecture — Standards - Chris KB</title>
+        <title>vSAN — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="vSAN Architecture — Standards · Chris KB">
+  <meta property="og:title" content="vSAN — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="vSAN Architecture — Standards · Chris KB">
+  <meta name="twitter:title" content="vSAN — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vsan-architecture-standards" class="md-skip">
+        <a href="#vsan-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              vSAN Architecture — Standards
+              vSAN — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,99 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cluster-configuration" class="md-nav__link">
+  <a href="#storage-architecture-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cluster Configuration
+        Storage Architecture Modes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Architecture Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#original-storage-architecture-osa-vsan-6x-7x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Original Storage Architecture (OSA) — vSAN 6.x / 7.x
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#express-storage-architecture-esa-vsan-80" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Express Storage Architecture (ESA) — vSAN 8.0+
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#objects-and-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objects and Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Objects and Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#object-placement-ftt1-raid-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Placement — FTT=1 RAID-1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Placement — FTT=1 RAID-5 (4 hosts minimum)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ftt-and-raid-policy-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FTT and RAID Policy Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Path
       
     </span>
   </a>
@@ -1080,10 +1169,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-policy-baseline" class="md-nav__link">
+  <a href="#read-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage Policy Baseline
+        Read Path
       
     </span>
   </a>
@@ -1091,10 +1180,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#naming-conventions" class="md-nav__link">
+  <a href="#core-components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Naming Conventions
+        Core Components
       
     </span>
   </a>
@@ -1102,10 +1191,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#capacity-management" class="md-nav__link">
+  <a href="#ports-and-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Capacity Management
+        Ports and Logs
       
     </span>
   </a>
@@ -1132,189 +1221,290 @@
 
 
 
-<h1 id="vsan-architecture-standards">vSAN Architecture — Standards<a class="headerlink" href="#vsan-architecture-standards" title="Permanent link">&para;</a></h1>
-<h2 id="cluster-configuration">Cluster Configuration<a class="headerlink" href="#cluster-configuration" title="Permanent link">&para;</a></h2>
-<p>Apply the following configuration baseline to every vSAN cluster before placing it in production.</p>
-<p><strong>Host requirements:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Requirement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Minimum nodes</td>
-<td>3 (FTT=1 RAID-1); 4 for RAID-5; 6 for RAID-6</td>
-</tr>
-<tr>
-<td>vSAN vmkernel adapter</td>
-<td>Dedicated vmk on each host (vmk2 by convention)</td>
-</tr>
-<tr>
-<td>Network speed</td>
-<td>10 GbE minimum; 25 GbE recommended for ESA or high-density</td>
-</tr>
-<tr>
-<td>MTU</td>
-<td>9000 (jumbo frames) end-to-end on vSAN network</td>
-</tr>
-<tr>
-<td>NIC allocation</td>
-<td>Dedicated NIC or NIC pair for vSAN traffic (separate from management and vMotion)</td>
-</tr>
-<tr>
-<td>RDMA</td>
-<td>Optional (RDMA over RoCE v2) for ESA ultra-low latency</td>
-</tr>
-<tr>
-<td>All hosts identical</td>
-<td>Identical CPU, RAM, and disk group configuration per cluster for balanced capacity</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Network validation before cluster creation:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify MTU 9000 end-to-end</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;remote-vsan-vmk-ip&gt;
+<h1 id="vsan-how-it-works">vSAN — How It Works<a class="headerlink" href="#vsan-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="storage-architecture-modes">Storage Architecture Modes<a class="headerlink" href="#storage-architecture-modes" title="Permanent link">&para;</a></h2>
+<h3 id="original-storage-architecture-osa-vsan-6x-7x">Original Storage Architecture (OSA) — vSAN 6.x / 7.x<a class="headerlink" href="#original-storage-architecture-osa-vsan-6x-7x" title="Permanent link">&para;</a></h3>
+<p>OSA uses a two-tier model within each disk group: a dedicated flash cache device and one or more capacity devices.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Host (OSA)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── Disk Group 1
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Cache SSD (NVMe or SATA SSD) — write buffer + read cache
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ├── Capacity Disk 1 (SSD or HDD)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ├── Capacity Disk 2
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    └── Capacity Disk N (up to 7 per group)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── Disk Group 2 (optional, up to 5 per host)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    └── ...
 </code></pre></div>
-<p>Ping must succeed at the large packet size. If it fails, check switch port MTU, vDS port group MTU, and vmkernel adapter MTU.</p>
-<h2 id="storage-policy-baseline">Storage Policy Baseline<a class="headerlink" href="#storage-policy-baseline" title="Permanent link">&para;</a></h2>
-<p>Define storage policies in vCenter before provisioning VMs. Assign policies by workload tier.</p>
-<table>
-<thead>
-<tr>
-<th>Workload Tier</th>
-<th>Policy Name</th>
-<th>FTT</th>
-<th>RAID</th>
-<th>Checksum</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Tier-1 Databases</td>
-<td><code>VSAN-T1-FTT2-RAID6</code></td>
-<td>2</td>
-<td>RAID-6</td>
-<td>Enabled</td>
-<td>6+ node cluster required</td>
-</tr>
-<tr>
-<td>Tier-2 General</td>
-<td><code>VSAN-T2-FTT1-RAID5</code></td>
-<td>1</td>
-<td>RAID-5</td>
-<td>Enabled</td>
-<td>4+ node cluster required</td>
-</tr>
-<tr>
-<td>Dev/Test</td>
-<td><code>VSAN-DEV-FTT1-RAID1</code></td>
-<td>1</td>
-<td>RAID-1</td>
-<td>Enabled</td>
-<td>3+ node cluster</td>
-</tr>
-<tr>
-<td>Stretched Cluster</td>
-<td><code>VSAN-STRETCH-FTT1-SITE</code></td>
-<td>1</td>
-<td>RAID-1 per site</td>
-<td>Enabled</td>
-<td>Affinity rule per site</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Object space reservation:</strong> Set to 0% unless workloads require thick provisioning. Thin provisioning is the default for vSAN.</p>
-<p><strong>Flash read cache reservation:</strong> Set to 0% for all-flash clusters (not applicable). OSA hybrid clusters may benefit from a non-zero value for latency-sensitive workloads.</p>
-<p><strong>Checksum:</strong> Enable object checksum on all production storage policies. Checksum detects silent data corruption at the component level and triggers resync automatically.</p>
-<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
-<p>Consistent naming makes multi-cluster environments manageable and aligns with vCenter inventory organisation.</p>
-<table>
-<thead>
-<tr>
-<th>Object</th>
-<th>Pattern</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vSAN Cluster</td>
-<td><code>VSAN-&lt;SITE&gt;-&lt;NN&gt;</code></td>
-<td><code>VSAN-LON-01</code></td>
-</tr>
-<tr>
-<td>Storage Policy (Tier-1)</td>
-<td><code>VSAN-T1-FTT&lt;n&gt;-RAID&lt;n&gt;</code></td>
-<td><code>VSAN-T1-FTT2-RAID6</code></td>
-</tr>
-<tr>
-<td>Storage Policy (Tier-2)</td>
-<td><code>VSAN-T2-FTT&lt;n&gt;-RAID&lt;n&gt;</code></td>
-<td><code>VSAN-T2-FTT1-RAID5</code></td>
-</tr>
-<tr>
-<td>Storage Policy (Dev)</td>
-<td><code>VSAN-DEV-FTT&lt;n&gt;-RAID&lt;n&gt;</code></td>
-<td><code>VSAN-DEV-FTT1-RAID1</code></td>
-</tr>
-<tr>
-<td>Stretched Cluster Policy</td>
-<td><code>VSAN-STRETCH-&lt;tag&gt;</code></td>
-<td><code>VSAN-STRETCH-FTT1-SITE</code></td>
-</tr>
-<tr>
-<td>Witness Appliance</td>
-<td><code>vsanwitness-&lt;site&gt;</code></td>
-<td><code>vsanwitness-lon</code></td>
-</tr>
-</tbody>
-</table>
-<p>Disk group components are not individually named in vSAN (managed at the host level). Document the physical disk-to-disk-group mapping in the host build record.</p>
-<h2 id="capacity-management">Capacity Management<a class="headerlink" href="#capacity-management" title="Permanent link">&para;</a></h2>
-<p>vSAN capacity management requires proactive monitoring. Resync operations during host failures or upgrades consume capacity above and beyond normal usage.</p>
-<p><strong>Alert thresholds:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Threshold</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>70% used capacity</td>
-<td>Alert — plan cluster expansion or data migration</td>
-</tr>
-<tr>
-<td>80% used capacity</td>
-<td>Escalation alert — immediate action required; vSAN operations reserve is at risk</td>
-</tr>
-<tr>
-<td>&gt; 80% used capacity</td>
-<td>vSAN may refuse new write operations or object provisioning</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Capacity reserve (slack):</strong></p>
-<p>Always maintain a minimum 30% free capacity:</p>
+<p><strong>All-Flash OSA:</strong> Cache SSD handles write buffering only. Reads served directly from capacity SSDs — no read cache needed.</p>
+<p><strong>Hybrid OSA:</strong> Cache SSD handles write buffering (70%) and read caching (30%). HDDs serve as capacity. Only suitable where cost constraints prevent all-flash.</p>
+<h3 id="express-storage-architecture-esa-vsan-80">Express Storage Architecture (ESA) — vSAN 8.0+<a class="headerlink" href="#express-storage-architecture-esa-vsan-80" title="Permanent link">&para;</a></h3>
+<p>ESA eliminates the separate cache tier. Every NVMe device contributes directly to capacity with inline compression enabled by default.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ESXi Host (ESA)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>└── Storage Pool
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── NVMe Device 1 (capacity + performance)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ├── NVMe Device 2
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    └── NVMe Device N
+</code></pre></div>
 <ul>
-<li>10% for vSAN operations reserve (internal metadata and resync)</li>
-<li>10% for resync buffer during host maintenance (one host's worth of data must be resynced)</li>
-<li>10% operational headroom</li>
+<li>NVMe-only — no SATA or SAS SSDs</li>
+<li>No separate cache tier; each NVMe is both cache and capacity</li>
+<li>Inline compression enabled by default</li>
+<li>Requires minimum 4 hosts (vs 3 for OSA)</li>
+<li>Separate ESA-specific HCL — OSA certified devices are not automatically ESA compatible</li>
+<li>Higher throughput and lower latency than OSA, particularly at scale</li>
 </ul>
-<p><strong>Monitoring commands:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check cluster capacity from any ESXi host</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># PowerCLI capacity overview</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Get-VsanSpaceUsage<span class="w"> </span>-Cluster<span class="w"> </span>&lt;clustername&gt;
+<hr />
+<h2 id="objects-and-components">Objects and Components<a class="headerlink" href="#objects-and-components" title="Permanent link">&para;</a></h2>
+<p>vSAN stores <strong>objects</strong> — logical storage containers distributed across the cluster per storage policy. Each object is divided into <strong>components</strong> — physical chunks placed on individual disk groups. Component placement is managed automatically by CLOM.</p>
+<p><strong>VM storage objects:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Object Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM Home Namespace</td>
+<td>VM configuration files (<code>.vmx</code>, <code>.nvram</code>, logs)</td>
+</tr>
+<tr>
+<td>VMDK</td>
+<td>Each virtual disk — largest and most I/O-intensive object</td>
+</tr>
+<tr>
+<td>VM Swap</td>
+<td>Memory swap file — equals VM RAM size; active only under memory pressure</td>
+</tr>
+<tr>
+<td>Snapshot Delta Disk</td>
+<td>Created per snapshot; grows with writes while snapshot is active</td>
+</tr>
+<tr>
+<td>Instant Clone Memory Object</td>
+<td>Memory state of an instant clone parent</td>
+</tr>
+</tbody>
+</table>
+<h3 id="object-placement-ftt1-raid-1">Object Placement — FTT=1 RAID-1<a class="headerlink" href="#object-placement-ftt1-raid-1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VM VMDK Object
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── Component A → ESXi-01, Disk Group 1
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├── Component B → ESXi-02, Disk Group 1  (mirror)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>└── Witness      → ESXi-03               (tiebreaker metadata only)
 </code></pre></div>
-<p>Capacity monitoring should also be configured in Aria Operations with an alert policy targeting the 70% threshold.</p>
+<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>VM VMDK Object
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── Data stripe 1 → ESXi-01
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── Data stripe 2 → ESXi-02
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├── Data stripe 3 → ESXi-03
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>└── Parity stripe → ESXi-04
+</code></pre></div>
+<h3 id="ftt-and-raid-policy-reference">FTT and RAID Policy Reference<a class="headerlink" href="#ftt-and-raid-policy-reference" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>FTT</th>
+<th>RAID Method</th>
+<th>Minimum Hosts</th>
+<th>Space Overhead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>RAID-1 (Mirroring)</td>
+<td>3</td>
+<td>2x</td>
+</tr>
+<tr>
+<td>1</td>
+<td>RAID-5 (Erasure Coding)</td>
+<td>4</td>
+<td>1.33x</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RAID-6 (Erasure Coding)</td>
+<td>6</td>
+<td>1.5x</td>
+</tr>
+<tr>
+<td>2</td>
+<td>RAID-1 (Mirroring)</td>
+<td>5</td>
+<td>3x</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RAID-1 (Mirroring)</td>
+<td>7</td>
+<td>4x</td>
+</tr>
+</tbody>
+</table>
+<p>Erasure Coding (RAID-5/6) is supported on All-Flash and ESA only.</p>
+<hr />
+<h2 id="write-path">Write Path<a class="headerlink" href="#write-path" title="Permanent link">&para;</a></h2>
+<p><strong>OSA write path:</strong></p>
+<ol>
+<li>VM issues a write to vSAN VMDK.</li>
+<li>DOM receives the write on the owner host.</li>
+<li>DOM sends the write to each component's home host via the vSAN VMkernel network.</li>
+<li>On each host, LSOM writes to the disk group's cache SSD write buffer.</li>
+<li>Once all required components acknowledge, DOM acknowledges the write to the VM.</li>
+<li>Data is de-staged from cache to capacity disks asynchronously in the background.</li>
+</ol>
+<pre class="mermaid"><code>graph TD
+    vm["VM\n(guest write I/O)"]
+    dom["DOM\n(Distributed Object Manager)\nowner host"]
+    lsom_local["LSOM — Local Host\nwrite to cache SSD buffer"]
+    vsan_net["vSAN VMkernel Network\n(unicast, 10/25 GbE)"]
+    lsom_remote["LSOM — Remote Host\nwrite to cache SSD buffer"]
+    ack["All required components\nacknowledge write"]
+    destage["Async destage:\ncache SSD → capacity disks"]
+    vm_ack["Write acknowledged\nto guest"]
+
+    vm --&gt; dom
+    dom --&gt; lsom_local
+    dom --&gt;|"FTT remote component"| vsan_net --&gt; lsom_remote
+    lsom_local --&gt; ack
+    lsom_remote --&gt; ack
+    ack --&gt; vm_ack
+    lsom_local --&gt; destage
+    lsom_remote --&gt; destage
+
+    classDef vm fill:#15803d,stroke:#166534,color:#fff
+    classDef mgr fill:#b45309,stroke:#92400e,color:#fff
+    classDef io fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class vm vm
+    class dom mgr
+    class lsom_local,lsom_remote,destage io
+    class vsan_net net
+    class ack,vm_ack vm</code></pre>
+<p><strong>ESA write path:</strong> DOM routes to component locations; LSOM writes directly to NVMe with inline compression — no cache tier.</p>
+<p><strong>Implication:</strong> Write latency is bounded by the slowest component acknowledgement. FTT=1 RAID-1 requires a round trip to a remote host — vSAN network latency directly contributes to front-end write latency.</p>
+<hr />
+<h2 id="read-path">Read Path<a class="headerlink" href="#read-path" title="Permanent link">&para;</a></h2>
+<p><strong>OSA read path (all-flash):</strong></p>
+<ol>
+<li>VM issues a read.</li>
+<li>DOM identifies the component owner — preferentially the local copy on the same host as the VM.</li>
+<li>LSOM reads from the capacity SSD on the local disk group.</li>
+<li>If not local, DOM fetches from a remote host's component via the vSAN network.</li>
+</ol>
+<p><strong>Read locality:</strong> vSAN preferentially reads from the local component copy. After vMotion, read preference follows the new host — minimising cross-host network traffic.</p>
+<p><strong>Hybrid OSA only:</strong> Frequently accessed data may be served from the cache SSD read cache (30% of cache) rather than the HDD capacity tier.</p>
+<hr />
+<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    policy["VM Storage Policy\n(FTT=1 RAID-1, checksum on)"]
+    obj["vSAN Storage Object\n(per VMDK / VM namespace)"]
+    compA["Component A\nESXi-01, Disk Group 1"]
+    compB["Component B\nESXi-02, Disk Group 1\n(mirror)"]
+    witness["Witness Component\nESXi-03\n(metadata tiebreaker)"]
+    diskA["Capacity SSD\n(naa.xxxxx)"]
+    diskB["Capacity SSD\n(naa.yyyyy)"]
+
+    policy --&gt;|"defines placement"| obj
+    obj --&gt; compA
+    obj --&gt; compB
+    obj --&gt; witness
+    compA --&gt; diskA
+    compB --&gt; diskB
+
+    classDef policy fill:#b45309,stroke:#92400e,color:#fff
+    classDef obj fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef comp fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef disk fill:#15803d,stroke:#166534,color:#fff
+    classDef wit fill:#1d4ed8,stroke:#1e40af,color:#fff
+
+    class policy policy
+    class obj obj
+    class compA,compB comp
+    class diskA,diskB disk
+    class witness wit</code></pre>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CLOM</strong></td>
+<td>Cluster Level Object Manager — policy compliance, placement decisions, triggering resyncs</td>
+</tr>
+<tr>
+<td><strong>DOM</strong></td>
+<td>Distributed Object Manager — handles I/O for each vSAN object across hosts</td>
+</tr>
+<tr>
+<td><strong>LSOM</strong></td>
+<td>Local Log-Structured Object Manager — manages on-disk layout within disk groups</td>
+</tr>
+<tr>
+<td><strong>CMMDS</strong></td>
+<td>Cluster Monitoring Membership Directory Service — tracks cluster membership and health metadata</td>
+</tr>
+<tr>
+<td><strong>vSAN Datastore</strong></td>
+<td>Logical datastore namespace visible to vCenter and all cluster hosts</td>
+</tr>
+<tr>
+<td><strong>vSAN Witness</strong></td>
+<td>Lightweight host or appliance holding only metadata for 2-node clusters — tiebreaker arbitration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ports-and-logs">Ports and Logs<a class="headerlink" href="#ports-and-logs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Use</th>
+<th>Protocol</th>
+<th>Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN transport</td>
+<td>TCP/UDP</td>
+<td>2233</td>
+</tr>
+<tr>
+<td>vSAN cluster service</td>
+<td>TCP</td>
+<td>12321</td>
+</tr>
+<tr>
+<td>vCenter management</td>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>TCP/UDP</td>
+<td>53</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>UDP</td>
+<td>123</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key log files (ESXi host):</strong></p>
+<ul>
+<li><code>/var/log/vmkernel.log</code></li>
+<li><code>/var/log/vsanmgmt.log</code></li>
+<li><code>/var/log/clomd.log</code></li>
+<li><code>/var/log/cmmdsd.log</code></li>
+<li><code>/var/log/vobd.log</code></li>
+</ul>
 
 
 
