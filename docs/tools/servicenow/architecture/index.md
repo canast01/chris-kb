@@ -51,7 +51,7 @@ flowchart LR
 - No direct change to production without prior UAT validation
 - Update Sets must be in **Complete** state before export
 - Peer review required before marking an Update Set complete
-- Emergency fixes follow a separate Fast-Track CAB process (see [Standards](../standards/))
+- Emergency fixes follow a separate Fast-Track CAB process (see the ServiceNow standards documentation)
 
 ---
 
@@ -179,7 +179,7 @@ flowchart TD
 | Production upgrade window | ServiceNow (automated) | 2–4 hours |
 | Post-upgrade validation | Platform team | 1 day |
 
-**Skipped versions policy:** ServiceNow supports upgrading across one or more versions. However, skipping more than two major releases is not recommended — see [Install & Upgrade](../../operations/install-upgrade/) for detailed guidance.
+**Skipped versions policy:** ServiceNow supports upgrading across one or more versions. However, skipping more than two major releases is not recommended — see [Install & Upgrade](../operations/install-upgrade/) for detailed guidance.
 
 ---
 

@@ -103,7 +103,7 @@ External exposure: only ports 443, 162, and 22 need to be reachable from outside
 
 Both databases are embedded and managed by the SANnav appliance startup scripts. External database servers are not supported.
 
-Backup of both databases is performed by the SANnav backup function (see [Backup & Restore](../backup-restore/)). Do not back up database directories directly while SANnav is running.
+Backup of both databases is performed by the SANnav backup function (Backup & Restore in the SANnav UI). Do not back up database directories directly while SANnav is running.
 
 ---
 

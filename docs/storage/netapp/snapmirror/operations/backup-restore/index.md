@@ -6,7 +6,7 @@
 
 ## How SnapMirror Fits into Backup and Restore
 
-SnapMirror is a replication technology, not a backup application. It maintains a continuously updated copy of source data on a destination cluster. The destination volume retains a configurable number of snapshots that represent point-in-time recovery points. For application-consistent backup orchestration — quiesce, snapshot, SnapMirror update, catalog registration — use [SnapCenter](../../../../snapcenter/).
+SnapMirror is a replication technology, not a backup application. It maintains a continuously updated copy of source data on a destination cluster. The destination volume retains a configurable number of snapshots that represent point-in-time recovery points. For application-consistent backup orchestration — quiesce, snapshot, SnapMirror update, catalog registration — use [SnapCenter](../../../snapcenter/).
 
 The following procedures cover the ONTAP-level operations for DR-oriented restore from a SnapMirror destination, snapshot-level recovery from a vault (XDP) relationship, and SVM-DR-level restore.
 

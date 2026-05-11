@@ -132,7 +132,7 @@ When a log-based alert fires in Aria Ops for Logs, operators can click to open t
 **Aria Operations → Log Insight (launch-in-context):**
 From an Aria Operations alert detail page, clicking "View Logs" opens Aria Ops for Logs pre-filtered to the affected object name and the alert time window. No manual query construction is needed.
 
-Configure the integration in both products — see the [Integrations](../integrations/) page for configuration steps.
+Configure the integration in both products via the Aria Operations alert integration settings.
 
 ---
 

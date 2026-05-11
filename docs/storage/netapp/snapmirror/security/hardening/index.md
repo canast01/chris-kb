@@ -6,7 +6,7 @@
 
 ## Hardening Checklist
 
-Apply this checklist to all clusters participating in SnapMirror relationships. It supplements the broader [ONTAP Security Hardening](../../../../ontap/security/hardening/) baseline, which should be applied first.
+Apply this checklist to all clusters participating in SnapMirror relationships. It supplements the broader [ONTAP Security Hardening](../../../ontap/security/hardening/) baseline, which should be applied first.
 
 ### Intercluster Network
 
