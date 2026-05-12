@@ -1,4 +1,4 @@
-# VCF Architecture — Standards
+# VCF — Design Standards
 
 VCF deployments must adhere to strict naming and sizing standards to ensure SDDC Manager can successfully validate and manage all components throughout the lifecycle.
 

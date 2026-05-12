@@ -1,4 +1,4 @@
-# VCF Architecture — Integrations
+# VCF — Integrations
 
 ## Integration Summary
 

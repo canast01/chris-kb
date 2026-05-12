@@ -1,5 +1,9 @@
 # VCF — Troubleshooting
 
+<div class="kb-summary">
+Troubleshooting reference for VMware Cloud Foundation. Covers common SDDC Manager and LCM failure patterns, workload domain issues, diagnostic commands, log collection, and escalation procedures.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">
