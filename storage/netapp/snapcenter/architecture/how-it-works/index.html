@@ -21,7 +21,7 @@
     
     
       
-        <title>Keystone — Overview - Chris KB</title>
+        <title>SnapCenter — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Keystone — Overview · Chris KB">
+  <meta property="og:title" content="SnapCenter — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Keystone — Overview · Chris KB">
+  <meta name="twitter:title" content="SnapCenter — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#keystone-overview" class="md-skip">
+        <a href="#snapcenter-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Keystone — Overview
+              SnapCenter — How It Works
             
           </span>
         </div>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#staas-consumption-model" class="md-nav__link">
+  <a href="#topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STaaS Consumption Model
+        Topology
       
     </span>
   </a>
@@ -1091,10 +1091,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#service-tiers" class="md-nav__link">
+  <a href="#ha-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Service Tiers
+        HA Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components
       
     </span>
   </a>
@@ -1113,10 +1124,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#capacity-model" class="md-nav__link">
+  <a href="#sizing-guidelines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Capacity Model
+        Sizing Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugins
       
     </span>
   </a>
@@ -1143,68 +1165,169 @@
 
 
 
-<h1 id="keystone-overview">Keystone — Overview<a class="headerlink" href="#keystone-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Keystone Architecture</a> reference.</p>
-</blockquote>
-<hr />
+<h1 id="snapcenter-how-it-works">SnapCenter — How It Works<a class="headerlink" href="#snapcenter-how-it-works" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>NetApp Keystone is a Storage as a Service (STaaS) subscription that delivers on-premises NetApp hardware — AFF/FAS for block and file, StorageGRID for object — on an OpEx consumption model. NetApp installs, owns, and manages the hardware either at the customer's data center or in a colocation facility. The customer commits to a minimum capacity per service tier and pays for committed capacity plus any burst usage above that commitment. A Keystone Collector agent deployed on-premises reports consumption telemetry to NetApp for billing.</p>
-<h2 id="staas-consumption-model">STaaS Consumption Model<a class="headerlink" href="#staas-consumption-model" title="Permanent link">&para;</a></h2>
+<p>SnapCenter is a Windows-based centralized data protection platform that orchestrates application-consistent ONTAP snapshots across a fleet of hosts and applications. It communicates with ONTAP storage systems via the ONTAP REST API or ZAPI, with application hosts via the SnapCenter Agent (TCP 8145), and exposes a web GUI on port 8146 and a REST API for automation. The architecture separates the control plane (SnapCenter Server), the data plane (ONTAP snapshots), and the agent layer (plugins on protected hosts).</p>
+<h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
-  ONTAP["NetApp ONTAP\n(on-premises / colocation)"] --&gt;|"telemetry"| KS["NetApp Keystone\n(STaaS portal)"]
-  KS --&gt; COMMIT["Committed Capacity Tier"]
-  KS --&gt; BURST["Burst Capacity\n(on-demand)"]
-  KS --&gt; BILL["Monthly Billing"]
-  ADMIN(["Customer Admin"]) --&gt;|"portal"| KS
+  SCW["SnapCenter Server\n(Windows / Linux VM)"]
+  SCW --&gt; PL1["Plug-in for SQL Server"]
+  SCW --&gt; PL2["Plug-in for Oracle"]
+  SCW --&gt; PL3["Plug-in for VMware"]
+  PL1 &amp; PL2 &amp; PL3 --&gt; ONTAP["NetApp ONTAP\nSnapshot · SnapMirror · SnapVault"]
+  ADMIN(["DBA / Storage Admin"]) --&gt;|"web UI / REST API"| SCW
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
-  class ONTAP ctrl
-  class KS,COMMIT,BURST,BILL cloud
+  class SCW,PL1,PL2,PL3 ctrl
+  class ONTAP store
   class ADMIN host</code></pre>
-<h2 id="service-tiers">Service Tiers<a class="headerlink" href="#service-tiers" title="Permanent link">&para;</a></h2>
+<h2 id="ha-options">HA Options<a class="headerlink" href="#ha-options" title="Permanent link">&para;</a></h2>
+<p>SnapCenter Server is not natively HA. Recommended approaches:</p>
+<ul>
+<li><strong>Windows Server Failover Cluster (WSFC)</strong> — host the SnapCenter application on a WSFC for automatic failover</li>
+<li><strong>VM-based resilience</strong> — run SnapCenter as a VM protected by VMware HA; RTO is VM restart time (~5 minutes)</li>
+<li><strong>MySQL HA</strong> — run the repository on a highly available MySQL cluster to prevent data loss</li>
+<li><strong>SnapCenter Server backup</strong> — use the built-in backup feature to snapshot the repository and application config daily; store on secondary ONTAP</li>
+</ul>
+<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Tier</th>
-<th>Protocol</th>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SnapCenter Server</td>
+<td>Windows Server hosting the web application, scheduler, and REST API; accessible at <code>https://&lt;server&gt;:8146</code></td>
+</tr>
+<tr>
+<td>Repository Database</td>
+<td>MySQL database storing all job history, policies, resource groups, and RBAC configuration</td>
+</tr>
+<tr>
+<td>SnapCenter Agent</td>
+<td>Lightweight Windows or Linux service (port 8145) on each protected host; runs pre/post quiesce scripts</td>
+</tr>
+<tr>
+<td>Plug-in for Windows</td>
+<td>VSS-based backup for SQL Server, Exchange, and Windows filesystems</td>
+</tr>
+<tr>
+<td>Plug-in for UNIX</td>
+<td>Agent extension for Linux/AIX; supports Oracle, SAP HANA, and UNIX filesystems</td>
+</tr>
+<tr>
+<td>Plug-in for VMware vSphere</td>
+<td>Separate OVA appliance registered with vCenter; VM-level and datastore-level backup without in-guest agents</td>
+</tr>
+<tr>
+<td>ONTAP Storage Systems</td>
+<td>Registered as storage connections; SnapCenter manages snapshots, SnapMirror updates, and SnapVault transfers via ONTAP APIs</td>
+</tr>
+<tr>
+<td>SMTP / Email Relay</td>
+<td>Optional; SnapCenter sends job notifications via SMTP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Connection</th>
+<th>Protocol / Port</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admin browser to SnapCenter GUI</td>
+<td>HTTPS/8146</td>
+<td>Client → Server</td>
+</tr>
+<tr>
+<td>SnapCenter Server to ONTAP</td>
+<td>HTTPS/443 (REST) or ZAPI</td>
+<td>Server → ONTAP cluster-mgmt LIF</td>
+</tr>
+<tr>
+<td>SnapCenter Server to Agent</td>
+<td>TCP/8145</td>
+<td>Server → Host agent</td>
+</tr>
+<tr>
+<td>SnapCenter Agent to Server</td>
+<td>TCP/8145</td>
+<td>Host → Server (callback)</td>
+</tr>
+<tr>
+<td>SnapCenter to MySQL repository</td>
+<td>TCP/3306</td>
+<td>Local (or network if remote DB)</td>
+</tr>
+<tr>
+<td>SnapCenter to SMTP relay</td>
+<td>TCP/25 or 587</td>
+<td>Server → Mail relay</td>
+</tr>
+<tr>
+<td>Plug-in for VMware to vCenter</td>
+<td>HTTPS/443</td>
+<td>Plugin OVA → vCenter</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>SnapCenter Server</strong>: Minimum 4 vCPU / 8 GB RAM for up to 50 hosts; scale to 8 vCPU / 16 GB for 50–200 hosts; dedicated Windows Server 2019 or 2022</li>
+<li><strong>Repository database</strong>: Allow ~500 MB per 1,000 backup jobs retained; 20 GB minimum partition</li>
+<li><strong>Concurrent jobs</strong>: Default maximum is 5; increase to 10–20 in global settings for large environments</li>
+<li><strong>Plugin hosts per server</strong>: Supports up to ~300–400 active hosts; beyond that, evaluate a secondary SnapCenter instance</li>
+</ul>
+<h2 id="plugins">Plugins<a class="headerlink" href="#plugins" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
 <th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Extreme</td>
-<td>NVMe-AF (all-flash NVMe)</td>
-<td>Latency-sensitive databases, high-IOPS transactional workloads</td>
+<td>Plug-in for Windows</td>
+<td>Windows filesystems, SQL Server</td>
 </tr>
 <tr>
-<td>Premium</td>
-<td>AFF (all-flash SAS/NVMe)</td>
-<td>Mixed workloads, virtualization, general-purpose high-performance</td>
+<td>Plug-in for SQL Server</td>
+<td>SQL Server databases (VSS-based)</td>
 </tr>
 <tr>
-<td>Standard</td>
-<td>FAS (hybrid or capacity flash)</td>
-<td>File storage, backup targets, less latency-sensitive workloads</td>
+<td>Plug-in for Oracle</td>
+<td>Oracle DB on Linux/Windows</td>
 </tr>
 <tr>
-<td>Object</td>
-<td>StorageGRID</td>
-<td>Unstructured data, backups, archives, S3-compatible object storage</td>
+<td>Plug-in for SAP HANA</td>
+<td>SAP HANA databases</td>
+</tr>
+<tr>
+<td>Plug-in for VMware vSphere</td>
+<td>VMware VMs and datastores</td>
+</tr>
+<tr>
+<td>Plug-in for UNIX</td>
+<td>Linux filesystems</td>
 </tr>
 </tbody>
 </table>
-<p>Customers select one or more tiers per subscription; each tier has a committed capacity minimum and a defined performance SLA (IOPS/TB and latency).</p>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<p>Storage protocols are identical to the underlying platform: NFS, SMB/CIFS, iSCSI, FC, and S3 (StorageGRID). There is no change to how hosts connect to storage compared to a standard NetApp deployment. The Keystone Collector VM requires outbound HTTPS (port 443) to <code>keystone.netapp.com</code> for telemetry reporting — no inbound ports are required. If the Collector cannot reach the NetApp endpoint, consumption reporting stops and billing data gaps occur.</p>
-<h2 id="capacity-model">Capacity Model<a class="headerlink" href="#capacity-model" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Committed capacity</strong> — the minimum monthly capacity the customer contracts for per service tier; billed whether used or not</li>
-<li><strong>Burst capacity</strong> — available headroom above committed capacity up to a defined burst limit; billed at a higher per-TB rate when consumed</li>
-<li><strong>True-up cadence</strong> — monthly; consumption report from the Collector is reconciled and the invoice reflects committed capacity plus burst usage for the period</li>
-<li>Committed capacity can be increased mid-term but cannot be decreased; plan initial sizing conservatively and use burst for growth headroom</li>
-</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Windows — restart plugin service</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Restart-Service<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;SnapCenter Plug-in for Windows&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Linux — restart plugin service</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>/opt/NetApp/snapcenter/scc/bin/scc<span class="w"> </span>restart
+</code></pre></div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>SnapMirror — Overview - Chris KB</title>
+        <title>SnapMirror — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SnapMirror — Overview · Chris KB">
+  <meta property="og:title" content="SnapMirror — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SnapMirror — Overview · Chris KB">
+  <meta name="twitter:title" content="SnapMirror — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snapmirror-overview" class="md-skip">
+        <a href="#snapmirror-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SnapMirror — Overview
+              SnapMirror — Architecture
             
           </span>
         </div>
@@ -1062,69 +1062,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#replication-modes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replication Modes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#replication-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replication Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1143,25 +1080,17 @@
 
 
 
-<h1 id="snapmirror-overview">SnapMirror — Overview<a class="headerlink" href="#snapmirror-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">SnapMirror Architecture</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>SnapMirror is ONTAP's built-in replication engine, providing volume-level and SVM-level replication across ONTAP clusters. It supports three primary operating modes: asynchronous (SnapMirror Async, RPO-based), synchronous (SnapMirror Synchronous, zero RPO), and extended data protection (XDP/SnapVault, backup retention). Relationships are always managed from the destination cluster. SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.</p>
-<h2 id="replication-modes">Replication Modes<a class="headerlink" href="#replication-modes" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  SRC["Source Volume\nSVM / Cluster A"] --&gt;|"SnapMirror replication\n(incremental block diff)"| DST["Destination Volume\nSVM / Cluster B — read-only"]
-  SRC --&gt; SNAP[("Local Snapshots")]
-  DST --&gt;|"break to activate for DR"| DRACT["DR Active Volume\n(after SnapMirror break)"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  class SRC,DST ctrl
-  class SNAP store
-  class DRACT dr</code></pre>
-<h2 id="replication-types">Replication Types<a class="headerlink" href="#replication-types" title="Permanent link">&para;</a></h2>
+<h1 id="snapmirror-architecture">SnapMirror — Architecture<a class="headerlink" href="#snapmirror-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+SnapMirror architecture reference — replication types (Async, Sync, SMBC, XDP), components, connectivity requirements, and DR failover procedures.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Replication types, components, connectivity, CLI commands, DR failover sequence, and SVM-level replication.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, policy baseline, and configuration checklist.</span></a>
+</div>
+
 <table>
 <thead>
 <tr>
@@ -1174,34 +1103,35 @@
 <tr>
 <td>SnapMirror Async</td>
 <td>Configurable, minutes to hours</td>
-<td>Standard volume replication; transfers run on a schedule; destination is read-only DP volume</td>
+<td>Standard volume replication; transfers run on a schedule; destination read-only DP volume</td>
 </tr>
 <tr>
 <td>SnapMirror Sync</td>
 <td>Zero RPO</td>
-<td>Every write acknowledged on both source and destination; requires &lt;5ms RTT between clusters</td>
+<td>Every write acknowledged on both source and destination; requires &lt;5ms RTT</td>
 </tr>
 <tr>
-<td>SnapMirror Business Continuity (SMBC)</td>
+<td>SMBC (AutomatedFailOver)</td>
 <td>Zero RPO, transparent failover</td>
 <td>Consistency group-based; mediator-assisted automatic failover; no host reconfiguration</td>
 </tr>
 <tr>
 <td>SnapVault / XDP</td>
 <td>Daily/weekly backup copies</td>
-<td>Extended data protection; independent retention on destination; replaces legacy SnapVault</td>
+<td>Extended data protection; independent retention on destination</td>
 </tr>
 </tbody>
 </table>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<p>Intercluster LIFs must be on a dedicated replication network, separate from data and management traffic. ONTAP uses TCP ports 11104 and 11105 for intercluster replication. Cluster peering must be established before SVM peering, and SVM peering is required before any volume or SVM-level relationship can be created. Bandwidth requirements are driven by the daily change rate of source data — higher change rates require proportionally more replication bandwidth to sustain the configured RPO.</p>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
+<pre class="mermaid"><code>graph LR
+  SRC["Source Volume\nSVM / Cluster A"] --&gt;|"SnapMirror replication\n(incremental block diff)"| DST["Destination Volume\nSVM / Cluster B — read-only"]
+  SRC --&gt; SNAP[("Local Snapshots")]
+  DST --&gt;|"break to activate for DR"| DRACT["DR Active Volume\n(after SnapMirror break)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  class SRC,DST ctrl
+  class SNAP store
+  class DRACT dr</code></pre>
 
 
 

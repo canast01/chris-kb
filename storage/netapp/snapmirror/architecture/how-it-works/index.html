@@ -21,7 +21,7 @@
     
     
       
-        <title>SnapCenter — Components - Chris KB</title>
+        <title>SnapMirror — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SnapCenter — Components · Chris KB">
+  <meta property="og:title" content="SnapMirror — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SnapCenter — Components · Chris KB">
+  <meta name="twitter:title" content="SnapMirror — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snapcenter-components" class="md-skip">
+        <a href="#snapmirror-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SnapCenter — Components
+              SnapMirror — How It Works
             
           </span>
         </div>
@@ -1069,6 +1069,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1080,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sizing-guidelines" class="md-nav__link">
+  <a href="#connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sizing Guidelines
+        Connectivity
       
     </span>
   </a>
@@ -1091,63 +1113,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#plugins" class="md-nav__link">
+  <a href="#key-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Plugins
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Plugins">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#checking-plugin-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Checking Plugin Status
+        Key Commands
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#installing-a-plugin" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#dr-failover-sequence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installing a Plugin
+        DR Failover Sequence
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#restarting-a-plugin" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#svm-level-replication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Restarting a Plugin
+        SVM-Level Replication
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plugin-communication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plugin Communication
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1171,11 +1165,51 @@
 
 
 
-<h1 id="snapcenter-components">SnapCenter — Components<a class="headerlink" href="#snapcenter-components" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">SnapCenter Architecture</a> reference.</p>
-</blockquote>
-<hr />
+<h1 id="snapmirror-how-it-works">SnapMirror — How It Works<a class="headerlink" href="#snapmirror-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SnapMirror is ONTAP's built-in replication engine, providing volume-level and SVM-level replication across ONTAP clusters. It supports three primary operating modes: asynchronous (SnapMirror Async, RPO-based), synchronous (SnapMirror Synchronous, zero RPO), and extended data protection (XDP/SnapVault, backup retention). Relationships are always managed from the destination cluster. SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.</p>
+<h2 id="replication-types">Replication Types<a class="headerlink" href="#replication-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>RPO</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SnapMirror Async</td>
+<td>Configurable, minutes to hours</td>
+<td>Standard volume replication; transfers run on a schedule; destination is read-only DP volume</td>
+</tr>
+<tr>
+<td>SnapMirror Sync</td>
+<td>Zero RPO</td>
+<td>Every write acknowledged on both source and destination; requires &lt;5ms RTT between clusters</td>
+</tr>
+<tr>
+<td>SnapMirror Business Continuity (SMBC)</td>
+<td>Zero RPO, transparent failover</td>
+<td>Consistency group-based; mediator-assisted automatic failover; no host reconfiguration</td>
+</tr>
+<tr>
+<td>SnapVault / XDP</td>
+<td>Daily/weekly backup copies</td>
+<td>Extended data protection; independent retention on destination; replaces legacy SnapVault</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>graph LR
+  SRC["Source Volume\nSVM / Cluster A"] --&gt;|"SnapMirror replication\n(incremental block diff)"| DST["Destination Volume\nSVM / Cluster B — read-only"]
+  SRC --&gt; SNAP[("Local Snapshots")]
+  DST --&gt;|"break to activate for DR"| DRACT["DR Active Volume\n(after SnapMirror break)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  class SRC,DST ctrl
+  class SNAP store
+  class DRACT dr</code></pre>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1186,109 +1220,117 @@
 </thead>
 <tbody>
 <tr>
-<td>SnapCenter Server</td>
-<td>Windows Server hosting the SnapCenter web application, scheduler, and REST API; accessible at <code>https://&lt;server&gt;:8146</code></td>
+<td>Source volume</td>
+<td>Read/write volume on the source cluster; the origin of replicated data</td>
 </tr>
 <tr>
-<td>Repository Database</td>
-<td>MySQL database installed on the SnapCenter Server host (or a separate MySQL server); stores all job history, policies, resource groups, and RBAC configuration</td>
+<td>Destination volume</td>
+<td>DP (data protection) type, read-only; managed by the replication engine</td>
 </tr>
 <tr>
-<td>SnapCenter Agent</td>
-<td>Lightweight Windows or Linux service (port 8145) installed on each protected host; communicates with the SnapCenter Server and runs pre/post quiesce scripts</td>
+<td>SnapMirror policy</td>
+<td>Defines rules, schedule, and retention for the relationship</td>
 </tr>
 <tr>
-<td>SnapCenter Plug-in for Windows</td>
-<td>Agent extension for Windows filesystem and VSS-based application backup; supports SQL Server, Exchange, and Windows filesystems</td>
+<td>Cluster peer relationship</td>
+<td>Trust relationship between two ONTAP clusters; prerequisite for all SnapMirror</td>
 </tr>
 <tr>
-<td>SnapCenter Plug-in for UNIX</td>
-<td>Agent extension for Linux/AIX; supports Oracle, SAP HANA, and UNIX filesystems</td>
+<td>SVM peer relationship</td>
+<td>Required for cross-SVM replication; establishes peer trust at the data SVM layer</td>
 </tr>
 <tr>
-<td>SnapCenter Plug-in for VMware vSphere</td>
-<td>Separate OVA appliance registered with vCenter; provides VM-level and datastore-level backup without an agent inside VMs</td>
+<td>Intercluster LIFs</td>
+<td>Dedicated network interfaces used exclusively for SnapMirror replication traffic</td>
 </tr>
 <tr>
-<td>ONTAP Storage Systems</td>
-<td>Registered as storage connections in SnapCenter; SnapCenter creates and manages ONTAP snapshots, SnapMirror updates, and SnapVault transfers via ONTAP APIs</td>
-</tr>
-<tr>
-<td>SMTP / Email Relay</td>
-<td>Optional; SnapCenter sends job success/failure notifications via SMTP</td>
+<td>ONTAP Mediator</td>
+<td>External Linux VM used as a quorum witness for SMBC automatic failover</td>
 </tr>
 </tbody>
 </table>
-<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>SnapCenter Server</strong>: Minimum 4 vCPU, 8 GB RAM for up to 50 hosts; scale to 8 vCPU / 16 GB for 50–200 hosts; dedicated Windows Server (2019 or 2022)</li>
-<li><strong>Repository database</strong>: MySQL data directory sizing — allow ~500 MB per 1,000 backup jobs retained; 20 GB minimum partition</li>
-<li><strong>Concurrent jobs</strong>: Default maximum concurrent jobs is 5; increase to 10–20 in SnapCenter global settings for large environments, limited by ONTAP API throughput</li>
-<li><strong>Plugin hosts per server</strong>: A single SnapCenter Server supports up to several hundred registered hosts; beyond 300–400 active hosts, evaluate a secondary SnapCenter instance for scale-out</li>
-<li><strong>SnapCenter Plug-in for VMware</strong>: Deploy one OVA per vCenter; supports thousands of VMs; requires access to vCenter API and ONTAP APIs for all datastores</li>
-</ul>
-<hr />
-<h2 id="plugins">Plugins<a class="headerlink" href="#plugins" title="Permanent link">&para;</a></h2>
-<p>SnapCenter uses host-based plugins to quiesce applications before snapshot creation, enabling application-consistent backups.</p>
+<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
+<p>Intercluster LIFs must be on a dedicated replication network, separate from data and management traffic. ONTAP uses TCP ports 11104 and 11105 for intercluster replication. Cluster peering must be established before SVM peering, and SVM peering is required before any volume or SVM-level relationship can be created.</p>
 <table>
 <thead>
 <tr>
-<th>Plugin</th>
-<th>Use Case</th>
+<th>Replication Type</th>
+<th>Latency Requirement</th>
+<th>Bandwidth Requirement</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>SnapCenter Plug-in for Windows</td>
-<td>Windows file systems, SQL Server</td>
+<td>SnapMirror Async</td>
+<td>No strict requirement</td>
+<td>Based on change rate and schedule window</td>
 </tr>
 <tr>
-<td>SnapCenter Plug-in for SQL Server</td>
-<td>SQL Server databases (VSS-based)</td>
+<td>SnapMirror Sync</td>
+<td>&lt;5ms RTT (sustained)</td>
+<td>Write throughput of source workload</td>
 </tr>
 <tr>
-<td>SnapCenter Plug-in for Oracle</td>
-<td>Oracle DB on Linux/Windows</td>
-</tr>
-<tr>
-<td>SnapCenter Plug-in for SAP HANA</td>
-<td>SAP HANA databases</td>
-</tr>
-<tr>
-<td>SnapCenter Plug-in for VMware vSphere</td>
-<td>VMware VMs and datastores</td>
-</tr>
-<tr>
-<td>SnapCenter Plug-in for UNIX</td>
-<td>Linux file systems</td>
+<td>SMBC</td>
+<td>&lt;5ms RTT (sustained)</td>
+<td>Write throughput of consistency group</td>
 </tr>
 </tbody>
 </table>
-<h3 id="checking-plugin-status">Checking Plugin Status<a class="headerlink" href="#checking-plugin-status" title="Permanent link">&para;</a></h3>
-<p>In the SnapCenter UI:
-1. Navigate to <strong>Hosts</strong> → verify all hosts show <code>Running</code>
-2. A host with <code>Stopped</code> or <code>Not reachable</code> requires investigation</p>
-<h3 id="installing-a-plugin">Installing a Plugin<a class="headerlink" href="#installing-a-plugin" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Hosts → Add</strong></li>
-<li>Enter host FQDN, credentials, and select plug-in packages</li>
-<li>SnapCenter pushes the installer to the host automatically</li>
-<li>Verify status shows <code>Running</code> after installation</li>
-</ol>
-<h3 id="restarting-a-plugin">Restarting a Plugin<a class="headerlink" href="#restarting-a-plugin" title="Permanent link">&para;</a></h3>
-<p>If a plugin shows <code>Stopped</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Windows (PowerShell — on the target host)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Restart-Service<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;SnapCenter Plug-in for Windows&quot;</span>
+<p>Estimate required replication bandwidth: <code>(Daily change rate × source volume size) / replication window (seconds)</code></p>
+<h2 id="key-commands">Key Commands<a class="headerlink" href="#key-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show all relationships with lag time and health</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lag-time,healthy,last-transfer-end-timestamp
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Linux (on the target host)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>/opt/NetApp/snapcenter/scc/bin/scc<span class="w"> </span>restart
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show full detail for a specific relationship</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Show relationships in broken-off state</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-relationship-status<span class="w"> </span>broken-off
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Trigger immediate incremental update</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Resync a broken-off relationship</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>snapmirror<span class="w"> </span>resync<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Break a relationship for DR failover (makes destination read-write)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Initialize a new relationship (baseline transfer)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Quiesce a relationship (pause future transfers, finishes current)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Show transfer history</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>snapmirror<span class="w"> </span>show-history<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:vol_dst
 </code></pre></div>
-<h3 id="plugin-communication">Plugin Communication<a class="headerlink" href="#plugin-communication" title="Permanent link">&para;</a></h3>
-<ul>
-<li>SnapCenter Server communicates with plugins over <strong>port 8145</strong> (default)</li>
-<li>Ensure firewall rules allow TCP 8145 from SnapCenter Server to each managed host</li>
-<li>Plugin hosts require outbound connectivity back to SnapCenter Server</li>
-</ul>
+<h2 id="dr-failover-sequence">DR Failover Sequence<a class="headerlink" href="#dr-failover-sequence" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Detect RPO breach or site failure</strong> — identify that the source is unavailable or lag has exceeded the RPO threshold</li>
+<li><strong>Quiesce the relationship</strong> — <code>snapmirror quiesce -destination-path svm_dst:vol_dst</code> (allows in-flight transfer to complete)</li>
+<li><strong>Break the relationship</strong> — <code>snapmirror break -destination-path svm_dst:vol_dst</code> (makes destination read-write)</li>
+<li><strong>Mount/present the destination volume to DR hosts</strong> — rescan iSCSI/FC on host or remount NFS exports</li>
+<li><strong>Start application on DR hosts</strong> — verify data integrity; bring application online</li>
+<li><strong>Failback</strong> — once source site recovers, reverse resync: <code>snapmirror resync -destination-path svm_src:vol_src</code> (treating the original source as the new destination until fully synced)</li>
+<li><strong>Final reverse resync</strong> — break and remount on original source hosts; re-establish the original replication direction</li>
+</ol>
+<h2 id="svm-level-replication">SVM-Level Replication<a class="headerlink" href="#svm-level-replication" title="Permanent link">&para;</a></h2>
+<p>SVM DR replicates the full SVM configuration (volumes, LIFs, NFS exports, CIFS shares, igroups) in addition to data:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an SVM DR relationship</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snapmirror<span class="w"> </span>create<span class="w"> </span>-source-path<span class="w"> </span>svm_src:<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:<span class="w"> </span>-type<span class="w"> </span>XDP<span class="w"> </span>-policy<span class="w"> </span>MirrorAllSnapshots
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Initialize SVM DR baseline</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Update SVM DR configuration</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Activate SVM at DR site</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_dst:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vserver<span class="w"> </span>start<span class="w"> </span>-vserver<span class="w"> </span>svm_dst
+</code></pre></div>
 
 
 
