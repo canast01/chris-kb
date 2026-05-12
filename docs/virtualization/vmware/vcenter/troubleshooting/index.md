@@ -1,5 +1,9 @@
 # vCenter — Troubleshooting
 
+<div class="kb-summary">
+Troubleshooting reference for VMware vCenter Server. Covers common VCSA failure patterns, SSO and certificate issues, diagnostic commands, log collection, and escalation procedures.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">

@@ -1,4 +1,4 @@
-# vCenter — Architecture Standards
+# vCenter — Design Standards
 
 ## Naming Conventions
 

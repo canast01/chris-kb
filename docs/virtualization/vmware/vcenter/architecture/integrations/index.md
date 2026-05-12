@@ -1,4 +1,4 @@
-# vCenter Architecture — Integrations
+# vCenter — Integrations
 
 ## Storage Integration
 
