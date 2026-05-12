@@ -1,4 +1,4 @@
-# NSX — Standards
+# NSX — Design Standards
 
 ## Naming Conventions
 
