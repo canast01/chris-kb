@@ -21,7 +21,7 @@
     
     
       
-        <title>Evergreen — Overview - Chris KB</title>
+        <title>Evergreen — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Evergreen — Overview · Chris KB">
+  <meta property="og:title" content="Evergreen — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Evergreen — Overview · Chris KB">
+  <meta name="twitter:title" content="Evergreen — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#evergreen-overview" class="md-skip">
+        <a href="#evergreen-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Evergreen — Overview
+              Evergreen — Architecture
             
           </span>
         </div>
@@ -1062,69 +1062,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#controller-refresh-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Controller Refresh Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1143,83 +1080,47 @@
 
 
 
-<h1 id="evergreen-overview">Evergreen — Overview<a class="headerlink" href="#evergreen-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Evergreen Architecture</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Evergreen is Pure Storage's hardware subscription model for the FlashArray platform (//X, //C, and //E series). Rather than purchasing hardware outright, customers subscribe to a capacity and performance tier, with controller hardware refreshes, Purity software upgrades, and support included in the subscription cost. The defining principle is no forklift upgrades: when controllers reach end of generation, Pure replaces them non-disruptively while data remains on the existing NVMe drive shelf — hosts stay connected and I/O continues during the swap.</p>
-<p>Evergreen spans two primary tiers:</p>
-<ul>
-<li><strong>Evergreen//Forever</strong> — base subscription; includes non-disruptive controller refresh (Ever Modern) every three years, all Purity software upgrades, and support</li>
-<li><strong>Evergreen//Flex</strong> — adds non-disruptive capacity and blade swap flexibility for FlashBlade; allows adding, removing, or swapping storage media without disruption</li>
-</ul>
-<p>Evergreen//One (STaaS consumption model) is covered in a separate section of this KB.</p>
-<h2 id="controller-refresh-model">Controller Refresh Model<a class="headerlink" href="#controller-refresh-model" title="Permanent link">&para;</a></h2>
+<h1 id="evergreen-architecture">Evergreen — Architecture<a class="headerlink" href="#evergreen-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Architecture reference for Pure Storage Evergreen. Covers the non-disruptive controller refresh model, active-active HA, DirectFlash Modules, host connectivity, replication options, and subscription design standards.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Controller refresh model, HA topology, DFMs, NVRAM, and connectivity.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Pure1, True Forward capacity, VMware, backup tools, and REST API.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, build baseline, and subscription checklist.</span></a>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evergreen//Forever</td>
+<td>Base subscription — non-disruptive Ever Modern controller refresh every 3 years, Purity upgrades, and support</td>
+</tr>
+<tr>
+<td>Evergreen//Flex</td>
+<td>Adds non-disruptive capacity and blade swap flexibility for FlashBlade</td>
+</tr>
+<tr>
+<td>Evergreen//One</td>
+<td>STaaS consumption model — Pure owns the hardware; covered separately</td>
+</tr>
+</tbody>
+</table>
 <pre class="mermaid"><code>graph LR
-  A["FlashArray Gen N\n(current)"] --&gt;|"Non-disruptive\nhardware swap"| B["FlashArray Gen N+1\n(upgraded blades/controllers)"]
+  A["FlashArray Gen N\n(current)"] --&gt;|"Non-disruptive\nhardware swap"| B["FlashArray Gen N+1\n(upgraded controllers)"]
   B --&gt;|"Evergreen//Forever"| C["FlashArray Gen N+2"]
   A &amp; B &amp; C --&gt; DATA[("Data — always online\nno migration required")]
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
   classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
   class A,B,C ctrl
   class DATA store</code></pre>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p>FlashArray under Evergreen runs active-active dual controllers. Both controllers handle read and write I/O simultaneously; on controller failure, all I/O shifts to the surviving controller within milliseconds with no host-visible interruption (assuming redundant host paths).</p>
-<p><strong>Non-Disruptive Controller Refresh (NDCR)</strong> — the Ever Modern process — allows Pure to replace one controller at a time while the other continues serving I/O. The process is:</p>
-<ol>
-<li>Failover all I/O to controller 1</li>
-<li>Remove controller 0, install new-generation controller 0</li>
-<li>Resync controller 0, failover I/O to controller 0</li>
-<li>Remove controller 1, install new-generation controller 1</li>
-<li>Resync controller 1, restore active-active operation</li>
-</ol>
-<p>The entire process is non-disruptive to hosts provided multipathing is correctly configured on all connected hosts.</p>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<p>FlashArray supports multiple host connectivity protocols:</p>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Fibre Channel (FC)</td>
-<td>Block storage for VMware, bare-metal, and mission-critical applications requiring dedicated SAN fabric</td>
-</tr>
-<tr>
-<td>iSCSI</td>
-<td>Block storage over IP networks; lower cost than FC with good performance at 10/25GbE</td>
-</tr>
-<tr>
-<td>NVMe/FC</td>
-<td>NVMe over Fibre Channel for lowest latency block workloads; requires NVMe-capable HBAs</td>
-</tr>
-<tr>
-<td>NVMe/RoCE</td>
-<td>NVMe over RDMA Converged Ethernet; high-throughput, low-latency block over 25/100GbE</td>
-</tr>
-<tr>
-<td>NVMe/TCP</td>
-<td>NVMe over standard TCP/IP; broadest compatibility without requiring specialised NICs or fabric</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Replication</strong></p>
-<ul>
-<li><strong>ActiveCluster</strong> — synchronous replication between two FlashArray systems; RPO=0, host-transparent failover via a mediator quorum service; requires stretched fabric or IP connectivity between sites</li>
-<li><strong>Async replication</strong> — snapshot-based asynchronous replication to a remote FlashArray with configurable RPO intervals</li>
-</ul>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>FlashArray — Overview - Chris KB</title>
+        <title>Evergreen — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FlashArray — Overview · Chris KB">
+  <meta property="og:title" content="Evergreen — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FlashArray — Overview · Chris KB">
+  <meta name="twitter:title" content="Evergreen — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#flasharray-overview" class="md-skip">
+        <a href="#evergreen-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FlashArray — Overview
+              Evergreen — Design Standards
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#activecluster-topology" class="md-nav__link">
+  <a href="#naming-conventions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ActiveCluster Topology
+        Naming Conventions
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#build-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Build Baseline
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
+  <a href="#subscription-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        HA Topology
+        Subscription Checklist
       
     </span>
   </a>
@@ -1102,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
+  <a href="#controller-refresh-pre-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Connectivity
+        Controller Refresh Pre-checks
       
     </span>
   </a>
@@ -1132,144 +1132,110 @@
 
 
 
-<h1 id="flasharray-overview">FlashArray — Overview<a class="headerlink" href="#flasharray-overview" title="Permanent link">&para;</a></h1>
-<h2 id="activecluster-topology">ActiveCluster Topology<a class="headerlink" href="#activecluster-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  H1(["ESXi-01"]) &amp; H2(["ESXi-02"]) --&gt; FabA["FC Fabric A"] &amp; FabB["FC Fabric B"]
-  H3(["ESXi-03"]) &amp; H4(["ESXi-04"]) --&gt; FabA &amp; FabB
-  FabA &amp; FabB --&gt; FA_A["FlashArray Site A\nCT0 · CT1"]
-  FabA &amp; FabB --&gt; FA_B["FlashArray Site B\nCT0 · CT1"]
-  FA_A &lt;--&gt;|"ActiveCluster\nsync replication"| FA_B
-  FA_A &amp; FA_B -.-&gt;|"heartbeat"| MED(["Purity Mediator"])
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef med fill:#b45309,stroke:#92400e,color:#fff
-  class FA_A,FA_B ctrl
-  class FabA,FabB net
-  class H1,H2,H3,H4 host
-  class MED med</code></pre>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS. It is purpose-built for block workloads — databases, virtualisation, and latency-sensitive applications — and is designed around three core principles: all-flash always (no spinning disk tiering), active-active dual-controller high availability with no single point of failure, and non-disruptive operations including upgrades, hardware replacement, and capacity expansion.</p>
-<p>FlashArray ships in three product lines:</p>
-<ul>
-<li><strong>//X series</strong> — NVMe-based, highest performance; targets Tier-1 databases and NVMe/FC or NVMe/RoCE workloads</li>
-<li><strong>//C series</strong> — QLC NAND, capacity-optimised; targets secondary workloads, backup staging, and dev/test at lower cost per TB</li>
-<li><strong>//E series</strong> — Maximum density with high-capacity QLC drives; targets large-scale consolidation at the lowest $/TB</li>
-</ul>
-<p>All models share the same Purity//FA OS, the same CLI and REST API surface, and the same operational model.</p>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌─────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                     FlashArray Chassis                              │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                     │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌────────────────────┐  NVMe fabric  ┌────────────────────┐       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │     CT0            ├───────────────┤     CT1            │       │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  (Controller 0)    │  mirror/sync  │  (Controller 1)    │       │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │                    │               │                    │       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  │  FC / iSCSI / NVMe │               │  FC / iSCSI / NVMe │       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  └─────────┬──────────┘               └──────────┬─────────┘       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │            │                                     │                 │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  ┌─────────▼─────────────────────────────────────▼─────────┐       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │                    NVMe / SSD Drive Shelf                │       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  └──────────────────────────────────────────────────────────┘       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  └──────────────┬────────────────────────────────┬────────────────────┘
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                 │ FC / NVMe-oF / iSCSI            │ FC / NVMe-oF / iSCSI
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        ┌────────▼────────┐                ┌───────▼─────────┐
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        │   FC Switch A   │                │   FC Switch B   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        │  (Fabric A)     │                │  (Fabric B)     │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        └────────┬────────┘                └───────┬─────────┘
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                 │                                 │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>         ┌───────▼──────────────────────────────────▼──────┐
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>         │  ESXi-01   ESXi-02   DB-01   DB-02   APP-01     │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>         │   HBA0      HBA0     HBA0    HBA0    HBA0       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>         │   HBA1      HBA1     HBA1    HBA1    HBA1       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>         │  (Fabric A) paths ──── (Fabric B) paths         │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>         └─────────────────────────────────────────────────┘
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                         Host Layer (MPIO / ALUA)
-</code></pre></div>
-<p>FlashArray operates in an active-active dual-controller configuration. Both CT0 and CT1 serve host I/O simultaneously — there is no standby controller. Volume ownership is distributed across both controllers, and load balancing occurs automatically via ALUA (Asymmetric Logical Unit Access).</p>
-<p><strong>Failover behaviour:</strong></p>
-<ol>
-<li>If one controller fails (hardware fault, NDU restart, or Purity upgrade), the surviving controller takes ownership of all volumes within seconds.</li>
-<li>Hosts with proper multipathing (at least two active paths, one to each controller) experience no I/O interruption — the multipath driver promotes the surviving paths immediately.</li>
-<li>The failed controller reboots automatically and rejoins the active-active pair once healthy; volume ownership rebalances back.</li>
-<li>There is no manual intervention required for controller failover or rejoin under normal circumstances.</li>
-</ol>
-<p><strong>Requirements for zero-impact failover:</strong></p>
-<ul>
-<li>Every host must have at least two host bus adapters (HBAs) or NICs connected to the array, one per controller</li>
-<li>Fabric zoning (FC) or iSCSI network design must ensure paths reach both CT0 and CT1</li>
-<li>Host multipath driver (e.g., HPE 3PAR MPIO, native MPIO on Windows, DM-Multipath on Linux) must be active and configured for ALUA</li>
-</ul>
-<pre class="mermaid"><code>flowchart LR
-  subgraph "Host MPIO"
-    P0["Path 0\nHBA0 → Fabric A → CT0\n(Active / Optimised)"]
-    P1["Path 1\nHBA1 → Fabric B → CT1\n(Active / Non-Optimised)"]
-  end
-
-  subgraph "FlashArray"
-    CT0["CT0 — volume owner\n(preferred path)"]
-    CT1["CT1 — secondary\n(ALUA non-optimised)"]
-    CT0 &lt;--&gt;|"NVMe mirror"| CT1
-  end
-
-  P0 --&gt; CT0
-  P1 --&gt; CT1
-
-  EVENT["CT0 fails or NDU restarts"]
-  CT0 -.-&gt;|"ownership migrates"| CT1
-  EVENT --&gt; CT1
-  P0 -.-&gt;|"MPIO promotes P1\nas Active/Optimised"| P1</code></pre>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
+<h1 id="evergreen-design-standards">Evergreen — Design Standards<a class="headerlink" href="#evergreen-design-standards" title="Permanent link">&para;</a></h1>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Protocol</th>
-<th>Media</th>
-<th>Port Speed</th>
-<th>Notes</th>
+<th>Object</th>
+<th>Pattern</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>FC</td>
-<td>Fibre Channel</td>
-<td>16 Gb / 32 Gb</td>
-<td>Traditional SAN fabric; requires FC switches and zoning</td>
+<td>Volume</td>
+<td><code>&lt;env&gt;-&lt;app&gt;-&lt;vol##&gt;</code></td>
+<td><code>prod-oracle-vol01</code>, <code>dev-sqldb-vol02</code></td>
 </tr>
 <tr>
-<td>iSCSI</td>
-<td>Ethernet</td>
-<td>10 GbE / 25 GbE</td>
-<td>IP-SAN; jumbo frames (MTU 9000) recommended</td>
+<td>Host</td>
+<td><code>&lt;hostname&gt;</code> (match OS hostname exactly)</td>
+<td><code>esxi-prod-01</code>, <code>rhel-app-04</code></td>
 </tr>
 <tr>
-<td>NVMe/FC</td>
-<td>Fibre Channel</td>
-<td>32 Gb</td>
-<td>NVMe-oF over FC fabric; requires NVMe-capable HBAs and FC switches</td>
+<td>Host Group</td>
+<td><code>&lt;env&gt;-&lt;cluster&gt;</code></td>
+<td><code>prod-esxi-cluster</code>, <code>dev-rhel-cluster</code></td>
 </tr>
 <tr>
-<td>NVMe/RoCE</td>
-<td>Ethernet (RoCE v2)</td>
-<td>25 GbE / 100 GbE</td>
-<td>NVMe-oF over RDMA-capable Ethernet; requires RoCE-capable NICs and switches</td>
+<td>Snapshot</td>
+<td><code>&lt;volname&gt;.&lt;date&gt;</code> (auto-generated by schedule)</td>
+<td><code>prod-oracle-vol01.2026-05-06</code></td>
 </tr>
 <tr>
-<td>NVMe/TCP</td>
-<td>Ethernet</td>
-<td>25 GbE / 100 GbE</td>
-<td>NVMe-oF over standard TCP/IP; no special fabric requirements</td>
+<td>Protection Group</td>
+<td><code>&lt;env&gt;-&lt;app&gt;-pg</code></td>
+<td><code>prod-oracle-pg</code>, <code>prod-sqldb-pg</code></td>
+</tr>
+<tr>
+<td>Volume Group</td>
+<td><code>&lt;env&gt;-&lt;app&gt;-vg</code></td>
+<td><code>prod-sap-vg</code></td>
+</tr>
+<tr>
+<td>Pod (ActiveCluster)</td>
+<td><code>&lt;env&gt;-&lt;app&gt;-pod</code></td>
+<td><code>prod-oracle-pod</code></td>
+</tr>
+<tr>
+<td>Replication target</td>
+<td><code>remote-&lt;sitecode&gt;</code></td>
+<td><code>remote-lon02</code></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Network requirements:</strong></p>
+<p><strong>Rules:</strong></p>
 <ul>
-<li>Management network: dedicated 1 GbE or 10 GbE; accessible from admin workstations and Pure1 cloud</li>
-<li>Replication network: 10 GbE minimum; dedicated VLAN recommended for ActiveCluster and async replication traffic</li>
-<li>iSCSI data network: MTU 9000 (jumbo frames) end-to-end including host NICs and switch uplinks</li>
-<li>Pure1 phone-home: outbound HTTPS (port 443) to <code>*.purestorage.com</code>; can traverse a proxy</li>
+<li>Use lowercase letters, numbers, and hyphens only — no underscores, dots (except snapshot convention), or spaces in object names</li>
+<li>Keep names short enough to be identifiable at a glance in CLI output</li>
+<li>Apply naming at provisioning time — renaming live volumes is disruptive in some automation contexts</li>
 </ul>
+<h2 id="build-baseline">Build Baseline<a class="headerlink" href="#build-baseline" title="Permanent link">&para;</a></h2>
+<p><strong>Minimum Purity Version</strong></p>
+<p>All arrays under an Evergreen subscription must run a Purity//FA version within the Pure-supported upgrade path for the current controller generation. Check the Pure compatibility matrix before any upgrade or controller refresh engagement. Stay within two minor versions of the latest recommended release.</p>
+<p><strong>Data Reduction Target</strong></p>
+<ul>
+<li>Minimum expected data reduction ratio: <strong>4:1</strong> (before committing to a usable capacity tier)</li>
+<li>If actual data reduction falls below the contractual guarantee, Pure provides additional capacity at no charge — document the contracted ratio in the subscription records</li>
+<li>Enable deduplication and compression on all volumes; disable only for pre-compressed data (video, encrypted archives)</li>
+</ul>
+<p><strong>Replication Configuration</strong></p>
+<ul>
+<li>All Tier-1 production volumes must be members of a protection group with replication to the DR site</li>
+<li>Async replication RPO: defined per application, typically 1–4 hours; document and review annually against business requirements</li>
+<li>ActiveCluster (synchronous) required for applications with RPO=0; confirm mediator deployment and quorum before go-live</li>
+</ul>
+<p><strong>Volume Configuration Standards</strong></p>
+<ul>
+<li>Set volume size at provisioned value (thin provisioning is always active)</li>
+<li>Assign all volumes to host groups, not directly to individual hosts — supports non-disruptive host addition</li>
+<li>Do not leave unattached volumes; clean up or document intentionally unattached volumes in the CMDB</li>
+</ul>
+<h2 id="subscription-checklist">Subscription Checklist<a class="headerlink" href="#subscription-checklist" title="Permanent link">&para;</a></h2>
+<p>Use at subscription start, on renewal, and after a True Forward capacity change:</p>
+<ul>
+<li>[ ] Verify current used capacity vs. entitled capacity in Pure1 — confirm no overage</li>
+<li>[ ] Confirm the controller generation matches the current subscription tier entitlement</li>
+<li>[ ] Review the controller support window — schedule the Ever Modern refresh at least 60 days before the window closes</li>
+<li>[ ] Confirm Purity//FA version is within the supported range for the current controller generation</li>
+<li>[ ] Verify data reduction ratio matches or exceeds the contracted guarantee; flag any shortfall to the Pure account team</li>
+<li>[ ] Confirm all Tier-1 protection groups are replicating successfully and lag is within defined RPO</li>
+<li>[ ] Schedule the annual True Forward review with the Pure account team to align committed capacity with actual growth</li>
+<li>[ ] Confirm Pure1 phone-home is active and support tunnel is enabled for all arrays in the subscription</li>
+<li>[ ] Review and update CMDB records: controller generation, serial numbers, subscription tier, renewal date</li>
+</ul>
+<h2 id="controller-refresh-pre-checks">Controller Refresh Pre-checks<a class="headerlink" href="#controller-refresh-pre-checks" title="Permanent link">&para;</a></h2>
+<p>Before every Ever Modern controller upgrade:</p>
+<ol>
+<li>Confirm Purity software version is within the supported range for the target controller generation (Pure compatibility matrix)</li>
+<li>Validate all host paths are redundant and multipathing is active on every connected host</li>
+<li>Confirm ActiveCluster mediator is reachable and pods are in sync before the upgrade window</li>
+<li>Pause or validate replication schedules so lag does not trigger alerts during the upgrade</li>
+<li>Engage Pure Support to schedule and lead the non-disruptive controller upgrade (Pure performs the swap)</li>
+<li>Monitor host I/O during upgrade with <code>purearray monitor</code> to confirm no latency impact</li>
+<li>After upgrade, verify all hardware components are healthy, all host paths are restored, and replication pods have resumed</li>
+</ol>
 
 
 

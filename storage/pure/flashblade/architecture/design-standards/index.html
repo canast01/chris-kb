@@ -21,7 +21,7 @@
     
     
       
-        <title>FlashArray — Standards - Chris KB</title>
+        <title>FlashBlade — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FlashArray — Standards · Chris KB">
+  <meta property="og:title" content="FlashBlade — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FlashArray — Standards · Chris KB">
+  <meta name="twitter:title" content="FlashBlade — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#flasharray-standards" class="md-skip">
+        <a href="#flashblade-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FlashArray — Standards
+              FlashBlade — Design Standards
             
           </span>
         </div>
@@ -1132,7 +1132,7 @@
 
 
 
-<h1 id="flasharray-standards">FlashArray — Standards<a class="headerlink" href="#flasharray-standards" title="Permanent link">&para;</a></h1>
+<h1 id="flashblade-design-standards">FlashBlade — Design Standards<a class="headerlink" href="#flashblade-design-standards" title="Permanent link">&para;</a></h1>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1144,49 +1144,54 @@
 </thead>
 <tbody>
 <tr>
-<td>Volume</td>
-<td><code>&lt;env&gt;-&lt;app&gt;-&lt;function&gt;-&lt;seq&gt;</code></td>
-<td><code>prod-oracle-data-01</code></td>
+<td>Filesystem</td>
+<td><code>&lt;env&gt;-&lt;team&gt;-&lt;purpose&gt;</code></td>
+<td><code>prod-ml-training-data</code></td>
 </tr>
 <tr>
-<td>Volume (boot)</td>
-<td><code>&lt;env&gt;-&lt;hostname&gt;-boot</code></td>
-<td><code>prod-esxi01-boot</code></td>
+<td>Filesystem (backup)</td>
+<td><code>&lt;env&gt;-&lt;source_system&gt;-&lt;tier&gt;</code></td>
+<td><code>prod-veeam-daily</code></td>
 </tr>
 <tr>
-<td>Host</td>
-<td><code>&lt;hostname&gt;</code> (match server hostname exactly)</td>
-<td><code>prod-esxi-01</code></td>
+<td>S3 bucket</td>
+<td><code>&lt;env&gt;-&lt;team&gt;-&lt;purpose&gt;</code> (lowercase, no underscores)</td>
+<td><code>prod-analytics-raw</code></td>
 </tr>
 <tr>
-<td>Host group</td>
-<td><code>&lt;env&gt;-&lt;cluster&gt;</code></td>
-<td><code>prod-vcenter-cluster01</code></td>
+<td>Object store account</td>
+<td><code>&lt;team&gt;</code> or <code>&lt;application&gt;</code></td>
+<td><code>ml-platform</code></td>
 </tr>
 <tr>
-<td>Protection group (local)</td>
-<td><code>&lt;env&gt;-&lt;app&gt;-pg</code></td>
-<td><code>prod-oracle-pg</code></td>
+<td>Object store user</td>
+<td><code>&lt;service_account_name&gt;</code></td>
+<td><code>svc-veeam-backup</code></td>
 </tr>
 <tr>
-<td>Protection group (remote)</td>
-<td><code>&lt;env&gt;-&lt;app&gt;-pg-to-&lt;remote&gt;</code></td>
-<td><code>prod-oracle-pg-to-dr</code></td>
+<td>NFS export path</td>
+<td><code>/&lt;env&gt;/&lt;team&gt;/&lt;purpose&gt;</code></td>
+<td><code>/prod/ml/training-data</code></td>
 </tr>
 <tr>
-<td>Pod (ActiveCluster)</td>
-<td><code>&lt;app&gt;-pod</code></td>
-<td><code>oracle-pod</code></td>
+<td>SMB share</td>
+<td><code>&lt;ENV&gt;-&lt;TEAM&gt;-&lt;PURPOSE&gt;</code></td>
+<td><code>PROD-ANALYTICS-SHARE</code></td>
 </tr>
 <tr>
-<td>Snapshot (on-demand)</td>
-<td><code>&lt;volname&gt;.&lt;purpose&gt;.&lt;date&gt;</code></td>
-<td><code>prod-oracle-data-01.premigration.20260501</code></td>
+<td>Snapshot (filesystem)</td>
+<td><code>&lt;fsname&gt;.&lt;purpose&gt;.&lt;date&gt;</code></td>
+<td><code>prod-ml-training-data.weekly.20260501</code></td>
+</tr>
+<tr>
+<td>Replica link</td>
+<td><code>&lt;source_fs&gt;-to-&lt;remote&gt;</code></td>
+<td><code>prod-ml-training-data-to-dr</code></td>
 </tr>
 <tr>
 <td>Array name</td>
-<td><code>&lt;site&gt;-fa-&lt;seq&gt;</code></td>
-<td><code>lon-fa-01</code></td>
+<td><code>&lt;site&gt;-fb-&lt;seq&gt;</code></td>
+<td><code>lon-fb-01</code></td>
 </tr>
 </tbody>
 </table>
@@ -1200,82 +1205,78 @@
 </thead>
 <tbody>
 <tr>
-<td>Usable capacity</td>
-<td>Account for effective capacity after deduplication and compression — Pure1 provides a workload-specific data reduction estimate; typical all-flash workloads achieve 3:1 to 5:1 effective</td>
+<td>Minimum blades</td>
+<td>3 blades minimum for production redundancy (parity can tolerate 1 blade loss)</td>
 </tr>
 <tr>
-<td>Raw drive capacity</td>
-<td>Size raw capacity so that after a single drive failure and rebuild, usable headroom remains above 70%</td>
+<td>Scale-out</td>
+<td>Add blades in the same chassis up to the chassis maximum; add chassis for larger deployments</td>
 </tr>
 <tr>
-<td>IOPS</td>
-<td>FlashArray //X: up to 2M+ IOPS per array depending on model; verify per-model datasheet for your workload block size</td>
+<td>Per-blade capacity</td>
+<td>Varies by blade model: FlashBlade//S 500 = 500 TB usable per blade</td>
 </tr>
 <tr>
-<td>Latency</td>
-<td>Sub-millisecond (typically 100–300 µs) for random 4K reads at normal utilisation; NVMe//X models achieve sub-100 µs</td>
+<td>Aggregate throughput</td>
+<td>Scales linearly with blades — each blade adds to aggregate bandwidth; a 10-blade FlashBlade//S delivers 90+ GB/s</td>
 </tr>
 <tr>
-<td>Maximum volumes</td>
-<td>Up to 500,000 volumes per array depending on model</td>
+<td>Maximum filesystem size</td>
+<td>Up to 4 PB per filesystem (configuration-dependent)</td>
 </tr>
 <tr>
-<td>Maximum hosts</td>
-<td>Up to 10,000 host entries per array</td>
+<td>S3 bucket limits</td>
+<td>No hard limit on bucket count; object count scales to billions per bucket</td>
 </tr>
 <tr>
-<td>ActiveCluster</td>
-<td>Maximum 5 ms round-trip time between arrays for synchronous replication</td>
-</tr>
-<tr>
-<td>Controller upgrade</td>
-<td>Evergreen controller upgrades do not require capacity changes — data stays in place</td>
+<td>Data reduction</td>
+<td>Inline dedup + compression; backup workloads achieve 2:1–3:1; AI/ML raw data typically 1:1 (incompressible)</td>
 </tr>
 </tbody>
 </table>
 <h2 id="build-baseline">Build Baseline<a class="headerlink" href="#build-baseline" title="Permanent link">&para;</a></h2>
-<p>Required settings to configure on every new FlashArray before it enters production:</p>
+<p>Required settings to configure on every new FlashBlade before production:</p>
 <ul>
-<li>[ ] Set array name to match naming convention (<code>purearray setattr --name &lt;name&gt;</code>)</li>
-<li>[ ] Configure DNS servers (<code>puredns setattr --domain &lt;domain&gt; --nameservers &lt;ip1&gt;,&lt;ip2&gt;</code>)</li>
-<li>[ ] Configure NTP servers (<code>purentpserver list</code> / <code>purentpserver add &lt;server&gt;</code>)</li>
-<li>[ ] Set timezone (<code>purearray setattr --timezone &lt;tz&gt;</code>)</li>
+<li>[ ] Set array name to match naming convention</li>
+<li>[ ] Configure DNS servers and domain</li>
+<li>[ ] Configure NTP servers and validate time sync</li>
+<li>[ ] Set timezone</li>
 <li>[ ] Configure syslog forwarding to central log aggregator</li>
-<li>[ ] Configure SMTP alert relay (<code>puresmtp create --username &lt;&gt; --password &lt;&gt; --relay-host &lt;&gt; --sender-domain &lt;&gt; default</code>)</li>
-<li>[ ] Set array-wide email alert recipients (<code>purealert create --email &lt;addr&gt; &lt;name&gt;</code>)</li>
-<li>[ ] Join Active Directory or configure LDAP for admin authentication</li>
-<li>[ ] Create local break-glass admin account with strong password stored in PAM vault</li>
-<li>[ ] Disable default <code>pureuser</code> account after AD/LDAP is validated</li>
-<li>[ ] Configure SNMP v3 community or trap destination if SNMP monitoring is required</li>
+<li>[ ] Configure SMTP alert relay and admin email alert recipients</li>
+<li>[ ] Join Active Directory (for SMB authentication and admin LDAP)</li>
+<li>[ ] Configure LDAP for NFS user/group ID mapping if required</li>
+<li>[ ] Create local break-glass admin account; store credentials in PAM vault</li>
+<li>[ ] Disable default admin account after AD/LDAP is validated</li>
 <li>[ ] Enable Pure1 phone-home and verify connectivity</li>
 <li>[ ] Configure management interface on dedicated management VLAN</li>
-<li>[ ] Configure replication interfaces on dedicated replication VLAN</li>
-<li>[ ] Set Safe Mode (immutable snapshots) — engage Pure Support to enable</li>
-<li>[ ] Apply SSL certificate from internal CA or public CA on management interface</li>
-<li>[ ] Document array serial number, management IP, Purity version, and FC/iSCSI port WWNs/IQNs in CMDB</li>
+<li>[ ] Configure data interfaces on dedicated data VLANs (separate NFS, SMB, S3 as needed)</li>
+<li>[ ] Configure replication interface on a dedicated replication VLAN</li>
+<li>[ ] Configure NFS export policies to restrict client IP access to authorised subnets (no <code>*</code> in production)</li>
+<li>[ ] Configure SMB share-level permissions and integrate with AD security groups</li>
+<li>[ ] Enable SafeMode (immutable snapshots) — engage Pure Support to enable</li>
+<li>[ ] Apply SSL certificate from internal CA on management interface</li>
+<li>[ ] Document blade count, chassis serial, management IP, Purity//FB version, and network VIPs in CMDB</li>
 </ul>
 <h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
-<p>Ordered steps for initial FlashArray setup:</p>
+<p>Ordered steps for initial FlashBlade setup:</p>
 <ol>
-<li><strong>Rack and cable</strong> — install chassis, connect power (dual PSU to separate PDUs), connect management Ethernet, connect data fabric (FC or iSCSI), connect replication Ethernet</li>
-<li><strong>Initial CLI access</strong> — connect serial console or management Ethernet; access Purity setup wizard at first boot</li>
-<li><strong>Set array name and network</strong> — assign management IP, gateway, and DNS; set array name and timezone</li>
-<li><strong>Activate licensing</strong> — register the array in Pure1 using the array serial number to activate the license and enable Pure1 monitoring</li>
-<li><strong>Configure NTP</strong> — add at least two NTP servers; verify time sync before proceeding</li>
-<li><strong>Configure alert notifications</strong> — set SMTP relay and add admin email addresses for alerts</li>
-<li><strong>Configure syslog</strong> — forward to central SIEM or log aggregator</li>
-<li><strong>Configure authentication</strong> — join AD or configure LDAP; create role-mapped admin groups; disable default <code>pureuser</code> once validated</li>
-<li><strong>Apply security hardening</strong> — see security section for ordered hardening steps</li>
-<li><strong>Zone FC fabric</strong> — create initiator zones for each host HBA to array target ports (single-initiator, single-target per zone); or configure iSCSI discovery portals</li>
-<li><strong>Register hosts</strong> — create host entries and add WWNs or IQNs: <code>purehost create &lt;hostname&gt;</code>, <code>purehost setifs --wwn &lt;wwn&gt; &lt;hostname&gt;</code></li>
-<li><strong>Create host groups</strong> — group hosts into clusters: <code>purehgroup create &lt;hgroupname&gt;</code>, <code>purehgroup addhosts --hostlist &lt;hosts&gt; &lt;hgroupname&gt;</code></li>
-<li><strong>Provision volumes</strong> — create volumes using naming convention: <code>purevol create --size &lt;size&gt; &lt;volname&gt;</code></li>
-<li><strong>Connect volumes</strong> — connect volumes to host group: <code>purehgroup addvol --vollist &lt;volname&gt; &lt;hgroupname&gt;</code></li>
-<li><strong>Verify host connectivity</strong> — on each host, rescan HBA bus and confirm volumes are visible via multipath driver</li>
-<li><strong>Configure protection groups</strong> — create protection group, add volumes, set snapshot schedule and replication targets</li>
-<li><strong>Enable replication</strong> (if required) — configure connection to remote array; add replication target to protection group</li>
-<li><strong>Configure ActiveCluster</strong> (if required) — create pod, stretch to remote array, move volumes into pod</li>
-<li><strong>Validate and document</strong> — run <code>purearray list</code>, <code>puredrive list</code>, <code>purealert list</code>; document build in CMDB and handover checklist</li>
+<li><strong>Rack and cable</strong> — install chassis, connect dual power supplies to separate PDUs, connect management Ethernet, connect data Ethernet (10/25/100 GbE), connect replication Ethernet</li>
+<li><strong>Initial access</strong> — connect to management IP via browser or SSH; complete initial setup wizard</li>
+<li><strong>Set array name and timezone</strong> — configure array name to match naming convention; set timezone and NTP</li>
+<li><strong>Register in Pure1</strong> — register FlashBlade serial number in Pure1 to activate licensing and monitoring</li>
+<li><strong>Configure data interfaces</strong> — assign IP addresses to data VIPs for NFS, SMB, and S3; bind to correct VLANs</li>
+<li><strong>Configure replication interface</strong> — assign IP to replication VLAN; verify reachability to DR site</li>
+<li><strong>Configure alert notifications</strong> — SMTP relay and admin email addresses</li>
+<li><strong>Configure syslog forwarding</strong> — forward to SIEM or log aggregator</li>
+<li><strong>Configure authentication</strong> — join AD for SMB and admin auth; configure LDAP for NFS UID/GID mapping; create role-mapped admin groups</li>
+<li><strong>Apply security hardening</strong> — see <a href="../../security/">Security</a></li>
+<li><strong>Create filesystems</strong> — provision using naming convention; set capacity limits per team or workload</li>
+<li><strong>Configure NFS exports</strong> — set export policies with source IP restrictions; configure NFSv4.1 pNFS if required</li>
+<li><strong>Configure SMB shares</strong> — set share-level permissions mapped to AD groups; enable SMB encryption if required</li>
+<li><strong>Create object store accounts and buckets</strong> — create per-team or per-application S3 accounts; create buckets with lifecycle policies</li>
+<li><strong>Configure snapshot schedules</strong> — create per-filesystem snapshot policies with appropriate retention aligned with application RPO</li>
+<li><strong>Configure replication</strong> — set up replica links to the remote FlashBlade for ActiveDR; verify lag is within RPO</li>
+<li><strong>Validate and document</strong> — confirm all filesystems, exports, and buckets are accessible; run <code>purefb alert list</code> and <code>purefb blade list</code>; record build in CMDB</li>
 </ol>
 
 
