@@ -1,6 +1,22 @@
-# FlashArray — Overview
+# FlashArray — Architecture
 
-## ActiveCluster Topology
+<div class="kb-summary">
+Architecture reference for Pure Storage FlashArray. Covers the dual-controller HA model, product lines (//X/C/E), host connectivity protocols (FC, iSCSI, NVMe-oF), Purity data services, ActiveCluster synchronous replication, and design standards.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>HA topology, Purity data services, ActiveCluster, and protection groups.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>VMware, backup tools, Pure1, authentication, and REST API.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, sizing, build baseline, and configuration checklist.</span></a>
+</div>
+
+| Model | Flash Type | Target Workload |
+|---|---|---|
+| FlashArray //X | TLC NVMe | Tier-1 databases, VDI, NVMe/FC or NVMe/RoCE latency-sensitive block |
+| FlashArray //C | QLC NVMe | Secondary storage, backup staging, dev/test at lower cost per TB |
+| FlashArray //E | High-density QLC | Large-scale consolidation at the lowest $/TB |
+
+All models run Purity//FA OS and share the same dual-controller active-active HA model, CLI, and REST API surface.
 
 ```mermaid
 graph LR
@@ -19,111 +35,3 @@ graph LR
   class H1,H2,H3,H4 host
   class MED med
 ```
-
-## Overview
-
-Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS. It is purpose-built for block workloads — databases, virtualisation, and latency-sensitive applications — and is designed around three core principles: all-flash always (no spinning disk tiering), active-active dual-controller high availability with no single point of failure, and non-disruptive operations including upgrades, hardware replacement, and capacity expansion.
-
-FlashArray ships in three product lines:
-
-- **//X series** — NVMe-based, highest performance; targets Tier-1 databases and NVMe/FC or NVMe/RoCE workloads
-- **//C series** — QLC NAND, capacity-optimised; targets secondary workloads, backup staging, and dev/test at lower cost per TB
-- **//E series** — Maximum density with high-capacity QLC drives; targets large-scale consolidation at the lowest $/TB
-
-All models share the same Purity//FA OS, the same CLI and REST API surface, and the same operational model.
-
-## HA Topology
-
-```
-  ┌─────────────────────────────────────────────────────────────────────┐
-  │                     FlashArray Chassis                              │
-  │                                                                     │
-  │  ┌────────────────────┐  NVMe fabric  ┌────────────────────┐       │
-  │  │     CT0            ├───────────────┤     CT1            │       │
-  │  │  (Controller 0)    │  mirror/sync  │  (Controller 1)    │       │
-  │  │                    │               │                    │       │
-  │  │  FC / iSCSI / NVMe │               │  FC / iSCSI / NVMe │       │
-  │  └─────────┬──────────┘               └──────────┬─────────┘       │
-  │            │                                     │                 │
-  │  ┌─────────▼─────────────────────────────────────▼─────────┐       │
-  │  │                    NVMe / SSD Drive Shelf                │       │
-  │  └──────────────────────────────────────────────────────────┘       │
-  └──────────────┬────────────────────────────────┬────────────────────┘
-                 │ FC / NVMe-oF / iSCSI            │ FC / NVMe-oF / iSCSI
-        ┌────────▼────────┐                ┌───────▼─────────┐
-        │   FC Switch A   │                │   FC Switch B   │
-        │  (Fabric A)     │                │  (Fabric B)     │
-        └────────┬────────┘                └───────┬─────────┘
-                 │                                 │
-         ┌───────▼──────────────────────────────────▼──────┐
-         │  ESXi-01   ESXi-02   DB-01   DB-02   APP-01     │
-         │   HBA0      HBA0     HBA0    HBA0    HBA0       │
-         │   HBA1      HBA1     HBA1    HBA1    HBA1       │
-         │  (Fabric A) paths ──── (Fabric B) paths         │
-         └─────────────────────────────────────────────────┘
-                         Host Layer (MPIO / ALUA)
-```
-
-FlashArray operates in an active-active dual-controller configuration. Both CT0 and CT1 serve host I/O simultaneously — there is no standby controller. Volume ownership is distributed across both controllers, and load balancing occurs automatically via ALUA (Asymmetric Logical Unit Access).
-
-**Failover behaviour:**
-
-1. If one controller fails (hardware fault, NDU restart, or Purity upgrade), the surviving controller takes ownership of all volumes within seconds.
-2. Hosts with proper multipathing (at least two active paths, one to each controller) experience no I/O interruption — the multipath driver promotes the surviving paths immediately.
-3. The failed controller reboots automatically and rejoins the active-active pair once healthy; volume ownership rebalances back.
-4. There is no manual intervention required for controller failover or rejoin under normal circumstances.
-
-**Requirements for zero-impact failover:**
-
-- Every host must have at least two host bus adapters (HBAs) or NICs connected to the array, one per controller
-- Fabric zoning (FC) or iSCSI network design must ensure paths reach both CT0 and CT1
-- Host multipath driver (e.g., HPE 3PAR MPIO, native MPIO on Windows, DM-Multipath on Linux) must be active and configured for ALUA
-
-```mermaid
-flowchart LR
-  subgraph "Host MPIO"
-    P0["Path 0\nHBA0 → Fabric A → CT0\n(Active / Optimised)"]
-    P1["Path 1\nHBA1 → Fabric B → CT1\n(Active / Non-Optimised)"]
-  end
-
-  subgraph "FlashArray"
-    CT0["CT0 — volume owner\n(preferred path)"]
-    CT1["CT1 — secondary\n(ALUA non-optimised)"]
-    CT0 <-->|"NVMe mirror"| CT1
-  end
-
-  P0 --> CT0
-  P1 --> CT1
-
-  EVENT["CT0 fails or NDU restarts"]
-  CT0 -.->|"ownership migrates"| CT1
-  EVENT --> CT1
-  P0 -.->|"MPIO promotes P1\nas Active/Optimised"| P1
-```
-
-## Connectivity
-
-| Protocol | Media | Port Speed | Notes |
-|---|---|---|---|
-| FC | Fibre Channel | 16 Gb / 32 Gb | Traditional SAN fabric; requires FC switches and zoning |
-| iSCSI | Ethernet | 10 GbE / 25 GbE | IP-SAN; jumbo frames (MTU 9000) recommended |
-| NVMe/FC | Fibre Channel | 32 Gb | NVMe-oF over FC fabric; requires NVMe-capable HBAs and FC switches |
-| NVMe/RoCE | Ethernet (RoCE v2) | 25 GbE / 100 GbE | NVMe-oF over RDMA-capable Ethernet; requires RoCE-capable NICs and switches |
-| NVMe/TCP | Ethernet | 25 GbE / 100 GbE | NVMe-oF over standard TCP/IP; no special fabric requirements |
-
-**Network requirements:**
-
-- Management network: dedicated 1 GbE or 10 GbE; accessible from admin workstations and Pure1 cloud
-- Replication network: 10 GbE minimum; dedicated VLAN recommended for ActiveCluster and async replication traffic
-- iSCSI data network: MTU 9000 (jumbo frames) end-to-end including host NICs and switch uplinks
-- Pure1 phone-home: outbound HTTPS (port 443) to `*.purestorage.com`; can traverse a proxy
-
----
-
-## In this section
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>

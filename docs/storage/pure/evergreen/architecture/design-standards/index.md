@@ -1,12 +1,6 @@
-# Evergreen — Standards
-
-> Part of the [Evergreen Architecture](../) reference.
-
----
+# Evergreen — Design Standards
 
 ## Naming Conventions
-
-Consistent naming across all FlashArray objects reduces operational confusion and enables automation.
 
 | Object | Pattern | Example |
 |---|---|---|
@@ -22,36 +16,36 @@ Consistent naming across all FlashArray objects reduces operational confusion an
 **Rules:**
 
 - Use lowercase letters, numbers, and hyphens only — no underscores, dots (except snapshot convention), or spaces in object names
-- Keep names short enough to be identifiable at a glance in CLI output; avoid encoding excessive metadata in the name
+- Keep names short enough to be identifiable at a glance in CLI output
 - Apply naming at provisioning time — renaming live volumes is disruptive in some automation contexts
 
 ## Build Baseline
 
 **Minimum Purity Version**
 
-All arrays under an Evergreen subscription must run a Purity//FA version within the Pure-supported upgrade path for the current controller generation. Check the Pure compatibility matrix before any upgrade or controller refresh engagement. The general recommendation is to stay within two minor versions of the latest recommended release.
+All arrays under an Evergreen subscription must run a Purity//FA version within the Pure-supported upgrade path for the current controller generation. Check the Pure compatibility matrix before any upgrade or controller refresh engagement. Stay within two minor versions of the latest recommended release.
 
 **Data Reduction Target**
 
 - Minimum expected data reduction ratio: **4:1** (before committing to a usable capacity tier)
 - If actual data reduction falls below the contractual guarantee, Pure provides additional capacity at no charge — document the contracted ratio in the subscription records
-- Enable deduplication and compression on all volumes; disable only for pre-compressed data (video, encrypted archives) where reduction provides no benefit
+- Enable deduplication and compression on all volumes; disable only for pre-compressed data (video, encrypted archives)
 
 **Replication Configuration**
 
 - All Tier-1 production volumes must be members of a protection group with replication to the DR site
-- Async replication RPO: defined per application, typically 1–4 hours; document and review against business requirements annually
+- Async replication RPO: defined per application, typically 1–4 hours; document and review annually against business requirements
 - ActiveCluster (synchronous) required for applications with RPO=0; confirm mediator deployment and quorum before go-live
 
 **Volume Configuration Standards**
 
-- Set volume size at provisioned (thin provisioning is always active; do not over-specify to avoid capacity confusion)
-- Assign all volumes to host groups, not directly to individual hosts, even for single-host connections — supports non-disruptive host addition
+- Set volume size at provisioned value (thin provisioning is always active)
+- Assign all volumes to host groups, not directly to individual hosts — supports non-disruptive host addition
 - Do not leave unattached volumes; clean up or document intentionally unattached volumes in the CMDB
 
 ## Subscription Checklist
 
-Use this checklist at subscription start, on renewal, and after a True Forward capacity change:
+Use at subscription start, on renewal, and after a True Forward capacity change:
 
 - [ ] Verify current used capacity vs. entitled capacity in Pure1 — confirm no overage
 - [ ] Confirm the controller generation matches the current subscription tier entitlement
@@ -60,5 +54,17 @@ Use this checklist at subscription start, on renewal, and after a True Forward c
 - [ ] Verify data reduction ratio matches or exceeds the contracted guarantee; flag any shortfall to the Pure account team
 - [ ] Confirm all Tier-1 protection groups are replicating successfully and lag is within defined RPO
 - [ ] Schedule the annual True Forward review with the Pure account team to align committed capacity with actual growth
-- [ ] Confirm Pure1 phonehome is active and support tunnel is enabled for all arrays in the subscription
+- [ ] Confirm Pure1 phone-home is active and support tunnel is enabled for all arrays in the subscription
 - [ ] Review and update CMDB records: controller generation, serial numbers, subscription tier, renewal date
+
+## Controller Refresh Pre-checks
+
+Before every Ever Modern controller upgrade:
+
+1. Confirm Purity software version is within the supported range for the target controller generation (Pure compatibility matrix)
+2. Validate all host paths are redundant and multipathing is active on every connected host
+3. Confirm ActiveCluster mediator is reachable and pods are in sync before the upgrade window
+4. Pause or validate replication schedules so lag does not trigger alerts during the upgrade
+5. Engage Pure Support to schedule and lead the non-disruptive controller upgrade (Pure performs the swap)
+6. Monitor host I/O during upgrade with `purearray monitor` to confirm no latency impact
+7. After upgrade, verify all hardware components are healthy, all host paths are restored, and replication pods have resumed

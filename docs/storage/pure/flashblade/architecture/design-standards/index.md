@@ -1,21 +1,4 @@
-# FlashBlade — Standards
-
-> Part of the [FlashBlade Architecture](../) reference.
-
----
-
-## Sizing Guidelines
-
-| Dimension | Guidance |
-|---|---|
-| Minimum blades | 3 blades minimum for production redundancy (parity can tolerate 1 blade loss) |
-| Scale-out | Add blades in the same chassis up to the chassis maximum; add chassis for larger deployments |
-| Per-blade capacity | Varies by blade model: FlashBlade//S 500 = 500 TB usable per blade |
-| Aggregate throughput | Scales linearly with blades — each blade adds to the aggregate bandwidth; a 10-blade FlashBlade//S delivers 90+ GB/s aggregate |
-| NFS/S3 client count | Hundreds to thousands of concurrent NFS or S3 clients; no hard per-protocol client limit in Purity//FB |
-| Maximum filesystem size | Up to 4 PB per filesystem (configuration-dependent) |
-| S3 bucket limits | No hard limit on bucket count; object count scales to billions per bucket |
-| Data reduction | Inline deduplication and compression; typical backup workloads achieve 2:1–3:1; AI/ML raw data workloads are typically 1:1 (incompressible) |
+# FlashBlade — Design Standards
 
 ## Naming Conventions
 
@@ -32,9 +15,21 @@
 | Replica link | `<source_fs>-to-<remote>` | `prod-ml-training-data-to-dr` |
 | Array name | `<site>-fb-<seq>` | `lon-fb-01` |
 
+## Sizing Guidelines
+
+| Dimension | Guidance |
+|---|---|
+| Minimum blades | 3 blades minimum for production redundancy (parity can tolerate 1 blade loss) |
+| Scale-out | Add blades in the same chassis up to the chassis maximum; add chassis for larger deployments |
+| Per-blade capacity | Varies by blade model: FlashBlade//S 500 = 500 TB usable per blade |
+| Aggregate throughput | Scales linearly with blades — each blade adds to aggregate bandwidth; a 10-blade FlashBlade//S delivers 90+ GB/s |
+| Maximum filesystem size | Up to 4 PB per filesystem (configuration-dependent) |
+| S3 bucket limits | No hard limit on bucket count; object count scales to billions per bucket |
+| Data reduction | Inline dedup + compression; backup workloads achieve 2:1–3:1; AI/ML raw data typically 1:1 (incompressible) |
+
 ## Build Baseline
 
-Required settings to configure on every new FlashBlade before it enters production:
+Required settings to configure on every new FlashBlade before production:
 
 - [ ] Set array name to match naming convention
 - [ ] Configure DNS servers and domain
@@ -52,7 +47,7 @@ Required settings to configure on every new FlashBlade before it enters producti
 - [ ] Configure replication interface on a dedicated replication VLAN
 - [ ] Configure NFS export policies to restrict client IP access to authorised subnets (no `*` in production)
 - [ ] Configure SMB share-level permissions and integrate with AD security groups
-- [ ] Enable Safe Mode (immutable snapshots) — engage Pure Support to enable
+- [ ] Enable SafeMode (immutable snapshots) — engage Pure Support to enable
 - [ ] Apply SSL certificate from internal CA on management interface
 - [ ] Document blade count, chassis serial, management IP, Purity//FB version, and network VIPs in CMDB
 
@@ -61,19 +56,19 @@ Required settings to configure on every new FlashBlade before it enters producti
 Ordered steps for initial FlashBlade setup:
 
 1. **Rack and cable** — install chassis, connect dual power supplies to separate PDUs, connect management Ethernet, connect data Ethernet (10/25/100 GbE), connect replication Ethernet
-2. **Initial access** — connect to management IP via browser or SSH; complete initial setup wizard (set management IP, gateway, DNS)
+2. **Initial access** — connect to management IP via browser or SSH; complete initial setup wizard
 3. **Set array name and timezone** — configure array name to match naming convention; set timezone and NTP
-4. **Register in Pure1** — register the FlashBlade serial number in Pure1 to activate licensing and monitoring
-5. **Configure data interfaces** — assign IP addresses to data VIPs for NFS, SMB, and S3 protocol services; bind to correct VLANs
-6. **Configure replication interface** — assign IP to the replication VLAN; verify reachability to DR site
+4. **Register in Pure1** — register FlashBlade serial number in Pure1 to activate licensing and monitoring
+5. **Configure data interfaces** — assign IP addresses to data VIPs for NFS, SMB, and S3; bind to correct VLANs
+6. **Configure replication interface** — assign IP to replication VLAN; verify reachability to DR site
 7. **Configure alert notifications** — SMTP relay and admin email addresses
 8. **Configure syslog forwarding** — forward to SIEM or log aggregator
-9. **Configure authentication** — join AD for SMB and admin auth; configure LDAP for NFS UID/GID mapping if required; create role-mapped admin groups
+9. **Configure authentication** — join AD for SMB and admin auth; configure LDAP for NFS UID/GID mapping; create role-mapped admin groups
 10. **Apply security hardening** — see [Security](../../security/)
-11. **Create filesystems** — provision filesystems using naming convention; set capacity limits appropriate for each team or workload
-12. **Configure NFS exports** — set export policies with source IP restrictions; configure NFSv4.1 pNFS if required for high-throughput HPC or AI/ML workloads
+11. **Create filesystems** — provision using naming convention; set capacity limits per team or workload
+12. **Configure NFS exports** — set export policies with source IP restrictions; configure NFSv4.1 pNFS if required
 13. **Configure SMB shares** — set share-level permissions mapped to AD groups; enable SMB encryption if required
 14. **Create object store accounts and buckets** — create per-team or per-application S3 accounts; create buckets with lifecycle policies
-15. **Configure snapshot schedules** — create per-filesystem snapshot policies with appropriate retention (daily/weekly/monthly) aligned with application RPO
-16. **Configure replication** (if required) — set up replica links to the remote FlashBlade for ActiveDR; verify lag is within RPO
+15. **Configure snapshot schedules** — create per-filesystem snapshot policies with appropriate retention aligned with application RPO
+16. **Configure replication** — set up replica links to the remote FlashBlade for ActiveDR; verify lag is within RPO
 17. **Validate and document** — confirm all filesystems, exports, and buckets are accessible; run `purefb alert list` and `purefb blade list`; record build in CMDB
