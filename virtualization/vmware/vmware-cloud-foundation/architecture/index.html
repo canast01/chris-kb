@@ -1079,28 +1079,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1122,6 +1100,45 @@
 
 
 <h1 id="vcf-architecture-overview">VCF — Architecture Overview<a class="headerlink" href="#vcf-architecture-overview" title="Permanent link">&para;</a></h1>
+<p>VMware Cloud Foundation (VCF) is a full-stack SDDC platform. SDDC Manager orchestrates vSphere, vSAN, and NSX as a validated, lifecycle-managed unit across deployment domains.</p>
+<table>
+<thead>
+<tr>
+<th>Domain Type</th>
+<th>Purpose</th>
+<th>Components</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management Domain</td>
+<td>Hosts VCF management stack</td>
+<td>SDDC Manager, vCenter, NSX, vSAN</td>
+</tr>
+<tr>
+<td>VI Workload Domain</td>
+<td>General-purpose vSphere workloads</td>
+<td>vCenter, NSX, vSAN (per domain)</td>
+</tr>
+<tr>
+<td>VVF Workload Domain</td>
+<td>Cloud-native / Tanzu workloads</td>
+<td>vCenter, NSX, vSAN + TKGs</td>
+</tr>
+<tr>
+<td>Consolidated Architecture</td>
+<td>Small deployments — management + workload combined</td>
+<td>All on 4 hosts</td>
+</tr>
+</tbody>
+</table>
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>SDDC Manager, deployment domains, BOM, lifecycle management, passwords, certificates, and network pools.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Aria Operations, Aria Automation, Active Directory, NSX Federation, backup, and SIEM.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Management domain sizing, naming conventions, network requirements, password policy, and HCL requirements.</span></a>
+</div>
+
+<hr />
 <h2 id="sddc-stack-architecture">SDDC Stack Architecture<a class="headerlink" href="#sddc-stack-architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
   SDDC["SDDC Manager\n(VCF orchestration)"] --&gt; MGMT["Management Domain\nvCenter · NSX · vSAN"]
@@ -1130,28 +1147,16 @@
   MGMT --&gt; EMH["ESXi Mgmt Hosts\n(4 minimum)"]
   WL1 --&gt; EWH["ESXi Workload Hosts"]
   SDDC --&gt; CLOUD["VMware Cloud\n(optional hybrid)"]
+
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
   classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
   classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+
   class SDDC mgmt
   class MGMT,WL1,WL2 ctrl
   class EMH,EWH host
   class CLOUD cloud</code></pre>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>VMware Cloud Foundation (VCF) is a full-stack SDDC platform that combines vSphere, vSAN, NSX, and SDDC Manager into a single integrated and lifecycle-managed platform.</p>
-<p>Key concepts:
-- <strong>SDDC Manager</strong> is the central orchestrator — it manages workload domains, lifecycle upgrades, password rotation, and certificate management across the entire stack
-- <strong>Management Domain</strong> hosts the VCF management components (vCenter, NSX Manager, SDDC Manager themselves)
-- <strong>Workload Domains</strong> are independently managed vSphere/vSAN/NSX instances provisioned by SDDC Manager for tenant or application workloads
-- <strong>Bill of Materials (BOM)</strong> defines the validated, interoperable versions of all components for a given VCF release</p>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

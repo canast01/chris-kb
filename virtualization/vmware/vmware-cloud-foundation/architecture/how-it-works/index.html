@@ -21,7 +21,7 @@
     
     
       
-        <title>VCF — Architecture Overview - Chris KB</title>
+        <title>VCF — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="VCF — Architecture Overview · Chris KB">
+  <meta property="og:title" content="VCF — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="VCF — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="VCF — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#vcf-architecture-overview" class="md-skip">
+        <a href="#vcf-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              VCF — Architecture Overview
+              VCF — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sddc-stack-architecture" class="md-nav__link">
+  <a href="#sddc-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SDDC Stack Architecture
+        SDDC Manager
       
     </span>
   </a>
@@ -1080,10 +1080,165 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#deployment-domains" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Deployment Domains
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Domains">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#management-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vi-workload-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VI Workload Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vvf-workload-domain-tanzu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VVF Workload Domain (Tanzu)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bill-of-materials-bom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bill of Materials (BOM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lifecycle-management-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle Management (LCM)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lifecycle Management (LCM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upgrade-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bundle-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bundle Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#precheck-validation-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Precheck Validation Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Pools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-commissioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Commissioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ports-and-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ports and Logs
       
     </span>
   </a>
@@ -1110,30 +1265,317 @@
 
 
 
-<h1 id="vcf-architecture-overview">VCF — Architecture Overview<a class="headerlink" href="#vcf-architecture-overview" title="Permanent link">&para;</a></h1>
-<h2 id="sddc-stack-architecture">SDDC Stack Architecture<a class="headerlink" href="#sddc-stack-architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  SDDC["SDDC Manager\n(VCF orchestration)"] --&gt; MGMT["Management Domain\nvCenter · NSX · vSAN"]
-  SDDC --&gt; WL1["Workload Domain I\n(VI workloads)"]
-  SDDC --&gt; WL2["Workload Domain II\n(VVF cloud workloads)"]
-  MGMT --&gt; EMH["ESXi Mgmt Hosts\n(4 minimum)"]
-  WL1 --&gt; EWH["ESXi Workload Hosts"]
-  SDDC --&gt; CLOUD["VMware Cloud\n(optional hybrid)"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-  class SDDC mgmt
-  class MGMT,WL1,WL2 ctrl
-  class EMH,EWH host
-  class CLOUD cloud</code></pre>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>VMware Cloud Foundation (VCF) is a full-stack SDDC platform that combines vSphere, vSAN, NSX, and SDDC Manager into a single integrated and lifecycle-managed platform.</p>
-<p>Key concepts:
-- <strong>SDDC Manager</strong> is the central orchestrator — it manages workload domains, lifecycle upgrades, password rotation, and certificate management across the entire stack
-- <strong>Management Domain</strong> hosts the VCF management components (vCenter, NSX Manager, SDDC Manager themselves)
-- <strong>Workload Domains</strong> are independently managed vSphere/vSAN/NSX instances provisioned by SDDC Manager for tenant or application workloads
-- <strong>Bill of Materials (BOM)</strong> defines the validated, interoperable versions of all components for a given VCF release</p>
+<h1 id="vcf-how-it-works">VCF — How It Works<a class="headerlink" href="#vcf-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="sddc-manager">SDDC Manager<a class="headerlink" href="#sddc-manager" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager is the central orchestrator for VCF. It manages the entire lifecycle of all components — deployment, upgrades, password rotation, certificate management, and inventory — across every workload domain.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workload domain provisioning</td>
+<td>Deploys vCenter, NSX, and vSAN as a validated unit</td>
+</tr>
+<tr>
+<td>Lifecycle Management (LCM)</td>
+<td>Orchestrates upgrades across the full BOM stack</td>
+</tr>
+<tr>
+<td>Password management</td>
+<td>Rotates credentials on all managed accounts on schedule</td>
+</tr>
+<tr>
+<td>Certificate management</td>
+<td>Issues and renews certificates for all components via VMCA or third-party CA</td>
+</tr>
+<tr>
+<td>Network pool management</td>
+<td>Allocates IP ranges for VMkernel adapters during host commissioning</td>
+</tr>
+<tr>
+<td>Inventory</td>
+<td>Single pane of glass for all domains, hosts, and components</td>
+</tr>
+<tr>
+<td>Precheck</td>
+<td>Validates DNS, NTP, certificates, vSAN health, and password status before upgrades</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="deployment-domains">Deployment Domains<a class="headerlink" href="#deployment-domains" title="Permanent link">&para;</a></h2>
+<h3 id="management-domain">Management Domain<a class="headerlink" href="#management-domain" title="Permanent link">&para;</a></h3>
+<p>The Management Domain hosts VCF's own management stack. It is always the first domain deployed and must be healthy before workload domains can be created.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDDC Manager</td>
+<td>VCF orchestration plane</td>
+</tr>
+<tr>
+<td>vCenter (management)</td>
+<td>Manages management domain ESXi hosts</td>
+</tr>
+<tr>
+<td>NSX Manager cluster</td>
+<td>Provides overlay networking for the management domain</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>Storage for management VMs</td>
+</tr>
+</tbody>
+</table>
+<p>Minimum 4 ESXi hosts. Management components (SDDC Manager, vCenter VMs, NSX Manager VMs) all run within this domain.</p>
+<h3 id="vi-workload-domain">VI Workload Domain<a class="headerlink" href="#vi-workload-domain" title="Permanent link">&para;</a></h3>
+<p>VI (Virtual Infrastructure) Workload Domains host general-purpose vSphere workloads. Each domain has its own vCenter and NSX instance, managed by SDDC Manager.</p>
+<ul>
+<li>Isolated failure domain from other workload domains</li>
+<li>Independent vSAN cluster(s) per domain</li>
+<li>NSX instance scoped to the domain (or shared via NSX Federation)</li>
+<li>Up to 15 workload domains per SDDC Manager instance</li>
+</ul>
+<h3 id="vvf-workload-domain-tanzu">VVF Workload Domain (Tanzu)<a class="headerlink" href="#vvf-workload-domain-tanzu" title="Permanent link">&para;</a></h3>
+<p>VVF (VMware vSphere Foundation) Workload Domains add Tanzu Kubernetes Grid Supervisor to a VI domain, enabling containerised workloads alongside VMs.</p>
+<hr />
+<h2 id="bill-of-materials-bom">Bill of Materials (BOM)<a class="headerlink" href="#bill-of-materials-bom" title="Permanent link">&para;</a></h2>
+<p>The BOM defines the validated, interoperable versions of all components for a given VCF release. You cannot mix component versions outside the BOM.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Example (VCF 5.1)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESXi</td>
+<td>8.0 U2</td>
+</tr>
+<tr>
+<td>vCenter</td>
+<td>8.0 U2</td>
+</tr>
+<tr>
+<td>NSX</td>
+<td>4.1.x</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>Embedded in ESXi</td>
+</tr>
+<tr>
+<td>SDDC Manager</td>
+<td>5.1.x</td>
+</tr>
+</tbody>
+</table>
+<p>Check the BOM before any upgrade: <strong>SDDC Manager → Lifecycle Management → Release Notes</strong>.</p>
+<hr />
+<h2 id="lifecycle-management-lcm">Lifecycle Management (LCM)<a class="headerlink" href="#lifecycle-management-lcm" title="Permanent link">&para;</a></h2>
+<p>LCM is the upgrade engine. SDDC Manager downloads bundles from the depot (online or offline), validates compatibility, runs prechecks, and orchestrates rolling upgrades across the stack.</p>
+<h3 id="upgrade-flow">Upgrade Flow<a class="headerlink" href="#upgrade-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Download bundle from depot (or upload from offline file)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. Run Precheck — validates DNS, NTP, certs, vSAN health, password status
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. Review precheck results — resolve any WARN or ERROR items
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. Schedule upgrade window
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>5. SDDC Manager upgrades components in BOM order:
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   ESXi → vCenter → NSX → vSAN (firmware optional)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>6. Post-upgrade validation — SDDC Manager verifies all services healthy
+</code></pre></div>
+<h3 id="bundle-management">Bundle Management<a class="headerlink" href="#bundle-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SDDC Manager UI — Lifecycle Management → Bundle Management</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Download latest bundles (requires internet or offline depot)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check depot connectivity from SDDC Manager appliance</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://depot.vmware.com/PROD2/evo/vmw/index.xml<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Offline depot: copy bundle .tar files to SDDC Manager</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Administration → Depot Settings → Local Depot</span>
+</code></pre></div>
+<h3 id="precheck-validation-points">Precheck Validation Points<a class="headerlink" href="#precheck-validation-points" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>What Is Checked</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS</td>
+<td>Forward and reverse resolution for all managed FQDNs</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>Clock skew across all components</td>
+</tr>
+<tr>
+<td>Certificates</td>
+<td>Expiry dates; warns at &lt;30 days</td>
+</tr>
+<tr>
+<td>vSAN health</td>
+<td>Cluster health tests; object compliance</td>
+</tr>
+<tr>
+<td>Network pools</td>
+<td>Available IPs for host commissioning</td>
+</tr>
+<tr>
+<td>Password rotation</td>
+<td>All managed accounts within policy</td>
+</tr>
+<tr>
+<td>HCL</td>
+<td>Hardware compatibility for ESXi hosts</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager centrally manages credentials for all components. Passwords rotate on a configurable schedule.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SDDC Manager → Security → Password Management
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>→ Select component → Rotate Password
+</code></pre></div>
+<p>Managed accounts include: vCenter SSO admin, NSX admin, ESXi root, SDDC Manager admin, vSAN iSCSI accounts.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># API — rotate a single credential</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentialType&quot;: &quot;SSH&quot;, &quot;resourceType&quot;: &quot;ESXI&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/credentials/rotate&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check credential rotation status</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/credentials&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<hr />
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager manages TLS certificates for all components using VMCA (embedded) or a third-party CA.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SDDC Manager → Security → Certificate Management
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>→ View expiry per component → Renew or Replace
+</code></pre></div>
+<p><strong>Certificate rotation order</strong> (to avoid service disruption):
+1. SDDC Manager itself
+2. vCenter (Machine SSL + solution certificates)
+3. NSX Manager nodes
+4. ESXi hosts (via vCenter)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check certificate expiry across all components (API)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;expirationDate|resourceFqdn&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="network-pools">Network Pools<a class="headerlink" href="#network-pools" title="Permanent link">&para;</a></h2>
+<p>Network pools pre-allocate IP ranges that SDDC Manager assigns to VMkernel adapters when a new host is commissioned into a workload domain.</p>
+<table>
+<thead>
+<tr>
+<th>Pool Type</th>
+<th>VMkernel Service</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>vmk0</td>
+<td>No (uses existing IP)</td>
+</tr>
+<tr>
+<td>vMotion</td>
+<td>vmk1</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>vmk2</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>NSX TEP</td>
+<td>vmkX</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>SDDC Manager → Network Settings → Network Pools
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>→ Create pool → specify VLAN, subnet, gateway, IP range
+</code></pre></div>
+<p>Each workload domain references a network pool at provisioning time. Pool exhaustion blocks new host commissioning — monitor available IPs.</p>
+<hr />
+<h2 id="host-commissioning">Host Commissioning<a class="headerlink" href="#host-commissioning" title="Permanent link">&para;</a></h2>
+<p>New hosts are onboarded into SDDC Manager before being assigned to a workload domain.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>1. Rack and cable host; configure BIOS baseline
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2. Install ESXi (or use Auto Deploy)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>3. Set management IP, FQDN, DNS — must resolve forward and reverse
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>4. SDDC Manager → Inventory → Hosts → Commission
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>   → Provide ESXi IP and root credentials
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>   → SDDC Manager validates: HCL, SSH, DNS, NTP
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>5. Host enters &quot;Unassigned&quot; state — available for domain expansion
+</code></pre></div>
+<hr />
+<h2 id="ports-and-logs">Ports and Logs<a class="headerlink" href="#ports-and-logs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Use</th>
+<th>Protocol</th>
+<th>Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDDC Manager UI / API</td>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>SDDC Manager SSH</td>
+<td>TCP</td>
+<td>22</td>
+</tr>
+<tr>
+<td>ESXi management</td>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>vCenter</td>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>NSX Manager</td>
+<td>HTTPS</td>
+<td>443</td>
+</tr>
+<tr>
+<td>Syslog (TLS)</td>
+<td>TCP</td>
+<td>6514</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key SDDC Manager log paths:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to SDDC Manager appliance (vcf user → sudo)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/var/log/vmware/vcf/sddc-manager/vcfops.log<span class="w">     </span><span class="c1"># LCM and orchestration</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/var/log/vmware/vcf/sddc-manager/sddc-svc.log<span class="w">   </span><span class="c1"># core SDDC Manager service</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>/var/log/vmware/vcf/lcm/lcm-debug.log<span class="w">           </span><span class="c1"># Lifecycle Management detail</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/var/log/vmware/vcf/domainmanager/dm.log<span class="w">        </span><span class="c1"># Workload domain operations</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w">        </span><span class="c1"># Admin actions and API calls</span>
+</code></pre></div>
 
 
 
