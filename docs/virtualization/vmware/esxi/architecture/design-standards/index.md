@@ -1,4 +1,5 @@
-# ESXi Standards
+# ESXi — Design Standards
+
 ## Host Naming
 
 All ESXi hosts use fully qualified domain names (FQDN) and must have matching forward and reverse DNS records:
@@ -10,6 +11,8 @@ Example: esxi-01.corp.example.com
 ```
 
 The hostname set in DCUI must match the DNS A record. DNS mismatch causes certificate errors and SSL thumbprint mismatches when adding hosts to vCenter.
+
+---
 
 ## BIOS / UEFI Baseline
 
@@ -27,6 +30,8 @@ Configure the following on all physical hosts before installing ESXi:
 | PXE Boot on management NIC | Disabled (unless Auto Deploy) | Prevent unintended re-provision |
 | IPMI / iDRAC / iLO | Enabled, on dedicated OOB NIC | Out-of-band management |
 
+---
+
 ## VMkernel Adapter Layout
 
 Standard vmkernel layout for cluster hosts. All adapters are configured on the vDS:
@@ -38,13 +43,16 @@ Standard vmkernel layout for cluster hosts. All adapters are configured on the v
 | vmk2 | vSAN | 9000 | vSAN VLAN /24 |
 | vmk3 | NFS / iSCSI | 9000 | Storage VLAN /24 |
 
-Jumbo frames (MTU 9000) require matching configuration on the physical switch ports and upstream switches for storage and vMotion traffic.
+Jumbo frames (MTU 9000) require matching configuration on physical switch ports and upstream switches for storage and vMotion traffic.
 
 Verify MTU end-to-end:
+
 ```bash
 vmkping -I vmk2 -d -s 8972 <target-IP>
 # -d = don't fragment, -s = payload size (8972 = 9000 - 28 byte IP+UDP header)
 ```
+
+---
 
 ## NTP Configuration
 
@@ -59,7 +67,9 @@ esxcli network ntp get
 esxcli system ntp set --server=ntp1.example.com --server=ntp2.example.com --enabled=true
 ```
 
-## VIB Policy and Accepted Levels
+---
+
+## VIB Acceptance Levels
 
 ESXi enforces VIB acceptance levels. Production hosts should accept only:
 
@@ -70,15 +80,15 @@ ESXi enforces VIB acceptance levels. Production hosts should accept only:
 | PartnerSupported | Vendor-signed only | Review case-by-case |
 | CommunitySupported | No signing | Not in production |
 
-Check the cluster's acceptance level:
 ```bash
+# Check acceptance level
 esxcli software acceptance get
-```
 
-Set to VMwareAccepted minimum:
-```bash
+# Set minimum to VMwareAccepted
 esxcli software acceptance set --level=VMwareAccepted
 ```
+
+---
 
 ## Storage Path Configuration
 
@@ -90,12 +100,14 @@ esxcli software acceptance set --level=VMwareAccepted
 | EMC VMAX / PowerMax | Round Robin | |
 | Active/Passive legacy | MRU | Do not use RR on A/P arrays |
 
-Configure Round Robin for a device:
 ```bash
+# Configure Round Robin with I/O ops limit of 1
 esxcli storage nmp psp roundrobin deviceconfig set -d <device-naa> --type=iops --iops=1
 ```
 
-## Host Profile Configuration Baseline
+---
+
+## Host Profile Baseline
 
 Every cluster host must conform to the Host Profile applied from vCenter. A Host Profile captures:
 
@@ -110,6 +122,8 @@ Every cluster host must conform to the Host Profile applied from vCenter. A Host
 
 After any host change, run **Check Compliance** in vCenter before marking the change as complete.
 
+---
+
 ## ESXi Shell and SSH Policy
 
 | Service | Production State | Maintenance State |
@@ -119,7 +133,25 @@ After any host change, run **Check Compliance** in vCenter before marking the ch
 | DCUI | Running | Running |
 
 Set shell timeout to limit exposure if left enabled:
+
 ```bash
 esxcli system settings advanced set -o /UserVars/ESXiShellTimeOut -i 600
 esxcli system settings advanced set -o /UserVars/ESXiShellInteractiveTimeOut -i 300
 ```
+
+---
+
+## Cluster Sizing Reference
+
+| Cluster Type | Min Hosts | Storage | HA Capacity |
+|---|---|---|---|
+| Standalone | 1 | Any | None |
+| Standard (N+1) | 3 | Shared SAN/NAS | Survive 1 host failure |
+| Standard (N+2) | 5 | Shared SAN/NAS | Survive 2 host failures |
+| vSAN (FTT=1 RAID-1) | 3 | Pooled (vSAN) | Survive 1 host failure |
+| vSAN (FTT=1 RAID-5) | 4 | Pooled (vSAN) | Survive 1 host failure |
+| vSAN (FTT=2 RAID-6) | 6 | Pooled (vSAN) | Survive 2 host failures |
+
+**CPU overcommit guidance:** 4:1 vCPU:pCPU ratio for general workloads; 2:1 for latency-sensitive (databases, real-time). Monitor CPU Ready — sustained > 5% indicates overcommitment.
+
+**Memory overcommit guidance:** Size physical RAM to cover peak active memory across all VMs. Balloon and swap are performance impacts, not design targets. Include 10–15% overhead for VMkernel and VM metadata.

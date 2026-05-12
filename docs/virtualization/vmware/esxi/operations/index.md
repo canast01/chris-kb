@@ -1,5 +1,9 @@
 # ESXi — Operations
 
+<div class="kb-summary">
+Day-to-day operational reference for VMware ESXi. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and automation scripts.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

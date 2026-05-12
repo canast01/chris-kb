@@ -1,4 +1,4 @@
-# VMware ESXi Integration
+# ESXi — Integrations
 ## vCenter Integration
 
 ESXi hosts are managed by vCenter Server and must be joined to a vCenter instance for full functionality. To add a host: vCenter > Hosts and Clusters > right-click datacenter or cluster > Add Host. Provide the ESXi hostname or IP, root credentials, and optionally assign a licence.

@@ -1,5 +1,9 @@
 # ESXi — Troubleshooting
 
+<div class="kb-summary">
+Troubleshooting reference for VMware ESXi. Covers common host failure patterns, diagnostic commands, log collection, and escalation procedures for engaging VMware support.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">
