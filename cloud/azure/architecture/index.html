@@ -21,7 +21,7 @@
     
     
       
-        <title>Azure — Architecture Overview - Chris KB</title>
+        <title>Azure — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Azure — Architecture Overview · Chris KB">
+  <meta property="og:title" content="Azure — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Azure — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="Azure — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#azure-architecture-overview" class="md-skip">
+        <a href="#azure-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Azure — Architecture Overview
+              Azure — Architecture
             
           </span>
         </div>
@@ -1062,113 +1062,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#management-group-hierarchy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Management Group Hierarchy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compute-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compute Options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#high-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Availability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disaster-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disaster Recovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#azure-key-vault-secret-access" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Azure Key Vault Secret Access
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#azure-ad-auth-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Azure AD Auth Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#identity-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Identity Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1187,8 +1080,58 @@
 
 
 
-<h1 id="azure-architecture-overview">Azure — Architecture Overview<a class="headerlink" href="#azure-architecture-overview" title="Permanent link">&para;</a></h1>
-<h2 id="management-group-hierarchy">Management Group Hierarchy<a class="headerlink" href="#management-group-hierarchy" title="Permanent link">&para;</a></h2>
+<h1 id="azure-architecture">Azure — Architecture<a class="headerlink" href="#azure-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Azure cloud platform architecture — management hierarchy, hub-and-spoke networking, compute options, HA patterns, and identity with Entra ID.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Management hierarchy, hub-spoke networking, compute, identity, HA, and DR patterns.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>ExpressRoute, on-premises connectivity, and third-party integrations.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, tagging policy, subscription design, and security baselines.</span></a>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Service</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity</td>
+<td>Entra ID (Azure AD)</td>
+<td>Cloud identity plane; SSO, MFA, PIM, Conditional Access</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Management Groups / Policy</td>
+<td>Governance hierarchy; RBAC and Policy inherited downward</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Hub VNet + Spoke VNets</td>
+<td>Hub-and-spoke; Azure Firewall controls east-west and internet traffic</td>
+</tr>
+<tr>
+<td>Compute</td>
+<td>VMs, AKS, App Service</td>
+<td>Lift-and-shift, containers, web apps</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Blob, ADLS, Managed Disks</td>
+<td>Object, data lake, and block storage</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>Azure Monitor + Log Analytics</td>
+<td>Metrics, logs, alerts, dashboards</td>
+</tr>
+</tbody>
+</table>
 <pre class="mermaid"><code>graph TB
   TENANT["Azure Tenant\n(Entra ID)"] --&gt; MG["Management Groups\nCorp &gt; Prod &gt; Non-Prod"]
   MG --&gt; SUBP["Production Subscription"]
@@ -1203,141 +1146,6 @@
   class TENANT,MG ctrl
   class SUBP,SUBD cloud
   class HUB,SP1,SP2 net</code></pre>
-<p>Azure Policy and RBAC assigned at Management Group level — inherited by all child subscriptions.</p>
-<h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
-<p>Hub-and-spoke topology:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                    │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                   ┌────────────────┼────────────────┐
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                   ▼                ▼                 ▼
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            Prod Spoke VNet   Staging Spoke VNet   Dev Spoke VNet
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            (10.1.0.0/16)    (10.2.0.0/16)        (10.3.0.0/16)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>            ├── snet-web      
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            ├── snet-app      
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>            └── snet-db (isolated — no internet)
-</code></pre></div>
-<p>Azure Firewall in the hub VNet controls all east-west and internet-bound traffic from spokes.</p>
-<h2 id="compute-options">Compute Options<a class="headerlink" href="#compute-options" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Azure Virtual Machines</td>
-<td>Lift-and-shift, legacy, special OS</td>
-</tr>
-<tr>
-<td>Azure Kubernetes Service (AKS)</td>
-<td>Container workloads</td>
-</tr>
-<tr>
-<td>Azure App Service</td>
-<td>Web apps, APIs</td>
-</tr>
-<tr>
-<td>Azure Container Apps</td>
-<td>Serverless containers</td>
-</tr>
-<tr>
-<td>Azure Functions</td>
-<td>Event-driven, short-lived tasks</td>
-</tr>
-</tbody>
-</table>
-<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>VMs</strong>: Availability Zones (spread across 3 zones per region) or Availability Sets</li>
-<li><strong>Azure SQL</strong>: Zone-redundant Business Critical tier or Geo-redundant</li>
-<li><strong>AKS</strong>: System node pool spanning ≥ 2 zones; application node pools zone-spread</li>
-<li><strong>Storage</strong>: Zone-Redundant Storage (ZRS) for production; Geo-Redundant (GRS) for DR</li>
-</ul>
-<h2 id="disaster-recovery">Disaster Recovery<a class="headerlink" href="#disaster-recovery" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Pattern</th>
-<th>Services</th>
-<th>RPO / RTO</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Azure Site Recovery</td>
-<td>VM replication to secondary region</td>
-<td>&lt; 1 hour RPO, &lt; 2 hours RTO</td>
-</tr>
-<tr>
-<td>Geo-redundant storage</td>
-<td>Azure Blob, ADLS Gen2 (GRS/GZRS)</td>
-<td>Near-zero RPO</td>
-</tr>
-<tr>
-<td>Azure SQL Failover Groups</td>
-<td>Active geo-replication</td>
-<td>&lt; 30 seconds RPO</td>
-</tr>
-<tr>
-<td>Azure Backup cross-region restore</td>
-<td>Recovery Services Vault</td>
-<td>12–24 hours RTO</td>
-</tr>
-</tbody>
-</table>
-<h2 id="azure-key-vault-secret-access">Azure Key Vault Secret Access<a class="headerlink" href="#azure-key-vault-secret-access" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant app as Application\n(VM / Function / AKS pod)
-    participant mi as Managed Identity\n(IMDS endpoint)
-    participant aad as Azure AD
-    participant kv as Key Vault
-    participant policy as Key Vault Access Policy\nor RBAC
-
-    app-&gt;&gt;mi: GET token (resource=vault.azure.net)
-    mi-&gt;&gt;aad: Token request (MSI credential)
-    aad--&gt;&gt;mi: Bearer token (JWT)
-    mi--&gt;&gt;app: Bearer token
-    app-&gt;&gt;kv: GET secret (Authorization: Bearer token)
-    kv-&gt;&gt;policy: Evaluate access policy / RBAC
-    policy--&gt;&gt;kv: Allow / Deny
-    kv--&gt;&gt;app: Secret value (200 OK) or 403 Forbidden</code></pre>
-<h2 id="azure-ad-auth-flow">Azure AD Auth Flow<a class="headerlink" href="#azure-ad-auth-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant user as User
-    participant browser as Browser / Client
-    participant aad as Azure AD (Entra ID)
-    participant ca as Conditional Access
-    participant resource as Azure Resource / App
-
-    user-&gt;&gt;browser: Sign-in request
-    browser-&gt;&gt;aad: Authentication request (OAuth2 / OIDC)
-    aad-&gt;&gt;aad: Validate credentials + MFA
-    aad-&gt;&gt;ca: Evaluate Conditional Access policies
-    ca--&gt;&gt;aad: Allow / Block / Require MFA
-    aad--&gt;&gt;browser: Access token (JWT)
-    browser-&gt;&gt;resource: Request with Bearer token
-    resource--&gt;&gt;browser: Response granted</code></pre>
-<h2 id="identity-architecture">Identity Architecture<a class="headerlink" href="#identity-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Entra ID (cloud identity plane)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── Azure AD Connect sync ←── On-premises AD (source of truth)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ├── Entra ID Governance (lifecycle, access reviews)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    ├── Privileged Identity Management (PIM — JIT role activation)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    └── Conditional Access Policies (MFA, compliant device requirements)
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Humans: SSO via Entra ID, MFA required
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Service Principals: used by CI/CD, Terraform (OIDC preferred; no client secrets)
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Managed Identities: used by Azure services (no credentials to manage)
-</code></pre></div>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

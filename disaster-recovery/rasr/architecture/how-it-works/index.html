@@ -21,7 +21,7 @@
     
     
       
-        <title>SRM Architecture — Overview - Chris KB</title>
+        <title>RASR — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SRM Architecture — Overview · Chris KB">
+  <meta property="og:title" content="RASR — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SRM Architecture — Overview · Chris KB">
+  <meta name="twitter:title" content="RASR — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#srm-architecture-overview" class="md-skip">
+        <a href="#rasr-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SRM Architecture — Overview
+              RASR — How It Works
             
           </span>
         </div>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#srm-topology" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SRM Topology
+        Architecture
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#site-pair" class="md-nav__link">
+  <a href="#recovery-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Site Pair
+        Recovery Workflow
       
     </span>
   </a>
@@ -1102,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-plan-modes" class="md-nav__link">
+  <a href="#dell-hardware-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recovery Plan Modes
+        Dell Hardware Integration
       
     </span>
   </a>
@@ -1113,10 +1113,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vsphere-replication-architecture" class="md-nav__link">
+  <a href="#agent-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        vSphere Replication Architecture
+        Agent Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-recovery-share-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Recovery Share Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rasr-vs-alternative-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RASR vs Alternative Methods
       
     </span>
   </a>
@@ -1143,78 +1165,203 @@
 
 
 
-<h1 id="srm-architecture-overview">SRM Architecture — Overview<a class="headerlink" href="#srm-architecture-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../../">SRM</a> reference.</p>
-</blockquote>
-<hr />
+<h1 id="rasr-how-it-works">RASR — How It Works<a class="headerlink" href="#rasr-how-it-works" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a vCenter plugin on both the protected and recovery sites. It automates VM failover by coordinating storage presentation, VM registration, power-on sequencing, IP customisation, and custom scripts — without manual intervention at the storage or compute layer.</p>
-<hr />
-<h2 id="srm-topology">SRM Topology<a class="headerlink" href="#srm-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  VC_A["vCenter A\n+ SRM Server A + SRA"] --&gt; STG_A[("Storage A")]
-  VC_B["vCenter B\n+ SRM Server B + SRA"] --&gt; STG_B[("Storage B")]
-  VC_A &lt;--&gt;|"SRM pairing"| VC_B
-  STG_A --&gt;|"replication\nvSphere Rep / array"| STG_B
-  H_A(["Production VMs\nSite A"]) --&gt; VC_A
-  H_B(["DR VMs\nSite B"]) -.-&gt; VC_B
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VC_A ctrl
-  class VC_B dr
-  class STG_A,STG_B store
-  class H_A host
-  class H_B dr</code></pre>
-<h2 id="site-pair">Site Pair<a class="headerlink" href="#site-pair" title="Permanent link">&para;</a></h2>
-<p>The site pair establishes a trust relationship between the protected site SRM and recovery site SRM. Both SRM servers must be able to reach each other on:</p>
-<ul>
-<li><strong>TCP 443</strong> — vCenter and SRM API communication</li>
-<li><strong>TCP 8095</strong> — SRM server-to-server communication (SRM API)</li>
-<li><strong>TCP 9086</strong> — vSphere Replication data channel (if using vSphere Replication)</li>
-</ul>
-<p>Each site pair maps a vCenter on the protected side to a vCenter on the recovery side. The pair is configured under SRM → Configure → Site Pair.</p>
-<hr />
-<h2 id="recovery-plan-modes">Recovery Plan Modes<a class="headerlink" href="#recovery-plan-modes" title="Permanent link">&para;</a></h2>
-<p><strong>Test vs. Actual failover:</strong></p>
-<ul>
-<li><strong>Test:</strong> SRM creates a temporary snapshot of R2 devices (array-based) or a point-in-time copy (vSphere Replication) and powers on VMs in an isolated test network. Production replication continues. Test cleanup removes the snapshot.</li>
-<li><strong>Planned migration:</strong> Orderly shutdown of protected site VMs, final sync, then power-on at recovery site. Used for scheduled DR tests or planned site migrations.</li>
-<li><strong>Unplanned failover:</strong> Protected site is unavailable; SRM fails over using the most recent replicated state (last consistent checkpoint). VMs are powered on at the recovery site.</li>
-</ul>
-<hr />
-<h2 id="vsphere-replication-architecture">vSphere Replication Architecture<a class="headerlink" href="#vsphere-replication-architecture" title="Permanent link">&para;</a></h2>
-<p>vSphere Replication does not use an SRA. The replication engine is embedded in the vSphere Replication appliance (one per site).</p>
+<p>RASR (Recovery and System Restore) is Dell's bare-metal recovery tool for Windows Server, shipped as part of the Dell OpenManage suite. It captures a full sector-level system image — including the OS volume, boot partition, and system state — and restores it to original or replacement hardware via a WinPE boot environment, without requiring a pre-installed OS. RASR is the last-resort bare-metal recovery mechanism for physical Dell PowerEdge servers.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RASR Agent</td>
+<td>Windows service (<code>RASRAgent</code>) on each protected server; orchestrates image capture</td>
+</tr>
+<tr>
+<td>RASR Console</td>
+<td>GUI within Windows for initiating backups and managing recovery media</td>
+</tr>
+<tr>
+<td>Recovery Image</td>
+<td>Sector-level snapshot of system volume(s) in <code>.wim</code> or proprietary RASR format</td>
+</tr>
+<tr>
+<td>Recovery Media</td>
+<td>Bootable WinPE USB drive or ISO; contains RASR engine and Dell hardware drivers</td>
+</tr>
+<tr>
+<td>Network Recovery Share</td>
+<td>SMB share where recovery images are stored and retrieved</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Windows Server
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── RASR Agent (RASRAgent Windows service)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── RASR Console (GUI in Windows)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── Captured Image → Network Recovery Share (SMB)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Recovery Media (USB / iDRAC virtual ISO)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── WinPE boot environment
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>      └── RASR Recovery Engine + Dell hardware drivers
+</code></pre></div>
+<h2 id="recovery-workflow">Recovery Workflow<a class="headerlink" href="#recovery-workflow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
-    subgraph protectedSite [Protected Site]
-        vm(["Protected VM\n(ESXi hypervisor)"])
-        vrAgent["vSphere Replication\nagent — embedded in\nhypervisor kernel"]
-        vra1["vSphere Replication\nAppliance — Source"]
-        vm --&gt; vrAgent
-        vrAgent --&gt; vra1
-    end
+    A([Server Failure Detected]) --&gt; B{Server boots?}
+    B --&gt; |Yes| C[Boot Windows normally\nor Safe Mode]
+    B --&gt; |No - hardware failure| D[Boot from RASR Media\nUSB / Virtual ISO via iDRAC]
 
-    subgraph recoverySite [Recovery Site]
-        vra2["vSphere Replication\nAppliance — Target"]
-        replicaDS[("Replicated Datastore\nrecovery site")]
-        vra2 --&gt; replicaDS
-    end
+    C --&gt; E[Launch RASR Console\nStart Recovery from OS]
+    D --&gt; F[WinPE Environment Loads]
 
-    vra1 --&gt;|"TCP 44046\nreplication traffic\n(compressed + deduped)"| vra2
+    F --&gt; G[Map Network Share\nnet use Z: \\\\nas\\rasr-images]
+    G --&gt; H[Select Recovery Image\nfrom share]
 
-    classDef appliance fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    class vrAgent,vra1,vra2 appliance
-    class replicaDS store
-    class vm host</code></pre>
+    H --&gt; I{Restore target?}
+    I --&gt; |Same hardware| J[In-Place Restore\nto original disks]
+    I --&gt; |New/replacement hardware| K[Bare-Metal Restore\nwith driver injection]
+
+    E --&gt; L[Select Image &amp; Restore Point]
+    J --&gt; M[Image written to disk\nPartition table restored]
+    K --&gt; M
+    L --&gt; M
+    M --&gt; N[Reboot server]
+    N --&gt; O[Windows starts from restored image]
+    O --&gt; P[Post-restore validation]
+    P --&gt; Q([Recovery Complete])</code></pre>
+<h2 id="dell-hardware-integration">Dell Hardware Integration<a class="headerlink" href="#dell-hardware-integration" title="Permanent link">&para;</a></h2>
+<p>RASR is designed specifically for Dell PowerEdge servers:</p>
 <ul>
-<li>RPO: 5 minutes minimum</li>
-<li>Consistency: crash-consistent by default; application-consistent with quiescing enabled</li>
-<li>Bandwidth: compressed and deduplicated; can be throttled per-VM</li>
+<li><strong>iDRAC Virtual Media</strong> — boot the RASR ISO from iDRAC without physical USB, enabling remote bare-metal recovery</li>
+<li><strong>PERC Storage Controller</strong> support — WinPE includes current PERC drivers, ensuring the recovery environment can see all local disks</li>
+<li><strong>Lifecycle Controller</strong> — RASR can be invoked from within the iDRAC Lifecycle Controller on compatible servers (R750, R650, R740 and later)</li>
+<li><strong>OpenManage Integration</strong> — RASR Agent status appears in the OpenManage Server Administrator dashboard</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>Server Generation</th>
+<th>WinPE Driver Pack</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerEdge 14G (R740, R640)</td>
+<td>WinPE 10</td>
+<td>Full PERC H730/H740 support</td>
+</tr>
+<tr>
+<td>PowerEdge 15G (R750, R650)</td>
+<td>WinPE 10/11</td>
+<td>PERC H755, HBA355</td>
+</tr>
+<tr>
+<td>PowerEdge 16G (R760, R660)</td>
+<td>WinPE 11</td>
+<td>PERC H965i, BOSS-N1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="agent-management">Agent Management<a class="headerlink" href="#agent-management" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check RASR Agent status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">RASRAgent</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Restart agent</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">RASRAgent</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Check last backup result</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Version</span><span class="p">,</span> <span class="n">LastBackupTime</span><span class="p">,</span> <span class="n">LastBackupResult</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># View recent agent log</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\Logs\RASRAgent.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
+</code></pre></div>
+<h2 id="network-recovery-share-requirements">Network Recovery Share Requirements<a class="headerlink" href="#network-recovery-share-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Protocol</td>
+<td>SMB 2.0 or later</td>
+</tr>
+<tr>
+<td>Permissions</td>
+<td>Read/write for RASR service account; read for recovery operators</td>
+</tr>
+<tr>
+<td>Path example</td>
+<td><code>\\nas01\rasr-images\server01\</code></td>
+</tr>
+<tr>
+<td>Minimum free space</td>
+<td>2× the compressed image size (image + staging)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rasr-vs-alternative-methods">RASR vs Alternative Methods<a class="headerlink" href="#rasr-vs-alternative-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>RASR</th>
+<th>Windows Server Backup</th>
+<th>Commvault BMR</th>
+<th>Veeam BMR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bare-metal to physical</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Dell hardware driver integration</td>
+<td>Native</td>
+<td>Manual</td>
+<td>Manual</td>
+<td>Manual</td>
+</tr>
+<tr>
+<td>iDRAC boot integration</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Application-aware backup</td>
+<td>No</td>
+<td>Limited</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Granular file restore</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Suitable for DR-only physical</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No (licensed)</td>
+<td>No (licensed)</td>
+</tr>
+</tbody>
+</table>
 
 
 

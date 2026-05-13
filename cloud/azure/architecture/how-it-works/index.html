@@ -21,7 +21,7 @@
     
     
       
-        <title>SRDF/S — Overview - Chris KB</title>
+        <title>Azure — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SRDF/S — Overview · Chris KB">
+  <meta property="og:title" content="Azure — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SRDF/S — Overview · Chris KB">
+  <meta name="twitter:title" content="Azure — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#srdfs-overview" class="md-skip">
+        <a href="#azure-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SRDF/S — Overview
+              Azure — How It Works
             
           </span>
         </div>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#write-commit-model" class="md-nav__link">
+  <a href="#management-group-hierarchy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Write Commit Model
+        Management Group Hierarchy
       
     </span>
   </a>
@@ -1091,10 +1091,109 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#licensing" class="md-nav__link">
+  <a href="#network-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Licensing
+        Network Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disaster-recovery-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#networking-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Networking Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring and Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-vault-secret-access-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Vault Secret Access Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identity-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity Architecture
       
     </span>
   </a>
@@ -1121,37 +1220,266 @@
 
 
 
-<h1 id="srdfs-overview">SRDF/S — Overview<a class="headerlink" href="#srdfs-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">SRDF/S Architecture</a> reference.</p>
-</blockquote>
-<hr />
+<h1 id="azure-how-it-works">Azure — How It Works<a class="headerlink" href="#azure-how-it-works" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>SRDF/S (Synchronous) provides zero-data-loss replication between two PowerMax arrays. Every host write is committed to both the source (R1) and target (R2) before an acknowledgement is returned to the host. This guarantees <strong>RPO = 0</strong> at the cost of write latency, which is directly proportional to the inter-site round-trip time (RTT).</p>
-<p><strong>Use case:</strong> Applications that cannot tolerate any data loss — financial transaction systems, active-active cluster workloads, and DR configurations where RPO = 0 is contractually required.</p>
-<hr />
-<h2 id="write-commit-model">Write Commit Model<a class="headerlink" href="#write-commit-model" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  PM_A["PowerMax Primary\nSite A — R1"] --&gt;|"SRDF/S synchronous\n(≤10ms RTT)"| PM_B["PowerMax Secondary\nSite B — R2"]
-  PM_A --&gt; HA(["Production Hosts\nSite A"])
-  PM_B -.-&gt;|"read-only\n(Synchronized state)"| HB(["Standby Hosts\nSite B"])
+<p>Microsoft Azure is a hyperscale public cloud platform. Resources are organised in a hierarchy: Tenant (Entra ID) → Management Groups → Subscriptions → Resource Groups → Resources. Azure Policy and RBAC applied at a Management Group are inherited by all child subscriptions. A hub-and-spoke network topology connects on-premises environments via ExpressRoute to a hub VNet, with workload spoke VNets peered to the hub.</p>
+<h2 id="management-group-hierarchy">Management Group Hierarchy<a class="headerlink" href="#management-group-hierarchy" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  TENANT["Azure Tenant\n(Entra ID)"] --&gt; MG["Management Groups\nCorp &gt; Prod &gt; Non-Prod"]
+  MG --&gt; SUBP["Production Subscription"]
+  MG --&gt; SUBD["Dev/Test Subscription"]
+  SUBP --&gt; HUB["Hub VNet\nFirewall · Bastion · VPN GW"]
+  SUBP --&gt; SP1["Spoke VNet 1\n(Workload A)"]
+  SUBP --&gt; SP2["Spoke VNet 2\n(Workload B)"]
+  HUB &lt;--&gt;|"VNet peering"| SP1 &amp; SP2
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class PM_A ctrl
-  class PM_B dr
-  class HA host
-  class HB dr</code></pre>
-<p>This provides:
-- Zero data loss between production and metro DR
-- Cost-effective remote protection without requiring synchronous WAN bandwidth to the remote site</p>
-<hr />
-<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  class TENANT,MG ctrl
+  class SUBP,SUBD cloud
+  class HUB,SP1,SP2 net</code></pre>
+<h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
+<p>Hub-and-spoke topology with Azure Firewall in the hub controlling east-west and internet-bound traffic:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                   ┌────────────────┼────────────────┐
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                   ▼                ▼                 ▼
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            Prod Spoke VNet   Staging Spoke VNet   Dev Spoke VNet
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            (10.1.0.0/16)    (10.2.0.0/16)        (10.3.0.0/16)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>            ├── snet-web
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            ├── snet-app
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>            └── snet-db (isolated — no internet)
+</code></pre></div>
+<h2 id="compute">Compute<a class="headerlink" href="#compute" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Azure Virtual Machines</td>
+<td>Lift-and-shift, legacy, special OS</td>
+</tr>
+<tr>
+<td>Azure Kubernetes Service (AKS)</td>
+<td>Container workloads</td>
+</tr>
+<tr>
+<td>Azure App Service</td>
+<td>Web apps, APIs</td>
+</tr>
+<tr>
+<td>Azure Container Apps</td>
+<td>Serverless containers</td>
+</tr>
+<tr>
+<td>Azure Functions</td>
+<td>Event-driven, short-lived tasks</td>
+</tr>
+<tr>
+<td>Azure Virtual Machine Scale Sets</td>
+<td>Auto-scaling VM groups</td>
+</tr>
+</tbody>
+</table>
+<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
 <ul>
-<li>SRDF/S license required on both arrays (separate from SRDF/A license)</li>
-<li>SRDF director ports must be licensed for synchronous replication</li>
-<li>SRDF/Metro (active-active SRDF/S variant) requires an additional license</li>
+<li><strong>VMs</strong>: Availability Zones (spread across 3 zones per region) or Availability Sets</li>
+<li><strong>Azure SQL</strong>: Zone-redundant Business Critical tier or geo-redundant</li>
+<li><strong>AKS</strong>: System node pool spanning ≥ 2 zones; application node pools zone-spread</li>
+<li><strong>Storage</strong>: Zone-Redundant Storage (ZRS) for production; Geo-Redundant (GRS) for DR</li>
 </ul>
+<h2 id="disaster-recovery-patterns">Disaster Recovery Patterns<a class="headerlink" href="#disaster-recovery-patterns" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Services</th>
+<th>RPO / RTO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Azure Site Recovery</td>
+<td>VM replication to secondary region</td>
+<td>&lt; 1 hour RPO, &lt; 2 hours RTO</td>
+</tr>
+<tr>
+<td>Geo-redundant storage</td>
+<td>Azure Blob, ADLS Gen2 (GRS/GZRS)</td>
+<td>Near-zero RPO</td>
+</tr>
+<tr>
+<td>Azure SQL Failover Groups</td>
+<td>Active geo-replication</td>
+<td>&lt; 30 seconds RPO</td>
+</tr>
+<tr>
+<td>Azure Backup cross-region restore</td>
+<td>Recovery Services Vault</td>
+<td>12–24 hours RTO</td>
+</tr>
+</tbody>
+</table>
+<h2 id="networking-components">Networking Components<a class="headerlink" href="#networking-components" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Virtual Network (VNet)</td>
+<td>Private network isolation</td>
+</tr>
+<tr>
+<td>Network Security Groups</td>
+<td>Layer 4 traffic filtering</td>
+</tr>
+<tr>
+<td>Azure Firewall</td>
+<td>Layer 7 hub egress and east-west control</td>
+</tr>
+<tr>
+<td>Application Gateway</td>
+<td>Layer 7 load balancer with WAF</td>
+</tr>
+<tr>
+<td>ExpressRoute</td>
+<td>Dedicated private connectivity to on-premises</td>
+</tr>
+<tr>
+<td>VPN Gateway</td>
+<td>Site-to-site and point-to-site VPN</td>
+</tr>
+<tr>
+<td>Private Endpoints</td>
+<td>Private connectivity to PaaS services</td>
+</tr>
+</tbody>
+</table>
+<h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Azure Blob Storage</td>
+<td>Object storage, large files, backups</td>
+</tr>
+<tr>
+<td>Azure Files</td>
+<td>SMB/NFS managed file shares</td>
+</tr>
+<tr>
+<td>Managed Disks</td>
+<td>Block storage for VMs</td>
+</tr>
+<tr>
+<td>Azure Data Lake Storage Gen2</td>
+<td>Analytics, hierarchical namespace</td>
+</tr>
+</tbody>
+</table>
+<h2 id="identity">Identity<a class="headerlink" href="#identity" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Entra ID (Azure AD)</td>
+<td>Cloud identity plane, SSO, MFA</td>
+</tr>
+<tr>
+<td>Managed Identities</td>
+<td>Credential-free service authentication</td>
+</tr>
+<tr>
+<td>Azure RBAC</td>
+<td>Role-based access control across resources</td>
+</tr>
+<tr>
+<td>Privileged Identity Management</td>
+<td>JIT privileged role activation</td>
+</tr>
+<tr>
+<td>Conditional Access</td>
+<td>Policy-based access control</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monitoring-and-security">Monitoring and Security<a class="headerlink" href="#monitoring-and-security" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Azure Monitor</td>
+<td>Metrics, logs, alerts, dashboards</td>
+</tr>
+<tr>
+<td>Log Analytics</td>
+<td>Centralised log query and retention</td>
+</tr>
+<tr>
+<td>Microsoft Defender for Cloud</td>
+<td>Security posture, threat protection</td>
+</tr>
+<tr>
+<td>Azure Key Vault</td>
+<td>Secrets, keys, and certificate management</td>
+</tr>
+<tr>
+<td>Microsoft Sentinel</td>
+<td>Cloud-native SIEM and SOAR</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-vault-secret-access-flow">Key Vault Secret Access Flow<a class="headerlink" href="#key-vault-secret-access-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant app as Application (VM / Function / AKS pod)
+    participant mi as Managed Identity (IMDS endpoint)
+    participant aad as Azure AD
+    participant kv as Key Vault
+    participant policy as Access Policy / RBAC
+
+    app-&gt;&gt;mi: GET token (resource=vault.azure.net)
+    mi-&gt;&gt;aad: Token request (MSI credential)
+    aad--&gt;&gt;mi: Bearer token (JWT)
+    mi--&gt;&gt;app: Bearer token
+    app-&gt;&gt;kv: GET secret (Authorization: Bearer token)
+    kv-&gt;&gt;policy: Evaluate access policy / RBAC
+    policy--&gt;&gt;kv: Allow / Deny
+    kv--&gt;&gt;app: Secret value (200 OK) or 403 Forbidden</code></pre>
+<h2 id="identity-architecture">Identity Architecture<a class="headerlink" href="#identity-architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Entra ID (cloud identity plane)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── Azure AD Connect sync ←── On-premises AD (source of truth)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ├── Entra ID Governance (lifecycle, access reviews)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    ├── Privileged Identity Management (PIM — JIT role activation)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    └── Conditional Access Policies (MFA, compliant device requirements)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Humans: SSO via Entra ID, MFA required
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Service Principals: used by CI/CD, Terraform (OIDC preferred; no client secrets)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Managed Identities: used by Azure services (no credentials to manage)
+</code></pre></div>
 
 
 

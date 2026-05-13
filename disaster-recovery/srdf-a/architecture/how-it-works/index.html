@@ -21,7 +21,7 @@
     
     
       
-        <title>RASR — Components - Chris KB</title>
+        <title>SRDF/A — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="RASR — Components · Chris KB">
+  <meta property="og:title" content="SRDF/A — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="RASR — Components · Chris KB">
+  <meta name="twitter:title" content="SRDF/A — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rasr-components" class="md-skip">
+        <a href="#srdfa-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RASR — Components
+              SRDF/A — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#component-overview" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Component Overview
+        Overview
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rasr-agent" class="md-nav__link">
+  <a href="#delta-set-mechanics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RASR Agent
+        Delta Set Mechanics
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rasr-console" class="md-nav__link">
+  <a href="#topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RASR Console
+        Topology
       
     </span>
   </a>
@@ -1102,38 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-image" class="md-nav__link">
+  <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recovery Image
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recovery Image">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#network-recovery-share-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Recovery Share Requirements
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rasr-recovery-media-winpe" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RASR Recovery Media (WinPE)
+        Components
       
     </span>
   </a>
@@ -1141,10 +1113,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#openmanage-integration" class="md-nav__link">
+  <a href="#pair-states" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OpenManage Integration
+        Pair States
       
     </span>
   </a>
@@ -1152,10 +1124,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#component-health-check" class="md-nav__link">
+  <a href="#key-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Component Health Check
+        Key Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lag-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lag Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity
       
     </span>
   </a>
@@ -1182,238 +1176,193 @@
 
 
 
-<h1 id="rasr-components">RASR — Components<a class="headerlink" href="#rasr-components" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">RASR Architecture</a> reference.</p>
-</blockquote>
-<hr />
-<p>RASR (Recovery and System Restore) consists of five components. Each has specific dependencies and failure modes worth understanding before a recovery operation.</p>
-<h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Server
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── RASR Agent (RASRAgent Windows service)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── RASR Console (GUI in Windows)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── Captured Image → Network Recovery Share (SMB)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Recovery Media (USB / iDRAC virtual ISO)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└── WinPE boot environment
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>      └── RASR Recovery Engine
-</code></pre></div>
-<h2 id="rasr-agent">RASR Agent<a class="headerlink" href="#rasr-agent" title="Permanent link">&para;</a></h2>
-<p>The RASR Agent (<code>RASRAgent</code>) is a Windows service that runs on the protected server and orchestrates image capture.</p>
+<h1 id="srdfa-how-it-works">SRDF/A — How It Works<a class="headerlink" href="#srdfa-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>SRDF/A (Asynchronous) replicates data from a source PowerMax to a target PowerMax by capturing writes into time-bounded delta sets (cycles) and transmitting them in order. The source array acknowledges writes to the host before transmission — host write latency is not affected by WAN latency. RPO is determined by cycle time (default 30 seconds). R1 is the source (production); R2 is the target (DR).</p>
+<h2 id="delta-set-mechanics">Delta Set Mechanics<a class="headerlink" href="#delta-set-mechanics" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Host writes to R1 go into the <strong>active delta set</strong> for the current cycle.</li>
+<li>At the end of the cycle interval, the active delta set is <strong>closed</strong> and queued for transmission.</li>
+<li>A new delta set opens for the next cycle.</li>
+<li>The closed delta set is transmitted to R2 in sequence — each delta set applied in order, maintaining consistency.</li>
+<li>When R2 confirms receipt, the cycle is complete and RPO resets.</li>
+</ol>
+<pre class="mermaid"><code>flowchart TD
+    hostWrite["Host Write to R1"] --&gt; activeDeltaSet["Active Delta Set\n(accumulating writes)"]
+    activeDeltaSet --&gt;|"cycle interval ends\n(default 30s)"| closeDeltaSet["Delta Set Closed\n&amp; Queued"]
+    closeDeltaSet --&gt; newActive["New Active Delta Set\nOpens for Next Cycle"]
+    closeDeltaSet --&gt; transmit["Transmit Delta Set\n→ WAN → R2"]
+    transmit --&gt;|"R2 confirms receipt"| rpoReset["RPO Resets\nCycle Complete"]
+    transmit --&gt;|"link saturated / slow"| dse["DSE Overflow Device\nActivated"]
+    dse --&gt;|"link clears"| transmit
+
+    style activeDeltaSet fill:#2563eb,color:#fff
+    style closeDeltaSet fill:#b45309,color:#fff
+    style transmit fill:#7c3aed,color:#fff
+    style dse fill:#be123c,color:#fff
+    style rpoReset fill:#15803d,color:#fff</code></pre>
+<h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  PM_A["PowerMax Primary\nSite A — R1"] --&gt;|"writes buffered"| CYCLE["Delta Set Extension\n(DSE — WAN buffer)"]
+  CYCLE --&gt;|"cycle flush\n~30s"| PM_B["PowerMax Secondary\nSite B — R2"]
+  PM_B -.-&gt;|"RPO / lag monitor"| LAG["SRDF/A Cycle State"]
+  PM_A --&gt; HA(["Production Hosts"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class PM_A ctrl
+  class PM_B dr
+  class CYCLE,LAG mgmt
+  class HA host</code></pre>
+<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Detail</th>
+<th>Component</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Service name</td>
-<td><code>RASRAgent</code></td>
+<td>R1 device</td>
+<td>Source (production) SRDF device</td>
 </tr>
 <tr>
-<td>Display name</td>
-<td>Dell Recovery and System Restore Agent</td>
+<td>R2 device</td>
+<td>Target (DR) SRDF device</td>
 </tr>
 <tr>
-<td>Startup type</td>
-<td>Automatic (Delayed Start)</td>
+<td>RDF group</td>
+<td>Logical pairing of R1 and R2 devices sharing cycle boundaries</td>
 </tr>
 <tr>
-<td>Log location</td>
-<td><code>C:\Program Files\Dell\RASR\Logs\</code></td>
+<td>Delta set</td>
+<td>Set of writes captured during one cycle interval</td>
 </tr>
 <tr>
-<td>Config location</td>
-<td><code>C:\Program Files\Dell\RASR\Config\rasr.ini</code></td>
+<td>SRDF director</td>
+<td>PowerMax back-end port handling SRDF I/O over FCIP or FC</td>
+</tr>
+<tr>
+<td>DSE (Delta Set Extension)</td>
+<td>Dedicated storage device used as overflow when write traffic exceeds in-memory delta set capacity</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check RASR Agent status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">RASRAgent</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Restart agent</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">RASRAgent</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Check agent version</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Version</span><span class="p">,</span> <span class="n">InstallDate</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># View recent agent log</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\Logs\RASRAgent.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
-</code></pre></div>
-<h2 id="rasr-console">RASR Console<a class="headerlink" href="#rasr-console" title="Permanent link">&para;</a></h2>
-<p>The RASR Console is the GUI interface launched from within a running Windows session. It provides:</p>
-<ul>
-<li><strong>Backup</strong> — initiate a new system image capture.</li>
-<li><strong>Schedule</strong> — configure automated image capture schedule.</li>
-<li><strong>Media</strong> — create bootable RASR USB media or download the boot ISO.</li>
-<li><strong>Recovery</strong> — initiate recovery from within a running OS (for non-catastrophic failures).</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Start → Dell OpenManage → Recovery and System Restore → Launch Console
-</code></pre></div>
-<p>The Console is a thin client — all operations are executed by the RASR Agent service.</p>
-<h2 id="recovery-image">Recovery Image<a class="headerlink" href="#recovery-image" title="Permanent link">&para;</a></h2>
-<p>The recovery image is a sector-level copy of the system volume, stored in the proprietary RASR format.</p>
+<h2 id="pair-states">Pair States<a class="headerlink" href="#pair-states" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Detail</th>
+<th>State</th>
+<th>Meaning</th>
+<th>Normal?</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Format</td>
-<td><code>.wim</code> or RASR proprietary block image</td>
+<td>Consistent</td>
+<td>R2 is consistent and receiving cycles; latest cycle applied</td>
+<td>Yes — normal SRDF/A state</td>
 </tr>
 <tr>
-<td>Contents</td>
-<td>OS volume, boot partition, EFI partition, system state</td>
+<td>Transmit Idle</td>
+<td>No data being transmitted — link idle or no new writes</td>
+<td>Investigate if unexpected</td>
 </tr>
 <tr>
-<td>Data volumes</td>
-<td>Not included by default; scope is OS + system state only</td>
+<td>Suspended</td>
+<td>Replication manually suspended</td>
+<td>Expected if suspension was performed</td>
 </tr>
 <tr>
-<td>Compression</td>
-<td>Hardware-dependent; typically 40–60% compression on OS volumes</td>
+<td>DSE Active</td>
+<td>Cache overflow to DSE device; high write load</td>
+<td>Monitor closely</td>
 </tr>
 <tr>
-<td>Storage location</td>
-<td>Network SMB share (default) or local USB</td>
+<td>Failed Over</td>
+<td>R1 devices are read-only; R2 devices are R/W</td>
+<td>Active failover underway</td>
+</tr>
+<tr>
+<td>Inconsistent</td>
+<td>R2 cannot be made consistent</td>
+<td>Immediate investigation required</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Typical image size:
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Fresh Windows Server 2022 OS: ~12 GB compressed
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Fully patched + apps installed: 20–40 GB compressed
+<h2 id="key-commands">Key Commands<a class="headerlink" href="#key-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show cycle state for all devices in an SRDF/A group</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Detailed view including cycle time and lag</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all RDFG groups</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check if DSE is active</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>DSE
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Suspend / resume replication</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Show lag value</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Lag|Cycle Age&quot;</span>
 </code></pre></div>
-<h3 id="network-recovery-share-requirements">Network Recovery Share Requirements<a class="headerlink" href="#network-recovery-share-requirements" title="Permanent link">&para;</a></h3>
+<h2 id="lag-reference">Lag Reference<a class="headerlink" href="#lag-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Requirement</th>
-<th>Detail</th>
+<th>Lag Range</th>
+<th>Assessment</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Protocol</td>
-<td>SMB 2.0 or later</td>
+<td>≤ configured cycle time</td>
+<td>Healthy — RPO is met</td>
+<td>None — monitor</td>
 </tr>
 <tr>
-<td>Authentication</td>
-<td>Domain account or local account on the share host</td>
+<td>2–5× cycle time</td>
+<td>Warning — investigate link or write rate</td>
+<td>Check link utilization and write rate</td>
 </tr>
 <tr>
-<td>Permissions</td>
-<td>Read/write for the RASR service account; read for recovery operations</td>
-</tr>
-<tr>
-<td>Path example</td>
-<td><code>\\nas01\rasr-images\server01\</code></td>
-</tr>
-<tr>
-<td>Minimum free space</td>
-<td>2× the compressed image size (for image + staging)</td>
+<td>&gt; 5× cycle time</td>
+<td>Critical — RPO SLA breached</td>
+<td>Immediate escalation; consider suspending non-critical groups</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Test connectivity to the recovery share from the protected server</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Test-Path</span> <span class="s2">&quot;\\nas01\rasr-images\server01&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Check available space on the share</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">(</span><span class="nb">Get-PSDrive</span> <span class="n">-Name</span> <span class="n">Z</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Free</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># or after mapping:</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">net</span> <span class="n">use</span> <span class="n">Z</span><span class="p">:</span> <span class="p">\\</span><span class="n">nas01</span><span class="p">\</span><span class="n">rasr-images</span> <span class="p">/</span><span class="n">user</span><span class="p">:</span><span class="n">domain</span><span class="p">\</span><span class="n">rasr-svc</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">(</span><span class="nb">Get-PSDrive</span> <span class="n">Z</span><span class="p">).</span><span class="n">Free</span> <span class="p">/</span> <span class="n">1GB</span>
-</code></pre></div>
-<h2 id="rasr-recovery-media-winpe">RASR Recovery Media (WinPE)<a class="headerlink" href="#rasr-recovery-media-winpe" title="Permanent link">&para;</a></h2>
-<p>The RASR boot media is a Windows Preinstallation Environment (WinPE) image that contains:</p>
-<ul>
-<li><strong>RASR Recovery Engine</strong> — the wizard-based restore interface.</li>
-<li><strong>Network drivers</strong> — Broadcom, Intel, Mellanox drivers for Dell PowerEdge generations 14G, 15G, 16G.</li>
-<li><strong>Storage drivers</strong> — PERC H730/H740/H755, HBA335/HBA355 drivers.</li>
-<li><strong>Recovery tools</strong> — <code>diskpart</code>, <code>net use</code>, <code>notepad</code>, <code>regedit</code>, <code>wpeutil</code>.</li>
-</ul>
+<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Media type</th>
-<th>Use case</th>
-<th>Creation method</th>
+<th>Link Type</th>
+<th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Bootable USB</td>
-<td>Physical recovery with USB access</td>
-<td>RASR Console → Create Media → USB</td>
+<td>FCIP (FC over IP)</td>
+<td>Most common — FC-to-IP gateway over WAN</td>
 </tr>
 <tr>
-<td>ISO file</td>
-<td>iDRAC virtual media (remote recovery)</td>
-<td>RASR Console → Create Media → ISO</td>
+<td>Dark fibre (FC)</td>
+<td>Short distances only — adds no additional latency</td>
 </tr>
 <tr>
-<td>Network boot (PXE)</td>
-<td>Large-scale recovery via PXE infrastructure</td>
-<td>Manual WinPE customisation required</td>
+<td>iSLR (IP Short Range)</td>
+<td>Newer PowerMax connectivity via IP directors</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Boot order for recovery:
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  1. Attach ISO via iDRAC → Virtual Media → Map CD/DVD
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  2. iDRAC → Power → Boot Once → Virtual CD/DVD
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  3. WinPE loads → RASR wizard starts automatically
-</code></pre></div>
-<h2 id="openmanage-integration">OpenManage Integration<a class="headerlink" href="#openmanage-integration" title="Permanent link">&para;</a></h2>
-<p>RASR Agent status is surfaced in the <strong>Dell OpenManage Server Administrator (OMSA)</strong> dashboard:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>OMSA → System → Recovery → RASR Status
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  - Last backup: &lt;timestamp&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  - Last backup result: Success / Failed
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  - Schedule: &lt;schedule&gt;
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  - Image location: &lt;path&gt;
-</code></pre></div>
-<p>OMSA alerts can be configured to notify on backup failure via SNMP trap or email.</p>
-<h2 id="component-health-check">Component Health Check<a class="headerlink" href="#component-health-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Run as part of regular health check cadence</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$results</span> <span class="p">=</span> <span class="p">@{</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">AgentStatus</span>     <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Service</span> <span class="n">RASRAgent</span><span class="p">).</span><span class="n">Status</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">LastBackup</span>      <span class="p">=</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span><span class="p">).</span><span class="n">LastBackupTime</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">LastBackupResult</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span><span class="p">).</span><span class="n">LastBackupResult</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">ImageShareReach</span> <span class="p">=</span> <span class="nb">Test-Path</span> <span class="s2">&quot;\\nas01\rasr-images\</span><span class="p">$(</span><span class="n">hostname</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">MediaPresent</span>    <span class="p">=</span> <span class="nb">Test-Path</span> <span class="s2">&quot;D:\rasr-media.iso&quot;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">}</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">$results</span> <span class="p">|</span> <span class="nb">Format-List</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Expected result</th>
-<th>Indicates</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Agent: Running</td>
-<td>Service operational</td>
-</tr>
-<tr>
-<td>Last backup: &lt; 24h ago</td>
-<td>Backup schedule running</td>
-</tr>
-<tr>
-<td>Last result: Success</td>
-<td>Image capture succeeded</td>
-</tr>
-<tr>
-<td>Share reachable: True</td>
-<td>Network path to image store is available</td>
-</tr>
-</tbody>
-</table>
+<p><strong>Bandwidth sizing:</strong> Required bandwidth = peak_change_rate_MB_per_cycle / cycle_time_s × 1.20 (20% headroom).</p>
 
 
 

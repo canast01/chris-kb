@@ -21,7 +21,7 @@
     
     
       
-        <title>SRDF/A — Overview - Chris KB</title>
+        <title>SRDF/A — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SRDF/A — Overview · Chris KB">
+  <meta property="og:title" content="SRDF/A — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SRDF/A — Overview · Chris KB">
+  <meta name="twitter:title" content="SRDF/A — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#srdfa-overview" class="md-skip">
+        <a href="#srdfa-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SRDF/A — Overview
+              SRDF/A — Architecture
             
           </span>
         </div>
@@ -1062,113 +1062,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#delta-set-mechanics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delta Set Mechanics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#srdf-group-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SRDF Group Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connectivity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dual-site-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dual-Site Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pair-states" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pair States
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#licensing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Licensing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-diagram-logical" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture Diagram (Logical)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1187,100 +1080,17 @@
 
 
 
-<h1 id="srdfa-overview">SRDF/A — Overview<a class="headerlink" href="#srdfa-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../../">SRDF/A</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>SRDF/A (Asynchronous) replicates data from a source PowerMax to a target PowerMax by capturing writes into time-bounded delta sets (cycles) and transmitting them in order. The source array acknowledges writes to the host before transmission, so host write latency is not directly affected by WAN latency — this is the key difference from SRDF/S.</p>
-<p><strong>RPO</strong> is determined by cycle time (default 30 seconds). If the WAN link fails, the R1 (source) continues accepting writes while the R2 (target) falls behind; RPO exposure equals the time since the last successful cycle completed at the target.</p>
-<hr />
-<h2 id="delta-set-mechanics">Delta Set Mechanics<a class="headerlink" href="#delta-set-mechanics" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Host writes to R1 go into the <strong>active delta set</strong> for the current cycle.</li>
-<li>At the end of the cycle interval, the active delta set is <strong>closed</strong> and queued for transmission.</li>
-<li>A new delta set opens for the next cycle.</li>
-<li>The closed delta set is transmitted to R2 in sequence — each delta set is applied in order, maintaining consistency.</li>
-<li>When R2 confirms receipt, the cycle is complete and RPO resets.</li>
-</ol>
-<p>Two delta sets are maintained simultaneously: one being transmitted (transmit delta set) and one accepting new writes (active delta set). A third set (overflow) is used when the transmit delta set is not clearing fast enough.</p>
-<pre class="mermaid"><code>flowchart TD
-    hostWrite["Host Write to R1"] --&gt; activeDeltaSet["Active Delta Set\n(accumulating writes)"]
-    activeDeltaSet --&gt;|"cycle interval ends\n(default 30s)"| closeDeltaSet["Delta Set Closed\n&amp; Queued"]
-    closeDeltaSet --&gt; newActive["New Active Delta Set\nOpens for Next Cycle"]
-    closeDeltaSet --&gt; transmit["Transmit Delta Set\n→ WAN → R2"]
-    transmit --&gt;|"R2 confirms receipt"| rpoReset["RPO Resets\nCycle Complete"]
-    transmit --&gt;|"link saturated / slow"| dse["DSE Overflow Device\nActivated"]
-    dse --&gt;|"link clears"| transmit
+<h1 id="srdfa-architecture">SRDF/A — Architecture<a class="headerlink" href="#srdfa-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Dell PowerMax SRDF/A asynchronous replication — delta set cycle model buffers writes and transmits to R2 on a ~30-second cycle; RPO equals the last completed cycle.
+</div>
 
-    style activeDeltaSet fill:#2563eb,color:#fff
-    style closeDeltaSet fill:#b45309,color:#fff
-    style transmit fill:#7c3aed,color:#fff
-    style dse fill:#be123c,color:#fff
-    style rpoReset fill:#15803d,color:#fff</code></pre>
-<hr />
-<h2 id="srdf-group-design">SRDF Group Design<a class="headerlink" href="#srdf-group-design" title="Permanent link">&para;</a></h2>
-<p>An SRDF group (RDF group) is a logical container for R1/R2 device pairs. All pairs in a group share the same cycle boundary, meaning they are consistent with each other at failover.</p>
-<ul>
-<li>All devices representing a single application or workload should be in the <strong>same SRDF group</strong> to guarantee write-order consistency.</li>
-<li>Multiple SRDF groups can exist between the same two arrays, but each has independent cycle timers.</li>
-<li>Device group (<code>symdg</code>) is the management boundary for controlling replication (<code>symrdf -g &lt;dgname&gt;</code>).</li>
-</ul>
-<hr />
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<p>SRDF/A transmits over:</p>
-<table>
-<thead>
-<tr>
-<th>Link Type</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FCIP (FC over IP)</td>
-<td>Most common — FC-to-IP gateway over a WAN</td>
-</tr>
-<tr>
-<td>Dark fibre (FC)</td>
-<td>Short distances only — adds no additional latency</td>
-</tr>
-<tr>
-<td>iSLR (IP Short Range)</td>
-<td>Newer PowerMax connectivity via IP directors</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Bandwidth sizing:</strong> The required bandwidth equals the average write I/O rate × average block size × replication overhead (~1.1–1.2x). For SRDF/A, bandwidth headroom above the average is also needed to handle peak delta set sizes without cycle delay.</p>
-<hr />
-<h2 id="dual-site-topology">Dual-Site Topology<a class="headerlink" href="#dual-site-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    subgraph siteA ["Site A — Production"]
-        hosts["Production Hosts"]
-        r1["PowerMax R1\n(Source Array)"]
-        srdfDir1["SRDF Director Ports"]
-        hosts --&gt;|"host writes"| r1
-        r1 --&gt; srdfDir1
-    end
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Delta set mechanics, SRDF group design, pair states, SYMCLI commands, and bandwidth sizing.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>SRM, Solutions Enabler, and TimeFinder/SnapVX for backup offload.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>SRDF group naming, cycle time standards, lag thresholds, and DSE sizing.</span></a>
+</div>
 
-    subgraph wan ["WAN / FCIP Link"]
-        link["FCIP / Dark Fibre\nReplication Link"]
-    end
-
-    subgraph siteB ["Site B — DR"]
-        srdfDir2["SRDF Director Ports"]
-        r2["PowerMax R2\n(Target Array)"]
-        dse["DSE Device\n(Overflow Buffer)"]
-        drHosts["DR Hosts\n(standby)"]
-        srdfDir2 --&gt; r2
-        r2 -.-&gt;|"only at failover"| drHosts
-        r2 --- dse
-    end
-
-    srdfDir1 --&gt;|"async delta sets\n~30s cycles"| link
-    link --&gt; srdfDir2</code></pre>
-<h2 id="pair-states">Pair States<a class="headerlink" href="#pair-states" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1291,13 +1101,8 @@
 </thead>
 <tbody>
 <tr>
-<td>Synchronized</td>
-<td>R2 is up to date; no active delta sets pending</td>
-<td>Yes — for SRDF/S only</td>
-</tr>
-<tr>
 <td>Consistent</td>
-<td>R2 is consistent and receiving cycles; the latest cycle is applied</td>
+<td>R2 is consistent and receiving cycles</td>
 <td>Yes — normal SRDF/A state</td>
 </tr>
 <tr>
@@ -1307,54 +1112,34 @@
 </tr>
 <tr>
 <td>Transmit Idle</td>
-<td>No data being transmitted — link idle, no new writes, or link saturation</td>
+<td>No data being transmitted</td>
 <td>Investigate if unexpected</td>
 </tr>
 <tr>
 <td>Suspended</td>
 <td>Replication manually suspended</td>
-<td>Expected if a suspension was performed</td>
+<td>Expected for maintenance</td>
 </tr>
 <tr>
 <td>Failed Over</td>
-<td>R1 devices are read-only; R2 devices are R/W</td>
+<td>R1 read-only; R2 writable</td>
 <td>Active failover underway</td>
-</tr>
-<tr>
-<td>Split</td>
-<td>Devices are split — both R1 and R2 are R/W (data diverges from this point)</td>
-<td>Only for planned operations</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
-<p>SRDF/A requires:
-- <strong>SRDF/A license</strong> on both source and target PowerMax arrays
-- SRDF port licenses on the directors used for replication
-- Optional: <strong>TimeFinder/SnapVX</strong> on the target to create local snapshots of R2 devices for backup offload</p>
-<hr />
-<h2 id="architecture-diagram-logical">Architecture Diagram (Logical)<a class="headerlink" href="#architecture-diagram-logical" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
-  PM_A["PowerMax Primary\nSite A — R1"] --&gt;|"writes buffered"| CYCLE["Delta Set Extension\n(DSE — WAN buffer)"]
-  CYCLE --&gt;|"cycle flush\n~30s"| PM_B["PowerMax Secondary\nSite B — R2"]
-  PM_B -.-&gt;|"RPO / lag monitor"| LAG["SRDF/A Cycle State"]
-  PM_A --&gt; HA(["Production Hosts"])
+  HA(["Production Hosts"]) --&gt; PM_A["PowerMax R1\nSite A"]
+  PM_A --&gt;|"writes buffered\nin delta set"| DSE["DSE Overflow Buffer\n(WAN saturation protection)"]
+  DSE --&gt;|"cycle flush ~30s"| PM_B["PowerMax R2\nSite B"]
+  PM_B -.-&gt;|"lag / RPO monitor"| LAG["Cycle State\nMonitor"]
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
   classDef dr fill:#be123c,stroke:#9f1239,color:#fff
   classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
   class PM_A ctrl
   class PM_B dr
-  class CYCLE,LAG mgmt
+  class DSE,LAG mgmt
   class HA host</code></pre>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Superna Eyeglass — Architecture Overview - Chris KB</title>
+        <title>Superna Eyeglass — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Superna Eyeglass — Architecture Overview · Chris KB">
+  <meta property="og:title" content="Superna Eyeglass — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Superna Eyeglass — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="Superna Eyeglass — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#superna-eyeglass-architecture-overview" class="md-skip">
+        <a href="#superna-eyeglass-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Superna Eyeglass — Architecture Overview
+              Superna Eyeglass — Architecture
             
           </span>
         </div>
@@ -1062,91 +1062,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#component-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Component Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dr-readiness-dashboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DR Readiness Dashboard
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#failover-execution-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failover Execution Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#appliance-sizing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Appliance Sizing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#networking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Networking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1165,10 +1080,48 @@
 
 
 
-<h1 id="superna-eyeglass-architecture-overview">Superna Eyeglass — Architecture Overview<a class="headerlink" href="#superna-eyeglass-architecture-overview" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It automates the share, quota, and DNS reconfiguration steps that previously required hours of manual work during a SyncIQ failover.</p>
-<h2 id="component-topology">Component Topology<a class="headerlink" href="#component-topology" title="Permanent link">&para;</a></h2>
+<h1 id="superna-eyeglass-architecture">Superna Eyeglass — Architecture<a class="headerlink" href="#superna-eyeglass-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Superna Eyeglass DR orchestration for NetApp PowerScale — automates SyncIQ failover, SMB/NFS share reconfiguration, quota migration, and DNS cutover in 5–15 minutes.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Failover execution flow, DR readiness scoring, CLI commands, sizing, and RPO tiers.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>PowerScale SyncIQ, Active Directory DNS, and SNMP/email alerting.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Policy naming, RPO tier assignments, readiness thresholds, and test schedule.</span></a>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eyeglass Primary Appliance</td>
+<td>Monitors SyncIQ; syncs share/quota config; DR orchestration control</td>
+<td>Primary site</td>
+</tr>
+<tr>
+<td>Eyeglass DR Appliance</td>
+<td>Standby node; activates when primary site unavailable</td>
+<td>DR site</td>
+</tr>
+<tr>
+<td>PowerScale SyncIQ</td>
+<td>Underlying data replication engine</td>
+<td>Both sites</td>
+</tr>
+<tr>
+<td>DNS Integration</td>
+<td>Automated SmartConnect zone cutover during failover</td>
+<td>Primary / DR DNS</td>
+</tr>
+</tbody>
+</table>
 <pre class="mermaid"><code>graph LR
   PS_A["PowerScale Cluster A\n(production)"] --&gt;|"SyncIQ policy"| PS_B["PowerScale Cluster B\n(DR)"]
   EG["Superna Eyeglass\nDR Assistant"] --&gt;|"monitors SyncIQ"| PS_A
@@ -1183,106 +1136,6 @@
   class PS_B dr
   class EG mgmt
   class ADMIN,DNS host</code></pre>
-<h2 id="dr-readiness-dashboard">DR Readiness Dashboard<a class="headerlink" href="#dr-readiness-dashboard" title="Permanent link">&para;</a></h2>
-<p>Eyeglass continuously monitors and scores DR readiness:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DR Readiness Score = 100% when:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ✓ All SyncIQ policies in sync state (not lagging beyond RPO threshold)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ✓ All SMB shares mirrored on DR cluster
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  ✓ All NFS exports mirrored on DR cluster
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  ✓ All quotas aligned between primary and DR cluster
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ✓ DNS zones pre-configured for cutover
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  ✓ Both Eyeglass appliances healthy and communicating
-</code></pre></div>
-<p>Access readiness dashboard: <code>https://&lt;eyeglass-ip&gt;</code> → DR → Readiness.</p>
-<h2 id="failover-execution-flow">Failover Execution Flow<a class="headerlink" href="#failover-execution-flow" title="Permanent link">&para;</a></h2>
-<p>When a failover is triggered:</p>
-<ol>
-<li>Eyeglass breaks SyncIQ replication (makes DR cluster writable)</li>
-<li>Reconfigures SMB shares and NFS exports on DR cluster to match primary settings</li>
-<li>Applies quota policies on DR cluster</li>
-<li>Executes DNS zone cutover (delegate authority to DR DNS entries)</li>
-<li>Notifies operations via email/SNMP</li>
-</ol>
-<p>RTO: typically 5–15 minutes for file services, depending on share count.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    actor Admin
-    participant EG as Eyeglass DR Assistant
-    participant ProdPS as Production PowerScale
-    participant DRPS as DR PowerScale
-    participant DNS as DNS Server
-
-    Admin-&gt;&gt;EG: egcli drfailover --policy POL-NAS-PROD --confirm
-    EG-&gt;&gt;ProdPS: Pause / break SyncIQ replication
-    ProdPS--&gt;&gt;EG: SyncIQ stopped
-    EG-&gt;&gt;DRPS: Activate access zones
-    EG-&gt;&gt;DRPS: Apply NFS exports + SMB shares
-    EG-&gt;&gt;DRPS: Apply quota policies
-    EG-&gt;&gt;DNS: Update SmartConnect zone delegation → DR VIPs
-    DNS--&gt;&gt;EG: DNS updated
-    EG--&gt;&gt;Admin: Failover complete — notify via SNMP/email
-    Note over DRPS: Clients now resolve to DR cluster</code></pre>
-<h2 id="appliance-sizing">Appliance Sizing<a class="headerlink" href="#appliance-sizing" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Environment</th>
-<th>Eyeglass VM Size</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>&lt; 500 shares</td>
-<td>4 vCPU, 8 GB RAM</td>
-</tr>
-<tr>
-<td>500–2,000 shares</td>
-<td>8 vCPU, 16 GB RAM</td>
-</tr>
-<tr>
-<td>&gt; 2,000 shares</td>
-<td>8 vCPU, 32 GB RAM (or contact Superna for sizing)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Traffic</th>
-<th>Port</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Eyeglass Admin UI</td>
-<td>443 (HTTPS)</td>
-<td>From management network</td>
-</tr>
-<tr>
-<td>PowerScale OneFS API</td>
-<td>8080 / 443</td>
-<td>From Eyeglass to each cluster</td>
-</tr>
-<tr>
-<td>Eyeglass appliance sync</td>
-<td>9000</td>
-<td>Between primary and DR Eyeglass appliances</td>
-</tr>
-<tr>
-<td>DNS management</td>
-<td>53, 445 (Windows DNS WMI)</td>
-<td>From Eyeglass to DNS servers</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

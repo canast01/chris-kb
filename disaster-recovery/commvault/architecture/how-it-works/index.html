@@ -21,7 +21,7 @@
     
     
       
-        <title>Superna Eyeglass — Components - Chris KB</title>
+        <title>Commvault — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Superna Eyeglass — Components · Chris KB">
+  <meta property="og:title" content="Commvault — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Superna Eyeglass — Components · Chris KB">
+  <meta name="twitter:title" content="Commvault — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#superna-eyeglass-components" class="md-skip">
+        <a href="#commvault-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Superna Eyeglass — Components
+              Commvault — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,98 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#component-roles" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Component Roles
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commserve-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CommServe High Availability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mediaagent-and-deduplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MediaAgent and Deduplication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-library-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Library Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-site-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Site Topology
       
     </span>
   </a>
@@ -1099,44 +1187,221 @@
 
 
 
-<h1 id="superna-eyeglass-components">Superna Eyeglass — Components<a class="headerlink" href="#superna-eyeglass-components" title="Permanent link">&para;</a></h1>
-<h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
+<h1 id="commvault-how-it-works">Commvault — How It Works<a class="headerlink" href="#commvault-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Commvault provides enterprise backup, recovery, replication, archive, and data protection management. The CommServe is the single command-and-control server — it holds the configuration database (SQL Server) mapping every backup job, client, and storage policy. MediaAgents perform data movement and host the Deduplication Database (DDB). Clients are the protected hosts (VMs, databases, filesystems).</p>
+<h2 id="component-topology">Component Topology<a class="headerlink" href="#component-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  CS["CommServe\n(command &amp; control)"] --&gt; WEBCON["Web Console\n&amp; Command Center"]
+  MA1["Media Agent 1\n(data mover)"] &amp; MA2["Media Agent 2"] --&gt; CS
+  SRC(["Source — VMs / DBs / Files"]) --&gt; MA1 &amp; MA2
+  MA1 &amp; MA2 --&gt; DISK[("Disk Library\nDDB dedup")]
+  DISK --&gt;|"aux copy"| TAPE[("Tape / Object\nlong-term retention")]
+  ADMIN(["Backup Admin"]) --&gt; WEBCON
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  class CS,MA1,MA2 ctrl
+  class DISK,TAPE store
+  class SRC,ADMIN host
+  class WEBCON mgmt</code></pre>
+<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Client (backup agent)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ▼ CVLT network (TCP 8403)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>MediaAgent (reads data, applies dedup, writes to storage)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ├── Primary copy (disk/dedup, performance tier)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    └── Secondary copy (offsite/cloud/tape, retention tier)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>CommServe (orchestrates job, tracks metadata in SQL DB)
+</code></pre></div>
+<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Component</th>
 <th>Role</th>
-<th>Location</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Eyeglass Primary Appliance</td>
-<td>Monitor SyncIQ policies; sync share/quota config; DR orchestration control plane</td>
-<td>Primary site</td>
+<td>CommServe</td>
+<td>Management, scheduling, SQL DB</td>
+<td>HA pair (passive standby) for critical environments</td>
 </tr>
 <tr>
-<td>Eyeglass DR Appliance</td>
-<td>Standby orchestration node; activates when primary site is unavailable</td>
-<td>DR site</td>
+<td>MediaAgent</td>
+<td>Data movement, deduplication (DDB)</td>
+<td>Multiple; one DDB per storage pool</td>
 </tr>
 <tr>
-<td>PowerScale SyncIQ</td>
-<td>Underlying data replication engine</td>
-<td>Both sites</td>
+<td>Client</td>
+<td>Backup agent (Windows, Linux, VSA)</td>
+<td>VSA agent for VMware vSphere</td>
 </tr>
 <tr>
-<td>DNS Integration</td>
-<td>Automated DNS zone cutover during failover</td>
-<td>Primary / DR DNS servers</td>
+<td>Command Center</td>
+<td>Web UI for administration</td>
+<td>Replaces legacy Java GUI in FR32+</td>
 </tr>
 <tr>
-<td>Eyeglass Admin UI</td>
-<td>Web-based management (port 443)</td>
-<td>Accessed from management network</td>
+<td>Storage Policy</td>
+<td>Job-to-storage mapping</td>
+<td>Primary copy + secondary (offsite) copy</td>
 </tr>
 </tbody>
 </table>
+<h2 id="commserve-high-availability">CommServe High Availability<a class="headerlink" href="#commserve-high-availability" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Passive standby</strong>: Second CommServe instance with SQL log shipping; manual failover</li>
+<li><strong>CommServe Failover (active/passive HA)</strong>: Automated failover via CommServe HA option</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify CommServe DB backup job status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">qlist</span> <span class="n">job</span> <span class="n">-j</span> <span class="n">CommServeDB_Backup</span> <span class="n">-detail</span>
+</code></pre></div>
+<h2 id="mediaagent-and-deduplication">MediaAgent and Deduplication<a class="headerlink" href="#mediaagent-and-deduplication" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    client(["Client Agent\n(VM / DB / File)"])
+    client --&gt;|"raw data stream\nTCP 8403"| ma["MediaAgent"]
+
+    subgraph maBlock [MediaAgent Processing]
+        direction TB
+        chunk["Chunk data into\nvariable blocks"]
+        hash["Hash each block\n(SHA-256)"]
+        ddb[("DDB\nDeduplication DB\nSSD-backed")]
+        chunk --&gt; hash
+        hash --&gt;|"block seen before?"| ddb
+    end
+
+    ma --&gt; maBlock
+
+    ddb --&gt;|"New block\nwrite to library"| diskLib[("Disk Library\nPrimary copy")]
+    ddb --&gt;|"Duplicate block\nskip write"| dedupSave["Dedup saving\n(reference only)"]
+
+    diskLib --&gt;|"Aux copy"| secondary[("Secondary copy\nOffsite / Cloud / Tape")]
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    class ma,chunk,hash ctrl
+    class ddb,diskLib,secondary store
+    class client host</code></pre>
+<p>MediaAgent best practices:
+- Deploy one MediaAgent per site for local backups
+- Place DDB on SSD-backed storage — IOPS are critical for large dedup pools
+- DDB free space: maintain ≥ 20% free at all times
+- Single DDB should not manage more than 60 TB of deduped data</p>
+<h2 id="storage-library-types">Storage Library Types<a class="headerlink" href="#storage-library-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Use Case</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Disk Library (Dedup)</td>
+<td>Primary backup target</td>
+<td>SSD recommended for DDB</td>
+</tr>
+<tr>
+<td>Cloud Library (S3)</td>
+<td>Long-term retention</td>
+<td>AWS S3, Azure Blob, GCP</td>
+</tr>
+<tr>
+<td>Tape Library</td>
+<td>Offsite/archival</td>
+<td>Via SAN-attached or NDMP</td>
+</tr>
+<tr>
+<td>Hyperscale X</td>
+<td>Integrated scale-out</td>
+<td>CommVault managed hardware; minimum 3-node cluster</td>
+</tr>
+</tbody>
+</table>
+<h2 id="port-requirements">Port Requirements<a class="headerlink" href="#port-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clients</td>
+<td>CommServe</td>
+<td>8400</td>
+<td>Job requests</td>
+</tr>
+<tr>
+<td>Clients</td>
+<td>MediaAgent</td>
+<td>8403</td>
+<td>Data movement</td>
+</tr>
+<tr>
+<td>CommServe</td>
+<td>MediaAgent</td>
+<td>8400</td>
+<td>Job orchestration</td>
+</tr>
+<tr>
+<td>Browser (admin)</td>
+<td>Command Center</td>
+<td>443</td>
+<td>Web UI</td>
+</tr>
+</tbody>
+</table>
+<h2 id="multi-site-topology">Multi-Site Topology<a class="headerlink" href="#multi-site-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph primarySite [Primary Site]
+        cs["CommServe\n(command &amp; control)"]
+        ma1["MediaAgent\ndc1-ma-01"]
+        diskLib1[("Disk Library\nDDB — Primary")]
+        clients1(["VMs / DBs / Files\nSite A"])
+        clients1 --&gt; ma1
+        ma1 --&gt; diskLib1
+        ma1 --&gt; cs
+    end
+
+    subgraph drSite [DR / Secondary Site]
+        ma2["MediaAgent\ndc2-ma-01"]
+        diskLib2[("Disk Library\nDDB — DR copy")]
+        clients2(["VMs / DBs / Files\nSite B"])
+        clients2 --&gt; ma2
+        ma2 --&gt; diskLib2
+        ma2 --&gt; cs
+    end
+
+    subgraph cloudTier [Cloud / Tape Tier]
+        cloud[("Cloud Library\nS3 / Azure Blob\nlong-term retention")]
+        tape[("Tape Library\narchival / compliance")]
+    end
+
+    diskLib1 --&gt;|"aux copy\n(scheduled)"| diskLib2
+    diskLib2 --&gt;|"aux copy\n(scheduled)"| cloud
+    diskLib1 --&gt;|"aux copy"| tape
+    cs --&gt; webUI["Command Center\nWeb UI — port 443"]
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+    class cs,ma1,ma2 ctrl
+    class diskLib1,diskLib2,tape store
+    class clients1,clients2 host
+    class cloud,webUI cloud</code></pre>
 
 
 

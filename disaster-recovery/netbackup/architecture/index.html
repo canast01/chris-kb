@@ -21,7 +21,7 @@
     
     
       
-        <title>NetBackup — Architecture Overview - Chris KB</title>
+        <title>NetBackup — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="NetBackup — Architecture Overview · Chris KB">
+  <meta property="og:title" content="NetBackup — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="NetBackup — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="NetBackup — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#netbackup-architecture-overview" class="md-skip">
+        <a href="#netbackup-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              NetBackup — Architecture Overview
+              NetBackup — Architecture
             
           </span>
         </div>
@@ -1062,58 +1062,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#three-tier-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Three-Tier Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-ports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Ports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1132,104 +1080,64 @@
 
 
 
-<h1 id="netbackup-architecture-overview">NetBackup — Architecture Overview<a class="headerlink" href="#netbackup-architecture-overview" title="Permanent link">&para;</a></h1>
-<h2 id="three-tier-topology">Three-Tier Topology<a class="headerlink" href="#three-tier-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    subgraph masterTier [Primary Server]
-        master["Primary Server\nCatalog DB · Policy DB\nJob Scheduler · EMM DB"]
-    end
+<h1 id="netbackup-architecture">NetBackup — Architecture<a class="headerlink" href="#netbackup-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Veritas NetBackup three-tier architecture — Primary Server catalog and scheduling, Media Servers for data movement, and Clients with backup agents.
+</div>
 
-    subgraph mediaTier [Media Servers]
-        ms1["Media Server 1\nSite A"]
-        ms2["Media Server 2\nSite B / DR"]
-        ms3["Media Server 3\nCloud Gateway"]
-    end
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Three-tier topology, key processes, storage units, catalog backup, and sizing.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>VMware VADP, Oracle RMAN, NDMP, and cloud storage integrations.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Policy naming, retention schedules, MSDP standards, and media server placement.</span></a>
+</div>
 
-    subgraph storageTier [Storage Units]
-        msdp1[("Disk / MSDP\ndedup pool\nSite A")]
-        msdp2[("Disk / MSDP\nDR copy\nSite B")]
-        cloud[("Cloud — S3\nlong-term archive")]
-    end
-
-    subgraph clientTier [Clients]
-        vmHost(["VMware backup host\nVADP"])
-        dbHost(["Oracle / MSSQL\nagent"])
-        nasHost(["NAS — NDMP"])
-    end
-
-    master --&gt;|"policy / job control\nTCP 1556"| ms1
-    master --&gt;|"policy / job control"| ms2
-    master --&gt;|"policy / job control"| ms3
-
-    ms1 --&gt; msdp1
-    ms2 --&gt; msdp2
-    ms3 --&gt; cloud
-
-    vmHost --&gt;|"TCP 13724 bpcd"| ms1
-    dbHost --&gt;|"TCP 13724 bpcd"| ms1
-    nasHost --&gt;|"NDMP"| ms1
-
-    msdp1 --&gt;|"AIR image replication"| msdp2
-
-    classDef masterNode fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef mediaNode fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef storageNode fill:#b45309,stroke:#92400e,color:#fff
-    classDef clientNode fill:#15803d,stroke:#166534,color:#fff
-    class master masterNode
-    class ms1,ms2,ms3 mediaNode
-    class msdp1,msdp2,cloud storageNode
-    class vmHost,dbHost,nasHost clientNode</code></pre>
-<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Client (backup agent) → TCP 13782
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ▼
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Media Server (reads client data, deduplicates if OST, writes to storage unit)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ├── AdvancedDisk/BasicDisk (local disk storage units)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    ├── OpenStorage (Data Domain OST)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    └── Cloud Storage Unit (S3, Azure Blob)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Master Server (catalogs image metadata, orchestrates scheduling)
-</code></pre></div>
-<h2 id="key-ports">Key Ports<a class="headerlink" href="#key-ports" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Port</th>
-<th>Protocol</th>
-<th>Purpose</th>
+<th>Component</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1556</td>
-<td>TCP</td>
-<td>vnetd (BPRD) — main communication</td>
+<td>Primary Server</td>
+<td>Central scheduler, catalog DB (PostgreSQL), EMM device database</td>
 </tr>
 <tr>
-<td>13724</td>
-<td>TCP</td>
-<td>bpcd — client daemon</td>
+<td>Media Server</td>
+<td>Data mover; writes to storage units; runs deduplication (MSDP)</td>
 </tr>
 <tr>
-<td>13782</td>
-<td>TCP</td>
-<td>bpbrm — backup/restore manager</td>
+<td>Client</td>
+<td>Backup agent on protected host; sends data to Media Server via TCP 13724</td>
 </tr>
 <tr>
-<td>13785</td>
-<td>TCP</td>
-<td>bpdbm — database manager (master)</td>
+<td>MSDP</td>
+<td>Media Server Deduplication Pool; inline dedup; supports AIR image replication</td>
+</tr>
+<tr>
+<td>Catalog</td>
+<td>Most critical component — tracks all backup images; must be protected separately</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
+<pre class="mermaid"><code>graph TB
+  MASTER["Primary Server\nCatalog · Scheduler · EMM DB"] --&gt;|"TCP 1556 policy/job control"| MS1["Media Server 1\nSite A"]
+  MASTER --&gt; MS2["Media Server 2\nSite B / DR"]
+  MS1 --&gt; MSDP1[("MSDP Pool\nSite A")]
+  MS2 --&gt; MSDP2[("MSDP Pool\nSite B")]
+  MSDP1 --&gt;|"AIR replication"| MSDP2
+  MSDP2 --&gt;|"SLP copy"| CLOUD[("Cloud Storage\nlong-term archive")]
+  CLIENT1(["VMware VADP host"]) --&gt;|"TCP 13724 bpcd"| MS1
+  CLIENT2(["Oracle / MSSQL agent"]) --&gt;|"TCP 13724 bpcd"| MS1
+  classDef master fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef media fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef store fill:#b45309,stroke:#92400e,color:#fff
+  classDef client fill:#15803d,stroke:#166534,color:#fff
+  class MASTER master
+  class MS1,MS2 media
+  class MSDP1,MSDP2,CLOUD store
+  class CLIENT1,CLIENT2 client</code></pre>
 
 
 

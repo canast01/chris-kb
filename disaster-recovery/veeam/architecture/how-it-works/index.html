@@ -21,7 +21,7 @@
     
     
       
-        <title>Commvault — Components - Chris KB</title>
+        <title>Veeam — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Commvault — Components · Chris KB">
+  <meta property="og:title" content="Veeam — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Commvault — Components · Chris KB">
+  <meta name="twitter:title" content="Veeam — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#commvault-components" class="md-skip">
+        <a href="#veeam-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Commvault — Components
+              Veeam — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-components" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Components
+        Overview
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commserve" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CommServe
+        Architecture
       
     </span>
   </a>
@@ -1091,38 +1091,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mediaagent-and-deduplication" class="md-nav__link">
+  <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        MediaAgent and Deduplication
+        Components
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="MediaAgent and Deduplication">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deduplication-data-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deduplication Data Path
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-library-types" class="md-nav__link">
+  <a href="#backup-proxy-transport-modes-vmware" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage Library Types
+        Backup Proxy Transport Modes (VMware)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scale-out-backup-repository-sobr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale-Out Backup Repository (SOBR)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Platforms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retention-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retention Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sizing-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instant-vm-recovery-rto-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant VM Recovery RTO Targets
       
     </span>
   </a>
@@ -1149,8 +1187,26 @@
 
 
 
-<h1 id="commvault-components">Commvault — Components<a class="headerlink" href="#commvault-components" title="Permanent link">&para;</a></h1>
-<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<h1 id="veeam-how-it-works">Veeam — How It Works<a class="headerlink" href="#veeam-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Veeam Backup &amp; Replication provides backup, replication, recovery, and disaster recovery for virtual, physical, and cloud workloads. The Backup Server manages scheduling and configuration. Backup Proxies perform data movement via VMware VADP or agent-based reads. The Scale-Out Backup Repository (SOBR) provides tiered storage — fast disk for short-term, object storage for long-term.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  VBR["Veeam Backup &amp; Replication Server"] --&gt; PROXY["Backup Proxy\n(data mover)"]
+  PROXY --&gt; REPO[("Backup Repository\nSOBR / immutable")]
+  VCTR(["VMware vCenter\nsource VMs"]) --&gt; PROXY
+  REPO --&gt;|"capacity tier"| OBJ[("Object Storage\nS3 / Azure Blob")]
+  REPO --&gt;|"tape offload"| TAPE[("Tape Library")]
+  ADMIN(["Backup Admin"]) --&gt;|"console"| VBR
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  class VBR,PROXY ctrl
+  class REPO,TAPE store
+  class VCTR,ADMIN host
+  class OBJ cloud</code></pre>
+<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1161,106 +1217,189 @@
 </thead>
 <tbody>
 <tr>
-<td>CommServe</td>
-<td>Management, scheduling, SQL DB</td>
-<td>HA pair (passive standby) for critical environments</td>
+<td>Backup Server</td>
+<td>Management, scheduler, config DB</td>
+<td>Windows Server; SQL Express (≤500 VMs) or full SQL Server</td>
 </tr>
 <tr>
-<td>MediaAgent</td>
-<td>Data movement, deduplication (DDB)</td>
-<td>Multiple; one DDB per storage pool</td>
+<td>Backup Proxy</td>
+<td>Data mover (reads VM data via VADP or agent)</td>
+<td>One or more per site; scale for throughput</td>
 </tr>
 <tr>
-<td>Client</td>
-<td>Backup agent (Windows, Linux, VSA)</td>
-<td>VSA agent for VMware vSphere</td>
+<td>Backup Repository</td>
+<td>Target storage for backup files (.vbk/.vib)</td>
+<td>Linux / Windows / NAS / hardened Linux</td>
 </tr>
 <tr>
-<td>Command Center</td>
-<td>Web UI for administration</td>
-<td>Replaces legacy Java GUI in FR32+</td>
+<td>Scale-Out Backup Repository (SOBR)</td>
+<td>Logical pool across multiple repos</td>
+<td>Performance tier (fast disk) + capacity tier (object storage)</td>
 </tr>
 <tr>
-<td>Storage Policy</td>
-<td>Job-to-storage mapping</td>
-<td>Primary copy + secondary (offsite) copy</td>
+<td>WAN Accelerator</td>
+<td>Remote replication deduplication</td>
+<td>Source/target pairs — only for VM replication jobs</td>
+</tr>
+<tr>
+<td>Veeam ONE</td>
+<td>Monitoring, alerting, reporting</td>
+<td>Separate server; integrates with VBR via DB</td>
 </tr>
 </tbody>
 </table>
-<h2 id="commserve">CommServe<a class="headerlink" href="#commserve" title="Permanent link">&para;</a></h2>
-<p>The CommServe is the single most critical component — it holds the configuration database (SQL Server) that maps every backup job, client, and storage policy. CommServe failure means no new jobs run.</p>
-<p>High availability options:
-- <strong>Passive standby</strong>: Second CommServe instance with SQL log shipping; manual failover
-- <strong>CommServe Failover (active/passive HA)</strong>: Automated failover via CommServe HA option</p>
-<p>CommServe SQL backup should run every 4 hours:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify CommServe DB backup job status</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">qlist</span> <span class="n">job</span> <span class="n">-j</span> <span class="n">CommServeDB_Backup</span> <span class="n">-detail</span>
-</code></pre></div></p>
-<h2 id="mediaagent-and-deduplication">MediaAgent and Deduplication<a class="headerlink" href="#mediaagent-and-deduplication" title="Permanent link">&para;</a></h2>
-<h3 id="deduplication-data-path">Deduplication Data Path<a class="headerlink" href="#deduplication-data-path" title="Permanent link">&para;</a></h3>
+<h2 id="backup-proxy-transport-modes-vmware">Backup Proxy Transport Modes (VMware)<a class="headerlink" href="#backup-proxy-transport-modes-vmware" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Hot-add (SAN)</strong>: Proxy VM attached to the production datastore — highest throughput; preferred</li>
+<li><strong>Direct NFS</strong>: For NFS datastores — bypasses ESXi, directly reads NFS</li>
+<li><strong>Network (NBD)</strong>: Fallback when SAN/NFS not available — slowest</li>
+</ul>
+<p>Deploy minimum 2 proxies per site for redundancy and parallel job capacity.</p>
+<h2 id="scale-out-backup-repository-sobr">Scale-Out Backup Repository (SOBR)<a class="headerlink" href="#scale-out-backup-repository-sobr" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
-    client(["Client Agent\n(VM / DB / File)"])
-    client --&gt;|"raw data stream\nTCP 8403"| ma["MediaAgent"]
+    job(["Backup Job\n(daily run)"])
 
-    subgraph maBlock [MediaAgent Processing]
+    subgraph sobr [Scale-Out Backup Repository]
         direction TB
-        chunk["Chunk data into\nvariable blocks"]
-        hash["Hash each block\n(SHA-256)"]
-        ddb[("DDB\nDeduplication DB\nSSD-backed")]
-        chunk --&gt; hash
-        hash --&gt;|"block seen before?"| ddb
+        pe1[("Performance Extent 1\nfast disk — NFS / XFS\n0-14 days")]
+        pe2[("Performance Extent 2\nfast disk — second node\n0-14 days")]
+        ct[("Capacity Tier\nS3-compatible object storage\n14+ days — immutable")]
+        pe1 --&gt;|"auto-offload\nafter threshold"| ct
+        pe2 --&gt;|"auto-offload"| ct
     end
 
-    ma --&gt; maBlock
+    job --&gt; pe1
+    job --&gt; pe2
 
-    ddb --&gt;|"New block\nwrite to library"| diskLib[("Disk Library\nPrimary copy")]
-    ddb --&gt;|"Duplicate block\nskip write"| dedupSave["Dedup saving\n(reference only)"]
+    ct --&gt;|"archive tier\nS3 Glacier"| glacier[("Glacier / Archive\nyearly retention")]
 
-    diskLib --&gt;|"Aux copy"| secondary[("Secondary copy\nOffsite / Cloud / Tape")]
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    class ma,chunk,hash ctrl
-    class ddb,diskLib,secondary store
-    class client host</code></pre>
-<p>MediaAgents perform data movement and host the Deduplication Database (DDB):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>MediaAgent placement best practices:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  - Deploy one MediaAgent per site for local backups
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  - Place DDB on SSD-backed storage — IOPS are critical for large dedup pools
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  - DDB free space: maintain ≥ 20% free at all times
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  - Single DDB should not manage more than 60TB of deduped data
-</code></pre></div>
-<p>Monitor DDB health via Command Center: Storage → Disk Libraries → DDB Status</p>
-<h2 id="storage-library-types">Storage Library Types<a class="headerlink" href="#storage-library-types" title="Permanent link">&para;</a></h2>
+    classDef peNode fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef ctNode fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef archNode fill:#0f766e,stroke:#0d5f58,color:#fff
+    classDef src fill:#15803d,stroke:#166534,color:#fff
+    class pe1,pe2 peNode
+    class ct ctNode
+    class glacier archNode
+    class job src</code></pre>
+<h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Type</th>
-<th>Use Case</th>
-<th>Notes</th>
+<th>Platform</th>
+<th>Method</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Disk Library (Dedup)</td>
-<td>Primary backup target</td>
-<td>SSD recommended for DDB</td>
+<td>VMware vSphere</td>
+<td>VADP, agentless</td>
 </tr>
 <tr>
-<td>Cloud Library (S3)</td>
-<td>Long-term retention</td>
-<td>AWS S3, Azure Blob, GCP</td>
+<td>Microsoft Hyper-V</td>
+<td>HV provider, agentless</td>
 </tr>
 <tr>
-<td>Tape Library</td>
-<td>Offsite/archival</td>
-<td>Via SAN-attached or NDMP</td>
+<td>Physical Windows</td>
+<td>Veeam Agent for Windows (VAW)</td>
 </tr>
 <tr>
-<td>Hyperscale X</td>
-<td>Integrated scale-out</td>
-<td>CommVault managed hardware</td>
+<td>Physical Linux</td>
+<td>Veeam Agent for Linux (VAL)</td>
+</tr>
+<tr>
+<td>AWS EC2</td>
+<td>Veeam Backup for AWS (separate appliance)</td>
+</tr>
+<tr>
+<td>Azure VMs</td>
+<td>Veeam Backup for Azure (separate appliance)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="retention-schedule">Retention Schedule<a class="headerlink" href="#retention-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Restore Points</th>
+<th>Schedule</th>
+<th>Repository</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daily</td>
+<td>14</td>
+<td>Incremental (synthetic full weekly)</td>
+<td>Performance tier (fast disk)</td>
+</tr>
+<tr>
+<td>Weekly</td>
+<td>8</td>
+<td>Synthetic full</td>
+<td>Performance tier</td>
+</tr>
+<tr>
+<td>Monthly</td>
+<td>12</td>
+<td>Active full (monthly)</td>
+<td>SOBR capacity tier offload</td>
+</tr>
+<tr>
+<td>Yearly</td>
+<td>7</td>
+<td>Active full (yearly)</td>
+<td>Object storage archive</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scale</th>
+<th>Backup Server</th>
+<th>Proxies per Site</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 100 VMs</td>
+<td>4 vCPU, 8 GB RAM</td>
+<td>1–2</td>
+</tr>
+<tr>
+<td>100–500 VMs</td>
+<td>8 vCPU, 16 GB RAM</td>
+<td>2–4</td>
+</tr>
+<tr>
+<td>500–2,000 VMs</td>
+<td>16 vCPU, 32 GB RAM (+ full SQL)</td>
+<td>4–8</td>
+</tr>
+</tbody>
+</table>
+<h2 id="instant-vm-recovery-rto-targets">Instant VM Recovery RTO Targets<a class="headerlink" href="#instant-vm-recovery-rto-targets" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Application Tier</th>
+<th>Target RTO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 1 (critical DB, ERP)</td>
+<td>&lt; 15 minutes via Instant VM Recovery</td>
+</tr>
+<tr>
+<td>Tier 2 (business apps)</td>
+<td>&lt; 1 hour</td>
+</tr>
+<tr>
+<td>Tier 3 (dev/test)</td>
+<td>&lt; 4 hours</td>
 </tr>
 </tbody>
 </table>
