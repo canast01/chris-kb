@@ -1,10 +1,14 @@
 # RecoverPoint
 
+<div class="kb-summary">
+Dell EMC RecoverPoint journal-based continuous data protection — RPA clusters intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery across CDP, CRR, and CLR modes.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>RPA topology, splitter types, replication modes, consistency groups, journal sizing, and HA.</span>
 </a>
 
 <a class="kb-card" href="operations/">

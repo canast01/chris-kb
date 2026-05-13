@@ -1,4 +1,8 @@
-# Azure — Architecture Overview
+# Azure — How It Works
+
+## Overview
+
+Microsoft Azure is a hyperscale public cloud platform. Resources are organised in a hierarchy: Tenant (Entra ID) → Management Groups → Subscriptions → Resource Groups → Resources. Azure Policy and RBAC applied at a Management Group are inherited by all child subscriptions. A hub-and-spoke network topology connects on-premises environments via ExpressRoute to a hub VNet, with workload spoke VNets peered to the hub.
 
 ## Management Group Hierarchy
 
@@ -19,11 +23,9 @@ graph TB
   class HUB,SP1,SP2 net
 ```
 
-Azure Policy and RBAC assigned at Management Group level — inherited by all child subscriptions.
-
 ## Network Architecture
 
-Hub-and-spoke topology:
+Hub-and-spoke topology with Azure Firewall in the hub controlling east-west and internet-bound traffic:
 
 ```
 On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
@@ -32,14 +34,12 @@ On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
                    ▼                ▼                 ▼
             Prod Spoke VNet   Staging Spoke VNet   Dev Spoke VNet
             (10.1.0.0/16)    (10.2.0.0/16)        (10.3.0.0/16)
-            ├── snet-web      
-            ├── snet-app      
+            ├── snet-web
+            ├── snet-app
             └── snet-db (isolated — no internet)
 ```
 
-Azure Firewall in the hub VNet controls all east-west and internet-bound traffic from spokes.
-
-## Compute Options
+## Compute
 
 | Service | Use Case |
 |---|---|
@@ -48,15 +48,16 @@ Azure Firewall in the hub VNet controls all east-west and internet-bound traffic
 | Azure App Service | Web apps, APIs |
 | Azure Container Apps | Serverless containers |
 | Azure Functions | Event-driven, short-lived tasks |
+| Azure Virtual Machine Scale Sets | Auto-scaling VM groups |
 
 ## High Availability
 
 - **VMs**: Availability Zones (spread across 3 zones per region) or Availability Sets
-- **Azure SQL**: Zone-redundant Business Critical tier or Geo-redundant
+- **Azure SQL**: Zone-redundant Business Critical tier or geo-redundant
 - **AKS**: System node pool spanning ≥ 2 zones; application node pools zone-spread
 - **Storage**: Zone-Redundant Storage (ZRS) for production; Geo-Redundant (GRS) for DR
 
-## Disaster Recovery
+## Disaster Recovery Patterns
 
 | Pattern | Services | RPO / RTO |
 |---|---|---|
@@ -65,15 +66,56 @@ Azure Firewall in the hub VNet controls all east-west and internet-bound traffic
 | Azure SQL Failover Groups | Active geo-replication | < 30 seconds RPO |
 | Azure Backup cross-region restore | Recovery Services Vault | 12–24 hours RTO |
 
-## Azure Key Vault Secret Access
+## Networking Components
+
+| Service | Purpose |
+|---|---|
+| Virtual Network (VNet) | Private network isolation |
+| Network Security Groups | Layer 4 traffic filtering |
+| Azure Firewall | Layer 7 hub egress and east-west control |
+| Application Gateway | Layer 7 load balancer with WAF |
+| ExpressRoute | Dedicated private connectivity to on-premises |
+| VPN Gateway | Site-to-site and point-to-site VPN |
+| Private Endpoints | Private connectivity to PaaS services |
+
+## Storage
+
+| Service | Purpose |
+|---|---|
+| Azure Blob Storage | Object storage, large files, backups |
+| Azure Files | SMB/NFS managed file shares |
+| Managed Disks | Block storage for VMs |
+| Azure Data Lake Storage Gen2 | Analytics, hierarchical namespace |
+
+## Identity
+
+| Service | Purpose |
+|---|---|
+| Entra ID (Azure AD) | Cloud identity plane, SSO, MFA |
+| Managed Identities | Credential-free service authentication |
+| Azure RBAC | Role-based access control across resources |
+| Privileged Identity Management | JIT privileged role activation |
+| Conditional Access | Policy-based access control |
+
+## Monitoring and Security
+
+| Service | Purpose |
+|---|---|
+| Azure Monitor | Metrics, logs, alerts, dashboards |
+| Log Analytics | Centralised log query and retention |
+| Microsoft Defender for Cloud | Security posture, threat protection |
+| Azure Key Vault | Secrets, keys, and certificate management |
+| Microsoft Sentinel | Cloud-native SIEM and SOAR |
+
+## Key Vault Secret Access Flow
 
 ```mermaid
 sequenceDiagram
-    participant app as Application\n(VM / Function / AKS pod)
-    participant mi as Managed Identity\n(IMDS endpoint)
+    participant app as Application (VM / Function / AKS pod)
+    participant mi as Managed Identity (IMDS endpoint)
     participant aad as Azure AD
     participant kv as Key Vault
-    participant policy as Key Vault Access Policy\nor RBAC
+    participant policy as Access Policy / RBAC
 
     app->>mi: GET token (resource=vault.azure.net)
     mi->>aad: Token request (MSI credential)
@@ -83,26 +125,6 @@ sequenceDiagram
     kv->>policy: Evaluate access policy / RBAC
     policy-->>kv: Allow / Deny
     kv-->>app: Secret value (200 OK) or 403 Forbidden
-```
-
-## Azure AD Auth Flow
-
-```mermaid
-sequenceDiagram
-    participant user as User
-    participant browser as Browser / Client
-    participant aad as Azure AD (Entra ID)
-    participant ca as Conditional Access
-    participant resource as Azure Resource / App
-
-    user->>browser: Sign-in request
-    browser->>aad: Authentication request (OAuth2 / OIDC)
-    aad->>aad: Validate credentials + MFA
-    aad->>ca: Evaluate Conditional Access policies
-    ca-->>aad: Allow / Block / Require MFA
-    aad-->>browser: Access token (JWT)
-    browser->>resource: Request with Bearer token
-    resource-->>browser: Response granted
 ```
 
 ## Identity Architecture

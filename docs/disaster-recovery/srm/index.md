@@ -1,10 +1,14 @@
 # SRM
 
+<div class="kb-summary">
+VMware Site Recovery Manager DR orchestration — vCenter plugin automating storage presentation, VM registration, power-on sequencing, and IP customisation across a site pair.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>Site pair topology, recovery plan boot sequence, recovery modes, SRAs, and vSphere Replication.</span>
 </a>
 
 <a class="kb-card" href="operations/">

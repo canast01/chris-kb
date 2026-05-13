@@ -1,10 +1,21 @@
-# Superna Eyeglass — Architecture Overview
+# Superna Eyeglass — Architecture
 
-## Overview
+<div class="kb-summary">
+Superna Eyeglass DR orchestration for NetApp PowerScale — automates SyncIQ failover, SMB/NFS share reconfiguration, quota migration, and DNS cutover in 5–15 minutes.
+</div>
 
-Superna Eyeglass is a DR orchestration platform purpose-built for NetApp PowerScale (Isilon). It automates the share, quota, and DNS reconfiguration steps that previously required hours of manual work during a SyncIQ failover.
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Failover execution flow, DR readiness scoring, CLI commands, sizing, and RPO tiers.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>PowerScale SyncIQ, Active Directory DNS, and SNMP/email alerting.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Policy naming, RPO tier assignments, readiness thresholds, and test schedule.</span></a>
+</div>
 
-## Component Topology
+| Component | Role | Location |
+|---|---|---|
+| Eyeglass Primary Appliance | Monitors SyncIQ; syncs share/quota config; DR orchestration control | Primary site |
+| Eyeglass DR Appliance | Standby node; activates when primary site unavailable | DR site |
+| PowerScale SyncIQ | Underlying data replication engine | Both sites |
+| DNS Integration | Automated SmartConnect zone cutover during failover | Primary / DR DNS |
 
 ```mermaid
 graph LR
@@ -22,78 +33,3 @@ graph LR
   class EG mgmt
   class ADMIN,DNS host
 ```
-
-## DR Readiness Dashboard
-
-Eyeglass continuously monitors and scores DR readiness:
-
-```
-DR Readiness Score = 100% when:
-  ✓ All SyncIQ policies in sync state (not lagging beyond RPO threshold)
-  ✓ All SMB shares mirrored on DR cluster
-  ✓ All NFS exports mirrored on DR cluster
-  ✓ All quotas aligned between primary and DR cluster
-  ✓ DNS zones pre-configured for cutover
-  ✓ Both Eyeglass appliances healthy and communicating
-```
-
-Access readiness dashboard: `https://<eyeglass-ip>` → DR → Readiness.
-
-## Failover Execution Flow
-
-When a failover is triggered:
-
-1. Eyeglass breaks SyncIQ replication (makes DR cluster writable)
-2. Reconfigures SMB shares and NFS exports on DR cluster to match primary settings
-3. Applies quota policies on DR cluster
-4. Executes DNS zone cutover (delegate authority to DR DNS entries)
-5. Notifies operations via email/SNMP
-
-RTO: typically 5–15 minutes for file services, depending on share count.
-
-```mermaid
-sequenceDiagram
-    actor Admin
-    participant EG as Eyeglass DR Assistant
-    participant ProdPS as Production PowerScale
-    participant DRPS as DR PowerScale
-    participant DNS as DNS Server
-
-    Admin->>EG: egcli drfailover --policy POL-NAS-PROD --confirm
-    EG->>ProdPS: Pause / break SyncIQ replication
-    ProdPS-->>EG: SyncIQ stopped
-    EG->>DRPS: Activate access zones
-    EG->>DRPS: Apply NFS exports + SMB shares
-    EG->>DRPS: Apply quota policies
-    EG->>DNS: Update SmartConnect zone delegation → DR VIPs
-    DNS-->>EG: DNS updated
-    EG-->>Admin: Failover complete — notify via SNMP/email
-    Note over DRPS: Clients now resolve to DR cluster
-```
-
-## Appliance Sizing
-
-| Environment | Eyeglass VM Size |
-|---|---|
-| < 500 shares | 4 vCPU, 8 GB RAM |
-| 500–2,000 shares | 8 vCPU, 16 GB RAM |
-| > 2,000 shares | 8 vCPU, 32 GB RAM (or contact Superna for sizing) |
-
-## Networking
-
-| Traffic | Port | Notes |
-|---|---|---|
-| Eyeglass Admin UI | 443 (HTTPS) | From management network |
-| PowerScale OneFS API | 8080 / 443 | From Eyeglass to each cluster |
-| Eyeglass appliance sync | 9000 | Between primary and DR Eyeglass appliances |
-| DNS management | 53, 445 (Windows DNS WMI) | From Eyeglass to DNS servers |
-
----
-
-## In this section
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>

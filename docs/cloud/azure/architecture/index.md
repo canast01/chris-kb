@@ -1,6 +1,23 @@
-# Azure — Architecture Overview
+# Azure — Architecture
 
-## Management Group Hierarchy
+<div class="kb-summary">
+Azure cloud platform architecture — management hierarchy, hub-and-spoke networking, compute options, HA patterns, and identity with Entra ID.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Management hierarchy, hub-spoke networking, compute, identity, HA, and DR patterns.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>ExpressRoute, on-premises connectivity, and third-party integrations.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, tagging policy, subscription design, and security baselines.</span></a>
+</div>
+
+| Layer | Service | Role |
+|---|---|---|
+| Identity | Entra ID (Azure AD) | Cloud identity plane; SSO, MFA, PIM, Conditional Access |
+| Management | Management Groups / Policy | Governance hierarchy; RBAC and Policy inherited downward |
+| Network | Hub VNet + Spoke VNets | Hub-and-spoke; Azure Firewall controls east-west and internet traffic |
+| Compute | VMs, AKS, App Service | Lift-and-shift, containers, web apps |
+| Storage | Blob, ADLS, Managed Disks | Object, data lake, and block storage |
+| Observability | Azure Monitor + Log Analytics | Metrics, logs, alerts, dashboards |
 
 ```mermaid
 graph TB
@@ -18,114 +35,3 @@ graph TB
   class SUBP,SUBD cloud
   class HUB,SP1,SP2 net
 ```
-
-Azure Policy and RBAC assigned at Management Group level — inherited by all child subscriptions.
-
-## Network Architecture
-
-Hub-and-spoke topology:
-
-```
-On-Premises ←→ ExpressRoute ←→ Hub VNet (Connectivity subscription)
-                                    │
-                   ┌────────────────┼────────────────┐
-                   ▼                ▼                 ▼
-            Prod Spoke VNet   Staging Spoke VNet   Dev Spoke VNet
-            (10.1.0.0/16)    (10.2.0.0/16)        (10.3.0.0/16)
-            ├── snet-web      
-            ├── snet-app      
-            └── snet-db (isolated — no internet)
-```
-
-Azure Firewall in the hub VNet controls all east-west and internet-bound traffic from spokes.
-
-## Compute Options
-
-| Service | Use Case |
-|---|---|
-| Azure Virtual Machines | Lift-and-shift, legacy, special OS |
-| Azure Kubernetes Service (AKS) | Container workloads |
-| Azure App Service | Web apps, APIs |
-| Azure Container Apps | Serverless containers |
-| Azure Functions | Event-driven, short-lived tasks |
-
-## High Availability
-
-- **VMs**: Availability Zones (spread across 3 zones per region) or Availability Sets
-- **Azure SQL**: Zone-redundant Business Critical tier or Geo-redundant
-- **AKS**: System node pool spanning ≥ 2 zones; application node pools zone-spread
-- **Storage**: Zone-Redundant Storage (ZRS) for production; Geo-Redundant (GRS) for DR
-
-## Disaster Recovery
-
-| Pattern | Services | RPO / RTO |
-|---|---|---|
-| Azure Site Recovery | VM replication to secondary region | < 1 hour RPO, < 2 hours RTO |
-| Geo-redundant storage | Azure Blob, ADLS Gen2 (GRS/GZRS) | Near-zero RPO |
-| Azure SQL Failover Groups | Active geo-replication | < 30 seconds RPO |
-| Azure Backup cross-region restore | Recovery Services Vault | 12–24 hours RTO |
-
-## Azure Key Vault Secret Access
-
-```mermaid
-sequenceDiagram
-    participant app as Application\n(VM / Function / AKS pod)
-    participant mi as Managed Identity\n(IMDS endpoint)
-    participant aad as Azure AD
-    participant kv as Key Vault
-    participant policy as Key Vault Access Policy\nor RBAC
-
-    app->>mi: GET token (resource=vault.azure.net)
-    mi->>aad: Token request (MSI credential)
-    aad-->>mi: Bearer token (JWT)
-    mi-->>app: Bearer token
-    app->>kv: GET secret (Authorization: Bearer token)
-    kv->>policy: Evaluate access policy / RBAC
-    policy-->>kv: Allow / Deny
-    kv-->>app: Secret value (200 OK) or 403 Forbidden
-```
-
-## Azure AD Auth Flow
-
-```mermaid
-sequenceDiagram
-    participant user as User
-    participant browser as Browser / Client
-    participant aad as Azure AD (Entra ID)
-    participant ca as Conditional Access
-    participant resource as Azure Resource / App
-
-    user->>browser: Sign-in request
-    browser->>aad: Authentication request (OAuth2 / OIDC)
-    aad->>aad: Validate credentials + MFA
-    aad->>ca: Evaluate Conditional Access policies
-    ca-->>aad: Allow / Block / Require MFA
-    aad-->>browser: Access token (JWT)
-    browser->>resource: Request with Bearer token
-    resource-->>browser: Response granted
-```
-
-## Identity Architecture
-
-```
-Entra ID (cloud identity plane)
-    │
-    ├── Azure AD Connect sync ←── On-premises AD (source of truth)
-    ├── Entra ID Governance (lifecycle, access reviews)
-    ├── Privileged Identity Management (PIM — JIT role activation)
-    └── Conditional Access Policies (MFA, compliant device requirements)
-
-Humans: SSO via Entra ID, MFA required
-Service Principals: used by CI/CD, Terraform (OIDC preferred; no client secrets)
-Managed Identities: used by Azure services (no credentials to manage)
-```
-
----
-
-## In this section
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
