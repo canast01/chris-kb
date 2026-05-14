@@ -21,7 +21,7 @@
     
     
       
-        <title>Data Domain — Overview - Chris KB</title>
+        <title>Data Domain — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Data Domain — Overview · Chris KB">
+  <meta property="og:title" content="Data Domain — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Data Domain — Overview · Chris KB">
+  <meta name="twitter:title" content="Data Domain — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#data-domain-overview" class="md-skip">
+        <a href="#data-domain-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Data Domain — Overview
+              Data Domain — Architecture
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#protocol-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Protocol Access
       
     </span>
   </a>
@@ -1080,82 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deduplication-pipeline" class="md-nav__link">
+  <a href="#topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Deduplication Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#filesystem-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Filesystem Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Topology
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="HA Topology">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#single-node-standard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Single Node (Standard)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ha-active-standby-pair" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Active-Standby Pair
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Path
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
+        Topology
       
     </span>
   </a>
@@ -1182,15 +1110,77 @@
 
 
 
-<h1 id="data-domain-overview">Data Domain — Overview<a class="headerlink" href="#data-domain-overview" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built around inline global deduplication. All data is deduplicated as it is written — not in post-processing — using the SISL (Stream-Informed Segment Layout) deduplication engine. The result is a highly space-efficient backup target that typically achieves 20:1 or greater reduction ratios across mixed workloads.</p>
-<h2 id="deduplication-pipeline">Deduplication Pipeline<a class="headerlink" href="#deduplication-pipeline" title="Permanent link">&para;</a></h2>
+<h1 id="data-domain-architecture">Data Domain — Architecture<a class="headerlink" href="#data-domain-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance with inline global deduplication via the SISL engine. DDBoost integration with backup software reduces network traffic by ~50% via source-side deduplication. Typical dedup ratios: 20:1 or greater.
+</div>
+
+<div class="kb-grid kb-grid-3">
+  <a class="kb-card" href="how-it-works/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">How It Works</div>
+    <div class="kb-card-desc">SISL dedup engine, DDFS/MTree namespace, DDBoost source-side filtering, DD Replicator, cloud tier, and key CLI commands.</div>
+  </a>
+  <a class="kb-card" href="integrations/">
+    <div class="kb-card-icon">🔗</div>
+    <div class="kb-card-title">Integrations</div>
+    <div class="kb-card-desc">NetBackup, Commvault, Veeam DDBoost integration, VTL for legacy backup software, and cloud tier object storage.</div>
+  </a>
+  <a class="kb-card" href="design-standards/">
+    <div class="kb-card-icon">📐</div>
+    <div class="kb-card-title">Design Standards</div>
+    <div class="kb-card-desc">MTree layout, replication topology, DDBoost vs NFS protocol selection, and cloud tier lifecycle policy design.</div>
+  </a>
+</div>
+
+<h2 id="protocol-access">Protocol Access<a class="headerlink" href="#protocol-access" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Port</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DDBoost over IP</td>
+<td>TCP 2052 / 2053</td>
+<td>Primary — backup software integration</td>
+</tr>
+<tr>
+<td>NFS v3</td>
+<td>TCP/UDP 2049</td>
+<td>Unix/Linux backup clients</td>
+</tr>
+<tr>
+<td>CIFS/SMB</td>
+<td>TCP 445</td>
+<td>Windows backup clients</td>
+</tr>
+<tr>
+<td>VTL</td>
+<td>FC</td>
+<td>Tape-emulation for legacy backup software</td>
+</tr>
+<tr>
+<td>DD Replicator</td>
+<td>TCP 2051</td>
+<td>DD-to-DD replication</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>TCP 22 / 443</td>
+<td>SSH CLI and HTTPS UI</td>
+</tr>
+</tbody>
+</table>
+<h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
   BU(["Backup Servers\nNetBackup / Commvault / Veeam"]) --&gt;|"DDBoost / NFS / CIFS / VTL"| DD["Dell Data Domain\n(dedup + compression)"]
-  DD --&gt;|"DD Replicator"| DDDR["Remote Data Domain\n(DR copy)"]
+  DD --&gt;|"DD Replicator\nTCP 2051"| DDDR["Remote Data Domain\n(DR copy)"]
   DD --&gt; CLOUD["Cloud Tier\nS3 / Azure Blob — long-term"]
-  DD --&gt; VTL["Virtual Tape Library\n(optional)"]
+  DD --&gt; VTL["Virtual Tape Library\n(optional — FC)"]
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
   classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
@@ -1199,59 +1189,6 @@
   class BU host
   class CLOUD cloud
   class DDDR dr</code></pre>
-<h2 id="filesystem-architecture">Filesystem Architecture<a class="headerlink" href="#filesystem-architecture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DDFS (Data Domain Filesystem)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Namespace layer (MTrees: /data/col1/&lt;name&gt;)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── MTree A (e.g., mtree-veeam-prod)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── MTree B (e.g., mtree-netbackup-ora)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └── MTree C (e.g., mtree-commvault-dev)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── Segment store (deduplicated data containers)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── Index (segment fingerprint lookup table)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└── Cleaning layer (garbage collection of unreferenced segments)
-</code></pre></div>
-<p>Each MTree is a logical view; all data physically shares the same dedup pool. Quotas are enforced per MTree, but deduplication operates globally across all MTrees.</p>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<h3 id="single-node-standard">Single Node (Standard)<a class="headerlink" href="#single-node-standard" title="Permanent link">&para;</a></h3>
-<p>The most common deployment. A single DD appliance with internal or external shelf expansion. No automatic failover — HA is achieved through MTree replication to a secondary DD at a remote site.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[Backup Clients]
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>      |
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  [Data Domain]  ←── DDBoost / NFS / CIFS / VTL
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  [Disk Shelves]  (internal or external SAS expansion)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  [Replication target DD] (remote site — DR)
-</code></pre></div>
-<h3 id="ha-active-standby-pair">HA Active-Standby Pair<a class="headerlink" href="#ha-active-standby-pair" title="Permanent link">&para;</a></h3>
-<p>Available on high-end DD9000/DD9900 series. Two DD heads share the same disk shelves. The standby monitors the active node and takes over on failure. Failover is automatic and non-disruptive to replication contexts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[Active DD Head] ←──── Heartbeat ────→ [Standby DD Head]
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>         \                                    /
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>          └──── Shared SAS Disk Shelves ─────┘
-</code></pre></div>
-<h2 id="data-path">Data Path<a class="headerlink" href="#data-path" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    client(["Backup Client\n(Veeam / NetBackup / CommVault)"])
-    dsp["DDBoost Client Library\n(DSP: source-side dedup filter)\n~50% traffic reduction"]
-    recv["DD Boost Receiver\n(NFS / CIFS handler)"]
-    sisl["SISL Engine\n(segment fingerprinting\n+ locality filter)"]
-    nvram["NVRAM Write Cache\n(power-safe)"]
-    ddfsStore["[(DDFS Container Store)]\n(deduplicated + compressed)"]
-    replEngine["Replication Engine\n(async delta sync)"]
-    remoteDd["Remote Data Domain\n(DR site)"]
-
-    client --&gt;|"DDBoost over IP"| dsp
-    dsp --&gt;|"unique segments only"| recv
-    recv --&gt; sisl
-    sisl --&gt;|"new unique segments"| nvram
-    nvram --&gt; ddfsStore
-    ddfsStore --&gt;|"async replication\nTCP 2051"| replEngine
-    replEngine --&gt; remoteDd</code></pre>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerScale — Components - Chris KB</title>
+        <title>PowerScale — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerScale — Components · Chris KB">
+  <meta property="og:title" content="PowerScale — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerScale — Components · Chris KB">
+  <meta name="twitter:title" content="PowerScale — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#powerscale-components" class="md-skip">
+        <a href="#powerscale-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerScale — Components
+              PowerScale — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-components" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Components
+        Overview
       
     </span>
   </a>
@@ -1080,85 +1080,90 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#synciq-replication" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SyncIQ — Replication
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SyncIQ — Replication">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#policy-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Policy Management
+        Architecture
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#running-and-monitoring-jobs" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#onefs-distributed-file-system" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Running and Monitoring Jobs
+        OneFS Distributed File System
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#policy-health-and-rpo" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#ha-and-protection-levels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Policy Health and RPO
+        HA and Protection Levels
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#failover-and-failback" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#node-pool-and-tier-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Failover and Failback
+        Node Pool and Tier Architecture
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#synciq-certificates-and-connectivity" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SyncIQ Certificates and Connectivity
+        Components
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting
+        Connectivity
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#node-hardware-families" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Hardware Families
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key CLI Commands
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1182,8 +1187,73 @@
 
 
 
-<h1 id="powerscale-components">PowerScale — Components<a class="headerlink" href="#powerscale-components" title="Permanent link">&para;</a></h1>
-<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<h1 id="powerscale-how-it-works">PowerScale — How It Works<a class="headerlink" href="#powerscale-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the <strong>OneFS</strong> distributed operating system. All nodes in a cluster are peers — there is no dedicated metadata controller. The entire cluster presents a single namespace rooted at <code>/ifs</code> across all protocols (NFS, SMB, HDFS, S3, FTP). Clusters scale from a minimum of 3 nodes to 252 nodes.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  N1["Node 1"] &amp; N2["Node 2"] &amp; N3["Node 3"] &amp; NN["Node N…"] --&gt; INT["InfiniBand / 100GbE\nInternal Cluster Network"]
+  INT --&gt; SC["SmartConnect\n(DNS-based load balancing)"]
+  SC --&gt; NFS(["NFS v3/v4 Clients"])
+  SC --&gt; SMB(["SMB / CIFS Clients"])
+  SC --&gt; HDFS(["HDFS / S3 Clients"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class N1,N2,N3,NN ctrl
+  class INT,SC net
+  class NFS,SMB,HDFS host</code></pre>
+<h2 id="onefs-distributed-file-system">OneFS Distributed File System<a class="headerlink" href="#onefs-distributed-file-system" title="Permanent link">&para;</a></h2>
+<p>OneFS runs identically on every node. There is no primary node or metadata controller — all nodes share metadata, data, and client I/O.</p>
+<ul>
+<li><strong>Single global namespace</strong>: All data lives under <code>/ifs</code>. No volumes, LUNs, or mount points.</li>
+<li><strong>Distributed metadata</strong>: File metadata (inodes, block maps, directory entries) is erasure-coded and distributed across all nodes — no metadata bottleneck.</li>
+<li><strong>Distributed locking</strong>: Coherence is maintained via per-I/O node ownership; NFS write caching and SMB oplocks operate within this framework.</li>
+</ul>
+<h2 id="ha-and-protection-levels">HA and Protection Levels<a class="headerlink" href="#ha-and-protection-levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Survives</th>
+<th>Recommended Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N+1</td>
+<td>1 node or drive failure</td>
+<td>Minimum for any production cluster</td>
+</tr>
+<tr>
+<td>N+2</td>
+<td>2 simultaneous failures</td>
+<td>Standard recommendation for production</td>
+</tr>
+<tr>
+<td>N+3</td>
+<td>3 simultaneous failures</td>
+<td>High-value data; archive clusters</td>
+</tr>
+<tr>
+<td>2x (mirroring)</td>
+<td>Any 1 full copy lost</td>
+<td>Small clusters or metadata-heavy workloads</td>
+</tr>
+</tbody>
+</table>
+<p>Losing a node triggers <strong>SMARTFAIL</strong> — OneFS rebalances data to remaining nodes. Quorum (strict majority) is required for write operations.</p>
+<h2 id="node-pool-and-tier-architecture">Node Pool and Tier Architecture<a class="headerlink" href="#node-pool-and-tier-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    cluster["OneFS Cluster\n(single /ifs namespace)"]
+    cluster --&gt; poolNVMe["Node Pool: F-series NVMe\n(all-flash — performance tier)"]
+    cluster --&gt; poolSAS["Node Pool: H-series Hybrid\n(NVMe + SAS — capacity tier)"]
+    cluster --&gt; poolNLSAS["Node Pool: A-series NL-SAS\n(high-density — archive tier)"]
+    fp["SmartPools File Policy\n(age / path / type rules)"]
+    fp --&gt;|"hot data"| poolNVMe
+    fp --&gt;|"warm data"| poolSAS
+    fp --&gt;|"cold data"| poolNLSAS</code></pre>
+<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1194,31 +1264,27 @@
 <tbody>
 <tr>
 <td>OneFS Node</td>
-<td>Individual server unit; contains CPU, RAM, NVMe/SSD/HDD storage, and network interfaces. Every node runs OneFS and participates in the distributed file system.</td>
-</tr>
-<tr>
-<td>OneFS OS</td>
-<td>Distributed OS running on all nodes; manages a single coherent namespace across the cluster.</td>
+<td>Individual server unit with CPU, RAM, and NVMe/SSD/HDD. Every node runs OneFS.</td>
 </tr>
 <tr>
 <td>SmartPools</td>
-<td>Policy-based data tiering; automatically migrates files between node pools (SSD, SAS, SATA/NL-SAS) based on access time or custom criteria.</td>
+<td>Policy-based data tiering; migrates files between node pools based on access time or custom criteria.</td>
 </tr>
 <tr>
 <td>Access Zones</td>
-<td>Virtual NAS partitions; each zone has its own IP pool, authentication provider, and export/share namespace. Used to multi-tenant the cluster.</td>
+<td>Virtual NAS partitions; each zone has its own IP pool, auth provider, and share namespace.</td>
 </tr>
 <tr>
 <td>SmartConnect</td>
-<td>DNS-based connection load balancing; distributes NFS/SMB client connections across node IP addresses within a zone.</td>
+<td>DNS-based load balancing; distributes client connections across node IPs within a zone.</td>
 </tr>
 <tr>
 <td>SyncIQ</td>
-<td>Asynchronous replication engine; replicates directories to a remote PowerScale cluster at scheduled intervals or continuously.</td>
+<td>Asynchronous replication engine; replicates directories to a remote PowerScale cluster.</td>
 </tr>
 <tr>
 <td>SnapshotIQ</td>
-<td>Per-directory point-in-time snapshots stored within <code>/ifs/.snapshot/</code></td>
+<td>Per-directory point-in-time snapshots stored within <code>/ifs/.snapshot/</code>.</td>
 </tr>
 <tr>
 <td>SmartQuotas</td>
@@ -1226,141 +1292,92 @@
 </tr>
 <tr>
 <td>CloudPools</td>
-<td>Tiering of cold data to object stores (AWS S3, Azure Blob, ECS) as a transparent extension of <code>/ifs</code>.</td>
-</tr>
-<tr>
-<td>InsightIQ</td>
-<td>(Legacy) Performance analytics collector; replaced by CloudIQ in current deployments.</td>
+<td>Tiers cold data to object stores (AWS S3, Azure Blob, ECS) as a transparent extension of <code>/ifs</code>.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="synciq-replication">SyncIQ — Replication<a class="headerlink" href="#synciq-replication" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    srcCluster["Source Cluster\n/ifs/data/project1"]
-    policy["SyncIQ Policy\n(schedule + target)"]
-    wan["WAN / IP Network\n(TCP 7722, optional TLS)"]
-    dstCluster["Target Cluster\n/ifs/replicated/project1"]
-    snapRef["Source Snapshot\n(change-tracking reference)"]
-
-    srcCluster --&gt; policy
-    policy --&gt; snapRef
-    snapRef --&gt;|"delta sync"| wan
-    wan --&gt; dstCluster
-
-    subgraph "Failover"
-        dstCluster --&gt;|"break mirror"| rw["Target Writable\n(clients re-pointed)"]
-    end
-
-    subgraph "Failback"
-        rw --&gt;|"return policy"| srcCluster
-    end</code></pre>
-<p>SyncIQ policy management, monitoring, and failover/failback operations on Dell PowerScale.</p>
-<h3 id="policy-management">Policy Management<a class="headerlink" href="#policy-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all SyncIQ policies</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># View a specific policy</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Create a policy (source → target, daily at 02:00)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span>--action<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span>--source-root-path<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span>--target-host<span class="w"> </span>&lt;target-cluster-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span>--target-path<span class="w"> </span>/ifs/replicated/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 days at 02:00&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Enable / disable a policy</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>modify<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--enabled<span class="w"> </span>yes
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>modify<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--enabled<span class="w"> </span>no
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Delete a policy</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>delete<span class="w"> </span>&lt;policy_name&gt;
-</code></pre></div>
-<h3 id="running-and-monitoring-jobs">Running and Monitoring Jobs<a class="headerlink" href="#running-and-monitoring-jobs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Start a manual sync job</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check currently running jobs</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>running
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># View job details</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>view<span class="w"> </span>&lt;job_id&gt;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check last completed job result</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>finished<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Failed jobs</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>failed
-</code></pre></div>
-<h3 id="policy-health-and-rpo">Policy Health and RPO<a class="headerlink" href="#policy-health-and-rpo" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Last successful sync time for all policies</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Policy Name|Last Success&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Policies that haven&#39;t synced in &gt; 24 hours</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Last Success&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>paste<span class="w"> </span>-<span class="w"> </span>-<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>awk<span class="w"> </span><span class="s1">&#39;{ if ($NF &lt; strftime(&quot;%s&quot;) - 86400) print &quot;OVERDUE:&quot;, $0 }&#39;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Policy performance report</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>&lt;report_id&gt;
-</code></pre></div>
-<h3 id="failover-and-failback">Failover and Failback<a class="headerlink" href="#failover-and-failback" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># --- Planned Failover ---</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Step 1 — disable the source policy (stops new syncs)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>modify<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--enabled<span class="w"> </span>no
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Step 2 — run a final sync to minimise RPO</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>running<span class="w">   </span><span class="c1"># wait for completion</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Step 3 — on the TARGET cluster, allow writes (break the mirror)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>delete<span class="w"> </span>&lt;policy_name&gt;<span class="w">   </span><span class="c1"># or use Superna Eyeglass for orchestrated failover</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># OR use the SyncIQ failover command if available:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>failover<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Step 4 — mount shares from DR cluster</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># (update DNS or DFS to point to DR cluster)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># --- Failback ---</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Step 1 — create a return policy from DR to primary</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span>&lt;return_policy_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span>--action<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--source-root-path<span class="w"> </span>/ifs/replicated/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span>--target-host<span class="w"> </span>&lt;primary-cluster-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>--target-path<span class="w"> </span>/ifs/data/project1
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Step 2 — run full sync back to primary</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;return_policy_name&gt;
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Step 3 — once synced, re-enable original policy on primary</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>modify<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--enabled<span class="w"> </span>yes
-</code></pre></div>
-<h3 id="synciq-certificates-and-connectivity">SyncIQ Certificates and Connectivity<a class="headerlink" href="#synciq-certificates-and-connectivity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List replication peer certificates</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>target<span class="w"> </span>policies<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Test connectivity to the target cluster</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Target Host&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ping<span class="w"> </span>&lt;target-cluster-ip&gt;
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check SyncIQ service</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>isi<span class="w"> </span>services<span class="w"> </span>synciq<span class="w"> </span>status
-</code></pre></div>
-<h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View error details for a failed job</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>view<span class="w"> </span>&lt;job_id&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check event log for SyncIQ errors</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>isi<span class="w"> </span>event<span class="w"> </span>events<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>sync
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Reset a policy after conflict (when both sides have been written to)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>reset<span class="w"> </span>&lt;policy_name&gt;
+<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Port</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFS v3/v4</td>
+<td>TCP/UDP 2049</td>
+<td>Primary Unix/Linux protocol; per access zone</td>
+</tr>
+<tr>
+<td>SMB 2.x/3.x</td>
+<td>TCP 445</td>
+<td>Windows file sharing; per access zone</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>TCP 9020/9021</td>
+<td>Object API; per access zone</td>
+</tr>
+<tr>
+<td>HDFS</td>
+<td>TCP 8020</td>
+<td>Hadoop; maps <code>/ifs</code> paths as HDFS volumes</td>
+</tr>
+<tr>
+<td>Management API (PAPI)</td>
+<td>TCP 8080/8081</td>
+<td>REST API for automation</td>
+</tr>
+<tr>
+<td>SyncIQ replication</td>
+<td>TCP 7722</td>
+<td>Cluster-to-cluster replication traffic</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>TCP 22</td>
+<td>CLI access; restrict to management VLAN</td>
+</tr>
+</tbody>
+</table>
+<h2 id="node-hardware-families">Node Hardware Families<a class="headerlink" href="#node-hardware-families" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Storage Type</th>
+<th>Primary Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-series (F600, F900)</td>
+<td>All-NVMe SSD</td>
+<td>High-IOPS workloads: EDA, genomics, databases</td>
+</tr>
+<tr>
+<td>H-series (H700, H7000)</td>
+<td>NVMe + SAS HDD hybrid</td>
+<td>Mixed workloads: home directories, general NAS</td>
+</tr>
+<tr>
+<td>A-series (A300, A3000)</td>
+<td>NL-SAS (high-density)</td>
+<td>Archive and cold data; long-term retention</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-cli-commands">Key CLI Commands<a class="headerlink" href="#key-cli-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>isi<span class="w"> </span>status<span class="w">                    </span><span class="c1"># cluster node and drive health</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>event<span class="w"> </span>list<span class="w">                </span><span class="c1"># active events — filter for CRITICAL</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>isi<span class="w"> </span>storagepool<span class="w"> </span>list<span class="w">          </span><span class="c1"># capacity per tier</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w">        </span><span class="c1"># SyncIQ policy status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>quota<span class="w"> </span>list<span class="w">                </span><span class="c1"># quota violations</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list<span class="w">        </span><span class="c1"># SmartConnect zone config</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>isi<span class="w"> </span>job<span class="w"> </span>list<span class="w">                  </span><span class="c1"># background jobs (Restripe, FlexProtect)</span>
 </code></pre></div>
 
 
