@@ -1,18 +1,24 @@
-# Aria Operations — Architecture Overview
+# Aria Operations — Architecture
 
-## Overview
+<div class="kb-summary">
+Analytics cluster for vSphere performance, capacity, and compliance monitoring. Adapters collect metrics from vCenter, NSX, and storage; remote collectors extend reach into remote sites and DMZs without direct cluster connectivity.
+</div>
 
-Aria Operations (formerly vRealize Operations) is deployed as an analytics cluster consisting of primary, replica, and data nodes. Remote collectors and cloud proxies extend monitoring reach without opening firewall holes back to the analytics cluster.
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with vCenter, NSX, storage, and external monitoring tools.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, adapter configuration, and cluster design best practices.</span></a>
+</div>
 
-## Cluster Roles
+## Node Roles
 
 | Node Role | Description |
-|-----------|-------------|
-| Primary | Hosts the UI, receives and processes data, coordinates cluster |
-| Replica | Hot standby for the primary; takes over automatically on failure |
-| Data Node | Stores time-series metric data; scale out for capacity |
-| Remote Collector | Lightweight VM placed in remote sites or DMZs to collect and forward data |
-| Cloud Proxy | Deployed in cloud or remote environments for cloud account monitoring |
+|---|---|
+| Primary | Hosts the UI, analytics controller, and cluster coordination |
+| Primary Replica | Hot standby — automatically promoted if Primary fails |
+| Data | Scale-out metric ingestion and storage nodes |
+| Remote Collector | Lightweight proxy for remote sites/DMZs; forwards to cluster without joining it |
+| Cloud Proxy | SaaS-hosted proxy for VMware Cloud on AWS integrations |
 
 ## Component Topology
 
@@ -20,7 +26,7 @@ Aria Operations (formerly vRealize Operations) is deployed as an analytics clust
 graph TB
   ADP1["vCenter Adapter"] & ADP2["NSX Adapter"] & ADP3["Storage Adapter"] --> COL["Remote Collector\n(cloud proxy)"]
   COL --> ANAL["Aria Operations\nAnalytics Cluster"]
-  ANAL --> DATA[("Metrics Store")]
+  ANAL --> DATA[("Metrics Store\nCassandra + GemFire")]
   ANAL --> ALERTS["Alerts · Capacity · Rightsizing"]
   ADMIN(["vSphere Admin"]) -->|"browser"| ANAL
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
@@ -32,29 +38,3 @@ graph TB
   class ADP1,ADP2,ADP3,ALERTS mgmt
   class ADMIN host
 ```
-
-## Adapters
-
-| Adapter | Purpose |
-|---------|---------|
-| SDDC (vCenter) Adapter | Monitors vSphere — hosts, clusters, VMs, datastores |
-| NSX Adapter | Monitors NSX-T/NSX-V logical topology and health |
-| vSAN Adapter | Built-in; monitors vSAN cluster, disk groups, policies |
-| Ping Adapter | ICMP availability checks for any endpoint |
-| AWS/Azure/GCP | Cloud account monitoring via cloud proxy |
-
-## High Availability
-
-- **Replica node** provides automatic failover for the primary
-- **Data nodes** provide distributed storage; losing one data node does not lose data if replication factor ≥ 2
-- **Remote collectors** operate independently; cluster failure does not stop local data collection
-
----
-
-## In this section
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
