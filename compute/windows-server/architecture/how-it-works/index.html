@@ -21,7 +21,7 @@
     
     
       
-        <title>Linux — Overview - Chris KB</title>
+        <title>Windows Server — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Linux — Overview · Chris KB">
+  <meta property="og:title" content="Windows Server — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Linux — Overview · Chris KB">
+  <meta name="twitter:title" content="Windows Server — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#linux-overview" class="md-skip">
+        <a href="#windows-server-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Linux — Overview
+              Windows Server — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#server-roles" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Server Roles
+        Overview
       
     </span>
   </a>
@@ -1080,10 +1080,76 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#server-role-topology" class="md-nav__link">
+  <a href="#editions-and-installation-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Server Role Topology
+        Editions and Installation Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-server-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Server Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-service-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Service Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-log-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Log Channels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-powershell-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key PowerShell Commands
       
     </span>
   </a>
@@ -1110,84 +1176,288 @@
 
 
 
-<h1 id="linux-overview">Linux — Overview<a class="headerlink" href="#linux-overview" title="Permanent link">&para;</a></h1>
-<p>Architecture overview, design principles, and topology.</p>
-<h2 id="server-roles">Server Roles<a class="headerlink" href="#server-roles" title="Permanent link">&para;</a></h2>
-<p>Linux servers fulfill multiple infrastructure roles:</p>
+<h1 id="windows-server-how-it-works">Windows Server — How It Works<a class="headerlink" href="#windows-server-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Windows Server delivers infrastructure services through <strong>Roles</strong> (major functions) and <strong>Features</strong> (supporting components) installed on top of the base OS. The current supported versions are 2019, 2022, and 2025, available in Standard and Datacenter editions. All server administration uses PowerShell, WinRM remoting, or RSAT tools. Server Core (no GUI) is the recommended installation type for security and performance.</p>
+<h2 id="editions-and-installation-types">Editions and Installation Types<a class="headerlink" href="#editions-and-installation-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Role</th>
-<th>Typical OS</th>
-<th>vCPU</th>
-<th>RAM</th>
+<th>Version</th>
+<th>Edition</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Application server</td>
-<td>RHEL 8/9, Ubuntu 22.04</td>
-<td>4–16</td>
-<td>8–64 GB</td>
-<td>Primary workload host</td>
+<td>Windows Server 2019/2022/2025</td>
+<td>Standard</td>
+<td>Up to 2 Hyper-V VMs per licence</td>
 </tr>
 <tr>
-<td>Automation node (Ansible)</td>
-<td>RHEL 9</td>
-<td>4</td>
-<td>8 GB</td>
-<td>Ansible control plane; no inbound access</td>
+<td>Windows Server 2019/2022/2025</td>
+<td>Datacenter</td>
+<td>Unlimited Hyper-V VMs; Storage Spaces Direct, SDN</td>
 </tr>
 <tr>
-<td>Monitoring server</td>
-<td>Ubuntu 22.04</td>
-<td>8</td>
-<td>16 GB</td>
-<td>Prometheus, Grafana, exporters</td>
+<td>All</td>
+<td>Server Core</td>
+<td>No GUI; PowerShell remoting / RSAT; smaller attack surface</td>
 </tr>
 <tr>
-<td>NFS/SMB file host</td>
-<td>RHEL 9</td>
-<td>4</td>
-<td>16 GB</td>
-<td>Shared storage; LVM on SAN-backed LUNs</td>
-</tr>
-<tr>
-<td>Container host</td>
-<td>RHEL 9</td>
-<td>8–32</td>
-<td>16–128 GB</td>
-<td>Podman/Docker workloads</td>
-</tr>
-<tr>
-<td>Backup proxy (Linux)</td>
-<td>RHEL 9</td>
-<td>8</td>
-<td>16 GB</td>
-<td>Veeam proxy or NetBackup media server</td>
+<td>All</td>
+<td>Desktop Experience</td>
+<td>Full GUI; larger footprint; required for some legacy tools</td>
 </tr>
 </tbody>
 </table>
-<h2 id="server-role-topology">Server Role Topology<a class="headerlink" href="#server-role-topology" title="Permanent link">&para;</a></h2>
+<h2 id="role-topology">Role Topology<a class="headerlink" href="#role-topology" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
-  KERNEL["Linux Kernel\nRHEL / Ubuntu / SLES"]
-  KERNEL --&gt; STORAGE["Storage Stack\nlvm2 · dm-multipath · xfs/ext4"]
-  KERNEL --&gt; NET["Network Stack\nnm · bonding · firewalld"]
-  KERNEL --&gt; SVCS["systemd Services\nsshd · rsyslog · cron"]
-  KERNEL --&gt; SEC["Security\nSELinux / AppArmor · auditd · PAM"]
-  STORAGE --&gt; DISK[("Block Devices\n/dev/sd* / /dev/mapper/*")]
-  NET --&gt; NIC["Physical NICs\neth0 / bond0 / enp*"]
-  ADMIN(["Sysadmin"]) --&gt;|"SSH / console"| KERNEL
+  WS["Windows Server 2019 / 2022"]
+  WS --&gt; AD["Active Directory DS\n(DC role)"]
+  WS --&gt; DNS_R["DNS Server"]
+  WS --&gt; FS["File Server\nSMB · DFS"]
+  WS --&gt; IIS["IIS / App Roles"]
+  WS --&gt; WSUS["Windows Update\nWSUS / Azure Update Manager"]
+  WS --&gt; SEC["Windows Defender\nFirewall · Audit Policy"]
+  ADMIN(["Windows Admin"]) --&gt;|"RDP / PowerShell"| WS
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
-  class KERNEL ctrl
-  class STORAGE,SVCS,SEC net
-  class DISK store
-  class NIC,NET net
+  class WS ctrl
+  class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
   class ADMIN host</code></pre>
+<h2 id="key-server-roles">Key Server Roles<a class="headerlink" href="#key-server-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Feature Name</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active Directory Domain Services</td>
+<td>AD-Domain-Services</td>
+<td>Directory services, authentication</td>
+</tr>
+<tr>
+<td>DNS Server</td>
+<td>DNS</td>
+<td>Name resolution</td>
+</tr>
+<tr>
+<td>DHCP Server</td>
+<td>DHCP</td>
+<td>IP address assignment</td>
+</tr>
+<tr>
+<td>File Services</td>
+<td>FS-FileServer</td>
+<td>SMB file sharing</td>
+</tr>
+<tr>
+<td>Hyper-V</td>
+<td>Hyper-V</td>
+<td>Hardware virtualisation</td>
+</tr>
+<tr>
+<td>IIS Web Server</td>
+<td>Web-Server</td>
+<td>HTTP/HTTPS hosting</td>
+</tr>
+<tr>
+<td>Remote Desktop Services</td>
+<td>RDS-RD-Server</td>
+<td>Remote desktop sessions</td>
+</tr>
+<tr>
+<td>Certificate Services</td>
+<td>ADCS</td>
+<td>Enterprise PKI / CA</td>
+</tr>
+<tr>
+<td>Failover Clustering</td>
+<td>Failover-Clustering</td>
+<td>HA for services</td>
+</tr>
+</tbody>
+</table>
+<h2 id="critical-services">Critical Services<a class="headerlink" href="#critical-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Default Start</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lsass.exe</td>
+<td>Auto</td>
+<td>Authentication, security policy</td>
+</tr>
+<tr>
+<td>WinRM</td>
+<td>Auto</td>
+<td>PowerShell remoting, WMI</td>
+</tr>
+<tr>
+<td>EventLog</td>
+<td>Auto</td>
+<td>Security/Application/System logs</td>
+</tr>
+<tr>
+<td>Dnscache</td>
+<td>Auto</td>
+<td>DNS caching and resolution</td>
+</tr>
+<tr>
+<td>W32tm</td>
+<td>Auto</td>
+<td>NTP time synchronisation</td>
+</tr>
+<tr>
+<td>mpssvc</td>
+<td>Auto</td>
+<td>Windows Defender Firewall</td>
+</tr>
+<tr>
+<td>NTDS</td>
+<td>Auto (on DCs)</td>
+<td>Active Directory database</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-service-ports">Common Service Ports<a class="headerlink" href="#common-service-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Protocol</th>
+<th>Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SMB (file sharing)</td>
+<td>TCP</td>
+<td>445</td>
+</tr>
+<tr>
+<td>RDP</td>
+<td>TCP</td>
+<td>3389</td>
+</tr>
+<tr>
+<td>WinRM (HTTP / HTTPS)</td>
+<td>TCP</td>
+<td>5985 / 5986</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>TCP/UDP</td>
+<td>53</td>
+</tr>
+<tr>
+<td>Kerberos</td>
+<td>TCP/UDP</td>
+<td>88</td>
+</tr>
+<tr>
+<td>LDAP / LDAPS</td>
+<td>TCP</td>
+<td>389 / 636</td>
+</tr>
+<tr>
+<td>Global Catalog</td>
+<td>TCP</td>
+<td>3268 / 3269</td>
+</tr>
+<tr>
+<td>RPC Endpoint Mapper</td>
+<td>TCP</td>
+<td>135</td>
+</tr>
+<tr>
+<td>RPC Dynamic Ports</td>
+<td>TCP</td>
+<td>49152–65535</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>UDP</td>
+<td>123</td>
+</tr>
+</tbody>
+</table>
+<h2 id="event-log-channels">Event Log Channels<a class="headerlink" href="#event-log-channels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Log</th>
+<th>Common Event IDs</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security</td>
+<td>4624 (logon), 4625 (failed), 4740 (lockout)</td>
+<td>Auth and access auditing</td>
+</tr>
+<tr>
+<td>System</td>
+<td>7034 (service crash), 6008 (unexpected shutdown)</td>
+<td>OS health</td>
+</tr>
+<tr>
+<td>Application</td>
+<td>Application-specific</td>
+<td>App-level diagnostics</td>
+</tr>
+<tr>
+<td>PowerShell/Operational</td>
+<td>4104 (script block)</td>
+<td>Script audit</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-powershell-commands">Key PowerShell Commands<a class="headerlink" href="#key-powershell-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Roles and features</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-WindowsFeature</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Installed</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Service health</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span><span class="p">}</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Event logs</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Level</span><span class="p">=</span><span class="n">2</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)}</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># Network</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Get-NetAdapter</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">LinkSpeed</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Get-NetIPAddress</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InterfaceAlias</span><span class="p">,</span> <span class="n">IPAddress</span><span class="p">,</span> <span class="n">PrefixLength</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">Get-NetTCPConnection</span> <span class="n">-State</span> <span class="n">Listen</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">LocalPort</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Process&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nb">Get-Process</span> <span class="n">-Id</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OwningProcess</span><span class="p">).</span><span class="n">Name</span><span class="p">}}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c"># Disk and storage</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">Get-Volume</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DriveLetter</span><span class="p">,</span> <span class="n">FileSystem</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">SizeRemaining</span><span class="p">,</span> <span class="n">HealthStatus</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">Get-PhysicalDisk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">MediaType</span><span class="p">,</span> <span class="n">HealthStatus</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c"># Active Directory</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">all</span> <span class="p">/</span><span class="n">q</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c"># Windows Update</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c"># Firewall</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nb">Get-NetFirewallProfile</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">DefaultInboundAction</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="nb">Get-NetFirewallRule</span> <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Enabled</span> <span class="n">True</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">LocalPort</span>
+</code></pre></div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Windows Server — Overview - Chris KB</title>
+        <title>Linux — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Windows Server — Overview · Chris KB">
+  <meta property="og:title" content="Linux — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Windows Server — Overview · Chris KB">
+  <meta name="twitter:title" content="Linux — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#windows-server-overview" class="md-skip">
+        <a href="#linux-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Windows Server — Overview
+              Linux — How It Works
             
           </span>
         </div>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#edition-and-installation-types" class="md-nav__link">
+  <a href="#kernel-subsystem-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Edition and Installation Types
+        Kernel Subsystem Architecture
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#roles-and-features-model" class="md-nav__link">
+  <a href="#server-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Roles and Features Model
+        Server Roles
       
     </span>
   </a>
@@ -1102,10 +1102,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#topology" class="md-nav__link">
+  <a href="#disk-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Topology
+        Disk Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lvm-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LVM Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key CLI Commands
       
     </span>
   </a>
@@ -1132,66 +1176,155 @@
 
 
 
-<h1 id="windows-server-overview">Windows Server — Overview<a class="headerlink" href="#windows-server-overview" title="Permanent link">&para;</a></h1>
-<p>Architecture overview, design principles, and topology.</p>
+<h1 id="linux-how-it-works">Linux — How It Works<a class="headerlink" href="#linux-how-it-works" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Windows Server is Microsoft's server operating system, available in Standard and Datacenter editions. Current supported versions are 2016, 2019, 2022, and 2025. The installation type choice — Server Core (headless) or Desktop Experience (full GUI) — is made at install time and cannot be changed post-install.</p>
-<h2 id="edition-and-installation-types">Edition and Installation Types<a class="headerlink" href="#edition-and-installation-types" title="Permanent link">&para;</a></h2>
+<p>Linux servers run RHEL, Ubuntu, or SLES as the base OS. All services are managed by <strong>systemd</strong>, storage is managed via <strong>LVM2</strong> (with dm-multipath for SAN), and security is enforced by <strong>SELinux</strong> (RHEL) or <strong>AppArmor</strong> (Ubuntu). Network configuration uses NetworkManager (<code>nmcli</code>) on RHEL and Netplan on Ubuntu.</p>
+<h2 id="kernel-subsystem-architecture">Kernel Subsystem Architecture<a class="headerlink" href="#kernel-subsystem-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  KERNEL["Linux Kernel\nRHEL / Ubuntu / SLES"]
+  KERNEL --&gt; STORAGE["Storage Stack\nlvm2 · dm-multipath · xfs/ext4"]
+  KERNEL --&gt; NET["Network Stack\nnm · bonding · firewalld"]
+  KERNEL --&gt; SVCS["systemd Services\nsshd · rsyslog · cron"]
+  KERNEL --&gt; SEC["Security\nSELinux / AppArmor · auditd · PAM"]
+  STORAGE --&gt; DISK[("Block Devices\n/dev/sd* / /dev/mapper/*")]
+  NET --&gt; NIC["Physical NICs\neth0 / bond0 / enp*"]
+  ADMIN(["Sysadmin"]) --&gt;|"SSH / console"| KERNEL
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class KERNEL ctrl
+  class STORAGE,SVCS,SEC net
+  class DISK store
+  class NIC,NET net
+  class ADMIN host</code></pre>
+<h2 id="server-roles">Server Roles<a class="headerlink" href="#server-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Version</th>
-<th>Edition</th>
+<th>Role</th>
+<th>Typical OS</th>
+<th>vCPU</th>
+<th>RAM</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Windows Server 2019/2022/2025</td>
-<td>Standard</td>
-<td>Up to 2 Hyper-V VMs per licence</td>
+<td>Application server</td>
+<td>RHEL 8/9, Ubuntu 22.04</td>
+<td>4–16</td>
+<td>8–64 GB</td>
+<td>Primary workload host</td>
 </tr>
 <tr>
-<td>Windows Server 2019/2022/2025</td>
-<td>Datacenter</td>
-<td>Unlimited Hyper-V VMs, extra features (Storage Spaces Direct, SDN)</td>
+<td>Automation node (Ansible)</td>
+<td>RHEL 9</td>
+<td>4</td>
+<td>8 GB</td>
+<td>Ansible control plane; no inbound access</td>
 </tr>
 <tr>
-<td>All</td>
-<td>Server Core</td>
-<td>No GUI; managed via PowerShell remoting or RSAT; smaller attack surface</td>
+<td>Monitoring server</td>
+<td>Ubuntu 22.04</td>
+<td>8</td>
+<td>16 GB</td>
+<td>Prometheus, Grafana, exporters</td>
 </tr>
 <tr>
-<td>All</td>
-<td>Desktop Experience</td>
-<td>Full GUI; larger footprint; required for some legacy management tools</td>
+<td>NFS/SMB file host</td>
+<td>RHEL 9</td>
+<td>4</td>
+<td>16 GB</td>
+<td>Shared storage; LVM on SAN-backed LUNs</td>
+</tr>
+<tr>
+<td>Container host</td>
+<td>RHEL 9</td>
+<td>8–32</td>
+<td>16–128 GB</td>
+<td>Podman/Docker workloads</td>
+</tr>
+<tr>
+<td>Backup proxy</td>
+<td>RHEL 9</td>
+<td>8</td>
+<td>16 GB</td>
+<td>Veeam proxy or NetBackup media server</td>
 </tr>
 </tbody>
 </table>
-<h2 id="roles-and-features-model">Roles and Features Model<a class="headerlink" href="#roles-and-features-model" title="Permanent link">&para;</a></h2>
-<p>Windows Server functionality is delivered through <strong>Roles</strong> (major services) and <strong>Features</strong> (supporting components), installed via Server Manager or PowerShell:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List installed roles and features</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-WindowsFeature</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Installed</span> <span class="o">-eq</span> <span class="nv">$true</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Install a role example</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">AD-Domain-Services</span> <span class="n">-IncludeManagementTools</span>
+<h2 id="disk-layout">Disk Layout<a class="headerlink" href="#disk-layout" title="Permanent link">&para;</a></h2>
+<p>Standard LVM partition layout — applied at provisioning via Kickstart or cloud-init:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/boot          512 MB      xfs     (separate /boot partition — not in LVM)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>VG: vg_system
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  lv_root     20 GB       xfs     /
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  lv_var      20 GB       xfs     /var
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  lv_tmp       5 GB       xfs     /tmp (noexec,nosuid mount options)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  lv_home      5 GB       xfs     /home
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  lv_swap      8 GB       swap    (= RAM, up to 16 GB max)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>VG: vg_data (application data — sized per role)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  lv_app      100+ GB     xfs     /opt/&lt;app&gt;
 </code></pre></div>
-<h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  WS["Windows Server 2019 / 2022"]
-  WS --&gt; AD["Active Directory DS\n(DC role)"]
-  WS --&gt; DNS_R["DNS Server"]
-  WS --&gt; FS["File Server\nSMB · DFS"]
-  WS --&gt; IIS["IIS / App Roles"]
-  WS --&gt; WSUS["Windows Update\nWSUS / Azure Update Manager"]
-  WS --&gt; SEC["Windows Defender\nFirewall · Audit Policy"]
-  ADMIN(["Windows Admin"]) --&gt;|"RDP / PowerShell"| WS
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class WS ctrl
-  class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
-  class ADMIN host</code></pre>
+<h2 id="lvm-stack">LVM Stack<a class="headerlink" href="#lvm-stack" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    physDisk["Physical Disk\n/dev/sdb · /dev/sdc"]
+    pv["Physical Volumes\npvcreate"]
+    vg["Volume Group\nvg_system · vg_data"]
+    lv["Logical Volumes\nlv_root · lv_var · lv_app"]
+    fs["Filesystems\nxfs · ext4 · swap"]
+    mnt["Mount Points\n/ · /var · /tmp · /opt/app"]
+    physDisk --&gt; pv --&gt; vg --&gt; lv --&gt; fs --&gt; mnt</code></pre>
+<h2 id="storage-stack">Storage Stack<a class="headerlink" href="#storage-stack" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    appLayer["Application\n(read/write syscall)"]
+    vfsLayer["VFS\nVirtual File System"]
+    fsLayer["Filesystem\nxfs / ext4"]
+    blockLayer["Block Layer\nI/O scheduler"]
+    driverLayer["Device Driver\nscsi / nvme"]
+    diskLayer["Physical Disk\nSSD / HDD / SAN LUN"]
+    appLayer --&gt; vfsLayer --&gt; fsLayer --&gt; blockLayer --&gt; driverLayer --&gt; diskLayer</code></pre>
+<h2 id="network-stack">Network Stack<a class="headerlink" href="#network-stack" title="Permanent link">&para;</a></h2>
+<p>All production servers require bonded LACP uplinks and separate management/data VLANs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Configure bonded interface with VLAN (RHEL / nmcli)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>bond<span class="w"> </span>ifname<span class="w"> </span>bond0<span class="w"> </span>bond.options<span class="w"> </span><span class="s2">&quot;mode=802.3ad,miimon=100&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth0<span class="w"> </span>master<span class="w"> </span>bond0
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ethernet<span class="w"> </span>ifname<span class="w"> </span>eth1<span class="w"> </span>master<span class="w"> </span>bond0
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nmcli<span class="w"> </span>con<span class="w"> </span>add<span class="w"> </span><span class="nb">type</span><span class="w"> </span>vlan<span class="w"> </span>con-name<span class="w"> </span>bond0.100<span class="w"> </span>dev<span class="w"> </span>bond0<span class="w"> </span>id<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>nmcli<span class="w"> </span>con<span class="w"> </span>modify<span class="w"> </span>bond0.100<span class="w"> </span>ipv4.addresses<span class="w"> </span>&lt;ip&gt;/&lt;prefix&gt;<span class="w"> </span>ipv4.gateway<span class="w"> </span>&lt;gw&gt;<span class="w"> </span>ipv4.method<span class="w"> </span>manual
+</code></pre></div>
+<h2 id="key-cli-commands">Key CLI Commands<a class="headerlink" href="#key-cli-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Service management (systemd)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span><span class="w"> </span>--no-pager
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Package updates</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>dnf<span class="w"> </span>check-update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>dnf<span class="w"> </span>upgrade<span class="w">    </span><span class="c1"># RHEL</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>upgrade<span class="w">  </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># LVM</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pvs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vgs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>lvs
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>lvextend<span class="w"> </span>-L<span class="w"> </span>+20G<span class="w"> </span>/dev/vg_data/lv_app<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>xfs_growfs<span class="w"> </span>/opt/app
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Network</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ip<span class="w"> </span>-br<span class="w"> </span>addr<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ss<span class="w"> </span>-tulnp
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Link detected|Speed&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Storage</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># SAN / iSCSI</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>rescan-scsi-bus.sh
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># Firewall</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>firewall-cmd<span class="w"> </span>--list-all<span class="w">          </span><span class="c1"># RHEL</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose<span class="w">               </span><span class="c1"># Ubuntu</span>
+</code></pre></div>
 
 
 
