@@ -1,10 +1,14 @@
 # PowerStore
 
+<div class="kb-summary">
+Mid-range all-flash platform with active-active dual-node appliance architecture — inline dedup/compression, Metro Volume zero-RPO sync replication, NVMe-oF, vVols, and AppsOn (X-series).
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">
