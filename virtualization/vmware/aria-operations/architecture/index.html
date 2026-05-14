@@ -21,7 +21,7 @@
     
     
       
-        <title>Aria Operations — Architecture Overview - Chris KB</title>
+        <title>Aria Operations — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Aria Operations — Architecture Overview · Chris KB">
+  <meta property="og:title" content="Aria Operations — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Aria Operations — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="Aria Operations — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#aria-operations-architecture-overview" class="md-skip">
+        <a href="#aria-operations-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Aria Operations — Architecture Overview
+              Aria Operations — Architecture
             
           </span>
         </div>
@@ -1069,21 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#node-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cluster-roles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cluster Roles
+        Node Roles
       
     </span>
   </a>
@@ -1095,39 +1084,6 @@
     <span class="md-ellipsis">
       
         Component Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adapters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adapters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#high-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Availability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
       
     </span>
   </a>
@@ -1154,10 +1110,18 @@
 
 
 
-<h1 id="aria-operations-architecture-overview">Aria Operations — Architecture Overview<a class="headerlink" href="#aria-operations-architecture-overview" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Aria Operations (formerly vRealize Operations) is deployed as an analytics cluster consisting of primary, replica, and data nodes. Remote collectors and cloud proxies extend monitoring reach without opening firewall holes back to the analytics cluster.</p>
-<h2 id="cluster-roles">Cluster Roles<a class="headerlink" href="#cluster-roles" title="Permanent link">&para;</a></h2>
+<h1 id="aria-operations-architecture">Aria Operations — Architecture<a class="headerlink" href="#aria-operations-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Analytics cluster for vSphere performance, capacity, and compliance monitoring. Adapters collect metrics from vCenter, NSX, and storage; remote collectors extend reach into remote sites and DMZs without direct cluster connectivity.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with vCenter, NSX, storage, and external monitoring tools.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, adapter configuration, and cluster design best practices.</span></a>
+</div>
+
+<h2 id="node-roles">Node Roles<a class="headerlink" href="#node-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1168,23 +1132,23 @@
 <tbody>
 <tr>
 <td>Primary</td>
-<td>Hosts the UI, receives and processes data, coordinates cluster</td>
+<td>Hosts the UI, analytics controller, and cluster coordination</td>
 </tr>
 <tr>
-<td>Replica</td>
-<td>Hot standby for the primary; takes over automatically on failure</td>
+<td>Primary Replica</td>
+<td>Hot standby — automatically promoted if Primary fails</td>
 </tr>
 <tr>
-<td>Data Node</td>
-<td>Stores time-series metric data; scale out for capacity</td>
+<td>Data</td>
+<td>Scale-out metric ingestion and storage nodes</td>
 </tr>
 <tr>
 <td>Remote Collector</td>
-<td>Lightweight VM placed in remote sites or DMZs to collect and forward data</td>
+<td>Lightweight proxy for remote sites/DMZs; forwards to cluster without joining it</td>
 </tr>
 <tr>
 <td>Cloud Proxy</td>
-<td>Deployed in cloud or remote environments for cloud account monitoring</td>
+<td>SaaS-hosted proxy for VMware Cloud on AWS integrations</td>
 </tr>
 </tbody>
 </table>
@@ -1192,7 +1156,7 @@
 <pre class="mermaid"><code>graph TB
   ADP1["vCenter Adapter"] &amp; ADP2["NSX Adapter"] &amp; ADP3["Storage Adapter"] --&gt; COL["Remote Collector\n(cloud proxy)"]
   COL --&gt; ANAL["Aria Operations\nAnalytics Cluster"]
-  ANAL --&gt; DATA[("Metrics Store")]
+  ANAL --&gt; DATA[("Metrics Store\nCassandra + GemFire")]
   ANAL --&gt; ALERTS["Alerts · Capacity · Rightsizing"]
   ADMIN(["vSphere Admin"]) --&gt;|"browser"| ANAL
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
@@ -1203,50 +1167,6 @@
   class DATA store
   class ADP1,ADP2,ADP3,ALERTS mgmt
   class ADMIN host</code></pre>
-<h2 id="adapters">Adapters<a class="headerlink" href="#adapters" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Adapter</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SDDC (vCenter) Adapter</td>
-<td>Monitors vSphere — hosts, clusters, VMs, datastores</td>
-</tr>
-<tr>
-<td>NSX Adapter</td>
-<td>Monitors NSX-T/NSX-V logical topology and health</td>
-</tr>
-<tr>
-<td>vSAN Adapter</td>
-<td>Built-in; monitors vSAN cluster, disk groups, policies</td>
-</tr>
-<tr>
-<td>Ping Adapter</td>
-<td>ICMP availability checks for any endpoint</td>
-</tr>
-<tr>
-<td>AWS/Azure/GCP</td>
-<td>Cloud account monitoring via cloud proxy</td>
-</tr>
-</tbody>
-</table>
-<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Replica node</strong> provides automatic failover for the primary</li>
-<li><strong>Data nodes</strong> provide distributed storage; losing one data node does not lose data if replication factor ≥ 2</li>
-<li><strong>Remote collectors</strong> operate independently; cluster failure does not stop local data collection</li>
-</ul>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

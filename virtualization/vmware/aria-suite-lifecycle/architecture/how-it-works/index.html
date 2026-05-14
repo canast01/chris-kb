@@ -21,7 +21,7 @@
     
     
       
-        <title>Aria Automation — Components - Chris KB</title>
+        <title>Aria Suite Lifecycle — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Aria Automation — Components · Chris KB">
+  <meta property="og:title" content="Aria Suite Lifecycle — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Aria Automation — Components · Chris KB">
+  <meta name="twitter:title" content="Aria Suite Lifecycle — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#aria-automation-components" class="md-skip">
+        <a href="#aria-suite-lifecycle-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Aria Automation — Components
+              Aria Suite Lifecycle — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-service-components" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Service Components
+        Overview
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deployment-topology" class="md-nav__link">
+  <a href="#product-management-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Deployment Topology
+        Product Management Topology
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#network-ports" class="md-nav__link">
+  <a href="#core-components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Network Ports
+        Core Components
       
     </span>
   </a>
@@ -1102,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kubernetes-pod-namespaces" class="md-nav__link">
+  <a href="#upgrade-sequencing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Kubernetes Pod Namespaces
+        Upgrade Sequencing
       
     </span>
   </a>
@@ -1113,10 +1113,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cloud-account-types" class="md-nav__link">
+  <a href="#upgrade-workflow-per-product" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cloud Account Types
+        Upgrade Workflow (per product)
       
     </span>
   </a>
@@ -1124,10 +1124,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#appliance-resource-requirements" class="md-nav__link">
+  <a href="#deployment-pre-requisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Appliance Resource Requirements
+        Deployment Pre-Requisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-version-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Product Version Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lcm-api-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LCM API Quick Reference
       
     </span>
   </a>
@@ -1154,276 +1176,206 @@
 
 
 
-<h1 id="aria-automation-components">Aria Automation — Components<a class="headerlink" href="#aria-automation-components" title="Permanent link">&para;</a></h1>
-<h2 id="core-service-components">Core Service Components<a class="headerlink" href="#core-service-components" title="Permanent link">&para;</a></h2>
-<p>Aria Automation (formerly vRealize Automation) runs as a Kubernetes-based microservices platform on a Linux appliance. The key services and their functions:</p>
+<h1 id="aria-suite-lifecycle-how-it-works">Aria Suite Lifecycle — How It Works<a class="headerlink" href="#aria-suite-lifecycle-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Aria Suite Lifecycle (LCM) is a management appliance that deploys, upgrades, and manages the entire VMware Aria product suite from a single control plane. LCM eliminates per-product upgrade complexity by orchestrating pre-checks, snapshots, binary staging, sequential node upgrades, and post-checks as a single audited workflow. All credentials and certificates are stored in the integrated <strong>Locker</strong> vault.</p>
+<h2 id="product-management-topology">Product Management Topology<a class="headerlink" href="#product-management-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  LCM["Aria Suite Lifecycle\n(LCM appliance)"]
+  LCM --&gt; VROPS["Aria Operations"]
+  LCM --&gt; VRLI["Aria Ops for Logs"]
+  LCM --&gt; VRA["Aria Automation"]
+  LCM --&gt; VRNI["Aria Ops for Networks"]
+  LCM --&gt; REPO["Product Binaries Repo\n(NFS /data)"]
+  ADMIN(["vSphere Admin"]) --&gt;|"web UI"| LCM
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class LCM mgmt
+  class VROPS,VRLI,VRA,VRNI ctrl
+  class ADMIN host</code></pre>
+<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Service</th>
-<th>Purpose</th>
+<th>Component</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Automation Assembler</strong></td>
-<td>Cloud template (blueprint) authoring, IaC in YAML, resource provisioning</td>
+<td>LCM Appliance</td>
+<td>Central orchestration, UI, REST API, Locker vault</td>
 </tr>
 <tr>
-<td><strong>Service Broker</strong></td>
-<td>Self-service catalog — exposes content to end users via projects</td>
+<td>Workspace ONE Access (VIDM)</td>
+<td>Identity provider and SSO for all Aria products</td>
 </tr>
 <tr>
-<td><strong>Automation Pipelines</strong></td>
-<td>CI/CD pipeline execution engine (formerly Code Stream)</td>
+<td>vRealize Easy Installer</td>
+<td>Bootstrap ISO for initial multi-product deployment</td>
 </tr>
 <tr>
-<td><strong>Automation Config</strong></td>
-<td>GitOps-based configuration management (formerly SaltStack Config)</td>
+<td>NFS Share</td>
+<td>Binary repository (<code>.pak</code> files) and snapshot storage</td>
 </tr>
 <tr>
-<td><strong>Orchestrator</strong></td>
-<td>Workflow engine for Day-2 actions and automation logic (embedded vRO)</td>
+<td>NTP Server</td>
+<td>Time synchronisation — mandatory; certificate operations fail on &gt;5s skew</td>
 </tr>
 <tr>
-<td><strong>PostgreSQL</strong></td>
-<td>Backend relational database for deployment state, catalog, and event log</td>
-</tr>
-<tr>
-<td><strong>RabbitMQ</strong></td>
-<td>Internal messaging bus between microservices</td>
-</tr>
-<tr>
-<td><strong>Kubernetes (K8s)</strong></td>
-<td>Container orchestration for all microservices (managed by the appliance)</td>
-</tr>
-<tr>
-<td><strong>Nginx / Envoy</strong></td>
-<td>Ingress proxy for UI and API routing</td>
+<td>DNS</td>
+<td>Forward + reverse resolution required for every node FQDN</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="deployment-topology">Deployment Topology<a class="headerlink" href="#deployment-topology" title="Permanent link">&para;</a></h2>
+<h2 id="upgrade-sequencing">Upgrade Sequencing<a class="headerlink" href="#upgrade-sequencing" title="Permanent link">&para;</a></h2>
+<p>Always upgrade in this order to avoid dependency conflicts:</p>
+<ol>
+<li>Aria Suite Lifecycle (LCM itself)</li>
+<li>Workspace ONE Access (VIDM) — identity provider must be upgraded first</li>
+<li>Aria Operations for Logs</li>
+<li>Aria Operations</li>
+<li>Aria Automation</li>
+</ol>
+<h2 id="upgrade-workflow-per-product">Upgrade Workflow (per product)<a class="headerlink" href="#upgrade-workflow-per-product" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Pre-check</strong> — validates DNS, NTP, disk space, NFS, vCenter reachability</li>
+<li><strong>Snapshot</strong> — takes VM snapshots of all product appliances (rollback point)</li>
+<li><strong>Binary stage</strong> — copies upgrade bundle from NFS to product appliances</li>
+<li><strong>Upgrade</strong> — runs in-product upgrade agent; clustered products upgrade node by node</li>
+<li><strong>Post-check</strong> — verifies services are running and health indicators are green</li>
+<li><strong>Rollback</strong> — if post-check fails, LCM reverts to pre-upgrade snapshots</li>
+</ol>
+<h2 id="deployment-pre-requisites">Deployment Pre-Requisites<a class="headerlink" href="#deployment-pre-requisites" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Deployment</th>
-<th>Nodes</th>
-<th>Use Case</th>
+<th>Prerequisite</th>
+<th>Why Required</th>
+<th>Verification</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Standalone (small)</td>
-<td>1 appliance</td>
-<td>Lab, PoC, development</td>
+<td>DNS A + PTR records for every FQDN</td>
+<td>LCM agents communicate by FQDN; PTR required for SSO</td>
+<td><code>nslookup &lt;fqdn&gt;</code> from LCM appliance</td>
 </tr>
 <tr>
-<td>Clustered (HA)</td>
-<td>3 appliances</td>
-<td>Production — active/active with shared Postgres</td>
+<td>NTP delta &lt; 5 seconds</td>
+<td>Certificate operations fail on time skew</td>
+<td><code>chronyc tracking</code> on LCM</td>
 </tr>
 <tr>
-<td>Scaled-out</td>
-<td>3+ appliances</td>
-<td>Production with high request volume</td>
+<td>NFS share at <code>/data</code></td>
+<td>Stores <code>.pak</code> binary files</td>
+<td><code>df -h /data &amp;&amp; touch /data/.test</code></td>
+</tr>
+<tr>
+<td>vCenter service account</td>
+<td>LCM deploys OVAs via vCenter API</td>
+<td>Test in LCM → Settings → vCenter</td>
+</tr>
+<tr>
+<td>CA-signed certificate with full chain</td>
+<td>Locker imports require full chain</td>
+<td><code>openssl verify -CAfile chain.pem leaf.pem</code></td>
+</tr>
+<tr>
+<td>VIDM registered or deployed</td>
+<td>All Aria products use VIDM for SSO</td>
+<td><code>curl -sk https://vidm.corp.local/SAAS/API/1.0/REST/system/health</code></td>
 </tr>
 </tbody>
 </table>
-<p>For production, a 3-node cluster is the minimum — it provides HA for all services and survives a single node failure.</p>
-<hr />
-<h2 id="network-ports">Network Ports<a class="headerlink" href="#network-ports" title="Permanent link">&para;</a></h2>
+<h2 id="product-version-matrix">Product Version Matrix<a class="headerlink" href="#product-version-matrix" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Port</th>
-<th>Protocol</th>
-<th>Direction</th>
-<th>Purpose</th>
+<th>Product</th>
+<th>Current Version</th>
+<th>Min LCM Version</th>
+<th>EOS Date</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>443</td>
-<td>TCP</td>
-<td>Inbound</td>
-<td>Web UI and REST API</td>
+<td>Aria Suite Lifecycle</td>
+<td>8.16</td>
+<td>—</td>
+<td>Nov 2026</td>
 </tr>
 <tr>
-<td>22</td>
-<td>TCP</td>
-<td>Inbound</td>
-<td>SSH admin access</td>
+<td>Aria Operations</td>
+<td>8.17</td>
+<td>8.14</td>
+<td>Nov 2026</td>
 </tr>
 <tr>
-<td>5480</td>
-<td>TCP</td>
-<td>Inbound</td>
-<td>VAMI (appliance management)</td>
+<td>Aria Operations for Logs</td>
+<td>8.16</td>
+<td>8.14</td>
+<td>Nov 2026</td>
 </tr>
 <tr>
-<td>443</td>
-<td>TCP</td>
-<td>Outbound</td>
-<td>vCenter API (cloud account)</td>
+<td>Aria Automation</td>
+<td>8.17</td>
+<td>8.14</td>
+<td>Nov 2026</td>
 </tr>
 <tr>
-<td>443</td>
-<td>TCP</td>
-<td>Outbound</td>
-<td>NSX-T Manager API</td>
-</tr>
-<tr>
-<td>443</td>
-<td>TCP</td>
-<td>Outbound</td>
-<td>Aria Orchestrator</td>
-</tr>
-<tr>
-<td>443</td>
-<td>TCP</td>
-<td>Outbound</td>
-<td>VIDM/SSO</td>
-</tr>
-<tr>
-<td>5432</td>
-<td>TCP</td>
-<td>Cluster-internal</td>
-<td>PostgreSQL replication</td>
-</tr>
-<tr>
-<td>5671/5672</td>
-<td>TCP</td>
-<td>Cluster-internal</td>
-<td>RabbitMQ messaging</td>
+<td>Workspace ONE Access</td>
+<td>23.09</td>
+<td>8.12</td>
+<td>Sep 2025</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="kubernetes-pod-namespaces">Kubernetes Pod Namespaces<a class="headerlink" href="#kubernetes-pod-namespaces" title="Permanent link">&para;</a></h2>
-<p>Aria Automation microservices run in Kubernetes namespaces on each appliance. Key namespaces for diagnostics:</p>
-<table>
-<thead>
-<tr>
-<th>Namespace</th>
-<th>Services</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>prelude</code></td>
-<td>Core Aria Automation services (assembler, catalog, event-broker)</td>
-</tr>
-<tr>
-<td><code>vro</code></td>
-<td>Embedded vRealize Orchestrator</td>
-</tr>
-<tr>
-<td><code>saltstack</code></td>
-<td>Automation Config (SaltStack)</td>
-</tr>
-<tr>
-<td><code>pipeline</code></td>
-<td>Automation Pipelines (Code Stream)</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all namespaces</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>namespaces
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List all pods in the prelude namespace</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prelude
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Get logs for a specific service</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>assembler<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Describe a failing pod for events and error messages</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>&lt;pod-name&gt;
+<h2 id="lcm-api-quick-reference">LCM API Quick Reference<a class="headerlink" href="#lcm-api-quick-reference" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># List all environments</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name: .environmentName, health: .environmentHealth}&#39;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Trigger upgrade</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments/&lt;env-id&gt;/products/&lt;product-id&gt;/upgrade&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;targetVersion&quot;:&quot;8.17.0&quot;,&quot;snapshotBeforeUpgrade&quot;:true}&#39;</span>
 </code></pre></div>
-<hr />
-<h2 id="cloud-account-types">Cloud Account Types<a class="headerlink" href="#cloud-account-types" title="Permanent link">&para;</a></h2>
-<p>Cloud accounts define the connections to cloud and infrastructure endpoints. Aria Automation uses cloud accounts to discover resources and target deployments.</p>
 <table>
 <thead>
 <tr>
-<th>Cloud Account Type</th>
-<th>Protocol</th>
-<th>Managed Resources</th>
+<th>API Path</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>vCenter (vSphere)</td>
-<td>vCenter API (443)</td>
-<td>VMs, networks, datastores, clusters</td>
+<td><code>/lcm/authz/api/v2</code></td>
+<td>Authentication — login and token management</td>
 </tr>
 <tr>
-<td>NSX-T</td>
-<td>NSX Manager API (443)</td>
-<td>Overlay segments, security groups, load balancers</td>
+<td><code>/lcm/lcmservice/api/v2/environments</code></td>
+<td>Environment and product inventory</td>
 </tr>
 <tr>
-<td>VMware Cloud on AWS</td>
-<td>VMware Cloud API</td>
-<td>SDDC VMs and networks</td>
+<td><code>/lcm/lcmservice/api/v2/requests</code></td>
+<td>Request tracking and audit</td>
 </tr>
 <tr>
-<td>AWS</td>
-<td>AWS API</td>
-<td>EC2, VPC, S3</td>
+<td><code>/lcm/locker/api/v2/certificates</code></td>
+<td>Locker — certificate management</td>
 </tr>
 <tr>
-<td>Azure</td>
-<td>Azure Resource Manager API</td>
-<td>VMs, VNets, storage</td>
-</tr>
-<tr>
-<td>GCP</td>
-<td>GCP API</td>
-<td>Compute Engine, VPC</td>
-</tr>
-<tr>
-<td>Kubernetes</td>
-<td>Kubernetes API</td>
-<td>Pod deployments, services</td>
-</tr>
-</tbody>
-</table>
-<p>Configure cloud accounts: <strong>Infrastructure → Connections → Cloud Accounts → Add</strong>.</p>
-<hr />
-<h2 id="appliance-resource-requirements">Appliance Resource Requirements<a class="headerlink" href="#appliance-resource-requirements" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Size</th>
-<th>vCPUs</th>
-<th>RAM</th>
-<th>Disk</th>
-<th>Supported Deployments/day</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Small (1 node)</td>
-<td>8</td>
-<td>32 GB</td>
-<td>100 GB</td>
-<td>Up to 100</td>
-</tr>
-<tr>
-<td>Medium (3 nodes)</td>
-<td>16 per node</td>
-<td>48 GB per node</td>
-<td>100 GB per node</td>
-<td>Up to 500</td>
-</tr>
-<tr>
-<td>Large (3 nodes)</td>
-<td>24 per node</td>
-<td>64 GB per node</td>
-<td>150 GB per node</td>
-<td>500+</td>
+<td><code>/lcm/locker/api/v2/passwords</code></td>
+<td>Locker — password management</td>
 </tr>
 </tbody>
 </table>
