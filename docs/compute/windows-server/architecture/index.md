@@ -1,31 +1,35 @@
-# Windows Server — Overview
+# Windows Server — Architecture
 
-Architecture overview, design principles, and topology.
+<div class="kb-summary">
+Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB file services, Hyper-V, WSUS, and PowerShell-based management. Available in Standard and Datacenter editions with Server Core (recommended) or Desktop Experience installation.
+</div>
 
-## Overview
+<div class="kb-grid kb-grid-3">
+  <a class="kb-card" href="how-it-works/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">How It Works</div>
+    <div class="kb-card-desc">Edition and installation types, key server roles, critical services, common ports, event log channels, and PowerShell reference.</div>
+  </a>
+  <a class="kb-card" href="integrations/">
+    <div class="kb-card-icon">🔗</div>
+    <div class="kb-card-title">Integrations</div>
+    <div class="kb-card-desc">Active Directory, Group Policy, SAN/SMB storage connectivity, Hyper-V, and monitoring via WMI/WinRM.</div>
+  </a>
+  <a class="kb-card" href="design-standards/">
+    <div class="kb-card-icon">📐</div>
+    <div class="kb-card-title">Design Standards</div>
+    <div class="kb-card-desc">Edition selection criteria, Server Core baseline, patch management policy, and firewall rule standards.</div>
+  </a>
+</div>
 
-Windows Server is Microsoft's server operating system, available in Standard and Datacenter editions. Current supported versions are 2016, 2019, 2022, and 2025. The installation type choice — Server Core (headless) or Desktop Experience (full GUI) — is made at install time and cannot be changed post-install.
+## Editions
 
-## Edition and Installation Types
-
-| Version | Edition | Notes |
-|---------|---------|-------|
+| Version | Edition | Key Differentiator |
+|---|---|---|
 | Windows Server 2019/2022/2025 | Standard | Up to 2 Hyper-V VMs per licence |
-| Windows Server 2019/2022/2025 | Datacenter | Unlimited Hyper-V VMs, extra features (Storage Spaces Direct, SDN) |
-| All | Server Core | No GUI; managed via PowerShell remoting or RSAT; smaller attack surface |
-| All | Desktop Experience | Full GUI; larger footprint; required for some legacy management tools |
-
-## Roles and Features Model
-
-Windows Server functionality is delivered through **Roles** (major services) and **Features** (supporting components), installed via Server Manager or PowerShell:
-
-```powershell
-# List installed roles and features
-Get-WindowsFeature | Where-Object Installed -eq $true
-
-# Install a role example
-Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
-```
+| Windows Server 2019/2022/2025 | Datacenter | Unlimited Hyper-V VMs; Storage Spaces Direct, SDN |
+| All | Server Core | No GUI; smaller attack surface; recommended for production |
+| All | Desktop Experience | Full GUI; required for some legacy management tools |
 
 ## Topology
 
@@ -46,13 +50,3 @@ graph TB
   class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
   class ADMIN host
 ```
-
----
-
-## In this section
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
