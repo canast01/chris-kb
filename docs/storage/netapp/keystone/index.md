@@ -5,7 +5,7 @@ NetApp Keystone STaaS knowledge base — architecture, operations, security, and
 </div>
 
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="architecture/"><strong>Architecture</strong><span>STaaS delivery model, service tiers, components, capacity model, and QoS mapping.</span></a>
+<a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Standards</strong><span>Service level selection, naming conventions, and capacity management thresholds.</span></a>
 <a class="kb-card" href="lifecycle/"><strong>Lifecycle</strong><span>Version matrix, upgrade paths, EOL tracking, and refresh planning.</span></a>
 <a class="kb-card" href="operations/"><strong>Operations</strong><span>Daily checks, health monitoring, maintenance tasks, and runbooks.</span></a>

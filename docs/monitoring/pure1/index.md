@@ -13,7 +13,7 @@ Pure Storage Pure1 cloud-based management and analytics — SaaS architecture, A
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Architecture overview, components, and design patterns.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="integration/">

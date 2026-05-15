@@ -8,7 +8,7 @@ Veeam Backup & Replication — Backup Server scheduling, Proxy data movement via
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Proxy transport modes, SOBR tiers, supported platforms, retention schedule, and sizing.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">
