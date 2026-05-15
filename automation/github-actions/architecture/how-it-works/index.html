@@ -21,7 +21,7 @@
     
     
       
-        <title>Terraform — Architecture Overview - Chris KB</title>
+        <title>GitHub Actions — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Terraform — Architecture Overview · Chris KB">
+  <meta property="og:title" content="GitHub Actions — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Terraform — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="GitHub Actions — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#terraform-architecture-overview" class="md-skip">
+        <a href="#github-actions-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Terraform — Architecture Overview
+              GitHub Actions — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#high-level-architecture" class="md-nav__link">
+  <a href="#core-execution-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        High-Level Architecture
+        Core Execution Model
       
     </span>
   </a>
@@ -1080,33 +1080,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#terraform-cli" class="md-nav__link">
+  <a href="#events" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Terraform CLI
+        Events
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#state-backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        State Backend
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="State Backend">
+    <nav class="md-nav" aria-label="Events">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#local-backend-development-only" class="md-nav__link">
+  <a href="#webhook-events" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Backend (development only)
+        Webhook Events
       
     </span>
   </a>
@@ -1114,32 +1103,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#remote-backends" class="md-nav__link">
+  <a href="#non-webhook-events" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Remote Backends
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#s3-backend-aws" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        S3 Backend (AWS)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#azure-blob-backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Azure Blob Backend
+        Non-Webhook Events
       
     </span>
   </a>
@@ -1152,10 +1119,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workspace-model" class="md-nav__link">
+  <a href="#jobs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workspace Model
+        Jobs
       
     </span>
   </a>
@@ -1163,22 +1130,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#provider-plugin-architecture" class="md-nav__link">
+  <a href="#steps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Provider Plugin Architecture
+        Steps
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Provider Plugin Architecture">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runners
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runners">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#provider-cache-shared-across-workspaces" class="md-nav__link">
+  <a href="#github-hosted-runners" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Provider cache (shared across workspaces)
+        GitHub-Hosted Runners
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-hosted-runners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Hosted Runners
       
     </span>
   </a>
@@ -1191,10 +1180,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-registry" class="md-nav__link">
+  <a href="#concurrency" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module Registry
+        Concurrency
       
     </span>
   </a>
@@ -1202,10 +1191,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#core-workflow" class="md-nav__link">
+  <a href="#artifacts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Workflow
+        Artifacts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Limits
       
     </span>
   </a>
@@ -1232,323 +1232,325 @@
 
 
 
-<h1 id="terraform-architecture-overview">Terraform — Architecture Overview<a class="headerlink" href="#terraform-architecture-overview" title="Permanent link">&para;</a></h1>
-<p>Terraform is a declarative infrastructure-as-code tool that manages resources across hundreds of providers via a consistent workflow. Understanding its internal architecture is essential for building reliable, scalable IaC pipelines.</p>
+<h1 id="github-actions-how-it-works">GitHub Actions — How It Works<a class="headerlink" href="#github-actions-how-it-works" title="Permanent link">&para;</a></h1>
+<p>GitHub Actions is an event-driven CI/CD and automation platform embedded directly into GitHub repositories. It executes workflows in response to repository events, schedules, or external triggers.</p>
 <hr />
-<h2 id="high-level-architecture">High-Level Architecture<a class="headerlink" href="#high-level-architecture" title="Permanent link">&para;</a></h2>
+<h2 id="core-execution-model">Core Execution Model<a class="headerlink" href="#core-execution-model" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
-    DEV([Developer / CI Pipeline]) --&gt; CLI[Terraform CLI]
-    CLI --&gt; INIT[terraform init\nDownload providers &amp; modules]
-    CLI --&gt; PLAN[terraform plan\nGenerate execution plan]
-    CLI --&gt; APPLY[terraform apply\nMutate infrastructure]
-
-    INIT --&gt; PR[Provider Registry\nregistry.terraform.io]
-    INIT --&gt; MR[Module Registry\nprivate or public]
-
-    PLAN --&gt; STATE[(State Backend\nS3 / GCS / Azure Blob\n/ Terraform Cloud)]
-    APPLY --&gt; STATE
-
-    PLAN --&gt; P1[AWS Provider\nterraform-provider-aws]
-    PLAN --&gt; P2[Azure Provider\nterraform-provider-azurerm]
-    PLAN --&gt; P3[vSphere Provider\nterraform-provider-vsphere]
-    PLAN --&gt; P4[Other Providers]
-
-    P1 --&gt; AWS[AWS APIs]
-    P2 --&gt; AZ[Azure ARM APIs]
-    P3 --&gt; VS[vSphere REST / SOAP APIs]
-    P4 --&gt; OTHER[Other Cloud/SaaS APIs]
-
-    STATE --&gt; LOCK[State Lock\nDynamoDB / Storage Account\n/ native backend lock]
-
-    style CLI fill:#5c35cc,color:#fff
-    style STATE fill:#1565c0,color:#fff
-    style LOCK fill:#c62828,color:#fff</code></pre>
+    E[Repository Event] --&gt; W[Workflow Triggered]
+    W --&gt; Q[Job Queue]
+    Q --&gt; R1[Runner 1\nJob A]
+    Q --&gt; R2[Runner 2\nJob B]
+    R1 --&gt; S1[Step 1: Checkout]
+    R1 --&gt; S2[Step 2: Build]
+    R1 --&gt; S3[Step 3: Test]
+    R2 --&gt; S4[Step 1: Lint]
+    R2 --&gt; S5[Step 2: Scan]
+    S3 --&gt; A[Upload Artifact]
+    S5 --&gt; A
+    A --&gt; NOTIFY[Notification / Downstream Jobs]</code></pre>
+<p>Events fire workflows. Workflows contain jobs. Jobs run on runners. Steps execute sequentially within a job. Artifacts bridge data between jobs.</p>
 <hr />
-<h2 id="terraform-cli">Terraform CLI<a class="headerlink" href="#terraform-cli" title="Permanent link">&para;</a></h2>
-<p>The CLI is the single binary that orchestrates the entire workflow. There are no separate agents — all execution is local (or in CI).</p>
+<h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">&para;</a></h2>
+<h3 id="webhook-events">Webhook Events<a class="headerlink" href="#webhook-events" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Command</th>
+<th>Event</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>push</code></td>
+<td>Commits pushed to a branch or tag</td>
+</tr>
+<tr>
+<td><code>pull_request</code></td>
+<td>PR opened, synchronized, or closed</td>
+</tr>
+<tr>
+<td><code>pull_request_target</code></td>
+<td>PR event running in the context of the base branch (elevated trust)</td>
+</tr>
+<tr>
+<td><code>release</code></td>
+<td>Release published, created, or deleted</td>
+</tr>
+<tr>
+<td><code>workflow_run</code></td>
+<td>Another workflow completes</td>
+</tr>
+<tr>
+<td><code>deployment</code></td>
+<td>A deployment is created</td>
+</tr>
+<tr>
+<td><code>issue_comment</code></td>
+<td>Comment posted on an issue or PR</td>
+</tr>
+</tbody>
+</table>
+<h3 id="non-webhook-events">Non-Webhook Events<a class="headerlink" href="#non-webhook-events" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schedule</code></td>
+<td>Cron-based timer (UTC, minimum 5-minute interval)</td>
+</tr>
+<tr>
+<td><code>workflow_dispatch</code></td>
+<td>Manual trigger via UI, API, or <code>gh</code> CLI</td>
+</tr>
+<tr>
+<td><code>repository_dispatch</code></td>
+<td>External HTTP POST to GitHub API</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">pull_request_target Risk</p>
+<p><code>pull_request_target</code> runs in the context of the base branch and has access to repository secrets. Never checkout and execute code from the PR head without explicit validation — this is a known attack vector for privilege escalation.</p>
+</div>
+<hr />
+<h2 id="jobs">Jobs<a class="headerlink" href="#jobs" title="Permanent link">&para;</a></h2>
+<p>A job is a set of steps that executes on a single runner. Jobs within a workflow are independent by default and run in parallel. Sequential execution requires explicit <code>needs:</code> dependencies.</p>
+<pre class="mermaid"><code>flowchart LR
+    lint[lint] --&gt; build[build]
+    test[test] --&gt; build
+    build --&gt; deploy[deploy]
+    deploy --&gt; notify[notify]</code></pre>
+<table>
+<thead>
+<tr>
+<th>Property</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>terraform init</code></td>
-<td>Initialise working directory: download providers, configure backend</td>
+<td><code>runs-on</code></td>
+<td>Specifies the runner label or group</td>
 </tr>
 <tr>
-<td><code>terraform validate</code></td>
-<td>Check configuration syntax and internal consistency</td>
+<td><code>needs</code></td>
+<td>Declares upstream job dependencies</td>
 </tr>
 <tr>
-<td><code>terraform fmt</code></td>
-<td>Format <code>.tf</code> files to canonical style</td>
+<td><code>if</code></td>
+<td>Conditional execution expression</td>
 </tr>
 <tr>
-<td><code>terraform plan</code></td>
-<td>Show changes required to reach desired state</td>
+<td><code>environment</code></td>
+<td>Links to a protected deployment environment</td>
 </tr>
 <tr>
-<td><code>terraform apply</code></td>
-<td>Apply the plan; mutate real infrastructure</td>
+<td><code>concurrency</code></td>
+<td>Prevents duplicate runs for the same group</td>
 </tr>
 <tr>
-<td><code>terraform destroy</code></td>
-<td>Plan and apply deletion of all managed resources</td>
+<td><code>timeout-minutes</code></td>
+<td>Hard deadline for the job (default 360)</td>
 </tr>
 <tr>
-<td><code>terraform state</code></td>
-<td>Inspect and manipulate state directly</td>
+<td><code>strategy.matrix</code></td>
+<td>Fan-out across multiple configurations</td>
 </tr>
 <tr>
-<td><code>terraform import</code></td>
-<td>Import existing resources into state</td>
-</tr>
-<tr>
-<td><code>terraform output</code></td>
-<td>Print output values from state</td>
-</tr>
-<tr>
-<td><code>terraform workspace</code></td>
-<td>Manage workspaces</td>
+<td><code>outputs</code></td>
+<td>Key-value data passed to dependent jobs</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="state-backend">State Backend<a class="headerlink" href="#state-backend" title="Permanent link">&para;</a></h2>
-<p>The state file is Terraform's source of truth for what resources it manages. The backend determines where this file is stored and how concurrent access is controlled.</p>
-<h3 id="local-backend-development-only">Local Backend (development only)<a class="headerlink" href="#local-backend-development-only" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Default — state stored in terraform.tfstate in the working directory</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># No locking — NEVER use in shared/CI environments</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;local&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform.tfstate&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
+<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout repository</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm test</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">env</span><span class="p">:</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">NODE_ENV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload coverage</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage/</span>
 </code></pre></div>
-<h3 id="remote-backends">Remote Backends<a class="headerlink" href="#remote-backends" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="runners">Runners<a class="headerlink" href="#runners" title="Permanent link">&para;</a></h2>
+<h3 id="github-hosted-runners">GitHub-Hosted Runners<a class="headerlink" href="#github-hosted-runners" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Backend</th>
-<th>State storage</th>
-<th>Locking mechanism</th>
-<th>Best for</th>
+<th>Label</th>
+<th>OS</th>
+<th>vCPU</th>
+<th>RAM</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>S3 + DynamoDB</td>
-<td>AWS S3</td>
-<td>DynamoDB item</td>
-<td>AWS-primary organisations</td>
+<td><code>ubuntu-24.04</code> / <code>ubuntu-latest</code></td>
+<td>Ubuntu 24.04 LTS</td>
+<td>4</td>
+<td>16 GB</td>
 </tr>
 <tr>
-<td>GCS</td>
-<td>Google Cloud Storage</td>
-<td>GCS object lock</td>
-<td>GCP-primary organisations</td>
+<td><code>ubuntu-22.04</code></td>
+<td>Ubuntu 22.04 LTS</td>
+<td>4</td>
+<td>16 GB</td>
 </tr>
 <tr>
-<td>Azure Blob</td>
-<td>Azure Storage Account</td>
-<td>Blob lease</td>
-<td>Azure-primary organisations</td>
+<td><code>windows-2022</code> / <code>windows-latest</code></td>
+<td>Windows Server 2022</td>
+<td>4</td>
+<td>16 GB</td>
 </tr>
 <tr>
-<td>Terraform Cloud / Enterprise</td>
-<td>Hosted</td>
-<td>Native</td>
-<td>Multi-cloud, managed service</td>
-</tr>
-<tr>
-<td>HTTP</td>
-<td>Custom endpoint</td>
-<td>Custom</td>
-<td>On-prem / custom solutions</td>
+<td><code>macos-15</code> / <code>macos-latest</code></td>
+<td>macOS 15 (ARM, M1)</td>
+<td>4</td>
+<td>14 GB</td>
 </tr>
 </tbody>
 </table>
-<h3 id="s3-backend-aws">S3 Backend (AWS)<a class="headerlink" href="#s3-backend-aws" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.7.0&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-org-terraform-state&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform/networking/terraform.tfstate&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eu-west-1&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="na">kms_key_id</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;arn:aws:kms:eu-west-1:123456789012:key/mrk-abc123&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-state-lock&quot;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">}</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create the DynamoDB lock table (one-time setup)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>create-table<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--table-name<span class="w"> </span>terraform-state-lock<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--attribute-definitions<span class="w"> </span><span class="nv">AttributeName</span><span class="o">=</span>LockID,AttributeType<span class="o">=</span>S<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--key-schema<span class="w"> </span><span class="nv">AttributeName</span><span class="o">=</span>LockID,KeyType<span class="o">=</span>HASH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--billing-mode<span class="w"> </span>PAY_PER_REQUEST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--region<span class="w"> </span>eu-west-1
-</code></pre></div>
-<h3 id="azure-blob-backend">Azure Blob Backend<a class="headerlink" href="#azure-blob-backend" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;azurerm&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="na">resource_group_name</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rg-terraform-state&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="na">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myorgtfstate&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="na">container_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tfstate&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="na">key</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform/networking/terraform.tfstate&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="na">use_oidc</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # Use OIDC for CI authentication</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="workspace-model">Workspace Model<a class="headerlink" href="#workspace-model" title="Permanent link">&para;</a></h2>
-<p>Workspaces allow multiple independent state files within the same backend path. They are suited for lightweight environment separation (dev/staging/prod) in simple configurations. For complex multi-environment setups, separate state paths (and separate directories/modules) are preferred.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List workspaces</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a new workspace</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>staging
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Switch workspace</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>prod
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Current workspace in configuration</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>variable<span class="w"> </span><span class="s2">&quot;environment&quot;</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nv">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>terraform.workspace
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="o">}</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Use workspace name in resource naming</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_s3_bucket&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-app-${terraform.workspace}-assets&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">  # dev → my-app-dev-assets</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">  # prod → my-app-prod-assets</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
-</code></pre></div>
-<blockquote>
-<p>Workspaces share the same configuration code and provider credentials. For strict isolation (separate AWS accounts, different permissions), use separate root modules with separate backends, not just workspaces.</p>
-</blockquote>
-<hr />
-<h2 id="provider-plugin-architecture">Provider Plugin Architecture<a class="headerlink" href="#provider-plugin-architecture" title="Permanent link">&para;</a></h2>
-<p>Providers are separate binaries (Go plugins) downloaded by <code>terraform init</code>. Terraform communicates with providers over a local gRPC socket.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.40&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nb">azurerm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/azurerm&quot;</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 3.100&quot;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="nb">vsphere</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/vsphere&quot;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 2.7&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="p">}</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1">  # Credentials via env vars: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1">  # Or IAM role (recommended in CI): no credentials in config</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="p">}</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;azurerm&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">  </span><span class="nb">features</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">  </span><span class="na">use_oidc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">   # OIDC federation for CI — no stored secrets</span>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="p">}</span>
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;vsphere&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">  </span><span class="na">vsphere_server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vsphere_server</span>
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">  </span><span class="na">user</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vsphere_user</span>
-<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">  </span><span class="na">password</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vsphere_password</span>
-<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">  </span><span class="na">allow_unverified_ssl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="p">}</span>
-</code></pre></div>
-<h3 id="provider-cache-shared-across-workspaces">Provider cache (shared across workspaces)<a class="headerlink" href="#provider-cache-shared-across-workspaces" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Set provider cache directory to avoid re-downloading</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_PLUGIN_CACHE_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.terraform.d/plugin-cache&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TF_PLUGIN_CACHE_DIR</span><span class="s2">&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Or in .terraformrc</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>~/.terraformrc<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s">plugin_cache_dir = &quot;$HOME/.terraform.d/plugin-cache&quot;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s">EOF</span>
-</code></pre></div>
-<hr />
-<h2 id="module-registry">Module Registry<a class="headerlink" href="#module-registry" title="Permanent link">&para;</a></h2>
-<p>Modules package reusable infrastructure components. They can be sourced from:</p>
+<h3 id="self-hosted-runners">Self-Hosted Runners<a class="headerlink" href="#self-hosted-runners" title="Permanent link">&para;</a></h3>
+<p>Self-hosted runners poll GitHub via HTTPS long-polling for job assignments.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant R as Runner Agent
+    participant G as GitHub API
+    R-&gt;&gt;G: Register (POST /repos/.../actions/runners/registration-token)
+    loop Long-polling
+        R-&gt;&gt;G: GET next job
+        G--&gt;&gt;R: Job payload (steps, env, secrets)
+        R-&gt;&gt;R: Execute all steps
+        R-&gt;&gt;G: POST logs + results
+    end</code></pre>
 <table>
 <thead>
 <tr>
-<th>Source</th>
-<th>Example</th>
+<th>Scope</th>
+<th>Registration Level</th>
+<th>Shared Across</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Terraform Registry (public)</td>
-<td><code>source = "terraform-aws-modules/vpc/aws"</code></td>
+<td>Repository</td>
+<td>Single repository settings</td>
+<td>That repo only</td>
 </tr>
 <tr>
-<td>Private registry (Terraform Cloud/Enterprise)</td>
-<td><code>source = "app.terraform.io/myorg/vpc/aws"</code></td>
+<td>Organisation</td>
+<td>Organisation settings</td>
+<td>All repos granted access</td>
 </tr>
 <tr>
-<td>Git</td>
-<td><code>source = "git::https://github.com/org/tf-modules.git//vpc?ref=v2.0.0"</code></td>
-</tr>
-<tr>
-<td>Local path</td>
-<td><code>source = "../modules/vpc"</code></td>
+<td>Enterprise</td>
+<td>Enterprise settings</td>
+<td>All orgs in the enterprise</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kr">module</span><span class="w"> </span><span class="nv">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-aws-modules/vpc/aws&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;5.8.0&quot;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-vpc&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="na">cidr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="na">azs</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;eu-west-1a&quot;, &quot;eu-west-1b&quot;, &quot;eu-west-1c&quot;</span><span class="p">]</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="na">private_subnets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.1.0/24&quot;, &quot;10.0.2.0/24&quot;, &quot;10.0.3.0/24&quot;</span><span class="p">]</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="na">public_subnets</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.101.0/24&quot;, &quot;10.0.102.0/24&quot;, &quot;10.0.103.0/24&quot;</span><span class="p">]</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="na">enable_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="na">single_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.common_tags</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="p">}</span>
+<div class="admonition warning">
+<p class="admonition-title">Self-Hosted Runner Security</p>
+<p>Never run self-hosted runners on public repositories — a forked PR can execute arbitrary code on the host.</p>
+</div>
+<hr />
+<h2 id="concurrency">Concurrency<a class="headerlink" href="#concurrency" title="Permanent link">&para;</a></h2>
+<p>Concurrency groups prevent duplicate workflow runs for the same logical scope.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">concurrency</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.workflow }}-${{ github.ref }}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 <hr />
-<h2 id="core-workflow">Core Workflow<a class="headerlink" href="#core-workflow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Initialise (required after adding providers or modules)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>terraform<span class="w"> </span>init
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># 2. Format code</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>terraform<span class="w"> </span>fmt<span class="w"> </span>-recursive
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># 3. Validate syntax</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>terraform<span class="w"> </span>validate
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 4. Plan — review before applying</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># 5. Apply the saved plan</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>terraform<span class="w"> </span>apply<span class="w"> </span>tfplan
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># 6. Inspect state</span>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>aws_vpc.main
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># 7. Import an existing resource</span>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>terraform<span class="w"> </span>import<span class="w"> </span>aws_s3_bucket.assets<span class="w"> </span>my-existing-bucket-name
+<h2 id="artifacts">Artifacts<a class="headerlink" href="#artifacts" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist-package</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">retention-days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/download-artifact@v4</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist-package</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
 </code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default retention</td>
+<td>90 days</td>
+</tr>
+<tr>
+<td>Maximum size per artifact</td>
+<td>10 GB</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="platform-limits">Platform Limits<a class="headerlink" href="#platform-limits" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>GitHub Free</th>
+<th>GitHub Team</th>
+<th>GitHub Enterprise</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Concurrent jobs (Linux, hosted)</td>
+<td>20</td>
+<td>60</td>
+<td>180</td>
+</tr>
+<tr>
+<td>Job execution timeout</td>
+<td>6 hours</td>
+<td>6 hours</td>
+<td>6 hours</td>
+</tr>
+<tr>
+<td>Artifact storage included</td>
+<td>500 MB</td>
+<td>2 GB</td>
+<td>50 GB</td>
+</tr>
+<tr>
+<td>Cache storage per repository</td>
+<td>10 GB</td>
+<td>10 GB</td>
+<td>10 GB</td>
+</tr>
+<tr>
+<td>Secrets per repository</td>
+<td>100</td>
+<td>100</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
 
 
 
