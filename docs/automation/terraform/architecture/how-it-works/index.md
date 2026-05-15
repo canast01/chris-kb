@@ -1,6 +1,6 @@
-# Terraform — Architecture Overview
+# Terraform — How It Works
 
-Terraform is a declarative infrastructure-as-code tool that manages resources across hundreds of providers via a consistent workflow. Understanding its internal architecture is essential for building reliable, scalable IaC pipelines.
+Terraform is a declarative infrastructure-as-code tool that manages resources across hundreds of providers via a consistent workflow. All execution is driven by a single CLI binary — there are no separate agents.
 
 ---
 
@@ -38,9 +38,7 @@ flowchart TD
 
 ---
 
-## Terraform CLI
-
-The CLI is the single binary that orchestrates the entire workflow. There are no separate agents — all execution is local (or in CI).
+## Terraform CLI Commands
 
 | Command | Purpose |
 |---|---|
@@ -59,21 +57,7 @@ The CLI is the single binary that orchestrates the entire workflow. There are no
 
 ## State Backend
 
-The state file is Terraform's source of truth for what resources it manages. The backend determines where this file is stored and how concurrent access is controlled.
-
-### Local Backend (development only)
-
-```hcl
-# Default — state stored in terraform.tfstate in the working directory
-# No locking — NEVER use in shared/CI environments
-terraform {
-  backend "local" {
-    path = "terraform.tfstate"
-  }
-}
-```
-
-### Remote Backends
+The state file is Terraform's source of truth for what resources it manages. The backend determines where it is stored and how concurrent access is controlled.
 
 | Backend | State storage | Locking mechanism | Best for |
 |---|---|---|---|
@@ -81,9 +65,6 @@ terraform {
 | GCS | Google Cloud Storage | GCS object lock | GCP-primary organisations |
 | Azure Blob | Azure Storage Account | Blob lease | Azure-primary organisations |
 | Terraform Cloud / Enterprise | Hosted | Native | Multi-cloud, managed service |
-| HTTP | Custom endpoint | Custom | On-prem / custom solutions |
-
-### S3 Backend (AWS)
 
 ```hcl
 terraform {
@@ -100,62 +81,19 @@ terraform {
 }
 ```
 
-```bash
-# Create the DynamoDB lock table (one-time setup)
-aws dynamodb create-table \
-  --table-name terraform-state-lock \
-  --attribute-definitions AttributeName=LockID,AttributeType=S \
-  --key-schema AttributeName=LockID,KeyType=HASH \
-  --billing-mode PAY_PER_REQUEST \
-  --region eu-west-1
-```
-
-### Azure Blob Backend
-
-```hcl
-terraform {
-  backend "azurerm" {
-    resource_group_name  = "rg-terraform-state"
-    storage_account_name = "myorgtfstate"
-    container_name       = "tfstate"
-    key                  = "platform/networking/terraform.tfstate"
-    use_oidc             = true  # Use OIDC for CI authentication
-  }
-}
-```
-
 ---
 
 ## Workspace Model
 
-Workspaces allow multiple independent state files within the same backend path. They are suited for lightweight environment separation (dev/staging/prod) in simple configurations. For complex multi-environment setups, separate state paths (and separate directories/modules) are preferred.
+Workspaces allow multiple independent state files within the same backend path. Suited for lightweight environment separation (dev/staging/prod).
 
 ```bash
-# List workspaces
 terraform workspace list
-
-# Create a new workspace
 terraform workspace new staging
-
-# Switch workspace
 terraform workspace select prod
-
-# Current workspace in configuration
-variable "environment" {
-  default = terraform.workspace
-}
 ```
 
-```hcl
-# Use workspace name in resource naming
-resource "aws_s3_bucket" "app" {
-  bucket = "my-app-${terraform.workspace}-assets"
-  # dev → my-app-dev-assets
-  # prod → my-app-prod-assets
-}
-```
-
-> Workspaces share the same configuration code and provider credentials. For strict isolation (separate AWS accounts, different permissions), use separate root modules with separate backends, not just workspaces.
+For strict isolation (separate AWS accounts, different permissions), use separate root modules with separate backends rather than workspaces.
 
 ---
 
@@ -183,46 +121,22 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-  # Credentials via env vars: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-  # Or IAM role (recommended in CI): no credentials in config
 }
 
 provider "azurerm" {
   features {}
-  use_oidc = true   # OIDC federation for CI — no stored secrets
+  use_oidc = true
 }
-
-provider "vsphere" {
-  vsphere_server = var.vsphere_server
-  user           = var.vsphere_user
-  password       = var.vsphere_password
-  allow_unverified_ssl = false
-}
-```
-
-### Provider cache (shared across workspaces)
-
-```bash
-# Set provider cache directory to avoid re-downloading
-export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
-mkdir -p "$TF_PLUGIN_CACHE_DIR"
-
-# Or in .terraformrc
-cat > ~/.terraformrc <<EOF
-plugin_cache_dir = "$HOME/.terraform.d/plugin-cache"
-EOF
 ```
 
 ---
 
 ## Module Registry
 
-Modules package reusable infrastructure components. They can be sourced from:
-
 | Source | Example |
 |---|---|
 | Terraform Registry (public) | `source = "terraform-aws-modules/vpc/aws"` |
-| Private registry (Terraform Cloud/Enterprise) | `source = "app.terraform.io/myorg/vpc/aws"` |
+| Private registry | `source = "app.terraform.io/myorg/vpc/aws"` |
 | Git | `source = "git::https://github.com/org/tf-modules.git//vpc?ref=v2.0.0"` |
 | Local path | `source = "../modules/vpc"` |
 
@@ -250,25 +164,12 @@ module "vpc" {
 ## Core Workflow
 
 ```bash
-# 1. Initialise (required after adding providers or modules)
 terraform init
-
-# 2. Format code
 terraform fmt -recursive
-
-# 3. Validate syntax
 terraform validate
-
-# 4. Plan — review before applying
 terraform plan -out=tfplan
-
-# 5. Apply the saved plan
 terraform apply tfplan
-
-# 6. Inspect state
 terraform state list
 terraform state show aws_vpc.main
-
-# 7. Import an existing resource
 terraform import aws_s3_bucket.assets my-existing-bucket-name
 ```

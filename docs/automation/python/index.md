@@ -1,10 +1,14 @@
 # Python Automation
 
+<div class="kb-summary">
+Python infrastructure automation knowledge base covering virtual environment management, dependency tooling, asyncio concurrency patterns, Docker containerisation, CLI script design, and integration with cloud and infrastructure APIs.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">

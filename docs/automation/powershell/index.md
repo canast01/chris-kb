@@ -1,10 +1,14 @@
 # PowerShell
 
+<div class="kb-summary">
+PowerShell automation knowledge base covering execution engine internals, pipeline model, WinRM and SSH remoting, module development, runspace pools, and scripting patterns for Windows and cross-platform infrastructure automation.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, modules, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">
