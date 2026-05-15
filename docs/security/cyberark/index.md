@@ -1,10 +1,14 @@
 # CyberArk
 
+<div class="kb-summary">
+CyberArk Privileged Access Manager knowledge base covering Digital Vault architecture, CPM rotation, PSM session proxying, PVWA administration, DR activation, and PAM hardening for enterprise privileged access environments.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">

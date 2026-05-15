@@ -1,8 +1,9 @@
-# Certificates Architecture
+# Certificates — How It Works
 
 Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-gapped Root CA at the trust anchor, an online Issuing CA for day-to-day issuance, and optionally a Registration Authority (RA) to separate enrolment approval from issuance. Internal PKI is implemented with Microsoft ADCS. External and public-facing services use commercial CAs (DigiCert, Entrust) or Let's Encrypt via ACME.
 
 ---
+
 ## PKI Hierarchy
 
 ```mermaid
@@ -22,6 +23,8 @@ graph TB
   class CERT1,CERT2,CERT3 host
   class CRL mgmt
 ```
+
+---
 
 ## Certificate Lifecycle Flow
 
@@ -59,8 +62,6 @@ flowchart TD
 
 Templates are created on the Issuing CA and determine key usage, validity, and enrollment permissions.
 
-Common templates in use:
-
 | Template Name | Purpose | Key Usage | Validity |
 |---|---|---|---|
 | `WebServer-Internal` | Internal HTTPS services | Server Authentication | 2 years |
@@ -70,14 +71,8 @@ Common templates in use:
 | `SubCA` | Issuing CA certificate | All key usages | 10 years |
 
 ```powershell
-# List all published certificate templates on the CA
 certutil -catemplates
-
-# View key details of a specific template
 Get-CATemplate -TemplateName "WebServer-Internal"
-
-# Duplicate a template from the CA MMC snap-in:
-# certsrv.msc -> Certificate Templates -> right-click -> Duplicate Template
 ```
 
 ---
@@ -90,11 +85,6 @@ CRL Distribution Points (CDP) and Authority Information Access (AIA) extensions 
 # View current CDP and AIA configuration
 certutil -getreg CA\CRLPublicationURLs
 certutil -getreg CA\CACertPublicationURLs
-
-# Recommended CDP URLs (set on Issuing CA):
-# 1. LDAP://... (domain members only)
-# 2. http://pki.corp.example.com/crl/<CAName><CRLNameSuffix><DeltaCRLAllowed>.crl
-# (HTTP CDP must be accessible to ALL systems that receive certificates)
 
 # Set CDP via PowerShell (restart CertSvc after changes)
 $cdpUrls = @(
@@ -124,7 +114,7 @@ Settings:
 ```
 
 ```powershell
-# Trigger manual auto-enrollment on a client (useful for testing)
+# Trigger manual auto-enrollment on a client
 certutil -pulse
 
 # View certificates in the machine store
@@ -133,7 +123,7 @@ Get-ChildItem Cert:\LocalMachine\My | Select-Object Subject, NotAfter, Thumbprin
 
 ---
 
-## OCSP and CRL Revocation Validation Flow
+## OCSP and CRL Revocation Validation
 
 ```mermaid
 sequenceDiagram
@@ -167,11 +157,11 @@ sequenceDiagram
 
 The Root CA private key is the most sensitive component of the PKI. Key ceremony requirements:
 
-- Performed in a secure, access-controlled room with at least two witnesses.
-- Key generated inside an HSM (e.g., nCipher, Thales) or a verified offline server.
-- Key backup stored in HSM firmware card set with M-of-N quorum (e.g., 3-of-5).
-- Ceremony is documented, signed by all witnesses, and stored with the CA policy documentation.
-- Root CA certificate renewed 12 months before expiry with a new key pair.
+- Performed in a secure, access-controlled room with at least two witnesses
+- Key generated inside an HSM (e.g., nCipher, Thales) or a verified offline server
+- Key backup stored in HSM firmware card set with M-of-N quorum (e.g., 3-of-5)
+- Ceremony is documented, signed by all witnesses, and stored with the CA policy documentation
+- Root CA certificate renewed 12 months before expiry with a new key pair
 
 ---
 

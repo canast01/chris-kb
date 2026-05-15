@@ -1,10 +1,14 @@
 # Certificates
 
+<div class="kb-summary">
+PKI and certificate management knowledge base covering three-tier CA hierarchy, ADCS configuration, certificate lifecycle, CDP/AIA, OCSP/CRL revocation, auto-enrollment, and Venafi TPP integration.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">

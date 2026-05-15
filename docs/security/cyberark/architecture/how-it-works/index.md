@@ -1,8 +1,9 @@
-# CyberArk Architecture
+# CyberArk — How It Works
 
 CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an encrypted hardened credential store that is the sole authoritative source for managed passwords and SSH keys. The Central Policy Manager (CPM) rotates credentials automatically, the Privileged Session Manager (PSM) proxies and records sessions, and the Password Vault Web Access (PVWA) provides the web UI and REST API gateway.
 
 ---
+
 ## Component Overview
 
 | Component | Role | Typical Count |
@@ -15,7 +16,6 @@ CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an e
 | DR Vault | Asynchronous replication replica of Vault | 1 per DR site |
 
 ---
-
 
 ## PAM Component Topology
 
@@ -33,6 +33,8 @@ graph TB
   class PVWA,PSM,CPM ctrl
   class USER,TARGET,SIEM host
 ```
+
+---
 
 ## Network Topology
 
@@ -58,6 +60,7 @@ graph TB
 ```
 
 Key ports:
+
 - PVWA → Vault: TCP 1858
 - CPM → Vault: TCP 1858
 - PSM → Vault: TCP 1858
@@ -99,6 +102,8 @@ sequenceDiagram
 | CPM failure | Accounts queue for rotation; failover CPM picks up queue on restart |
 | PSM node failure | Active sessions on failed node terminate; load balancer routes new sessions to healthy node |
 
+---
+
 ## DR Activation Flow
 
 ```mermaid
@@ -113,6 +118,7 @@ flowchart TD
 ```
 
 DR Vault activation procedure:
+
 1. Stop replication on the DR Vault: `C:\Program Files (x86)\PrivateArk\Server\dbsync.exe` — stop the sync service.
 2. Change DR Vault to standalone mode via PrivateArk Client.
 3. Update CPM, PSM, and PVWA `vault.ini` to point to the DR Vault IP.

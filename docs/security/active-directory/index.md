@@ -1,10 +1,14 @@
 # Active Directory
 
+<div class="kb-summary">
+Windows Server Active Directory knowledge base covering forest and domain architecture, FSMO roles, Kerberos authentication, replication topology, GPO management, and troubleshooting for enterprise directory environments.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">

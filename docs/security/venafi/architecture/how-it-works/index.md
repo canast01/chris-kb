@@ -1,8 +1,9 @@
-# Venafi Architecture
+# Venafi — How It Works
 
 Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle management system. It enforces certificate policy, integrates with multiple CA backends, automates renewal, and provides visibility across all managed certificates. The SaaS equivalent is Venafi as a Service (VaaS / TLS Protect Cloud).
 
 ---
+
 ## Component Overview
 
 | Component | Role | Deployment |
@@ -15,7 +16,6 @@ Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle m
 | Venafi SDK / REST API | Automation and integration interface | Consumed by CI/CD and scripts |
 
 ---
-
 
 ## Trust Protection Platform Topology
 
@@ -36,6 +36,8 @@ graph TB
   class CA1,CA2,AUTO mgmt
   class ADMIN,SIEM host
 ```
+
+---
 
 ## Policy Tree Structure
 
@@ -58,7 +60,8 @@ The Venafi policy tree (`\VED\Policy\`) organises certificates into folders that
     └── Partners\
 ```
 
-Policy folder settings (configured per folder):
+Policy folder settings:
+
 - CA template / connector to use for issuance
 - Validity period and renewal window
 - Key algorithm and minimum key size
@@ -68,7 +71,15 @@ Policy folder settings (configured per folder):
 
 ---
 
-## CA Integration Hierarchy
+## CA Connectors
+
+| CA Type | Connector | Notes |
+|---|---|---|
+| Microsoft ADCS | ADCS connector (built-in) | Requires CES/CEP or direct RPC access to CA |
+| DigiCert | DigiCert connector | Requires DigiCert API key; supports OV/EV/DV |
+| Entrust | Entrust connector | Requires Entrust API key and client credentials |
+| Let's Encrypt | ACME connector | HTTP-01 or DNS-01 challenge; requires accessible validation endpoint |
+| Internal standalone CA | Generic PKCS#10 / SCEP | For CAs without a native connector |
 
 ```mermaid
 graph TD
@@ -84,28 +95,6 @@ graph TD
     entrust -->|"REST API"| entrustCloud["Entrust API Cloud"]
     acme -->|"ACME RFC 8555"| leCloud["Let's Encrypt"]
     vault -->|"Vault REST API"| vaultPKI["Vault PKI Engine"]
-```
-
----
-
-## CA Connectors
-
-Venafi integrates with multiple CA backends. Each connector is configured once at the Policy Server level and referenced by policy folders.
-
-| CA Type | Connector | Notes |
-|---|---|---|
-| Microsoft ADCS | ADCS connector (built-in) | Requires CES/CEP or direct RPC access to CA |
-| DigiCert | DigiCert connector | Requires DigiCert API key; supports OV/EV/DV |
-| Entrust | Entrust connector | Requires Entrust API key and client credentials |
-| Let's Encrypt | ACME connector | HTTP-01 or DNS-01 challenge; requires accessible validation endpoint |
-| Internal standalone CA | Generic PKCS#10 / SCEP | For CAs without a native connector |
-
-```powershell
-# List configured CA connectors via Venafi REST API
-$headers = @{ "X-Venafi-API-Key" = $apiKey }
-Invoke-RestMethod -Uri "https://venafi.corp.example.com/vedsdk/Certificates/CheckPolicy" `
-  -Headers $headers -Method Post -ContentType "application/json" `
-  -Body '{"PolicyDN":"\\VED\\Policy\\Internal\\Production"}'
 ```
 
 ---
@@ -146,15 +135,10 @@ graph TD
     admin["Security Admin\n(portal)"] -->|"HTTPS 443"| lb
 ```
 
-- Both nodes are active; the load balancer distributes requests.
-- SQL Server is the single source of truth; both nodes are stateless with respect to certificate data.
-- Failover is transparent — if one node fails, the load balancer routes all traffic to the remaining node.
+Both nodes are active; the load balancer distributes requests. SQL Server is the single source of truth — both nodes are stateless with respect to certificate data. If one node fails, the load balancer routes all traffic to the remaining node.
 
 ```powershell
-# Check TPP service health on both nodes (run on each node)
 Get-Service -Name "Venafi*" | Select-Object Name, Status
-
-# Verify SQL connectivity from TPP node
 Test-NetConnection -ComputerName sql01.corp.example.com -Port 1433
 ```
 
