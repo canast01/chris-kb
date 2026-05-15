@@ -208,6 +208,6 @@ SureBackup boots each VM in the isolated lab and runs application-specific tests
 
 ## Related Pages
 
-- [Veeam — Architecture Overview](../../architecture/overview/index.md)
+- [Veeam — Architecture](../../architecture/how-it-works/index.md)
 - [Veeam — Health Checks](../health-checks/index.md)
 - [Veeam — Troubleshooting](../../troubleshooting/common-issues/index.md)
