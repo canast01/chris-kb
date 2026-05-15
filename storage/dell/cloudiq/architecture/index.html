@@ -21,7 +21,7 @@
     
     
       
-        <title>CloudIQ — Architecture Overview - Chris KB</title>
+        <title>CloudIQ — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="CloudIQ — Architecture Overview · Chris KB">
+  <meta property="og:title" content="CloudIQ — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CloudIQ — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="CloudIQ — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cloudiq-architecture-overview" class="md-skip">
+        <a href="#cloudiq-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CloudIQ — Architecture Overview
+              CloudIQ — Architecture
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#data-pipeline-topology" class="md-nav__link">
+  <a href="#supported-platforms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data Pipeline Topology
+        Supported Platforms
       
     </span>
   </a>
@@ -1080,21 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#data-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
+        Data Pipeline
       
     </span>
   </a>
@@ -1121,9 +1110,49 @@
 
 
 
-<h1 id="cloudiq-architecture-overview">CloudIQ — Architecture Overview<a class="headerlink" href="#cloudiq-architecture-overview" title="Permanent link">&para;</a></h1>
-<p>Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.</p>
-<h2 id="data-pipeline-topology">Data Pipeline Topology<a class="headerlink" href="#data-pipeline-topology" title="Permanent link">&para;</a></h2>
+<h1 id="cloudiq-architecture">CloudIQ — Architecture<a class="headerlink" href="#cloudiq-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Cloud-native AIOps SaaS platform hosted by Dell. Receives telemetry from on-premises Dell arrays via the Secure Connect Gateway and produces health scores (0–100), capacity forecasts, and AI-driven recommendations. No on-premises compute required beyond the SCG.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with Dell arrays, Secure Connect Gateway, and REST API.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>SCG redundancy, notification configuration, and API integration practices.</span></a>
+</div>
+
+<h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Telemetry Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerMax / VMAX</td>
+<td>Embedded telemetry agent</td>
+</tr>
+<tr>
+<td>Unity XT</td>
+<td>CloudIQ data collection service</td>
+</tr>
+<tr>
+<td>PowerScale (Isilon)</td>
+<td>OneFS embedded agent</td>
+</tr>
+<tr>
+<td>PowerStore</td>
+<td>REST API</td>
+</tr>
+<tr>
+<td>PowerFlex (VxFlex OS)</td>
+<td>SDC telemetry</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-pipeline">Data Pipeline<a class="headerlink" href="#data-pipeline" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
   ARRAYS["Dell Arrays\nPowerMax · Unity · PowerScale · PowerStore"] --&gt;|"secure telemetry HTTPS"| CLOUDIQ["Dell CloudIQ\n(SaaS analytics)"]
   CLOUDIQ --&gt; HEALTH["Health Score &amp; Alerts"]
@@ -1136,22 +1165,6 @@
   class ARRAYS ctrl
   class CLOUDIQ,HEALTH,CAP,REC cloud
   class ADMIN host</code></pre>
-<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Each on-premises Dell storage system is registered to an SCG appliance</li>
-<li>The SCG polls the registered systems for telemetry (capacity metrics, performance counters, hardware health) and forwards the data to the Dell CloudIQ back-end over outbound HTTPS (port 443)</li>
-<li>CloudIQ ingests the telemetry, applies ML-based health scoring, and generates alerts when scores drop or anomalies are detected</li>
-<li>Users access results via the CloudIQ web dashboard or the REST API</li>
-<li>Notifications are sent via email or webhook based on configured notification rules</li>
-</ol>
-<p>CloudIQ health scores range from 0 to 100. Scores below 80 indicate a condition requiring attention; scores below 60 are typically active hardware or configuration alerts.</p>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Dell ECS — Overview - Chris KB</title>
+        <title>PowerPath — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Dell ECS — Overview · Chris KB">
+  <meta property="og:title" content="PowerPath — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dell ECS — Overview · Chris KB">
+  <meta name="twitter:title" content="PowerPath — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dell-ecs-overview" class="md-skip">
+        <a href="#powerpath-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dell ECS — Overview
+              PowerPath — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#scale-out-object-storage-topology" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scale-Out Object Storage Topology
+        Overview
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#host-side-mpio-stack" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How It Works
+        Host-Side MPIO Stack
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#erasure-coding" class="md-nav__link">
+  <a href="#path-states" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Erasure Coding
+        Path States
       
     </span>
   </a>
@@ -1102,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#virtual-data-centers-vdc" class="md-nav__link">
+  <a href="#load-balancing-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Virtual Data Centers (VDC)
+        Load-Balancing Policies
       
     </span>
   </a>
@@ -1113,10 +1113,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replication-groups-and-geo-distribution" class="md-nav__link">
+  <a href="#failover-and-recovery" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replication Groups and Geo-Distribution
+        Failover and Recovery
       
     </span>
   </a>
@@ -1124,10 +1124,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#namespace-and-bucket-hierarchy" class="md-nav__link">
+  <a href="#supported-platforms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Namespace and Bucket Hierarchy
+        Supported Platforms
       
     </span>
   </a>
@@ -1135,32 +1135,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#connectivity-and-integration-points" class="md-nav__link">
+  <a href="#key-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Connectivity and Integration Points
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-path-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Path Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-api-protocols" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported API Protocols
+        Key Commands
       
     </span>
   </a>
@@ -1187,278 +1165,111 @@
 
 
 
-<h1 id="dell-ecs-overview">Dell ECS — Overview<a class="headerlink" href="#dell-ecs-overview" title="Permanent link">&para;</a></h1>
-<p>Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform built on commodity x86 nodes. It exposes S3, Swift, Atmos, and CAS (Content Addressable Storage) APIs over standard HTTPS. The software stack runs entirely on commodity hardware and provides geo-distribution across sites via Virtual Data Centers (VDCs) linked into replication groups.</p>
-<h2 id="scale-out-object-storage-topology">Scale-Out Object Storage Topology<a class="headerlink" href="#scale-out-object-storage-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  CLT(["S3 / Swift / Atmos Clients"]) --&gt; GW["Load Balancer\n(optional)"]
-  GW --&gt; N1["ECS Node 1"] &amp; N2["ECS Node 2"] &amp; N3["ECS Node 3"] &amp; NN["Node N…"]
-  N1 &amp; N2 &amp; N3 &amp; NN --&gt; RING[("Object Ring\ndistributed erasure coding")]
+<h1 id="powerpath-how-it-works">PowerPath — How It Works<a class="headerlink" href="#powerpath-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell PowerPath is a host-side multipath I/O driver that sits between the OS block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS regardless of how many physical paths exist.</p>
+<h2 id="host-side-mpio-stack">Host-Side MPIO Stack<a class="headerlink" href="#host-side-mpio-stack" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  HOST(["Host — Linux / Windows / VMware"]) --&gt; PP["PowerPath\n(MPIO driver)"]
+  PP --&gt; P1["HBA0 → Fabric A → SP-A"]
+  PP --&gt; P2["HBA0 → Fabric A → SP-B"]
+  PP --&gt; P3["HBA1 → Fabric B → SP-A"]
+  PP --&gt; P4["HBA1 → Fabric B → SP-B"]
+  P1 &amp; P2 &amp; P3 &amp; P4 --&gt; ARRAY["Storage Array\nPowerMax / Unity"]
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
   classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
-  class N1,N2,N3,NN ctrl
-  class GW,RING net
-  class CLT host</code></pre>
-<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>ECS writes incoming objects by chunking them into fixed-size chunks, applying erasure coding (typically 12+4 or 10+2 depending on node count and VDC span), and distributing coded fragments across nodes. For geo-replication, ECS asynchronously or synchronously replicates chunk journals to remote VDCs according to the replication group policy.</p>
-<ul>
-<li><strong>Single-site deployment</strong>: All nodes in one VDC. Erasure coding protects against disk and node failure. No geographic redundancy.</li>
-<li><strong>Multi-site (geo) deployment</strong>: Two or more VDCs in a replication group. Active-active writes are possible; object consistency uses a geo-replication journal. VDC-level failures do not cause data loss if replication lag is near zero.</li>
-<li><strong>Temporary Site Failure (TSF) mode</strong>: When a VDC is unreachable, the remaining VDC enters TSF mode, continues serving data from local copies, and queues a replication backlog to replay on reconnection.</li>
-</ul>
-<h2 id="erasure-coding">Erasure Coding<a class="headerlink" href="#erasure-coding" title="Permanent link">&para;</a></h2>
-<p>ECS uses erasure coding (EC) rather than replication for within-VDC data protection. Erasure coding breaks each object into data fragments and generates parity fragments; the cluster can reconstruct the original object even when a defined number of fragments are lost.</p>
+  class PP net
+  class P1,P2,P3,P4 net
+  class HOST host
+  class ARRAY ctrl</code></pre>
+<h2 id="path-states">Path States<a class="headerlink" href="#path-states" title="Permanent link">&para;</a></h2>
+<p>On startup, PowerPath discovers all LUNs visible across all HBA ports and groups paths to the same LUN into a single pseudo device.</p>
 <table>
 <thead>
 <tr>
-<th>EC Scheme</th>
-<th>Data Fragments</th>
-<th>Parity Fragments</th>
-<th>Minimum Nodes</th>
-<th>Tolerated Failures</th>
+<th>State</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>12+4 (default)</td>
-<td>12</td>
-<td>4</td>
-<td>16</td>
-<td>Up to 4 simultaneous node/disk failures</td>
+<td><code>alive</code></td>
+<td>Path is healthy and eligible for I/O</td>
 </tr>
 <tr>
-<td>10+2</td>
-<td>10</td>
-<td>2</td>
-<td>12</td>
-<td>Up to 2 simultaneous failures</td>
+<td><code>dead</code></td>
+<td>Path has failed I/O tests; excluded from routing</td>
 </tr>
 <tr>
-<td>4+2 (small cluster)</td>
-<td>4</td>
-<td>2</td>
-<td>6</td>
-<td>Up to 2 simultaneous failures</td>
+<td><code>unlic</code></td>
+<td>Path is not licensed; I/O will not be sent over this path</td>
 </tr>
 </tbody>
 </table>
-<p>The EC scheme is selected automatically based on VDC node count. Clusters with fewer than 16 nodes use a narrower EC scheme. Adding nodes to an existing VDC does not immediately change the EC scheme; ECS rebalances data in the background after expansion.</p>
-<p><strong>Capacity overhead</strong>: A 12+4 scheme has 1.33× raw-to-usable overhead ratio. For every 133 TB of raw disk, approximately 100 TB is usable after EC parity. Additionally, ECS reserves a further ~30% overhead for metadata, journals, and temporary rebuild workspace. Plan usable capacity accordingly.</p>
-<h2 id="virtual-data-centers-vdc">Virtual Data Centers (VDC)<a class="headerlink" href="#virtual-data-centers-vdc" title="Permanent link">&para;</a></h2>
-<p>A VDC is the fundamental administrative and fault boundary in ECS. All nodes in a VDC reside at a single physical site and share a single cluster management plane.</p>
+<h2 id="load-balancing-policies">Load-Balancing Policies<a class="headerlink" href="#load-balancing-policies" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Concept</th>
+<th>Policy</th>
+<th>Code</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>VDC</td>
-<td>A single-site logical cluster of ECS nodes. Each VDC is independently manageable and can serve S3 requests autonomously.</td>
+<td>CLAROpt</td>
+<td><code>co</code></td>
+<td>Dell/EMC optimised — ALUA-aware; prefers active-optimised paths on PowerMax, Unity</td>
 </tr>
 <tr>
-<td>VDC Quorum</td>
-<td>ECS requires a majority of VDC nodes to be online to maintain the management and data planes. A VDC with an even number of nodes requires <code>(n/2)+1</code> nodes for quorum.</td>
+<td>RoundRobin</td>
+<td><code>rr</code></td>
+<td>Even distribution across all paths regardless of ALUA state (not recommended for Dell arrays)</td>
 </tr>
 <tr>
-<td>Temporary Site Failure (TSF)</td>
-<td>When a VDC in a multi-VDC replication group loses connectivity to peer VDCs, it enters TSF mode, continues accepting writes locally, and queues a replication backlog. On reconnection, the backlog is replayed and the VDC resynchronises.</td>
-</tr>
-<tr>
-<td>VDC Federation</td>
-<td>Multiple VDCs are federated into a single management domain by peering them through the ECS Portal. This enables cross-VDC replication group configuration and geo monitoring from a single pane of glass.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="replication-groups-and-geo-distribution">Replication Groups and Geo-Distribution<a class="headerlink" href="#replication-groups-and-geo-distribution" title="Permanent link">&para;</a></h2>
-<p>Replication groups are named policy objects that define which VDCs participate in geo-replication and how objects are distributed. Every namespace is assigned to a replication group, which determines where its objects are stored and replicated.</p>
-<pre class="mermaid"><code>graph LR
-  subgraph "Site A — VDC 1"
-    NS1["Namespace: analytics-prod"]
-    B1["Bucket: analytics-prod-raw"]
-  end
-  subgraph "Site B — VDC 2"
-    NS2["Namespace: analytics-prod (replica)"]
-    B2["Bucket: analytics-prod-raw (replica)"]
-  end
-  RG["Replication Group\nlon01-ams01-rg1\n(Async, 15 min RPO)"]
-  NS1 --&gt; RG --&gt; NS2</code></pre>
-<p>Replication groups support three replication modes:</p>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>Consistency</th>
-<th>RPO</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Synchronous</td>
-<td>Strong — write acknowledged after confirmed on all VDCs</td>
-<td>Near-zero</td>
-<td>Compliance, financial records</td>
-</tr>
-<tr>
-<td>Asynchronous</td>
-<td>Eventual — write acknowledged locally; replicated in background</td>
-<td>Minutes (configurable)</td>
-<td>General workloads, backup targets</td>
-</tr>
-<tr>
-<td>Metered</td>
-<td>Asynchronous with WAN bandwidth throttling</td>
-<td>Longer (depends on throttle)</td>
-<td>WAN-constrained environments</td>
+<td>BasicFailover</td>
+<td><code>bf</code></td>
+<td>Uses one path; fails over to another on failure; no load balancing</td>
 </tr>
 </tbody>
 </table>
-<h2 id="namespace-and-bucket-hierarchy">Namespace and Bucket Hierarchy<a class="headerlink" href="#namespace-and-bucket-hierarchy" title="Permanent link">&para;</a></h2>
-<p>ECS organises data in a two-level hierarchy below the VDC: namespaces and buckets.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VDC
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── Namespace (multi-tenancy boundary)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Assigned to one Replication Group
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ├── Quota (hard or advisory)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ├── IAM Users (object users with S3 access keys)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    └── Bucket (object container)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        ├── Versioning enabled/disabled
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ├── Lifecycle policy (expiration, transitions)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        ├── Access policy (bucket policy, ACLs)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        └── Object Lock (WORM, compliance or governance mode)
-</code></pre></div>
-<ul>
-<li><strong>Namespace</strong>: The top-level multi-tenancy boundary. Separate namespaces isolate teams, applications, or compliance zones. Each namespace has its own IAM users, quotas, and replication group assignment.</li>
-<li><strong>Bucket</strong>: An object container within a namespace. Buckets are the S3-visible unit. Versioning, lifecycle, and access policy are configured per bucket.</li>
-<li><strong>Object</strong>: The individual data item stored in a bucket, identified by a key (path-like string). Objects can carry custom metadata tags used by the metadata search API.</li>
-</ul>
-<h2 id="connectivity-and-integration-points">Connectivity and Integration Points<a class="headerlink" href="#connectivity-and-integration-points" title="Permanent link">&para;</a></h2>
+<p>CLAROpt is the recommended policy for all Dell/EMC arrays. It respects ALUA path preferences and avoids non-optimised paths under normal conditions.</p>
+<h2 id="failover-and-recovery">Failover and Recovery<a class="headerlink" href="#failover-and-recovery" title="Permanent link">&para;</a></h2>
+<p>On path failure, PowerPath automatically marks the path <code>dead</code> and re-routes I/O to remaining <code>alive</code> paths within milliseconds. Path restoration is automatic — when a failed path recovers, <code>powermt restore</code> (run periodically by the daemon or manually) retests dead paths and promotes them back to <code>alive</code>.</p>
+<h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Interface</th>
-<th>Protocol / Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>S3 API endpoint</td>
-<td>HTTPS 443 or 9021</td>
-<td>Object read/write for applications and backup tools</td>
-</tr>
-<tr>
-<td>Swift API endpoint</td>
-<td>HTTPS 9024</td>
-<td>OpenStack-compatible object access</td>
-</tr>
-<tr>
-<td>Management REST API</td>
-<td>HTTPS 4443</td>
-<td>Administration, monitoring, and automation</td>
-</tr>
-<tr>
-<td>ECS Portal</td>
-<td>HTTPS 443</td>
-<td>Web-based administration console</td>
-</tr>
-<tr>
-<td>Geo-replication</td>
-<td>TCP 9100</td>
-<td>Inter-VDC replication traffic between nodes</td>
-</tr>
-<tr>
-<td>LDAP/AD</td>
-<td>TCP 389 / 636</td>
-<td>Optional namespace-level user authentication</td>
-</tr>
-<tr>
-<td>Syslog</td>
-<td>UDP/TCP 514</td>
-<td>External log forwarding for SIEM integration</td>
-</tr>
-<tr>
-<td>HDFS</td>
-<td>TCP 9003</td>
-<td>Hadoop ecosystem access via ECS HDFS connector</td>
-</tr>
-<tr>
-<td>KMIP</td>
-<td>TCP 5696</td>
-<td>External key management for encryption at rest</td>
-</tr>
-</tbody>
-</table>
-<h2 id="data-path-summary">Data Path Summary<a class="headerlink" href="#data-path-summary" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Client sends an S3 PUT request to the ECS load balancer (or directly to a node).</li>
-<li>The receiving node acts as the request coordinator for this object.</li>
-<li>The coordinator chunks the object, applies erasure coding, and distributes coded fragments across data nodes according to the EC scheme.</li>
-<li>Once the local write is complete (all fragments placed), the coordinator acknowledges the write to the client.</li>
-<li>The geo-replication journal records the new object. The replication service picks up journal entries and transmits them to peer VDCs according to the replication group mode (sync/async).</li>
-<li>On the remote VDC, fragments are written and the replication journal is updated. The remote VDC can now serve the object to readers.</li>
-</ol>
-<pre class="mermaid"><code>sequenceDiagram
-  participant CLT as "S3 Client"
-  participant LB as "Load Balancer"
-  participant COORD as "Coordinator Node"
-  participant DATA as "Data Nodes (N-3)"
-  participant JRNL as "Geo-Rep Journal"
-  participant REMOTE as "Remote VDC"
-  CLT-&gt;&gt;LB: PUT /bucket/key
-  LB-&gt;&gt;COORD: route request
-  COORD-&gt;&gt;COORD: chunk + erasure code
-  COORD-&gt;&gt;DATA: write EC fragments (12+4)
-  DATA--&gt;&gt;COORD: fragments committed
-  COORD--&gt;&gt;CLT: 200 OK (write acknowledged)
-  COORD-&gt;&gt;JRNL: record new object
-  JRNL-&gt;&gt;REMOTE: replicate (async/sync)
-  REMOTE--&gt;&gt;JRNL: replicated OK</code></pre>
-<h2 id="supported-api-protocols">Supported API Protocols<a class="headerlink" href="#supported-api-protocols" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Use Case</th>
+<th>OS</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>S3</td>
-<td>General-purpose object access, backup, analytics</td>
-<td>Primary API; widest client support</td>
+<td>Linux (RHEL, SLES, Ubuntu)</td>
+<td>RPM/DEB package; integrates with dm-multipath (replaces it)</td>
 </tr>
 <tr>
-<td>Swift</td>
-<td>OpenStack integration</td>
-<td>Supported but less commonly deployed in new installations</td>
+<td>Windows Server</td>
+<td>MSI installer; presents pseudo devices as disk objects</td>
 </tr>
 <tr>
-<td>CAS (Centera)</td>
-<td>Fixed-content, WORM compliance storage</td>
-<td>Atmos/Centera API compatibility for migration from legacy EMC Centera</td>
+<td>VMware ESXi</td>
+<td>vSphere plug-in; used with PowerMax and Unity</td>
 </tr>
 <tr>
-<td>Atmos</td>
-<td>Legacy EMC Atmos workloads</td>
-<td>Maintained for backward compatibility; not recommended for new deployments</td>
-</tr>
-<tr>
-<td>HDFS</td>
-<td>Hadoop/Spark workloads</td>
-<td>Requires ECS HDFS connector JAR on compute nodes</td>
-</tr>
-<tr>
-<td>NFS (ECS 3.8+)</td>
-<td>POSIX namespace access</td>
-<td>Namespace-level NFS export; requires NFS gateway configuration</td>
+<td>AIX, HP-UX, Solaris</td>
+<td>Legacy OS support — check PowerPath compatibility matrix</td>
 </tr>
 </tbody>
 </table>
+<h2 id="key-commands">Key Commands<a class="headerlink" href="#key-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>powermt<span class="w"> </span>display<span class="w">              </span><span class="c1"># show all pseudo devices and path states</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>powermt<span class="w"> </span>display<span class="w"> </span><span class="nv">dev</span><span class="o">=</span>all<span class="w">      </span><span class="c1"># verbose path detail per device</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>powermt<span class="w"> </span>restore<span class="w">              </span><span class="c1"># retest dead paths and restore alive</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>powermt<span class="w"> </span>check_registration<span class="w">   </span><span class="c1"># verify PowerPath license is registered</span>
+</code></pre></div>
 
 
 

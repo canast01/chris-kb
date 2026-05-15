@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerPath — Overview - Chris KB</title>
+        <title>CloudIQ — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerPath — Overview · Chris KB">
+  <meta property="og:title" content="CloudIQ — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerPath — Overview · Chris KB">
+  <meta name="twitter:title" content="CloudIQ — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#powerpath-overview" class="md-skip">
+        <a href="#cloudiq-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerPath — Overview
+              CloudIQ — How It Works
             
           </span>
         </div>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#host-side-mpio-stack" class="md-nav__link">
+  <a href="#data-pipeline-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Host-Side MPIO Stack
+        Data Pipeline Topology
       
     </span>
   </a>
@@ -1102,10 +1102,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#high-availability-design" class="md-nav__link">
+  <a href="#supported-platforms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        High Availability Design
+        Supported Platforms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Capabilities
       
     </span>
   </a>
@@ -1132,58 +1143,97 @@
 
 
 
-<h1 id="powerpath-overview">PowerPath — Overview<a class="headerlink" href="#powerpath-overview" title="Permanent link">&para;</a></h1>
+<h1 id="cloudiq-how-it-works">CloudIQ — How It Works<a class="headerlink" href="#cloudiq-how-it-works" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell PowerPath is a host-side multipath I/O driver that sits between the operating system's block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it intelligently across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS, regardless of how many physical paths exist.</p>
-<h2 id="host-side-mpio-stack">Host-Side MPIO Stack<a class="headerlink" href="#host-side-mpio-stack" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  HOST(["Host — Linux / Windows / VMware"]) --&gt; PP["PowerPath\n(MPIO driver)"]
-  PP --&gt; P1["HBA0 → Fabric A → SP-A"]
-  PP --&gt; P2["HBA0 → Fabric A → SP-B"]
-  PP --&gt; P3["HBA1 → Fabric B → SP-A"]
-  PP --&gt; P4["HBA1 → Fabric B → SP-B"]
-  P1 &amp; P2 &amp; P3 &amp; P4 --&gt; ARRAY["Storage Array\nPowerMax / Unity"]
+<p>Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.</p>
+<h2 id="data-pipeline-topology">Data Pipeline Topology<a class="headerlink" href="#data-pipeline-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  ARRAYS["Dell Arrays\nPowerMax · Unity · PowerScale · PowerStore"] --&gt;|"secure telemetry HTTPS"| CLOUDIQ["Dell CloudIQ\n(SaaS analytics)"]
+  CLOUDIQ --&gt; HEALTH["Health Score &amp; Alerts"]
+  CLOUDIQ --&gt; CAP["Capacity Forecasting"]
+  CLOUDIQ --&gt; REC["AI Recommendations"]
+  ADMIN(["IT Admin"]) --&gt;|"web portal"| CLOUDIQ
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
-  class PP net
-  class P1,P2,P3,P4 net
-  class HOST host
-  class ARRAY ctrl</code></pre>
+  class ARRAYS ctrl
+  class CLOUDIQ,HEALTH,CAP,REC cloud
+  class ADMIN host</code></pre>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>On startup, PowerPath discovers all LUNs visible across all HBA ports and groups paths to the same LUN into a single pseudo device. Each path has a state:
-- <code>alive</code> — path is healthy and eligible for I/O
-- <code>dead</code> — path has failed I/O tests; excluded from routing
-- <code>unlic</code> — path is not licensed; I/O will not be sent over this path</p>
-<p>PowerPath load-balancing policies determine how I/O is distributed across <code>alive</code> paths:
-- <strong>CLAROpt</strong> (<code>co</code>) — Dell/EMC optimised policy; aware of active/passive or ALUA path groupings on PowerMax, Unity, and CLARiiON arrays; sends I/O preferentially over optimised paths
-- <strong>RoundRobin</strong> (<code>rr</code>) — distributes I/O evenly across all paths regardless of ALUA state (not recommended for Dell/EMC arrays)
-- <strong>BasicFailover</strong> (<code>bf</code>) — uses one path, fails over to another on failure; no load balancing</p>
-<p>On path failure, PowerPath automatically marks the path <code>dead</code> and re-routes I/O to remaining <code>alive</code> paths within milliseconds. When <code>powermt restore</code> is run (or periodically by the daemon), dead paths are retested and promoted back to <code>alive</code> if they recover.</p>
-<h2 id="high-availability-design">High Availability Design<a class="headerlink" href="#high-availability-design" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    io(["Application I/O"]) --&gt; ppDriver["PowerPath\nMPIO Driver"]
-
-    ppDriver --&gt; pathCheck{{"Path health\ncheck"}}
-    pathCheck --&gt;|"alive paths exist"| lbPolicy{{"CLAROpt LB Policy\n(ALUA-aware)"}}
-    pathCheck --&gt;|"all paths dead"| ioErr(["I/O Error\n(alert ops team)"])
-
-    lbPolicy --&gt;|"optimised path"| hba0Fab1["HBA0 → Fabric A → SP-A\n(Active-Optimised)"]
-    lbPolicy --&gt;|"failover path"| hba1Fab2["HBA1 → Fabric B → SP-B\n(Active-Non-Optimised)"]
-
-    hba0Fab1 --&gt; array["Storage Array\n(PowerMax / Unity)"]
-    hba1Fab2 --&gt; array
-
-    pathFail(["Path Failure"]) --&gt;|"dead path detected"| ppDriver
-    ppDriver --&gt;|"powermt restore\n(auto + manual)"| hba0Fab1</code></pre>
-<p>PowerPath provides host-side HA through multipath redundancy. Key design principles:</p>
-<ul>
-<li>Minimum 2 paths per LUN (one per fabric/HBA) for basic redundancy</li>
-<li>Recommended 4 paths (two fabrics x two HBA ports per fabric) for full redundancy</li>
-<li>CLAROpt policy ensures I/O uses ALUA-optimised paths preferentially, failing over automatically on path loss</li>
-<li>The PowerPath daemon continuously monitors path health and triggers failover/restore events without manual intervention</li>
-<li>Path restoration is automatic — when a failed path recovers, PowerPath promotes it back to <code>alive</code> state</li>
-</ul>
+<ol>
+<li>Each on-premises Dell storage system is registered to an SCG appliance</li>
+<li>The SCG polls the registered systems for telemetry (capacity metrics, performance counters, hardware health) and forwards it to the Dell CloudIQ back-end over outbound HTTPS (port 443)</li>
+<li>CloudIQ ingests the telemetry, applies ML-based health scoring, and generates alerts when scores drop or anomalies are detected</li>
+<li>Users access results via the CloudIQ web dashboard or the REST API</li>
+<li>Notifications are sent via email or webhook based on configured notification rules</li>
+</ol>
+<p>CloudIQ health scores range from 0 to 100. Scores below 80 indicate a condition requiring attention; scores below 60 are typically active hardware or configuration alerts.</p>
+<h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Telemetry Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerMax / VMAX</td>
+<td>Embedded telemetry agent</td>
+</tr>
+<tr>
+<td>Unity XT</td>
+<td>CloudIQ data collection service</td>
+</tr>
+<tr>
+<td>PowerScale (Isilon)</td>
+<td>OneFS embedded agent</td>
+</tr>
+<tr>
+<td>PowerStore</td>
+<td>REST API</td>
+</tr>
+<tr>
+<td>PowerFlex (VxFlex OS)</td>
+<td>SDC telemetry</td>
+</tr>
+<tr>
+<td>XtremIO</td>
+<td>REST API</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-capabilities">Key Capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Health scoring</td>
+<td>0–100 score per system; ML-based anomaly detection flags degraded conditions</td>
+</tr>
+<tr>
+<td>Capacity forecasting</td>
+<td>Trend-based projection of when systems will reach capacity thresholds</td>
+</tr>
+<tr>
+<td>Proactive recommendations</td>
+<td>AI-generated configuration and performance improvement suggestions</td>
+</tr>
+<tr>
+<td>Cross-platform visibility</td>
+<td>Unified dashboard across all registered Dell systems</td>
+</tr>
+<tr>
+<td>API access</td>
+<td>REST API for integrating CloudIQ data into ITSM and capacity planning tools</td>
+</tr>
+</tbody>
+</table>
 
 
 

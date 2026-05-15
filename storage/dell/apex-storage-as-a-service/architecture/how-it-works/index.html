@@ -21,7 +21,7 @@
     
     
       
-        <title>CloudIQ — Components - Chris KB</title>
+        <title>APEX Storage as a Service — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="CloudIQ — Components · Chris KB">
+  <meta property="og:title" content="APEX Storage as a Service — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CloudIQ — Components · Chris KB">
+  <meta name="twitter:title" content="APEX Storage as a Service — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cloudiq-components" class="md-skip">
+        <a href="#apex-storage-as-a-service-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CloudIQ — Components
+              APEX Storage as a Service — How It Works
             
           </span>
         </div>
@@ -1062,6 +1062,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#underlying-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Underlying Platforms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,45 +1143,91 @@
 
 
 
-<h1 id="cloudiq-components">CloudIQ — Components<a class="headerlink" href="#cloudiq-components" title="Permanent link">&para;</a></h1>
+<h1 id="apex-storage-as-a-service-how-it-works">APEX Storage as a Service — How It Works<a class="headerlink" href="#apex-storage-as-a-service-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell APEX Storage as a Service (STaaS) is a consumption-based storage model where Dell provisions, owns, and manages the physical infrastructure on-premises at the customer site. Capacity is metered monthly based on committed and burst usage, billed through the APEX Console. The underlying platforms are PowerStore, PowerScale, or PowerFlex, managed by Dell — the customer interacts primarily with the APEX Console or REST API for visibility, capacity requests, and billing reporting.</p>
+<h2 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Component</th>
-<th>Location</th>
-<th>Role</th>
+<th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>CloudIQ SaaS Platform</td>
-<td>Dell-hosted cloud</td>
-<td>Analytics engine, health scoring, capacity forecasting, alert generation</td>
+<td>Organisations that want on-premises storage economics without capital expenditure or operational management overhead</td>
 </tr>
 <tr>
-<td>CloudIQ Web Dashboard</td>
-<td>Browser (SaaS)</td>
-<td>Primary operator interface for health, alerts, capacity, and performance views</td>
+<td>Environments requiring predictable $/TiB subscription pricing with burst capacity headroom</td>
 </tr>
 <tr>
-<td>CloudIQ REST API</td>
-<td>Dell-hosted (<code>cloudiq.dell.com</code>)</td>
-<td>Programmatic access to all CloudIQ data; used for automation and integrations</td>
+<td>Multi-platform environments (block, file, object) under a single consumption agreement</td>
 </tr>
 <tr>
-<td>Secure Connect Gateway (SCG)</td>
-<td>On-premises (virtual appliance)</td>
-<td>Collects telemetry from registered Dell devices and forwards it to CloudIQ over HTTPS</td>
+<td>IT teams that want to outsource hardware lifecycle management (firmware, hardware replace, capacity adds) to Dell</td>
 </tr>
 <tr>
-<td>Registered storage systems</td>
-<td>On-premises</td>
-<td>PowerMax, PowerStore, PowerScale, Unity, VPLEX, Data Domain, etc.; each registered to SCG</td>
+<td>Capacity planning scenarios where future growth is uncertain and over-provisioning risk needs to be avoided</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>Dell installs and owns the physical hardware. A Secure Connect Gateway (SCG) appliance at the customer site relays telemetry to Dell's cloud backend for metering and health monitoring. The APEX Console tracks consumed vs. committed capacity. Burst capacity above the committed tier is billed at an incremental per-TiB rate at the end of each billing period.</p>
+<h2 id="underlying-platforms">Underlying Platforms<a class="headerlink" href="#underlying-platforms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Storage Type</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerStore</td>
+<td>Block (NVMe) and file</td>
+<td>General-purpose primary storage</td>
 </tr>
 <tr>
-<td>API client credentials</td>
-<td>CloudIQ → Settings</td>
-<td>OAuth2 <code>client_id</code> / <code>client_secret</code> for REST API access</td>
+<td>PowerScale</td>
+<td>NAS (scale-out NFS/SMB)</td>
+<td>Unstructured data and file workloads</td>
+</tr>
+<tr>
+<td>PowerFlex</td>
+<td>Block (software-defined)</td>
+<td>High-performance and Kubernetes workloads</td>
+</tr>
+</tbody>
+</table>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keep Secure Connect Gateway appliances highly available</td>
+<td>Deploy two SCG appliances for redundancy — loss of SCG connectivity causes telemetry gaps and may trigger alerts</td>
+</tr>
+<tr>
+<td>Monitor committed vs. consumed capacity monthly</td>
+<td>Request tier increases at least 30 days before hitting the committed threshold to avoid burst pricing</td>
+</tr>
+<tr>
+<td>Use the APEX REST API to build automated capacity reports</td>
+<td>Feed into internal capacity planning tools</td>
+</tr>
+<tr>
+<td>Review APEX Console alerts daily</td>
+<td>Infrastructure issues are Dell's responsibility to remediate but you need to confirm SLA compliance</td>
+</tr>
+<tr>
+<td>Document subscription details in a runbook</td>
+<td>Subscription ID, contract end date, committed tier, and burst thresholds for on-call staff</td>
 </tr>
 </tbody>
 </table>

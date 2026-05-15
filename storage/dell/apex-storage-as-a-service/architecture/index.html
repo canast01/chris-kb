@@ -21,7 +21,7 @@
     
     
       
-        <title>APEX Storage as a Service — Overview - Chris KB</title>
+        <title>APEX Storage as a Service — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="APEX Storage as a Service — Overview · Chris KB">
+  <meta property="og:title" content="APEX Storage as a Service — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="APEX Storage as a Service — Overview · Chris KB">
+  <meta name="twitter:title" content="APEX Storage as a Service — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#apex-storage-as-a-service-overview" class="md-skip">
+        <a href="#apex-storage-as-a-service-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              APEX Storage as a Service — Overview
+              APEX Storage as a Service — Architecture
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
+  <a href="#underlying-platforms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Cases
+        Underlying Platforms
       
     </span>
   </a>
@@ -1080,21 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
+  <a href="#how-apex-staas-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
+        How APEX STaaS Works
       
     </span>
   </a>
@@ -1121,75 +1110,58 @@
 
 
 
-<h1 id="apex-storage-as-a-service-overview">APEX Storage as a Service — Overview<a class="headerlink" href="#apex-storage-as-a-service-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../../">APEX Storage as a Service</a> reference.</p>
-</blockquote>
-<hr />
-<p>Dell APEX Storage as a Service (STaaS) is a consumption-based storage model where Dell provisions, owns, and manages the physical infrastructure on-premises at the customer site. Capacity is metered monthly based on committed and burst usage, billed through the APEX Console. The underlying platforms are PowerStore, PowerScale, or PowerFlex, managed by Dell — the customer interacts primarily with the APEX Console or REST API for visibility, capacity requests, and billing reporting.</p>
-<h2 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h2>
+<h1 id="apex-storage-as-a-service-architecture">APEX Storage as a Service — Architecture<a class="headerlink" href="#apex-storage-as-a-service-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Consumption-based STaaS model — Dell owns and manages on-premises PowerStore, PowerScale, or PowerFlex hardware; capacity is metered monthly via the APEX Console with committed and burst tiers.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with APEX Console, Secure Connect Gateway, and REST API.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>SCG redundancy, capacity planning, and subscription management practices.</span></a>
+</div>
+
+<h2 id="underlying-platforms">Underlying Platforms<a class="headerlink" href="#underlying-platforms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
+<th>Platform</th>
+<th>Storage Type</th>
 <th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Organisations that want on-premises storage economics without capital expenditure or operational management overhead</td>
+<td>PowerStore</td>
+<td>Block (NVMe) and file</td>
+<td>General-purpose primary storage</td>
 </tr>
 <tr>
-<td>Environments requiring predictable $/TiB subscription pricing with burst capacity headroom</td>
+<td>PowerScale</td>
+<td>NAS (scale-out NFS/SMB)</td>
+<td>Unstructured data and file workloads</td>
 </tr>
 <tr>
-<td>Multi-platform environments (block, file, object) under a single consumption agreement</td>
-</tr>
-<tr>
-<td>IT teams that want to outsource hardware lifecycle management (firmware, hardware replace, capacity adds) to Dell</td>
-</tr>
-<tr>
-<td>Capacity planning scenarios where future growth is uncertain and over-provisioning risk needs to be avoided</td>
+<td>PowerFlex</td>
+<td>Block (software-defined)</td>
+<td>High-performance and Kubernetes workloads</td>
 </tr>
 </tbody>
 </table>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Recommendation</th>
-<th>Detail</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Keep Secure Connect Gateway appliances highly available</td>
-<td>deploy two SCG appliances for redundancy; loss of SCG connectivity causes telemetry gaps and may trigger alerts</td>
-</tr>
-<tr>
-<td>Monitor committed vs. consumed capacity monthly</td>
-<td>request tier increases at least 30 days before hitting the committed threshold to avoid burst pricing</td>
-</tr>
-<tr>
-<td>Use the APEX REST API to build automated capacity reports</td>
-<td>feed into internal capacity planning tools</td>
-</tr>
-<tr>
-<td>Review APEX Console alerts daily</td>
-<td>infrastructure issues are Dell's responsibility to remediate but you need to confirm SLA compliance</td>
-</tr>
-<tr>
-<td>Document subscription details in a runbook</td>
-<td>subscription ID, contract end date, committed tier, and burst thresholds for on-call staff</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
+<h2 id="how-apex-staas-works">How APEX STaaS Works<a class="headerlink" href="#how-apex-staas-works" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  DELL["Dell Infrastructure\n(owned and managed by Dell)"] --&gt; SCG["Secure Connect Gateway\n(on-premises telemetry relay)"]
+  SCG --&gt;|"outbound HTTPS 443"| APEX["APEX Console\n(SaaS — Dell cloud)"]
+  APEX --&gt; METER["Usage Metering\n&amp; Billing"]
+  APEX --&gt; ALERT["Capacity Alerts\n&amp; Health Reporting"]
+  ADMIN(["Customer Admin"]) --&gt;|"web portal / API"| APEX
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class DELL ctrl
+  class SCG ctrl
+  class APEX,METER,ALERT cloud
+  class ADMIN host</code></pre>
 
 
 

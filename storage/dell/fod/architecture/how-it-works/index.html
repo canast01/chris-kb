@@ -21,7 +21,7 @@
     
     
       
-        <title>APEX Storage as a Service — Overview - Chris KB</title>
+        <title>Flex on Demand — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="APEX Storage as a Service — Overview · Chris KB">
+  <meta property="og:title" content="Flex on Demand — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="APEX Storage as a Service — Overview · Chris KB">
+  <meta name="twitter:title" content="Flex on Demand — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#apex-storage-as-a-service-overview" class="md-skip">
+        <a href="#flex-on-demand-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              APEX Storage as a Service — Overview
+              Flex on Demand — How It Works
             
           </span>
         </div>
@@ -1069,6 +1069,39 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metering-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metering Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Platforms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#use-cases" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1110,12 +1143,44 @@
 
 
 
-<h1 id="apex-storage-as-a-service-overview">APEX Storage as a Service — Overview<a class="headerlink" href="#apex-storage-as-a-service-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../../">APEX Storage as a Service</a> reference.</p>
-</blockquote>
-<hr />
-<p>Dell APEX Storage as a Service (STaaS) is a consumption-based storage model where Dell provisions, owns, and manages the physical infrastructure on-premises at the customer site. Capacity is metered monthly based on committed and burst usage, billed through the APEX Console. The underlying platforms are PowerStore, PowerScale, or PowerFlex, managed by Dell — the customer interacts primarily with the APEX Console or REST API for visibility, capacity requests, and billing reporting.</p>
+<h1 id="flex-on-demand-how-it-works">Flex on Demand — How It Works<a class="headerlink" href="#flex-on-demand-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD is available on PowerMax, PowerStore, and PowerScale platforms.</p>
+<h2 id="metering-model">Metering Model<a class="headerlink" href="#metering-model" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Total Installed Capacity (physically installed)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Committed Baseline (licensed, always billed)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    │       └── Available for immediate use
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    └── Burst Range (base → burst ceiling)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>            └── Metered monthly at per-TiB rate
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                Billed on peak-hour consumption during billing month
+</code></pre></div>
+<p>FOD contracts define a <strong>base</strong> commitment and a <strong>burst ceiling</strong>. Usage between base and ceiling is billed monthly. Usage above the burst ceiling may trigger over-usage charges or require an immediate license upgrade.</p>
+<p>Metering is based on the <strong>maximum capacity used in any hour</strong> during the billing month (peak-hour metering).</p>
+<h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>FOD Availability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerMax</td>
+<td>Yes — pre-installed drives, metered via CloudIQ</td>
+</tr>
+<tr>
+<td>PowerStore</td>
+<td>Yes — block and file capacity</td>
+</tr>
+<tr>
+<td>PowerScale</td>
+<td>Yes — node-based metering</td>
+</tr>
+</tbody>
+</table>
 <h2 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1125,19 +1190,19 @@
 </thead>
 <tbody>
 <tr>
-<td>Organisations that want on-premises storage economics without capital expenditure or operational management overhead</td>
+<td>Variable workload patterns where paying for peak capacity all the time is wasteful</td>
 </tr>
 <tr>
-<td>Environments requiring predictable $/TiB subscription pricing with burst capacity headroom</td>
+<td>Dev/test environments needing burst capacity periodically with a low committed baseline</td>
 </tr>
 <tr>
-<td>Multi-platform environments (block, file, object) under a single consumption agreement</td>
+<td>Businesses wanting to avoid capital expenditure on storage while remaining on-premises</td>
 </tr>
 <tr>
-<td>IT teams that want to outsource hardware lifecycle management (firmware, hardware replace, capacity adds) to Dell</td>
+<td>Organisations running APEX Flex on Demand subscriptions as part of a broader APEX agreement</td>
 </tr>
 <tr>
-<td>Capacity planning scenarios where future growth is uncertain and over-provisioning risk needs to be avoided</td>
+<td>Situations where procurement lead times are too long to meet workload growth demands</td>
 </tr>
 </tbody>
 </table>
@@ -1151,24 +1216,20 @@
 </thead>
 <tbody>
 <tr>
-<td>Keep Secure Connect Gateway appliances highly available</td>
-<td>deploy two SCG appliances for redundancy; loss of SCG connectivity causes telemetry gaps and may trigger alerts</td>
+<td>Set committed baseline conservatively at contract start</td>
+<td>Easier to raise baseline at renewal than recover overbilled burst charges</td>
 </tr>
 <tr>
-<td>Monitor committed vs. consumed capacity monthly</td>
-<td>request tier increases at least 30 days before hitting the committed threshold to avoid burst pricing</td>
+<td>Monitor CloudIQ capacity trends weekly</td>
+<td>Burst events are visible before the end-of-month bill</td>
 </tr>
 <tr>
-<td>Use the APEX REST API to build automated capacity reports</td>
-<td>feed into internal capacity planning tools</td>
+<td>Ensure Secure Connect Gateway redundancy</td>
+<td>A single SCG failure causing telemetry gaps can complicate billing disputes</td>
 </tr>
 <tr>
-<td>Review APEX Console alerts daily</td>
-<td>infrastructure issues are Dell's responsibility to remediate but you need to confirm SLA compliance</td>
-</tr>
-<tr>
-<td>Document subscription details in a runbook</td>
-<td>subscription ID, contract end date, committed tier, and burst thresholds for on-call staff</td>
+<td>Automate monthly usage extraction via CloudIQ API</td>
+<td>Feed into finance reporting to eliminate manual reconciliation</td>
 </tr>
 </tbody>
 </table>

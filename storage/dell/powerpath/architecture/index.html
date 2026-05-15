@@ -21,7 +21,7 @@
     
     
       
-        <title>PowerPath — Overview - Chris KB</title>
+        <title>PowerPath — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerPath — Overview · Chris KB">
+  <meta property="og:title" content="PowerPath — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerPath — Overview · Chris KB">
+  <meta name="twitter:title" content="PowerPath — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#powerpath-overview" class="md-skip">
+        <a href="#powerpath-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerPath — Overview
+              PowerPath — Architecture
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#load-balancing-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Load-Balancing Policies
       
     </span>
   </a>
@@ -1084,39 +1084,6 @@
     <span class="md-ellipsis">
       
         Host-Side MPIO Stack
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How It Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#high-availability-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Availability Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
       
     </span>
   </a>
@@ -1143,9 +1110,44 @@
 
 
 
-<h1 id="powerpath-overview">PowerPath — Overview<a class="headerlink" href="#powerpath-overview" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell PowerPath is a host-side multipath I/O driver that sits between the operating system's block device layer and the physical HBA/iSCSI initiator layer. It intercepts I/O destined for storage LUNs and distributes it intelligently across all available physical paths, providing automatic failover on path loss and load balancing across healthy paths. PowerPath presents a single virtual (pseudo) device per LUN to the OS, regardless of how many physical paths exist.</p>
+<h1 id="powerpath-architecture">PowerPath — Architecture<a class="headerlink" href="#powerpath-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Host-side multipath I/O driver for Dell/EMC arrays. Intercepts block I/O and distributes it across all available HBA paths with ALUA-aware load balancing (CLAROpt policy) and automatic sub-millisecond failover on path loss.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with PowerMax, Unity, and host OS multipath frameworks.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Path count requirements, CLAROpt policy standards, and installation best practices.</span></a>
+</div>
+
+<h2 id="load-balancing-policies">Load-Balancing Policies<a class="headerlink" href="#load-balancing-policies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLAROpt</td>
+<td><code>co</code></td>
+<td>ALUA-aware; prefers active-optimised paths — recommended for all Dell arrays</td>
+</tr>
+<tr>
+<td>RoundRobin</td>
+<td><code>rr</code></td>
+<td>Even distribution across all paths regardless of ALUA state</td>
+</tr>
+<tr>
+<td>BasicFailover</td>
+<td><code>bf</code></td>
+<td>Single active path; failover only — no load balancing</td>
+</tr>
+</tbody>
+</table>
 <h2 id="host-side-mpio-stack">Host-Side MPIO Stack<a class="headerlink" href="#host-side-mpio-stack" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
   HOST(["Host — Linux / Windows / VMware"]) --&gt; PP["PowerPath\n(MPIO driver)"]
@@ -1161,47 +1163,6 @@
   class P1,P2,P3,P4 net
   class HOST host
   class ARRAY ctrl</code></pre>
-<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>On startup, PowerPath discovers all LUNs visible across all HBA ports and groups paths to the same LUN into a single pseudo device. Each path has a state:
-- <code>alive</code> — path is healthy and eligible for I/O
-- <code>dead</code> — path has failed I/O tests; excluded from routing
-- <code>unlic</code> — path is not licensed; I/O will not be sent over this path</p>
-<p>PowerPath load-balancing policies determine how I/O is distributed across <code>alive</code> paths:
-- <strong>CLAROpt</strong> (<code>co</code>) — Dell/EMC optimised policy; aware of active/passive or ALUA path groupings on PowerMax, Unity, and CLARiiON arrays; sends I/O preferentially over optimised paths
-- <strong>RoundRobin</strong> (<code>rr</code>) — distributes I/O evenly across all paths regardless of ALUA state (not recommended for Dell/EMC arrays)
-- <strong>BasicFailover</strong> (<code>bf</code>) — uses one path, fails over to another on failure; no load balancing</p>
-<p>On path failure, PowerPath automatically marks the path <code>dead</code> and re-routes I/O to remaining <code>alive</code> paths within milliseconds. When <code>powermt restore</code> is run (or periodically by the daemon), dead paths are retested and promoted back to <code>alive</code> if they recover.</p>
-<h2 id="high-availability-design">High Availability Design<a class="headerlink" href="#high-availability-design" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    io(["Application I/O"]) --&gt; ppDriver["PowerPath\nMPIO Driver"]
-
-    ppDriver --&gt; pathCheck{{"Path health\ncheck"}}
-    pathCheck --&gt;|"alive paths exist"| lbPolicy{{"CLAROpt LB Policy\n(ALUA-aware)"}}
-    pathCheck --&gt;|"all paths dead"| ioErr(["I/O Error\n(alert ops team)"])
-
-    lbPolicy --&gt;|"optimised path"| hba0Fab1["HBA0 → Fabric A → SP-A\n(Active-Optimised)"]
-    lbPolicy --&gt;|"failover path"| hba1Fab2["HBA1 → Fabric B → SP-B\n(Active-Non-Optimised)"]
-
-    hba0Fab1 --&gt; array["Storage Array\n(PowerMax / Unity)"]
-    hba1Fab2 --&gt; array
-
-    pathFail(["Path Failure"]) --&gt;|"dead path detected"| ppDriver
-    ppDriver --&gt;|"powermt restore\n(auto + manual)"| hba0Fab1</code></pre>
-<p>PowerPath provides host-side HA through multipath redundancy. Key design principles:</p>
-<ul>
-<li>Minimum 2 paths per LUN (one per fabric/HBA) for basic redundancy</li>
-<li>Recommended 4 paths (two fabrics x two HBA ports per fabric) for full redundancy</li>
-<li>CLAROpt policy ensures I/O uses ALUA-optimised paths preferentially, failing over automatically on path loss</li>
-<li>The PowerPath daemon continuously monitors path health and triggers failover/restore events without manual intervention</li>
-<li>Path restoration is automatic — when a failed path recovers, PowerPath promotes it back to <code>alive</code> state</li>
-</ul>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 

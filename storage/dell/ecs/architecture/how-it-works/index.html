@@ -21,7 +21,7 @@
     
     
       
-        <title>FOD — Overview - Chris KB</title>
+        <title>Dell ECS — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FOD — Overview · Chris KB">
+  <meta property="og:title" content="Dell ECS — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FOD — Overview · Chris KB">
+  <meta name="twitter:title" content="Dell ECS — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fod-overview" class="md-skip">
+        <a href="#dell-ecs-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FOD — Overview
+              Dell ECS — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Cases
+        Overview
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-fod-works" class="md-nav__link">
+  <a href="#scale-out-object-storage-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How FOD Works
+        Scale-Out Object Storage Topology
       
     </span>
   </a>
@@ -1091,10 +1091,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
+  <a href="#erasure-coding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Best Practices
+        Erasure Coding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-data-centers-vdc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Data Centers (VDC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-groups-and-geo-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Groups and Geo-Distribution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#namespace-and-bucket-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace and Bucket Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-api-protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported API Protocols
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-write-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Write Path
       
     </span>
   </a>
@@ -1121,67 +1176,176 @@
 
 
 
-<h1 id="fod-overview">FOD — Overview<a class="headerlink" href="#fod-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../../">Flex on Demand</a> reference.</p>
-</blockquote>
-<hr />
-<p>Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD provides the cost efficiency of a cloud-like model on-premises without requiring physical capacity additions. It is available on PowerMax, PowerStore, and PowerScale platforms.</p>
-<h2 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h2>
+<h1 id="dell-ecs-how-it-works">Dell ECS — How It Works<a class="headerlink" href="#dell-ecs-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object storage platform built on commodity x86 nodes. It exposes S3, Swift, Atmos, and CAS APIs over HTTPS. The software stack runs entirely on commodity hardware and provides geo-distribution across sites via Virtual Data Centers (VDCs) linked into replication groups.</p>
+<h2 id="scale-out-object-storage-topology">Scale-Out Object Storage Topology<a class="headerlink" href="#scale-out-object-storage-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  CLT(["S3 / Swift / Atmos Clients"]) --&gt; GW["Load Balancer\n(optional)"]
+  GW --&gt; N1["ECS Node 1"] &amp; N2["ECS Node 2"] &amp; N3["ECS Node 3"] &amp; NN["Node N…"]
+  N1 &amp; N2 &amp; N3 &amp; NN --&gt; RING[("Object Ring\ndistributed erasure coding")]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef net fill:#7c3aed,stroke:#6d28d9,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class N1,N2,N3,NN ctrl
+  class GW,RING net
+  class CLT host</code></pre>
+<h2 id="erasure-coding">Erasure Coding<a class="headerlink" href="#erasure-coding" title="Permanent link">&para;</a></h2>
+<p>ECS uses erasure coding (EC) rather than replication for within-VDC data protection. Objects are broken into data fragments and parity fragments; the cluster reconstructs the original object when a defined number of fragments are lost.</p>
 <table>
 <thead>
 <tr>
+<th>EC Scheme</th>
+<th>Data Fragments</th>
+<th>Parity Fragments</th>
+<th>Min Nodes</th>
+<th>Tolerated Failures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12+4 (default)</td>
+<td>12</td>
+<td>4</td>
+<td>16</td>
+<td>Up to 4 simultaneous node/disk failures</td>
+</tr>
+<tr>
+<td>10+2</td>
+<td>10</td>
+<td>2</td>
+<td>12</td>
+<td>Up to 2 simultaneous failures</td>
+</tr>
+<tr>
+<td>4+2 (small cluster)</td>
+<td>4</td>
+<td>2</td>
+<td>6</td>
+<td>Up to 2 simultaneous failures</td>
+</tr>
+</tbody>
+</table>
+<p>The EC scheme is selected automatically based on VDC node count. A 12+4 scheme has a 1.33× raw-to-usable overhead ratio. ECS also reserves ~30% overhead for metadata, journals, and rebuild workspace.</p>
+<h2 id="virtual-data-centers-vdc">Virtual Data Centers (VDC)<a class="headerlink" href="#virtual-data-centers-vdc" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VDC</td>
+<td>Single-site logical cluster of ECS nodes; independently manageable; serves S3 requests autonomously</td>
+</tr>
+<tr>
+<td>VDC Quorum</td>
+<td>Requires majority of VDC nodes online — <code>(n/2)+1</code> for even node counts</td>
+</tr>
+<tr>
+<td>Temporary Site Failure (TSF)</td>
+<td>VDC continues accepting writes locally; queues replication backlog; replays on reconnection</td>
+</tr>
+<tr>
+<td>VDC Federation</td>
+<td>Multiple VDCs peered into one management domain via ECS Portal for cross-VDC replication</td>
+</tr>
+</tbody>
+</table>
+<h2 id="replication-groups-and-geo-distribution">Replication Groups and Geo-Distribution<a class="headerlink" href="#replication-groups-and-geo-distribution" title="Permanent link">&para;</a></h2>
+<p>Replication groups define which VDCs participate in geo-replication. Every namespace is assigned to a replication group.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Consistency</th>
+<th>RPO</th>
 <th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Environments with variable workload patterns where paying for peak capacity all the time is wasteful</td>
+<td>Synchronous</td>
+<td>Strong — write confirmed on all VDCs</td>
+<td>Near-zero</td>
+<td>Compliance, financial records</td>
 </tr>
 <tr>
-<td>Dev/test environments that need burst capacity periodically but a low committed baseline</td>
+<td>Asynchronous</td>
+<td>Eventual — write acknowledged locally; replicated in background</td>
+<td>Minutes</td>
+<td>General workloads, backup targets</td>
 </tr>
 <tr>
-<td>Businesses that want to avoid capital expenditure on storage but remain on-premises</td>
-</tr>
-<tr>
-<td>Organisations running APEX Flex on Demand subscriptions as part of a broader APEX agreement</td>
-</tr>
-<tr>
-<td>Situations where procurement lead times are too long to meet workload growth demands</td>
+<td>Metered</td>
+<td>Async with WAN bandwidth throttling</td>
+<td>Longer</td>
+<td>WAN-constrained environments</td>
 </tr>
 </tbody>
 </table>
-<h2 id="how-fod-works">How FOD Works<a class="headerlink" href="#how-fod-works" title="Permanent link">&para;</a></h2>
-<p>A base capacity is licensed outright. Burst capacity above the committed level is metered and billed monthly. FOD contracts define a <strong>base</strong> commitment and a <strong>burst ceiling</strong>. Usage between base and ceiling is billed monthly. Usage above the burst ceiling may trigger over-usage charges or require an immediate license upgrade.</p>
-<p>Metering is based on the <strong>maximum capacity used in any hour</strong> during the billing month (peak-hour metering).</p>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h2 id="namespace-and-bucket-hierarchy">Namespace and Bucket Hierarchy<a class="headerlink" href="#namespace-and-bucket-hierarchy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VDC
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── Namespace (multi-tenancy boundary)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Assigned to one Replication Group
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ├── Quota (hard or advisory)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    ├── IAM Users (object users with S3 access keys)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    └── Bucket
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        ├── Versioning, lifecycle policy, access policy
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        └── Object Lock (WORM — compliance or governance mode)
+</code></pre></div>
+<h2 id="supported-api-protocols">Supported API Protocols<a class="headerlink" href="#supported-api-protocols" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Recommendation</th>
-<th>Detail</th>
+<th>Protocol</th>
+<th>Port</th>
+<th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Set the committed baseline conservatively at contract start and adjust upward at renewal</td>
-<td>it is easier to raise a baseline than recover overbilled burst charges</td>
+<td>S3</td>
+<td>HTTPS 443 / 9021</td>
+<td>General-purpose; primary API; widest client support</td>
 </tr>
 <tr>
-<td>Monitor CloudIQ capacity trends weekly</td>
-<td>burst events visible before the end-of-month bill</td>
+<td>Swift</td>
+<td>HTTPS 9024</td>
+<td>OpenStack integration</td>
 </tr>
 <tr>
-<td>Ensure Secure Connect Gateway redundancy</td>
-<td>a single SCG failure that causes telemetry gaps can complicate billing disputes</td>
+<td>CAS (Centera)</td>
+<td>HTTPS</td>
+<td>Fixed-content WORM compliance (legacy EMC Centera migration)</td>
 </tr>
 <tr>
-<td>Automate monthly usage extraction via CloudIQ API</td>
-<td>feed it into a finance reporting system to eliminate manual reconciliation</td>
+<td>HDFS</td>
+<td>TCP 9003</td>
+<td>Hadoop/Spark via ECS HDFS connector JAR</td>
+</tr>
+<tr>
+<td>NFS (ECS 3.8+)</td>
+<td>TCP 2049</td>
+<td>POSIX namespace access via NFS gateway</td>
+</tr>
+<tr>
+<td>Management REST API</td>
+<td>HTTPS 4443</td>
+<td>Administration and automation</td>
 </tr>
 </tbody>
 </table>
+<h2 id="data-write-path">Data Write Path<a class="headerlink" href="#data-write-path" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Client sends S3 PUT to the ECS load balancer (or directly to a node)</li>
+<li>Receiving node acts as the request coordinator</li>
+<li>Coordinator chunks the object, applies erasure coding, distributes fragments across data nodes</li>
+<li>Once local write completes, coordinator acknowledges write to client</li>
+<li>Geo-replication journal records the new object; replication service transmits to peer VDCs</li>
+</ol>
 
 
 

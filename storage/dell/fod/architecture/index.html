@@ -21,7 +21,7 @@
     
     
       
-        <title>FOD — Overview - Chris KB</title>
+        <title>Flex on Demand — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FOD — Overview · Chris KB">
+  <meta property="og:title" content="Flex on Demand — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FOD — Overview · Chris KB">
+  <meta name="twitter:title" content="Flex on Demand — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#fod-overview" class="md-skip">
+        <a href="#flex-on-demand-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FOD — Overview
+              Flex on Demand — Architecture
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
+  <a href="#metering-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Cases
+        Metering Model
       
     </span>
   </a>
@@ -1080,32 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-fod-works" class="md-nav__link">
+  <a href="#fod-data-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How FOD Works
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
+        FOD Data Flow
       
     </span>
   </a>
@@ -1132,74 +1110,54 @@
 
 
 
-<h1 id="fod-overview">FOD — Overview<a class="headerlink" href="#fod-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../../">Flex on Demand</a> reference.</p>
-</blockquote>
-<hr />
-<p>Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD provides the cost efficiency of a cloud-like model on-premises without requiring physical capacity additions. It is available on PowerMax, PowerStore, and PowerScale platforms.</p>
-<h2 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Environments with variable workload patterns where paying for peak capacity all the time is wasteful</td>
-</tr>
-<tr>
-<td>Dev/test environments that need burst capacity periodically but a low committed baseline</td>
-</tr>
-<tr>
-<td>Businesses that want to avoid capital expenditure on storage but remain on-premises</td>
-</tr>
-<tr>
-<td>Organisations running APEX Flex on Demand subscriptions as part of a broader APEX agreement</td>
-</tr>
-<tr>
-<td>Situations where procurement lead times are too long to meet workload growth demands</td>
-</tr>
-</tbody>
-</table>
-<h2 id="how-fod-works">How FOD Works<a class="headerlink" href="#how-fod-works" title="Permanent link">&para;</a></h2>
-<p>A base capacity is licensed outright. Burst capacity above the committed level is metered and billed monthly. FOD contracts define a <strong>base</strong> commitment and a <strong>burst ceiling</strong>. Usage between base and ceiling is billed monthly. Usage above the burst ceiling may trigger over-usage charges or require an immediate license upgrade.</p>
-<p>Metering is based on the <strong>maximum capacity used in any hour</strong> during the billing month (peak-hour metering).</p>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Recommendation</th>
-<th>Detail</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Set the committed baseline conservatively at contract start and adjust upward at renewal</td>
-<td>it is easier to raise a baseline than recover overbilled burst charges</td>
-</tr>
-<tr>
-<td>Monitor CloudIQ capacity trends weekly</td>
-<td>burst events visible before the end-of-month bill</td>
-</tr>
-<tr>
-<td>Ensure Secure Connect Gateway redundancy</td>
-<td>a single SCG failure that causes telemetry gaps can complicate billing disputes</td>
-</tr>
-<tr>
-<td>Automate monthly usage extraction via CloudIQ API</td>
-<td>feed it into a finance reporting system to eliminate manual reconciliation</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
+<h1 id="flex-on-demand-architecture">Flex on Demand — Architecture<a class="headerlink" href="#flex-on-demand-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Consumption-based capacity model on PowerMax, PowerStore, and PowerScale. Additional capacity is pre-installed in the array and metered monthly — billing is based on peak-hour consumption above the committed baseline, not physical installation.
 </div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with CloudIQ, Secure Connect Gateway, and APEX billing.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Baseline configuration, burst monitoring, and SCG redundancy practices.</span></a>
+</div>
+
+<h2 id="metering-model">Metering Model<a class="headerlink" href="#metering-model" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Committed baseline</td>
+<td>Licensed outright — always billed; immediately usable</td>
+</tr>
+<tr>
+<td>Burst range</td>
+<td>Pre-installed; metered monthly at per-TiB rate above baseline</td>
+</tr>
+<tr>
+<td>Burst ceiling</td>
+<td>Maximum metered capacity; over-ceiling usage may incur over-usage charges</td>
+</tr>
+</tbody>
+</table>
+<p>Billing is based on the <strong>maximum capacity used in any single hour</strong> during the billing month (peak-hour metering).</p>
+<h2 id="fod-data-flow">FOD Data Flow<a class="headerlink" href="#fod-data-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  ARRAY["Dell Array\nPowerMax / PowerStore / PowerScale"] --&gt;|"telemetry"| SCG["Secure Connect Gateway"]
+  SCG --&gt;|"HTTPS 443"| CLOUDIQ["Dell CloudIQ\n(metering &amp; reporting)"]
+  CLOUDIQ --&gt; BILL["APEX Console\nMonthly billing"]
+  ADMIN(["Storage Admin"]) --&gt;|"portal"| CLOUDIQ
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class ARRAY ctrl
+  class SCG ctrl
+  class CLOUDIQ,BILL cloud
+  class ADMIN host</code></pre>
 
 
 
