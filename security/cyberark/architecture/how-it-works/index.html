@@ -21,7 +21,7 @@
     
     
       
-        <title>CyberArk Architecture - Chris KB</title>
+        <title>CyberArk — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="CyberArk Architecture · Chris KB">
+  <meta property="og:title" content="CyberArk — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="CyberArk Architecture · Chris KB">
+  <meta name="twitter:title" content="CyberArk — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cyberark-architecture" class="md-skip">
+        <a href="#cyberark-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CyberArk Architecture
+              CyberArk — How It Works
             
           </span>
         </div>
@@ -1154,7 +1154,7 @@
 
 
 
-<h1 id="cyberark-architecture">CyberArk Architecture<a class="headerlink" href="#cyberark-architecture" title="Permanent link">&para;</a></h1>
+<h1 id="cyberark-how-it-works">CyberArk — How It Works<a class="headerlink" href="#cyberark-how-it-works" title="Permanent link">&para;</a></h1>
 <p>CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an encrypted hardened credential store that is the sole authoritative source for managed passwords and SSH keys. The Central Policy Manager (CPM) rotates credentials automatically, the Privileged Session Manager (PSM) proxies and records sessions, and the Password Vault Web Access (PVWA) provides the web UI and REST API gateway.</p>
 <hr />
 <h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
@@ -1213,6 +1213,7 @@
   class VAULT store
   class PVWA,PSM,CPM ctrl
   class USER,TARGET,SIEM host</code></pre>
+<hr />
 <h2 id="network-topology">Network Topology<a class="headerlink" href="#network-topology" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[Admin workstation / PAW]
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>         |
@@ -1233,13 +1234,15 @@
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    v                    v
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>[Target systems]     [Target systems]
 </code></pre></div>
-<p>Key ports:
-- PVWA → Vault: TCP 1858
-- CPM → Vault: TCP 1858
-- PSM → Vault: TCP 1858
-- Admin → PVWA: TCP 443
-- PSM → Targets: TCP 22 (SSH), TCP 3389 (RDP), TCP 1521 (Oracle), TCP 1433 (MSSQL)
-- PSMP → Targets: TCP 22</p>
+<p>Key ports:</p>
+<ul>
+<li>PVWA → Vault: TCP 1858</li>
+<li>CPM → Vault: TCP 1858</li>
+<li>PSM → Vault: TCP 1858</li>
+<li>Admin → PVWA: TCP 443</li>
+<li>PSM → Targets: TCP 22 (SSH), TCP 3389 (RDP), TCP 1521 (Oracle), TCP 1433 (MSSQL)</li>
+<li>PSMP → Targets: TCP 22</li>
+</ul>
 <hr />
 <h2 id="credential-checkout-sequence">Credential Checkout Sequence<a class="headerlink" href="#credential-checkout-sequence" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>sequenceDiagram
@@ -1286,6 +1289,7 @@
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="dr-activation-flow">DR Activation Flow<a class="headerlink" href="#dr-activation-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     failure["Primary Vault failure detected"] --&gt; stopSync["Stop replication on DR Vault\n(dbsync.exe service stopped)"]
@@ -1295,12 +1299,14 @@
     restartSvc --&gt; validate["Validate connectivity\n(Test-NetConnection :1858)"]
     validate --&gt; testCred["Test credential retrieval\nfrom DR Vault"]
     testCred --&gt; ops["Operations resume from DR Vault"]</code></pre>
-<p>DR Vault activation procedure:
-1. Stop replication on the DR Vault: <code>C:\Program Files (x86)\PrivateArk\Server\dbsync.exe</code> — stop the sync service.
-2. Change DR Vault to standalone mode via PrivateArk Client.
-3. Update CPM, PSM, and PVWA <code>vault.ini</code> to point to the DR Vault IP.
-4. Restart CyberArk services on CPM, PSM, PVWA.
-5. Validate connectivity and test a credential retrieval.</p>
+<p>DR Vault activation procedure:</p>
+<ol>
+<li>Stop replication on the DR Vault: <code>C:\Program Files (x86)\PrivateArk\Server\dbsync.exe</code> — stop the sync service.</li>
+<li>Change DR Vault to standalone mode via PrivateArk Client.</li>
+<li>Update CPM, PSM, and PVWA <code>vault.ini</code> to point to the DR Vault IP.</li>
+<li>Restart CyberArk services on CPM, PSM, PVWA.</li>
+<li>Validate connectivity and test a credential retrieval.</li>
+</ol>
 
 
 

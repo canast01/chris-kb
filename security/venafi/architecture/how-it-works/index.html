@@ -21,7 +21,7 @@
     
     
       
-        <title>Active Directory — Architecture Overview - Chris KB</title>
+        <title>Venafi — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Active Directory — Architecture Overview · Chris KB">
+  <meta property="og:title" content="Venafi — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Active Directory — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="Venafi — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#active-directory-architecture-overview" class="md-skip">
+        <a href="#venafi-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Active Directory — Architecture Overview
+              Venafi — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#forest-and-domain-hierarchy" class="md-nav__link">
+  <a href="#component-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Forest and Domain Hierarchy
+        Component Overview
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#forest-and-domain-topology" class="md-nav__link">
+  <a href="#trust-protection-platform-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Forest and Domain Topology
+        Trust Protection Platform Topology
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#core-components" class="md-nav__link">
+  <a href="#policy-tree-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core Components
+        Policy Tree Structure
       
     </span>
   </a>
@@ -1102,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fsmo-role-placement" class="md-nav__link">
+  <a href="#ca-connectors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        FSMO Role Placement
+        CA Connectors
       
     </span>
   </a>
@@ -1113,10 +1113,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-services-and-ports" class="md-nav__link">
+  <a href="#certificate-lifecycle-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Services and Ports
+        Certificate Lifecycle Flow
       
     </span>
   </a>
@@ -1124,10 +1124,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#replication-topology-kcc-generated" class="md-nav__link">
+  <a href="#high-availability" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replication Topology (KCC-Generated)
+        High Availability
       
     </span>
   </a>
@@ -1135,10 +1135,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sites-and-replication" class="md-nav__link">
+  <a href="#network-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sites and Replication
+        Network Requirements
       
     </span>
   </a>
@@ -1146,54 +1146,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dc-high-availability-design" class="md-nav__link">
+  <a href="#rest-api-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DC High Availability Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#active-directory-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Active Directory Database
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kerberos-authentication-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kerberos Authentication Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kerberos-authentication-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kerberos Authentication Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ldap-bind-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LDAP Bind Flow
+        REST API Access
       
     </span>
   </a>
@@ -1220,306 +1176,249 @@
 
 
 
-<h1 id="active-directory-architecture-overview">Active Directory — Architecture Overview<a class="headerlink" href="#active-directory-architecture-overview" title="Permanent link">&para;</a></h1>
-<h2 id="forest-and-domain-hierarchy">Forest and Domain Hierarchy<a class="headerlink" href="#forest-and-domain-hierarchy" title="Permanent link">&para;</a></h2>
-<p>Active Directory is organised in a Forest → Domain → OU hierarchy:</p>
-<pre class="mermaid"><code>graph TB
-  FOREST["AD Forest\n(security boundary)"] --&gt; ROOT["Forest Root Domain\ncorp.example.com"]
-  ROOT --&gt; DC1["DC-01 Site A\nPDC · RID · Infra Master"]
-  ROOT --&gt; DC2["DC-02 Site A\nGlobal Catalog"]
-  ROOT --&gt;|"AD replication"| DC3["DC-03 · DC-04\nSite B — replica DCs"]
-  ROOT --&gt; CHILD["Child Domain\ndivision.corp.example.com"]
-  CHILD --&gt; CDC["Child DC"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class DC1,DC2,DC3,CDC ctrl
-  class FOREST,ROOT,CHILD mgmt</code></pre>
-<p>The forest is the ultimate security boundary — Kerberos trust does not cross forest boundaries by default. Child domains share the forest schema and global catalog but have separate administrative boundaries.</p>
-<h2 id="forest-and-domain-topology">Forest and Domain Topology<a class="headerlink" href="#forest-and-domain-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  ┌──────────────────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  │                         AD Forest                                        │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │                                                                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  ┌────────────────────────────────────────────────────────────────┐     │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  │  Forest Root Domain  (corp.example.com)                        │     │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  │  ┌────────────────────────────────────────────────────────┐   │     │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  │  │  Schema Master  Domain Naming Master  Global Catalogue  │   │     │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  │  └────────────────────────────────────────────────────────┘   │     │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  │                                                                │     │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  │  │  ┌─────────────────────┐  ┌─────────────────────────────┐    │     │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  │  │  DC-01 (Site A PDC) │  │  DC-02 (Site A)             │    │     │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  │  │  RID / PDC Emulator │  │  Global Catalogue           │    │     │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  │  │  Infra Master       │  │                             │    │     │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  │  └────────┬────────────┘  └─────────────────────────────┘    │     │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  │           │ AD replication (inter-site: IP / SMTP)            │     │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  │  ┌────────▼──────────────────────────────────────────────┐   │     │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  │  │  DC-03 (Site B)  DC-04 (Site B)  — replica DCs        │   │     │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  │  └────────────────────────────────────────────────────────┘   │     │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  └────────────────────────────────────────────────────────────────┘     │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │                                                                          │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  │  ┌─────────────────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  │  │  Child Domains (if used)                                        │    │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  │  │  eu.corp.example.com    apac.corp.example.com                   │    │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  │  │  (trust is automatic within forest — transitive two-way)        │    │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  │  └─────────────────────────────────────────────────────────────────┘    │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  └──────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  DNS: every DC is also a DNS server; AD relies entirely on DNS SRV records
-</code></pre></div>
-<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
+<h1 id="venafi-how-it-works">Venafi — How It Works<a class="headerlink" href="#venafi-how-it-works" title="Permanent link">&para;</a></h1>
+<p>Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle management system. It enforces certificate policy, integrates with multiple CA backends, automates renewal, and provides visibility across all managed certificates. The SaaS equivalent is Venafi as a Service (VaaS / TLS Protect Cloud).</p>
+<hr />
+<h2 id="component-overview">Component Overview<a class="headerlink" href="#component-overview" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Component</th>
 <th>Role</th>
+<th>Deployment</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Forest Root Domain</td>
-<td>Schema master, Enterprise Admins, trust anchor</td>
+<td>Policy Server</td>
+<td>Lifecycle management, CA integration, policy enforcement</td>
+<td>On-prem VM (primary + secondary)</td>
 </tr>
 <tr>
-<td>Regional Domains</td>
-<td>Administrative boundary per region or business unit</td>
+<td>Edge Proxy</td>
+<td>Certificate discovery across segmented networks</td>
+<td>Lightweight on-prem agent</td>
 </tr>
 <tr>
-<td>Domain Controller (DC)</td>
-<td>Hosts AD database (NTDS.DIT), DNS, KDC, SYSVOL</td>
+<td>Log Server</td>
+<td>Audit event aggregation and SIEM forwarding</td>
+<td>On-prem VM or syslog target</td>
 </tr>
 <tr>
-<td>Global Catalog (GC)</td>
-<td>Partial attribute replica + universal group membership cache</td>
+<td>VaaS / TLS Protect Cloud</td>
+<td>SaaS alternative to TPP</td>
+<td>Hosted by Venafi</td>
 </tr>
 <tr>
-<td>FSMO Roles</td>
-<td>Five single-master operations (see below)</td>
+<td>CA Connectors</td>
+<td>Integration adapters for ADCS, DigiCert, Entrust</td>
+<td>Configured on Policy Server</td>
 </tr>
 <tr>
-<td>Sites &amp; Site Links</td>
-<td>Control replication topology and DC/KDC selection</td>
-</tr>
-<tr>
-<td>SYSVOL</td>
-<td>Shared folder replicated via DFSR; holds GPO templates and logon scripts</td>
+<td>Venafi SDK / REST API</td>
+<td>Automation and integration interface</td>
+<td>Consumed by CI/CD and scripts</td>
 </tr>
 </tbody>
 </table>
-<h2 id="fsmo-role-placement">FSMO Role Placement<a class="headerlink" href="#fsmo-role-placement" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="trust-protection-platform-topology">Trust Protection Platform Topology<a class="headerlink" href="#trust-protection-platform-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  TPP["Venafi Trust Protection Platform"]
+  TPP --&gt; DISC["Discovery Engine\n(network scan / agent)"]
+  TPP --&gt; CA1["CA Connector — ADCS"]
+  TPP --&gt; CA2["CA Connector — DigiCert / Entrust"]
+  TPP --&gt; AUTO["Automation\n(renewal / provisioning)"]
+  DISC --&gt;|"found certs"| TPP
+  ADMIN(["Security Admin"]) --&gt;|"portal"| TPP
+  TPP --&gt;|"SIEM / SNMP"| SIEM(["SIEM / Monitoring"])
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class TPP,DISC ctrl
+  class CA1,CA2,AUTO mgmt
+  class ADMIN,SIEM host</code></pre>
+<hr />
+<h2 id="policy-tree-structure">Policy Tree Structure<a class="headerlink" href="#policy-tree-structure" title="Permanent link">&para;</a></h2>
+<p>The Venafi policy tree (<code>\VED\Policy\</code>) organises certificates into folders that apply inheritance-based policy. Certificates inherit policy settings from parent folders unless explicitly overridden.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>\VED\Policy\
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Internal\
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── Production\
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   ├── Servers\
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │   └── Services\
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── Non-Production\
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   ├── Dev\
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │   └── Test\
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └── Infrastructure\
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│       ├── Network\
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│       └── VMware\
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└── External\
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    ├── Public\
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    └── Partners\
+</code></pre></div>
+<p>Policy folder settings:</p>
+<ul>
+<li>CA template / connector to use for issuance</li>
+<li>Validity period and renewal window</li>
+<li>Key algorithm and minimum key size</li>
+<li>Required SANs and prohibited wildcard usage</li>
+<li>Approval workflow (auto-issue vs. manual approval)</li>
+<li>Notification contacts for expiry alerts</li>
+</ul>
+<hr />
+<h2 id="ca-connectors">CA Connectors<a class="headerlink" href="#ca-connectors" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>FSMO Role</th>
-<th>Scope</th>
-<th>Recommended DC</th>
+<th>CA Type</th>
+<th>Connector</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Schema Master</td>
-<td>Forest-wide</td>
-<td>Forest root DC 1</td>
+<td>Microsoft ADCS</td>
+<td>ADCS connector (built-in)</td>
+<td>Requires CES/CEP or direct RPC access to CA</td>
 </tr>
 <tr>
-<td>Domain Naming Master</td>
-<td>Forest-wide</td>
-<td>Forest root DC 1</td>
+<td>DigiCert</td>
+<td>DigiCert connector</td>
+<td>Requires DigiCert API key; supports OV/EV/DV</td>
 </tr>
 <tr>
-<td>PDC Emulator</td>
-<td>Per domain</td>
-<td>Most capable DC; close to users (time source)</td>
+<td>Entrust</td>
+<td>Entrust connector</td>
+<td>Requires Entrust API key and client credentials</td>
 </tr>
 <tr>
-<td>RID Master</td>
-<td>Per domain</td>
-<td>Same site as PDC Emulator preferred</td>
+<td>Let's Encrypt</td>
+<td>ACME connector</td>
+<td>HTTP-01 or DNS-01 challenge; requires accessible validation endpoint</td>
 </tr>
 <tr>
-<td>Infrastructure Master</td>
-<td>Per domain</td>
-<td>Not a GC DC (if single-domain, can be GC)</td>
+<td>Internal standalone CA</td>
+<td>Generic PKCS#10 / SCEP</td>
+<td>For CAs without a native connector</td>
 </tr>
 </tbody>
 </table>
-<p>Verify current FSMO holders:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Or:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InfrastructureMaster</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">PDCEmulator</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
-</code></pre></div></p>
-<h2 id="key-services-and-ports">Key Services and Ports<a class="headerlink" href="#key-services-and-ports" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    tpp["Venafi Trust Protection Platform"]
+    tpp --&gt; adcs["CA Connector: ADCS\n(Microsoft Active Directory CS)"]
+    tpp --&gt; digicert["CA Connector: DigiCert\n(public OV / EV / DV)"]
+    tpp --&gt; entrust["CA Connector: Entrust\n(public / OV)"]
+    tpp --&gt; acme["ACME Connector\n(Let's Encrypt)"]
+    tpp --&gt; vault["HashiCorp Vault PKI\n(short-lived / service mesh)"]
+
+    adcs --&gt;|"DCOM / CES"| adcsServer["ADCS Issuing CA Server"]
+    digicert --&gt;|"REST API"| digicertCloud["DigiCert API Cloud"]
+    entrust --&gt;|"REST API"| entrustCloud["Entrust API Cloud"]
+    acme --&gt;|"ACME RFC 8555"| leCloud["Let's Encrypt"]
+    vault --&gt;|"Vault REST API"| vaultPKI["Vault PKI Engine"]</code></pre>
+<hr />
+<h2 id="certificate-lifecycle-flow">Certificate Lifecycle Flow<a class="headerlink" href="#certificate-lifecycle-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    request["Certificate Request\n(UI / API / vcert CLI / CI-CD)"]
+    request --&gt; policyCheck{"Policy engine\nvalidation"}
+    policyCheck --&gt;|"SAN missing / key too small\npolicy violation"| reject["Reject with\nviolation message"]
+    policyCheck --&gt;|"internal auto-issue"| submitCA["Submit CSR to\nconfigured CA connector"]
+    policyCheck --&gt;|"external / approval required"| approvalQ["Enter Approval Queue\n(Security team review)"]
+    approvalQ --&gt;|"approved"| submitCA
+    approvalQ --&gt;|"rejected"| reject
+    submitCA --&gt; caIssue["CA issues certificate"]
+    caIssue --&gt; tppStore["Venafi stores certificate\n+ notifies owner"]
+    tppStore --&gt; monitor["Expiry monitoring begins\n(30-day alert window)"]
+    monitor --&gt;|"within renewal window"| autoRenew["Auto-renew triggered\n(new CSR generated)"]
+    autoRenew --&gt; submitCA
+    monitor --&gt;|"key compromise / decommission"| revoke["Revoke via CA connector\n+ update CRL / OCSP"]</code></pre>
+<hr />
+<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
+<p>Venafi TPP is deployed as a primary + secondary pair sharing a common Microsoft SQL Server backend.</p>
+<pre class="mermaid"><code>graph TD
+    client["API Consumers\n(CI-CD / scripts / UI)"] --&gt;|"HTTPS 443"| lb["Load Balancer / VIP\n(venafi.corp.example.com)"]
+    lb --&gt; tppPrimary["TPP Primary Node\n(active)"]
+    lb --&gt; tppSecondary["TPP Secondary Node\n(active)"]
+    tppPrimary --&gt; sqlAG["SQL Server\n(Always On AG preferred)"]
+    tppSecondary --&gt; sqlAG
+    edgeProxy["Edge Proxy\n(segmented network)"] --&gt;|"HTTPS 443"| lb
+    admin["Security Admin\n(portal)"] --&gt;|"HTTPS 443"| lb</code></pre>
+<p>Both nodes are active; the load balancer distributes requests. SQL Server is the single source of truth — both nodes are stateless with respect to certificate data. If one node fails, the load balancer routes all traffic to the remaining node.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;Venafi*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">sql01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">1433</span>
+</code></pre></div>
+<hr />
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Service</th>
+<th>Source</th>
+<th>Destination</th>
 <th>Port</th>
-<th>Protocol</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>LDAP</td>
-<td>389</td>
-<td>TCP/UDP</td>
-<td>Directory queries</td>
+<td>TPP Policy Server</td>
+<td>ADCS (CES endpoint)</td>
+<td>TCP 443</td>
+<td>Certificate enrolment</td>
 </tr>
 <tr>
-<td>LDAPS</td>
-<td>636</td>
-<td>TCP</td>
-<td>Encrypted directory queries</td>
+<td>TPP Policy Server</td>
+<td>DigiCert / Entrust APIs</td>
+<td>TCP 443</td>
+<td>External CA issuance</td>
 </tr>
 <tr>
-<td>Global Catalog</td>
-<td>3268</td>
-<td>TCP</td>
-<td>Universal group membership</td>
+<td>TPP Policy Server</td>
+<td>SQL Server</td>
+<td>TCP 1433</td>
+<td>Database backend</td>
 </tr>
 <tr>
-<td>Global Catalog SSL</td>
-<td>3269</td>
-<td>TCP</td>
-<td>Encrypted GC queries</td>
+<td>Edge Proxy</td>
+<td>TPP Policy Server</td>
+<td>TCP 443</td>
+<td>Proxy registration and data sync</td>
 </tr>
 <tr>
-<td>Kerberos</td>
-<td>88</td>
-<td>TCP/UDP</td>
-<td>Authentication tickets</td>
+<td>Admin / CI-CD</td>
+<td>TPP Policy Server</td>
+<td>TCP 443</td>
+<td>REST API and web UI</td>
 </tr>
 <tr>
-<td>DNS</td>
-<td>53</td>
-<td>TCP/UDP</td>
-<td>Name resolution (AD-integrated DNS)</td>
-</tr>
-<tr>
-<td>RPC (replication)</td>
-<td>135 + dynamic</td>
-<td>TCP</td>
-<td>DC-to-DC replication</td>
-</tr>
-<tr>
-<td>SMB (SYSVOL)</td>
-<td>445</td>
-<td>TCP</td>
-<td>SYSVOL/DFSR replication</td>
-</tr>
-<tr>
-<td>WinRM</td>
-<td>5985/5986</td>
-<td>TCP</td>
-<td>Remote management</td>
+<td>TPP Log Server</td>
+<td>Splunk / SIEM</td>
+<td>TCP 514 / 6514</td>
+<td>Syslog event forwarding</td>
 </tr>
 </tbody>
 </table>
-<h2 id="replication-topology-kcc-generated">Replication Topology (KCC-Generated)<a class="headerlink" href="#replication-topology-kcc-generated" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    siteA["Site A — London"]
-    siteB["Site B — New York"]
-    siteC["Site C — Singapore"]
-
-    dc01["DC-01\nPDC Emulator\nRID Master"]
-    dc02["DC-02\nGlobal Catalog"]
-    dc03["DC-03\nSite A replica"]
-    dc04["DC-04\nGlobal Catalog"]
-    dc05["DC-05\nSite B replica"]
-    dc06["DC-06\nSite C GC"]
-
-    siteA --&gt; dc01
-    siteA --&gt; dc02
-    siteA --&gt; dc03
-    siteB --&gt; dc04
-    siteB --&gt; dc05
-    siteC --&gt; dc06
-
-    dc01 &lt;--&gt;|"intra-site\nRPC — frequent"| dc02
-    dc01 &lt;--&gt;|"intra-site\nRPC — frequent"| dc03
-    dc04 &lt;--&gt;|"intra-site"| dc05
-
-    dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc04
-    dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc06
-    dc04 &lt;--&gt;|"inter-site link"| dc06</code></pre>
-<h2 id="sites-and-replication">Sites and Replication<a class="headerlink" href="#sites-and-replication" title="Permanent link">&para;</a></h2>
-<p>Sites define physical network boundaries for efficient replication and logon:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># List sites</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-ADReplicationSite</span> <span class="n">-Filter</span> <span class="p">*</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># List site links</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ADReplicationSiteLink</span> <span class="n">-Filter</span> <span class="p">*</span>
+<hr />
+<h2 id="rest-api-access">REST API Access<a class="headerlink" href="#rest-api-access" title="Permanent link">&para;</a></h2>
+<p>Venafi TPP exposes a REST API at <code>https://&lt;tpp-fqdn&gt;/vedsdk/</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Authenticate and get API key</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$body</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">Username</span> <span class="p">=</span> <span class="s2">&quot;svc-venafi-api&quot;</span><span class="p">;</span> <span class="n">Password</span> <span class="p">=</span> <span class="s2">&quot;password&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$response</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://venafi.corp.example.com/vedauth/authorize&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="nv">$body</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">$apiKey</span> <span class="p">=</span> <span class="nv">$response</span><span class="p">.</span><span class="n">APIKey</span>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Check replication health</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>   <span class="c"># Summary of replication success/failure</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">v</span>
-</code></pre></div>
-<p>AD replicates via multi-master within a site (frequent, fast) and between sites via site links (scheduled, based on link interval).</p>
-<h2 id="dc-high-availability-design">DC High Availability Design<a class="headerlink" href="#dc-high-availability-design" title="Permanent link">&para;</a></h2>
-<p>Minimum two Domain Controllers per site:
-- DC1: PDC Emulator, RID Master for the site's domain
-- DC2: Infrastructure Master, GC (if only one domain — GC on both)
-- Both DCs act as DNS servers for the site</p>
-<p>In the event DC1 fails: DC2 handles all authentication and DNS. FSMO roles should be seized only if DC1 cannot be restored within 24 hours.</p>
-<h2 id="active-directory-database">Active Directory Database<a class="headerlink" href="#active-directory-database" title="Permanent link">&para;</a></h2>
-<p>The AD database file is <code>NTDS.DIT</code>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Location: C:\Windows\NTDS\NTDS.DIT
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Log files: C:\Windows\NTDS\*.log (EDB transaction logs)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>SYSVOL: C:\Windows\SYSVOL\sysvol\&lt;domain&gt;\
-</code></pre></div></p>
-<p>Back up via Windows Server Backup (System State backup) or bare-metal backup:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># System State backup includes NTDS.DIT</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">wbadmin</span> <span class="nb">start </span><span class="n">systemstatebackup</span> <span class="n">-backupTarget</span><span class="p">:</span><span class="n">D</span><span class="p">:</span>
-</code></pre></div></p>
-<h2 id="kerberos-authentication-sequence">Kerberos Authentication Sequence<a class="headerlink" href="#kerberos-authentication-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant client as Client
-    participant kdc as KDC (Domain Controller)
-    participant svc as Application Server
-
-    client-&gt;&gt;kdc: AS-REQ (username + encrypted timestamp)
-    kdc--&gt;&gt;client: AS-REP — TGT (encrypted with krbtgt key)
-    note over client: Client caches TGT (valid 10 hours)
-    client-&gt;&gt;kdc: TGS-REQ (TGT + service SPN)
-    kdc--&gt;&gt;client: TGS-REP — Service Ticket (encrypted with service key)
-    client-&gt;&gt;svc: AP-REQ (Service Ticket + authenticator)
-    svc--&gt;&gt;client: AP-REP (mutual auth confirmation)
-    note over client,svc: Secure session established</code></pre>
-<h2 id="kerberos-authentication-flow">Kerberos Authentication Flow<a class="headerlink" href="#kerberos-authentication-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>  Client                  KDC (DC)                  Application Server
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    │                        │                               │
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    │── AS-REQ (username) ──►│                               │
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    │   (pre-auth: enc TS)   │                               │
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    │◄── AS-REP (TGT) ───────│                               │
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    │    enc with krbtgt key  │                               │
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    │                        │                               │
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    │── TGS-REQ (TGT) ──────►│                               │
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    │   (request: service SPN)│                               │
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    │◄── TGS-REP (ST) ───────│                               │
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    │    enc with svc key     │                               │
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    │                        │                               │
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    │── AP-REQ (ST + auth) ──────────────────────────────►  │
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    │   (mutual auth option)  │                               │
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    │◄── AP-REP ─────────────────────────────────────────── │
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    │                        │                               │
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    │           [Session established — Kerberos ticket valid]│
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    │                        │                               │
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    │── Resource Access ─────────────────────────────────►  │
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    │◄── Response ────────────────────────────────────────── │
-</code></pre></div>
-<h2 id="ldap-bind-flow">LDAP Bind Flow<a class="headerlink" href="#ldap-bind-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>  Client                         Active Directory (LDAP)
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    │                                      │
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    │── TCP SYN ──────────────────────────►│  (port 389 / 636)
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    │◄── TCP SYN-ACK ─────────────────────│
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    │── LDAP Bind Request (DN + password) ►│
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    │◄── Bind Response (success / error) ──│
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    │                                      │
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    │── Search Request (filter + scope) ──►│
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    │◄── Search Entries ───────────────────│
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    │◄── Search Done ──────────────────────│
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    │                                      │
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    │── Unbind ───────────────────────────►│
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    │── TCP FIN ──────────────────────────►│
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Request a certificate</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">$certRequest</span> <span class="p">=</span> <span class="p">@{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">PolicyDN</span> <span class="p">=</span> <span class="s2">&quot;\\VED\\Policy\\Internal\\Production\\Servers&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">Subject</span>  <span class="p">=</span> <span class="s2">&quot;app01.corp.example.com&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">SubjectAltNames</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="p">@{</span> <span class="n">TypedName</span> <span class="p">=</span> <span class="s2">&quot;dns:app01.corp.example.com&quot;</span> <span class="p">},</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="p">@{</span> <span class="n">TypedName</span> <span class="p">=</span> <span class="s2">&quot;dns:app01-internal.corp.example.com&quot;</span> <span class="p">}</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="n">-Depth</span> <span class="n">5</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://venafi.corp.example.com/vedsdk/Certificates/Request&quot;</span> <span class="p">`</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>  <span class="n">-Headers</span> <span class="p">@{</span> <span class="s2">&quot;X-Venafi-API-Key&quot;</span> <span class="p">=</span> <span class="nv">$apiKey</span> <span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  <span class="n">-Method</span> <span class="n">Post</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span> <span class="n">-Body</span> <span class="nv">$certRequest</span>
 </code></pre></div>
 
 

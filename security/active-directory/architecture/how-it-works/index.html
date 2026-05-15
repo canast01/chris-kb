@@ -21,7 +21,7 @@
     
     
       
-        <title>Certificates Architecture - Chris KB</title>
+        <title>Active Directory — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Certificates Architecture · Chris KB">
+  <meta property="og:title" content="Active Directory — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Certificates Architecture · Chris KB">
+  <meta name="twitter:title" content="Active Directory — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#certificates-architecture" class="md-skip">
+        <a href="#active-directory-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Certificates Architecture
+              Active Directory — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pki-hierarchy" class="md-nav__link">
+  <a href="#forest-and-domain-hierarchy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        PKI Hierarchy
+        Forest and Domain Hierarchy
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#certificate-lifecycle-flow" class="md-nav__link">
+  <a href="#core-components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Certificate Lifecycle Flow
+        Core Components
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adcs-role-components" class="md-nav__link">
+  <a href="#fsmo-role-placement" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ADCS Role Components
+        FSMO Role Placement
       
     </span>
   </a>
@@ -1102,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#certificate-templates" class="md-nav__link">
+  <a href="#key-services-and-ports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Certificate Templates
+        Key Services and Ports
       
     </span>
   </a>
@@ -1113,10 +1113,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cdp-and-aia-configuration" class="md-nav__link">
+  <a href="#replication-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CDP and AIA Configuration
+        Replication Topology
       
     </span>
   </a>
@@ -1124,10 +1124,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#auto-enrollment-via-group-policy" class="md-nav__link">
+  <a href="#dc-high-availability-design" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Auto-Enrollment via Group Policy
+        DC High Availability Design
       
     </span>
   </a>
@@ -1135,10 +1135,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ocsp-and-crl-revocation-validation-flow" class="md-nav__link">
+  <a href="#active-directory-database" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OCSP and CRL Revocation Validation Flow
+        Active Directory Database
       
     </span>
   </a>
@@ -1146,10 +1146,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#root-ca-key-ceremony" class="md-nav__link">
+  <a href="#kerberos-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Root CA Key Ceremony
+        Kerberos Authentication
       
     </span>
   </a>
@@ -1157,10 +1157,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#crl-and-ocsp-monitoring" class="md-nav__link">
+  <a href="#ldap-bind-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CRL and OCSP Monitoring
+        LDAP Bind Flow
       
     </span>
   </a>
@@ -1187,212 +1187,255 @@
 
 
 
-<h1 id="certificates-architecture">Certificates Architecture<a class="headerlink" href="#certificates-architecture" title="Permanent link">&para;</a></h1>
-<p>Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-gapped Root CA at the trust anchor, an online Issuing CA for day-to-day issuance, and optionally a Registration Authority (RA) to separate enrolment approval from issuance. Internal PKI is implemented with Microsoft ADCS. External and public-facing services use commercial CAs (DigiCert, Entrust) or Let's Encrypt via ACME.</p>
-<hr />
-<h2 id="pki-hierarchy">PKI Hierarchy<a class="headerlink" href="#pki-hierarchy" title="Permanent link">&para;</a></h2>
+<h1 id="active-directory-how-it-works">Active Directory — How It Works<a class="headerlink" href="#active-directory-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="forest-and-domain-hierarchy">Forest and Domain Hierarchy<a class="headerlink" href="#forest-and-domain-hierarchy" title="Permanent link">&para;</a></h2>
+<p>Active Directory is organised in a Forest → Domain → OU hierarchy:</p>
 <pre class="mermaid"><code>graph TB
-  ROOT[("Root CA\n(offline — HSM)")] --&gt;|"signs"| INT1["Intermediate CA 1\nInternal Issuing CA"]
-  ROOT --&gt;|"signs"| INT2["Intermediate CA 2\nPublic / External CA"]
-  INT1 --&gt;|"issues"| CERT1["Server Certificate"]
-  INT1 --&gt;|"issues"| CERT2["Client Certificate"]
-  INT2 --&gt;|"issues"| CERT3["Publicly Trusted Cert"]
-  CERT1 &amp; CERT2 &amp; CERT3 -.-&gt;|"OCSP / CRL"| CRL["Revocation\nCRL / OCSP Responder"]
+  FOREST["AD Forest\n(security boundary)"] --&gt; ROOT["Forest Root Domain\ncorp.example.com"]
+  ROOT --&gt; DC1["DC-01 Site A\nPDC · RID · Infra Master"]
+  ROOT --&gt; DC2["DC-02 Site A\nGlobal Catalog"]
+  ROOT --&gt;|"AD replication"| DC3["DC-03 · DC-04\nSite B — replica DCs"]
+  ROOT --&gt; CHILD["Child Domain\ndivision.corp.example.com"]
+  CHILD --&gt; CDC["Child DC"]
   classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
   classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  class ROOT store
-  class INT1,INT2 ctrl
-  class CERT1,CERT2,CERT3 host
-  class CRL mgmt</code></pre>
-<h2 id="certificate-lifecycle-flow">Certificate Lifecycle Flow<a class="headerlink" href="#certificate-lifecycle-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    csrGen["CSR Generation\n(key pair on target host / HSM)"]
-    csrGen --&gt; submit["Submit CSR to CA\n(ADCS / DigiCert / Venafi)"]
-    submit --&gt; caSign["CA validates and signs\n(issues certificate)"]
-    caSign --&gt; deploy["Deploy to target service\n(nginx / IIS / F5 / Java keystore)"]
-    deploy --&gt; monitor["Continuous expiry monitoring\n(Venafi / openssl / Prometheus)"]
-    monitor --&gt; renewWindow{"Within renewal\nwindow?"}
-    renewWindow --&gt;|"yes — 30 days"| renewDecision{"Automated\nrenewal?"}
-    renewWindow --&gt;|"no"| monitor
-    renewDecision --&gt;|"yes — Venafi / ACME"| csrGen
-    renewDecision --&gt;|"no — manual"| manualRenew["Manual renewal procedure\n(owner notified)"]
-    manualRenew --&gt; csrGen
-    monitor --&gt;|"key compromise\nor decommission"| revoke["Revoke via CA\nPublish CRL + OCSP update"]</code></pre>
+  class DC1,DC2,DC3,CDC ctrl
+  class FOREST,ROOT,CHILD mgmt</code></pre>
+<p>The forest is the ultimate security boundary — Kerberos trust does not cross forest boundaries by default. Child domains share the forest schema and global catalog but have separate administrative boundaries.</p>
 <hr />
-<h2 id="adcs-role-components">ADCS Role Components<a class="headerlink" href="#adcs-role-components" title="Permanent link">&para;</a></h2>
+<h2 id="core-components">Core Components<a class="headerlink" href="#core-components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Component</th>
-<th>Description</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Certification Authority (CA)</td>
-<td>Core CA service; issues and revokes certificates</td>
+<td>Forest Root Domain</td>
+<td>Schema master, Enterprise Admins, trust anchor</td>
 </tr>
 <tr>
-<td>CA Web Enrollment</td>
-<td>Browser-based manual certificate requests (legacy)</td>
+<td>Regional Domains</td>
+<td>Administrative boundary per region or business unit</td>
 </tr>
 <tr>
-<td>Network Device Enrollment Service (NDES)</td>
-<td>SCEP for network devices and mobile MDM</td>
+<td>Domain Controller (DC)</td>
+<td>Hosts AD database (NTDS.DIT), DNS, KDC, SYSVOL</td>
 </tr>
 <tr>
-<td>Online Responder (OCSP)</td>
-<td>Real-time revocation status; preferred over CRL for large deployments</td>
+<td>Global Catalog (GC)</td>
+<td>Partial attribute replica + universal group membership cache</td>
 </tr>
 <tr>
-<td>Certificate Enrollment Web Service (CEP/CES)</td>
-<td>HTTP(S)-based auto-enrollment for non-domain members</td>
+<td>FSMO Roles</td>
+<td>Five single-master operations (see below)</td>
+</tr>
+<tr>
+<td>Sites &amp; Site Links</td>
+<td>Control replication topology and DC/KDC selection</td>
+</tr>
+<tr>
+<td>SYSVOL</td>
+<td>Shared folder replicated via DFSR; holds GPO templates and logon scripts</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="certificate-templates">Certificate Templates<a class="headerlink" href="#certificate-templates" title="Permanent link">&para;</a></h2>
-<p>Templates are created on the Issuing CA and determine key usage, validity, and enrollment permissions.</p>
-<p>Common templates in use:</p>
+<h2 id="fsmo-role-placement">FSMO Role Placement<a class="headerlink" href="#fsmo-role-placement" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Template Name</th>
-<th>Purpose</th>
-<th>Key Usage</th>
-<th>Validity</th>
+<th>FSMO Role</th>
+<th>Scope</th>
+<th>Recommended DC</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>WebServer-Internal</code></td>
-<td>Internal HTTPS services</td>
-<td>Server Authentication</td>
-<td>2 years</td>
+<td>Schema Master</td>
+<td>Forest-wide</td>
+<td>Forest root DC 1</td>
 </tr>
 <tr>
-<td><code>WorkstationAuth</code></td>
-<td>Computer authentication (802.1X)</td>
-<td>Client Authentication</td>
-<td>1 year</td>
+<td>Domain Naming Master</td>
+<td>Forest-wide</td>
+<td>Forest root DC 1</td>
 </tr>
 <tr>
-<td><code>SmartcardLogon</code></td>
-<td>User smart card / FIDO logon</td>
-<td>Smart Card Logon</td>
-<td>1 year</td>
+<td>PDC Emulator</td>
+<td>Per domain</td>
+<td>Most capable DC; close to users (time source)</td>
 </tr>
 <tr>
-<td><code>CodeSigning-Internal</code></td>
-<td>Internal script / binary signing</td>
-<td>Code Signing</td>
-<td>1 year</td>
+<td>RID Master</td>
+<td>Per domain</td>
+<td>Same site as PDC Emulator preferred</td>
 </tr>
 <tr>
-<td><code>SubCA</code></td>
-<td>Issuing CA certificate</td>
-<td>All key usages</td>
-<td>10 years</td>
+<td>Infrastructure Master</td>
+<td>Per domain</td>
+<td>Not a GC DC (if single-domain, can be GC)</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all published certificate templates on the CA</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">certutil</span> <span class="n">-catemplates</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># View key details of a specific template</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-CATemplate</span> <span class="n">-TemplateName</span> <span class="s2">&quot;WebServer-Internal&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Duplicate a template from the CA MMC snap-in:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># certsrv.msc -&gt; Certificate Templates -&gt; right-click -&gt; Duplicate Template</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">/</span><span class="n">domain</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InfrastructureMaster</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">PDCEmulator</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
 </code></pre></div>
 <hr />
-<h2 id="cdp-and-aia-configuration">CDP and AIA Configuration<a class="headerlink" href="#cdp-and-aia-configuration" title="Permanent link">&para;</a></h2>
-<p>CRL Distribution Points (CDP) and Authority Information Access (AIA) extensions must be resolvable by all relying parties — including non-domain members.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># View current CDP and AIA configuration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">certutil</span> <span class="n">-getreg</span> <span class="n">CA</span><span class="p">\</span><span class="n">CRLPublicationURLs</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">certutil</span> <span class="n">-getreg</span> <span class="n">CA</span><span class="p">\</span><span class="n">CACertPublicationURLs</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Recommended CDP URLs (set on Issuing CA):</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># 1. LDAP://... (domain members only)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># 2. http://pki.corp.example.com/crl/&lt;CAName&gt;&lt;CRLNameSuffix&gt;&lt;DeltaCRLAllowed&gt;.crl</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># (HTTP CDP must be accessible to ALL systems that receive certificates)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Set CDP via PowerShell (restart CertSvc after changes)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nv">$cdpUrls</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  <span class="s2">&quot;1:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  <span class="s2">&quot;2:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="s2">&quot;2:http://pki.corp.example.com/crl/%3%8%9.crl&quot;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">certutil</span> <span class="n">-setreg</span> <span class="n">CA</span><span class="p">\</span><span class="n">CRLPublicationURLs</span> <span class="p">(</span><span class="nv">$cdpUrls</span> <span class="n">-join</span> <span class="s2">&quot;\n&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">Restart-Service</span> <span class="n">CertSvc</span>
-</code></pre></div>
+<h2 id="key-services-and-ports">Key Services and Ports<a class="headerlink" href="#key-services-and-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LDAP</td>
+<td>389</td>
+<td>TCP/UDP</td>
+<td>Directory queries</td>
+</tr>
+<tr>
+<td>LDAPS</td>
+<td>636</td>
+<td>TCP</td>
+<td>Encrypted directory queries</td>
+</tr>
+<tr>
+<td>Global Catalog</td>
+<td>3268</td>
+<td>TCP</td>
+<td>Universal group membership</td>
+</tr>
+<tr>
+<td>Global Catalog SSL</td>
+<td>3269</td>
+<td>TCP</td>
+<td>Encrypted GC queries</td>
+</tr>
+<tr>
+<td>Kerberos</td>
+<td>88</td>
+<td>TCP/UDP</td>
+<td>Authentication tickets</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>53</td>
+<td>TCP/UDP</td>
+<td>Name resolution (AD-integrated DNS)</td>
+</tr>
+<tr>
+<td>RPC (replication)</td>
+<td>135 + dynamic</td>
+<td>TCP</td>
+<td>DC-to-DC replication</td>
+</tr>
+<tr>
+<td>SMB (SYSVOL)</td>
+<td>445</td>
+<td>TCP</td>
+<td>SYSVOL/DFSR replication</td>
+</tr>
+<tr>
+<td>WinRM</td>
+<td>5985/5986</td>
+<td>TCP</td>
+<td>Remote management</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="auto-enrollment-via-group-policy">Auto-Enrollment via Group Policy<a class="headerlink" href="#auto-enrollment-via-group-policy" title="Permanent link">&para;</a></h2>
-<p>Auto-enrollment automatically issues and renews certificates to domain members without user interaction.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>GPO Path: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>          Public Key Policies &gt; Certificate Services Client - Auto-Enrollment
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Settings:
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  - Configuration Model: Enabled
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  - Renew expired certificates: Checked
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  - Update certificates that use certificate templates: Checked
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  - Expiry notification: 10% before expiry
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Trigger manual auto-enrollment on a client (useful for testing)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">certutil</span> <span class="n">-pulse</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># View certificates in the machine store</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
-</code></pre></div>
-<hr />
-<h2 id="ocsp-and-crl-revocation-validation-flow">OCSP and CRL Revocation Validation Flow<a class="headerlink" href="#ocsp-and-crl-revocation-validation-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant client as TLS Client
-    participant server as TLS Server
-    participant ocsp as OCSP Responder
-    participant crlDist as CRL Distribution Point
+<h2 id="replication-topology">Replication Topology<a class="headerlink" href="#replication-topology" title="Permanent link">&para;</a></h2>
+<p>The KCC (Knowledge Consistency Checker) auto-generates the replication topology. Intra-site replication is frequent and near-real-time; inter-site replication is scheduled via site links.</p>
+<pre class="mermaid"><code>graph TD
+    siteA["Site A — London"]
+    siteB["Site B — New York"]
+    siteC["Site C — Singapore"]
 
-    client-&gt;&gt;server: TLS ClientHello
-    server--&gt;&gt;client: Certificate (+ OCSP staple if enabled)
-    note over client: Client must verify revocation status
+    dc01["DC-01\nPDC Emulator\nRID Master"]
+    dc02["DC-02\nGlobal Catalog"]
+    dc03["DC-03\nSite A replica"]
+    dc04["DC-04\nGlobal Catalog"]
+    dc05["DC-05\nSite B replica"]
+    dc06["DC-06\nSite C GC"]
 
-    alt OCSP Stapling (preferred)
-        note over client,server: OCSP response embedded in TLS handshake
-        client-&gt;&gt;client: Verify stapled OCSP response signature
-    else OCSP Live Query
-        client-&gt;&gt;ocsp: OCSP Request (cert serial + issuer)
-        ocsp--&gt;&gt;client: OCSP Response (good / revoked / unknown)
-    else CRL Fallback
-        client-&gt;&gt;crlDist: HTTP GET CRL file
-        crlDist--&gt;&gt;client: CRL (signed list of revoked serials)
-        client-&gt;&gt;client: Check serial against CRL
-    end
+    siteA --&gt; dc01
+    siteA --&gt; dc02
+    siteA --&gt; dc03
+    siteB --&gt; dc04
+    siteB --&gt; dc05
+    siteC --&gt; dc06
 
-    client-&gt;&gt;server: Continue TLS handshake (if not revoked)</code></pre>
+    dc01 &lt;--&gt;|"intra-site\nRPC — frequent"| dc02
+    dc01 &lt;--&gt;|"intra-site\nRPC — frequent"| dc03
+    dc04 &lt;--&gt;|"intra-site"| dc05
+
+    dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc04
+    dc01 &lt;--&gt;|"inter-site link\nscheduled interval"| dc06
+    dc04 &lt;--&gt;|"inter-site link"| dc06</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check replication health</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">showrepl</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">repadmin</span> <span class="p">/</span><span class="n">replsummary</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">v</span>
+</code></pre></div>
 <hr />
-<h2 id="root-ca-key-ceremony">Root CA Key Ceremony<a class="headerlink" href="#root-ca-key-ceremony" title="Permanent link">&para;</a></h2>
-<p>The Root CA private key is the most sensitive component of the PKI. Key ceremony requirements:</p>
+<h2 id="dc-high-availability-design">DC High Availability Design<a class="headerlink" href="#dc-high-availability-design" title="Permanent link">&para;</a></h2>
+<p>Minimum two Domain Controllers per site:</p>
 <ul>
-<li>Performed in a secure, access-controlled room with at least two witnesses.</li>
-<li>Key generated inside an HSM (e.g., nCipher, Thales) or a verified offline server.</li>
-<li>Key backup stored in HSM firmware card set with M-of-N quorum (e.g., 3-of-5).</li>
-<li>Ceremony is documented, signed by all witnesses, and stored with the CA policy documentation.</li>
-<li>Root CA certificate renewed 12 months before expiry with a new key pair.</li>
+<li>DC1: PDC Emulator, RID Master for the site's domain</li>
+<li>DC2: Infrastructure Master, GC (if only one domain — GC on both)</li>
+<li>Both DCs act as DNS servers for the site</li>
 </ul>
+<p>FSMO roles should be seized only if DC1 cannot be restored within 24 hours.</p>
 <hr />
-<h2 id="crl-and-ocsp-monitoring">CRL and OCSP Monitoring<a class="headerlink" href="#crl-and-ocsp-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check CRL validity and next publish time</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">certutil</span> <span class="n">-URL</span> <span class="n">http</span><span class="p">://</span><span class="n">pki</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">crl</span><span class="p">/</span><span class="n">IssuingCA</span><span class="p">.</span><span class="n">crl</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Verify the CRL is accessible and not expired</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">certutil</span> <span class="n">-verify</span> <span class="n">-urlfetch</span> <span class="p">&lt;</span><span class="n">certificate</span><span class="p">.</span><span class="n">cer</span><span class="p">&gt;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Check OCSP responder health</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">certutil</span> <span class="n">-URL</span> <span class="n">http</span><span class="p">://</span><span class="n">ocsp</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">ocsp</span>
+<h2 id="active-directory-database">Active Directory Database<a class="headerlink" href="#active-directory-database" title="Permanent link">&para;</a></h2>
+<p>The AD database file is <code>NTDS.DIT</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Location: C:\Windows\NTDS\NTDS.DIT
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Log files: C:\Windows\NTDS\*.log (EDB transaction logs)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>SYSVOL:    C:\Windows\SYSVOL\sysvol\&lt;domain&gt;\
 </code></pre></div>
-<p>Set a monitoring alert to fire when the CRL validity period drops below 24 hours. The Issuing CA CRL overlap period should be set to at least 10% of the publication interval to avoid gaps.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># System State backup includes NTDS.DIT</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">wbadmin</span> <span class="nb">start </span><span class="n">systemstatebackup</span> <span class="n">-backupTarget</span><span class="p">:</span><span class="n">D</span><span class="p">:</span>
+</code></pre></div>
+<hr />
+<h2 id="kerberos-authentication">Kerberos Authentication<a class="headerlink" href="#kerberos-authentication" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant client as Client
+    participant kdc as KDC (Domain Controller)
+    participant svc as Application Server
+
+    client-&gt;&gt;kdc: AS-REQ (username + encrypted timestamp)
+    kdc--&gt;&gt;client: AS-REP — TGT (encrypted with krbtgt key)
+    note over client: Client caches TGT (valid 10 hours)
+    client-&gt;&gt;kdc: TGS-REQ (TGT + service SPN)
+    kdc--&gt;&gt;client: TGS-REP — Service Ticket (encrypted with service key)
+    client-&gt;&gt;svc: AP-REQ (Service Ticket + authenticator)
+    svc--&gt;&gt;client: AP-REP (mutual auth confirmation)
+    note over client,svc: Secure session established</code></pre>
+<hr />
+<h2 id="ldap-bind-flow">LDAP Bind Flow<a class="headerlink" href="#ldap-bind-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>  Client                         Active Directory (LDAP)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    │                                      │
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    │── TCP SYN ──────────────────────────►│  (port 389 / 636)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    │◄── TCP SYN-ACK ─────────────────────│
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    │── LDAP Bind Request (DN + password) ►│
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    │◄── Bind Response (success / error) ──│
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    │                                      │
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    │── Search Request (filter + scope) ──►│
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    │◄── Search Entries ───────────────────│
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    │◄── Search Done ──────────────────────│
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    │                                      │
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    │── Unbind ───────────────────────────►│
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    │── TCP FIN ──────────────────────────►│
+</code></pre></div>
 
 
 
