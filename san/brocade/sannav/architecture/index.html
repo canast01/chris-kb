@@ -21,7 +21,7 @@
     
     
       
-        <title>SANnav — Overview - Chris KB</title>
+        <title>SANnav — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SANnav — Overview · Chris KB">
+  <meta property="og:title" content="SANnav — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SANnav — Overview · Chris KB">
+  <meta name="twitter:title" content="SANnav — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sannav-overview" class="md-skip">
+        <a href="#sannav-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SANnav — Overview
+              SANnav — Architecture
             
           </span>
         </div>
@@ -1069,50 +1069,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-sannav" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Is SANnav
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deployment-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deployment Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#supported-hardware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Hardware
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#vm-sizing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1121,74 +1077,13 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="VM Sizing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sannav-management-portal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SANnav Management Portal
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sannav-global-view" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SANnav Global View
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
-  <a href="#functional-architecture" class="md-nav__link">
+  <a href="#management-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Functional Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-the-management-stack" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration with the Management Stack
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Path
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
+        Management Topology
       
     </span>
   </a>
@@ -1215,169 +1110,22 @@
 
 
 
-<h1 id="sannav-overview">SANnav — Overview<a class="headerlink" href="#sannav-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../../">SANnav</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="what-is-sannav">What Is SANnav<a class="headerlink" href="#what-is-sannav" title="Permanent link">&para;</a></h2>
-<p>Brocade SANnav is a SAN management platform delivered in two product variants:</p>
-<ul>
-<li><strong>SANnav Management Portal</strong> — single-fabric or multi-fabric management for day-to-day operations: zoning, firmware management, MAPS policies, performance dashboards, inventory, and event management. Deployed as a standalone virtual appliance (OVA/ISO).</li>
-<li><strong>SANnav Global View</strong> — a higher-level aggregation layer for large environments with multiple SANnav Management Portal instances. Provides a consolidated dashboard, cross-fabric health summary, and centralised alert aggregation without replacing per-fabric portal instances.</li>
-</ul>
-<p>Both products run as Linux-based virtual appliances and communicate with managed switches via HTTPS and SNMP. Switch-side prerequisites are minimal: the switch must have an IP address reachable from SANnav and must have HTTPS enabled.</p>
-<hr />
-<h2 id="deployment-topology">Deployment Topology<a class="headerlink" href="#deployment-topology" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                  SANnav Global View                  │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│         (single VM, aggregates portal data)          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└───────────────┬──────────────────┬───────────────────┘
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                │                  │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ┌───────────▼──────┐  ┌────────▼──────────┐
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    │ SANnav Portal A  │  │  SANnav Portal B  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    │  (Fabric A – DC1)│  │  (Fabric B – DC2) │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    └────────┬─────────┘  └────────┬──────────┘
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>             │                     │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    ┌────────▼──────────────────────▼───────┐
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    │     Managed Brocade FC Switches        │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    │  (Gen 6 / Gen 7 directors and edge)    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    └────────────────────────────────────────┘
-</code></pre></div>
-<p>Each Management Portal instance manages one or more fabrics. A single portal can scale to hundreds of switches; Global View federates across portals with no direct switch communication of its own.</p>
-<hr />
-<h2 id="supported-hardware">Supported Hardware<a class="headerlink" href="#supported-hardware" title="Permanent link">&para;</a></h2>
-<p>SANnav Management Portal and Global View support the following Brocade / Broadcom FC platforms:</p>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>Gen</th>
-<th>Max Ports</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>G730 Director</td>
-<td>Gen 7</td>
-<td>384</td>
-<td>64G FC, NVMe-oF</td>
-</tr>
-<tr>
-<td>G720 Director</td>
-<td>Gen 7</td>
-<td>192</td>
-<td>32/64G FC</td>
-</tr>
-<tr>
-<td>G630 Director</td>
-<td>Gen 6</td>
-<td>384</td>
-<td>32G FC</td>
-</tr>
-<tr>
-<td>G620 Director</td>
-<td>Gen 6</td>
-<td>128</td>
-<td>32G FC</td>
-</tr>
-<tr>
-<td>G610 Edge Switch</td>
-<td>Gen 6</td>
-<td>24</td>
-<td>32G FC</td>
-</tr>
-<tr>
-<td>G720 Edge Switch</td>
-<td>Gen 7</td>
-<td>24</td>
-<td>64G FC</td>
-</tr>
-<tr>
-<td>X7-8 Director</td>
-<td>Gen 7</td>
-<td>512</td>
-<td>64G FC, high density</td>
-</tr>
-<tr>
-<td>X6-8 Director</td>
-<td>Gen 6</td>
-<td>512</td>
-<td>32G FC</td>
-</tr>
-</tbody>
-</table>
-<p>Legacy Gen 5 hardware (6510, 6520, DCX 8510) is supported in monitoring mode with reduced feature availability.</p>
-<hr />
-<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Communication</th>
-<th>Protocol</th>
-<th>Port</th>
-<th>Direction</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SANnav → switch</td>
-<td>HTTPS</td>
-<td>443</td>
-<td>Outbound from SANnav</td>
-</tr>
-<tr>
-<td>SANnav → switch</td>
-<td>SNMP v3</td>
-<td>161/UDP</td>
-<td>Outbound from SANnav</td>
-</tr>
-<tr>
-<td>Switch → SANnav</td>
-<td>SNMP trap</td>
-<td>162/UDP</td>
-<td>Inbound to SANnav</td>
-</tr>
-<tr>
-<td>Browser → SANnav</td>
-<td>HTTPS</td>
-<td>443</td>
-<td>Inbound to SANnav</td>
-</tr>
-<tr>
-<td>SANnav → LDAP</td>
-<td>LDAPS</td>
-<td>636</td>
-<td>Outbound from SANnav</td>
-</tr>
-<tr>
-<td>SANnav → SMTP</td>
-<td>SMTP</td>
-<td>25 or 587</td>
-<td>Outbound from SANnav</td>
-</tr>
-<tr>
-<td>Portal → Global View</td>
-<td>HTTPS</td>
-<td>443</td>
-<td>Outbound from Portal</td>
-</tr>
-<tr>
-<td>SANnav → NTP</td>
-<td>NTP</td>
-<td>123/UDP</td>
-<td>Outbound from SANnav</td>
-</tr>
-</tbody>
-</table>
-<p>SANnav uses the switch's management IP (mgmt VRF). Switches must not be behind NAT from the SANnav perspective, as SNMP trap source IPs are used for switch identification.</p>
-<hr />
+<h1 id="sannav-architecture">SANnav — Architecture<a class="headerlink" href="#sannav-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Brocade SANnav is a SAN management platform in two variants: Management Portal (per-fabric operations) and Global View (multi-portal aggregation). Deployed as Linux virtual appliances; communicates with switches via HTTPS and SNMP v3.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with Brocade FC switches, vCenter, LDAP, and SIEM.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, HA design, and deployment best practices.</span></a>
+</div>
+
 <h2 id="vm-sizing">VM Sizing<a class="headerlink" href="#vm-sizing" title="Permanent link">&para;</a></h2>
-<h3 id="sannav-management-portal">SANnav Management Portal<a class="headerlink" href="#sannav-management-portal" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
+<th>Variant</th>
 <th>Environment</th>
 <th>vCPU</th>
 <th>RAM</th>
@@ -1387,132 +1135,51 @@
 </thead>
 <tbody>
 <tr>
-<td>Small (≤ 50 switches)</td>
+<td>Management Portal</td>
+<td>Small</td>
 <td>8</td>
 <td>32 GB</td>
 <td>300 GB</td>
 <td>50</td>
 </tr>
 <tr>
-<td>Medium (≤ 150 switches)</td>
+<td>Management Portal</td>
+<td>Medium</td>
 <td>16</td>
 <td>64 GB</td>
 <td>500 GB</td>
 <td>150</td>
 </tr>
 <tr>
-<td>Large (≤ 300 switches)</td>
+<td>Management Portal</td>
+<td>Large</td>
 <td>24</td>
 <td>96 GB</td>
 <td>1 TB</td>
 <td>300</td>
 </tr>
-</tbody>
-</table>
-<h3 id="sannav-global-view">SANnav Global View<a class="headerlink" href="#sannav-global-view" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
 <tr>
-<th>Environment</th>
-<th>vCPU</th>
-<th>RAM</th>
-<th>Storage</th>
-<th>Max Portals</th>
-</tr>
-</thead>
-<tbody>
-<tr>
+<td>Global View</td>
 <td>Standard</td>
 <td>8</td>
 <td>32 GB</td>
 <td>500 GB</td>
-<td>10</td>
+<td>10 portals</td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>OS: CentOS / RHEL 8-based embedded Linux</li>
-<li>Hypervisors supported: VMware ESXi 6.7+, 7.x; KVM (QCOW2 image)</li>
-<li>Storage: thin provisioning is supported; thick provisioning preferred for production</li>
-</ul>
-<hr />
-<h2 id="functional-architecture">Functional Architecture<a class="headerlink" href="#functional-architecture" title="Permanent link">&para;</a></h2>
-<p>SANnav Management Portal is composed of the following internal services:</p>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Web UI (Angular)</td>
-<td>Browser-based management console</td>
-</tr>
-<tr>
-<td>REST API gateway</td>
-<td>External API and internal service bus</td>
-</tr>
-<tr>
-<td>Discovery engine</td>
-<td>Continuous fabric topology polling via HTTPS/SNMP</td>
-</tr>
-<tr>
-<td>Event engine</td>
-<td>SNMP trap processing, alert evaluation, email/SNMP forward</td>
-</tr>
-<tr>
-<td>MAPS analytics</td>
-<td>MAPS policy violation monitoring and trending</td>
-</tr>
-<tr>
-<td>SAN analytics</td>
-<td>I/O performance data ingestion and visualization</td>
-</tr>
-<tr>
-<td>Image management</td>
-<td>Firmware repository, staged upgrades</td>
-</tr>
-<tr>
-<td>Zone manager</td>
-<td>Zoning configuration push, alias management</td>
-</tr>
-<tr>
-<td>Report scheduler</td>
-<td>Scheduled report generation and delivery</td>
-</tr>
-<tr>
-<td>Time-series DB</td>
-<td>Performance metric retention (internal InfluxDB)</td>
-</tr>
-<tr>
-<td>PostgreSQL</td>
-<td>Configuration, inventory, user, and event data</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="integration-with-the-management-stack">Integration with the Management Stack<a class="headerlink" href="#integration-with-the-management-stack" title="Permanent link">&para;</a></h2>
-<p>In a typical Broadcom SAN environment, SANnav sits alongside:</p>
-<ul>
-<li><strong>Brocade Network Advisor (BNA)</strong> — legacy predecessor; SANnav replaces BNA and provides migration tooling</li>
-<li><strong>VMware vCenter</strong> — SANnav can pull host WWN data from vCenter for end-to-end path visibility</li>
-<li><strong>ServiceNow / ticketing</strong> — alert forwarding via email or webhook (HTTPS POST to webhook endpoints)</li>
-<li><strong>SIEM</strong> — syslog forwarding from SANnav appliance; SNMP trap forwarding to SIEM/NMS</li>
-<li><strong>Active Directory / LDAP</strong> — user authentication and group-based role assignment</li>
-</ul>
-<hr />
-<h2 id="upgrade-path">Upgrade Path<a class="headerlink" href="#upgrade-path" title="Permanent link">&para;</a></h2>
-<p>SANnav follows a major.minor.patch version scheme (e.g. 2.4.0). Upgrade is performed via the SANnav Management Portal UI or CLI. In-place upgrades are supported; there is no requirement to re-deploy the appliance for minor or patch releases.</p>
-<p>Always review the SANnav Release Notes for the target version before upgrading; some releases require an intermediate hop version rather than a direct upgrade.</p>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
+<h2 id="management-topology">Management Topology<a class="headerlink" href="#management-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  GV["SANnav Global View\n(multi-portal aggregation)"] --&gt; PA["SANnav Portal A\n(Fabric A — DC1)"]
+  GV --&gt; PB["SANnav Portal B\n(Fabric B — DC2)"]
+  PA --&gt;|"HTTPS + SNMP v3"| SW["Managed Brocade FC Switches\n(Gen 6 / Gen 7 directors and edge)"]
+  PB --&gt;|"HTTPS + SNMP v3"| SW
+  ADMIN(["SAN Admin"]) --&gt;|"browser"| GV
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class GV,PA,PB ctrl
+  class SW ctrl
+  class ADMIN host</code></pre>
 
 
 

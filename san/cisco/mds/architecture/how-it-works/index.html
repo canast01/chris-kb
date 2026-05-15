@@ -21,7 +21,7 @@
     
     
       
-        <title>MDS — Components - Chris KB</title>
+        <title>Cisco MDS — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="MDS — Components · Chris KB">
+  <meta property="og:title" content="Cisco MDS — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="MDS — Components · Chris KB">
+  <meta name="twitter:title" content="Cisco MDS — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#mds-components" class="md-skip">
+        <a href="#cisco-mds-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              MDS — Components
+              Cisco MDS — How It Works
             
           </span>
         </div>
@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#port-types" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Port Types
+        Overview
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#zoning" class="md-nav__link">
+  <a href="#san-fabric-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zoning
+        SAN Fabric Topology
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#isls" class="md-nav__link">
+  <a href="#platform-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ISLs
+        Platform Reference
       
     </span>
   </a>
@@ -1102,10 +1102,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ports" class="md-nav__link">
+  <a href="#vsan-design" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Ports
+        VSAN Design
       
     </span>
   </a>
@@ -1113,10 +1113,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vsans" class="md-nav__link">
+  <a href="#fc-services" class="md-nav__link">
     <span class="md-ellipsis">
       
-        VSANs
+        FC Services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fabric-login-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fabric Login Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Commands
       
     </span>
   </a>
@@ -1143,234 +1165,142 @@
 
 
 
-<h1 id="mds-components">MDS — Components<a class="headerlink" href="#mds-components" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../../">Cisco MDS</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="port-types">Port Types<a class="headerlink" href="#port-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Port Type</th>
-<th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>F_Port</td>
-<td>Connects to a host HBA or storage target port</td>
-</tr>
-<tr>
-<td>E_Port</td>
-<td>ISL — connects to another switch</td>
-</tr>
-<tr>
-<td>TE_Port</td>
-<td>Trunking E_Port — carries multiple VSANs over an ISL trunk</td>
-</tr>
-<tr>
-<td>NP_Port</td>
-<td>N_Port Proxy — used in NPV mode</td>
-</tr>
-<tr>
-<td>SD_Port</td>
-<td>SPAN Destination Port — used for FC traffic capture</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check port type and state</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Set a port to F_Port mode (override auto-negotiation)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>switchport<span class="w"> </span>mode<span class="w"> </span>F
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>no<span class="w"> </span>shutdown
-</code></pre></div>
-<hr />
-<h2 id="zoning">Zoning<a class="headerlink" href="#zoning" title="Permanent link">&para;</a></h2>
-<p>Zoning controls which initiator (host HBA) can communicate with which target (storage port). Best practice is <strong>single-initiator / single-target</strong> zones — one zone per host-port-to-storage-port pair.</p>
-<pre class="mermaid"><code>graph TD
-  DA1["Device Alias: esxi01_hba0\n(pWWN 10:00:00:...)"]
-  DA2["Device Alias: fa01_ct0_p0\n(pWWN 52:4a:93:...)"]
-  DA3["Device Alias: esxi01_hba1\n(pWWN 10:00:00:...)"]
-  DA4["Device Alias: fa01_ct1_p0\n(pWWN 52:4a:93:...)"]
-
-  Z1["Zone: esxi01_hba0__fa01_ct0_p0"]
-  Z2["Zone: esxi01_hba1__fa01_ct1_p0"]
-
-  ZS["Zone Set: dc1-fabA-prod\n(VSAN 10)"]
-
-  VSAN["VSAN 10 — Fabric A\n(active)"]
-
-  DA1 --&gt; Z1
-  DA2 --&gt; Z1
-  DA3 --&gt; Z2
-  DA4 --&gt; Z2
-  Z1 --&gt; ZS
-  Z2 --&gt; ZS
-  ZS --&gt;|"zoneset activate"| VSAN
-
-  classDef alias fill:#1d4ed8,stroke:#1e3a5f,color:#fff
-  classDef zone fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef zset fill:#b45309,stroke:#92400e,color:#fff
-  classDef fabric fill:#15803d,stroke:#166534,color:#fff
-  class DA1,DA2,DA3,DA4 alias
-  class Z1,Z2 zone
-  class ZS zset
-  class VSAN fabric</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show active zone set for a VSAN</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show all zones (active and inactive)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check if a specific WWPN is zoned</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>wwn<span class="w"> </span>&lt;wwpn&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-</code></pre></div>
-<p>Zone sets must be <strong>activated</strong> for zoning to take effect. An inactive zone set change is not applied to the fabric.</p>
-<hr />
-<h2 id="isls">ISLs<a class="headerlink" href="#isls" title="Permanent link">&para;</a></h2>
-<p>ISLs (Inter-Switch Links) connect MDS switches together to form a multi-switch fabric. ISLs are configured as port-channel trunks carrying multiple VSANs.</p>
+<h1 id="cisco-mds-how-it-works">Cisco MDS — How It Works<a class="headerlink" href="#cisco-mds-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC). The core isolation mechanism is the <strong>VSAN (Virtual SAN)</strong> — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.</p>
+<h2 id="san-fabric-topology">SAN Fabric Topology<a class="headerlink" href="#san-fabric-topology" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
-  H1A(["esxi-01  HBA0"]) --&gt; MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
-  H2A(["esxi-02  HBA0"]) --&gt; MDSA
-  H1B(["esxi-01  HBA1"]) --&gt; MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
-  H2B(["esxi-02  HBA1"]) --&gt; MDSB
-
+  H1A(["esxi-01 HBA0"]) --&gt; MDSA["MDS-9710 Director A\n2× 48p 32Gb FC"]
+  H2A(["esxi-02 HBA0"]) --&gt; MDSA
+  H1B(["esxi-01 HBA1"]) --&gt; MDSB["MDS-9710 Director B\n2× 48p 32Gb FC"]
+  H2B(["esxi-02 HBA1"]) --&gt; MDSB
   MDSA &lt;--&gt;|"4× 100G ISL"| MDSB
-
+  MDSA --&gt; FA_CT0[("FlashArray CT0")]
+  MDSA --&gt; PM_A[("PowerMax Dir A")]
+  MDSB --&gt; FA_CT1[("FlashArray CT1")]
+  MDSB --&gt; PM_B[("PowerMax Dir B")]
   classDef switch fill:#2563eb,stroke:#1d4ed8,color:#fff
   classDef host fill:#15803d,stroke:#166534,color:#fff
-
+  classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
   class MDSA,MDSB switch
-  class H1A,H2A,H1B,H2B host</code></pre>
-<p><strong>ISL standards:</strong>
-- Minimum 2 physical links per port-channel group
-- 32G Fibre Channel minimum for new deployments
-- All VSANs allowed on the ISL must be explicitly permitted
-- Load balancing: source-ID/destination-ID exchange-based</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View fabric ISL topology</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>topology
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check port-channel ISL status</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>show<span class="w"> </span>interface<span class="w"> </span>san-port-channel<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check trunk port allowed VSANs</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>show<span class="w"> </span>trunk
-</code></pre></div>
-<hr />
-<h2 id="ports">Ports<a class="headerlink" href="#ports" title="Permanent link">&para;</a></h2>
-<p>FC interfaces on MDS are identified as <code>fc&lt;slot/port&gt;</code>. Port mode determines how a port behaves in the fabric.</p>
+  class H1A,H2A,H1B,H2B host
+  class FA_CT0,PM_A,FA_CT1,PM_B storage</code></pre>
+<h2 id="platform-reference">Platform Reference<a class="headerlink" href="#platform-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Mode</th>
-<th>Use Case</th>
+<th>Model</th>
+<th>Type</th>
+<th>Max FC Ports</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>F</td>
-<td>Host / initiator (N_Port)</td>
+<td>MDS 9132T</td>
+<td>Fixed</td>
+<td>32× 32G FC</td>
+<td>Entry/mid-range</td>
 </tr>
 <tr>
-<td>E</td>
-<td>ISL to another switch (E_Port)</td>
+<td>MDS 9148T</td>
+<td>Fixed</td>
+<td>48× 32G FC</td>
+<td>Mid-range</td>
 </tr>
 <tr>
-<td>TE</td>
-<td>Trunking ISL (VSAN-aware)</td>
+<td>MDS 9396T</td>
+<td>Fixed</td>
+<td>96× 32G FC</td>
+<td>High-density fixed</td>
 </tr>
 <tr>
-<td>NP</td>
-<td>N-Port Virtualization (NPV mode)</td>
+<td>MDS 9706</td>
+<td>Director</td>
+<td>Up to 384 FC</td>
+<td>Modular director</td>
 </tr>
 <tr>
-<td>auto</td>
-<td>Auto-detect (default)</td>
-</tr>
-<tr>
-<td>SD</td>
-<td>SPAN destination</td>
+<td>MDS 9710</td>
+<td>Director</td>
+<td>Up to 576 FC</td>
+<td>Large-scale director</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Summary of all interfaces</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>interface<span class="w"> </span>brief
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Detailed single port</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Error counters</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>counters
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>counters<span class="w"> </span>errors
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Transceiver / SFP details</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>transceiver
-</code></pre></div>
+<p>Directors (9706/9710) support ISSU (In-Service Software Upgrade) — preferred for zero-downtime maintenance.</p>
+<h2 id="vsan-design">VSAN Design<a class="headerlink" href="#vsan-design" title="Permanent link">&para;</a></h2>
+<p>VSANs segment the fabric logically. Each VSAN has its own FC Name Server, domain ID space, zone database, and FLOGI/PLOGI table.</p>
 <table>
 <thead>
 <tr>
-<th>Counter</th>
-<th>Cause</th>
-<th>Action</th>
+<th>VSAN</th>
+<th>Purpose</th>
+<th>Fabric A</th>
+<th>Fabric B</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>link-failures</td>
-<td>Cable/SFP; port resets</td>
-<td>Replace SFP; check cable</td>
+<td>Production</td>
+<td>ESXi hosts → storage</td>
+<td>10</td>
+<td>11</td>
 </tr>
 <tr>
-<td>loss-of-sync</td>
-<td>Signal quality</td>
-<td>Check SFP power levels</td>
+<td>Replication</td>
+<td>SRDF/A or SnapMirror</td>
+<td>20</td>
+<td>21</td>
 </tr>
 <tr>
-<td>input-crc</td>
-<td>Bad frames</td>
-<td>Replace SFP; check cable</td>
-</tr>
-<tr>
-<td>bb-credit-zero</td>
-<td>Buffer-to-buffer credit depleted</td>
-<td>Increase BB credits; check ISL design</td>
+<td>Management</td>
+<td>Out-of-band fabric management</td>
+<td>99</td>
+<td>99</td>
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>stateDiagram-v2
-  [*] --&gt; notConnected : port created / no signal
-  notConnected --&gt; up : signal detected + FLOGI success
-  up --&gt; down : link lost / SFP removed
-  down --&gt; up : link restored
-  up --&gt; errDisabled : error threshold exceeded&lt;br/&gt;(flap count, VSAN conflict, SFP fault)
-  errDisabled --&gt; down : shutdown → no shutdown&lt;br/&gt;(after root cause resolved)
-  down --&gt; notConnected : SFP removed
-  up --&gt; trunking : TE port ISL established
-  trunking --&gt; isolated : VSAN merge conflict
-  isolated --&gt; trunking : conflict resolved</code></pre>
-<hr />
-<h2 id="vsans">VSANs<a class="headerlink" href="#vsans" title="Permanent link">&para;</a></h2>
-<p>VSANs (Virtual SANs) partition a physical fabric into multiple logical fabrics. Each VSAN has its own name server, domain IDs, and zoning configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># All VSANs on the switch</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>vsan
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>show<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># VSAN port membership</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;slot/port&gt;
-</code></pre></div>
-<p><strong>Create and assign a VSAN:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vsan<span class="w"> </span>database
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>vsan<span class="w"> </span>&lt;id&gt;<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;&lt;name&gt;&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>vsan<span class="w"> </span>&lt;id&gt;<span class="w"> </span>interface<span class="w"> </span>fc&lt;slot/port&gt;
-</code></pre></div>
-<p><strong>Allow VSAN on ISL trunk:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>interface<span class="w"> </span>fc&lt;slot/port&gt;
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>switchport<span class="w"> </span>trunk<span class="w"> </span>allowed<span class="w"> </span>vsan<span class="w"> </span>add<span class="w"> </span>&lt;id&gt;
+<p>VSAN 1 is the default — do not use VSAN 1 for production; all production traffic must use dedicated VSANs.</p>
+<h2 id="fc-services">FC Services<a class="headerlink" href="#fc-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FCNS (Name Server)</td>
+<td>Registers all devices (hosts and storage) that FLOGI into the fabric</td>
+</tr>
+<tr>
+<td>FSPF</td>
+<td>Fabric Shortest Path First — routing protocol for FC fabrics</td>
+</tr>
+<tr>
+<td>FLOGI DB</td>
+<td>Records all fabric login events (WWN, FCID, port)</td>
+</tr>
+<tr>
+<td>Zoning</td>
+<td>Controls which initiators can communicate with which targets</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fabric-login-sequence">Fabric Login Sequence<a class="headerlink" href="#fabric-login-sequence" title="Permanent link">&para;</a></h2>
+<p>When a host HBA connects:
+1. HBA sends <strong>FLOGI</strong> → switch assigns FCID (3-byte address)
+2. HBA sends <strong>PLOGI</strong> to Name Server (0xFFFFFC) → registers WWPN and FCID
+3. HBA queries <strong>GNN_FT / GID_FT</strong> → Name Server returns list of target FCIDs
+4. HBA sends <strong>PLOGI</strong> to each target → establishes session
+5. HBA sends <strong>PRLI</strong> → negotiates SCSI/NVMe service — I/O ready</p>
+<h2 id="key-commands">Key Commands<a class="headerlink" href="#key-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w">    </span><span class="c1"># all devices logged into VSAN 10</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w">           </span><span class="c1"># all FLOGI entries</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>show<span class="w"> </span>fspf<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w">    </span><span class="c1"># fabric shortest path</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w">          </span><span class="c1"># port status</span>
 </code></pre></div>
 
 
