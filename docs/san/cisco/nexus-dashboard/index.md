@@ -8,7 +8,7 @@ Cisco Nexus Dashboard knowledge base covering fabric health, flow telemetry, pol
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, components, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">
