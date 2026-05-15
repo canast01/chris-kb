@@ -1,10 +1,12 @@
 # Nexus Dashboard
 
-Nexus Dashboard operational notes and deep-dive references.
+<div class="kb-summary">
+Cisco Nexus Dashboard unified operations platform — architecture, NDFC/NDI services, fabric health, ACI integration, and operational runbooks.
+</div>
 
 <div class="kb-grid kb-grid-14">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>HA topology, components, connectivity, and sizing.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>
 <a class="kb-card" href="lifecycle/"><strong>Lifecycle</strong><span>Version matrix, upgrade paths, EOL tracking, and refresh planning.</span></a>
 <a class="kb-card" href="operations/"><strong>Operations</strong><span>Daily checks, health monitoring, maintenance tasks, and runbooks.</span></a>
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Command reference by category with syntax and examples.</span></a>

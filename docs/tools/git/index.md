@@ -1,10 +1,14 @@
 # Git
 
+<div class="kb-summary">
+Git knowledge base covering the distributed object model, GitHub Enterprise and GitLab self-managed architecture, branching workflows, authentication, and troubleshooting.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, repository structure, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">

@@ -150,7 +150,7 @@ isi snapshot settings modify --reserve 10    # 10% reservation
 
 ## SyncIQ — Replication-Based Recovery
 
-SyncIQ replicates directory trees to a remote PowerScale cluster. For full details on policy management, monitoring, and failover, see [Components — SyncIQ](../../architecture/components/).
+SyncIQ replicates directory trees to a remote PowerScale cluster. For full details on policy management, monitoring, and failover, see [Architecture — How It Works](../../architecture/how-it-works/).
 
 ### Backup to a Dedicated DR Cluster
 

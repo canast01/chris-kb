@@ -91,7 +91,7 @@ Use port 636 (LDAPS). Configure as described in [Authentication](../authenticati
 
 ### SNMP
 
-Configure SNMPv3 with `authPriv` (SHA authentication, AES-128 privacy) on all managed switches. See [Standards](../../architecture/standards/) for full switch-side SNMP configuration.
+Configure SNMPv3 with `authPriv` (SHA authentication, AES-128 privacy) on all managed switches. See [Design Standards](../../architecture/design-standards/) for full switch-side SNMP configuration.
 
 ---
 

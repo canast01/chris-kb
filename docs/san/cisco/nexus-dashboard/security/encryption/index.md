@@ -60,7 +60,7 @@ NDFC uses SSH (port 22) for all configuration push operations to MDS switches. E
 - RSA keys ≥ 2048-bit: `show crypto key mypubkey rsa` on each MDS
 - NDFC stores switch host keys on first connection; if a switch is replaced, remove the old host key from NDFC: **NDFC > Fabrics > [Fabric] > Edit Switch > Reset Host Key**
 
-SNMP polling uses SNMPv3 with `authPriv` (SHA auth + AES-128 priv). Configure on managed switches per the [Standards](../../architecture/standards/) page.
+SNMP polling uses SNMPv3 with `authPriv` (SHA auth + AES-128 priv). Configure on managed switches per the [Design Standards](../../architecture/design-standards/) page.
 
 ### ND Cluster Internal Communication
 

@@ -1,4 +1,4 @@
-# Jira — Architecture Overview
+# Jira — How It Works
 
 ## Deployment Models
 
@@ -16,8 +16,6 @@ Jira is available in three deployment models, each with distinct architectural c
 ---
 
 ## Data Center Reference Architecture
-
-The following diagram represents a production-grade Jira Data Center deployment with high availability:
 
 ```mermaid
 graph TB
@@ -54,11 +52,6 @@ graph TB
         EH["Ehcache / Hazelcast<br/>(in-process cluster)"]
     end
 
-    subgraph Mon["Monitoring"]
-        PROM["Prometheus + Grafana"]
-        ELK["ELK Stack (logs)"]
-    end
-
     B --> HAP
     API --> HAP
     HAP -->|sticky session| N1
@@ -77,14 +70,6 @@ graph TB
     N1 --> NFS
     N2 --> NFS
     N3 --> NFS
-    N1 -.-> S3
-    N2 -.-> S3
-    N3 -.-> S3
-    N1 -.-> PROM
-    N2 -.-> PROM
-    N3 -.-> PROM
-    PG -.-> ELK
-    N1 -.-> ELK
 ```
 
 ---
@@ -114,8 +99,6 @@ Each Jira node runs an identical instance of the Jira application within a Java 
 | JVM heap | 4 GB | 8–16 GB |
 | JVM metaspace | 512 MB | 1 GB |
 
-JVM options are configured in `setenv.sh` (Linux) or `setenv.bat` (Windows):
-
 ```bash
 # /opt/atlassian/jira/bin/setenv.sh
 JVM_MINIMUM_MEMORY="4096m"
@@ -135,11 +118,7 @@ Jira requires a single shared relational database. Supported engines:
 | Oracle | 19c | Supported, not recommended |
 | SQL Server | 2019, 2022 | Enterprise license required |
 
-The database contains all Jira entities: projects, issues, workflows, users, configurations, and audit logs. File attachments and search indexes are stored separately.
-
 ### Search (OpenSearch / Elasticsearch)
-
-Jira uses an embedded or external search index to power JQL text searches, issue navigator, and board filtering. In Data Center, an external clustered OpenSearch/Elasticsearch deployment is required.
 
 | Parameter | Value |
 |---|---|
@@ -151,13 +130,7 @@ Jira uses an embedded or external search index to power JQL text searches, issue
 
 ### Shared Home (NFS / SMB)
 
-All nodes mount a shared file system at the Jira shared home path (`/var/atlassian/application-data/jira/shared`). This share contains:
-
-- Attachments
-- Avatars
-- Logos
-- Export files
-- Plugin data
+All nodes mount a shared file system at the Jira shared home path (`/var/atlassian/application-data/jira/shared`). This share contains attachments, avatars, logos, export files, and plugin data.
 
 ```
 /var/atlassian/application-data/jira/
@@ -171,7 +144,7 @@ All nodes mount a shared file system at the Jira shared home path (`/var/atlassi
 └── dbconfig.xml          ← Node-local (same content on each)
 ```
 
-NFS mount options (recommended):
+NFS mount options:
 
 ```
 nfs-server:/jira-shared /var/atlassian/application-data/jira/shared \
@@ -180,14 +153,12 @@ nfs-server:/jira-shared /var/atlassian/application-data/jira/shared \
 
 ### Distributed Cache (Hazelcast)
 
-Jira Data Center uses Hazelcast for in-cluster cache invalidation and distributed locking. Communication is peer-to-peer on a dedicated multicast or unicast network.
+Jira Data Center uses Hazelcast for in-cluster cache invalidation and distributed locking.
 
 | Port | Protocol | Purpose |
 |---|---|---|
 | 5701 | TCP | Hazelcast cluster communication |
 | 40001 | TCP | Ehcache replication (legacy) |
-
-Hazelcast is auto-configured; manual configuration is in `cluster.properties`:
 
 ```properties
 # /var/atlassian/application-data/jira/cluster.properties
@@ -197,11 +168,9 @@ jira.shared.home=/var/atlassian/application-data/jira/shared
 
 ---
 
-## Clustering Overview
+## Clustering
 
 ### Node Registration
-
-When a node starts, it registers itself in the `CLUSTERNODEINFO` database table. The cluster heartbeat is written every 30 seconds. A node is considered offline if no heartbeat is recorded for 2 minutes.
 
 ```sql
 -- Check active cluster nodes
@@ -233,10 +202,6 @@ sequenceDiagram
     N1->>N2: Invalidate issue cache [key=PRJ-123]
 ```
 
-### Session Affinity Requirement
-
-Jira stores ephemeral session data locally on the node (e.g., issue draft state, in-progress wizard steps). Without sticky sessions, a user mid-workflow could be routed to a different node that lacks this state, causing errors or data loss.
-
 ---
 
 ## Port Reference
@@ -244,24 +209,19 @@ Jira stores ephemeral session data locally on the node (e.g., issue draft state,
 | Port | Protocol | Component | Direction |
 |---|---|---|---|
 | 443 | TCP | Load Balancer (HTTPS) | Inbound from clients |
-| 80 | TCP | Load Balancer (HTTP redirect) | Inbound from clients |
 | 8080 | TCP | Jira Tomcat | LB → App nodes |
-| 8443 | TCP | Jira Tomcat (SSL) | LB → App nodes |
 | 5432 | TCP | PostgreSQL | App nodes → DB |
 | 9200 | TCP | OpenSearch HTTP | App nodes → Search |
-| 9300 | TCP | OpenSearch Transport | Search cluster internal |
 | 5701 | TCP | Hazelcast | App nodes (internal) |
-| 25 / 587 | TCP | SMTP | App nodes → Mail server |
 | 389 / 636 | TCP | LDAP / LDAPS | App nodes → Directory |
 
 ---
 
 ## Cloud Architecture (Reference)
 
-For Jira Cloud, Atlassian manages all infrastructure on AWS. Key points for administrators:
+For Jira Cloud, Atlassian manages all infrastructure on AWS:
 
-- **No direct DB or file system access** — all operations via REST API or UI
-- **Data residency** configurable for Enterprise plans (EU, US, AUS)
-- **Atlassian Access** required for SAML SSO and enforced MFA
-- **Connect / Forge** app framework replaces Server plugins
-- **Sandbox / Staging** environment available on Premium and Enterprise plans
+- No direct DB or file system access — all operations via REST API or UI
+- Data residency configurable for Enterprise plans (EU, US, AUS)
+- Atlassian Access required for SAML SSO and enforced MFA
+- Connect / Forge app framework replaces Server plugins

@@ -1,6 +1,8 @@
 # CloudIQ
 
-CloudIQ operational notes and deep-dive references.
+<div class="kb-summary">
+Dell CloudIQ cloud-based monitoring platform — architecture, health scoring, capacity forecasting, recommendations, and operational runbooks.
+</div>
 
 <div class="kb-grid kb-grid-2">
 
@@ -39,7 +41,7 @@ CloudIQ operational notes and deep-dive references.
   <span>Security configuration, hardening, and access control.</span>
 </a>
 
-<a class="kb-card" href="standards/">
+<a class="kb-card" href="design-standards/">
   <strong>Standards</strong>
   <span>Configuration standards, naming conventions, and baselines.</span>
 </a>

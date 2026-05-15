@@ -76,7 +76,7 @@ Configure port 636 (LDAPS) rather than 389 (plain LDAP) to encrypt LDAP traffic.
 
 ### SNMP
 
-SNMP v3 with `authPriv` security level encrypts SNMP traffic. Configure SNMPv3 on all managed switches using AES-128 or AES-256 for encryption. See the [Standards](../../architecture/standards/) page for switch-side SNMP configuration.
+SNMP v3 with `authPriv` security level encrypts SNMP traffic. Configure SNMPv3 on all managed switches using AES-128 or AES-256 for encryption. See the [Design Standards](../../architecture/design-standards/) page for switch-side SNMP configuration.
 
 ---
 

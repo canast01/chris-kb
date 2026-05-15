@@ -1,10 +1,14 @@
 # Confluence
 
+<div class="kb-summary">
+Confluence knowledge base covering Data Center cluster architecture, space and page management, authentication, and troubleshooting.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, space structure, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">

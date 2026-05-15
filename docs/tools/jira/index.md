@@ -1,10 +1,14 @@
 # Jira
 
+<div class="kb-summary">
+Jira knowledge base covering Data Center cluster architecture, issue management, workflow configuration, security, and troubleshooting.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>Overview, project structure, integrations, and standards.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">
