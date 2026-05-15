@@ -1,8 +1,26 @@
-# CloudIQ — Architecture Overview
+# CloudIQ — Architecture
 
-Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.
+<div class="kb-summary">
+Cloud-native AIOps SaaS platform hosted by Dell. Receives telemetry from on-premises Dell arrays via the Secure Connect Gateway and produces health scores (0–100), capacity forecasts, and AI-driven recommendations. No on-premises compute required beyond the SCG.
+</div>
 
-## Data Pipeline Topology
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with Dell arrays, Secure Connect Gateway, and REST API.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>SCG redundancy, notification configuration, and API integration practices.</span></a>
+</div>
+
+## Supported Platforms
+
+| Platform | Telemetry Source |
+|---|---|
+| PowerMax / VMAX | Embedded telemetry agent |
+| Unity XT | CloudIQ data collection service |
+| PowerScale (Isilon) | OneFS embedded agent |
+| PowerStore | REST API |
+| PowerFlex (VxFlex OS) | SDC telemetry |
+
+## Data Pipeline
 
 ```mermaid
 graph TB
@@ -18,23 +36,3 @@ graph TB
   class CLOUDIQ,HEALTH,CAP,REC cloud
   class ADMIN host
 ```
-
-## How It Works
-
-1. Each on-premises Dell storage system is registered to an SCG appliance
-2. The SCG polls the registered systems for telemetry (capacity metrics, performance counters, hardware health) and forwards the data to the Dell CloudIQ back-end over outbound HTTPS (port 443)
-3. CloudIQ ingests the telemetry, applies ML-based health scoring, and generates alerts when scores drop or anomalies are detected
-4. Users access results via the CloudIQ web dashboard or the REST API
-5. Notifications are sent via email or webhook based on configured notification rules
-
-CloudIQ health scores range from 0 to 100. Scores below 80 indicate a condition requiring attention; scores below 60 are typically active hardware or configuration alerts.
-
----
-
-## In this section
-
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
