@@ -21,7 +21,7 @@
     
     
       
-        <title>Jira — Architecture Overview - Chris KB</title>
+        <title>Jira — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Jira — Architecture Overview · Chris KB">
+  <meta property="og:title" content="Jira — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Jira — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="Jira — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#jira-architecture-overview" class="md-skip">
+        <a href="#jira-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Jira — Architecture Overview
+              Jira — Architecture
             
           </span>
         </div>
@@ -1080,176 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-center-reference-architecture" class="md-nav__link">
+  <a href="#data-center-topology" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data Center Reference Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#component-descriptions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Component Descriptions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Component Descriptions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#load-balancer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Load Balancer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#application-nodes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Application Nodes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#database" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Database
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#search-opensearch-elasticsearch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Search (OpenSearch / Elasticsearch)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#shared-home-nfs-smb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Shared Home (NFS / SMB)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#distributed-cache-hazelcast" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Distributed Cache (Hazelcast)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#clustering-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clustering Overview
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Clustering Overview">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#node-registration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Node Registration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cluster-traffic-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cluster Traffic Flow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#session-affinity-requirement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Session Affinity Requirement
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#port-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Port Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cloud-architecture-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud Architecture (Reference)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
+        Data Center Topology
       
     </span>
   </a>
@@ -1276,9 +1110,19 @@
 
 
 
-<h1 id="jira-architecture-overview">Jira — Architecture Overview<a class="headerlink" href="#jira-architecture-overview" title="Permanent link">&para;</a></h1>
+<h1 id="jira-architecture">Jira — Architecture<a class="headerlink" href="#jira-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Jira Data Center runs as an active-active Java cluster backed by a shared PostgreSQL database, shared NFS home, and distributed Hazelcast cache. Load balancer sticky sessions are mandatory.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Deployment models, cluster topology, component roles, and port reference.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
+</div>
+
+<hr />
 <h2 id="deployment-models">Deployment Models<a class="headerlink" href="#deployment-models" title="Permanent link">&para;</a></h2>
-<p>Jira is available in three deployment models, each with distinct architectural characteristics:</p>
 <table>
 <thead>
 <tr>
@@ -1291,7 +1135,7 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Server</strong></td>
+<td>Server (EOL)</td>
 <td>Self-hosted</td>
 <td>Single node</td>
 <td>Full</td>
@@ -1305,7 +1149,7 @@
 <td>Full</td>
 </tr>
 <tr>
-<td><strong>Cloud</strong></td>
+<td>Cloud</td>
 <td>Atlassian-managed</td>
 <td>Managed</td>
 <td>None</td>
@@ -1313,391 +1157,39 @@
 </tr>
 </tbody>
 </table>
-<div class="admonition warning">
-<p class="admonition-title">Server End-of-Life</p>
-<p>Jira Server reached end of support on <strong>15 February 2024</strong>. All on-premises deployments should be on Data Center.</p>
-</div>
 <hr />
-<h2 id="data-center-reference-architecture">Data Center Reference Architecture<a class="headerlink" href="#data-center-reference-architecture" title="Permanent link">&para;</a></h2>
-<p>The following diagram represents a production-grade Jira Data Center deployment with high availability:</p>
+<h2 id="data-center-topology">Data Center Topology<a class="headerlink" href="#data-center-topology" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TB
-    subgraph Users["Users / Clients"]
-        B[Browser]
-        API[API Consumers]
-    end
-
-    subgraph LB["Load Balancer Tier"]
-        HAP["HAProxy / F5 / AWS ALB&lt;br/&gt;(sticky sessions)"]
+    subgraph LB["Load Balancer (sticky sessions)"]
+        HAP["HAProxy / F5 / ALB"]
     end
 
     subgraph App["Application Tier (Active-Active)"]
-        N1["Jira Node 1&lt;br/&gt;jira-app-01"]
-        N2["Jira Node 2&lt;br/&gt;jira-app-02"]
-        N3["Jira Node 3&lt;br/&gt;jira-app-03"]
+        N1["Node 1"]
+        N2["Node 2"]
+        N3["Node 3"]
     end
 
-    subgraph Search["Search Tier"]
-        OS["OpenSearch / Elasticsearch&lt;br/&gt;(clustered, 3 nodes)"]
+    subgraph Data["Data &amp; Cache Tier"]
+        PG[("PostgreSQL")]
+        OS["OpenSearch"]
+        NFS["Shared Home\n(NFS)"]
+        EH["Hazelcast\nCache"]
     end
 
-    subgraph Data["Data Tier"]
-        PG[("PostgreSQL&lt;br/&gt;Primary")]
-        PGR[("PostgreSQL&lt;br/&gt;Read Replica")]
-    end
-
-    subgraph Storage["Shared File Storage"]
-        NFS["NFS / SMB Share&lt;br/&gt;(jira-home shared)"]
-        S3["Object Storage&lt;br/&gt;(attachments, avatars)"]
-    end
-
-    subgraph Cache["Distributed Cache"]
-        EH["Ehcache / Hazelcast&lt;br/&gt;(in-process cluster)"]
-    end
-
-    subgraph Mon["Monitoring"]
-        PROM["Prometheus + Grafana"]
-        ELK["ELK Stack (logs)"]
-    end
-
-    B --&gt; HAP
-    API --&gt; HAP
-    HAP --&gt;|sticky session| N1
-    HAP --&gt;|sticky session| N2
-    HAP --&gt;|sticky session| N3
+    HAP --&gt;|sticky| N1
+    HAP --&gt;|sticky| N2
+    HAP --&gt;|sticky| N3
     N1 &lt;--&gt; EH
     N2 &lt;--&gt; EH
     N3 &lt;--&gt; EH
     N1 --&gt; PG
     N2 --&gt; PG
     N3 --&gt; PG
-    PG --&gt; PGR
     N1 --&gt; OS
-    N2 --&gt; OS
-    N3 --&gt; OS
     N1 --&gt; NFS
     N2 --&gt; NFS
-    N3 --&gt; NFS
-    N1 -.-&gt; S3
-    N2 -.-&gt; S3
-    N3 -.-&gt; S3
-    N1 -.-&gt; PROM
-    N2 -.-&gt; PROM
-    N3 -.-&gt; PROM
-    PG -.-&gt; ELK
-    N1 -.-&gt; ELK</code></pre>
-<hr />
-<h2 id="component-descriptions">Component Descriptions<a class="headerlink" href="#component-descriptions" title="Permanent link">&para;</a></h2>
-<h3 id="load-balancer">Load Balancer<a class="headerlink" href="#load-balancer" title="Permanent link">&para;</a></h3>
-<p>The load balancer is the single ingress point for all Jira traffic. <strong>Sticky sessions (session affinity)</strong> are mandatory for Jira Data Center — a user session must remain on the same node throughout its lifetime.</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Session persistence</td>
-<td>Cookie-based (<code>JSESSIONID</code>)</td>
-</tr>
-<tr>
-<td>Health check endpoint</td>
-<td><code>GET /status</code> → HTTP 200</td>
-</tr>
-<tr>
-<td>Protocol</td>
-<td>HTTPS (TLS termination at LB or pass-through)</td>
-</tr>
-<tr>
-<td>Timeout</td>
-<td>60 s connection, 300 s request</td>
-</tr>
-</tbody>
-</table>
-<h3 id="application-nodes">Application Nodes<a class="headerlink" href="#application-nodes" title="Permanent link">&para;</a></h3>
-<p>Each Jira node runs an identical instance of the Jira application within a Java servlet container (Tomcat). Nodes share no in-process state — all shared state is managed through the database and shared home.</p>
-<table>
-<thead>
-<tr>
-<th>Resource</th>
-<th>Minimum</th>
-<th>Recommended (production)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vCPU</td>
-<td>8</td>
-<td>16</td>
-</tr>
-<tr>
-<td>RAM</td>
-<td>16 GB</td>
-<td>32 GB</td>
-</tr>
-<tr>
-<td>OS disk</td>
-<td>50 GB SSD</td>
-<td>100 GB SSD</td>
-</tr>
-<tr>
-<td>JVM heap</td>
-<td>4 GB</td>
-<td>8–16 GB</td>
-</tr>
-<tr>
-<td>JVM metaspace</td>
-<td>512 MB</td>
-<td>1 GB</td>
-</tr>
-</tbody>
-</table>
-<p>JVM options are configured in <code>setenv.sh</code> (Linux) or <code>setenv.bat</code> (Windows):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># /opt/atlassian/jira/bin/setenv.sh</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">JVM_MINIMUM_MEMORY</span><span class="o">=</span><span class="s2">&quot;4096m&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">JVM_MAXIMUM_MEMORY</span><span class="o">=</span><span class="s2">&quot;16384m&quot;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">JVM_SUPPORT_RECOMMENDED_ARGS</span><span class="o">=</span><span class="s2">&quot;-XX:+UseG1GC -XX:MaxGCPauseMillis=200 \</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s2">  -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled&quot;</span>
-</code></pre></div>
-<h3 id="database">Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h3>
-<p>Jira requires a single shared relational database. Supported engines:</p>
-<table>
-<thead>
-<tr>
-<th>Engine</th>
-<th>Supported Versions</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PostgreSQL</td>
-<td>14, 15, 16</td>
-<td>Recommended for new deployments</td>
-</tr>
-<tr>
-<td>MySQL</td>
-<td>8.0</td>
-<td>Requires specific JDBC config</td>
-</tr>
-<tr>
-<td>Oracle</td>
-<td>19c</td>
-<td>Supported, not recommended</td>
-</tr>
-<tr>
-<td>SQL Server</td>
-<td>2019, 2022</td>
-<td>Enterprise license required</td>
-</tr>
-</tbody>
-</table>
-<p>The database contains all Jira entities: projects, issues, workflows, users, configurations, and audit logs. File attachments and search indexes are stored separately.</p>
-<h3 id="search-opensearch-elasticsearch">Search (OpenSearch / Elasticsearch)<a class="headerlink" href="#search-opensearch-elasticsearch" title="Permanent link">&para;</a></h3>
-<p>Jira uses an embedded or external search index to power JQL text searches, issue navigator, and board filtering. In Data Center, an external clustered OpenSearch/Elasticsearch deployment is required.</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Recommended version</td>
-<td>OpenSearch 2.x / Elasticsearch 7.x</td>
-</tr>
-<tr>
-<td>Heap per node</td>
-<td>8–16 GB</td>
-</tr>
-<tr>
-<td>Minimum nodes</td>
-<td>3 (quorum)</td>
-</tr>
-<tr>
-<td>Replication factor</td>
-<td>1</td>
-</tr>
-<tr>
-<td>Index rebuild trigger</td>
-<td>Manual or after restore</td>
-</tr>
-</tbody>
-</table>
-<h3 id="shared-home-nfs-smb">Shared Home (NFS / SMB)<a class="headerlink" href="#shared-home-nfs-smb" title="Permanent link">&para;</a></h3>
-<p>All nodes mount a shared file system at the Jira shared home path (<code>/var/atlassian/application-data/jira/shared</code>). This share contains:</p>
-<ul>
-<li>Attachments</li>
-<li>Avatars</li>
-<li>Logos</li>
-<li>Export files</li>
-<li>Plugin data</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/var/atlassian/application-data/jira/
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── shared/               ← NFS/SMB mount (all nodes)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ├── attachments/
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   ├── avatars/
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ├── export/
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └── plugins/
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>├── log/                  ← Node-local
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>├── tmp/                  ← Node-local
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>└── dbconfig.xml          ← Node-local (same content on each)
-</code></pre></div>
-<p>NFS mount options (recommended):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nfs-server:/jira-shared /var/atlassian/application-data/jira/shared \
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  nfs4 rw,sync,hard,intr,noatime,rsize=131072,wsize=131072 0 0
-</code></pre></div>
-<h3 id="distributed-cache-hazelcast">Distributed Cache (Hazelcast)<a class="headerlink" href="#distributed-cache-hazelcast" title="Permanent link">&para;</a></h3>
-<p>Jira Data Center uses Hazelcast for in-cluster cache invalidation and distributed locking. Communication is peer-to-peer on a dedicated multicast or unicast network.</p>
-<table>
-<thead>
-<tr>
-<th>Port</th>
-<th>Protocol</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>5701</td>
-<td>TCP</td>
-<td>Hazelcast cluster communication</td>
-</tr>
-<tr>
-<td>40001</td>
-<td>TCP</td>
-<td>Ehcache replication (legacy)</td>
-</tr>
-</tbody>
-</table>
-<p>Hazelcast is auto-configured; manual configuration is in <code>cluster.properties</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /var/atlassian/application-data/jira/cluster.properties</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">jira.node.id</span><span class="o">=</span><span class="s">jira-app-01</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="na">jira.shared.home</span><span class="o">=</span><span class="s">/var/atlassian/application-data/jira/shared</span>
-</code></pre></div>
-<hr />
-<h2 id="clustering-overview">Clustering Overview<a class="headerlink" href="#clustering-overview" title="Permanent link">&para;</a></h2>
-<h3 id="node-registration">Node Registration<a class="headerlink" href="#node-registration" title="Permanent link">&para;</a></h3>
-<p>When a node starts, it registers itself in the <code>CLUSTERNODEINFO</code> database table. The cluster heartbeat is written every 30 seconds. A node is considered offline if no heartbeat is recorded for 2 minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Check active cluster nodes</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">node_id</span><span class="p">,</span><span class="w"> </span><span class="n">node_name</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">last_heartbeat</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">clusternodeinfo</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">last_heartbeat</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
-</code></pre></div>
-<h3 id="cluster-traffic-flow">Cluster Traffic Flow<a class="headerlink" href="#cluster-traffic-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-    participant U as User Browser
-    participant LB as Load Balancer
-    participant N1 as Node 1
-    participant N2 as Node 2
-    participant DB as PostgreSQL
-    participant FS as Shared Home
-
-    U-&gt;&gt;LB: HTTPS request (create issue)
-    LB-&gt;&gt;N1: Route (sticky session)
-    N1-&gt;&gt;DB: INSERT into jiraissue
-    DB--&gt;&gt;N1: Commit OK
-    N1-&gt;&gt;FS: Write attachment
-    N1--&gt;&gt;LB: HTTP 200
-    LB--&gt;&gt;U: Response
-
-    Note over N1,N2: Cache invalidation via Hazelcast
-    N1-&gt;&gt;N2: Invalidate issue cache [key=PRJ-123]</code></pre>
-<h3 id="session-affinity-requirement">Session Affinity Requirement<a class="headerlink" href="#session-affinity-requirement" title="Permanent link">&para;</a></h3>
-<p>Jira stores ephemeral session data locally on the node (e.g., issue draft state, in-progress wizard steps). Without sticky sessions, a user mid-workflow could be routed to a different node that lacks this state, causing errors or data loss.</p>
-<hr />
-<h2 id="port-reference">Port Reference<a class="headerlink" href="#port-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Port</th>
-<th>Protocol</th>
-<th>Component</th>
-<th>Direction</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>443</td>
-<td>TCP</td>
-<td>Load Balancer (HTTPS)</td>
-<td>Inbound from clients</td>
-</tr>
-<tr>
-<td>80</td>
-<td>TCP</td>
-<td>Load Balancer (HTTP redirect)</td>
-<td>Inbound from clients</td>
-</tr>
-<tr>
-<td>8080</td>
-<td>TCP</td>
-<td>Jira Tomcat</td>
-<td>LB → App nodes</td>
-</tr>
-<tr>
-<td>8443</td>
-<td>TCP</td>
-<td>Jira Tomcat (SSL)</td>
-<td>LB → App nodes</td>
-</tr>
-<tr>
-<td>5432</td>
-<td>TCP</td>
-<td>PostgreSQL</td>
-<td>App nodes → DB</td>
-</tr>
-<tr>
-<td>9200</td>
-<td>TCP</td>
-<td>OpenSearch HTTP</td>
-<td>App nodes → Search</td>
-</tr>
-<tr>
-<td>9300</td>
-<td>TCP</td>
-<td>OpenSearch Transport</td>
-<td>Search cluster internal</td>
-</tr>
-<tr>
-<td>5701</td>
-<td>TCP</td>
-<td>Hazelcast</td>
-<td>App nodes (internal)</td>
-</tr>
-<tr>
-<td>25 / 587</td>
-<td>TCP</td>
-<td>SMTP</td>
-<td>App nodes → Mail server</td>
-</tr>
-<tr>
-<td>389 / 636</td>
-<td>TCP</td>
-<td>LDAP / LDAPS</td>
-<td>App nodes → Directory</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="cloud-architecture-reference">Cloud Architecture (Reference)<a class="headerlink" href="#cloud-architecture-reference" title="Permanent link">&para;</a></h2>
-<p>For Jira Cloud, Atlassian manages all infrastructure on AWS. Key points for administrators:</p>
-<ul>
-<li><strong>No direct DB or file system access</strong> — all operations via REST API or UI</li>
-<li><strong>Data residency</strong> configurable for Enterprise plans (EU, US, AUS)</li>
-<li><strong>Atlassian Access</strong> required for SAML SSO and enforced MFA</li>
-<li><strong>Connect / Forge</strong> app framework replaces Server plugins</li>
-<li><strong>Sandbox / Staging</strong> environment available on Premium and Enterprise plans</li>
-</ul>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
+    N3 --&gt; NFS</code></pre>
 
 
 
