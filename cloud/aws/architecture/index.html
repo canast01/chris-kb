@@ -21,7 +21,7 @@
     
     
       
-        <title>AWS — Architecture Overview - Chris KB</title>
+        <title>AWS — Architecture - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="AWS — Architecture Overview · Chris KB">
+  <meta property="og:title" content="AWS — Architecture · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="AWS — Architecture Overview · Chris KB">
+  <meta name="twitter:title" content="AWS — Architecture · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#aws-architecture-overview" class="md-skip">
+        <a href="#aws-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              AWS — Architecture Overview
+              AWS — Architecture
             
           </span>
         </div>
@@ -1069,98 +1069,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#service-domains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Domains
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#account-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
         Account Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compute" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compute
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#high-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Availability
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disaster-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disaster Recovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ec2-launch-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EC2 Launch Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#iam-assume-role-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IAM Assume-Role Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#iam-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IAM Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-this-section" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In this section
       
     </span>
   </a>
@@ -1187,13 +1110,53 @@
 
 
 
-<h1 id="aws-architecture-overview">AWS — Architecture Overview<a class="headerlink" href="#aws-architecture-overview" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>Part of the <a href="../">Architecture</a> section.</p>
-</blockquote>
-<hr />
+<h1 id="aws-architecture">AWS — Architecture<a class="headerlink" href="#aws-architecture" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Identity Center SSO, and Transit Gateway hub-and-spoke networking. All production workloads run in dedicated member accounts; no workloads in the management account.
+</div>
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
+<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with on-premises, identity providers, and monitoring tools.</span></a>
+<a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Account structure standards, tagging, naming, and security guardrails.</span></a>
+</div>
+
+<h2 id="service-domains">Service Domains<a class="headerlink" href="#service-domains" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Key Services</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Networking</td>
+<td>VPC, Transit Gateway, Direct Connect, Route 53, ALB/NLB, CloudFront</td>
+</tr>
+<tr>
+<td>Compute</td>
+<td>EC2, Auto Scaling, EKS, ECS/Fargate, Lambda</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>S3, EBS, EFS, FSx for Windows, FSx for ONTAP</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>RDS, Aurora, DynamoDB, ElastiCache</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>IAM, KMS, Secrets Manager, WAF, GuardDuty, Security Hub</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>CloudWatch, CloudTrail, AWS Config, Systems Manager, CloudFormation</td>
+</tr>
+</tbody>
+</table>
 <h2 id="account-structure">Account Structure<a class="headerlink" href="#account-structure" title="Permanent link">&para;</a></h2>
-<p>AWS Organizations with a management account at the root; all production workloads in member accounts:</p>
 <pre class="mermaid"><code>graph TB
   ORG["AWS Organization\n(management account)"] --&gt; LOG["Log Archive Account"]
   ORG --&gt; AUDIT["Audit / Security Account"]
@@ -1209,136 +1172,6 @@
   class ORG,LOG,AUDIT,PROD ctrl
   class VPC,PUB,PRIV net
   class IGW,TGW cloud</code></pre>
-<ul>
-<li>Management account hosts no workloads — only SCPs and consolidated billing</li>
-<li>SCPs enforce guardrails: deny root access, enforce encryption, restrict regions to approved list</li>
-</ul>
-<h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
-<p>Hub-and-spoke via Transit Gateway:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>On-Premises ←→ Direct Connect ←→ Transit Gateway
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                                        │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>              ┌─────────────────────────┼─────────────────────────┐
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>              ▼                         ▼                         ▼
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>      Shared Services VPC         Production VPC            Dev/Staging VPC
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>      (10.0.0.0/16)               (10.1.0.0/16)             (10.2.0.0/16)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>      ├── Public Subnet           ├── Public Subnet (ALB)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>      ├── Private Subnet          ├── Private Subnet (EC2, RDS)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>      └── Isolated Subnet         └── Isolated Subnet (DB, no internet)
-</code></pre></div>
-<p>Subnet tiers per VPC:
-- <strong>Public</strong>: ALB, NAT Gateway — no EC2 instances
-- <strong>Private</strong>: EC2, ECS, Lambda — internet via NAT Gateway
-- <strong>Isolated</strong>: RDS, ElastiCache — no internet access</p>
-<h2 id="compute">Compute<a class="headerlink" href="#compute" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>EC2 (Auto Scaling Groups)</td>
-<td>Stateful apps, legacy workloads</td>
-</tr>
-<tr>
-<td>ECS (Fargate)</td>
-<td>Containerised microservices</td>
-</tr>
-<tr>
-<td>Lambda</td>
-<td>Event-driven functions, short-lived tasks</td>
-</tr>
-<tr>
-<td>EKS</td>
-<td>Kubernetes workloads requiring fine-grained node control</td>
-</tr>
-</tbody>
-</table>
-<h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
-<ul>
-<li>All stateful services deployed Multi-AZ: RDS, ElastiCache, EFS, ELB</li>
-<li>EC2 in Auto Scaling Groups spanning ≥ 2 AZs</li>
-<li>ALB with target group health checks; unhealthy instances replaced automatically</li>
-</ul>
-<h2 id="disaster-recovery">Disaster Recovery<a class="headerlink" href="#disaster-recovery" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Pattern</th>
-<th>Services</th>
-<th>RPO / RTO</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cross-region S3 replication</td>
-<td>S3 CRR</td>
-<td>Near-zero RPO</td>
-</tr>
-<tr>
-<td>RDS automated backups</td>
-<td>RDS automated backup to secondary region</td>
-<td>&lt; 1 hour RPO</td>
-</tr>
-<tr>
-<td>Route 53 health-check failover</td>
-<td>Route 53 + secondary ALB</td>
-<td>&lt; 5 minutes RTO</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ec2-launch-flow">EC2 Launch Flow<a class="headerlink" href="#ec2-launch-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    request["Launch Request\nConsole / CLI / ASG"]
-    iamCheck["IAM Authorization\niam:RunInstances check"]
-    amiSelect["AMI Selection\nAMI ID + EBS snapshot"]
-    networkPlace["Network Placement\nVPC · Subnet · AZ"]
-    sgApply["Security Group\napply inbound/outbound rules"]
-    instanceProfile["Instance Profile\nIAM role attached"]
-    userData["User Data\ncloud-init / bootstrap"]
-    running["Instance Running\nEC2 metadata available"]
-
-    request --&gt; iamCheck --&gt; amiSelect --&gt; networkPlace --&gt; sgApply --&gt; instanceProfile --&gt; userData --&gt; running</code></pre>
-<h2 id="iam-assume-role-sequence">IAM Assume-Role Sequence<a class="headerlink" href="#iam-assume-role-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant principal as Principal\n(user / service / CI-CD)
-    participant sts as AWS STS
-    participant iam as IAM Policy Engine
-    participant resource as AWS Resource\n(S3 / EC2 / RDS)
-
-    principal-&gt;&gt;sts: AssumeRole (RoleArn, ExternalId)
-    sts-&gt;&gt;iam: Evaluate trust policy on role
-    iam--&gt;&gt;sts: Trust policy allows principal?
-    sts--&gt;&gt;principal: Temporary credentials\n(AccessKey + SecretKey + SessionToken)
-    principal-&gt;&gt;resource: API call with temporary credentials
-    resource-&gt;&gt;iam: Evaluate identity + resource policies
-    iam--&gt;&gt;resource: Allow / Deny decision
-    resource--&gt;&gt;principal: Response</code></pre>
-<h2 id="iam-structure">IAM Structure<a class="headerlink" href="#iam-structure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>AWS Organizations SCPs (guardrails — deny dangerous actions globally)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ▼
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>IAM Identity Center (SSO) — maps AD groups to permission sets
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    ▼
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>IAM Roles (assumed by EC2, Lambda, ECS, CI/CD pipelines)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>No long-lived IAM user access keys in production
-</code></pre></div>
-<ul>
-<li>Humans: IAM Identity Center (SSO) — no direct IAM users</li>
-<li>Machines: IAM Roles with instance profiles or OIDC federation</li>
-<li>Emergency: break-glass IAM user in management account; credentials in CyberArk</li>
-</ul>
-<hr />
-<h2 id="in-this-section">In this section<a class="headerlink" href="#in-this-section" title="Permanent link">&para;</a></h2>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="components/"><strong>Components</strong><span>Core components, services, and technical specifications.</span></a>
-<a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and external systems.</span></a>
-<a class="kb-card" href="standards/"><strong>Standards</strong><span>Sizing guidelines, design standards, and best practices.</span></a>
-</div>
 
 
 
