@@ -1062,6 +1062,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#account-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Account Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-account-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Account Protection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iam-password-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Password Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudtrail-multi-region-with-cloudwatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudTrail — Multi-Region with CloudWatch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardduty-enable-all-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GuardDuty — Enable All Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-hub-enable-and-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Hub — Enable and Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-config-enable-recording" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Config — Enable Recording
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#s3-block-public-access-account-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3 — Block Public Access (Account Level)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-security-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC — Security Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restrict-region-usage-scp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrict Region Usage (SCP)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1199,272 @@
 
 
 <h1 id="aws-hardening">AWS — Hardening<a class="headerlink" href="#aws-hardening" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="account-hardening-checklist">Account Hardening Checklist<a class="headerlink" href="#account-hardening-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>CLI Verification</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Root account — no access keys</td>
+<td><code>aws iam get-account-summary</code> → AccountAccessKeysPresent = 0</td>
+<td>Critical</td>
+</tr>
+<tr>
+<td>Root account — MFA enabled</td>
+<td>Console only; check credential report</td>
+<td>Critical</td>
+</tr>
+<tr>
+<td>IMDSv2 required on all EC2</td>
+<td><code>aws ec2 describe-instance-metadata-options</code></td>
+<td>Critical</td>
+</tr>
+<tr>
+<td>S3 Block Public Access (account level)</td>
+<td><code>aws s3control get-public-access-block --account-id &lt;id&gt;</code></td>
+<td>Critical</td>
+</tr>
+<tr>
+<td>CloudTrail — all regions, S3 + CloudWatch</td>
+<td><code>aws cloudtrail describe-trails</code></td>
+<td>Critical</td>
+</tr>
+<tr>
+<td>GuardDuty enabled</td>
+<td><code>aws guardduty list-detectors</code></td>
+<td>High</td>
+</tr>
+<tr>
+<td>Security Hub enabled</td>
+<td><code>aws securityhub describe-hub</code></td>
+<td>High</td>
+</tr>
+<tr>
+<td>AWS Config enabled</td>
+<td><code>aws configservice describe-configuration-recorders</code></td>
+<td>High</td>
+</tr>
+<tr>
+<td>No users with AdministratorAccess (use roles)</td>
+<td><code>aws iam list-entities-for-policy --policy-arn ...AdministratorAccess</code></td>
+<td>High</td>
+</tr>
+<tr>
+<td>Access key rotation ≤ 90 days</td>
+<td>Credential report</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Password policy — length ≥ 14, complexity, rotation</td>
+<td><code>aws iam get-account-password-policy</code></td>
+<td>High</td>
+</tr>
+<tr>
+<td>VPC Flow Logs enabled</td>
+<td><code>aws ec2 describe-flow-logs</code></td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Default VPC deleted or unused</td>
+<td><code>aws ec2 describe-vpcs --filters Name=isDefault,Values=true</code></td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="root-account-protection">Root Account Protection<a class="headerlink" href="#root-account-protection" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check root account has no access keys</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-account-summary<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SummaryMap.[AccountAccessKeysPresent,AccountMFAEnabled]&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Expected: AccountAccessKeysPresent=0, AccountMFAEnabled=1</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># MFA for root must be enabled via Console — cannot be set via CLI</span>
+</code></pre></div>
+<hr />
+<h2 id="iam-password-policy">IAM Password Policy<a class="headerlink" href="#iam-password-policy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>aws<span class="w"> </span>iam<span class="w"> </span>update-account-password-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--minimum-password-length<span class="w"> </span><span class="m">14</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--require-symbols<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--require-numbers<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--require-uppercase-characters<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--require-lowercase-characters<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--allow-users-to-change-password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--max-password-age<span class="w"> </span><span class="m">90</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--password-reuse-prevention<span class="w"> </span><span class="m">12</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--hard-expiry
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-account-password-policy
+</code></pre></div>
+<hr />
+<h2 id="cloudtrail-multi-region-with-cloudwatch">CloudTrail — Multi-Region with CloudWatch<a class="headerlink" href="#cloudtrail-multi-region-with-cloudwatch" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create S3 bucket for CloudTrail logs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>create-bucket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--bucket<span class="w"> </span>my-org-cloudtrail-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--region<span class="w"> </span>eu-west-1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--create-bucket-configuration<span class="w"> </span><span class="nv">LocationConstraint</span><span class="o">=</span>eu-west-1
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Enable versioning + server-side encryption on the bucket</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-versioning<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--bucket<span class="w"> </span>my-org-cloudtrail-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--versioning-configuration<span class="w"> </span><span class="nv">Status</span><span class="o">=</span>Enabled
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Create multi-region trail</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>create-trail<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--name<span class="w"> </span>org-management-trail<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--s3-bucket-name<span class="w"> </span>my-org-cloudtrail-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--include-global-service-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--is-multi-region-trail<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--enable-log-file-validation<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--cloud-watch-logs-log-group-arn<span class="w"> </span>arn:aws:logs:eu-west-1:&lt;account&gt;:log-group:CloudTrail<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--cloud-watch-logs-role-arn<span class="w"> </span>arn:aws:iam::&lt;account&gt;:role/CloudTrailCloudWatchRole
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>start-logging<span class="w"> </span>--name<span class="w"> </span>org-management-trail
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>get-trail-status<span class="w"> </span>--name<span class="w"> </span>org-management-trail<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[IsLogging,LatestDeliveryTime,LatestCloudWatchLogsDeliveryTime]&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="guardduty-enable-all-features">GuardDuty — Enable All Features<a class="headerlink" href="#guardduty-enable-all-features" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Enable GuardDuty</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">DETECTOR_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>guardduty<span class="w"> </span>create-detector<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--enable<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--finding-publishing-frequency<span class="w"> </span>FIFTEEN_MINUTES<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--features<span class="w"> </span><span class="s1">&#39;[</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    {&quot;Name&quot;:&quot;S3_DATA_EVENTS&quot;,&quot;Status&quot;:&quot;ENABLED&quot;},</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    {&quot;Name&quot;:&quot;EKS_AUDIT_LOGS&quot;,&quot;Status&quot;:&quot;ENABLED&quot;},</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    {&quot;Name&quot;:&quot;MALWARE_PROTECTION&quot;,&quot;Status&quot;:&quot;ENABLED&quot;},</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">    {&quot;Name&quot;:&quot;RDS_LOGIN_EVENTS&quot;,&quot;Status&quot;:&quot;ENABLED&quot;},</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">    {&quot;Name&quot;:&quot;LAMBDA_NETWORK_LOGS&quot;,&quot;Status&quot;:&quot;ENABLED&quot;}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">  ]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DetectorId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Detector ID: </span><span class="nv">$DETECTOR_ID</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Export findings to S3 (for SIEM)</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>aws<span class="w"> </span>guardduty<span class="w"> </span>create-publishing-destination<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--detector-id<span class="w"> </span><span class="nv">$DETECTOR_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--destination-type<span class="w"> </span>S3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--destination-properties<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="nv">DestinationArn</span><span class="o">=</span>arn:aws:s3:::my-security-findings,KmsKeyArn<span class="o">=</span>arn:aws:kms:eu-west-1:&lt;account&gt;:alias/guardduty-cmk
+</code></pre></div>
+<hr />
+<h2 id="security-hub-enable-and-standards">Security Hub — Enable and Standards<a class="headerlink" href="#security-hub-enable-and-standards" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable Security Hub</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>securityhub<span class="w"> </span>enable-security-hub<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--enable-default-standards<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--control-finding-generator<span class="w"> </span>SECURITY_CONTROL
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Enable CIS AWS Foundations Benchmark</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>aws<span class="w"> </span>securityhub<span class="w"> </span>batch-enable-standards<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--standards-subscription-requests<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nv">StandardsArn</span><span class="o">=</span>arn:aws:securityhub:::ruleset/cis-aws-foundations-benchmark/v/1.2.0
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># List failed controls</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>aws<span class="w"> </span>securityhub<span class="w"> </span>get-findings<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">    &quot;ComplianceStatus&quot;: [{&quot;Value&quot;:&quot;FAILED&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;}],</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">    &quot;WorkflowStatus&quot;: [{&quot;Value&quot;:&quot;NEW&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;}],</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">    &quot;SeverityLabel&quot;: [{&quot;Value&quot;:&quot;CRITICAL&quot;,&quot;Comparison&quot;:&quot;EQUALS&quot;}]</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Findings[*].[Title,SeverityLabel,ProductName]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<hr />
+<h2 id="aws-config-enable-recording">AWS Config — Enable Recording<a class="headerlink" href="#aws-config-enable-recording" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create Config recorder</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>configservice<span class="w"> </span>put-configuration-recorder<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--configuration-recorder<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s1">    &quot;name&quot;: &quot;default&quot;,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s1">    &quot;roleARN&quot;: &quot;arn:aws:iam::&lt;account&gt;:role/AWSConfigRole&quot;,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;recordingGroup&quot;: {</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">      &quot;allSupported&quot;: true,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">      &quot;includeGlobalResourceTypes&quot;: true</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">    }</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Create delivery channel</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>aws<span class="w"> </span>configservice<span class="w"> </span>put-delivery-channel<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--delivery-channel<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">    &quot;name&quot;: &quot;default&quot;,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s1">    &quot;s3BucketName&quot;: &quot;my-config-bucket&quot;,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s1">    &quot;configSnapshotDeliveryProperties&quot;: {</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">      &quot;deliveryFrequency&quot;: &quot;TwentyFour_Hours&quot;</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s1">    }</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>aws<span class="w"> </span>configservice<span class="w"> </span>start-configuration-recorder<span class="w"> </span>--configuration-recorder-name<span class="w"> </span>default
+</code></pre></div>
+<hr />
+<h2 id="s3-block-public-access-account-level">S3 — Block Public Access (Account Level)<a class="headerlink" href="#s3-block-public-access-account-level" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>aws<span class="w"> </span>s3control<span class="w"> </span>put-public-access-block<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--account-id<span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--query<span class="w"> </span>Account<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--public-access-block-configuration<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nv">BlockPublicAcls</span><span class="o">=</span>true,IgnorePublicAcls<span class="o">=</span>true,BlockPublicPolicy<span class="o">=</span>true,RestrictPublicBuckets<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Verify</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>aws<span class="w"> </span>s3control<span class="w"> </span>get-public-access-block<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>--account-id<span class="w"> </span><span class="k">$(</span>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--query<span class="w"> </span>Account<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</code></pre></div>
+<hr />
+<h2 id="vpc-security-controls">VPC — Security Controls<a class="headerlink" href="#vpc-security-controls" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Delete default VPC (if not in use — irreversible)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">DEFAULT_VPC</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>isDefault,Values<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Vpcs[0].VpcId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Before deleting, detach/delete IGW and subnets</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-internet-gateways<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s2">&quot;Name=attachment.vpc-id,Values=</span><span class="nv">$DEFAULT_VPC</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InternetGateways[0].InternetGatewayId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>aws<span class="w"> </span>ec2<span class="w"> </span>detach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span><span class="o">{}</span><span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$DEFAULT_VPC</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Then delete subnets, then VPC</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Enable VPC Flow Logs</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-flow-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span>--resource-type<span class="w"> </span>VPC<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span>--resource-ids<span class="w"> </span>vpc-0abc123<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span>--traffic-type<span class="w"> </span>ALL<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>--log-destination-type<span class="w"> </span>cloud-watch-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>--log-group-name<span class="w"> </span>/aws/vpc/flowlogs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span>--deliver-logs-permission-arn<span class="w"> </span>arn:aws:iam::&lt;account&gt;:role/VPCFlowLogsRole
+</code></pre></div>
+<hr />
+<h2 id="restrict-region-usage-scp">Restrict Region Usage (SCP)<a class="headerlink" href="#restrict-region-usage-scp" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DenyUnapprovedRegions&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">      </span><span class="nt">&quot;NotAction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">        </span><span class="s2">&quot;iam:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">        </span><span class="s2">&quot;organizations:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">        </span><span class="s2">&quot;support:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">        </span><span class="s2">&quot;budgets:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">        </span><span class="s2">&quot;account:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">        </span><span class="s2">&quot;sts:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">        </span><span class="s2">&quot;cloudfront:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">        </span><span class="s2">&quot;route53:*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">        </span><span class="s2">&quot;waf::*&quot;</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">        </span><span class="nt">&quot;StringNotEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">          </span><span class="nt">&quot;aws:RequestedRegion&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;eu-west-1&quot;</span><span class="p">,</span><span class="s2">&quot;eu-central-1&quot;</span><span class="p">,</span><span class="s2">&quot;us-east-1&quot;</span><span class="p">]</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="p">}</span>
+</code></pre></div>
+<p>Apply this SCP via AWS Organizations to restrict which regions accounts can operate in.</p>
 
 
 

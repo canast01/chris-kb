@@ -1062,6 +1062,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#iam-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Fundamentals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#least-privilege-policy-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least-Privilege Policy Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iam-role-for-ec2-instance-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Role for EC2 (Instance Profile)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-account-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-Account Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-based-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource-Based Policies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#permission-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Boundary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Simulation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-advisor-identify-unused-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Advisor — Identify Unused Permissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-organizations-scps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Organizations — SCPs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-privilege-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit — Privilege Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1199,237 @@
 
 
 <h1 id="aws-access-control">AWS — Access Control<a class="headerlink" href="#aws-access-control" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="iam-fundamentals">IAM Fundamentals<a class="headerlink" href="#iam-fundamentals" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAM User</td>
+<td>Long-lived identity with access keys or password; avoid for services</td>
+</tr>
+<tr>
+<td>IAM Role</td>
+<td>Temporary credentials via STS; use for EC2, Lambda, ECS, cross-account</td>
+</tr>
+<tr>
+<td>IAM Group</td>
+<td>Collection of users sharing policies; cannot be used as a principal</td>
+</tr>
+<tr>
+<td>IAM Policy</td>
+<td>JSON document defining Allow/Deny on actions/resources</td>
+</tr>
+<tr>
+<td>Permission Boundary</td>
+<td>Max permissions a role/user can ever have, regardless of attached policies</td>
+</tr>
+<tr>
+<td>SCP (Service Control Policy)</td>
+<td>Org-level guardrail — applies to entire accounts, not individual principals</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="least-privilege-policy-design">Least-Privilege Policy Design<a class="headerlink" href="#least-privilege-policy-design" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;S3ReadSpecificBucket&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="s2">&quot;s3:ListBucket&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="p">],</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="s2">&quot;arn:aws:s3:::my-prod-bucket&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="s2">&quot;arn:aws:s3:::my-prod-bucket/*&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="p">]</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="p">}</span>
+</code></pre></div>
+<p>Attach to a role, not a user. Use resource ARNs, not <code>*</code>, wherever possible.</p>
+<hr />
+<h2 id="iam-role-for-ec2-instance-profile">IAM Role for EC2 (Instance Profile)<a class="headerlink" href="#iam-role-for-ec2-instance-profile" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a trust policy for EC2</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>trust-policy.json<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="s">{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s">  &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s">  &quot;Statement&quot;: [</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s">    {</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s">      &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s">      &quot;Principal&quot;: {&quot;Service&quot;: &quot;ec2.amazonaws.com&quot;},</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s">      &quot;Action&quot;: &quot;sts:AssumeRole&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s">    }</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s">  ]</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s">}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s">EOF</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Create the role</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--role-name<span class="w"> </span>ec2-app-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--assume-role-policy-document<span class="w"> </span>file://trust-policy.json
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Attach a policy</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>aws<span class="w"> </span>iam<span class="w"> </span>attach-role-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--role-name<span class="w"> </span>ec2-app-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--policy-arn<span class="w"> </span>arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Create instance profile and link role</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-instance-profile<span class="w"> </span>--instance-profile-name<span class="w"> </span>ec2-app-profile
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>aws<span class="w"> </span>iam<span class="w"> </span>add-role-to-instance-profile<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span>--instance-profile-name<span class="w"> </span>ec2-app-profile<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span>--role-name<span class="w"> </span>ec2-app-role
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1"># Attach to running instance</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-iam-instance-profile<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span>--instance-id<span class="w"> </span>i-0abc123<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span>--iam-instance-profile<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>ec2-app-profile
+</code></pre></div>
+<hr />
+<h2 id="cross-account-access">Cross-Account Access<a class="headerlink" href="#cross-account-access" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># In the target account — create role with trust for source account</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>cross-account-trust.json<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">  &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">  &quot;Statement&quot;: [</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">    {</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">      &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">      &quot;Principal&quot;: {&quot;AWS&quot;: &quot;arn:aws:iam::&lt;source-account-id&gt;:root&quot;},</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">      &quot;Action&quot;: &quot;sts:AssumeRole&quot;,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">      &quot;Condition&quot;: {</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s">        &quot;StringEquals&quot;: {&quot;sts:ExternalId&quot;: &quot;my-external-id&quot;}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">      }</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">    }</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">  ]</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s">}</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s">EOF</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--role-name<span class="w"> </span>CrossAccountReadRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--assume-role-policy-document<span class="w"> </span>file://cross-account-trust.json
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># In the source account — assume the target role</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>aws<span class="w"> </span>sts<span class="w"> </span>assume-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>--role-arn<span class="w"> </span>arn:aws:iam::&lt;target-account&gt;:role/CrossAccountReadRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span>--role-session-name<span class="w"> </span>audit-session<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>--external-id<span class="w"> </span>my-external-id
+</code></pre></div>
+<hr />
+<h2 id="resource-based-policies">Resource-Based Policies<a class="headerlink" href="#resource-based-policies" title="Permanent link">&para;</a></h2>
+<p>For S3, KMS, SQS, Lambda — attached to the resource, not the principal. Grant access without requiring IAM role assumptions.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># S3 bucket policy — allow specific role from another account</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-policy<span class="w"> </span>--bucket<span class="w"> </span>my-bucket<span class="w"> </span>--policy<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s1">  &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s1">  &quot;Statement&quot;: [</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    {</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">      &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      &quot;Principal&quot;: {</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">        &quot;AWS&quot;: &quot;arn:aws:iam::&lt;account-id&gt;:role/DataProcessingRole&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">      },</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">      &quot;Action&quot;: [&quot;s3:GetObject&quot;,&quot;s3:PutObject&quot;],</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">      &quot;Resource&quot;: &quot;arn:aws:s3:::my-bucket/*&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">    }</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">  ]</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">}&#39;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Deny public access to all buckets</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>aws<span class="w"> </span>s3control<span class="w"> </span>put-public-access-block<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--account-id<span class="w"> </span>&lt;account-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--public-access-block-configuration<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="nv">BlockPublicAcls</span><span class="o">=</span>true,IgnorePublicAcls<span class="o">=</span>true,BlockPublicPolicy<span class="o">=</span>true,RestrictPublicBuckets<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+<hr />
+<h2 id="permission-boundary">Permission Boundary<a class="headerlink" href="#permission-boundary" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create boundary policy (max permissions this role can have)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--policy-name<span class="w"> </span>DeveloperBoundary<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--policy-document<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s1">    &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;Statement&quot;: [</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">      {</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">        &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">        &quot;Action&quot;: [&quot;ec2:*&quot;,&quot;s3:*&quot;,&quot;rds:Describe*&quot;,&quot;cloudwatch:*&quot;],</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">        &quot;Resource&quot;: &quot;*&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">      },</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">      {</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">        &quot;Effect&quot;: &quot;Deny&quot;,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">        &quot;Action&quot;: [&quot;iam:*&quot;,&quot;organizations:*&quot;,&quot;account:*&quot;],</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">        &quot;Resource&quot;: &quot;*&quot;</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">      }</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">    ]</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Apply boundary when creating role</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span>--role-name<span class="w"> </span>DeveloperRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span>--assume-role-policy-document<span class="w"> </span>file://trust.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">  </span>--permissions-boundary<span class="w"> </span>arn:aws:iam::&lt;account&gt;:policy/DeveloperBoundary
+</code></pre></div>
+<hr />
+<h2 id="policy-simulation">Policy Simulation<a class="headerlink" href="#policy-simulation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test whether a role can perform specific actions</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>simulate-principal-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--policy-source-arn<span class="w"> </span>arn:aws:iam::&lt;account&gt;:role/DeveloperRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--action-names<span class="w"> </span>s3:PutObject<span class="w"> </span>s3:DeleteObject<span class="w"> </span>ec2:TerminateInstances<span class="w"> </span>iam:CreateUser<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--resource-arns<span class="w"> </span><span class="s2">&quot;arn:aws:s3:::my-bucket/*&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;EvaluationResults[*].[EvalActionName,EvalDecision]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<hr />
+<h2 id="access-advisor-identify-unused-permissions">Access Advisor — Identify Unused Permissions<a class="headerlink" href="#access-advisor-identify-unused-permissions" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Generate access advisor report for a role</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">JOB_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>iam<span class="w"> </span>generate-service-last-accessed-details<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--arn<span class="w"> </span>arn:aws:iam::&lt;account&gt;:role/DeveloperRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;JobId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>sleep<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-service-last-accessed-details<span class="w"> </span>--job-id<span class="w"> </span><span class="nv">$JOB_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;ServicesLastAccessed[?TotalAuthenticatedEntities==`0`].[ServiceName,ServiceNamespace]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Services never accessed — candidates for removal from the policy</span>
+</code></pre></div>
+<hr />
+<h2 id="aws-organizations-scps">AWS Organizations — SCPs<a class="headerlink" href="#aws-organizations-scps" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List SCPs attached to an OU</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws<span class="w"> </span>organizations<span class="w"> </span>list-policies-for-target<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--target-id<span class="w"> </span>ou-xxxx-yyyyyyyy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--filter<span class="w"> </span>SERVICE_CONTROL_POLICY<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Policies[*].[Name,Id,Description]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Common SCP — deny leaving the organization</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Apply at root or management account level:</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># {</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1">#   &quot;Effect&quot;: &quot;Deny&quot;,</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1">#   &quot;Action&quot;: &quot;organizations:LeaveOrganization&quot;,</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1">#   &quot;Resource&quot;: &quot;*&quot;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># }</span>
+</code></pre></div>
+<hr />
+<h2 id="audit-privilege-review">Audit — Privilege Review<a class="headerlink" href="#audit-privilege-review" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Users with AdministratorAccess</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>list-entities-for-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--policy-arn<span class="w"> </span>arn:aws:iam::aws:policy/AdministratorAccess<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[PolicyUsers[*].UserName,PolicyRoles[*].RoleName,PolicyGroups[*].GroupName]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Roles with * on * (broad permissions) — review manually</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>aws<span class="w"> </span>iam<span class="w"> </span>list-roles<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Roles[*].RoleName&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>tr<span class="w"> </span><span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>role<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nv">POLICIES</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>iam<span class="w"> </span>list-attached-role-policies<span class="w"> </span>--role-name<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$role</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">      </span>--query<span class="w"> </span><span class="s1">&#39;AttachedPolicies[*].PolicyArn&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$role</span><span class="s2">: </span><span class="nv">$POLICIES</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="k">done</span>
+</code></pre></div>
 
 
 
