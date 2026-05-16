@@ -21,7 +21,7 @@
     
     
       
-        <title>SRM — Backup Restore - Chris KB</title>
+        <title>SRM — Backup and Restore - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SRM — Backup Restore · Chris KB">
+  <meta property="og:title" content="SRM — Backup and Restore · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SRM — Backup Restore · Chris KB">
+  <meta name="twitter:title" content="SRM — Backup and Restore · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#srm-backup-restore" class="md-skip">
+        <a href="#srm-backup-and-restore" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SRM — Backup Restore
+              SRM — Backup and Restore
             
           </span>
         </div>
@@ -1062,6 +1062,275 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-srm-stores-and-where" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What SRM Stores and Where
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#back-up-vcenter-covers-srm-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Back Up vCenter (Covers SRM Config)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Back Up vCenter (Covers SRM Config)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vcsa-file-based-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VCSA File-Based Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-schedule-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Schedule Recommendation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srm-configuration-export-migration-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Configuration Export (Migration / Documentation)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SRM Configuration Export (Migration / Documentation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#export-via-srm-appliance-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export via SRM Appliance CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-via-srm-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export via SRM REST API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-replication-appliance-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication Appliance Backup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vSphere Replication Appliance Backup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snapshot-based-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot-Based Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ovf-export-for-cold-backups-or-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OVF Export (for cold backups or migration)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vr-vami-config-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VR VAMI Config Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-plan-pdf-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan PDF Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srm-database-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Database Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SRM Database Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#embedded-database-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Embedded Database (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-database-enterprise-deployments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External Database (Enterprise deployments)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srm-appliance-8x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Appliance (8.x+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-group-inventory-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group Inventory Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-srm-after-vcenter-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore SRM After vCenter Restore
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Restore SRM After vCenter Restore">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-restore-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Restore Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srm-appliance-re-deploy-and-re-register" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Appliance Re-Deploy and Re-Register
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-recovery-after-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Recovery After Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1349,309 @@
 
 
 
-<h1 id="srm-backup-restore">SRM — Backup Restore<a class="headerlink" href="#srm-backup-restore" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<h1 id="srm-backup-and-restore">SRM — Backup and Restore<a class="headerlink" href="#srm-backup-and-restore" title="Permanent link">&para;</a></h1>
+<h2 id="what-srm-stores-and-where">What SRM Stores and Where<a class="headerlink" href="#what-srm-stores-and-where" title="Permanent link">&para;</a></h2>
+<p>SRM does not have its own independent database for most critical configuration. Understanding where data lives is essential for backup planning.</p>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Storage Location</th>
+<th>Backup Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recovery Plans</td>
+<td>vCenter database (Postgres, embedded or external)</td>
+<td>vCenter backup</td>
+</tr>
+<tr>
+<td>Protection Group definitions</td>
+<td>vCenter database</td>
+<td>vCenter backup</td>
+</tr>
+<tr>
+<td>Inventory mappings (network, folder, resource)</td>
+<td>vCenter database</td>
+<td>vCenter backup</td>
+</tr>
+<tr>
+<td>IP customization rules</td>
+<td>vCenter database</td>
+<td>vCenter backup</td>
+</tr>
+<tr>
+<td>SRA credentials (array usernames/passwords)</td>
+<td>SRM local config files (encrypted)</td>
+<td>SRM config backup / appliance snapshot</td>
+</tr>
+<tr>
+<td>Site pairing certificate trust</td>
+<td>SRM Server config</td>
+<td>SRM config backup</td>
+</tr>
+<tr>
+<td>SRM Server settings</td>
+<td>SRM Server (appliance or Windows)</td>
+<td>Appliance snapshot / OS backup</td>
+</tr>
+<tr>
+<td>vSphere Replication config (per-VM replication jobs)</td>
+<td>VR Appliance + vCenter</td>
+<td>VR appliance backup</td>
+</tr>
+<tr>
+<td>VR Appliance config</td>
+<td>VR Appliance local</td>
+<td>VR appliance snapshot / OVF export</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key point:</strong> Backing up vCenter covers the majority of SRM's logical configuration. The SRM appliance or Windows server itself holds the certificate trust and SRA credentials — these must be backed up separately.</p>
+<hr />
+<h2 id="back-up-vcenter-covers-srm-config">Back Up vCenter (Covers SRM Config)<a class="headerlink" href="#back-up-vcenter-covers-srm-config" title="Permanent link">&para;</a></h2>
+<h3 id="vcsa-file-based-backup">VCSA File-Based Backup<a class="headerlink" href="#vcsa-file-based-backup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Access VCSA VAMI backup:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># https://&lt;vcenter-fqdn&gt;:5480 → Backup → Backup Now</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Or via API:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.example.com/api/appliance/recovery/backup/job&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$VC_SESSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s1">    &quot;location&quot;: &quot;sftp://backup-server.example.com/vcsa-backups/&quot;,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s1">    &quot;location_user&quot;: &quot;backupuser&quot;,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s1">    &quot;location_password&quot;: &quot;secretpassword&quot;,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s1">    &quot;parts&quot;: [&quot;seat&quot;, &quot;common&quot;],</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">    &quot;comment&quot;: &quot;Daily scheduled backup&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p><strong>Backup parts that include SRM data:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>seat</code></td>
+<td>vCenter inventory service — includes SRM extension data (Protection Groups, Recovery Plans)</td>
+</tr>
+<tr>
+<td><code>common</code></td>
+<td>vCenter Postgres database — core vCenter inventory</td>
+</tr>
+</tbody>
+</table>
+<p>Both <code>seat</code> and <code>common</code> must be included in every vCenter backup for complete SRM recovery.</p>
+<h3 id="backup-schedule-recommendation">Backup Schedule Recommendation<a class="headerlink" href="#backup-schedule-recommendation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Frequency</th>
+<th>Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter VCSA (includes SRM config)</td>
+<td>Daily</td>
+<td>14 days minimum</td>
+</tr>
+<tr>
+<td>SRM appliance snapshot</td>
+<td>Weekly</td>
+<td>2 snapshots</td>
+</tr>
+<tr>
+<td>VR appliance snapshot</td>
+<td>Weekly</td>
+<td>2 snapshots</td>
+</tr>
+<tr>
+<td>Recovery Plan PDF export</td>
+<td>After each change</td>
+<td>Stored in documentation system</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="srm-configuration-export-migration-documentation">SRM Configuration Export (Migration / Documentation)<a class="headerlink" href="#srm-configuration-export-migration-documentation" title="Permanent link">&para;</a></h2>
+<p>SRM provides a config export utility useful when migrating SRM to a new server or documenting current state.</p>
+<h3 id="export-via-srm-appliance-cli">Export via SRM Appliance CLI<a class="headerlink" href="#export-via-srm-appliance-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>root@srm-appliance.example.com
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Run the SRM configuration export tool</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>/usr/lib/vmware-dr/bin/vmware-dr-configure<span class="w"> </span>--action<span class="w"> </span>exportConfig<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--outputFile<span class="w"> </span>/tmp/srm-config-export.xml
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Copy the export off the appliance</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>scp<span class="w"> </span>root@srm-appliance.example.com:/tmp/srm-config-export.xml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>/backup/srm/srm-config-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.xml
+</code></pre></div>
+<p>The exported XML contains:
+- Site pairing information.
+- SRA configuration (array manager entries — credentials are encrypted and may not be re-importable directly).
+- General SRM settings.</p>
+<p>Recovery Plans and Protection Groups are <strong>not</strong> in this export — they live in vCenter DB and are recovered with vCenter.</p>
+<h3 id="export-via-srm-rest-api">Export via SRM REST API<a class="headerlink" href="#export-via-srm-rest-api" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate to get session token</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">SRM_TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://srm-appliance.example.com/api/session&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;VMware1!&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># List Recovery Plans (for documentation)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="s2">&quot;https://srm-appliance.example.com/api/recovery-plans&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$SRM_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>/backup/srm/recovery-plans-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+</code></pre></div>
+<hr />
+<h2 id="vsphere-replication-appliance-backup">vSphere Replication Appliance Backup<a class="headerlink" href="#vsphere-replication-appliance-backup" title="Permanent link">&para;</a></h2>
+<h3 id="snapshot-based-backup">Snapshot-Based Backup<a class="headerlink" href="#snapshot-based-backup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Take a snapshot of the VR appliance via govc (do during low-change-rate window)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>govc<span class="w"> </span>snapshot.create<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;VR-Backup-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;Scheduled VR appliance backup&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># List existing snapshots</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>govc<span class="w"> </span>snapshot.tree<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Remove old snapshots (keep only last 2)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>govc<span class="w"> </span>snapshot.remove<span class="w"> </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="s2">&quot;VR-Backup-20260401&quot;</span>
+</code></pre></div>
+<p><strong>Note:</strong> Do not leave snapshots on the VR Appliance indefinitely. The VR Appliance receives replication data continuously — snapshot growth can fill the datastore.</p>
+<h3 id="ovf-export-for-cold-backups-or-migration">OVF Export (for cold backups or migration)<a class="headerlink" href="#ovf-export-for-cold-backups-or-migration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Power off the VR Appliance (during maintenance window)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>govc<span class="w"> </span>vm.power<span class="w"> </span>-off<span class="w"> </span>vr-appliance-01
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Export to OVF</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>govc<span class="w"> </span>export.ovf<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-vm<span class="w"> </span><span class="s2">&quot;vr-appliance-01&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-o<span class="w"> </span>/backup/vrm/vr-appliance-01-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.ovf
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Power on</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>govc<span class="w"> </span>vm.power<span class="w"> </span>-on<span class="w"> </span>vr-appliance-01
+</code></pre></div>
+<h3 id="vr-vami-config-backup">VR VAMI Config Backup<a class="headerlink" href="#vr-vami-config-backup" title="Permanent link">&para;</a></h3>
+<p>The VAMI provides a configuration export that captures network settings, registration info, and certificates:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>https://&lt;vr-appliance&gt;:5480 → Administration → Backup
+</code></pre></div>
+<p>Download the backup tar file and store with the OVF export.</p>
+<hr />
+<h2 id="recovery-plan-pdf-export">Recovery Plan PDF Export<a class="headerlink" href="#recovery-plan-pdf-export" title="Permanent link">&para;</a></h2>
+<p>SRM can generate a PDF summary of a Recovery Plan from the UI. This is useful for:
+- Change management documentation.
+- Audit evidence.
+- Offline reference during a DR event when vCenter may be unavailable.</p>
+<p>Export path: SRM UI → Recovery Plan → <strong>Export</strong> → Export as PDF</p>
+<p>Contents include:
+- All steps in priority group order.
+- Per-VM IP customization rules.
+- Pre/post power-on commands.
+- Network and resource mappings applied.</p>
+<p>Export after every change to a Recovery Plan and store in your documentation system or DR runbook.</p>
+<hr />
+<h2 id="srm-database-considerations">SRM Database Considerations<a class="headerlink" href="#srm-database-considerations" title="Permanent link">&para;</a></h2>
+<h3 id="embedded-database-default">Embedded Database (Default)<a class="headerlink" href="#embedded-database-default" title="Permanent link">&para;</a></h3>
+<p>SRM Server (Windows, pre-8.x) uses an embedded SQL Server Express database by default.</p>
+<ul>
+<li>Max size: 4 GB (SQL Express limit).</li>
+<li>Suitable for: ≤ 250 protected VMs.</li>
+<li>Location: <code>C:\Program Files\VMware\VMware vCenter Site Recovery Manager\db\</code></li>
+</ul>
+<p>Backup:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Backup SRM embedded database (Windows)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$backupPath</span> <span class="p">=</span> <span class="s2">&quot;C:\SRMBackup\srm-db-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.bak&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Invoke-Sqlcmd</span> <span class="n">-Query</span> <span class="s2">&quot;BACKUP DATABASE [VMware DR] TO DISK = &#39;$backupPath&#39;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="n">-ServerInstance</span> <span class="s2">&quot;localhost\VIMSERVICESRM&quot;</span>
+</code></pre></div>
+<h3 id="external-database-enterprise-deployments">External Database (Enterprise deployments)<a class="headerlink" href="#external-database-enterprise-deployments" title="Permanent link">&para;</a></h3>
+<p>For &gt; 250 VMs, use an external SQL Server or Oracle database. Configure during SRM Server installation.</p>
+<p>Backup is handled by your standard SQL Server backup policy — include the SRM database (<code>VMware DR</code>) in your backup jobs.</p>
+<h3 id="srm-appliance-8x">SRM Appliance (8.x+)<a class="headerlink" href="#srm-appliance-8x" title="Permanent link">&para;</a></h3>
+<p>The SRM appliance uses an embedded vPostgres database. All configuration is stored in vCenter's DB (for Recovery Plans/Protection Groups) and the appliance's local config. The appliance has no separate DB backup procedure — use snapshot + vCenter VCSA backup.</p>
+<hr />
+<h2 id="protection-group-inventory-backup">Protection Group Inventory Backup<a class="headerlink" href="#protection-group-inventory-backup" title="Permanent link">&para;</a></h2>
+<p>Protection Group definitions live in vCenter, but the list of protected VMs and their configuration should also be documented externally for use during recovery when vCenter may be unavailable.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># PowerCLI: Export all Protection Groups and their protected VMs</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Import-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">VimAutomation</span><span class="p">.</span><span class="n">Srm</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nb">Connect-SrmServer</span> <span class="n">-SrmServerAddress</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nv">$srmApi</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">$output</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srmApi</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pgRef</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="nv">$pg</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">GetInfo</span><span class="p">()</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">()</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>        <span class="nv">$output</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>            <span class="n">ProtectionGroup</span> <span class="p">=</span> <span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>            <span class="n">VMName</span>          <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">MoRef</span><span class="p">.</span><span class="n">Value</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>            <span class="n">State</span>           <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">State</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>            <span class="n">PeerState</span>       <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>        <span class="p">}</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    <span class="p">}</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="p">}</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="nv">$output</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Backup\srm-protection-groups-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Exported </span><span class="p">$(</span><span class="nv">$output</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> protected VM entries&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="restore-srm-after-vcenter-restore">Restore SRM After vCenter Restore<a class="headerlink" href="#restore-srm-after-vcenter-restore" title="Permanent link">&para;</a></h2>
+<p>When vCenter is restored from backup, SRM configuration (Recovery Plans, Protection Groups) is restored with it automatically — it lives in the vCenter database.</p>
+<h3 id="post-restore-steps">Post-Restore Steps<a class="headerlink" href="#post-restore-steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Verify site pairing</strong> — if vCenter was restored to a point before pairing, re-pair the sites.</li>
+<li><strong>Re-register SRA</strong> — if SRM Server was also reinstalled, re-add Array Manager entries (credentials must be re-entered manually).</li>
+<li><strong>Verify placeholder VMs</strong> — run a <strong>Configure All</strong> on each Protection Group to ensure placeholder VMs exist at recovery site.</li>
+<li><strong>Verify network mappings</strong> — check that mappings are still valid (recovery site port groups may have changed).</li>
+<li><strong>Run a test failover</strong> — confirm Recovery Plans execute correctly post-restore.</li>
+</ol>
+<h3 id="srm-appliance-re-deploy-and-re-register">SRM Appliance Re-Deploy and Re-Register<a class="headerlink" href="#srm-appliance-re-deploy-and-re-register" title="Permanent link">&para;</a></h3>
+<p>If the SRM appliance itself must be re-deployed (not just restored):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Deploy new SRM OVA</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># 2. During setup wizard, register with vCenter</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># 3. If vCenter still has SRM extension from old appliance, unregister first:</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1">#    vCenter → Administration → Solutions → Client Plugins</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1">#    Remove old SRM plugin entries</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 4. After new registration, re-pair sites:</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1">#    SRM UI → Site Recovery → New Site Pair</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># 5. SRM reads Protection Groups and Recovery Plans from vCenter DB automatically</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1">#    after pairing is established</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># 6. Re-add Array Managers (SRA credentials not recovered from vCenter backup)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># 7. Scan arrays to re-discover replicated devices</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># 8. Run Configure All on all Protection Groups</span>
+</code></pre></div>
+<h3 id="verify-recovery-after-restore">Verify Recovery After Restore<a class="headerlink" href="#verify-recovery-after-restore" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># PowerCLI: Check Protection Group health post-restore</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srmApi</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pgRef</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nv">$pg</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">GetInfo</span><span class="p">()</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;PG: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> | State: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">}</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c"># Check placeholder VMs exist</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$pgRef</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">()</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span> <span class="o">-ne</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;Placeholder issue for VM: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">MoRef</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span><span class="s2"> — PeerState: </span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">PeerState</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="p">}</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">}</span>
+</code></pre></div>
 
 
 

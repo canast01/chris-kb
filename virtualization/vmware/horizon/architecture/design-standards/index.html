@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>Horizon — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="Horizon — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="Horizon — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#horizon-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              Horizon — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,403 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#connection-server-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Server Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection Server Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#per-server-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Server Limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-server-vm-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Server VM Sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ha-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HA Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#desktop-vm-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desktop VM Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Desktop VM Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-sizing-by-persona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Sizing by Persona
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rds-host-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS Host Sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#esxi-host-desktop-density" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Host Desktop Density
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instant-clone-storage-per-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant Clone Storage Per Pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-volumes-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App Volumes Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-clone-pool-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Clone Pool Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vlan-and-network-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN and Network Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VLAN and Network Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-vlan-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended VLAN Segmentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-rules-key-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Rules (key flows)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uag-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UAG Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UAG Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#appliance-size-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Size Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uag-network-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UAG Network Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#app-volumes-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App Volumes Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="App Volumes Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app-volumes-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App Volumes Manager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appstack-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AppStack Design Rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#golden-image-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Golden Image Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Golden Image Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snapshot-naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot Naming Convention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#golden-image-update-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Golden Image Update Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-version-in-golden-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Version in Golden Image
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pod-federation-cloud-pod-architecture-cpa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Federation — Cloud Pod Architecture (CPA)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Naming Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pools-and-farms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pools and Farms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desktop-vm-naming-pattern-instant-clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desktop VM Naming Pattern (Instant Clone)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entitlement-groups-ad-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entitlement Groups (AD Groups)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uag-appliance-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UAG Appliance Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1477,595 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="horizon-design-standards">Horizon — Design Standards<a class="headerlink" href="#horizon-design-standards" title="Permanent link">&para;</a></h1>
+<h2 id="connection-server-sizing">Connection Server Sizing<a class="headerlink" href="#connection-server-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="per-server-limits">Per-Server Limits<a class="headerlink" href="#per-server-limits" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Recommended Limit</th>
+<th>Hard Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Concurrent sessions per Connection Server</td>
+<td>2,000</td>
+<td>4,000 (not recommended)</td>
+</tr>
+<tr>
+<td>Connection Servers per pod</td>
+<td>2 (min HA) – 7 (max)</td>
+<td>7</td>
+</tr>
+<tr>
+<td>vCenter instances per pod</td>
+<td>1 (typical) – 10</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Desktops per pod (Instant Clone)</td>
+<td>10,000</td>
+<td>~15,000</td>
+</tr>
+<tr>
+<td>Pools per pod</td>
+<td>200</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<h3 id="connection-server-vm-sizing">Connection Server VM Sizing<a class="headerlink" href="#connection-server-vm-sizing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Environment Scale</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small (&lt;500 concurrent)</td>
+<td>4</td>
+<td>10 GB</td>
+<td>60 GB</td>
+</tr>
+<tr>
+<td>Medium (500–2000 concurrent)</td>
+<td>8</td>
+<td>16 GB</td>
+<td>60 GB</td>
+</tr>
+<tr>
+<td>Large (2000+ concurrent)</td>
+<td>8–12</td>
+<td>16–24 GB</td>
+<td>60 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Connection Server is CPU-bound at high session counts. Do not over-commit CPU on the ESXi host running Connection Server VMs. Recommend dedicated management cluster.</p>
+<h3 id="ha-requirements">HA Requirements<a class="headerlink" href="#ha-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Minimum 2 Connection Servers</strong> per pod for HA — one can go down without service impact</li>
+<li>All Connection Servers replicate configuration via AD LDS (ADAM) — no shared database required</li>
+<li>Place behind a load balancer or DNS round-robin for client distribution</li>
+<li>Do not place all Connection Servers on the same ESXi host — use anti-affinity rules</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># PowerCLI — create anti-affinity DRS rule for Connection Servers</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;Management-Cluster&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="s2">&quot;cs01&quot;</span><span class="p">,</span><span class="s2">&quot;cs02&quot;</span><span class="p">,</span><span class="s2">&quot;cs03&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">New-DrsRule</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span> <span class="n">-Name</span> <span class="s2">&quot;CS-AntiAffinity&quot;</span> <span class="n">-KeepTogether</span> <span class="nv">$false</span> <span class="n">-VM</span> <span class="nv">$vms</span> <span class="n">-Enabled</span> <span class="nv">$true</span>
+</code></pre></div>
+<hr />
+<h2 id="desktop-vm-sizing">Desktop VM Sizing<a class="headerlink" href="#desktop-vm-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="standard-sizing-by-persona">Standard Sizing by Persona<a class="headerlink" href="#standard-sizing-by-persona" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Typical Use Case</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>OS Disk</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task Worker</td>
+<td>Call center, data entry, browser-only</td>
+<td>2</td>
+<td>4 GB</td>
+<td>60 GB</td>
+<td>High desktop density on ESXi</td>
+</tr>
+<tr>
+<td>Knowledge Worker</td>
+<td>Office apps, email, Teams/Zoom</td>
+<td>2–4</td>
+<td>6–8 GB</td>
+<td>60 GB</td>
+<td>Majority of enterprise VDI</td>
+</tr>
+<tr>
+<td>Power User</td>
+<td>Developer, analyst, multiple monitors</td>
+<td>4–8</td>
+<td>8–16 GB</td>
+<td>80 GB</td>
+<td>May need vGPU</td>
+</tr>
+<tr>
+<td>GPU User</td>
+<td>CAD, 3D, video editing</td>
+<td>4–8</td>
+<td>16–32 GB</td>
+<td>80 GB</td>
+<td>vGPU required (NVIDIA GRID)</td>
+</tr>
+<tr>
+<td>RDS Session</td>
+<td>Shared desktop/published app</td>
+<td>N/A (host-level)</td>
+<td>2 GB/session</td>
+<td>N/A</td>
+<td>Size RDS host, not session</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rds-host-sizing">RDS Host Sizing<a class="headerlink" href="#rds-host-sizing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>RDS Host Size</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Concurrent Sessions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td>8</td>
+<td>32 GB</td>
+<td>20–30</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>16</td>
+<td>64 GB</td>
+<td>40–60</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>32</td>
+<td>128 GB</td>
+<td>80–120</td>
+</tr>
+</tbody>
+</table>
+<p>Actual session density depends heavily on workload. Test with load simulation (LoginVSI or similar) before production sizing.</p>
+<h3 id="esxi-host-desktop-density">ESXi Host Desktop Density<a class="headerlink" href="#esxi-host-desktop-density" title="Permanent link">&para;</a></h3>
+<p>Rule of thumb for Instant Clone pools (no vGPU):</p>
+<table>
+<thead>
+<tr>
+<th>Desktop Persona</th>
+<th>Desktops per ESXi Host (dual-socket, 28–32 physical cores, 384 GB RAM)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task Worker (2 vCPU / 4 GB)</td>
+<td>100–150</td>
+</tr>
+<tr>
+<td>Knowledge Worker (4 vCPU / 8 GB)</td>
+<td>50–80</td>
+</tr>
+<tr>
+<td>Power User (8 vCPU / 16 GB)</td>
+<td>25–40</td>
+</tr>
+</tbody>
+</table>
+<p>Apply a CPU over-commit ratio of 4:1 (vCPU:pCPU) for task workers, 3:1 for knowledge workers. Monitor CPU ready (%) — keep below 5% average.</p>
+<hr />
+<h2 id="storage-sizing">Storage Sizing<a class="headerlink" href="#storage-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="instant-clone-storage-per-pool">Instant Clone Storage Per Pool<a class="headerlink" href="#instant-clone-storage-per-pool" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Size per Desktop</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Golden image OS disk</td>
+<td>40–80 GB</td>
+<td>Shared via replica — one copy per datastore</td>
+</tr>
+<tr>
+<td>Replica VM disk</td>
+<td>= Golden image</td>
+<td>Read-only, shared across all children</td>
+</tr>
+<tr>
+<td>Parent VM disk</td>
+<td>Thin delta above replica</td>
+<td>Small — typically &lt;1 GB</td>
+</tr>
+<tr>
+<td>Child VM OS delta disk</td>
+<td>2–10 GB</td>
+<td>Grows during session; reset on logoff</td>
+</tr>
+<tr>
+<td>Child VM swap/memory</td>
+<td>= Guest RAM</td>
+<td>On same datastore; size accordingly</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Practical formula:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Total datastore capacity = (Replica size × 1) + (N_desktops × avg_delta × 1.25)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Example: 60 GB replica + (200 desktops × 5 GB delta × 1.25) = 60 + 1250 = 1,310 GB per datastore
+</code></pre></div></p>
+<h3 id="app-volumes-storage">App Volumes Storage<a class="headerlink" href="#app-volumes-storage" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Typical Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AppStack (per app package)</td>
+<td>1–10 GB</td>
+</tr>
+<tr>
+<td>Writable Volume (per user)</td>
+<td>10–30 GB</td>
+</tr>
+<tr>
+<td>Total AppStack storage</td>
+<td>(# of AppStacks × avg size) — plan for 20% growth</td>
+</tr>
+<tr>
+<td>Total writable volume storage</td>
+<td>(# of users with WV × WV size)</td>
+</tr>
+</tbody>
+</table>
+<p>Store AppStacks on a datastore accessible to all ESXi hosts in the cluster (shared storage, vSAN, or NFS). Writable volumes require read-write access from the host where the desktop VM runs.</p>
+<h3 id="full-clone-pool-storage">Full Clone Pool Storage<a class="headerlink" href="#full-clone-pool-storage" title="Permanent link">&para;</a></h3>
+<p>Full Clone VMs are independent — no sharing:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Total = N_VMs × (OS_disk + swap + data_disk)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Example: 50 VMs × (80 GB + 8 GB + 0 GB) = 4,400 GB
+</code></pre></div>
+<p>Add 20% headroom for snapshots during maintenance windows.</p>
+<hr />
+<h2 id="vlan-and-network-design">VLAN and Network Design<a class="headerlink" href="#vlan-and-network-design" title="Permanent link">&para;</a></h2>
+<h3 id="recommended-vlan-segmentation">Recommended VLAN Segmentation<a class="headerlink" href="#recommended-vlan-segmentation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>VLAN</th>
+<th>Purpose</th>
+<th>Devices</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VLAN-10 Management</td>
+<td>Horizon management plane</td>
+<td>Connection Servers, App Volumes Manager, DEM file server, vCenter</td>
+</tr>
+<tr>
+<td>VLAN-20 Desktop</td>
+<td>Desktop VM traffic (Blast/PCoIP from internal clients)</td>
+<td>Instant Clone VMs</td>
+</tr>
+<tr>
+<td>VLAN-30 RDS</td>
+<td>RDS farm hosts</td>
+<td>RDS Windows Server VMs</td>
+</tr>
+<tr>
+<td>VLAN-40 DMZ</td>
+<td>External-facing UAG interfaces</td>
+<td>UAG internet-facing NICs</td>
+</tr>
+<tr>
+<td>VLAN-50 UAG Backend</td>
+<td>UAG to Connection Server proxy traffic</td>
+<td>UAG backend NICs</td>
+</tr>
+</tbody>
+</table>
+<h3 id="firewall-rules-key-flows">Firewall Rules (key flows)<a class="headerlink" href="#firewall-rules-key-flows" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Horizon Client (internal)</td>
+<td>Connection Server</td>
+<td>443/TCP</td>
+<td>Horizon broker</td>
+</tr>
+<tr>
+<td>Horizon Client (internal)</td>
+<td>Desktop VM</td>
+<td>8443/TCP+UDP</td>
+<td>Blast Extreme</td>
+</tr>
+<tr>
+<td>Horizon Client (internal)</td>
+<td>Desktop VM</td>
+<td>4172/TCP+UDP</td>
+<td>PCoIP</td>
+</tr>
+<tr>
+<td>External client</td>
+<td>UAG</td>
+<td>443/TCP</td>
+<td>HTTPS + tunnel</td>
+</tr>
+<tr>
+<td>External client</td>
+<td>UAG</td>
+<td>8443/TCP+UDP</td>
+<td>Blast Extreme</td>
+</tr>
+<tr>
+<td>UAG</td>
+<td>Connection Server</td>
+<td>443/TCP</td>
+<td>Broker proxy</td>
+</tr>
+<tr>
+<td>UAG</td>
+<td>Desktop VM</td>
+<td>8443/TCP+UDP</td>
+<td>Blast proxy</td>
+</tr>
+<tr>
+<td>Connection Server</td>
+<td>vCenter</td>
+<td>443/TCP</td>
+<td>vSphere API</td>
+</tr>
+<tr>
+<td>Connection Server</td>
+<td>AD DCs</td>
+<td>389/TCP+UDP, 636/TCP, 88/TCP+UDP, 3268/TCP</td>
+<td>LDAP, Kerberos, GC</td>
+</tr>
+<tr>
+<td>Desktop VM</td>
+<td>App Volumes Mgr</td>
+<td>443/TCP</td>
+<td>AppStack mount</td>
+</tr>
+<tr>
+<td>Desktop VM</td>
+<td>DEM Config Share</td>
+<td>445/TCP</td>
+<td>SMB policy read</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="uag-sizing">UAG Sizing<a class="headerlink" href="#uag-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="appliance-size-options">Appliance Size Options<a class="headerlink" href="#appliance-size-options" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Size</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Max Concurrent Sessions</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small (S)</td>
+<td>2</td>
+<td>4 GB</td>
+<td>1,000</td>
+<td>Development, POC</td>
+</tr>
+<tr>
+<td>Medium (M)</td>
+<td>4</td>
+<td>8 GB</td>
+<td>2,000</td>
+<td>Standard production</td>
+</tr>
+<tr>
+<td>Large (L)</td>
+<td>8</td>
+<td>16 GB</td>
+<td>10,000</td>
+<td>High-density</td>
+</tr>
+</tbody>
+</table>
+<p>For production, deploy <strong>Medium</strong> UAGs minimum. For &gt; 2,000 external concurrent sessions, use Large or deploy multiple UAGs behind a load balancer.</p>
+<h3 id="uag-network-interfaces">UAG Network Interfaces<a class="headerlink" href="#uag-network-interfaces" title="Permanent link">&para;</a></h3>
+<p>UAG supports 1-NIC, 2-NIC, or 3-NIC deployments:</p>
+<table>
+<thead>
+<tr>
+<th>Deployment</th>
+<th>Internet NIC</th>
+<th>Management NIC</th>
+<th>Backend NIC</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-NIC</td>
+<td>Combined</td>
+<td>Combined</td>
+<td>Combined</td>
+<td>POC only</td>
+</tr>
+<tr>
+<td>2-NIC</td>
+<td>Separate</td>
+<td>Combined with backend</td>
+<td>Separate</td>
+<td>Common production</td>
+</tr>
+<tr>
+<td>3-NIC</td>
+<td>Separate</td>
+<td>Separate</td>
+<td>Separate</td>
+<td>Maximum security</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="app-volumes-sizing">App Volumes Sizing<a class="headerlink" href="#app-volumes-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="app-volumes-manager">App Volumes Manager<a class="headerlink" href="#app-volumes-manager" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Sizing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App Volumes Manager VM</td>
+<td>4 vCPU, 8 GB RAM</td>
+</tr>
+<tr>
+<td>SQL Server</td>
+<td>4 vCPU, 16 GB RAM (or SQL Express for &lt;500 desktops)</td>
+</tr>
+<tr>
+<td>AppStack cache on Manager</td>
+<td>4 GB RAM allocated to cache — default</td>
+</tr>
+<tr>
+<td>Writable volume location</td>
+<td>Shared datastore or NFS — must be accessible from all ESXi hosts</td>
+</tr>
+</tbody>
+</table>
+<h3 id="appstack-design-rules">AppStack Design Rules<a class="headerlink" href="#appstack-design-rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li>One AppStack per application or related application suite (not monolithic)</li>
+<li>Maximum AppStack size: technically unlimited, practical limit ~40 GB (larger = slower attach)</li>
+<li>Maximum AppStacks assigned per user: 10 (practical limit — more degrades logon time)</li>
+<li>Test AppStack attach time at scale: target &lt; 10 seconds per AppStack</li>
+</ul>
+<hr />
+<h2 id="golden-image-management">Golden Image Management<a class="headerlink" href="#golden-image-management" title="Permanent link">&para;</a></h2>
+<h3 id="snapshot-naming-convention">Snapshot Naming Convention<a class="headerlink" href="#snapshot-naming-convention" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&lt;OS&gt;-&lt;BaseVersion&gt;-&lt;PatchDate&gt;-&lt;Status&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Examples:
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Win11-23H2-20240312-TESTED
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Win11-23H2-20240312-PUBLISHED
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Win10-22H2-20240115-DEPRECATED
+</code></pre></div>
+<h3 id="golden-image-update-process">Golden Image Update Process<a class="headerlink" href="#golden-image-update-process" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Power on golden image VM (do not publish during update)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Apply Windows updates, agent updates, application changes
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Run internal test checklist (logon, app launch, App Volumes attach)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>4. Shut down VM cleanly (do not snapshot while powered on)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>5. Take snapshot with naming convention above (status: TESTED)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>6. Publish snapshot to Instant Clone pool (Horizon Admin &gt; Pool &gt; Maintain &gt; Push Image)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>7. Set maintenance window: &quot;Scheduled&quot; (desktops refresh on next logoff) or &quot;Force immediately&quot;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>8. Verify first wave of refreshed desktops — check error rate in pool
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>9. Update snapshot status to PUBLISHED after verification
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>10. Remove old DEPRECATED snapshots (&gt; 3 months old) to free datastore space
+</code></pre></div>
+<h3 id="agent-version-in-golden-image">Agent Version in Golden Image<a class="headerlink" href="#agent-version-in-golden-image" title="Permanent link">&para;</a></h3>
+<p>Keep Horizon Agent version within one minor version of Connection Server. Never run an older Connection Server with a newer Agent — unsupported. Check compatibility matrix before any update:</p>
+<p><a href="https://interopmatrix.vmware.com/">VMware Product Interoperability Matrix</a></p>
+<hr />
+<h2 id="pod-federation-cloud-pod-architecture-cpa">Pod Federation — Cloud Pod Architecture (CPA)<a class="headerlink" href="#pod-federation-cloud-pod-architecture-cpa" title="Permanent link">&para;</a></h2>
+<p>CPA links multiple Horizon pods (at the same or different sites) into a single Global Entitlement. Users see one pool regardless of which site their desktop is provisioned from.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pods per CPA federation</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Sites per CPA federation</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Desktops per federation</td>
+<td>50,000</td>
+</tr>
+<tr>
+<td>Global entitlements per federation</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to use CPA:</strong>
+- Multi-site deployments where users need failover between sites
+- Environments exceeding single-pod limits
+- Providing a unified namespace across geographically distributed VDI</p>
+<p><strong>CPA is not a replication technology</strong> — it does not replicate VMs between sites. Each pod has its own VMs; CPA brokers the user to the appropriate pod.</p>
+<hr />
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<h3 id="pools-and-farms">Pools and Farms<a class="headerlink" href="#pools-and-farms" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Format: &lt;SITE&gt;-&lt;PERSONA&gt;-&lt;OS&gt;-&lt;TYPE&gt;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Examples:
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  LON-KW-W11-IC        London, Knowledge Worker, Win11, Instant Clone
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  NYC-TW-W11-IC        New York, Task Worker, Win11, Instant Clone
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  LON-RDS-APPS         London, RDS Published Apps Farm
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  LON-PW-W11-FC        London, Power User, Win11, Full Clone
+</code></pre></div>
+<h3 id="desktop-vm-naming-pattern-instant-clone">Desktop VM Naming Pattern (Instant Clone)<a class="headerlink" href="#desktop-vm-naming-pattern-instant-clone" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Format: &lt;SITE&gt;-&lt;PERSONA&gt;-{n:fixed=3}
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Examples:
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  LON-KW-{n:fixed=3}   → LON-KW-001, LON-KW-002, ..., LON-KW-200
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  NYC-TW-{n:fixed=3}   → NYC-TW-001, NYC-TW-002
+</code></pre></div>
+<h3 id="entitlement-groups-ad-groups">Entitlement Groups (AD Groups)<a class="headerlink" href="#entitlement-groups-ad-groups" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Format: VDI-&lt;PoolName&gt;-Users
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Examples:
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  VDI-LON-KW-W11-IC-Users
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  VDI-NYC-TW-W11-IC-Users
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  VDI-LON-RDS-APPS-Users
+</code></pre></div>
+<h3 id="uag-appliance-names">UAG Appliance Names<a class="headerlink" href="#uag-appliance-names" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Format: uag-&lt;site&gt;-&lt;index&gt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Examples:
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  uag-lon-01, uag-lon-02
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  uag-nyc-01
+</code></pre></div>
 
 
 

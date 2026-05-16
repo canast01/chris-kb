@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>Tanzu — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="Tanzu — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="Tanzu — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#tanzu-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              Tanzu — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,342 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supervisor-cluster-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supervisor Cluster Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tkg-workload-cluster-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TKG Workload Cluster Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TKG Workload Cluster Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-sizing-reference-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Sizing Reference Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vm-classes-vsphere-with-tanzu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Classes (vSphere with Tanzu)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sizing-by-workload-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing by Workload Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#namespace-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Namespace Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#namespace-isolation-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace Isolation Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-namespace-resource-quota-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Namespace Resource Quota Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-cidr-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network CIDR Planning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network CIDR Planning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-cidr-ranges-per-supervisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required CIDR Ranges per Supervisor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tkg-standalone-cluster-cidr-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TKG Standalone Cluster CIDR Planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-policy-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Policy Mapping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Policy Mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-storage-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Storage Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-policy-selection-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Policy Selection Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#harbor-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Harbor Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Harbor Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#harbor-ova-deployment-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Harbor OVA Deployment Sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#harbor-ha-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Harbor HA Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#harbor-configuration-for-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Harbor Configuration for Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-registry-trust-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image Registry Trust Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image Registry Trust Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-custom-ca-to-tkg-clusters-tkg-standalone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Custom CA to TKG Clusters (TKG standalone)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-custom-ca-post-deployment-via-trustanchor-or-machineconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Custom CA Post-Deployment (via TrustAnchor or machineconfig)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-templates-dev-vs-prod-plan-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Templates: Dev vs Prod Plan Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#taints-and-node-pools-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Taints and Node Pools Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Taints and Node Pools Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-pool-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Pool Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workload-scheduling-to-node-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workload Scheduling to Node Pools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anti-affinity-for-control-plane-vms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Affinity for Control Plane VMs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1416,737 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="tanzu-design-standards">Tanzu — Design Standards<a class="headerlink" href="#tanzu-design-standards" title="Permanent link">&para;</a></h1>
+<h2 id="supervisor-cluster-sizing">Supervisor Cluster Sizing<a class="headerlink" href="#supervisor-cluster-sizing" title="Permanent link">&para;</a></h2>
+<p>The Supervisor control plane consists of exactly 3 VMs — this is fixed and cannot be changed post-deployment. vSphere selects the VM sizing based on the <code>size_hint</code> set during Workload Management enablement.</p>
+<table>
+<thead>
+<tr>
+<th>Size Hint</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Disk</th>
+<th>Max ESXi Hosts</th>
+<th>Max Namespaces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tiny</td>
+<td>2</td>
+<td>8 GB</td>
+<td>30 GB</td>
+<td>10</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Small</td>
+<td>4</td>
+<td>16 GB</td>
+<td>30 GB</td>
+<td>50</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>8</td>
+<td>16 GB</td>
+<td>30 GB</td>
+<td>200</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>16</td>
+<td>32 GB</td>
+<td>30 GB</td>
+<td>500</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decision guideline:</strong>
+- Lab/PoC: Tiny or Small
+- Production &lt; 50 nodes: Small or Medium
+- Production enterprise: Medium (recommended default) or Large if exceeding 200 ESXi hosts</p>
+<p>The Supervisor control plane VMs are placed by vSphere anti-affinity rules across 3 different ESXi hosts automatically.</p>
+<hr />
+<h2 id="tkg-workload-cluster-sizing">TKG Workload Cluster Sizing<a class="headerlink" href="#tkg-workload-cluster-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="node-sizing-reference-table">Node Sizing Reference Table<a class="headerlink" href="#node-sizing-reference-table" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cluster Tier</th>
+<th>Control Plane</th>
+<th>Workers</th>
+<th>vCPU/node</th>
+<th>RAM/node</th>
+<th>Storage</th>
+<th>Total vCPU</th>
+<th>Total RAM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Micro (dev)</td>
+<td>1</td>
+<td>2</td>
+<td>2 / 4</td>
+<td>4 GB / 8 GB</td>
+<td>20 GB</td>
+<td>10 vCPU</td>
+<td>20 GB</td>
+</tr>
+<tr>
+<td>Small</td>
+<td>3</td>
+<td>3</td>
+<td>4</td>
+<td>8 GB</td>
+<td>40 GB</td>
+<td>24 vCPU</td>
+<td>48 GB</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>3</td>
+<td>5</td>
+<td>8</td>
+<td>16 GB</td>
+<td>60 GB</td>
+<td>64 vCPU</td>
+<td>128 GB</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>3</td>
+<td>10</td>
+<td>16</td>
+<td>32 GB</td>
+<td>80 GB</td>
+<td>208 vCPU</td>
+<td>416 GB</td>
+</tr>
+<tr>
+<td>XL</td>
+<td>3</td>
+<td>20</td>
+<td>16</td>
+<td>64 GB</td>
+<td>120 GB</td>
+<td>368 vCPU</td>
+<td>1.3 TB</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vm-classes-vsphere-with-tanzu">VM Classes (vSphere with Tanzu)<a class="headerlink" href="#vm-classes-vsphere-with-tanzu" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>VM Class</th>
+<th>vCPU</th>
+<th>Memory</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>best-effort-xsmall</td>
+<td>2</td>
+<td>2 GB</td>
+<td>Best-effort</td>
+</tr>
+<tr>
+<td>best-effort-small</td>
+<td>2</td>
+<td>4 GB</td>
+<td>Best-effort</td>
+</tr>
+<tr>
+<td>best-effort-medium</td>
+<td>2</td>
+<td>8 GB</td>
+<td>Best-effort</td>
+</tr>
+<tr>
+<td>best-effort-large</td>
+<td>4</td>
+<td>12 GB</td>
+<td>Best-effort</td>
+</tr>
+<tr>
+<td>best-effort-xlarge</td>
+<td>4</td>
+<td>16 GB</td>
+<td>Best-effort</td>
+</tr>
+<tr>
+<td>best-effort-2xlarge</td>
+<td>8</td>
+<td>32 GB</td>
+<td>Best-effort</td>
+</tr>
+<tr>
+<td>best-effort-4xlarge</td>
+<td>16</td>
+<td>64 GB</td>
+<td>Best-effort</td>
+</tr>
+<tr>
+<td>best-effort-8xlarge</td>
+<td>32</td>
+<td>128 GB</td>
+<td>Best-effort</td>
+</tr>
+<tr>
+<td>guaranteed-xsmall</td>
+<td>2</td>
+<td>2 GB</td>
+<td>Guaranteed (reserved)</td>
+</tr>
+<tr>
+<td>guaranteed-small</td>
+<td>2</td>
+<td>4 GB</td>
+<td>Guaranteed (reserved)</td>
+</tr>
+<tr>
+<td>guaranteed-medium</td>
+<td>2</td>
+<td>8 GB</td>
+<td>Guaranteed (reserved)</td>
+</tr>
+<tr>
+<td>guaranteed-large</td>
+<td>4</td>
+<td>12 GB</td>
+<td>Guaranteed (reserved)</td>
+</tr>
+<tr>
+<td>guaranteed-xlarge</td>
+<td>4</td>
+<td>16 GB</td>
+<td>Guaranteed (reserved)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Guidance:</strong> Use <code>best-effort-*</code> for dev/test and <code>guaranteed-*</code> for production databases or latency-sensitive workloads. Guaranteed classes reserve CPU/RAM on the host — plan ESXi capacity accordingly.</p>
+<h3 id="sizing-by-workload-type">Sizing by Workload Type<a class="headerlink" href="#sizing-by-workload-type" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Workload Type</th>
+<th>Recommended Worker Class</th>
+<th>Workers</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microservices (Java/Node)</td>
+<td>best-effort-large</td>
+<td>5–10</td>
+<td>Scale out over up</td>
+</tr>
+<tr>
+<td>Batch/ML training</td>
+<td>best-effort-4xlarge</td>
+<td>3–5</td>
+<td>High CPU bursts</td>
+</tr>
+<tr>
+<td>Databases (PostgreSQL)</td>
+<td>guaranteed-xlarge</td>
+<td>3+</td>
+<td>Memory-bound, predictable</td>
+</tr>
+<tr>
+<td>CI pipelines (Tekton)</td>
+<td>best-effort-2xlarge</td>
+<td>3–5</td>
+<td>Ephemeral burst demand</td>
+</tr>
+<tr>
+<td>TAP iterate (dev)</td>
+<td>best-effort-medium</td>
+<td>2</td>
+<td>Minimal; scale per team</td>
+</tr>
+<tr>
+<td>TAP run (prod)</td>
+<td>best-effort-large</td>
+<td>5+</td>
+<td>Knative revision scaling</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="namespace-design">Namespace Design<a class="headerlink" href="#namespace-design" title="Permanent link">&para;</a></h2>
+<h3 id="namespace-isolation-models">Namespace Isolation Models<a class="headerlink" href="#namespace-isolation-models" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Structure</th>
+<th>Tradeoffs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One namespace per team</td>
+<td>Each team has own vSphere Namespace + TKC</td>
+<td>Strong isolation, dedicated quotas, independent lifecycle — more admin overhead</td>
+</tr>
+<tr>
+<td>One namespace per application</td>
+<td>Each app has own namespace and cluster</td>
+<td>Maximum isolation, complex to manage at scale</td>
+</tr>
+<tr>
+<td>Shared namespace, separate K8s namespaces</td>
+<td>Multiple teams share one vSphere Namespace, separate K8s namespaces within TKC</td>
+<td>Simple administration, weaker isolation — namespace quotas shared</td>
+</tr>
+<tr>
+<td>Environment-based (dev/staging/prod)</td>
+<td>Separate vSphere Namespaces per environment</td>
+<td>SDLC promotion clarity — recommended for most orgs</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommended standard:</strong>
+- Create one vSphere Namespace per environment per team: <code>team-a-dev</code>, <code>team-a-prod</code>
+- One TanzuKubernetesCluster per environment
+- K8s namespace isolation within the TKC for individual applications</p>
+<h3 id="vsphere-namespace-resource-quota-example">vSphere Namespace Resource Quota Example<a class="headerlink" href="#vsphere-namespace-resource-quota-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Applied to vSphere Namespace via vCenter API or UI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># vCenter UI → Workload Management → Namespaces → Edit Resource Limits</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">resourceQuota</span><span class="p">:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">cpu_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32000</span><span class="w">       </span><span class="c1"># millicores</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">memory_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65536</span><span class="w">    </span><span class="c1"># MB</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">storage_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span><span class="w">     </span><span class="c1"># GB (across all storage policies)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">persistent_volume_claim_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">pod_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">service_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+</code></pre></div>
+<hr />
+<h2 id="network-cidr-planning">Network CIDR Planning<a class="headerlink" href="#network-cidr-planning" title="Permanent link">&para;</a></h2>
+<p>CIDR ranges must not overlap with physical network ranges, vCenter/ESXi management ranges, or other cluster CIDRs in the environment.</p>
+<h3 id="required-cidr-ranges-per-supervisor">Required CIDR Ranges per Supervisor<a class="headerlink" href="#required-cidr-ranges-per-supervisor" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Example</th>
+<th>Min Size</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Supervisor Management Network</td>
+<td>10.10.10.20–10.10.10.25/24</td>
+<td>/27</td>
+<td>Control plane VM IPs + VIP</td>
+</tr>
+<tr>
+<td>Pod CIDR (Supervisor)</td>
+<td>100.64.0.0/16</td>
+<td>/16</td>
+<td>vSphere Pods / TKG internal pod IPs</td>
+</tr>
+<tr>
+<td>Service CIDR</td>
+<td>10.96.0.0/16</td>
+<td>/16</td>
+<td>ClusterIP services in Supervisor</td>
+</tr>
+<tr>
+<td>Ingress CIDR</td>
+<td>10.50.0.0/24</td>
+<td>/24</td>
+<td>VIPs for LoadBalancer Services</td>
+</tr>
+<tr>
+<td>Egress CIDR</td>
+<td>10.51.0.0/24</td>
+<td>/24</td>
+<td>SNAT pool for pod egress</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tkg-standalone-cluster-cidr-planning">TKG Standalone Cluster CIDR Planning<a class="headerlink" href="#tkg-standalone-cluster-cidr-planning" title="Permanent link">&para;</a></h3>
+<p>Each workload cluster needs its own non-overlapping ranges:</p>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Example</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pod CIDR</td>
+<td>192.168.0.0/16</td>
+<td>Per cluster — must not overlap between clusters</td>
+</tr>
+<tr>
+<td>Service CIDR</td>
+<td>10.32.0.0/16</td>
+<td>Per cluster — must not overlap between clusters</td>
+</tr>
+<tr>
+<td>Node network</td>
+<td>10.20.x.0/24</td>
+<td>VMs' management IPs — routable VLAN</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># TKG cluster config CIDR settings</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>CLUSTER_CIDR:<span class="w"> </span><span class="m">100</span>.96.0.0/11
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SERVICE_CIDR:<span class="w"> </span><span class="m">100</span>.64.0.0/13
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Note: TKG defaults use 100.x ranges — change if they conflict with existing RFC1918</span>
+</code></pre></div>
+<p><strong>Overlap check before deployment:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check for IP overlap with existing routes</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Or verify on NSX-T: check T0 BGP advertised routes and ensure pod/service CIDRs are not announced</span>
+</code></pre></div>
+<hr />
+<h2 id="storage-policy-mapping">Storage Policy Mapping<a class="headerlink" href="#storage-policy-mapping" title="Permanent link">&para;</a></h2>
+<h3 id="standard-storage-classes">Standard Storage Classes<a class="headerlink" href="#standard-storage-classes" title="Permanent link">&para;</a></h3>
+<p>Define one StorageClass per vSAN storage policy. Keep names consistent across all clusters:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># vsan-default — general purpose RAID-1</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan-default</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">storageclass.kubernetes.io/is-default-class</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csi.vsphere.vmware.com</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nt">parameters</span><span class="p">:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nt">storagepolicyname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vSAN</span><span class="nv"> </span><span class="s">Default</span><span class="nv"> </span><span class="s">Storage</span><span class="nv"> </span><span class="s">Policy&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nt">allowVolumeExpansion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nn">---</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># vsan-retain — for databases (manual PV cleanup)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan-retain</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csi.vsphere.vmware.com</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nt">parameters</span><span class="p">:</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="nt">storagepolicyname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vSAN</span><span class="nv"> </span><span class="s">Default</span><span class="nv"> </span><span class="s">Storage</span><span class="nv"> </span><span class="s">Policy&quot;</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retain</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="nt">allowVolumeExpansion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="nn">---</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># vsan-encrypted — for regulated data</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan-encrypted</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csi.vsphere.vmware.com</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="nt">parameters</span><span class="p">:</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">  </span><span class="nt">storagepolicyname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vSAN</span><span class="nv"> </span><span class="s">Encryption</span><span class="nv"> </span><span class="s">Policy&quot;</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retain</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="nt">allowVolumeExpansion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="storage-policy-selection-matrix">Storage Policy Selection Matrix<a class="headerlink" href="#storage-policy-selection-matrix" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Workload</th>
+<th>StorageClass</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stateless apps (no PVC)</td>
+<td>N/A</td>
+<td>No storage class needed</td>
+</tr>
+<tr>
+<td>Log aggregation (Loki, EFK)</td>
+<td>vsan-default</td>
+<td>Non-critical, large volume</td>
+</tr>
+<tr>
+<td>Relational DB (PostgreSQL)</td>
+<td>vsan-retain</td>
+<td>Data retention, prevent accidental delete</td>
+</tr>
+<tr>
+<td>Redis/Memcached (ephemeral)</td>
+<td>vsan-default</td>
+<td>Can be recreated</td>
+</tr>
+<tr>
+<td>Secrets-adjacent data</td>
+<td>vsan-encrypted</td>
+<td>Regulatory compliance</td>
+</tr>
+<tr>
+<td>CI artifact caching</td>
+<td>vsan-default</td>
+<td>Ephemeral OK</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="harbor-sizing">Harbor Sizing<a class="headerlink" href="#harbor-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="harbor-ova-deployment-sizing">Harbor OVA Deployment Sizing<a class="headerlink" href="#harbor-ova-deployment-sizing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>OS Disk</th>
+<th>Image Disk</th>
+<th>Registry Load</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td>2</td>
+<td>8 GB</td>
+<td>80 GB</td>
+<td>500 GB</td>
+<td>&lt; 20 users, &lt; 50 projects</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>4</td>
+<td>16 GB</td>
+<td>80 GB</td>
+<td>2 TB</td>
+<td>20–100 users, &lt; 200 projects</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>8</td>
+<td>32 GB</td>
+<td>80 GB</td>
+<td>10 TB</td>
+<td>100+ users, enterprise-wide</td>
+</tr>
+</tbody>
+</table>
+<p>External database (PostgreSQL) and Redis are strongly recommended for Medium/Large deployments to separate stateful storage from the Harbor VM.</p>
+<h3 id="harbor-ha-architecture">Harbor HA Architecture<a class="headerlink" href="#harbor-ha-architecture" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Load Balancer (AVI or NSX-T)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    │
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    ├── Harbor Core 1 (VM or pod)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    ├── Harbor Core 2 (VM or pod)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    │
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    ├── External PostgreSQL (3-node cluster or managed DB)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    ├── External Redis (Sentinel or Cluster mode)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    └── Shared Image Storage:
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>          ├── S3 / MinIO (recommended)
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>          ├── NFS
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>          └── vSAN (via PVC if K8s-deployed)
+</code></pre></div>
+<h3 id="harbor-configuration-for-production">Harbor Configuration for Production<a class="headerlink" href="#harbor-configuration-for-production" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># harbor.yml (OVA-based deployment) — key production settings</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">harbor.example.com</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">https</span><span class="p">:</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">certificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/your/certificate/path</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">private_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/your/private/key/path</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nt">external_database</span><span class="p">:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg.example.com</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nt">core_database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">harbor_core</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="nt">notary_signer_database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notary_signer</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="nt">notary_server_database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notary_server</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">harbor</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;db-password&gt;</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="nt">ssl_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">require</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="nt">external_redis</span><span class="p">:</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis.example.com</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6379</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;redis-password&gt;</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="nt">registry_db_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span><span class="nt">jobservice_db_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="nt">trivyscanner_db_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span><span class="nt">clair_db_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span><span class="nt">cache_layer_db_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="nt">storage_service</span><span class="p">:</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span><span class="nt">s3</span><span class="p">:</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">    </span><span class="nt">bucket</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">harbor-registry</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">    </span><span class="nt">access_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;access-key&gt;</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span><span class="nt">secret_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;secret-key&gt;</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">    </span><span class="nt">secure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">    </span><span class="nt">chunksize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10485760</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">    </span><span class="nt">rootdirectory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/harbor</span>
+</code></pre></div>
+<hr />
+<h2 id="image-registry-trust-configuration">Image Registry Trust Configuration<a class="headerlink" href="#image-registry-trust-configuration" title="Permanent link">&para;</a></h2>
+<p>All TKG clusters must trust the Harbor CA certificate to pull images without <code>ImagePullBackOff</code> errors.</p>
+<h3 id="add-custom-ca-to-tkg-clusters-tkg-standalone">Add Custom CA to TKG Clusters (TKG standalone)<a class="headerlink" href="#add-custom-ca-to-tkg-clusters-tkg-standalone" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># In cluster config YAML — add under TKG_CUSTOM_IMAGE_REPOSITORY_CA_CERTIFICATE</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">TKG_CUSTOM_IMAGE_REPOSITORY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">harbor.example.com</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nt">TKG_CUSTOM_IMAGE_REPOSITORY_SKIP_TLS_VERIFY</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">TKG_CUSTOM_IMAGE_REPOSITORY_CA_CERTIFICATE</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="no">LS0tLS1CRUdJTiB...  # base64-encoded CA cert</span>
+</code></pre></div>
+<h3 id="add-custom-ca-post-deployment-via-trustanchor-or-machineconfig">Add Custom CA Post-Deployment (via TrustAnchor or machineconfig)<a class="headerlink" href="#add-custom-ca-post-deployment-via-trustanchor-or-machineconfig" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># For vSphere with Tanzu TKC nodes — use TanzuKubernetesCluster trust field</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Or apply a Secret to vmware-system-tkg namespace:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>harbor-ca-cert<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--from-file<span class="o">=</span>ca.crt<span class="o">=</span>/path/to/harbor-ca.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-n<span class="w"> </span>vmware-system-tkg
+</code></pre></div>
+<p>For containerd-based nodes, the CA must be placed at <code>/etc/containerd/certs.d/harbor.example.com/ca.crt</code> — use a DaemonSet or Bootstrap script to distribute.</p>
+<hr />
+<h2 id="cluster-templates-dev-vs-prod-plan-differences">Cluster Templates: Dev vs Prod Plan Differences<a class="headerlink" href="#cluster-templates-dev-vs-prod-plan-differences" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Dev Plan</th>
+<th>Prod Plan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Control Plane nodes</td>
+<td>1</td>
+<td>3 (HA)</td>
+</tr>
+<tr>
+<td>etcd</td>
+<td>Single instance</td>
+<td>Stacked HA (3 instances)</td>
+</tr>
+<tr>
+<td>Worker nodes</td>
+<td>1 (default)</td>
+<td>3+ (recommended 5)</td>
+</tr>
+<tr>
+<td>Anti-affinity</td>
+<td>Not enforced</td>
+<td>MachineDeployment spread across hosts</td>
+</tr>
+<tr>
+<td>Control plane VM class</td>
+<td>best-effort-small</td>
+<td>best-effort-medium or guaranteed-medium</td>
+</tr>
+<tr>
+<td>Upgrade strategy</td>
+<td>Recreate</td>
+<td>RollingUpdate (maxUnavailable: 0)</td>
+</tr>
+<tr>
+<td>Auto-healing</td>
+<td>Basic</td>
+<td>MachineHealthCheck active</td>
+</tr>
+<tr>
+<td>Recommended cert-manager</td>
+<td>Optional</td>
+<td>Required</td>
+</tr>
+<tr>
+<td>Velero backup</td>
+<td>Optional</td>
+<td>Required</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># MachineHealthCheck for prod cluster workers</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster.x-k8s.io/v1beta1</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MachineHealthCheck</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod-cluster-worker-health</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-a</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nt">clusterName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod-cluster</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">      </span><span class="nt">cluster.x-k8s.io/deployment-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod-cluster-md-0</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="nt">unhealthyConditions</span><span class="p">:</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ready</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Unknown</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m0s</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ready</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;False&quot;</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m0s</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="nt">maxUnhealthy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40%</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span><span class="nt">nodeStartupTimeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
+</code></pre></div>
+<hr />
+<h2 id="taints-and-node-pools-design">Taints and Node Pools Design<a class="headerlink" href="#taints-and-node-pools-design" title="Permanent link">&para;</a></h2>
+<h3 id="node-pool-strategy">Node Pool Strategy<a class="headerlink" href="#node-pool-strategy" title="Permanent link">&para;</a></h3>
+<p>Use separate MachineDeployments (node pools) for different workload types to enable targeted scheduling:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># TKG workload cluster with multiple node pools</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">topology</span><span class="p">:</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">nodePools</span><span class="p">:</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">general-workers</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">      </span><span class="nt">vmClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">best-effort-large</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">      </span><span class="nt">storageClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan-default</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">      </span><span class="c1"># no taints — general workloads land here</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-workers</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">      </span><span class="nt">vmClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">guaranteed-xlarge</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">      </span><span class="nt">storageClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan-retain</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">      </span><span class="nt">taints</span><span class="p">:</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workload-type</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">        </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NoSchedule</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpu-workers</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">      </span><span class="nt">vmClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">best-effort-8xlarge</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">      </span><span class="nt">storageClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vsan-default</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">      </span><span class="nt">taints</span><span class="p">:</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nvidia.com/gpu</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">        </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NoSchedule</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">        </span><span class="nt">accelerator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nvidia</span>
+</code></pre></div>
+<h3 id="workload-scheduling-to-node-pools">Workload Scheduling to Node Pools<a class="headerlink" href="#workload-scheduling-to-node-pools" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># StatefulSet targeting database pool</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">      </span><span class="nt">tolerations</span><span class="p">:</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workload-type</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">        </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NoSchedule</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">      </span><span class="nt">nodeSelector</span><span class="p">:</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">        </span><span class="nt">workload-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database</span><span class="w">    </span><span class="c1"># requires label on node pool</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">      </span><span class="c1"># Or use node affinity for soft preference:</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">      </span><span class="nt">affinity</span><span class="p">:</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">        </span><span class="nt">nodeAffinity</span><span class="p">:</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">          </span><span class="nt">requiredDuringSchedulingIgnoredDuringExecution</span><span class="p">:</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">            </span><span class="nt">nodeSelectorTerms</span><span class="p">:</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workload-type</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">                </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">                </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">database</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h3 id="anti-affinity-for-control-plane-vms">Anti-Affinity for Control Plane VMs<a class="headerlink" href="#anti-affinity-for-control-plane-vms" title="Permanent link">&para;</a></h3>
+<p>vSphere with Tanzu enforces anti-affinity for Supervisor control plane VMs automatically. For TKG standalone, the CAPV provider respects vSphere anti-affinity groups — enable in cluster config:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># TKG cluster config</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nt">VSPHERE_CONTROL_PLANE_ENDPOINT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.30</span><span class="w">  </span><span class="c1"># static VIP (via NSX LB or keepalived)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># CAPI KubeadmControlPlane sets MaxSurge=1, MaxUnavailable=0 for prod plan</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># CAPV places VMs in a vSphere VM/Host Group per cluster for anti-affinity</span>
+</code></pre></div>
 
 
 

@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>SRM — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="SRM — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="SRM — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#srm-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              SRM — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,342 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#srm-server-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Server Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SRM Server Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srm-appliance-8x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Appliance (8.x+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srm-server-windows-pre-8x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Server (Windows, pre-8.x)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srm-site-to-site-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Site-to-Site Ports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srm-local-site-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Local Site Ports
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-replication-appliance-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication Appliance Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-site-network-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Site Network Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recovery Site Network Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shadow-port-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shadow Port Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-network-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Network Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ip-customization-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IP Customization Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IP Customization Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-subnet-level-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Subnet-Level Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-per-vm-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Per-VM Customization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dhcp-at-recovery-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DHCP at Recovery Site
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ip-customization-and-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IP Customization and DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-plan-structure-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Structure Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recovery Plan Structure Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#priority-group-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Group Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recovery-plan-size-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Size Limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recovery-plan-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-recovery-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Recovery Plans
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rpo-targets-and-sra-capability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RPO Targets and SRA Capability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RPO Targets and SRA Capability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bandwidth-estimation-for-vr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bandwidth Estimation for VR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-frequency-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Frequency Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srm-design-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Design Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SRM Design Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1416,486 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="srm-design-standards">SRM — Design Standards<a class="headerlink" href="#srm-design-standards" title="Permanent link">&para;</a></h1>
+<h2 id="srm-server-sizing">SRM Server Sizing<a class="headerlink" href="#srm-server-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="srm-appliance-8x">SRM Appliance (8.x+)<a class="headerlink" href="#srm-appliance-8x" title="Permanent link">&para;</a></h3>
+<p>VMware ships SRM as an OVA appliance from version 8.x. Sizing is based on the number of protected VMs.</p>
+<table>
+<thead>
+<tr>
+<th>Deployment Size</th>
+<th>Protected VMs</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tiny</td>
+<td>≤ 100</td>
+<td>2</td>
+<td>8 GB</td>
+<td>40 GB</td>
+</tr>
+<tr>
+<td>Small</td>
+<td>≤ 250</td>
+<td>4</td>
+<td>12 GB</td>
+<td>40 GB</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>≤ 500</td>
+<td>8</td>
+<td>16 GB</td>
+<td>40 GB</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>≤ 1000</td>
+<td>16</td>
+<td>32 GB</td>
+<td>40 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Notes:
+- These values are per SRM appliance (one per site).
+- VM count refers to protected VMs, not total VMs in the vCenter.
+- If running concurrent Recovery Plan tests or executions, scale up by one tier.
+- SRM appliance root disk is thin-provisioned; ensure datastore has headroom for logs.</p>
+<h3 id="srm-server-windows-pre-8x">SRM Server (Windows, pre-8.x)<a class="headerlink" href="#srm-server-windows-pre-8x" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Protected VMs</th>
+<th>vCPU</th>
+<th>RAM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≤ 100</td>
+<td>2</td>
+<td>4 GB</td>
+</tr>
+<tr>
+<td>100–500</td>
+<td>4</td>
+<td>8 GB</td>
+</tr>
+<tr>
+<td>500–1000</td>
+<td>8</td>
+<td>16 GB</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="srm-site-to-site-ports">SRM Site-to-Site Ports<a class="headerlink" href="#srm-site-to-site-ports" title="Permanent link">&para;</a></h3>
+<p>All communication between SRM Servers at the two sites traverses the WAN link. Ensure firewall rules permit:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM Server (protected)</td>
+<td>SRM Server (recovery)</td>
+<td>443</td>
+<td>TCP</td>
+<td>SRM site pairing HTTPS API</td>
+</tr>
+<tr>
+<td>SRM Server (recovery)</td>
+<td>SRM Server (protected)</td>
+<td>443</td>
+<td>TCP</td>
+<td>Bi-directional site pairing</td>
+</tr>
+<tr>
+<td>SRM Server (protected)</td>
+<td>SRM Server (recovery)</td>
+<td>9086</td>
+<td>TCP</td>
+<td>SRM legacy pairing (pre-8.x)</td>
+</tr>
+<tr>
+<td>vCenter (protected)</td>
+<td>vCenter (recovery)</td>
+<td>443</td>
+<td>TCP</td>
+<td>Cross-vCenter VM operations</td>
+</tr>
+<tr>
+<td>ESXi hosts (protected)</td>
+<td>VR Appliance (recovery)</td>
+<td>44046</td>
+<td>TCP</td>
+<td>vSphere Replication data</td>
+</tr>
+<tr>
+<td>VR Appliance (protected)</td>
+<td>VR Appliance (recovery)</td>
+<td>10000, 10001</td>
+<td>TCP</td>
+<td>VR management channel</td>
+</tr>
+<tr>
+<td>SRM Server</td>
+<td>Storage array management</td>
+<td>443</td>
+<td>TCP</td>
+<td>SRA to array API</td>
+</tr>
+</tbody>
+</table>
+<h3 id="srm-local-site-ports">SRM Local Site Ports<a class="headerlink" href="#srm-local-site-ports" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM Server</td>
+<td>vCenter Server</td>
+<td>443</td>
+<td>TCP</td>
+<td>SRM ↔ vCenter API</td>
+</tr>
+<tr>
+<td>vSphere Client browser</td>
+<td>SRM Server</td>
+<td>443</td>
+<td>TCP</td>
+<td>UI access</td>
+</tr>
+<tr>
+<td>SRM Server</td>
+<td>ESXi hosts</td>
+<td>443, 902</td>
+<td>TCP</td>
+<td>VM power operations</td>
+</tr>
+<tr>
+<td>SRM Server</td>
+<td>VR Appliance</td>
+<td>8043</td>
+<td>TCP</td>
+<td>SRM ↔ VR integration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vsphere-replication-appliance-sizing">vSphere Replication Appliance Sizing<a class="headerlink" href="#vsphere-replication-appliance-sizing" title="Permanent link">&para;</a></h2>
+<p>VR Appliance sizing depends on both VM count and aggregate daily change rate.</p>
+<table>
+<thead>
+<tr>
+<th>Deployment Size</th>
+<th>Protected VMs</th>
+<th>Daily Change Rate</th>
+<th>vCPU</th>
+<th>RAM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td>≤ 100</td>
+<td>Low (&lt; 100 GB/day)</td>
+<td>4</td>
+<td>8 GB</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>≤ 500</td>
+<td>Medium (100–500 GB/day)</td>
+<td>8</td>
+<td>16 GB</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>≤ 2000</td>
+<td>High (&gt; 500 GB/day)</td>
+<td>16</td>
+<td>32 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Guidelines:
+- Deploy one VR Appliance per site minimum. Scale out with additional VR Appliances for high VM counts.
+- VR Appliances can be load-balanced for replication sessions — configure in VAMI → Configuration → Servers.
+- Low RPO (5–15 min) on many VMs increases change rate impact significantly — account for this in sizing.</p>
+<hr />
+<h2 id="recovery-site-network-design">Recovery Site Network Design<a class="headerlink" href="#recovery-site-network-design" title="Permanent link">&para;</a></h2>
+<h3 id="shadow-port-groups">Shadow Port Groups<a class="headerlink" href="#shadow-port-groups" title="Permanent link">&para;</a></h3>
+<p>For every production VLAN at the protected site, create a corresponding port group at the recovery site. Common patterns:</p>
+<p><strong>Option A: Same VLAN IDs</strong> — If WAN connectivity is re-routed and the recovery site switches can accommodate the same VLAN IDs:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected: dvPG-App-VLAN100  →  Recovery: dvPG-App-VLAN100
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Protected: dvPG-DB-VLAN200   →  Recovery: dvPG-DB-VLAN200
+</code></pre></div>
+VMs retain their IPs. Routing updates (BGP, static routes) redirect traffic to recovery site.</p>
+<p><strong>Option B: Different VLAN IDs, same IP subnets</strong> — Recovery site uses different physical VLANs but same IP subnets (extended L3 or re-advertising the subnets):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Protected: dvPG-App-VLAN100 (10.10.0.0/24)  →  Recovery: dvPG-App-VLAN500 (10.10.0.0/24)
+</code></pre></div>
+No IP customization needed. Requires routing coordination.</p>
+<p><strong>Option C: Different subnets with IP re-addressing</strong> — Recovery site uses entirely different IP ranges:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Protected: 10.10.0.0/24  →  Recovery: 10.20.0.0/24
+</code></pre></div>
+Requires SRM IP customization rules (subnet-level mapping). DNS updates required at recovery.</p>
+<h3 id="test-network-design">Test Network Design<a class="headerlink" href="#test-network-design" title="Permanent link">&para;</a></h3>
+<p>For test failovers, create isolated port groups with no uplink assignment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dvPG-SRM-Test-App     (no uplink — isolated bubble)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dvPG-SRM-Test-DB      (no uplink — isolated bubble)
+</code></pre></div>
+<p>Map protected-site production port groups → isolated test port groups in SRM's test network mapping (separate from the production failover mapping). This prevents test VMs from reaching production systems.</p>
+<hr />
+<h2 id="ip-customization-strategy">IP Customization Strategy<a class="headerlink" href="#ip-customization-strategy" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-use-subnet-level-mapping">When to Use Subnet-Level Mapping<a class="headerlink" href="#when-to-use-subnet-level-mapping" title="Permanent link">&para;</a></h3>
+<p>Best for large environments where subnets map cleanly between sites:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Source subnet: 10.10.0.0/24  →  Target subnet: 10.20.0.0/24
+</code></pre></div>
+<p>All VMs with static IPs in <code>10.10.0.x</code> will be re-addressed to <code>10.20.0.x</code> (same host portion). Configure in SRM UI: Recovery Plan → IP Customization → <strong>Subnet Mappings</strong>.</p>
+<h3 id="when-to-use-per-vm-customization">When to Use Per-VM Customization<a class="headerlink" href="#when-to-use-per-vm-customization" title="Permanent link">&para;</a></h3>
+<p>Use when:
+- Target IPs don't follow a simple subnet pattern.
+- Only specific VMs need re-addressing.
+- Different NICs on the same VM go to different subnets.</p>
+<p>Per-VM customization is more granular but doesn't scale well beyond ~50 VMs per plan.</p>
+<h3 id="dhcp-at-recovery-site">DHCP at Recovery Site<a class="headerlink" href="#dhcp-at-recovery-site" title="Permanent link">&para;</a></h3>
+<p>Use DHCP at recovery site when:
+- Recovery site is pre-configured with DHCP scopes matching recovery IP ranges.
+- VMs are already configured for DHCP (common for application VMs).
+- Simplifies Recovery Plan maintenance.</p>
+<p>Avoid DHCP for:
+- Database servers (need stable IPs for connection strings).
+- Servers referenced in DNS with static A records.
+- VMs in IP customization dependency chains.</p>
+<h3 id="ip-customization-and-dns">IP Customization and DNS<a class="headerlink" href="#ip-customization-and-dns" title="Permanent link">&para;</a></h3>
+<p>SRM does not update DNS. After failover with IP re-addressing:</p>
+<ol>
+<li>Configure pre/post-power-on scripts in the Recovery Plan to run DNS update commands.</li>
+<li>Use low TTL values on production DNS A records (TTL ≤ 300 seconds) to speed propagation.</li>
+<li>Alternatively, maintain a secondary DNS zone at recovery site that is promoted after failover.</li>
+</ol>
+<hr />
+<h2 id="recovery-plan-structure-best-practices">Recovery Plan Structure Best Practices<a class="headerlink" href="#recovery-plan-structure-best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="priority-group-design">Priority Group Design<a class="headerlink" href="#priority-group-design" title="Permanent link">&para;</a></h3>
+<p>SRM supports 5 priority groups. Recommended allocation:</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>VM Category</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Core infrastructure</td>
+<td>Domain controllers, DNS servers, DHCP, NTP</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Data tier</td>
+<td>Database servers, message queues</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Application tier</td>
+<td>Application servers, middleware</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Presentation tier</td>
+<td>Web servers, load balancers</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Non-critical / batch</td>
+<td>Reporting, batch jobs, dev/test</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>All Priority 1 VMs power on and reach post-power-on step success before Priority 2 starts.</li>
+<li>Within a priority group, VMs start concurrently.</li>
+<li>Add a <strong>Wait for VM tools heartbeat</strong> post-power-on step for infrastructure VMs to enforce sequencing more granularly.</li>
+</ul>
+<h3 id="recovery-plan-size-limits">Recovery Plan Size Limits<a class="headerlink" href="#recovery-plan-size-limits" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Recommended Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VMs per Recovery Plan</td>
+<td>≤ 400</td>
+</tr>
+<tr>
+<td>Protection Groups per Recovery Plan</td>
+<td>≤ 20</td>
+</tr>
+<tr>
+<td>Concurrent Recovery Plans</td>
+<td>1 per site pair (serialized)</td>
+</tr>
+<tr>
+<td>Priority groups</td>
+<td>5 (fixed)</td>
+</tr>
+<tr>
+<td>Custom steps per VM</td>
+<td>No hard limit — keep to ≤ 5 per VM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="recovery-plan-dependencies">Recovery Plan Dependencies<a class="headerlink" href="#recovery-plan-dependencies" title="Permanent link">&para;</a></h3>
+<p>If application A depends on DR site services that are in a separate Recovery Plan:</p>
+<ol>
+<li>Use <strong>Recovery Plan dependencies</strong> (SRM UI → Recovery Plan → Properties → Dependencies).</li>
+<li>Plan B will not start until Plan A completes successfully.</li>
+<li>Use this for layered DR strategies (infra plan → workload plan).</li>
+</ol>
+<h3 id="multiple-recovery-plans">Multiple Recovery Plans<a class="headerlink" href="#multiple-recovery-plans" title="Permanent link">&para;</a></h3>
+<p>Organize plans by:
+- <strong>Tier</strong> — infrastructure plan + workload plan (dependency chain)
+- <strong>Business unit</strong> — separate plans per BU for independent failover
+- <strong>Criticality</strong> — mission-critical plan (RTO &lt; 1 hr) vs. standard plan (RTO &lt; 4 hr)</p>
+<p>Do not put all VMs in a single monolithic Recovery Plan — this increases blast radius for misconfiguration and makes testing harder.</p>
+<hr />
+<h2 id="rpo-targets-and-sra-capability">RPO Targets and SRA Capability<a class="headerlink" href="#rpo-targets-and-sra-capability" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Replication Method</th>
+<th>Minimum RPO</th>
+<th>Typical RPO</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synchronous ABR</td>
+<td>0 (no data loss)</td>
+<td>0</td>
+<td>Requires low-latency WAN (&lt; 5ms RTT); impacts write performance</td>
+</tr>
+<tr>
+<td>Asynchronous ABR</td>
+<td>Array-dependent</td>
+<td>15–30 min</td>
+<td>Most common; RPO depends on WAN bandwidth vs change rate</td>
+</tr>
+<tr>
+<td>vSphere Replication</td>
+<td>5 minutes</td>
+<td>15–30 min</td>
+<td>Practical lower bound depends on change rate and bandwidth</td>
+</tr>
+<tr>
+<td>vSphere Replication (high change)</td>
+<td>5 minutes</td>
+<td>May lag</td>
+<td>High-churn VMs (databases) may not achieve 5-min RPO without sufficient bandwidth</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bandwidth-estimation-for-vr">Bandwidth Estimation for VR<a class="headerlink" href="#bandwidth-estimation-for-vr" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Required bandwidth (Mbps) = (Daily change rate GB × 8192) / (86400 × efficiency factor)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Efficiency factor: 0.7 (compression enabled), 0.5 (no compression)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Example:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>VM daily change rate = 50 GB
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>With compression: (50 × 8192) / (86400 × 0.7) = 6.8 Mbps
+</code></pre></div>
+<hr />
+<h2 id="test-frequency-recommendations">Test Frequency Recommendations<a class="headerlink" href="#test-frequency-recommendations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Activity</th>
+<th>Recommended Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full Recovery Plan test (all VMs)</td>
+<td>Quarterly minimum; semi-annually acceptable for stable environments</td>
+</tr>
+<tr>
+<td>Partial test (critical VMs only)</td>
+<td>Monthly</td>
+</tr>
+<tr>
+<td>Protection Group health review</td>
+<td>Weekly (automated script or SRM dashboard)</td>
+</tr>
+<tr>
+<td>RPO compliance check</td>
+<td>Daily (automated alert)</td>
+</tr>
+<tr>
+<td>Network mapping validation</td>
+<td>Each time infrastructure changes at either site</td>
+</tr>
+<tr>
+<td>SRA connectivity check</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>SRM license validity check</td>
+<td>Monthly</td>
+</tr>
+</tbody>
+</table>
+<p>Regular testing is the only way to confirm recovery plans actually work. Document test results and resolve any failures before the next scheduled test.</p>
+<hr />
+<h2 id="srm-design-checklist">SRM Design Checklist<a class="headerlink" href="#srm-design-checklist" title="Permanent link">&para;</a></h2>
+<h3 id="pre-implementation">Pre-Implementation<a class="headerlink" href="#pre-implementation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] vCenter versions at both sites are SRM-compatible (same major version required).</li>
+<li>[ ] SRM version is compatible with vCenter version (check VMware Compatibility Guide).</li>
+<li>[ ] Network connectivity between sites meets port requirements.</li>
+<li>[ ] Recovery site has sufficient compute, memory, and storage for all protected VMs.</li>
+<li>[ ] Storage replication is configured and healthy at array level before SRM installation.</li>
+<li>[ ] VR Appliances sized for VM count and change rate.</li>
+<li>[ ] Recovery site network (VLANs / NSX segments) mirrors protected site topology.</li>
+<li>[ ] IP customization strategy decided (subnet mapping / per-VM / DHCP).</li>
+<li>[ ] DNS strategy for IP re-addressing defined.</li>
+<li>[ ] SRM service account created with minimum required privileges.</li>
+</ul>
+<h3 id="post-implementation">Post-Implementation<a class="headerlink" href="#post-implementation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] All Protection Groups show status <strong>OK</strong>.</li>
+<li>[ ] All protected VMs have placeholder VMs at recovery site.</li>
+<li>[ ] Network mappings configured for all port groups used by protected VMs.</li>
+<li>[ ] Folder and resource mappings configured.</li>
+<li>[ ] Test failover completed for all Recovery Plans.</li>
+<li>[ ] Test cleanup completed successfully.</li>
+<li>[ ] Test failover results documented.</li>
+<li>[ ] RPO compliance monitored and all VMs within target RPO.</li>
+</ul>
 
 
 

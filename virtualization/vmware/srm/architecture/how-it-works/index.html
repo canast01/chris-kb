@@ -21,7 +21,7 @@
     
     
       
-        <title>Site Recovery Manager — How It Works - Chris KB</title>
+        <title>SRM — How It Works - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Site Recovery Manager — How It Works · Chris KB">
+  <meta property="og:title" content="SRM — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Site Recovery Manager — How It Works · Chris KB">
+  <meta name="twitter:title" content="SRM — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#site-recovery-manager-how-it-works" class="md-skip">
+        <a href="#srm-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Site Recovery Manager — How It Works
+              SRM — How It Works
             
           </span>
         </div>
@@ -1062,6 +1062,308 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#site-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Replication Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#abr-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABR Mechanism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-replication-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication Mechanism
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-group-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Protection Group Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#abr-protection-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABR Protection Group
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-replication-protection-group-individual-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication Protection Group (Individual VM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datastore-group-vr-based" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datastore Group (VR-based)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-group-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-plan-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recovery Plan Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recovery-plan-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ip-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IP Customization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-command-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Command Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-failover-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Failover Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Failover Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-failover-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Failover Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#planned-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Migration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disaster-recovery-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#placeholder-vms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Placeholder VMs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Placeholder VMs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-placeholder-vm-contains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a Placeholder VM Contains
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#placeholder-vm-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Placeholder VM Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srm-inventory-mappings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Inventory Mappings
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1382,303 @@
 
 
 
-<h1 id="site-recovery-manager-how-it-works">Site Recovery Manager — How It Works<a class="headerlink" href="#site-recovery-manager-how-it-works" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="srm-how-it-works">SRM — How It Works<a class="headerlink" href="#srm-how-it-works" title="Permanent link">&para;</a></h1>
+<h2 id="site-topology">Site Topology<a class="headerlink" href="#site-topology" title="Permanent link">&para;</a></h2>
+<p>SRM operates across two paired sites: a <strong>protected site</strong> (production) and a <strong>recovery site</strong> (DR). Each site requires:</p>
+<ul>
+<li>vCenter Server</li>
+<li>SRM Server (Windows-based installer pre-8.x, OVA appliance from 8.x+)</li>
+<li>SRM Server registers as a vCenter extension and appears under <strong>Site Recovery</strong> in the vSphere Client</li>
+</ul>
+<p>The two SRM Servers form a <strong>site pair</strong>. Communication between them uses TCP 443 and TCP 9086. The pairing is authenticated via certificate thumbprint exchange — each site must trust the other's SSL certificate.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Site                        Recovery Site
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────┐               ┌─────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  vCenter Server     │◄──── TCP 443 ─►│  vCenter Server     │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  SRM Server         │◄──── TCP 9086 ─►│  SRM Server         │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ESXi Hosts         │               │  ESXi Hosts         │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  Production VMs     │               │  Placeholder VMs    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  Storage Array A    │               │  Storage Array B    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└─────────────────────┘               └─────────────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>         │                                      │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>         └──── Replication (ABR or VR) ─────────┘
+</code></pre></div>
+<hr />
+<h2 id="replication-methods">Replication Methods<a class="headerlink" href="#replication-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Array-Based Replication (ABR)</th>
+<th>vSphere Replication (VR)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RPO minimum</td>
+<td>Depends on array (typically 0–15 min)</td>
+<td>5 minutes</td>
+</tr>
+<tr>
+<td>Granularity</td>
+<td>Entire LUN / volume</td>
+<td>Per individual VM</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Requires storage array replication license</td>
+<td>Included with most vSphere editions</td>
+</tr>
+<tr>
+<td>SRA required</td>
+<td>Yes — vendor-specific SRA</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Snapshot consistency</td>
+<td>Array consistency groups</td>
+<td>VM-level quiescing (VMware Tools)</td>
+</tr>
+<tr>
+<td>Network bandwidth</td>
+<td>Handled by array fabric</td>
+<td>Uses VMkernel / management network</td>
+</tr>
+<tr>
+<td>Change tracking</td>
+<td>Block-level via array</td>
+<td>vSphere Changed Block Tracking (CBT)</td>
+</tr>
+<tr>
+<td>Recovery site storage</td>
+<td>Must be same array vendor (usually)</td>
+<td>Any datastore visible to recovery ESXi</td>
+</tr>
+<tr>
+<td>Multi-VM consistency</td>
+<td>Consistency groups (array-coordinated)</td>
+<td>Independent per VM (no cross-VM atomicity)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="abr-mechanism">ABR Mechanism<a class="headerlink" href="#abr-mechanism" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Array at protected site replicates blocks to array at recovery site asynchronously (or synchronously for RPO=0).</li>
+<li>At recovery site, replicated volumes are presented to ESXi hosts as read-only.</li>
+<li>SRA queries the array to discover which VMs live on replicated datastores.</li>
+<li>On failover, SRA issues commands to the array to perform a storage failover (promote snapshot, break replication, mount writable).</li>
+</ol>
+<h3 id="vsphere-replication-mechanism">vSphere Replication Mechanism<a class="headerlink" href="#vsphere-replication-mechanism" title="Permanent link">&para;</a></h3>
+<ol>
+<li>VR filter (installed on ESXi kernel via VIB) intercepts writes to VMDK.</li>
+<li>Changed blocks are sent to the VR appliance at the recovery site over TCP 31031 (VAMI) / TCP 44046 (replication data).</li>
+<li>VR appliance writes received blocks to a staging area on the recovery site datastore.</li>
+<li>At failover, SRM instructs VR to finalize the disk copy (apply any in-flight changes).</li>
+</ol>
+<hr />
+<h2 id="protection-group-types">Protection Group Types<a class="headerlink" href="#protection-group-types" title="Permanent link">&para;</a></h2>
+<h3 id="abr-protection-group">ABR Protection Group<a class="headerlink" href="#abr-protection-group" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Groups VMs that reside on a replicated LUN/volume.</li>
+<li>All VMs on the same array replication group are included together — you cannot split a consistency group across protection groups.</li>
+<li>SRM automatically discovers VMs on replicated datastores via SRA.</li>
+<li>If a VM spans multiple datastores, all datastores must be included in the same replication group.</li>
+</ul>
+<h3 id="vsphere-replication-protection-group-individual-vm">vSphere Replication Protection Group (Individual VM)<a class="headerlink" href="#vsphere-replication-protection-group-individual-vm" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Each VM is independently replicated.</li>
+<li>You configure replication per VM — different RPOs per VM are valid.</li>
+<li>Protection group can contain any mix of VMs regardless of datastore.</li>
+<li>No storage-level consistency — if you need cross-VM consistency, coordinate with application quiescing or use ABR.</li>
+</ul>
+<h3 id="datastore-group-vr-based">Datastore Group (VR-based)<a class="headerlink" href="#datastore-group-vr-based" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Available when using vSAN stretched cluster — not applicable in standard two-site SRM.</li>
+</ul>
+<hr />
+<h2 id="protection-group-states">Protection Group States<a class="headerlink" href="#protection-group-states" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OK</td>
+<td>All VMs protected, RPO met, placeholder VMs exist</td>
+</tr>
+<tr>
+<td>Warning</td>
+<td>One or more VMs approaching RPO threshold</td>
+</tr>
+<tr>
+<td>Error</td>
+<td>RPO violated, replication stopped, or SRA unreachable</td>
+</tr>
+<tr>
+<td>Not Configured</td>
+<td>VMs exist on replicated datastore but not yet added to a group</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="recovery-plan-structure">Recovery Plan Structure<a class="headerlink" href="#recovery-plan-structure" title="Permanent link">&para;</a></h2>
+<p>A Recovery Plan defines the exact steps SRM executes during failover. One Recovery Plan can reference multiple Protection Groups.</p>
+<h3 id="recovery-plan-components">Recovery Plan Components<a class="headerlink" href="#recovery-plan-components" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Recovery Plan
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── Protection Groups (one or more)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── Priority Groups (1–5, executed sequentially)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   ├── Priority 1 — infrastructure VMs (DNS, AD, DB)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ├── Priority 2 — application servers
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ├── Priority 3 — web/frontend
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └── Priority 5 — non-critical / batch
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>├── Steps (per VM within a priority group)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   ├── Pre-power-on steps (run command, send message)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   ├── Power on VM
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └── Post-power-on steps (run command, wait for heartbeat)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>├── Network Mappings (map protected site port groups → recovery site port groups)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>├── IP Customization (static re-IP rules per VM or subnet)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>└── Dependencies (optionally wait for another plan to complete first)
+</code></pre></div>
+<h3 id="priority-groups">Priority Groups<a class="headerlink" href="#priority-groups" title="Permanent link">&para;</a></h3>
+<ul>
+<li>VMs in <strong>Priority 1</strong> power on first. SRM waits for them to complete before moving to Priority 2.</li>
+<li>Within a priority group, VMs start concurrently (subject to host resource limits).</li>
+<li>Maximum of 5 priority groups. If you need finer ordering, use pre/post steps with <code>Wait for heartbeat</code> or custom scripts.</li>
+<li>Recovery Plan steps within a VM's sequence:</li>
+<li>Suspend or shut down VM at protected site (planned migration only)</li>
+<li>Storage operations (SRA: promote LUN / VR: finalize disk)</li>
+<li>Configure network (apply IP customization)</li>
+<li>Pre-power-on commands (optional)</li>
+<li>Power on VM</li>
+<li>Post-power-on commands (optional, typically wait for VM tools heartbeat)</li>
+</ul>
+<h3 id="ip-customization">IP Customization<a class="headerlink" href="#ip-customization" title="Permanent link">&para;</a></h3>
+<p>Two approaches:</p>
+<p><strong>Subnet-level mapping</strong> — define a source subnet and a target subnet. SRM translates any static IP in the source range to the corresponding address in the target range.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Source: 10.10.0.0/24  →  Target: 10.20.0.0/24
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>VM at 10.10.0.50       →  Recovers at 10.20.0.50
+</code></pre></div>
+<p><strong>Per-VM customization</strong> — define exact IP, netmask, gateway, DNS per NIC per VM. Used when target IPs don't follow a simple subnet mapping.</p>
+<p>IP customization is applied using the Guest OS customization engine (VMware Tools required). If the VM does not have VMware Tools running, customization is skipped and the VM retains its protected-site IP (may cause routing issues at recovery site).</p>
+<h3 id="custom-command-steps">Custom Command Steps<a class="headerlink" href="#custom-command-steps" title="Permanent link">&para;</a></h3>
+<p>SRM can execute commands before or after powering on a VM:</p>
+<ul>
+<li><strong>Script (on recovery site)</strong> — runs a command/script on the SRM Server or on a VM (via VMware Tools <code>RunProgram</code>).</li>
+<li><strong>Prompt</strong> — pauses execution and waits for manual confirmation before proceeding. Used to gate critical steps.</li>
+<li><strong>Call an Alarm</strong> — triggers a vCenter alarm.</li>
+</ul>
+<hr />
+<h2 id="test-failover-workflow">Test Failover Workflow<a class="headerlink" href="#test-failover-workflow" title="Permanent link">&para;</a></h2>
+<p>Test failover is non-disruptive: production VMs remain running. SRM powers on placeholder VMs in an isolated <strong>bubble network</strong>.</p>
+<h3 id="test-failover-steps">Test Failover Steps<a class="headerlink" href="#test-failover-steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li>User initiates <strong>Test</strong> from the Recovery Plan in SRM UI.</li>
+<li>SRM creates a <strong>snapshot</strong> of the replicated datastore at recovery site (ABR: writable snapshot / VR: point-in-time copy).</li>
+<li>Placeholder VMs are reconfigured to use this test snapshot datastore (not the live replicated datastore).</li>
+<li>SRM connects each test VM to an <strong>isolated test network</strong> (port group with no uplink, or a dedicated VLAN).</li>
+<li>This prevents test VMs from impacting production by sending traffic on production networks.</li>
+<li>IP customization runs on the test VMs (they get recovery-site IPs but are isolated).</li>
+<li>VMs power on in priority order.</li>
+<li>Custom steps (pre/post power-on commands) execute as configured.</li>
+<li>Test result: pass / warning / error — each step logged with timestamp and outcome.</li>
+</ol>
+<h3 id="test-cleanup">Test Cleanup<a class="headerlink" href="#test-cleanup" title="Permanent link">&para;</a></h3>
+<p>After verifying the test:</p>
+<ol>
+<li>Initiate <strong>Cleanup</strong> from the Recovery Plan.</li>
+<li>SRM powers off test VMs.</li>
+<li>Snapshots created for the test are deleted.</li>
+<li>Placeholder VMs return to their pre-test state.</li>
+<li>Recovery Plan returns to <strong>Ready</strong> state.</li>
+</ol>
+<p>Test cleanup must complete before running a real failover or another test.</p>
+<hr />
+<h2 id="planned-migration">Planned Migration<a class="headerlink" href="#planned-migration" title="Permanent link">&para;</a></h2>
+<p>Used when both sites are operational (datacenter move, scheduled maintenance).</p>
+<ol>
+<li>SRM shuts down protected VMs gracefully (respects VM tools shutdown).</li>
+<li>Waits for final replication sync to complete — ensures RPO = 0.</li>
+<li>VMs power on at recovery site using the final synced data.</li>
+<li>IP customization is applied.</li>
+<li>VMs are now running at recovery site — protected site VMs are removed from inventory.</li>
+</ol>
+<p>Planned migration is fully reversible via <strong>Failback</strong> once you have re-protected (reversed replication).</p>
+<hr />
+<h2 id="disaster-recovery-failover">Disaster Recovery Failover<a class="headerlink" href="#disaster-recovery-failover" title="Permanent link">&para;</a></h2>
+<p>Used when the protected site is unavailable (power failure, network loss, site disaster).</p>
+<ol>
+<li>Operator initiates <strong>Run</strong> (Recovery) from the Recovery Plan.</li>
+<li>SRM assumes protected VMs are offline — no graceful shutdown.</li>
+<li>For ABR: SRA promotes replicated LUN to writable (may involve accepting a crash-consistent snapshot).</li>
+<li>For VR: VR appliance applies all received data up to the last sync point.</li>
+<li>VMs power on at recovery site.</li>
+<li>IP customization is applied.</li>
+<li>Recovery Plan history logs all steps with outcome.</li>
+</ol>
+<p>There is a <strong>Force Recovery</strong> option if SRM cannot reach the protected site SRM Server — this bypasses the normal handshake and proceeds unilaterally.</p>
+<hr />
+<h2 id="failback-process">Failback Process<a class="headerlink" href="#failback-process" title="Permanent link">&para;</a></h2>
+<p>Failback returns VMs from the recovery site to the protected site after a recovery. Requires:</p>
+<ol>
+<li>Protected site is back online.</li>
+<li><strong>Re-protect</strong> the VMs — reverses replication direction (recovery site → protected site).</li>
+<li>For VR: configure VR with new source = recovery site, new target = protected site.</li>
+<li>For ABR: SRA reverses the replication pair on the array.</li>
+<li>Create a new Recovery Plan (or use the original plan after re-pairing) in the opposite direction.</li>
+<li>Run <strong>Planned Migration</strong> or <strong>DR</strong> back to the original protected site.</li>
+<li>Re-protect again in the original direction to restore normal operations.</li>
+</ol>
+<p>Full failback cycle: <code>Recover → Re-protect → Failback → Re-protect</code></p>
+<hr />
+<h2 id="placeholder-vms">Placeholder VMs<a class="headerlink" href="#placeholder-vms" title="Permanent link">&para;</a></h2>
+<p>Placeholder VMs are lightweight VM objects at the recovery site that represent protected VMs. They exist so that:</p>
+<ul>
+<li>The recovery site vCenter knows about the VM before failover.</li>
+<li>Network mappings and IP customization can be pre-configured and validated.</li>
+<li>The Recovery Plan can reference the VMs for power-on ordering and dependencies.</li>
+<li>Alarms and monitoring at the recovery site can be configured.</li>
+</ul>
+<h3 id="what-a-placeholder-vm-contains">What a Placeholder VM Contains<a class="headerlink" href="#what-a-placeholder-vm-contains" title="Permanent link">&para;</a></h3>
+<ul>
+<li>VM configuration file (<code>.vmx</code>) with hardware configuration matching the protected VM.</li>
+<li>No active VMDKs — disks are pointed at the replicated datastore (not yet promoted writable).</li>
+<li>Not powered on — exists only in vCenter inventory in a suspended/unregistered state.</li>
+<li>Network adapters assigned to recovery-site port groups (as per network mappings).</li>
+</ul>
+<h3 id="placeholder-vm-problems">Placeholder VM Problems<a class="headerlink" href="#placeholder-vm-problems" title="Permanent link">&para;</a></h3>
+<p>If a placeholder VM is missing or corrupt, SRM re-creates it automatically on the next <strong>Configure All</strong> or protection group reconfigure. If a placeholder VM shows errors, delete it manually from the recovery site vCenter and trigger a reconfigure on the Protection Group.</p>
+<hr />
+<h2 id="srm-inventory-mappings">SRM Inventory Mappings<a class="headerlink" href="#srm-inventory-mappings" title="Permanent link">&para;</a></h2>
+<p>Before VMs can recover, SRM requires:</p>
+<table>
+<thead>
+<tr>
+<th>Mapping Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network mappings</td>
+<td>Map protected-site port group/vDS → recovery-site port group/vDS</td>
+</tr>
+<tr>
+<td>Folder mappings</td>
+<td>Map VM folders at protected site → folders at recovery site</td>
+</tr>
+<tr>
+<td>Resource mappings</td>
+<td>Map clusters/resource pools at protected site → at recovery site</td>
+</tr>
+<tr>
+<td>Storage policy mappings</td>
+<td>Map VM storage policies (optional, affects datastore placement at recovery)</td>
+</tr>
+</tbody>
+</table>
+<p>Network and folder mappings are bidirectional — configuring them in one direction auto-populates the reverse. Resource mappings define where recovered VMs are placed in the vCenter hierarchy.</p>
 
 
 

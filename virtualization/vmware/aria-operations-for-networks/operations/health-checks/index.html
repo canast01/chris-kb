@@ -1062,6 +1062,113 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ui-health-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Health Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-collectors-are-connected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Collectors Are Connected
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-data-source-sync-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Data Source Sync Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-flow-data-is-being-received" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Flow Data Is Being Received
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-disk-usage-on-platform-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Disk Usage on Platform VM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-ipfixnetflow-is-arriving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify IPFIX/NetFlow Is Arriving
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-metrics-to-monitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Metrics to Monitor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-platform-vm-resource-utilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Platform VM Resource Utilization
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1188,297 @@
 
 
 <h1 id="aria-operations-for-networks-health-checks">Aria Operations for Networks — Health Checks<a class="headerlink" href="#aria-operations-for-networks-health-checks" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<h2 id="ui-health-dashboard">UI Health Dashboard<a class="headerlink" href="#ui-health-dashboard" title="Permanent link">&para;</a></h2>
+<p><strong>UI path:</strong> Settings → Infrastructure → Health</p>
+<p>The Health dashboard displays:
+- Platform VM status (CPU, memory, disk utilization)
+- Per-Collector status (connected/disconnected, flows per second, last heartbeat)
+- Per-data-source status (last successful sync, sync errors)
+- Active problems count and severity breakdown
+- License status and expiry date</p>
+<p>Key indicators to check at a glance:</p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Healthy State</th>
+<th>Action if Unhealthy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform VM status</td>
+<td>Green / Running</td>
+<td>Check services on Platform VM</td>
+</tr>
+<tr>
+<td>Each Collector status</td>
+<td>Connected</td>
+<td>See Common Issues — Collector Disconnected</td>
+</tr>
+<tr>
+<td>vCenter Last Sync</td>
+<td>Within last 20 minutes</td>
+<td>Re-verify vCenter credentials; check network</td>
+</tr>
+<tr>
+<td>NSX-T Last Sync</td>
+<td>Within last 20 minutes</td>
+<td>Re-verify NSX-T API access; check TLS</td>
+</tr>
+<tr>
+<td>Flows per second</td>
+<td>&gt; 0 for each collector</td>
+<td>Check NetFlow config on switches; check UDP 2055</td>
+</tr>
+<tr>
+<td>Disk usage (Platform)</td>
+<td>&lt; 80%</td>
+<td>Reduce retention or expand disk</td>
+</tr>
+<tr>
+<td>License status</td>
+<td>Valid / Days remaining &gt; 30</td>
+<td>Renew license in Broadcom licensing portal</td>
+</tr>
+</tbody>
+</table>
+<h2 id="verify-collectors-are-connected">Verify Collectors Are Connected<a class="headerlink" href="#verify-collectors-are-connected" title="Permanent link">&para;</a></h2>
+<p><strong>UI:</strong> Settings → Accounts and Data Sources → Collectors</p>
+<p>Each Collector should show:
+- Status: <strong>Connected</strong>
+- Last heartbeat: within the last 2 minutes
+- Flows per second: non-zero if any NetFlow source is configured</p>
+<p>Via REST API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://aon.corp.local/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;PASSWORD&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon.corp.local/api/ni/collectors&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s2">from datetime import datetime, timezone</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s2">for c in data.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s2">    last_hb = c.get(&#39;last_heartbeat_ms&#39;, 0) / 1000</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s2">    dt = datetime.fromtimestamp(last_hb, tz=timezone.utc).strftime(&#39;%Y-%m-%d %H:%M:%S UTC&#39;) if last_hb else &#39;Never&#39;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s2">    print(f\&quot;{c.get(&#39;nickname&#39;,&#39;&#39;):&lt;25} {c.get(&#39;status&#39;,&#39;&#39;):&lt;15} Last HB: {dt}\&quot;)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<h2 id="verify-data-source-sync-status">Verify Data Source Sync Status<a class="headerlink" href="#verify-data-source-sync-status" title="Permanent link">&para;</a></h2>
+<p><strong>UI:</strong> Settings → Accounts and Data Sources → select each source → View Details</p>
+<p>Check:
+- <strong>Last Sync</strong>: should be recent (vCenter/NSX-T: within 20 minutes)
+- <strong>Sync Status</strong>: Success
+- <strong>Error message</strong>: if present, indicates auth or connectivity failure</p>
+<p>Via REST API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon.corp.local/api/ni/datasources&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">for ds in data.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">    name = ds.get(&#39;nickname&#39;, ds.get(&#39;credentials&#39;, {}).get(&#39;ip&#39;, &#39;&#39;))</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s2">    dtype = ds.get(&#39;datasource_type&#39;, &#39;&#39;)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">    enabled = ds.get(&#39;enabled&#39;, False)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">    last_sync = ds.get(&#39;last_successful_collection_time&#39;, &#39;Never&#39;)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s2">    print(f&#39;{name:&lt;30} {dtype:&lt;20} Enabled:{enabled} LastSync:{last_sync}&#39;)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">&quot;</span>
+</code></pre></div>
+<h2 id="verify-flow-data-is-being-received">Verify Flow Data Is Being Received<a class="headerlink" href="#verify-flow-data-is-being-received" title="Permanent link">&para;</a></h2>
+<p><strong>UI search query</strong> (in the search bar at top of screen):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>flows where collector = &quot;aon-collector-dc1&quot; grouped by Flow Type
+</code></pre></div>
+<p>This returns a count of flows grouped by East-West / North-South. If the count is 0 or the query returns no results, flow data is not arriving.</p>
+<p>Additional flow verification queries:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Flows in the last 15 minutes
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>flows where time_range = &quot;last 15 minutes&quot;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a># Flows from a specific subnet
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>flows where source ip = &quot;10.10.20.0/24&quot;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># Top talkers by bytes
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>flows where time_range = &quot;last 1 hour&quot; order by bytes desc
+</code></pre></div>
+<p><strong>Check flow ingestion via tcpdump on Collector VM:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>ubuntu@aon-collector.corp.local
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Confirm UDP 2055 packets are arriving</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-n<span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># See which source IPs are sending flows</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-n<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d.<span class="w"> </span>-f1-4<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
+<h2 id="check-disk-usage-on-platform-vm">Check Disk Usage on Platform VM<a class="headerlink" href="#check-disk-usage-on-platform-vm" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.corp.local
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Overall disk layout</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>df<span class="w"> </span>-hT
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Cassandra data (flow store) — typically largest consumer</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/cassandra
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Elasticsearch (search index)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/elasticsearch
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Log directory</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/log
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Identify top consumers</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>sudo<span class="w"> </span>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/cassandra/data/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>sudo<span class="w"> </span>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/elasticsearch/data/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Check inode usage (can exhaust before disk space)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>df<span class="w"> </span>-i
+</code></pre></div>
+<p>If disk usage exceeds 80% on the data partition, AON will start purging older flow data. If it exceeds 90%, ingestion may pause.</p>
+<h2 id="certificate-expiry-check">Certificate Expiry Check<a class="headerlink" href="#certificate-expiry-check" title="Permanent link">&para;</a></h2>
+<p><strong>UI:</strong> Settings → SSL Certificate → view expiry date</p>
+<p>Via the Platform VM CLI:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check the currently installed certificate expiry</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>aon.corp.local:443<span class="w"> </span>-servername<span class="w"> </span>aon.corp.local<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Output example:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># notBefore=Sep 15 00:00:00 2024 GMT</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># notAfter=Sep 15 23:59:59 2025 GMT</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Days until expiry</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>aon.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="o">=</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;echo &quot;$(( ( $(date -d &quot;{}&quot; +%s) - $(date +%s) ) / 86400 )) days remaining&quot;&#39;</span>
+</code></pre></div>
+<p>Alert at 60 days remaining — certificate replacement in AON requires a UI reload.</p>
+<h2 id="verify-ipfixnetflow-is-arriving">Verify IPFIX/NetFlow Is Arriving<a class="headerlink" href="#verify-ipfixnetflow-is-arriving" title="Permanent link">&para;</a></h2>
+<p><strong>UI search:</strong> Search → type:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>flows where collector = &quot;aon-collector-dc1&quot; and time_range = &quot;last 5 minutes&quot;
+</code></pre></div>
+<p>Zero results indicates no flows are arriving at the Collector. Drill down:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># Check if any flows exist at all (remove time constraint)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>flows where collector = &quot;aon-collector-dc1&quot;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a># Check flows by source type
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>flows where source = ESXi and time_range = &quot;last 1 hour&quot;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>flows where source = physical and time_range = &quot;last 1 hour&quot;
+</code></pre></div>
+<p><strong>From the Collector VM, test UDP 2055 reception directly:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Capture any UDP 2055 traffic for 30 seconds</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sudo<span class="w"> </span>timeout<span class="w"> </span><span class="m">30</span><span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>-w<span class="w"> </span>/tmp/netflow-capture.pcap
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Read the capture</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-r<span class="w"> </span>/tmp/netflow-capture.pcap<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># If no packets: check firewall rules between switch and Collector</span>
+</code></pre></div>
+<h2 id="key-metrics-to-monitor">Key Metrics to Monitor<a class="headerlink" href="#key-metrics-to-monitor" title="Permanent link">&para;</a></h2>
+<p>Configure external monitoring (Nagios, Zabbix, Prometheus with blackbox exporter) to alert on:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Check Method</th>
+<th>Alert Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS reachability</td>
+<td>HTTP GET to <code>https://aon.corp.local</code></td>
+<td>Non-200 response</td>
+</tr>
+<tr>
+<td>API token auth</td>
+<td>POST <code>/api/ni/auth/token</code></td>
+<td>Non-200 response</td>
+</tr>
+<tr>
+<td>Collector status</td>
+<td>GET <code>/api/ni/collectors</code> → status != CONNECTED</td>
+<td>Any collector disconnected</td>
+</tr>
+<tr>
+<td>Data source sync lag</td>
+<td>GET <code>/api/ni/datasources</code> → last_sync &gt; 30 min ago</td>
+<td>&gt; 30 minutes</td>
+</tr>
+<tr>
+<td>Open critical problems</td>
+<td>GET <code>/api/ni/problems?status=OPEN&amp;severity=CRITICAL</code></td>
+<td>Count &gt; 0</td>
+</tr>
+<tr>
+<td>Platform disk usage</td>
+<td>SSH → <code>df -h</code> on data partition</td>
+<td>&gt; 80%</td>
+</tr>
+<tr>
+<td>Flows per second per collector</td>
+<td>UI metric / API</td>
+<td>= 0 for &gt; 15 minutes</td>
+</tr>
+<tr>
+<td>Certificate expiry</td>
+<td><code>openssl s_client</code> check</td>
+<td>&lt; 60 days</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Monitoring script (outputs Nagios-compatible exit codes):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># aon-health-check.sh</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">&quot;https://aon.corp.local&quot;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">USER</span><span class="o">=</span><span class="s2">&quot;svc-monitor@local&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nv">PASS</span><span class="o">=</span><span class="s2">&quot;PASSWORD&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="si">${</span><span class="nv">USER</span><span class="si">}</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="si">${</span><span class="nv">PASS</span><span class="si">}</span><span class="s2">\&quot;}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(d.get(&#39;token&#39;,&#39;&#39;))&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRITICAL: Cannot authenticate to AON API&quot;</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">fi</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="nv">DISCONNECTED</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/collectors&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="s2">bad = [c[&#39;nickname&#39;] for c in data.get(&#39;results&#39;,[]) if c.get(&#39;status&#39;) != &#39;CONNECTED&#39;]</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="s2">print(&#39;,&#39;.join(bad))</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DISCONNECTED</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRITICAL: Collectors disconnected: </span><span class="nv">$DISCONNECTED</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="k">fi</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: All collectors connected, API reachable&quot;</span>
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<h2 id="check-platform-vm-resource-utilization">Check Platform VM Resource Utilization<a class="headerlink" href="#check-platform-vm-resource-utilization" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.corp.local
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># CPU load</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>uptime
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>top<span class="w"> </span>-bn1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Memory</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>free<span class="w"> </span>-h
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Process list for AON services</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;java|cassandra|kafka|nginx|postgres|elastic&#39;</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Java heap for platform service (if OutOfMemory suspected)</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>sudo<span class="w"> </span>jmap<span class="w"> </span>-heap<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>vrni-platform<span class="k">)</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;Heap|used|capacity&#39;</span>
+</code></pre></div>
+<p>If CPU is consistently above 80% or memory is near exhaustion, refer to the Design Standards page for sizing guidance and consider upgrading to the next VM size tier.</p>
 
 
 
