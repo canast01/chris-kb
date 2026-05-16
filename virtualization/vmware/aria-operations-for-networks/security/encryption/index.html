@@ -1062,6 +1062,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#data-at-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data at Rest
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data in Transit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-via-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace via UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replace-via-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace via REST API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-certificate-expiry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Certificate Expiry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-cipher-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Cipher Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credential-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1183,131 @@
 
 
 <h1 id="aria-operations-for-networks-encryption">Aria Operations for Networks — Encryption<a class="headerlink" href="#aria-operations-for-networks-encryption" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="data-at-rest">Data at Rest<a class="headerlink" href="#data-at-rest" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Encryption</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform VM disks</td>
+<td>Optional</td>
+<td>vSphere VM Encryption or encrypted datastore</td>
+</tr>
+<tr>
+<td>Collector VM disks</td>
+<td>Optional</td>
+<td>vSphere VM Encryption or encrypted datastore</td>
+</tr>
+<tr>
+<td>Stored credentials (vCenter/NSX)</td>
+<td>Yes</td>
+<td>AES-256, Platform VM keystore</td>
+</tr>
+<tr>
+<td>Flow database</td>
+<td>Datastore-level</td>
+<td>Encrypt underlying datastore (vSAN encrypted storage policy)</td>
+</tr>
+</tbody>
+</table>
+<p>Apply vSphere VM Encryption to Platform and Collector VMs via an encrypted storage policy if the datastore does not use hardware encryption.</p>
+<hr />
+<h2 id="data-in-transit">Data in Transit<a class="headerlink" href="#data-in-transit" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traffic Path</th>
+<th>Encryption</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser → Platform UI</td>
+<td>TLS 1.2+ HTTPS</td>
+<td>TCP 443</td>
+</tr>
+<tr>
+<td>REST API client → Platform</td>
+<td>TLS 1.2+ HTTPS</td>
+<td>TCP 443</td>
+</tr>
+<tr>
+<td>Collector → Platform</td>
+<td>TLS 1.2+ HTTPS</td>
+<td>TCP 443</td>
+</tr>
+<tr>
+<td>Platform/Collector → vCenter</td>
+<td>TLS 1.2+ HTTPS</td>
+<td>TCP 443</td>
+</tr>
+<tr>
+<td>Platform/Collector → NSX Manager</td>
+<td>TLS 1.2+ HTTPS</td>
+<td>TCP 443</td>
+</tr>
+<tr>
+<td>Switches → Collector (NetFlow/IPFIX)</td>
+<td>None</td>
+<td>UDP — unencrypted by protocol design</td>
+</tr>
+</tbody>
+</table>
+<p>NetFlow/IPFIX is inherently unencrypted. Mitigate by placing Collector VMs on a dedicated management or replication VLAN with no routing from untrusted segments.</p>
+<hr />
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>vRNI ships with a self-signed certificate. Replace with a CA-signed certificate for production.</p>
+<h3 id="replace-via-ui">Replace via UI<a class="headerlink" href="#replace-via-ui" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Settings → SSL Certificate → Upload Certificate
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Upload: PEM certificate chain (server cert + intermediate CAs)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Upload: Private key (PEM, no passphrase)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Save → UI restarts — reconnect after ~60 seconds
+</code></pre></div>
+<h3 id="replace-via-rest-api">Replace via REST API<a class="headerlink" href="#replace-via-rest-api" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">CERT_B64</span><span class="o">=</span><span class="k">$(</span>base64<span class="w"> </span>-i<span class="w"> </span>server.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">KEY_B64</span><span class="o">=</span><span class="k">$(</span>base64<span class="w"> </span>-i<span class="w"> </span>server.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="s2">&quot;https://vrni.corp.local/api/ni/system/ssl/certificate&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;certificate\&quot;: \&quot;</span><span class="nv">$CERT_B64</span><span class="s2">\&quot;, \&quot;private_key\&quot;: \&quot;</span><span class="nv">$KEY_B64</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<h3 id="verify-certificate-expiry">Verify Certificate Expiry<a class="headerlink" href="#verify-certificate-expiry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vrni.corp.local:443<span class="w"> </span>-servername<span class="w"> </span>vrni.corp.local<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># notBefore= and notAfter= lines show validity window</span>
+</code></pre></div>
+<hr />
+<h2 id="tls-cipher-hardening">TLS Cipher Hardening<a class="headerlink" href="#tls-cipher-hardening" title="Permanent link">&para;</a></h2>
+<p>Restrict to strong ciphers by editing the Nginx config on the Platform VM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>ubuntu@vrni.corp.local
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/nginx/nginx.conf
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Find and update ssl_* directives:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ssl_protocols<span class="w"> </span>TLSv1.2<span class="w"> </span>TLSv1.3<span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ssl_ciphers<span class="w"> </span>ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256<span class="p">;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ssl_prefer_server_ciphers<span class="w"> </span>on<span class="p">;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>sudo<span class="w"> </span>nginx<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+</code></pre></div>
+<p>Verify:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>nmap<span class="w"> </span>--script<span class="w"> </span>ssl-enum-ciphers<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>vrni.corp.local
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Confirm: no TLS 1.0/1.1, no RC4/DES/3DES</span>
+</code></pre></div></p>
+<hr />
+<h2 id="credential-storage">Credential Storage<a class="headerlink" href="#credential-storage" title="Permanent link">&para;</a></h2>
+<p>vRNI encrypts all data source credentials (vCenter, NSX, physical device passwords) in its internal database. The encryption key is tied to the Platform VM instance. Do not copy the Platform VM VMDK to another host — credentials will not decrypt without the original key material.</p>
+<p>Update stored credentials when source system passwords change:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Settings → Data Sources → [source] → Edit → update password → Save
+</code></pre></div></p>
 
 
 

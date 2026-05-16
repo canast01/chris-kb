@@ -1062,6 +1062,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#srm-log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collect-srm-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collect SRM Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-replication-log-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication Log Collection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sra-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRA Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-srm-service-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check SRM Service Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-site-pairing-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Site Pairing Certificate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-recovery-plan-step-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Recovery Plan Step Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-sra-connectivity-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test SRA Connectivity Manually
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1177,119 @@
 
 
 <h1 id="srm-diagnostics">SRM — Diagnostics<a class="headerlink" href="#srm-diagnostics" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="srm-log-locations">SRM Log Locations<a class="headerlink" href="#srm-log-locations" title="Permanent link">&para;</a></h2>
+<p><strong>Windows SRM Server:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  vmware-dr.log        # Main SRM log
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  vmware-dr-*.log      # Rotated logs
+</code></pre></div></p>
+<p><strong>SRM Appliance (Linux):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>admin@srm-protected.corp.local
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/var/log/vmware/srm/
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>vmware-dr.log
+</code></pre></div></p>
+<hr />
+<h2 id="collect-srm-support-bundle">Collect SRM Support Bundle<a class="headerlink" href="#collect-srm-support-bundle" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Site Recovery → Summary → Download SRM Support Bundle
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Includes: SRM logs, configuration, site pairing state
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Download from both protected and recovery site SRM Servers
+</code></pre></div>
+<p>Manual collection if UI unavailable:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SRM Appliance:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>admin@srm-protected.corp.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/opt/vmware/srm/bin/support-bundle.sh
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Bundle location: /tmp/srm-support-&lt;timestamp&gt;.tar.gz</span>
+</code></pre></div></p>
+<hr />
+<h2 id="vsphere-replication-log-collection">vSphere Replication Log Collection<a class="headerlink" href="#vsphere-replication-log-collection" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to VRA appliance</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@vra-protected.corp.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Log locations:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/var/log/vmware/hms/<span class="w">      </span><span class="c1"># Replication management</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/var/log/vmware/vrms/<span class="w">     </span><span class="c1"># VRA service</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>/var/log/vmware/vcd/<span class="w">      </span><span class="c1"># Cloud director integration (if applicable)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Download support bundle via VRA VAMI:</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># https://vra-protected.corp.local:5480 → Support → Download Support Bundle</span>
+</code></pre></div>
+<hr />
+<h2 id="sra-logs">SRA Logs<a class="headerlink" href="#sra-logs" title="Permanent link">&para;</a></h2>
+<p>SRA logs location depends on the array vendor:</p>
+<table>
+<thead>
+<tr>
+<th>Vendor</th>
+<th>Log Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pure Storage</td>
+<td><code>C:\ProgramData\Pure Storage\SRA\Logs\</code> (Windows)</td>
+</tr>
+<tr>
+<td>Dell PowerStore</td>
+<td><code>C:\ProgramData\EMC\SRA\Logs\</code></td>
+</tr>
+<tr>
+<td>NetApp</td>
+<td><code>C:\Program Files\NetApp\SnapMirror SRA\log\</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check Pure Storage SRA log (Windows SRM Server)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\ProgramData\Pure Storage\SRA\Logs\pure-sra.log&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
+</code></pre></div>
+<hr />
+<h2 id="check-srm-service-status">Check SRM Service Status<a class="headerlink" href="#check-srm-service-status" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Protected site</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Recovery site</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="n">srm-recovery</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  <span class="n">-Name</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># If stopped, start:</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">Start-Service</span> <span class="n">-ComputerName</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  <span class="n">-Name</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="verify-site-pairing-certificate">Verify Site Pairing Certificate<a class="headerlink" href="#verify-site-pairing-certificate" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Test TLS connection between SRM Servers (inter-site port)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-recovery.corp.local:9086<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject<span class="w"> </span>-issuer
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Test admin HTTPS</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-protected.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject
+</code></pre></div>
+<hr />
+<h2 id="review-recovery-plan-step-logs">Review Recovery Plan Step Logs<a class="headerlink" href="#review-recovery-plan-step-logs" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Site Recovery → Recovery Plans → [plan] → History → [run] → Steps
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Click any step to see detailed sub-step log
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Export history as CSV for external analysis
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Export full history via PowerCLI</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$plans</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">ListPlans</span><span class="p">()</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$plan</span> <span class="k">in</span> <span class="nv">$plans</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nv">$history</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">GetHistory</span><span class="p">(</span><span class="nv">$plan</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="nv">$history</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="s2">&quot;srm-history-</span><span class="p">$(</span><span class="nv">$plan</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="test-sra-connectivity-manually">Test SRA Connectivity Manually<a class="headerlink" href="#test-sra-connectivity-manually" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Test FlashArray reachability from SRM Server:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;api-token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;flasharray-ip&gt;/api/2.0/array&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Should return array info — if error, SRA connectivity is broken</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Check certificate used by FlashArray:</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;flasharray-ip&gt;:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+</code></pre></div>
 
 
 

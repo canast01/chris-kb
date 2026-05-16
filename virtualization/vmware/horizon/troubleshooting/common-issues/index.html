@@ -1062,6 +1062,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#desktop-stuck-in-provisioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desktop Stuck in "Provisioning"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#no-desktop-sources-available" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "No Desktop Sources Available"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#black-screen-after-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Black Screen After Login
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slow-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slow Login
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uag-shows-disconnected-from-connection-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UAG Shows Disconnected from Connection Server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#app-volumes-appstack-fails-to-mount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App Volumes AppStack Fails to Mount
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1155,146 @@
 
 
 <h1 id="horizon-common-issues">Horizon — Common Issues<a class="headerlink" href="#horizon-common-issues" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="desktop-stuck-in-provisioning">Desktop Stuck in "Provisioning"<a class="headerlink" href="#desktop-stuck-in-provisioning" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Desktop pool shows desktops in "Provisioning" state for &gt;10 minutes without progressing</p>
+<p><strong>Causes and resolution:</strong></p>
+<ol>
+<li>
+<p><strong>Parent VM snapshot issue:</strong> Snapshot taken while VMware Tools not current, or VM was not properly sealed (sysprep not run / customization spec missing)
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Horizon Console → Inventory → Desktops → [pool] → Edit
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Verify: Customization Spec is assigned and valid (test it in vCenter)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vCenter → right-click golden image → Guest OS → Customize... → test
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>vCenter permission issue:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check Connection Server event log for permission errors:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;VMwareVDMDS&quot;</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LevelDisplayName</span> <span class="o">-eq</span> <span class="s2">&quot;Error&quot;</span> <span class="p">}</span> <span class="p">|</span> 
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+</code></pre></div>
+   Fix: verify Horizon service account has required vCenter permissions</p>
+</li>
+<li>
+<p><strong>Datastore full:</strong> Desktop VM cannot be provisioned
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → Datastore → check free space &gt; 10% minimum
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Customization spec fails:</strong> Check vCenter Tasks and Events for the provisioning VM
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Monitor → Tasks — filter by the stuck desktop VM name
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="no-desktop-sources-available">"No Desktop Sources Available"<a class="headerlink" href="#no-desktop-sources-available" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Users get "No desktop sources available" when connecting</p>
+<ol>
+<li>
+<p><strong>Pool is exhausted — all desktops assigned or in use:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Horizon Console → Inventory → Desktops → [pool]
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Check: Available count — if 0, all desktops are in use or error
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Increase pool size or add headroom
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>All desktops in error state:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-HVDesktop</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-win10-float&quot;</span> <span class="p">|</span> 
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  <span class="nb">Group-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">BasicState</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c"># If all are ERROR: bulk-delete and let pool reprovision</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Get-HVDesktop</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-win10-float&quot;</span> <span class="p">|</span> 
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">BasicState</span> <span class="o">-eq</span> <span class="s2">&quot;ERROR&quot;</span> <span class="p">}</span> <span class="p">|</span> 
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="nb">Remove-HVDesktop</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Entitlement missing:</strong> User is not entitled to the pool
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Horizon Console → [pool] → Entitlements → verify user&#39;s AD group is listed
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="black-screen-after-login">Black Screen After Login<a class="headerlink" href="#black-screen-after-login" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> User authenticates successfully, session starts, but screen remains black</p>
+<ol>
+<li>
+<p><strong>Horizon Agent not running in the desktop VM:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># From Connection Server:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$desktop</span> <span class="p">=</span> <span class="nb">Get-HVDesktop</span> <span class="n">-VMName</span> <span class="s2">&quot;win10-042&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c"># Get the VM IP, then check remotely:</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">desktop-ip</span><span class="p">&gt;</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Horizon View Agent&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># If stopped: reset the desktop (reboot)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Reset-HVMachine</span> <span class="n">-HVMachineName</span> <span class="s2">&quot;win10-042&quot;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Display protocol (Blast/PCoIP) port blocked:</strong> Check NSG or firewall rules between Horizon Client and the UAG/Connection Server</p>
+</li>
+<li>
+<p><strong>vGPU driver issue (if vGPU pool):</strong> Check vGPU driver status in guest</p>
+</li>
+</ol>
+<hr />
+<h2 id="slow-login">Slow Login<a class="headerlink" href="#slow-login" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Login takes &gt;60 seconds; users report slow desktop loading</p>
+<ol>
+<li>
+<p><strong>DEM profile migration:</strong> First-time migration of legacy profile to DEM can take minutes — expected behavior
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>DEM Management Console → Monitor → check profile migration queue
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>AppStack mount failure (App Volumes):</strong> AppStack VMDK attachment is slow or failing
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>App Volumes Manager → Activity → check for stuck attach operations
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Antivirus scanning user profile on login:</strong> AV exclusions needed
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Exclude from scanning: %APPDATA%, %USERPROFILE%, DEM config share (\\server\dem-config)
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Network drive mapping slow:</strong> Group Policy login script timing out on drive mapping
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Enable asynchronous user Group Policy processing to prevent blocking login
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="uag-shows-disconnected-from-connection-server">UAG Shows Disconnected from Connection Server<a class="headerlink" href="#uag-shows-disconnected-from-connection-server" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> UAG Admin UI shows "Connection Server is not connected" or users can authenticate but cannot launch desktops</p>
+<ol>
+<li>
+<p><strong>Certificate mismatch:</strong> Connection Server cert thumbprint in UAG config doesn't match the current CS cert
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Get current CS cert thumbprint:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>horizon-cs01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-fingerprint<span class="w"> </span>-sha1<span class="w"> </span>-noout
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Compare to thumbprint in UAG:</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>UAG<span class="w"> </span>Admin<span class="w"> </span>UI<span class="w"> </span>→<span class="w"> </span>Edge<span class="w"> </span>Service<span class="w"> </span>Settings<span class="w"> </span>→<span class="w"> </span>Horizon<span class="w"> </span>→<span class="w"> </span>Thumbprint
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Update if different</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Firewall between UAG and Connection Server:</strong> TCP 443 from UAG backend NIC to Connection Server must be open</p>
+</li>
+</ol>
+<hr />
+<h2 id="app-volumes-appstack-fails-to-mount">App Volumes AppStack Fails to Mount<a class="headerlink" href="#app-volumes-appstack-fails-to-mount" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> User logs in but application is not available; App Volumes Manager shows failed attachment</p>
+<ol>
+<li>
+<p><strong>App Volumes Manager unreachable from desktop VM:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># From desktop VM:
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Test-NetConnection appvol-mgr.corp.local -Port 443
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a># Must succeed — if failed, firewall or DNS issue
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>VMDK attachment failure in vCenter:</strong> AppStack VMDK is already attached to another VM (from a previous failed detach)
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>App Volumes Manager → AppStacks → [stack] → Assignments → check for stale attachments
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>OR: vCenter → locate AppStack VMDK → detach from any VM it&#39;s currently attached to
+</code></pre></div></p>
+</li>
+</ol>
 
 
 

@@ -1062,6 +1062,97 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#data-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data in Transit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-replication-data-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication Data Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-at-recovery-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption at Recovery Site
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management-for-srm-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management for SRM Server
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Management for SRM Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-certificate-windows-srm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace Certificate (Windows SRM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sra-credential-storage-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRA Credential Storage Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fips-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FIPS Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1172,91 @@
 
 
 <h1 id="srm-encryption">SRM — Encryption<a class="headerlink" href="#srm-encryption" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="data-in-transit">Data in Transit<a class="headerlink" href="#data-in-transit" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traffic Path</th>
+<th>Encryption</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM Server ↔ SRM Server (site pairing)</td>
+<td>TLS 1.2+</td>
+<td>TCP 9086 — always encrypted</td>
+</tr>
+<tr>
+<td>SRM Server ↔ vCenter</td>
+<td>TLS 1.2+</td>
+<td>TCP 443</td>
+</tr>
+<tr>
+<td>SRM Server ↔ Storage Array (SRA)</td>
+<td>TLS 1.2+</td>
+<td>HTTPS to array management IP</td>
+</tr>
+<tr>
+<td>VRA ↔ VRA (replication control)</td>
+<td>TLS 1.2+</td>
+<td>TCP 44046</td>
+</tr>
+<tr>
+<td>ESXi ↔ Target VRA (replication data)</td>
+<td>Optional</td>
+<td>TCP 31031 — can be encrypted or unencrypted per VM config</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vsphere-replication-data-encryption">vSphere Replication Data Encryption<a class="headerlink" href="#vsphere-replication-data-encryption" title="Permanent link">&para;</a></h2>
+<p>VR replication can encrypt data in transit between source ESXi and target VRA:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter → [VM] → right-click → Configure Replication → Edit
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Enable Replication Data Encryption: Yes
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  (adds AES-256 encryption to the replication stream)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Note: encryption adds ~5-10% CPU overhead on source host
+</code></pre></div>
+<p>Enable encryption for VMs replicating over untrusted WAN links. For on-premises replication over private LAN, rely on network-level security instead.</p>
+<hr />
+<h2 id="encryption-at-recovery-site">Encryption at Recovery Site<a class="headerlink" href="#encryption-at-recovery-site" title="Permanent link">&para;</a></h2>
+<p>When VMs fail over to the recovery site, they inherit the storage encryption state from the source:</p>
+<ul>
+<li><strong>vSAN encrypted at source → recovered VMs on encrypted vSAN at recovery:</strong> encrypted throughout</li>
+<li><strong>vSAN encrypted at source → recovered VMs on unencrypted datastore at recovery:</strong> data is unencrypted at recovery — apply an encrypted storage policy at recovery site</li>
+<li><strong>vSphere VM Encryption:</strong> VM encryption keys are managed by vCenter KMS — if the KMS is unavailable at recovery site, encrypted VMs cannot start. Always include KMS in DR plan or use a shared KMS accessible from both sites.</li>
+</ul>
+<hr />
+<h2 id="certificate-management-for-srm-server">Certificate Management for SRM Server<a class="headerlink" href="#certificate-management-for-srm-server" title="Permanent link">&para;</a></h2>
+<p>SRM Server uses an SSL certificate for HTTPS access (port 443) and inter-site communication (port 9086).</p>
+<h3 id="replace-certificate-windows-srm">Replace Certificate (Windows SRM)<a class="headerlink" href="#replace-certificate-windows-srm" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Import new cert to Windows Certificate Store</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="n">srm-server</span><span class="p">.</span><span class="n">pfx</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-CertStoreLocation</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">`</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;pfxpassword&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Get thumbprint of new cert</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-match</span> <span class="s2">&quot;srm-protected&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">$cert</span><span class="p">.</span><span class="n">Thumbprint</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Configure SRM to use new cert via SRM admin interface:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># https://srm-protected.corp.local:9086/admin → Certificate → Replace</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Or re-run SRM installer → Modify → update certificate</span>
+</code></pre></div>
+<p>After replacing the SRM Server cert, update the thumbprint at the remote site:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Recovery Site → Site Recovery → Site Pair → Edit → Accept new thumbprint
+</code></pre></div></p>
+<hr />
+<h2 id="sra-credential-storage-encryption">SRA Credential Storage Encryption<a class="headerlink" href="#sra-credential-storage-encryption" title="Permanent link">&para;</a></h2>
+<p>SRA credentials (array username/password or API token) are stored encrypted by SRM. The encryption key is tied to the SRM installation — do not restore SRM from a backup to a different machine without re-entering SRA credentials.</p>
+<hr />
+<h2 id="fips-mode">FIPS Mode<a class="headerlink" href="#fips-mode" title="Permanent link">&para;</a></h2>
+<p>SRM 8.x and later support FIPS 140-2 mode when deployed on FIPS-enabled vSphere. Requirements:
+- vCenter must be in FIPS mode
+- All SRM components must be on FIPS-capable versions
+- VRA appliances must be configured for FIPS mode during deployment</p>
+<p>Check VMware FIPS compliance documentation before enabling.</p>
 
 
 

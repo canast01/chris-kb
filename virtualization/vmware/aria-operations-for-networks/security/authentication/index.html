@@ -1062,6 +1062,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Methods
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP / Active Directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saml-vmware-identity-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAML / VMware Identity Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-token-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Token Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-certificate-trust-ldaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Certificate Trust (LDAPS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#token-rotation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Rotation Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1177,162 @@
 
 
 <h1 id="aria-operations-for-networks-authentication">Aria Operations for Networks — Authentication<a class="headerlink" href="#aria-operations-for-networks-authentication" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="authentication-methods">Authentication Methods<a class="headerlink" href="#authentication-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local</td>
+<td>Built-in admin@local</td>
+<td>Initial setup, break-glass</td>
+</tr>
+<tr>
+<td>LDAP / AD</td>
+<td>AD group-to-role mapping</td>
+<td>Standard enterprise</td>
+</tr>
+<tr>
+<td>SAML / vIDM</td>
+<td>Workspace ONE SSO</td>
+<td>SSO environments</td>
+</tr>
+<tr>
+<td>API Token</td>
+<td>Bearer token for REST API</td>
+<td>Automation, monitoring</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="local-authentication">Local Authentication<a class="headerlink" href="#local-authentication" title="Permanent link">&para;</a></h2>
+<p>Default credential after OVA deployment: <code>admin@local</code> — password set during OVA wizard.</p>
+<p>Password policy (Settings → Security):
+- Minimum length: 12+ characters (increase from default 8)
+- Complexity: uppercase, lowercase, number, special character
+- Lockout: 5 failed attempts → 30-minute lockout</p>
+<p>Change password:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Settings → My Account → Change Password
+</code></pre></div></p>
+<hr />
+<h2 id="ldap-active-directory">LDAP / Active Directory<a class="headerlink" href="#ldap-active-directory" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Settings → Authentication → LDAP → Configure
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Server URL:     ldaps://dc01.corp.local:636
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Base DN:        DC=corp,DC=local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Bind DN:        CN=svc-vrni,OU=ServiceAccounts,DC=corp,DC=local
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Bind Password:  &lt;password&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  User Attribute: sAMAccountName
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Group Attribute: memberOf
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  → Test Connection → &quot;Connection successful&quot;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  → Save
+</code></pre></div>
+<p>After LDAP is configured, add Role Mappings (Settings → Authentication → Role Mappings) to map AD groups to vRNI roles.</p>
+<hr />
+<h2 id="saml-vmware-identity-manager">SAML / VMware Identity Manager<a class="headerlink" href="#saml-vmware-identity-manager" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Settings → Authentication → SAML
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  IdP Metadata URL: https://vidm.corp.local/SAAS/API/1.0/GET/metadata/idp.xml
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  SP Entity ID:     https://vrni.corp.local  (auto-populated)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  NameID Format:    urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Download SP Metadata → import into vIDM as Service Provider
+</code></pre></div>
+<p>Attribute mapping in vIDM:
+- NameID → user email
+- Groups attribute → AD groups synced to vIDM (map to vRNI roles)</p>
+<hr />
+<h2 id="api-token-authentication">API Token Authentication<a class="headerlink" href="#api-token-authentication" title="Permanent link">&para;</a></h2>
+<p>Create long-lived tokens in UI (Settings → API Tokens → Generate Token). Store in secrets manager — never hard-code.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Session token (short-lived — for interactive scripting)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>https://vrni.corp.local/api/ni/auth/token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Use token</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="s2">&quot;https://vrni.corp.local/api/ni/data-sources/vcenters&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Idle session timeout</td>
+<td>30 minutes</td>
+<td>15 minutes</td>
+</tr>
+<tr>
+<td>Failed login lockout</td>
+<td>5 attempts</td>
+<td>5 attempts</td>
+</tr>
+<tr>
+<td>Lockout duration</td>
+<td>30 minutes</td>
+<td>30 minutes</td>
+</tr>
+</tbody>
+</table>
+<p>Configure: Settings → Security → Session Timeout.</p>
+<hr />
+<h2 id="ldap-certificate-trust-ldaps">LDAP Certificate Trust (LDAPS)<a class="headerlink" href="#ldap-certificate-trust-ldaps" title="Permanent link">&para;</a></h2>
+<p>If using LDAPS (port 636), the LDAP CA certificate must be trusted by the Platform VM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to Platform VM</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>ubuntu@vrni.corp.local
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Install CA certificate</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/corp-root-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/corp-root-ca.crt
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sudo<span class="w"> </span>update-ca-certificates
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Restart vRNI after cert trust update</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>hms
+</code></pre></div>
+<hr />
+<h2 id="token-rotation-policy">Token Rotation Policy<a class="headerlink" href="#token-rotation-policy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Token Type</th>
+<th>Expiry</th>
+<th>Rotation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session tokens (API login)</td>
+<td>24 hours</td>
+<td>Auto-expire</td>
+</tr>
+<tr>
+<td>Long-lived API tokens</td>
+<td>90–365 days</td>
+<td>Calendar reminder, revoke old on renewal</td>
+</tr>
+<tr>
+<td>Service account tokens</td>
+<td>365 days</td>
+<td>Rotate when personnel changes</td>
+</tr>
+</tbody>
+</table>
+<p>Review active tokens quarterly (Settings → API Tokens) and revoke any with no recent activity.</p>
 
 
 

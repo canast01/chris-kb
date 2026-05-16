@@ -1062,6 +1062,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#before-opening-a-support-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before Opening a Support Case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#severity-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Severity Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-support-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware Support Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-specific-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component-Specific Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#community-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1155,159 @@
 
 
 <h1 id="tanzu-escalation">Tanzu — Escalation<a class="headerlink" href="#tanzu-escalation" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="before-opening-a-support-case">Before Opening a Support Case<a class="headerlink" href="#before-opening-a-support-case" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>How to Collect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanzu diagnostics bundle</td>
+<td><code>tanzu diagnostics collect --management-cluster</code></td>
+</tr>
+<tr>
+<td>kubectl cluster dump</td>
+<td><code>kubectl cluster-info dump --output-directory=/tmp/dump --all-namespaces</code></td>
+</tr>
+<tr>
+<td>vCenter logs</td>
+<td>vCenter → Administration → Export System Logs</td>
+</tr>
+<tr>
+<td>NSX-T logs (if networking involved)</td>
+<td>NSX-T → System → Fabric → Support Bundle</td>
+</tr>
+<tr>
+<td>AVI logs (if AVI is load balancer)</td>
+<td>AVI Controller → Administration → Tech Support</td>
+</tr>
+<tr>
+<td>Harbor logs</td>
+<td><code>docker-compose logs</code> or <code>kubectl logs -n harbor</code></td>
+</tr>
+<tr>
+<td>tanzu CLI version</td>
+<td><code>tanzu version</code></td>
+</tr>
+<tr>
+<td>vSphere version</td>
+<td>vCenter → About</td>
+</tr>
+<tr>
+<td>Kubernetes version</td>
+<td><code>kubectl version</code></td>
+</tr>
+<tr>
+<td>Symptom description</td>
+<td>What was attempted, what failed, exact error messages, timestamps</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="severity-definitions">Severity Definitions<a class="headerlink" href="#severity-definitions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sev 1</td>
+<td>Supervisor down — no cluster creation, all workloads inaccessible</td>
+</tr>
+<tr>
+<td>Sev 2</td>
+<td>Workload cluster(s) degraded — pods not scheduling, storage not provisioning</td>
+</tr>
+<tr>
+<td>Sev 3</td>
+<td>Individual application issue, Harbor down, specific namespace failing</td>
+</tr>
+<tr>
+<td>Sev 4</td>
+<td>General how-to question, feature request</td>
+</tr>
+</tbody>
+</table>
+<p>For Sev 1: create case online AND call VMware Support.</p>
+<hr />
+<h2 id="escalation-steps">Escalation Steps<a class="headerlink" href="#escalation-steps" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable maximum verbosity before contacting support</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">TANZU_LOG_LEVEL</span><span class="o">=</span>debug<span class="w"> </span>tanzu<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span>my-cluster<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>tanzu-verbose.log
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Collect full cluster dump</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>kubectl<span class="w"> </span>cluster-info<span class="w"> </span>dump<span class="w"> </span>--output-directory<span class="o">=</span>/tmp/cluster-dump<span class="w"> </span>--all-namespaces
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>tar<span class="w"> </span>czf<span class="w"> </span>cluster-dump.tar.gz<span class="w"> </span>/tmp/cluster-dump/
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Collect vSphere events for the affected cluster VMs</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># vCenter → Monitor → Events → filter by cluster VM names → export</span>
+</code></pre></div>
+<hr />
+<h2 id="vmware-support-portal">VMware Support Portal<a class="headerlink" href="#vmware-support-portal" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Portal:</strong> support.broadcom.com → Log Case</li>
+<li>Product: VMware Tanzu Kubernetes Grid (or vSphere with Tanzu)</li>
+<li>Version: [TKG version]</li>
+<li>Component: Management Cluster / Workload Cluster / Supervisor / Harbor</li>
+<li>
+<p>Attach: diagnostics bundle, cluster dump, symptom description</p>
+</li>
+<li>
+<p><strong>For Sev 1:</strong> after creating case, call support and reference case number</p>
+</li>
+</ol>
+<hr />
+<h2 id="component-specific-support">Component-Specific Support<a class="headerlink" href="#component-specific-support" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Supervisor / vSphere with Tanzu</td>
+<td>VMware Support — vSphere team</td>
+</tr>
+<tr>
+<td>TKG management/workload cluster</td>
+<td>VMware Support — Tanzu team</td>
+</tr>
+<tr>
+<td>Harbor Registry</td>
+<td>VMware Support — Harbor team</td>
+</tr>
+<tr>
+<td>NSX-T (load balancer)</td>
+<td>VMware Support — NSX team</td>
+</tr>
+<tr>
+<td>AVI (load balancer)</td>
+<td>VMware Support — AVI team</td>
+</tr>
+<tr>
+<td>Pinniped authentication</td>
+<td>VMware Support — Tanzu team</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="community-resources">Community Resources<a class="headerlink" href="#community-resources" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Tanzu Community Slack: #tanzu-platform, #tkg-users on vmware-code.slack.com</li>
+<li>Tanzu Documentation: docs.vmware.com/tanzu-kubernetes-grid</li>
+<li>Tanzu GitHub: github.com/vmware-tanzu</li>
+<li>Harbor Documentation: goharbor.io/docs</li>
+<li>Pinniped Documentation: pinniped.dev/docs</li>
+<li>Velero Documentation: velero.io/docs</li>
+</ul>
 
 
 

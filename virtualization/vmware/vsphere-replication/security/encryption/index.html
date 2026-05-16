@@ -1062,6 +1062,108 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#data-in-transit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data in Transit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-data-encryption-per-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Data Encryption (Per-VM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-at-rest-on-target-datastore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption at Rest on Target Datastore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kms-consideration-for-encrypted-vms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KMS Consideration for Encrypted VMs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management-for-vra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management for VRA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Management for VRA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-via-vra-vami" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace via VRA VAMI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replace-via-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace via REST API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-hardening-on-vra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Hardening on VRA
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1183,106 @@
 
 
 <h1 id="vsphere-replication-encryption">vSphere Replication — Encryption<a class="headerlink" href="#vsphere-replication-encryption" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="data-in-transit">Data in Transit<a class="headerlink" href="#data-in-transit" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traffic Path</th>
+<th>Encryption</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source ESXi → Target VRA (replication data)</td>
+<td>Optional</td>
+<td>Enable per-VM in replication config</td>
+</tr>
+<tr>
+<td>VRA → VRA (management)</td>
+<td>TLS 1.2+</td>
+<td>TCP 44046 — always encrypted</td>
+</tr>
+<tr>
+<td>VRA → vCenter</td>
+<td>TLS 1.2+</td>
+<td>TCP 443</td>
+</tr>
+<tr>
+<td>Browser → VRA VAMI</td>
+<td>TLS 1.2+</td>
+<td>TCP 5480</td>
+</tr>
+<tr>
+<td>REST API client → VRA</td>
+<td>TLS 1.2+</td>
+<td>TCP 443</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="replication-data-encryption-per-vm">Replication Data Encryption (Per-VM)<a class="headerlink" href="#replication-data-encryption-per-vm" title="Permanent link">&para;</a></h2>
+<p>Enable encryption when configuring or editing a replication:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter → [VM] → right-click → Configure/Edit Replication
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Encryption: Enable Replication Traffic Encryption
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Algorithm: AES-256 (automatic)
+</code></pre></div>
+<p><strong>Performance impact:</strong> AES-256 encryption adds ~5–10% CPU overhead on the source ESXi host. For VMs on a private, trusted LAN, encryption may not be necessary. For VMs replicating over WAN links, enable encryption.</p>
+<hr />
+<h2 id="encryption-at-rest-on-target-datastore">Encryption at Rest on Target Datastore<a class="headerlink" href="#encryption-at-rest-on-target-datastore" title="Permanent link">&para;</a></h2>
+<p>VR replica files (<code>.vrepl</code> VMDKs) are stored on the target datastore without application-level encryption by VR itself. Protect replica data at rest using:</p>
+<ol>
+<li><strong>vSAN Encryption</strong> at the target site (encrypts all data on vSAN)</li>
+<li><strong>vSphere VM Encryption</strong> — apply an encrypted storage policy to the datastore used for replicas</li>
+<li><strong>Hardware storage encryption</strong> — if the target array supports data-at-rest encryption</li>
+</ol>
+<p>If source VM uses vSphere VM Encryption and is replicated with VR, the replica at the target site must also be on an encrypted datastore (or vSAN) — VR replicates the encrypted ciphertext, but the VM cannot be powered on at the target site without access to the key management server (KMS).</p>
+<hr />
+<h2 id="kms-consideration-for-encrypted-vms">KMS Consideration for Encrypted VMs<a class="headerlink" href="#kms-consideration-for-encrypted-vms" title="Permanent link">&para;</a></h2>
+<p>If source VMs use vSphere VM Encryption:</p>
+<ul>
+<li>The KMS must be accessible from the <strong>target site vCenter</strong> for recovered VMs to power on</li>
+<li>Options:</li>
+<li><strong>Shared KMS</strong> (accessible from both sites) — simplest</li>
+<li><strong>Replicated KMS</strong> (KeyControl clusters mirrored across sites)</li>
+<li><strong>Per-site KMS</strong> — recovered VMs must be re-keyed after failover (adds recovery complexity)</li>
+</ul>
+<p>Document the KMS architecture in your DR plan.</p>
+<hr />
+<h2 id="certificate-management-for-vra">Certificate Management for VRA<a class="headerlink" href="#certificate-management-for-vra" title="Permanent link">&para;</a></h2>
+<p>VRA ships with a self-signed certificate. Replace with a CA-signed certificate:</p>
+<h3 id="replace-via-vra-vami">Replace via VRA VAMI<a class="headerlink" href="#replace-via-vra-vami" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>https://vra-london.corp.local:5480 → SSL → Upload Certificate
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Upload: PEM certificate (server cert + chain)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Upload: PEM private key (no passphrase)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Save → VRA VAMI restarts
+</code></pre></div>
+<h3 id="replace-via-rest-api">Replace via REST API<a class="headerlink" href="#replace-via-rest-api" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">CERT_B64</span><span class="o">=</span><span class="k">$(</span>base64<span class="w"> </span>-i<span class="w"> </span>vra-london.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="k">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">KEY_B64</span><span class="o">=</span><span class="k">$(</span>base64<span class="w"> </span>-i<span class="w"> </span>vra-london.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="k">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://vra-london.corp.local/api/rest/vr/ssl/certificate&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;certificate\&quot;: \&quot;</span><span class="nv">$CERT_B64</span><span class="s2">\&quot;, \&quot;private_key\&quot;: \&quot;</span><span class="nv">$KEY_B64</span><span class="s2">\&quot;}&quot;</span>
+</code></pre></div>
+<p>After replacing the VRA certificate, update the thumbprint stored in the site pair:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
+</code></pre></div></p>
+<hr />
+<h2 id="tls-hardening-on-vra">TLS Hardening on VRA<a class="headerlink" href="#tls-hardening-on-vra" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>admin@vra-london.corp.local
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Check current TLS configuration:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>sudo<span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-london.corp.local:443<span class="w"> </span>-tls1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Cipher&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Should show &quot;no peer certificate available&quot; or handshake failure for TLS 1.0/1.1</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># VRA&#39;s TLS config is managed by the appliance framework — updating nginx config:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sudo<span class="w"> </span>vim<span class="w"> </span>/opt/vmware/etc/nginx/nginx.conf
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Set: ssl_protocols TLSv1.2 TLSv1.3;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+</code></pre></div>
 
 
 

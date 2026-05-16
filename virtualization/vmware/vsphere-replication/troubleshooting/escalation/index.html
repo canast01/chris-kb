@@ -1062,6 +1062,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#before-opening-a-support-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before Opening a Support Case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#severity-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Severity Definitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#if-srm-is-also-involved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If SRM is Also Involved
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-support-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware Support Portal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#useful-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1155,139 @@
 
 
 <h1 id="vsphere-replication-escalation">vSphere Replication — Escalation<a class="headerlink" href="#vsphere-replication-escalation" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="before-opening-a-support-case">Before Opening a Support Case<a class="headerlink" href="#before-opening-a-support-case" title="Permanent link">&para;</a></h2>
+<p>Collect from both protected and recovery sites:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>How to Collect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VRA support bundle (both sites)</td>
+<td>VRA VAMI → Support → Generate Support Bundle</td>
+</tr>
+<tr>
+<td>ESXi hostd log (source host)</td>
+<td>SSH to ESXi → <code>/var/log/hostd.log</code></td>
+</tr>
+<tr>
+<td>ESXi hbr log</td>
+<td>SSH to ESXi → <code>/var/log/hbr.log</code></td>
+</tr>
+<tr>
+<td>vCenter logs</td>
+<td>vCenter → Administration → Export System Logs</td>
+</tr>
+<tr>
+<td>Replication status screenshot</td>
+<td>vCenter → Site Recovery → Replications (capture status at time of issue)</td>
+</tr>
+<tr>
+<td>VR version</td>
+<td>VRA VAMI → Summary → Version</td>
+</tr>
+<tr>
+<td>vSphere version</td>
+<td>vCenter → About</td>
+</tr>
+<tr>
+<td>SRM version (if paired with SRM)</td>
+<td>SRM admin UI → About</td>
+</tr>
+<tr>
+<td>Symptom timeline</td>
+<td>When issue started, what action preceded it, expected behavior</td>
+</tr>
+<tr>
+<td>Error messages</td>
+<td>Exact text from vCenter Tasks/Events or VRA VAMI</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="severity-definitions">Severity Definitions<a class="headerlink" href="#severity-definitions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sev 1</td>
+<td>Active DR recovery operation failing; VMs cannot be recovered</td>
+</tr>
+<tr>
+<td>Sev 2</td>
+<td>All replications failing; DR capability degraded but no active recovery</td>
+</tr>
+<tr>
+<td>Sev 3</td>
+<td>Subset of VMs in RPO violation or single VR configuration issue</td>
+</tr>
+<tr>
+<td>Sev 4</td>
+<td>General how-to question, minor issue</td>
+</tr>
+</tbody>
+</table>
+<p>For Sev 1 (active recovery operation blocked): create case AND call VMware Support immediately.</p>
+<hr />
+<h2 id="if-srm-is-also-involved">If SRM is Also Involved<a class="headerlink" href="#if-srm-is-also-involved" title="Permanent link">&para;</a></h2>
+<p>If using SRM to manage VR-based protection groups:
+1. Open a single VMware Support case — SRM and VR teams collaborate internally
+2. Include: SRM support bundle (from both sites) in addition to VRA bundles
+3. Specify: the issue is in the "vSphere Replication" layer vs "SRM orchestration" layer if known</p>
+<hr />
+<h2 id="vmware-support-portal">VMware Support Portal<a class="headerlink" href="#vmware-support-portal" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Portal:</strong> support.broadcom.com → Log Case</li>
+<li>Product: VMware vSphere Replication</li>
+<li>Version: [VR version]</li>
+<li>
+<p>Attach: VRA support bundles from both sites, ESXi logs, symptom description</p>
+</li>
+<li>
+<p>For Sev 1: after creating case, call VMware Support and reference case number</p>
+</li>
+</ol>
+<hr />
+<h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Escalation</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Technical Account Manager</td>
+<td>Recurring issue, SLA breach</td>
+</tr>
+<tr>
+<td>Critical Escalation Team</td>
+<td>Sev 1 unresolved within 2 hours</td>
+</tr>
+<tr>
+<td>VR Engineering</td>
+<td>Suspected defect — escalate via support case</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="useful-resources">Useful Resources<a class="headerlink" href="#useful-resources" title="Permanent link">&para;</a></h2>
+<ul>
+<li>vSphere Replication Documentation: docs.vmware.com/vsphere-replication</li>
+<li>Interoperability Matrix: interopmatrix.vmware.com (VR ↔ vSphere ↔ SRM)</li>
+<li>VMware KB: kb.vmware.com (search "vSphere Replication")</li>
+<li>vSphere Replication Community: communities.vmware.com/community/vmtn/vsphere/vspherereplication</li>
+</ul>
 
 
 

@@ -1062,6 +1062,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#site-pairing-fails-shows-disconnected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site Pairing Fails / Shows Disconnected
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sra-not-found-discovery-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRA Not Found / Discovery Fails
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-plan-stuck-in-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Stuck in "Running"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-group-shows-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group Shows Error
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-failover-vms-fail-to-power-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Failover: VMs Fail to Power On
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failback-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failback Fails
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1155,146 @@
 
 
 <h1 id="srm-common-issues">SRM — Common Issues<a class="headerlink" href="#srm-common-issues" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="site-pairing-fails-shows-disconnected">Site Pairing Fails / Shows Disconnected<a class="headerlink" href="#site-pairing-fails-shows-disconnected" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Site Recovery Summary shows remote site as "Not Connected"</p>
+<ol>
+<li>
+<p><strong>Certificate thumbprint mismatch</strong> (cert replaced without updating pairing):
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Get current remote SRM cert thumbprint:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-recovery.corp.local:9086<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-fingerprint<span class="w"> </span>-sha1<span class="w"> </span>-noout
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Compare to thumbprint stored in site pair</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Site Recovery → Site Pair → Edit → update thumbprint</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Network / firewall</strong>: TCP 9086 blocked between SRM Servers
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nc<span class="w"> </span>-vz<span class="w"> </span>srm-recovery.corp.local<span class="w"> </span><span class="m">9086</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># If connection refused or timeout: firewall rule missing</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>SRM service stopped on remote site</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="n">srm-recovery</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Name</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Start-Service</span> <span class="n">-ComputerName</span> <span class="n">srm-recovery</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Name</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span>
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="sra-not-found-discovery-fails">SRA Not Found / Discovery Fails<a class="headerlink" href="#sra-not-found-discovery-fails" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> "No Storage Replication Adapters found" or discovery returns empty</p>
+<ol>
+<li>
+<p><strong>SRA service stopped on SRM Server</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Name</span> <span class="s2">&quot;*SRA*&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c"># Restart if stopped</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Wrong array credentials</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Test credentials against array directly:
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curl -sk -H &quot;x-auth-token: &lt;api-token&gt;&quot; https://&lt;flasharray-ip&gt;/api/2.0/array
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a># Should return 200 OK
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Network connectivity from SRM Server to array management IP</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Test-NetConnection &lt;flasharray-ip&gt; -Port 443
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="recovery-plan-stuck-in-running">Recovery Plan Stuck in "Running"<a class="headerlink" href="#recovery-plan-stuck-in-running" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Recovery Plan is running but no progress for &gt;10 minutes; one step shows in-progress indefinitely</p>
+<ol>
+<li>
+<p><strong>Manual step timeout</strong>: Recovery Plan has a manual approval step that no one has approved
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Site Recovery → Recovery Plans → [plan] → [current run] → Steps
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Find the step waiting for input → click to complete/skip
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>VM power-on timeout</strong>: VM at recovery site taking too long to power on (resource contention)
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter (Recovery) → Recent Tasks → look for power-on task on the stuck VM
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Check ESXi host resources at recovery site
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Force cancel if stuck &gt;30 minutes</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Site Recovery → Recovery Plans → [plan] → Cancel
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Note: cancellation may leave partial state — check VMs manually
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="protection-group-shows-error">Protection Group Shows Error<a class="headerlink" href="#protection-group-shows-error" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Protection Group status is "Error" or "Warning"</p>
+<ol>
+<li>
+<p><strong>RPO lag exceeds configured RPO</strong>: Replication is not keeping up
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Site Recovery → Replication → vSphere Replication
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Find the VMs in the PG → check &quot;Lag&quot; column
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Investigate: network bandwidth, ESXi CPU on source host, source datastore I/O
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>VM snapshot inconsistency</strong> (for ABR protection groups):
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Check storage array — verify snapshot exists for the replication group
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>SRA may need to re-discover: Site Recovery → Storage → Array Pairs → Discover Devices
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>vSphere Replication appliance unreachable</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-protected.corp.local<span class="w"> </span><span class="m">31031</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-protected.corp.local<span class="w"> </span><span class="m">44046</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Both should be open</span>
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="test-failover-vms-fail-to-power-on">Test Failover: VMs Fail to Power On<a class="headerlink" href="#test-failover-vms-fail-to-power-on" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Test recovery starts but VMs in isolated network fail to power on or get wrong IP</p>
+<ol>
+<li>
+<p><strong>Network mapping missing</strong>: The test network not mapped to an isolated portgroup
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Site Recovery → Recovery Plans → [plan] → Test Networks
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Map each protected network to an isolated portgroup at recovery site
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Placeholder VM stale</strong>: Placeholder VM at recovery site has incorrect config
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a># Delete placeholder VM from recovery site vCenter
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a># Site Recovery → Protection → [PG] → Configure → adds placeholder VMs back automatically
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Resource pool or datastore insufficient at recovery site</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Check recovery site CPU/RAM/storage capacity before running test
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Verify resource mappings in Site Recovery → Site Pair → Inventory Mappings
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="failback-fails">Failback Fails<a class="headerlink" href="#failback-fails" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> After recovery, re-protect or planned migration back fails</p>
+<ol>
+<li>
+<p><strong>VM not re-protected</strong>: Must run "Reprotect" after DR before failback
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Site Recovery → Protection → [PG] → Reprotect
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Wait for initial sync to complete (status: OK)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Then run Planned Migration back to protected site
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Protected site not fully restored</strong>: Protected site vCenter or SRM not running
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Verify: vCenter at protected site is operational
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Verify: SRM service running at protected site
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Verify: site pairing is Connected
+</code></pre></div></p>
+</li>
+</ol>
 
 
 

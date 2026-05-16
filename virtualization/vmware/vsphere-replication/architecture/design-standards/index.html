@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>vSphere Replication — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="vSphere Replication — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="vSphere Replication — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#vsphere-replication-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              vSphere Replication — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vra-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VRA Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vrs-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VRS Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bandwidth-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bandwidth Estimation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rpo-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RPO Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#target-datastore-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target Datastore Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-network-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Network Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#latency-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1176,226 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="vsphere-replication-design-standards">vSphere Replication — Design Standards<a class="headerlink" href="#vsphere-replication-design-standards" title="Permanent link">&para;</a></h1>
+<hr />
+<h2 id="vra-sizing">VRA Sizing<a class="headerlink" href="#vra-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Deployment Size</th>
+<th>VMs Replicated</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td>Up to 200</td>
+<td>2</td>
+<td>8 GB</td>
+<td>100 GB</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>Up to 500</td>
+<td>4</td>
+<td>16 GB</td>
+<td>100 GB</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>Up to 2000 (with VRS)</td>
+<td>4</td>
+<td>16 GB</td>
+<td>100 GB</td>
+</tr>
+</tbody>
+</table>
+<p>A single VRA can handle up to 500 replicated VMs. Above 500, deploy vSphere Replication Servers (VRS) to distribute the load.</p>
+<hr />
+<h2 id="vrs-sizing">VRS Sizing<a class="headerlink" href="#vrs-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>VRS Count</th>
+<th>Additional VMs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 VRS</td>
+<td>+500 VMs (total 1000 with 1 VRA + 1 VRS)</td>
+</tr>
+<tr>
+<td>2 VRS</td>
+<td>+1000 VMs (total 1500)</td>
+</tr>
+<tr>
+<td>Each additional VRS</td>
+<td>+500 VMs</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="bandwidth-estimation">Bandwidth Estimation<a class="headerlink" href="#bandwidth-estimation" title="Permanent link">&para;</a></h2>
+<p>Use this formula to estimate replication bandwidth:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Required bandwidth (Mbps) = (Daily change rate in GB × 8) / (86400 × RPO in seconds)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Example:
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  VM with 200 GB disk, 5% daily change rate = 10 GB changed/day
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  RPO: 1 hour (3600 seconds)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  Bandwidth = (10 × 1024 × 8) / (86400 × 3600 / 3600) = ~81600 / 86400 = ~0.95 Mbps per VM
+</code></pre></div>
+<p>Rule of thumb: assume 1–2 Mbps per VM for typical enterprise workloads with 1-hour RPO. High-churn databases may require 5–10 Mbps per VM.</p>
+<table>
+<thead>
+<tr>
+<th>Workload Type</th>
+<th>Typical Change Rate</th>
+<th>Bandwidth (1hr RPO)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File/Print server</td>
+<td>1–2% daily</td>
+<td>&lt;0.5 Mbps</td>
+</tr>
+<tr>
+<td>Web/App server</td>
+<td>2–5% daily</td>
+<td>1–2 Mbps</td>
+</tr>
+<tr>
+<td>Database (moderate)</td>
+<td>5–15% daily</td>
+<td>3–8 Mbps</td>
+</tr>
+<tr>
+<td>Database (high-write)</td>
+<td>15–30% daily</td>
+<td>8–20 Mbps</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rpo-selection">RPO Selection<a class="headerlink" href="#rpo-selection" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>RPO</th>
+<th>Minimum Required Bandwidth</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5 minutes</td>
+<td>High — 12× the 1-hour bandwidth</td>
+<td>Suitable only for low-churn, high-bandwidth links</td>
+</tr>
+<tr>
+<td>15 minutes</td>
+<td>Moderate-high</td>
+<td>Practical minimum for most workloads</td>
+</tr>
+<tr>
+<td>1 hour</td>
+<td>Moderate</td>
+<td>Good balance — recommended default</td>
+</tr>
+<tr>
+<td>4 hours</td>
+<td>Low</td>
+<td>Acceptable for non-critical workloads</td>
+</tr>
+<tr>
+<td>24 hours</td>
+<td>Minimal</td>
+<td>Only for batch/archive workloads</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="target-datastore-sizing">Target Datastore Sizing<a class="headerlink" href="#target-datastore-sizing" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Target datastore required space per VM =
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Source disk size + (N recovery point instances × average delta size)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Default recovery point instances: 3
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Each delta = ~1–5% of VM disk size (depends on churn)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Example:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  100 GB VM, 3 recovery points, 2 GB average delta per point
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Required: 100 GB + (3 × 2 GB) = 106 GB minimum
+</code></pre></div>
+<p>Add 20% headroom on top of this estimate.</p>
+<hr />
+<h2 id="replication-network-design">Replication Network Design<a class="headerlink" href="#replication-network-design" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Design Choice</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dedicated VLAN</td>
+<td>Yes — isolate replication traffic from production traffic</td>
+</tr>
+<tr>
+<td>MTU</td>
+<td>9000 (jumbo frames) for high-throughput replication</td>
+</tr>
+<tr>
+<td>WAN acceleration</td>
+<td>Optional — reduces bandwidth but adds latency</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>Enable per-VM if replicating over untrusted WAN</td>
+</tr>
+<tr>
+<td>Firewall</td>
+<td>TCP 31031 (source ESXi → target VRA) must be open</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="latency-limits">Latency Limits<a class="headerlink" href="#latency-limits" title="Permanent link">&para;</a></h2>
+<p>vSphere Replication is tested and supported with up to 100ms RTT between sites. For links with &gt;100ms RTT:
+- Increase RPO to reduce required bandwidth
+- Contact VMware Support for guidance on high-latency deployments</p>
+<hr />
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VRA appliance</td>
+<td><code>vra-&lt;site&gt;</code></td>
+<td><code>vra-london</code>, <code>vra-amsterdam</code></td>
+</tr>
+<tr>
+<td>VRS appliance</td>
+<td><code>vrs-&lt;site&gt;-&lt;number&gt;</code></td>
+<td><code>vrs-london-01</code></td>
+</tr>
+<tr>
+<td>Replication groups (in SRM)</td>
+<td><code>&lt;workload&gt;-vr-pg</code></td>
+<td><code>sql-vr-pg</code>, <code>webapp-vr-pg</code></td>
+</tr>
+</tbody>
+</table>
 
 
 
