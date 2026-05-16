@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="750" font-family="'Segoe UI',Arial,sans-serif">
+  <rect width="820" height="750" fill="#f4f6f9"/>
+  <!-- TITLE -->
+  <rect x="0" y="0" width="820" height="58" fill="#1a2744"/>
+  <text x="410" y="36" text-anchor="middle" fill="white" font-size="20" font-weight="700" letter-spacing="0.5">Aria Operations — Analytics Cluster Topology</text>
+  <text x="410" y="52" text-anchor="middle" fill="#7a8fbb" font-size="11">Primary · Primary Replica · Data Nodes · Remote Collector / Cloud Proxy</text>
+
+  <!-- ═ COLUMN 1: Primary ═ -->
+  <rect x="20" y="72" width="185" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="20" y="72" width="185" height="42" fill="#1565c0" rx="6"/>
+  <rect x="20" y="100" width="185" height="14" fill="#1565c0"/>
+  <text x="112" y="97" text-anchor="middle" fill="white" font-size="12" font-weight="700">Primary Node</text>
+  <text x="112" y="111" text-anchor="middle" fill="#90caf9" font-size="9">Active master · UI + coordination</text>
+  <rect x="30" y="126" width="165" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="112" y="141" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">Analytics Controller</text>
+  <rect x="30" y="152" width="165" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="112" y="167" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">vSphere Client UI (HTTPS)</text>
+  <rect x="30" y="178" width="165" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="112" y="193" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">REST API endpoint</text>
+  <rect x="30" y="204" width="165" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="112" y="219" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">Cluster coordination</text>
+  <rect x="30" y="230" width="165" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="112" y="245" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">Alert processing</text>
+  <text x="112" y="282" text-anchor="middle" fill="#78909c" font-size="9">Single active primary</text>
+  <text x="112" y="300" text-anchor="middle" fill="#78909c" font-size="9">Must be on separate ESXi host</text>
+  <text x="112" y="318" text-anchor="middle" fill="#78909c" font-size="9">If primary fails: replica promotes</text>
+  <text x="112" y="336" text-anchor="middle" fill="#78909c" font-size="9">Failover automatic — no data loss</text>
+  <text x="112" y="354" text-anchor="middle" fill="#78909c" font-size="9">Size: 16 vCPU / 48 GB RAM (large)</text>
+
+  <!-- ═ COLUMN 2: Primary Replica ═ -->
+  <rect x="215" y="72" width="185" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="215" y="72" width="185" height="42" fill="#e65100" rx="6"/>
+  <rect x="215" y="100" width="185" height="14" fill="#e65100"/>
+  <text x="307" y="97" text-anchor="middle" fill="white" font-size="12" font-weight="700">Primary Replica</text>
+  <text x="307" y="111" text-anchor="middle" fill="#ffccbc" font-size="9">Hot standby · auto-promotion</text>
+  <rect x="225" y="126" width="165" height="22" fill="#fbe9e7" rx="3" stroke="#ffccbc" stroke-width="1"/>
+  <text x="307" y="141" text-anchor="middle" fill="#bf360c" font-size="9" font-weight="700">Mirrors Primary state</text>
+  <rect x="225" y="152" width="165" height="22" fill="#fbe9e7" rx="3" stroke="#ffccbc" stroke-width="1"/>
+  <text x="307" y="167" text-anchor="middle" fill="#bf360c" font-size="9" font-weight="700">Receives all metric writes</text>
+  <rect x="225" y="178" width="165" height="22" fill="#fbe9e7" rx="3" stroke="#ffccbc" stroke-width="1"/>
+  <text x="307" y="193" text-anchor="middle" fill="#bf360c" font-size="9" font-weight="700">Passive (not serving UI)</text>
+  <rect x="225" y="204" width="165" height="22" fill="#fbe9e7" rx="3" stroke="#ffccbc" stroke-width="1"/>
+  <text x="307" y="219" text-anchor="middle" fill="#bf360c" font-size="9" font-weight="700">Anti-affinity with Primary</text>
+  <text x="307" y="258" text-anchor="middle" fill="#78909c" font-size="9">Required for HA</text>
+  <text x="307" y="276" text-anchor="middle" fill="#78909c" font-size="9">Same sizing as Primary</text>
+  <text x="307" y="294" text-anchor="middle" fill="#78909c" font-size="9">Promotes automatically on failure</text>
+  <text x="307" y="312" text-anchor="middle" fill="#78909c" font-size="9">Deploy before adding Data nodes</text>
+  <text x="307" y="330" text-anchor="middle" fill="#78909c" font-size="9">On separate ESXi host from Primary</text>
+
+  <!-- ═ COLUMN 3: Data Nodes ═ -->
+  <rect x="410" y="72" width="185" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="410" y="72" width="185" height="42" fill="#00695c" rx="6"/>
+  <rect x="410" y="100" width="185" height="14" fill="#00695c"/>
+  <text x="502" y="97" text-anchor="middle" fill="white" font-size="12" font-weight="700">Data Nodes</text>
+  <text x="502" y="111" text-anchor="middle" fill="#80cbc4" font-size="9">Scale-out metric ingestion</text>
+  <rect x="420" y="126" width="165" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="502" y="141" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">Cassandra (metric store)</text>
+  <rect x="420" y="152" width="165" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="502" y="167" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">GemFire (in-memory cache)</text>
+  <rect x="420" y="178" width="165" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="502" y="193" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">Elastic Search (indexing)</text>
+  <rect x="420" y="204" width="165" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="502" y="219" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">Scale: up to 8 data nodes</text>
+  <text x="502" y="258" text-anchor="middle" fill="#78909c" font-size="9">Each node: 8 vCPU / 32 GB</text>
+  <text x="502" y="276" text-anchor="middle" fill="#78909c" font-size="9">Add nodes as objects scale</text>
+  <text x="502" y="294" text-anchor="middle" fill="#78909c" font-size="9">Handles metric compression</text>
+  <text x="502" y="312" text-anchor="middle" fill="#78909c" font-size="9">Storage: 500 GB+ thin-provisioned</text>
+  <text x="502" y="330" text-anchor="middle" fill="#78909c" font-size="9">Only needed at large scale</text>
+
+  <!-- ═ COLUMN 4: Remote Collector ═ -->
+  <rect x="605" y="72" width="185" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="605" y="72" width="185" height="42" fill="#6a1b9a" rx="6"/>
+  <rect x="605" y="100" width="185" height="14" fill="#6a1b9a"/>
+  <text x="697" y="97" text-anchor="middle" fill="white" font-size="12" font-weight="700">Remote Collector</text>
+  <text x="697" y="111" text-anchor="middle" fill="#ce93d8" font-size="9">Remote sites · DMZ · cloud</text>
+  <rect x="615" y="126" width="165" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="697" y="141" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">Lightweight proxy appliance</text>
+  <rect x="615" y="152" width="165" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="697" y="167" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">Adapter instances run here</text>
+  <rect x="615" y="178" width="165" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="697" y="193" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">Forwards to analytics cluster</text>
+  <rect x="615" y="204" width="165" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="697" y="219" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">Cloud Proxy (SaaS variant)</text>
+  <rect x="615" y="230" width="165" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="697" y="245" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">No direct cluster connectivity</text>
+  <text x="697" y="282" text-anchor="middle" fill="#78909c" font-size="9">Collect without firewall changes</text>
+  <text x="697" y="300" text-anchor="middle" fill="#78909c" font-size="9">Deploy per remote site or DMZ</text>
+  <text x="697" y="318" text-anchor="middle" fill="#78909c" font-size="9">Size: 4 vCPU / 16 GB RAM</text>
+  <text x="697" y="336" text-anchor="middle" fill="#78909c" font-size="9">Does not store metrics locally</text>
+  <text x="697" y="354" text-anchor="middle" fill="#78909c" font-size="9">Cloud Proxy: VMware Cloud on AWS</text>
+
+  <!-- ═ COMPARISON TABLE ═ -->
+  <rect x="20" y="480" width="780" height="222" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="20" y="480" width="780" height="36" fill="#1a2744" rx="6"/>
+  <rect x="20" y="504" width="780" height="12" fill="#1a2744"/>
+  <text x="410" y="504" text-anchor="middle" fill="white" font-size="13" font-weight="700">Node Role Comparison</text>
+  <rect x="20" y="516" width="780" height="28" fill="#eceff1"/>
+  <text x="120" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Attribute</text>
+  <text x="302" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Primary</text>
+  <text x="450" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Replica</text>
+  <text x="597" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Data Node</text>
+  <text x="742" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Remote Collector</text>
+  <line x1="220" y1="516" x2="220" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <line x1="385" y1="516" x2="385" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <line x1="515" y1="516" x2="515" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <line x1="680" y1="516" x2="680" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <rect x="20" y="544" width="780" height="26" fill="#f7f9fb"/>
+  <text x="120" y="561" text-anchor="middle" fill="#455a64" font-size="9">Serves UI / API</text>
+  <text x="302" y="562" text-anchor="middle" fill="#2e7d32" font-size="13" font-weight="700">✓</text>
+  <text x="450" y="562" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="597" y="562" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="742" y="562" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="120" y="587" text-anchor="middle" fill="#455a64" font-size="9">Stores metrics</text>
+  <text x="302" y="587" text-anchor="middle" fill="#2e7d32" font-size="13" font-weight="700">✓</text>
+  <text x="450" y="587" text-anchor="middle" fill="#2e7d32" font-size="13" font-weight="700">✓</text>
+  <text x="597" y="587" text-anchor="middle" fill="#2e7d32" font-size="13" font-weight="700">✓</text>
+  <text x="742" y="587" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <rect x="20" y="596" width="780" height="26" fill="#f7f9fb"/>
+  <text x="120" y="613" text-anchor="middle" fill="#455a64" font-size="9">Required for cluster</text>
+  <text x="302" y="613" text-anchor="middle" fill="#2e7d32" font-size="13" font-weight="700">✓</text>
+  <text x="450" y="613" text-anchor="middle" fill="#546e7a" font-size="9">For HA</text>
+  <text x="597" y="613" text-anchor="middle" fill="#546e7a" font-size="9">At scale</text>
+  <text x="742" y="613" text-anchor="middle" fill="#546e7a" font-size="9">Remote sites</text>
+  <text x="120" y="639" text-anchor="middle" fill="#455a64" font-size="9">vCPU / RAM</text>
+  <text x="302" y="639" text-anchor="middle" fill="#546e7a" font-size="9">16 vCPU / 48 GB</text>
+  <text x="450" y="639" text-anchor="middle" fill="#546e7a" font-size="9">16 vCPU / 48 GB</text>
+  <text x="597" y="639" text-anchor="middle" fill="#546e7a" font-size="9">8 vCPU / 32 GB</text>
+  <text x="742" y="639" text-anchor="middle" fill="#546e7a" font-size="9">4 vCPU / 16 GB</text>
+  <rect x="20" y="648" width="780" height="26" fill="#f7f9fb"/>
+  <text x="120" y="665" text-anchor="middle" fill="#455a64" font-size="9">HA impact if lost</text>
+  <text x="302" y="665" text-anchor="middle" fill="#546e7a" font-size="9">Replica promotes</text>
+  <text x="450" y="665" text-anchor="middle" fill="#546e7a" font-size="9">No failover</text>
+  <text x="597" y="665" text-anchor="middle" fill="#546e7a" font-size="9">Reduced capacity</text>
+  <text x="742" y="665" text-anchor="middle" fill="#546e7a" font-size="9">Remote site blind</text>
+  <text x="120" y="691" text-anchor="middle" fill="#455a64" font-size="9">Count per cluster</text>
+  <text x="302" y="691" text-anchor="middle" fill="#546e7a" font-size="9">1</text>
+  <text x="450" y="691" text-anchor="middle" fill="#546e7a" font-size="9">0–1</text>
+  <text x="597" y="691" text-anchor="middle" fill="#546e7a" font-size="9">0–8</text>
+  <text x="742" y="691" text-anchor="middle" fill="#546e7a" font-size="9">0–many</text>
+  <line x1="20" y1="700" x2="800" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <!-- FOOTER -->
+  <rect x="0" y="720" width="820" height="30" fill="#1a2744"/>
+  <text x="410" y="739" text-anchor="middle" fill="#7a8fbb" font-size="9">VMware Aria Operations Reference · Primary · Replica · Data Nodes · Remote Collector · Cloud Proxy</text>
+</svg>
