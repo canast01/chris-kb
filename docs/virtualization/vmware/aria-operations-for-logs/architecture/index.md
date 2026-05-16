@@ -10,6 +10,10 @@ Log analytics platform collecting syslog and LI Agent data from VMware infrastru
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, HA design, and ingestion protocol best practices.</span></a>
 </div>
 
+## Aria Operations for Logs — Cluster Architecture
+
+![Aria Operations for Logs Cluster Architecture](../../../../assets/aria-operations-for-logs-architecture-overview.svg)
+
 ## Cluster Topology
 
 | Node Role | Description |

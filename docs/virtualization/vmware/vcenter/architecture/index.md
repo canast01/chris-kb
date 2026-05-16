@@ -19,6 +19,10 @@ vCenter Server is the management plane for VMware vSphere. It is deployed as the
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, cluster baseline, HA/DRS settings, VM standards, and snapshot policy.</span></a>
 </div>
 
+## vCenter Server Deployment Topologies
+
+![vCenter Server Deployment Topologies](../../../../assets/vcenter-architecture-overview.svg)
+
 ---
 
 ## vSphere Cluster Topology

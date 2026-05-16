@@ -10,6 +10,10 @@ Analytics cluster for vSphere performance, capacity, and compliance monitoring. 
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, adapter configuration, and cluster design best practices.</span></a>
 </div>
 
+## Aria Operations Cluster Architecture
+
+![Aria Operations Cluster Architecture](../../../../assets/aria-operations-architecture-overview.svg)
+
 ## Node Roles
 
 | Node Role | Description |

@@ -20,6 +20,10 @@ NSX is VMware's software-defined networking and security platform. It virtualise
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, overlay design rules, firewall design, baselines, and version compatibility.</span></a>
 </div>
 
+## NSX Architecture Planes
+
+![NSX Architecture Planes](../../../../assets/nsx-architecture-overview.svg)
+
 ---
 
 ## NSX Overlay Architecture

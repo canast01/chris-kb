@@ -19,6 +19,10 @@ ESXi is VMware's Type-1 hypervisor. It is deployed in several cluster configurat
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Host naming, BIOS baseline, vmkernel layout, NTP, VIB policy, and cluster sizing.</span></a>
 </div>
 
+## ESXi Cluster Deployment Models
+
+![ESXi Cluster Deployment Models](../../../../assets/esxi-architecture-overview.svg)
+
 ---
 
 ## Host Architecture

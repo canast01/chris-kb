@@ -9,3 +9,7 @@ Aria Operations for Networks (formerly vRealize Network Insight) provides networ
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with other platforms and services.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, design rules, and configuration baselines.</span></a>
 </div>
+
+## Aria Operations for Networks — Platform Architecture
+
+![Aria Operations for Networks Platform Architecture](../../../../assets/aria-operations-for-networks-architecture-overview.svg)

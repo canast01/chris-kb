@@ -19,6 +19,10 @@ VMware Cloud Foundation (VCF) is a full-stack SDDC platform. SDDC Manager orches
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Management domain sizing, naming conventions, network requirements, password policy, and HCL requirements.</span></a>
 </div>
 
+## VCF Domain Architecture
+
+![VCF Domain Architecture](../../../../assets/vcf-architecture-overview.svg)
+
 ---
 
 ## SDDC Stack Architecture
