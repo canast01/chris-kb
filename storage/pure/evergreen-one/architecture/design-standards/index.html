@@ -1062,6 +1062,208 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#committed-reserve-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Committed Reserve Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Committed Reserve Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sizing-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reserve-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reserve Calculation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#burst-headroom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Burst Headroom
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phonehome-pure1-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phonehome / Pure1 Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-data-network-iscsi-nvme-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Data Network (iSCSI / NVMe-TCP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-data-network-fc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Data Network (FC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sla-compliance-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLA Compliance Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Naming Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#array-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Array Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-and-host-group-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host and Host Group Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protection-group-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1283,315 @@
 
 
 <h1 id="evergreenone-design-standards">Evergreen//One — Design Standards<a class="headerlink" href="#evergreenone-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<hr />
+<h2 id="committed-reserve-sizing">Committed Reserve Sizing<a class="headerlink" href="#committed-reserve-sizing" title="Permanent link">&para;</a></h2>
+<p>The committed reserve is the minimum monthly TiB the customer commits to pay for. Size it based on current workload capacity plus expected growth within the contract term.</p>
+<h3 id="sizing-inputs">Sizing Inputs<a class="headerlink" href="#sizing-inputs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Source</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Current host-written TiB</td>
+<td>Pure1 capacity report</td>
+<td>Raw consumed before data reduction</td>
+</tr>
+<tr>
+<td>Data reduction ratio</td>
+<td>Pure1 array view</td>
+<td>Typical FlashArray: 3–5:1; FlashBlade: 2–4:1</td>
+</tr>
+<tr>
+<td>Growth rate</td>
+<td>Historical trend (12 months minimum)</td>
+<td>Compound monthly growth rate</td>
+</tr>
+<tr>
+<td>Contract term</td>
+<td>Service agreement</td>
+<td>Typically 3 or 5 years</td>
+</tr>
+<tr>
+<td>Performance tier</td>
+<td>Workload IOPS/latency requirements</td>
+<td>Defines hardware selection</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reserve-calculation">Reserve Calculation<a class="headerlink" href="#reserve-calculation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Committed Reserve (TiB) = (Current TiB × Growth Factor) × Safety Buffer
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Growth Factor = (1 + Monthly Growth Rate) ^ Contract Months
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Safety Buffer = 1.15 (15% above projected needs)
+</code></pre></div>
+<p>Example:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Current: 50 TiB consumed
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Monthly growth rate: 2%
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Contract: 36 months
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Growth Factor: (1.02)^36 = 2.04
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Reserve: 50 × 2.04 × 1.15 = 117 TiB committed
+</code></pre></div></p>
+<h3 id="burst-headroom">Burst Headroom<a class="headerlink" href="#burst-headroom" title="Permanent link">&para;</a></h3>
+<p>The burst headroom defines the maximum TiB above reserve the array can serve before a capacity increase order is required. Set to at least 20% above the expected peak:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Burst Headroom = Committed Reserve × 0.20
+</code></pre></div>
+<p>Burst capacity is billed at a higher per-TiB rate. Monitor Pure1 burst utilisation weekly — sustained burst above 10% of the committed reserve is a signal to renegotiate the reserve tier.</p>
+<hr />
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="phonehome-pure1-connectivity">Phonehome / Pure1 Connectivity<a class="headerlink" href="#phonehome-pure1-connectivity" title="Permanent link">&para;</a></h3>
+<p>Phonehome is mandatory for all Evergreen//One installations. Without it, Pure cannot monitor SLA compliance.</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Destination</td>
+<td><code>api.pure1.purestorage.com</code> — TCP 443 (HTTPS)</td>
+</tr>
+<tr>
+<td>Firewall rule</td>
+<td>Allow from FlashArray management IPs to internet on TCP 443</td>
+</tr>
+<tr>
+<td>Proxy support</td>
+<td>HTTP proxy supported (configure in FlashArray settings)</td>
+</tr>
+<tr>
+<td>Bandwidth</td>
+<td>Minimal — telemetry uploads are typically &lt; 10 MB/day</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td>99.9% uptime required for SLA monitoring; alert if disconnected &gt; 4 hours</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure HTTP proxy on FlashArray (if required by corporate policy)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Pure1 portal → Administration → Phonehome → Proxy Settings</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Or via CLI:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>puresetting<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--proxy<span class="w"> </span>http://proxy.corp.local:8080
+</code></pre></div>
+<h3 id="host-data-network-iscsi-nvme-tcp">Host Data Network (iSCSI / NVMe-TCP)<a class="headerlink" href="#host-data-network-iscsi-nvme-tcp" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Port speed</td>
+<td>25 GbE minimum per host HBA; 100 GbE recommended for NVMe-TCP</td>
+</tr>
+<tr>
+<td>Dedicated VLAN</td>
+<td>Separate VLAN for storage traffic — do not share with VM or management traffic</td>
+</tr>
+<tr>
+<td>MTU</td>
+<td>Jumbo frames (MTU 9000) end-to-end including switch and host vNIC</td>
+</tr>
+<tr>
+<td>Multipath</td>
+<td>Round Robin PSP with minimum 2 paths per host</td>
+</tr>
+<tr>
+<td>Redundancy</td>
+<td>Dual-homed to separate TOR switches (A/B fabric)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify MTU on ESXi storage VMkernel</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>iscsi
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get<span class="w"> </span>--interface-name<span class="w"> </span>vmk1
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test MTU end-to-end (from ESXi to FlashArray iSCSI port)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">192</span>.168.100.10
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># -d = don&#39;t fragment; -s 8972 = 8972 bytes payload (9000 MTU - 28 byte header)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Should succeed without fragmentation</span>
+</code></pre></div>
+<h3 id="host-data-network-fc">Host Data Network (FC)<a class="headerlink" href="#host-data-network-fc" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Speed</td>
+<td>16 Gb FC minimum; 32 Gb FC recommended</td>
+</tr>
+<tr>
+<td>Zoning</td>
+<td>Single initiator, single target zoning (WWPN-based)</td>
+</tr>
+<tr>
+<td>Fabric</td>
+<td>Dual fabric (A and B) — each HBA port to a separate fabric</td>
+</tr>
+<tr>
+<td>FlashArray FC ports</td>
+<td>2 ports per controller minimum; typically 4 (2 per fabric)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="protocol-selection">Protocol Selection<a class="headerlink" href="#protocol-selection" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Workload Type</th>
+<th>Recommended Protocol</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Block — general purpose</td>
+<td>iSCSI (10/25 GbE)</td>
+<td>Simplest operational model; runs over existing Ethernet</td>
+</tr>
+<tr>
+<td>Block — high performance</td>
+<td>NVMe/FC or NVMe/TCP</td>
+<td>Lower latency than SCSI; requires NVMe-capable HBAs</td>
+</tr>
+<tr>
+<td>Block — mission critical</td>
+<td>FC (16/32 Gb)</td>
+<td>Deterministic latency; separate physical fabric</td>
+</tr>
+<tr>
+<td>File</td>
+<td>NFS v3/v4.1 (FlashBlade)</td>
+<td>vSphere NFS datastores or direct application NFS mounts</td>
+</tr>
+<tr>
+<td>Object</td>
+<td>S3 (FlashBlade)</td>
+<td>Backup targets, cloud-native applications</td>
+</tr>
+<tr>
+<td>Mixed block+file</td>
+<td>iSCSI (FlashArray) + NFS (FlashBlade)</td>
+<td>Common in enterprise deployments</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sla-compliance-requirements">SLA Compliance Requirements<a class="headerlink" href="#sla-compliance-requirements" title="Permanent link">&para;</a></h2>
+<p>Evergreen//One provides a 99.9999% availability SLA (approximately 32 seconds downtime per year). Meeting this SLA requires the customer to maintain their side of the dependency chain:</p>
+<table>
+<thead>
+<tr>
+<th>Customer Responsibility</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multipathing</td>
+<td>At least 2 active paths per host at all times</td>
+</tr>
+<tr>
+<td>Network redundancy</td>
+<td>Dual fabric / dual switch — no single switch failure should isolate a host</td>
+</tr>
+<tr>
+<td>Host maintenance</td>
+<td>Coordinate host patching windows with Pure for any array-touching procedures</td>
+</tr>
+<tr>
+<td>Phonehome</td>
+<td>Must remain connected; notify Pure if firewall changes affect phonehome</td>
+</tr>
+<tr>
+<td>Environmental</td>
+<td>UPS, cooling, and power A/B feeds per Dell/Pure site requirements</td>
+</tr>
+<tr>
+<td>Change notification</td>
+<td>Notify Pure account team of major changes (host additions, replication changes, protocol changes)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="naming-standards">Naming Standards<a class="headerlink" href="#naming-standards" title="Permanent link">&para;</a></h2>
+<h3 id="array-names">Array Names<a class="headerlink" href="#array-names" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&lt;site&gt;-fa-&lt;number&gt;       # FlashArray
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>&lt;site&gt;-fb-&lt;number&gt;       # FlashBlade
+</code></pre></div>
+<p>Examples: <code>lon-fa-01</code>, <code>ams-fb-01</code></p>
+<h3 id="volume-names">Volume Names<a class="headerlink" href="#volume-names" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&lt;host&gt;-&lt;purpose&gt;-&lt;number&gt;
+</code></pre></div>
+<p>Examples: <code>esxi-01-boot-01</code>, <code>sql-prod-data-01</code>, <code>oracle-asm-01</code></p>
+<h3 id="host-and-host-group-names">Host and Host Group Names<a class="headerlink" href="#host-and-host-group-names" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&lt;hostname&gt;               # Host: match the actual server hostname
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>&lt;cluster&gt;-hg             # Host Group: cluster name + -hg
+</code></pre></div>
+<p>Examples: <code>esxi-01</code>, <code>vsan-cluster-hg</code>, <code>sql-prod-hg</code></p>
+<h3 id="protection-group-names">Protection Group Names<a class="headerlink" href="#protection-group-names" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>&lt;workload&gt;-pg            # Protection group
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>&lt;source-site&gt;-to-&lt;dest-site&gt;-pg   # Replication protection group
+</code></pre></div>
+<p>Examples: <code>sql-prod-pg</code>, <code>lon-to-ams-pg</code></p>
+<hr />
+<h2 id="change-management">Change Management<a class="headerlink" href="#change-management" title="Permanent link">&para;</a></h2>
+<p>Pure manages all hardware changes. The customer manages all host-side and configuration changes.</p>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>Owner</th>
+<th>Advance Notice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FlashArray firmware update</td>
+<td>Pure</td>
+<td>5 business days notification from Pure</td>
+</tr>
+<tr>
+<td>Controller replacement</td>
+<td>Pure</td>
+<td>Coordinated with customer during business hours</td>
+</tr>
+<tr>
+<td>Capacity increase (new shelf)</td>
+<td>Pure</td>
+<td>30-day lead time for ordering and scheduling</td>
+</tr>
+<tr>
+<td>Host addition</td>
+<td>Customer</td>
+<td>Notify Pure account team; Pure verifies capacity impact</td>
+</tr>
+<tr>
+<td>Replication link changes</td>
+<td>Customer</td>
+<td>Notify Pure; can affect burst headroom calculations</td>
+</tr>
+<tr>
+<td>Protocol changes (e.g., add NVMe/FC)</td>
+<td>Customer + Pure</td>
+<td>Requires Pure involvement for FlashArray-side port configuration</td>
+</tr>
+</tbody>
+</table>
+<p>All Pure-initiated changes arrive with prior notification. Customer should not accept unscheduled on-site visits or remote sessions without validation through the Pure support portal.</p>
 
 
 

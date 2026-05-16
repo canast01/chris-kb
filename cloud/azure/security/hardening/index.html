@@ -1062,6 +1062,125 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#microsoft-defender-for-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Microsoft Defender for Cloud
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Microsoft Defender for Cloud">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unhealthy-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unhealthy Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-security-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Security Groups
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Security Groups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nsg-flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSG Flow Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#just-in-time-vm-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Just-In-Time VM Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-policy-for-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Policy for Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-locks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Locks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defender-for-servers-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defender for Servers — Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-baseline-hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Baseline Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,7 +1200,309 @@
 
 
 <h1 id="azure-hardening">Azure — Hardening<a class="headerlink" href="#azure-hardening" title="Permanent link">&para;</a></h1>
-<p>Content coming soon.</p>
+<p>Azure hardening applies the principle of least privilege, reduces the attack surface, and enforces security configuration standards across subscriptions, resource groups, and individual resources.</p>
+<hr />
+<h2 id="microsoft-defender-for-cloud">Microsoft Defender for Cloud<a class="headerlink" href="#microsoft-defender-for-cloud" title="Permanent link">&para;</a></h2>
+<p>Defender for Cloud is the primary security posture dashboard. It aggregates recommendations, assigns a Secure Score, and provides threat detection.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable Defender for Cloud on a subscription (free tier — CSPM only)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>security<span class="w"> </span>auto-provisioning-setting<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span>mma<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--auto-provision<span class="w"> </span>On
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Enable Defender plans (paid) for specific resource types</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>VirtualMachines<span class="w"> </span>--tier<span class="w"> </span>Standard
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>StorageAccounts<span class="w"> </span>--tier<span class="w"> </span>Standard
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>SqlServers<span class="w"> </span>--tier<span class="w"> </span>Standard
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>AppServices<span class="w"> </span>--tier<span class="w"> </span>Standard
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>Containers<span class="w"> </span>--tier<span class="w"> </span>Standard
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List all Defender plan states</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>security<span class="w"> </span>pricing<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Get current Secure Score</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>az<span class="w"> </span>security<span class="w"> </span>secure-score<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
+</code></pre></div>
+<h3 id="unhealthy-recommendations">Unhealthy Recommendations<a class="headerlink" href="#unhealthy-recommendations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all unhealthy security recommendations</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>security<span class="w"> </span>assessment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?status.code==&#39;Unhealthy&#39;]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Get details on a specific recommendation</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>az<span class="w"> </span>security<span class="w"> </span>assessment<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--name<span class="w"> </span>&lt;assessment-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--assessed-resource-id<span class="w"> </span>&lt;resource-id&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Export all recommendations to JSON for remediation tracking</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>security<span class="w"> </span>assessment<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>json<span class="w"> </span>&gt;<span class="w"> </span>security-assessments-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+</code></pre></div>
+<hr />
+<h2 id="network-security-groups">Network Security Groups<a class="headerlink" href="#network-security-groups" title="Permanent link">&para;</a></h2>
+<p>NSGs filter traffic at the subnet or NIC level. Apply NSGs to subnets (preferred) rather than individual NICs.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an NSG</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--name<span class="w"> </span>nsg-appsubnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--location<span class="w"> </span>&lt;region&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Add a rule — allow HTTPS inbound from a specific CIDR</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--nsg-name<span class="w"> </span>nsg-appsubnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--name<span class="w"> </span>Allow-HTTPS-Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--priority<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--direction<span class="w"> </span>Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--access<span class="w"> </span>Allow<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--protocol<span class="w"> </span>Tcp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--source-address-prefixes<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--destination-port-ranges<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Deny all other inbound (explicit deny — NSGs have implicit deny but make it explicit for auditing)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>az<span class="w"> </span>network<span class="w"> </span>nsg<span class="w"> </span>rule<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--nsg-name<span class="w"> </span>nsg-appsubnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span>--name<span class="w"> </span>Deny-All-Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>--priority<span class="w"> </span><span class="m">4000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span>--direction<span class="w"> </span>Inbound<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>--access<span class="w"> </span>Deny<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">  </span>--protocol<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span>--source-address-prefixes<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">  </span>--destination-port-ranges<span class="w"> </span><span class="s1">&#39;*&#39;</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1"># Associate NSG with a subnet</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">  </span>--vnet-name<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">  </span>--name<span class="w"> </span>&lt;subnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">  </span>--network-security-group<span class="w"> </span>nsg-appsubnet
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="c1"># List effective NSG rules on a NIC (what actually applies including inheritance)</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>az<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list-effective-nsg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">  </span>--name<span class="w"> </span>&lt;nic-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;
+</code></pre></div>
+<h3 id="nsg-flow-logs">NSG Flow Logs<a class="headerlink" href="#nsg-flow-logs" title="Permanent link">&para;</a></h3>
+<p>Enable flow logs for all production NSGs. Required for security investigations and network anomaly detection.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a storage account for NSG flow logs</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--name<span class="w"> </span>&lt;sa-nsgflowlogs&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--sku<span class="w"> </span>Standard_LRS
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Enable NSG flow logs (version 2 includes traffic analytics)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>az<span class="w"> </span>network<span class="w"> </span>watcher<span class="w"> </span>flow-log<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--name<span class="w"> </span>flowlog-nsg-appsubnet<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--nsg<span class="w"> </span>&lt;nsg-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--storage-account<span class="w"> </span>&lt;sa-resource-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--format<span class="w"> </span>JSON<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--log-version<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--retention<span class="w"> </span><span class="m">90</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--traffic-analytics<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--workspace<span class="w"> </span>&lt;log-analytics-workspace-id&gt;
+</code></pre></div>
+<hr />
+<h2 id="just-in-time-vm-access">Just-In-Time VM Access<a class="headerlink" href="#just-in-time-vm-access" title="Permanent link">&para;</a></h2>
+<p>JIT VM access blocks management ports (RDP/SSH) by default and opens them only for approved requests with time limits.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable JIT on a VM</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>az<span class="w"> </span>security<span class="w"> </span>jit-policy<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--location<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--vm-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--ports<span class="w"> </span><span class="s1">&#39;[</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    {</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">      &quot;number&quot;: 22,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">      &quot;protocol&quot;: &quot;TCP&quot;,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">      &quot;allowedSourceAddressPrefix&quot;: &quot;*&quot;,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">      &quot;maxRequestAccessDuration&quot;: &quot;PT3H&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">    },</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">    {</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">      &quot;number&quot;: 3389,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">      &quot;protocol&quot;: &quot;TCP&quot;,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">      &quot;allowedSourceAddressPrefix&quot;: &quot;*&quot;,</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">      &quot;maxRequestAccessDuration&quot;: &quot;PT3H&quot;</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">    }</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">  ]&#39;</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Request JIT access (opens port for 2 hours from your IP)</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>az<span class="w"> </span>security<span class="w"> </span>jit-policy<span class="w"> </span>initiate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">  </span>--vm-name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span>--vm-requests<span class="w"> </span><span class="s1">&#39;[</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="s1">    {</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="s1">      &quot;virtualMachineResourceId&quot;: &quot;&lt;vm-resource-id&gt;&quot;,</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="s1">      &quot;ports&quot;: [</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="s1">        {</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="s1">          &quot;number&quot;: 22,</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="s1">          &quot;allowedSourceAddressPrefix&quot;: &quot;&lt;your-ip&gt;/32&quot;,</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="s1">          &quot;endTimeUtc&quot;: &quot;2024-01-01T12:00:00.0000000Z&quot;,</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="s1">          &quot;duration&quot;: &quot;PT2H&quot;</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="s1">        }</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="s1">      ]</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="s1">    }</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="s1">  ]&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="azure-policy-for-security">Azure Policy for Security<a class="headerlink" href="#azure-policy-for-security" title="Permanent link">&para;</a></h2>
+<p>Azure Policy enforces configuration standards automatically and audits for drift.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all built-in security policies</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>policy<span class="w"> </span>definition<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?policyType==&#39;BuiltIn&#39; &amp;&amp; contains(displayName, &#39;Security&#39;)]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Assign a built-in policy: require TLS 1.2 on storage accounts</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;require-tls12-storage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;Require TLS 1.2 on Storage Accounts&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--policy<span class="w"> </span><span class="s2">&quot;fe83a0eb-a853-422d-aac2-1bffd182c5d0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--enforcement-mode<span class="w"> </span>Default
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Assign CIS Microsoft Azure Foundations Benchmark initiative</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>az<span class="w"> </span>policy<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;cis-azure-benchmark&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span>--display-name<span class="w"> </span><span class="s2">&quot;CIS Microsoft Azure Foundations Benchmark&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>--policy-set-definition<span class="w"> </span><span class="s2">&quot;612b5213-9160-4969-8578-1518bd2a000c&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>--scope<span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;sub-id&gt;&quot;</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Get policy compliance state</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>summarize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>--subscription<span class="w"> </span>&lt;sub-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="c1"># Get non-compliant resources for a specific assignment</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>az<span class="w"> </span>policy<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span>--policy-assignment<span class="w"> </span>&lt;assignment-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>--filter<span class="w"> </span><span class="s2">&quot;complianceState eq &#39;NonCompliant&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<hr />
+<h2 id="resource-locks">Resource Locks<a class="headerlink" href="#resource-locks" title="Permanent link">&para;</a></h2>
+<p>Resource locks prevent accidental deletion or modification of critical resources.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Apply a delete lock to a resource group</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>lock<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--name<span class="w"> </span>lock-prod-rg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--lock-type<span class="w"> </span>CanNotDelete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--notes<span class="w"> </span><span class="s2">&quot;Production resource group — cannot delete without removing lock&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Apply a read-only lock (prevents modification)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>az<span class="w"> </span>lock<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--name<span class="w"> </span>lock-prod-vnet-readonly<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--resource-type<span class="w"> </span>Microsoft.Network/virtualNetworks<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--resource-name<span class="w"> </span>&lt;vnet-name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>--lock-type<span class="w"> </span>ReadOnly
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># List all locks in a subscription</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>az<span class="w"> </span>lock<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Remove a lock</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>az<span class="w"> </span>lock<span class="w"> </span>delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">  </span>--name<span class="w"> </span>lock-prod-rg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;
+</code></pre></div>
+<p>Apply <code>CanNotDelete</code> locks to all production resource groups, key vaults, virtual networks, and storage accounts that hold critical data.</p>
+<hr />
+<h2 id="defender-for-servers-hardening">Defender for Servers — Hardening<a class="headerlink" href="#defender-for-servers-hardening" title="Permanent link">&para;</a></h2>
+<p>When Defender for Servers (Plan 2) is enabled, it provides:
+- Microsoft Defender Vulnerability Management (MDVM) for OS and application CVE scanning
+- File Integrity Monitoring (FIM) — alerts on changes to critical system files
+- Adaptive Application Controls — allowlist for running processes
+- OS security baseline assessment (CIS benchmarks)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check vulnerability assessment findings for a VM</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>az<span class="w"> </span>security<span class="w"> </span>va<span class="w"> </span>sql<span class="w"> </span>scans<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--server-name<span class="w"> </span>&lt;server&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--database-name<span class="w"> </span>&lt;db&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--resource-group<span class="w"> </span>&lt;rg-name&gt;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Get endpoint protection status on VMs</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>az<span class="w"> </span>security<span class="w"> </span>assessment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;[?contains(displayName, &#39;endpoint protection&#39;)]&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<hr />
+<h2 id="security-baseline-hardening-checklist">Security Baseline Hardening Checklist<a class="headerlink" href="#security-baseline-hardening-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Azure Implementation</th>
+<th>Status Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MFA enforced for all users</td>
+<td>Conditional Access policy</td>
+<td><code>az rest --url graph.microsoft.com/v1.0/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr>
+<td>Legacy auth blocked</td>
+<td>Conditional Access → block legacy clients</td>
+<td>Same as above</td>
+</tr>
+<tr>
+<td>No standing Owner assignments</td>
+<td>PIM eligible assignments only</td>
+<td><code>az role assignment list --all --query "[?roleDefinitionName=='Owner']"</code></td>
+</tr>
+<tr>
+<td>JIT VM access</td>
+<td>Defender for Cloud → JIT</td>
+<td><code>az security jit-policy list</code></td>
+</tr>
+<tr>
+<td>NSG flow logs</td>
+<td>All production NSGs</td>
+<td><code>az network watcher flow-log list</code></td>
+</tr>
+<tr>
+<td>Key Vault purge protection</td>
+<td>Enabled on all vaults</td>
+<td><code>az keyvault list --query "[?properties.enablePurgeProtection!=true]"</code></td>
+</tr>
+<tr>
+<td>Storage HTTPS only</td>
+<td>All storage accounts</td>
+<td><code>az storage account list --query "[?enableHttpsTrafficOnly!=true]"</code></td>
+</tr>
+<tr>
+<td>Storage TLS 1.2+</td>
+<td>All storage accounts</td>
+<td><code>az storage account list --query "[?minimumTlsVersion!='TLS1_2']"</code></td>
+</tr>
+<tr>
+<td>Defender for Cloud enabled</td>
+<td>All subscriptions</td>
+<td><code>az security auto-provisioning-setting list</code></td>
+</tr>
+<tr>
+<td>Diagnostic settings</td>
+<td>All critical resources</td>
+<td><code>az monitor diagnostic-settings list</code></td>
+</tr>
+<tr>
+<td>No public storage blobs</td>
+<td>All storage accounts</td>
+<td><code>az storage account list --query "[?allowBlobPublicAccess==true]"</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Quick hardening audit — find storage accounts with HTTP allowed or public access</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="s2">import json, sys</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s2">accounts = json.load(sys.stdin)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s2">for a in accounts:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s2">    issues = []</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s2">    if not a.get(&#39;enableHttpsTrafficOnly&#39;): issues.append(&#39;HTTP allowed&#39;)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s2">    if a.get(&#39;allowBlobPublicAccess&#39;): issues.append(&#39;public blob access&#39;)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s2">    if a.get(&#39;minimumTlsVersion&#39;,&#39;&#39;) != &#39;TLS1_2&#39;: issues.append(&#39;TLS &lt; 1.2&#39;)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s2">    if issues:</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s2">        print(f&#39;{a[\&quot;name\&quot;]}: {\&quot;, \&quot;.join(issues)}&#39;)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s2">&quot;</span>
+</code></pre></div>
 
 
 
