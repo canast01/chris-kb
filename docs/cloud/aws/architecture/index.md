@@ -10,6 +10,10 @@ Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Iden
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Account structure standards, tagging, naming, and security guardrails.</span></a>
 </div>
 
+## AWS Platform Overview
+
+![AWS Multi-Account Architecture](../../../assets/aws-overview.svg)
+
 ## Service Domains
 
 | Domain | Key Services |
