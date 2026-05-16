@@ -8,7 +8,7 @@ Evergreen//One Storage-as-a-Service — Pure-owned and managed hardware on-premi
 
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
-  <span>How it works, STaaS delivery model, consumption tiers, and HA topology.</span>
+  <span>How it works, integrations, and design standards.</span>
 </a>
 
 <a class="kb-card" href="operations/">
