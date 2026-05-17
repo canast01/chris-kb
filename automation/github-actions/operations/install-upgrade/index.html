@@ -1069,10 +1069,115 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
+  <a href="#self-hosted-runner-upgrade-procedure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrade Workflow
+        Self-Hosted Runner Upgrade Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Self-Hosted Runner Upgrade Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-check-the-current-runner-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Check the current runner version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-drain-in-progress-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Drain in-progress jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-download-and-install-the-new-runner-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Download and install the new runner package
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-restart-the-runner-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Restart the runner service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-validate-with-a-test-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Validate with a test workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version-pinning-for-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Pinning for Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runner-group-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runner Group Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-validation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Validation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback Procedure
       
     </span>
   </a>
@@ -1104,14 +1209,152 @@
 <p>Part of the <a href="../">GitHub Actions Operations</a> reference.</p>
 </blockquote>
 <hr />
-<h2 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h2>
+<h2 id="self-hosted-runner-upgrade-procedure">Self-Hosted Runner Upgrade Procedure<a class="headerlink" href="#self-hosted-runner-upgrade-procedure" title="Permanent link">&para;</a></h2>
+<p>Self-hosted runners do not auto-update by default (unlike GitHub-hosted runners). Follow this procedure for each upgrade cycle.</p>
+<h3 id="1-check-the-current-runner-version">1. Check the current runner version<a class="headerlink" href="#1-check-the-current-runner-version" title="Permanent link">&para;</a></h3>
+<p>On each runner host, check the installed version:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cd /opt/actions-runner   # or wherever the runner is installed
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./config.sh --version
+</code></pre></div>
+<p>Compare against the latest release on the <a href="https://github.com/actions/runner/releases">actions/runner releases page</a>.</p>
+<h3 id="2-drain-in-progress-jobs">2. Drain in-progress jobs<a class="headerlink" href="#2-drain-in-progress-jobs" title="Permanent link">&para;</a></h3>
+<p>Before stopping the runner service, drain any active jobs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo systemctl stop actions.runner.&lt;org&gt;-&lt;name&gt;.service
+</code></pre></div>
+<p>Wait for any in-flight workflow jobs to complete before proceeding. If runners are registered in a runner group, temporarily remove the runner from active job queues via the GitHub UI (Settings &gt; Actions &gt; Runners) rather than hard-stopping the service.</p>
+<h3 id="3-download-and-install-the-new-runner-package">3. Download and install the new runner package<a class="headerlink" href="#3-download-and-install-the-new-runner-package" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cd /opt/actions-runner
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl -O -L https://github.com/actions/runner/releases/download/v&lt;VERSION&gt;/actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tar xzf ./actions-runner-linux-x64-&lt;VERSION&gt;.tar.gz
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>./bin/installdependencies.sh
+</code></pre></div>
+<p>Re-registration is not required for in-place upgrades — the existing <code>.credentials</code> and <code>.runner</code> files remain valid.</p>
+<h3 id="4-restart-the-runner-service">4. Restart the runner service<a class="headerlink" href="#4-restart-the-runner-service" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo systemctl start actions.runner.&lt;org&gt;-&lt;name&gt;.service
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo systemctl status actions.runner.&lt;org&gt;-&lt;name&gt;.service
+</code></pre></div>
+<p>Confirm the runner appears as <strong>Idle</strong> in the GitHub repository or organisation runner list (Settings &gt; Actions &gt; Runners).</p>
+<h3 id="5-validate-with-a-test-workflow">5. Validate with a test workflow<a class="headerlink" href="#5-validate-with-a-test-workflow" title="Permanent link">&para;</a></h3>
+<p>Trigger a lightweight test workflow targeting the upgraded runner before routing production jobs to it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workflow_dispatch</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">validate</span><span class="p">:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">self-hosted</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">&lt;runner-label&gt;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;Runner version check&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat /opt/actions-runner/.runner</span>
+</code></pre></div>
+<p>Confirm the job completes successfully and the correct runner version is reported in the job log.</p>
+<hr />
+<h2 id="version-pinning-for-actions">Version Pinning for Actions<a class="headerlink" href="#version-pinning-for-actions" title="Permanent link">&para;</a></h2>
+<p>Pin third-party actions to a specific commit SHA rather than a mutable tag to prevent supply-chain substitution:</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Risk</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uses: actions/checkout@main</code></td>
+<td>Pulls whatever is on <code>main</code> at run time — changes without notice</td>
+<td>Do not use</td>
+</tr>
+<tr>
+<td><code>uses: actions/checkout@v4</code></td>
+<td>Tag can be force-pushed to a different commit</td>
+<td>Acceptable for first-party GitHub actions (actions/*); avoid for third-party</td>
+</tr>
+<tr>
+<td><code>uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683</code></td>
+<td>Pinned to a specific commit SHA</td>
+<td>Preferred for all third-party actions</td>
+</tr>
+</tbody>
+</table>
+<p>Use <a href="https://docs.github.com/en/code-security/dependabot">Dependabot</a> or <a href="https://docs.renovatebot.com/">Renovate</a> to automate SHA pin updates.</p>
+<hr />
+<h2 id="runner-group-management">Runner Group Management<a class="headerlink" href="#runner-group-management" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Location</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a runner group</td>
+<td>Org Settings &gt; Actions &gt; Runner groups</td>
+<td>Scope runner groups to specific repositories or all repositories</td>
+</tr>
+<tr>
+<td>Move a runner to a group</td>
+<td>Org Settings &gt; Actions &gt; Runners &gt; Edit</td>
+<td>A runner can belong to only one group</td>
+</tr>
+<tr>
+<td>Restrict a group to selected repos</td>
+<td>Runner group &gt; Edit &gt; Repository access</td>
+<td>Use this to segregate production and development runners</td>
+</tr>
+<tr>
+<td>Set group policies</td>
+<td>Runner group &gt; Edit &gt; Workflow access</td>
+<td>Control whether public repository workflows can use the group</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="upgrade-validation-checklist">Upgrade Validation Checklist<a class="headerlink" href="#upgrade-validation-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Runner service status</td>
+<td><code>active (running)</code> in systemctl output</td>
+</tr>
+<tr>
+<td>Runner registration</td>
+<td>Runner shows as <strong>Idle</strong> in GitHub Settings &gt; Actions &gt; Runners</td>
+</tr>
+<tr>
+<td>Runner version</td>
+<td>Reported version matches target upgrade version</td>
+</tr>
+<tr>
+<td>Test workflow</td>
+<td>Workflow dispatched to runner completes without errors</td>
+</tr>
+<tr>
+<td>Job labels</td>
+<td>Runner labels are preserved (check <code>.runner</code> file or GitHub UI)</td>
+</tr>
+<tr>
+<td>No orphaned processes</td>
+<td>No <code>Runner.Worker</code> or <code>Runner.Listener</code> processes from the old version still running</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rollback-procedure">Rollback Procedure<a class="headerlink" href="#rollback-procedure" title="Permanent link">&para;</a></h2>
+<p>If the upgraded runner fails validation:</p>
 <ol>
-<li>Review workflow changes</li>
-<li>Validate action versions</li>
-<li>Update pinned actions carefully</li>
-<li>Run workflow on test branch</li>
-<li>Confirm deployment output</li>
+<li>Stop the runner service: <code>sudo systemctl stop actions.runner.&lt;org&gt;-&lt;name&gt;.service</code></li>
+<li>Re-extract the previous runner tarball over the installation directory (keep the existing <code>.credentials</code> and <code>.runner</code> files — do not overwrite them).</li>
+<li>Restart the service: <code>sudo systemctl start actions.runner.&lt;org&gt;-&lt;name&gt;.service</code></li>
+<li>Validate the runner shows Idle in the GitHub UI before routing jobs back to it.</li>
+<li>File an issue against the runner upgrade noting the failure and the version combination.</li>
 </ol>
+<p>Keep the previous runner tarball on the host until the upgraded version has been validated in production for at least one full release cycle.</p>
 
 
 

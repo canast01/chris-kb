@@ -1062,6 +1062,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1085,8 +1115,48 @@
 <p>Part of the <a href="../../">Flex on Demand</a> reference.</p>
 </blockquote>
 <hr />
-<p>FOD metering telemetry is transmitted from the array to CloudIQ via the Secure Connect Gateway over TLS 1.2 or higher. The telemetry payload contains capacity metrics only — no user data, file contents, or host data is transmitted.</p>
-<p>APEX Console access is protected by HTTPS (TLS 1.2+) managed by Dell's cloud infrastructure.</p>
+<h2 id="encryption-controls">Encryption Controls<a class="headerlink" href="#encryption-controls" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Telemetry transmission</strong></td>
+<td>Capacity metrics are forwarded from the array to CloudIQ via the Secure Connect Gateway (SCG) over TLS 1.2 or higher. The payload contains only capacity counters — no user data, file contents, or host identifiers are transmitted.</td>
+</tr>
+<tr>
+<td><strong>APEX Console access</strong></td>
+<td>The APEX Console web UI and its underlying REST API are served exclusively over HTTPS (TLS 1.2+). Certificate management is handled by Dell's cloud infrastructure; no customer-managed certificate is required.</td>
+</tr>
+<tr>
+<td><strong>SCG communication security</strong></td>
+<td>The SCG appliance initiates all outbound connections to Dell's cloud endpoints. It uses certificate pinning to validate Dell's cloud TLS certificates, preventing man-in-the-middle interception. Inbound connections from Dell to the SCG are not required and should be blocked at the perimeter firewall.</td>
+</tr>
+<tr>
+<td><strong>Data-at-rest</strong></td>
+<td>FOD is a metering and billing overlay; it does not own storage volumes. Data-at-rest encryption is governed entirely by the underlying array (PowerStore, PowerMax, Unity XT, etc.). Refer to the respective platform's security documentation for encryption configuration — for example, PowerStore supports D@RE using self-encrypting drives managed through Unisphere.</td>
+</tr>
+<tr>
+<td><strong>API encryption</strong></td>
+<td>All APEX API calls (OAuth token exchange and subsequent requests) are made over HTTPS. API credentials are bearer tokens scoped to a service account; credentials in transit are protected by the same TLS layer as the console.</td>
+</tr>
+<tr>
+<td><strong>Internal array-to-SCG path</strong></td>
+<td>Communication between the array and the co-located or remote SCG appliance travels over the management network segment. Place the SCG on a VLAN that is accessible to the array management interface only; do not route SCG traffic through untrusted segments.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h2>
+<ul>
+<li>No user data or file content ever leaves the array through the FOD telemetry path.</li>
+<li>TLS 1.2 is the minimum enforced by Dell's endpoints; TLS 1.0 and 1.1 are not accepted.</li>
+<li>Data-at-rest encryption for stored data is a platform-level control, not a FOD control.</li>
+<li>If SCG uses a proxy for outbound internet access, ensure the proxy does not perform TLS inspection on Dell cloud endpoints — certificate pinning will cause the connection to fail.</li>
+</ul>
 
 
 

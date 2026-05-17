@@ -1069,10 +1069,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ssh-hardening" class="md-nav__link">
+  <a href="#hardening-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SSH Hardening
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-port-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Port Reference
       
     </span>
   </a>
@@ -1104,17 +1115,132 @@
 <p>Part of the <a href="../../">RecoverPoint</a> &gt; <a href="../">Security</a> reference.</p>
 </blockquote>
 <hr />
-<h2 id="ssh-hardening">SSH Hardening<a class="headerlink" href="#ssh-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify root login is disabled</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>grep<span class="w"> </span>PermitRootLogin<span class="w"> </span>/etc/ssh/sshd_config<span class="w">    </span><span class="c1"># Should show: no</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Restrict SSH to management jump hosts only (RecoverPoint CLI)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>set_system_ssh_restrictions<span class="w"> </span>-allow<span class="w"> </span>&lt;jump_host_ip&gt;/32
-</code></pre></div>
-<ul>
-<li>SSH idle session timeout: 10 minutes (TMOUT=600 in /etc/profile)</li>
-<li>SSH host keys: document fingerprints in the CMDB entry for each RPA node</li>
-</ul>
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Standard</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Root login disabled</strong></td>
+<td>SSH root login off</td>
+<td>Confirm <code>PermitRootLogin no</code> in <code>/etc/ssh/sshd_config</code> on each RPA node. Use named admin accounts and <code>sudo</code> for privileged operations.</td>
+</tr>
+<tr>
+<td><strong>SSH access restriction</strong></td>
+<td>Management jump hosts only</td>
+<td>Restrict SSH to the management VLAN and specific jump host IPs using the RecoverPoint CLI: <code>set_system_ssh_restrictions -allow &lt;jump_host_ip&gt;/32</code>. Deny SSH from general server VLANs.</td>
+</tr>
+<tr>
+<td><strong>SSH idle session timeout</strong></td>
+<td>10 minutes</td>
+<td>Set <code>TMOUT=600</code> in <code>/etc/profile</code> on each RPA node to enforce automatic session termination after 10 minutes of inactivity.</td>
+</tr>
+<tr>
+<td><strong>SSH host key documentation</strong></td>
+<td>CMDB entry per RPA</td>
+<td>Record SSH host key fingerprints for each RPA node in the CMDB. Validate fingerprints after any RPA replacement or OS-level rebuild to detect unauthorised key changes.</td>
+</tr>
+<tr>
+<td><strong>Admin account control</strong></td>
+<td>Named accounts only</td>
+<td>Create individual named admin accounts for each administrator. Remove or disable the default <code>admin</code> account after initial setup. Enforce a minimum 16-character password with complexity requirements.</td>
+</tr>
+<tr>
+<td><strong>Admin password rotation</strong></td>
+<td>Every 90 days</td>
+<td>Rotate all RecoverPoint admin account passwords on a 90-day cycle. Store credentials in a secrets vault. Do not reuse passwords across accounts or systems.</td>
+</tr>
+<tr>
+<td><strong>RPA network isolation</strong></td>
+<td>Dedicated replication VLAN</td>
+<td>Place RPA replication interfaces on a dedicated replication VLAN, separate from management and production data VLANs. Apply ACLs to permit only inter-site RPA traffic on replication ports (TCP 2049, 7225, and 11111).</td>
+</tr>
+<tr>
+<td><strong>Replication traffic encryption</strong></td>
+<td>WAN Encryption enabled</td>
+<td>Enable WAN Encryption on journal-to-journal replication links traversing untrusted networks (internet WAN, shared MPLS). RecoverPoint uses AES-256 for replication traffic encryption when this feature is active. Verify the setting under System &gt; WAN Encryption in Unisphere for RecoverPoint.</td>
+</tr>
+<tr>
+<td><strong>API access control</strong></td>
+<td>Service accounts only</td>
+<td>Use dedicated service accounts for any integration with the RecoverPoint REST API or Unisphere for RecoverPoint. Assign the minimum required role (Monitor where read-only access suffices). Rotate API credentials every 90 days.</td>
+</tr>
+<tr>
+<td><strong>Certificate management</strong></td>
+<td>Trusted CA-signed certificates</td>
+<td>Replace the default self-signed certificate on the Unisphere for RecoverPoint management interface with a certificate signed by your internal CA or a trusted public CA. Document the certificate expiry date and set a renewal reminder at 60 days before expiry.</td>
+</tr>
+<tr>
+<td><strong>Audit log configuration</strong></td>
+<td>Remote syslog enabled</td>
+<td>Configure RecoverPoint to forward audit logs to a centralised syslog server or SIEM. Review logs monthly for unexpected login attempts, configuration changes, and replication policy modifications. Retain logs for a minimum of 90 days.</td>
+</tr>
+<tr>
+<td><strong>Unisphere for RecoverPoint access</strong></td>
+<td>HTTPS only, restricted IPs</td>
+<td>Ensure Unisphere for RecoverPoint is only accessible over HTTPS (TLS 1.2+). Restrict access to the management VLAN. If the environment supports IP-based access control at the load balancer or firewall level, allowlist only administrator workstations and jump hosts.</td>
+</tr>
+<tr>
+<td><strong>Firmware and software currency</strong></td>
+<td>Current supported release</td>
+<td>Apply RecoverPoint software updates within 90 days of general availability. Critical security patches should be applied within 30 days. Track the RecoverPoint release notes for security-relevant changes.</td>
+</tr>
+<tr>
+<td><strong>Consistency group access</strong></td>
+<td>Least-privilege role per team**</td>
+<td>Assign RecoverPoint roles (Admin, Operator, Monitor) at the consistency group level where possible. Do not grant site-wide Admin to teams that only manage specific applications.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="network-port-reference">Network Port Reference<a class="headerlink" href="#network-port-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Direction</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TCP 443</td>
+<td>HTTPS</td>
+<td>Inbound to RPA cluster</td>
+<td>Unisphere for RecoverPoint management</td>
+</tr>
+<tr>
+<td>TCP 22</td>
+<td>SSH</td>
+<td>Inbound to RPA (restricted)</td>
+<td>CLI administration from jump hosts</td>
+</tr>
+<tr>
+<td>TCP 2049</td>
+<td>TCP</td>
+<td>Inter-site RPA</td>
+<td>Journal replication</td>
+</tr>
+<tr>
+<td>TCP 7225</td>
+<td>TCP</td>
+<td>Inter-site RPA</td>
+<td>RecoverPoint communication</td>
+</tr>
+<tr>
+<td>TCP 11111</td>
+<td>TCP</td>
+<td>Inter-site RPA</td>
+<td>RecoverPoint communication</td>
+</tr>
+</tbody>
+</table>
+<p>All other inbound connections to RPA nodes should be denied by perimeter and internal firewall policy.</p>
 
 
 

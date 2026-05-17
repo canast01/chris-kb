@@ -1062,6 +1062,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#apex-console-rbac-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APEX Console RBAC Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-token-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Token Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sso-and-saml-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO and SAML Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scg-access-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG Access Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1085,11 +1148,122 @@
 <p>Part of the <a href="../../">APEX Storage as a Service</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="apex-console-rbac-roles">APEX Console RBAC Roles<a class="headerlink" href="#apex-console-rbac-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+<th>Recommended Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Account Admin</strong></td>
+<td>Full subscription management, user provisioning, service request creation, billing access</td>
+<td>One or two named storage leads per account</td>
+</tr>
+<tr>
+<td><strong>Storage Admin</strong></td>
+<td>Manage storage resources, view and acknowledge alerts, access performance and capacity dashboards</td>
+<td>Day-to-day storage operations team</td>
+</tr>
+<tr>
+<td><strong>Viewer</strong></td>
+<td>Read-only access to dashboards, capacity reports, consumption data, and health summaries</td>
+<td>Capacity monitoring automation, finance teams, auditors</td>
+</tr>
+</tbody>
+</table>
+<p>Assign the Viewer role to all non-operational accounts including monitoring integrations. Elevated roles should be assigned to named individuals only — avoid shared or generic accounts.</p>
+<h2 id="api-token-management">API Token Management<a class="headerlink" href="#api-token-management" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>One service account per integration</strong></td>
+<td>Create a dedicated APEX API service account for each consuming system (monitoring, automation, chargeback reporting). Never share credentials between integrations or teams.</td>
+</tr>
+<tr>
+<td><strong>Minimum role assignment</strong></td>
+<td>Bind each service account to the Viewer role unless the integration explicitly requires write operations. Document and justify any service account with Storage Admin or Account Admin rights.</td>
+</tr>
+<tr>
+<td><strong>Token lifecycle</strong></td>
+<td>APEX API tokens are short-lived OAuth 2.0 bearer tokens. Integrations must implement the client credentials flow to refresh tokens automatically. Do not cache tokens beyond their expiry.</td>
+</tr>
+<tr>
+<td><strong>Client secret rotation</strong></td>
+<td>Rotate API client secrets every 90 days. Store client IDs and secrets in a secrets vault (HashiCorp Vault, AWS Secrets Manager, CyberArk, or equivalent). Never store credentials in source code, config files, or CI/CD environment variables in plaintext.</td>
+</tr>
+<tr>
+<td><strong>Revocation on staff change</strong></td>
+<td>Revoke API credentials for service accounts tied to a departing team member's ownership immediately upon offboarding. Reassign ownership documentation to the team.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sso-and-saml-integration">SSO and SAML Integration<a class="headerlink" href="#sso-and-saml-integration" title="Permanent link">&para;</a></h2>
+<p>APEX Console supports federated authentication via SAML 2.0. When SSO is configured:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Identity provider integration</strong></td>
+<td>Configure the APEX Console as a SAML service provider in your IdP (Okta, Azure AD, Ping Identity, etc.). Map IdP groups to APEX Console roles using attribute-based role assignment.</td>
+</tr>
+<tr>
+<td><strong>MFA enforcement</strong></td>
+<td>MFA is enforced at the IdP level when SSO is active. Ensure your IdP policy requires MFA for all users accessing APEX.</td>
+</tr>
+<tr>
+<td><strong>Local account fallback</strong></td>
+<td>Disable or restrict local (non-SSO) accounts after SSO is configured. Maintain one break-glass local admin account with a complex password stored in the vault, for use only when SSO is unavailable.</td>
+</tr>
+<tr>
+<td><strong>Session timeout</strong></td>
+<td>Configure idle session timeout at the IdP to a maximum of 8 hours. APEX Console does not independently manage session lifetime when SSO is active.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="scg-access-controls">SCG Access Controls<a class="headerlink" href="#scg-access-controls" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Local admin password</strong></td>
+<td>Change the SCG appliance default admin password at deployment. Rotate on a 90-day cycle aligned with other privileged credentials.</td>
+</tr>
+<tr>
+<td><strong>Network access restriction</strong></td>
+<td>Restrict SCG management interface access to the storage management VLAN. The SCG does not require inbound connections from the internet — deny all inbound at the perimeter.</td>
+</tr>
+<tr>
+<td><strong>Gateway audit log</strong></td>
+<td>Review SCG and CloudIQ gateway event logs monthly for unexpected registration, deregistration, or failed connectivity events.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="general-controls">General Controls<a class="headerlink" href="#general-controls" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Assign APEX Console roles with least-privilege: most operators need read access to dashboards; only administrators need to manage subscriptions or raise service requests</li>
-<li>Use separate API credentials per integration (monitoring, automation, reporting)</li>
-<li>Audit APEX Console user access quarterly and remove stale accounts</li>
-<li>Do not share API credentials between teams or integrations</li>
+<li>Audit APEX Console user access quarterly. Remove accounts for personnel who have left or changed roles.</li>
+<li>Enforce MFA for all human user accounts, either via SSO policy or the APEX Console's built-in MFA setting.</li>
+<li>Do not use shared or team-named accounts for APEX Console access — all access should be attributable to a named individual.</li>
+<li>Log and alert on Account Admin role assignment changes.</li>
 </ul>
 
 

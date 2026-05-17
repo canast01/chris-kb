@@ -1062,6 +1062,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#apex-console-rbac-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APEX Console RBAC Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-service-account-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Service Account Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scg-access-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG Access Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudiq-user-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudIQ User Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1085,11 +1148,117 @@
 <p>Part of the <a href="../../">Flex on Demand</a> reference.</p>
 </blockquote>
 <hr />
+<h2 id="apex-console-rbac-roles">APEX Console RBAC Roles<a class="headerlink" href="#apex-console-rbac-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+<th>Recommended Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Account Admin</strong></td>
+<td>Full subscription management, user provisioning, raise and manage service requests</td>
+<td>One or two named storage leads per account</td>
+</tr>
+<tr>
+<td><strong>Storage Admin</strong></td>
+<td>View and manage storage resources, view consumption dashboards, acknowledge alerts</td>
+<td>Day-to-day storage operations team</td>
+</tr>
+<tr>
+<td><strong>Viewer / Monitor</strong></td>
+<td>Read-only access to dashboards, consumption reports, and capacity trends</td>
+<td>Capacity monitoring automation accounts, finance teams, auditors</td>
+</tr>
+</tbody>
+</table>
+<p>Assign the Viewer role to any integration or service account that only needs to pull capacity metrics. Write-level access is not required for FOD reporting or chargeback automation.</p>
+<h2 id="api-service-account-configuration">API Service Account Configuration<a class="headerlink" href="#api-service-account-configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>One account per integration</strong></td>
+<td>Create a dedicated APEX API service account for each consuming system (e.g., one for CloudIQ, one for chargeback scripts, one for monitoring tooling). Do not share credentials between integrations.</td>
+</tr>
+<tr>
+<td><strong>Scope to minimum role</strong></td>
+<td>Bind each service account to the Viewer role unless a specific integration requires write operations. Document any exception.</td>
+</tr>
+<tr>
+<td><strong>Credential rotation</strong></td>
+<td>Rotate API client secrets every 90 days. Store credentials in a secrets vault (HashiCorp Vault, AWS Secrets Manager, or equivalent) — never in source code or configuration files.</td>
+</tr>
+<tr>
+<td><strong>Token lifetime</strong></td>
+<td>APEX API access tokens are short-lived. Ensure integrations use the OAuth client credentials flow to refresh tokens automatically rather than caching a long-lived token.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="scg-access-controls">SCG Access Controls<a class="headerlink" href="#scg-access-controls" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Local admin accounts</strong></td>
+<td>The SCG appliance has a local admin account used during initial registration. Change the default password at deployment and rotate it on the same schedule as other privileged credentials.</td>
+</tr>
+<tr>
+<td><strong>Management network access</strong></td>
+<td>Restrict SSH and the SCG management interface to the storage management VLAN. Block access from general-purpose server VLANs.</td>
+</tr>
+<tr>
+<td><strong>No inbound connectivity required</strong></td>
+<td>The SCG initiates all outbound connections to Dell's cloud. No inbound firewall rule from the internet to the SCG is needed or should be opened.</td>
+</tr>
+<tr>
+<td><strong>Audit log access</strong></td>
+<td>SCG activity is visible in CloudIQ under the gateway events log. Review this log monthly to confirm telemetry delivery and detect unexpected registration or deregistration events.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cloudiq-user-roles">CloudIQ User Roles<a class="headerlink" href="#cloudiq-user-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Manage users, configure alert policies, view all objects across all registered arrays</td>
+</tr>
+<tr>
+<td><strong>Operator</strong></td>
+<td>Acknowledge and manage alerts, view all objects</td>
+</tr>
+<tr>
+<td><strong>Read Only</strong></td>
+<td>View dashboards, capacity reports, and health scores; cannot modify any configuration</td>
+</tr>
+</tbody>
+</table>
+<p>Apply the Read Only role to all non-operational accounts. Audit CloudIQ user membership quarterly and remove accounts for personnel who have changed roles or left the organisation.</p>
+<h2 id="general-controls">General Controls<a class="headerlink" href="#general-controls" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Restrict Unisphere and APEX Console access to named storage administrators</li>
-<li>Use read-only roles for capacity monitoring automation accounts</li>
-<li>Apply least-privilege: FOD capacity queries do not require StorageAdmin write access — use a Viewer or Monitor role where available</li>
-<li>Audit APEX Console user access quarterly and remove stale accounts</li>
+<li>Restrict Unisphere access to named storage administrators; do not use shared admin credentials.</li>
+<li>Enforce MFA on the APEX Console for all human users — this is configurable under the account's identity settings.</li>
+<li>Review APEX Console user access quarterly and revoke stale accounts promptly.</li>
 </ul>
 
 
