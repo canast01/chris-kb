@@ -1,7 +1,7 @@
 # Lifecycle
 
 <div class="kb-summary">
-Lifecycle knowledge base landing page.
+Infrastructure lifecycle management covering installation, upgrade, patching, decommission, and EOL tracking across platforms.
 </div>
 
 ## Articles

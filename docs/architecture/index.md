@@ -1,7 +1,7 @@
 # Architecture
 
 <div class="kb-summary">
-Architecture knowledge base landing page.
+Enterprise infrastructure architecture design guides covering high availability patterns, storage tiering, network topology, and disaster recovery design principles.
 </div>
 
 ## Articles

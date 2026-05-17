@@ -1,7 +1,7 @@
 # Certifications
 
 <div class="kb-summary">
-Certifications knowledge base landing page.
+Certification study notes and practice tracking for AWS, Azure, VMware, SAN, storage, and AI practitioner exams.
 </div>
 
 ## Articles

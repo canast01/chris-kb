@@ -1,7 +1,7 @@
 # Project Management
 
 <div class="kb-summary">
-Project Management knowledge base landing page.
+Project and operational management references — change management, maintenance windows, health checks, asset inventory, and operational templates.
 </div>
 
 ## Articles

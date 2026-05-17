@@ -1,7 +1,7 @@
 # Protocols
 
 <div class="kb-summary">
-Protocols knowledge base landing page.
+Reference coverage for the networking and storage protocols used in enterprise infrastructure — Fibre Channel, iSCSI, NFS, SMB, NTP, SNMP, TLS, DNS, DHCP, and LDAP.
 </div>
 
 ## Articles

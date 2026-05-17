@@ -1,7 +1,7 @@
 # Tools
 
 <div class="kb-summary">
-Tools knowledge base landing page.
+Operational tooling reference covering version control, project tracking, documentation, and ITSM — Git, Jira, Confluence, and ServiceNow.
 </div>
 
 ## Main Areas
