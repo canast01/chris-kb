@@ -4,6 +4,8 @@
 Dell VxRail is an HCI appliance built on vSphere and vSAN. VxRail Manager orchestrates lifecycle upgrades as a single tested bundle (ESXi + vCenter + vSAN + firmware). All storage is vSAN-based — no external shared storage in a standard deployment.
 </div>
 
+![VxRail Architecture](../../../../assets/vxrail-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Cluster topology, node families, vSAN integration, network design, deployment models, and VxRail Manager API.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>vCenter plugin, Dell support APIs, Aria Operations, and external system integrations.</span></a>
