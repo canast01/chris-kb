@@ -4,6 +4,8 @@
 Dell Unity XT is a mid-range unified storage platform delivering block (FC, iSCSI) and file (NFS, SMB) from a dual storage processor (SP A / SP B) active-active architecture. Write cache is continuously mirrored between SPs with BBU protection.
 </div>
 
+![Unity Architecture](../../../../assets/unity-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="how-it-works/">
     <div class="kb-card-icon">⚙️</div>

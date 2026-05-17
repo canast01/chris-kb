@@ -4,6 +4,8 @@
 Cross-platform automation shell on .NET; execution engine processes input through parser → AST → runspace → pipeline; remoting via WinRM (5985/5986) or SSH; module system with PSGallery distribution; runspace pools for parallelism.
 </div>
 
+![PowerShell Architecture](../../../assets/powershell-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="how-it-works/">

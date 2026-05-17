@@ -4,6 +4,8 @@
 Keystone STaaS architecture reference — delivery model, service tiers, components, capacity model, and consumption reporting.
 </div>
 
+![Keystone Architecture](../../../../assets/netapp-keystone-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>STaaS delivery model, service tiers, components, capacity model, and QoS mapping.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>BlueXP, ActiveIQ, ONTAP, and third-party integrations.</span></a>

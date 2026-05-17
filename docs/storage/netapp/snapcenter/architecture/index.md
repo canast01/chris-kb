@@ -4,6 +4,8 @@
 SnapCenter architecture reference — topology, HA options, components, connectivity ports, plugin model, and sizing guidelines.
 </div>
 
+![SnapCenter Architecture](../../../../assets/snapcenter-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Topology, HA options, components, connectivity ports, plugins, and sizing guidelines.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with ONTAP, VMware, Active Directory, and external systems.</span></a>

@@ -4,6 +4,8 @@
 Linux server infrastructure running RHEL and Ubuntu — systemd service management, LVM2 storage with dm-multipath, LACP bonded networking, SELinux/AppArmor security enforcement, and Ansible-driven automation.
 </div>
 
+![Linux Architecture](../../../assets/linux-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="how-it-works/">
     <div class="kb-card-icon">⚙️</div>

@@ -4,6 +4,8 @@
 Aria Operations deploys as an analytics cluster (Primary + Replica + optional Data Nodes) with Remote Collectors distributing telemetry collection across sites. Management Packs extend coverage to third-party platforms.
 </div>
 
+![Aria Operations Architecture](../../../assets/aria-operations-monitoring-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Analytics cluster topology, component roles, sizing, Remote Collectors, and network ports.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Management packs, vCenter, NSX, storage adapters, and third-party integrations.</span></a>

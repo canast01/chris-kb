@@ -4,6 +4,8 @@
 Agentless IT automation over SSH/WinRM; the control node pushes modules to managed nodes, executes tasks, and removes them; organised via inventory, playbooks, roles, and collections; enterprise scale via AWX/AAP and Execution Environments.
 </div>
 
+![Ansible Architecture](../../../assets/ansible-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="how-it-works/">

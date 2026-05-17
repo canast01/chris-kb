@@ -4,6 +4,8 @@
 Nexus Dashboard is a 3- or 5-node Raft-consensus cluster hosting microservice bundles (NDFC, NDI, NDO) that provide unified management and observability across Cisco ACI and NX-OS fabrics.
 </div>
 
+![Nexus Dashboard Architecture](../../../assets/nexus-dashboard-monitoring-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Cluster architecture, deployment modes, services, ACI/NX-OS integration, and network ports.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>ACI APIC, NX-OS fabrics, multi-site orchestration, and third-party integrations.</span></a>

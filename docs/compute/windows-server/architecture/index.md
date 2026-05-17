@@ -4,6 +4,8 @@
 Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB file services, Hyper-V, WSUS, and PowerShell-based management. Available in Standard and Datacenter editions with Server Core (recommended) or Desktop Experience installation.
 </div>
 
+![Windows Server Architecture](../../../assets/windows-server-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="how-it-works/">
     <div class="kb-card-icon">⚙️</div>
