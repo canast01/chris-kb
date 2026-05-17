@@ -37,16 +37,16 @@ Inventory references for clusters, hosts, datastores, networks, management tools
 
 <a class="kb-card" href="backup-coverage/">
   <strong>Backup Coverage</strong>
-  <span>Backup Coverage notes, checks, commands, and references.</span>
+  <span>VM backup job coverage, schedules, retention policy, and gap identification.</span>
 </a>
 
 <a class="kb-card" href="certificate-inventory/">
   <strong>Certificate Inventory</strong>
-  <span>Certificate Inventory notes, checks, commands, and references.</span>
+  <span>Certificate thumbprints, expiry dates, issuer, and renewal tracking per component.</span>
 </a>
 
 <a class="kb-card" href="service-accounts/">
   <strong>Service Accounts</strong>
-  <span>Service Accounts notes, checks, commands, and references.</span>
+  <span>Service account list, permissions, owning team, and password rotation schedule.</span>
 </a>
 </div>

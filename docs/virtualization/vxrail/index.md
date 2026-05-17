@@ -15,9 +15,9 @@ Operational reference for Dell VxRail HCI. Covers architecture, lifecycle manage
 <a class="kb-card" href="integration/"><strong>Integration</strong><span>VMware, backup tools, monitoring, authentication, and API integration.</span></a>
 <a class="kb-card" href="security/"><strong>Security</strong><span>Hardening checklist, RBAC, encryption, audit logging, and compliance.</span></a>
 <a class="kb-card" href="vendor-support/"><strong>Vendor Support</strong><span>Opening a case, information to collect, support portal, and SLA tiers.</span></a>
-<a class="kb-card" href="field-reference/"><strong>Field Reference</strong><span>Field Reference notes, checks, commands, and references.</span></a>
-<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Health check procedures and validation steps.</span></a>
-<a class="kb-card" href="support-notes/"><strong>Support Notes</strong><span>Support Notes notes, checks, commands, and references.</span></a>
-<a class="kb-card" href="technical-deep-dive/"><strong>Technical Deep Dive</strong><span>Technical Deep Dive notes, checks, commands, and references.</span></a>
-<a class="kb-card" href="vxrail-manager/"><strong>VxRail Manager</strong><span>VxRail Manager notes, checks, commands, and references.</span></a>
+<a class="kb-card" href="field-reference/"><strong>Field Reference</strong><span>Node part numbers, slot layout, LED codes, and drive replacement mapping.</span></a>
+<a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Cluster health, vSAN object status, node connectivity, and firmware compliance checks.</span></a>
+<a class="kb-card" href="support-notes/"><strong>Support Notes</strong><span>Known issues, Dell support case tips, log bundle collection, and KB article links.</span></a>
+<a class="kb-card" href="technical-deep-dive/"><strong>Technical Deep Dive</strong><span>Internal architecture, vSAN witness placement, network stack, and boot sequence detail.</span></a>
+<a class="kb-card" href="vxrail-manager/"><strong>VxRail Manager</strong><span>VxRail Manager UI, API, upgrade orchestration, and credential management.</span></a>
 </div>

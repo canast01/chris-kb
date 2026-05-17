@@ -47,46 +47,46 @@ Fast operational tools for troubleshooting and validation.
 
 <a class="kb-card" href="certificate-quick-reference/">
   <strong>Certificate Quick Reference</strong>
-  <span>Certificate Quick Reference notes, checks, commands, and references.</span>
+  <span>Certificate chain inspection, expiry checking, openssl commands, and SAN/CN verification.</span>
 </a>
 
 <a class="kb-card" href="command-cheat-sheets/">
   <strong>Command Cheat Sheets</strong>
-  <span>Command Cheat Sheets notes, checks, commands, and references.</span>
+  <span>vSphere CLI, ESXi ESXCLI, and PowerCLI quick-reference commands by task.</span>
 </a>
 
 <a class="kb-card" href="daily-workflow/">
   <strong>Daily Workflow</strong>
-  <span>Daily Workflow notes, checks, commands, and references.</span>
+  <span>Ordered checklist of daily health checks, alarm review, and handoff notes.</span>
 </a>
 
 <a class="kb-card" href="emergency-checks/">
   <strong>Emergency Checks</strong>
-  <span>Emergency Checks notes, checks, commands, and references.</span>
+  <span>First-response checks for outage triage across hosts, storage, and networking.</span>
 </a>
 
 <a class="kb-card" href="logs-quick-reference/">
   <strong>Logs Quick Reference</strong>
-  <span>Logs Quick Reference notes, checks, commands, and references.</span>
+  <span>Log file locations, grep patterns, and log level references for ESXi and vCenter.</span>
 </a>
 
 <a class="kb-card" href="snapshot-quick-reference/">
   <strong>Snapshot Quick Reference</strong>
-  <span>Snapshot Quick Reference notes, checks, commands, and references.</span>
+  <span>Snapshot creation, removal, delta disk consolidation, and stale snapshot detection.</span>
 </a>
 
 <a class="kb-card" href="vcenter-commands/">
   <strong>vCenter Commands</strong>
-  <span>vCenter Commands notes, checks, commands, and references.</span>
+  <span>vCenter CLI and API commands for inventory, services, and certificate management.</span>
 </a>
 
 <a class="kb-card" href="vm-performance-checks/">
   <strong>VM Performance Checks</strong>
-  <span>VM Performance Checks notes, checks, commands, and references.</span>
+  <span>CPU ready, memory balloon, disk latency, and network drop metrics to check.</span>
 </a>
 
 <a class="kb-card" href="vsan-quick-reference/">
   <strong>vSAN Quick Reference</strong>
-  <span>vSAN Quick Reference notes, checks, commands, and references.</span>
+  <span>vSAN health checks, resync monitoring, disk group status, and policy compliance.</span>
 </a>
 </div>
