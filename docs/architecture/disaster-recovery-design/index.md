@@ -1,5 +1,7 @@
 # Disaster Recovery Design
 
+![Disaster Recovery Design Overview](../../assets/disaster-recovery-design-overview.svg)
+
 ## Overview
 
 Disaster Recovery (DR) design defines how business services are restored after a major disruptive event — site-level failure, ransomware, catastrophic data corruption, or any scenario that renders the primary environment unusable. DR is the complement to HA: while HA prevents or masks individual component failures, DR handles scenarios where an entire site, facility, or system is lost.

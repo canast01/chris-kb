@@ -1,5 +1,7 @@
 # Network Design
 
+![Network Design Overview](../../assets/network-design-overview.svg)
+
 ## Overview
 
 Enterprise network design establishes the framework for how compute, storage, users, and external services communicate reliably, securely, and at scale. A well-architected network is deterministic in its behavior, resilient to single and double failures, segmented by trust zone, and observable at every layer.

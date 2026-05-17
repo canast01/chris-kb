@@ -1,5 +1,7 @@
 # Storage Design
 
+![Storage Design Overview](../../assets/storage-design-overview.svg)
+
 ## Overview
 
 Storage design determines how enterprise data is stored, protected, accessed, and managed across its entire lifecycle. Poor storage design is one of the most common root causes of performance bottlenecks, outages, and cost overruns in data centre infrastructure. A rigorous approach classifies workloads by I/O profile and criticality, selects the appropriate technology tier, designs for redundancy and data protection at every level, and validates capacity and performance assumptions before production deployment.

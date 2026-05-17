@@ -1,5 +1,7 @@
 # High Availability Design
 
+![High Availability Design Overview](../../assets/high-availability-design-overview.svg)
+
 ## Overview
 
 High availability (HA) is the discipline of engineering systems so that service disruptions — whether caused by hardware failure, software faults, planned maintenance, or network events — are either invisible to end users or resolved within a predetermined recovery window. Enterprise HA design is not a single technique; it is a layered strategy that must be applied consistently across compute, storage, networking, and application tiers.
