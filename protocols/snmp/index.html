@@ -1001,6 +1001,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1017,6 +1035,58 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-commands-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Commands / Config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1817,6 +1887,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-commands-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Commands / Config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1851,35 +1962,233 @@
 
 
 <h1 id="snmp">SNMP<a class="headerlink" href="#snmp" title="Permanent link">&para;</a></h1>
-<p>SNMP operational notes and deep-dive references.</p>
+<div class="kb-summary">
+Simple Network Management Protocol (SNMP) is an application-layer protocol used to poll device metrics and receive asynchronous fault notifications (traps) from network infrastructure, servers, and storage. It operates over UDP — port 161 for polling, port 162 for traps — and the version in use matters significantly: SNMPv1 and v2c use plaintext community strings, while SNMPv3 adds authentication and encryption via the User Security Model (USM).
+</div>
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="polling/">
   <strong>Polling</strong>
-  <span>Polling notes, checks, references, and validation.</span>
+  <span>OID walks, GET requests, polling intervals, and MIB-based metric collection from network devices.</span>
 </a>
 
 <a class="kb-card" href="traps/">
   <strong>Traps</strong>
-  <span>Traps notes, checks, references, and validation.</span>
+  <span>Trap vs inform, trap receivers, filtering, and forwarding asynchronous device alerts.</span>
 </a>
 
 <a class="kb-card" href="communities/">
   <strong>Communities</strong>
-  <span>Communities notes, checks, references, and validation.</span>
+  <span>Community string configuration for SNMPv1/v2c — read-only vs read-write, ACLs, and security risks.</span>
 </a>
 
 <a class="kb-card" href="snmpv3/">
-  <strong>Snmpv3</strong>
-  <span>Snmpv3 notes, checks, references, and validation.</span>
+  <strong>SNMPv3</strong>
+  <span>USM user configuration, authNoPriv vs authPriv, SHA authentication, and AES encryption setup.</span>
 </a>
 
 <a class="kb-card" href="monitoring/">
   <strong>Monitoring</strong>
-  <span>Monitoring notes, checks, references, and validation.</span>
+  <span>Integrating SNMP with monitoring platforms (Zabbix, PRTG, Prometheus snmp_exporter), MIB management.</span>
 </a>
 
 </div>
+
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>SNMPv1</th>
+<th>SNMPv2c</th>
+<th>SNMPv3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authentication</td>
+<td>Community string</td>
+<td>Community string</td>
+<td>USM (username + auth password)</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>None</td>
+<td>None</td>
+<td>AES-128 / AES-256 (authPriv)</td>
+</tr>
+<tr>
+<td>Bulk operations</td>
+<td>No</td>
+<td>Yes (GetBulk)</td>
+<td>Yes (GetBulk)</td>
+</tr>
+<tr>
+<td>Trap acknowledgement</td>
+<td>No (fire-and-forget)</td>
+<td>Informs (acknowledged)</td>
+<td>Informs (acknowledged)</td>
+</tr>
+<tr>
+<td>Security recommendation</td>
+<td>Avoid</td>
+<td>Legacy only</td>
+<td>Required for production</td>
+</tr>
+<tr>
+<td>Port (polling)</td>
+<td>161/udp</td>
+<td>161/udp</td>
+<td>161/udp</td>
+</tr>
+<tr>
+<td>Port (traps)</td>
+<td>162/udp</td>
+<td>162/udp</td>
+<td>162/udp</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SNMPv3 security levels:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Auth</th>
+<th>Priv</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>noAuthNoPriv</code></td>
+<td>No</td>
+<td>No</td>
+<td>Testing only</td>
+</tr>
+<tr>
+<td><code>authNoPriv</code></td>
+<td>Yes (MD5/SHA)</td>
+<td>No</td>
+<td>Low-sensitivity metrics</td>
+</tr>
+<tr>
+<td><code>authPriv</code></td>
+<td>Yes (SHA)</td>
+<td>Yes (AES)</td>
+<td>Production — recommended</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-commands-config">Common Commands / Config<a class="headerlink" href="#common-commands-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Walk all OIDs from a device (SNMPv2c)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;host&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Get a specific OID (sysDescr)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snmpget<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;host&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.1.1.0
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Walk interface table (SNMPv2c)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;host&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.2.2
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Walk with SNMPv3 (authPriv)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>&lt;host&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.1
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Send a test trap (SNMPv2c)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>snmptrap<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;trap-receiver&gt;<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="m">1</span>.3.6.1.6.3.1.1.5.1
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Get system uptime OID</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>snmpget<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;host&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.1.3.0
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Translate OID to human-readable name (requires MIBs installed)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>snmptranslate<span class="w"> </span>-Of<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.1.1.0
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Bulk walk for faster retrieval (SNMPv2c+)</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>snmpbulkwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;host&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.2
+</code></pre></div>
+<p><strong>Common OIDs:</strong></p>
+<table>
+<thead>
+<tr>
+<th>OID</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1.3.6.1.2.1.1.1.0</code></td>
+<td>sysDescr</td>
+<td>Device description</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.1.3.0</code></td>
+<td>sysUpTime</td>
+<td>Uptime in hundredths of a second</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.1.5.0</code></td>
+<td>sysName</td>
+<td>Hostname</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.2.1.2.2</code></td>
+<td>ifTable</td>
+<td>Interface table</td>
+</tr>
+<tr>
+<td><code>1.3.6.1.4.1.*</code></td>
+<td>enterprise</td>
+<td>Vendor-specific OIDs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Timeout: No Response</code></td>
+<td>UDP reachability, ACL on device</td>
+<td>Confirm port 161/udp is open; verify community string or USM credentials; check device SNMP ACL</td>
+</tr>
+<tr>
+<td><code>Authentication failure</code> (v3)</td>
+<td>Auth password, auth protocol mismatch</td>
+<td>Verify <code>-a</code> (SHA/MD5) and <code>-A</code> password match device config; check engine ID sync</td>
+</tr>
+<tr>
+<td>Walk returns no data</td>
+<td>Community string wrong; OID not supported</td>
+<td>Test with <code>sysDescr</code> (1.3.6.1.2.1.1.1.0) first; confirm MIB is loaded on device</td>
+</tr>
+<tr>
+<td>Traps not received</td>
+<td>Trap destination not configured on device; firewall blocking 162/udp</td>
+<td>Verify trap receiver IP on device; check firewall for 162/udp inbound on receiver</td>
+</tr>
+<tr>
+<td>Read-write community exposed</td>
+<td>SNMPv2c RW community in use</td>
+<td>Restrict to read-only; switch to SNMPv3 authPriv; ACL to monitoring host IPs only</td>
+</tr>
+<tr>
+<td>MIB not found locally</td>
+<td>MIB files not installed</td>
+<td>Install net-snmp-mibs or vendor MIB package; set <code>MIBDIRS</code> environment variable</td>
+</tr>
+</tbody>
+</table>
 
 
 

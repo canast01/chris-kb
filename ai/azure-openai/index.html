@@ -1062,6 +1062,86 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-configuration-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Configuration Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-filter-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content Filter Categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1081,35 +1161,208 @@
 
 
 <h1 id="azure-openai">Azure OpenAI<a class="headerlink" href="#azure-openai" title="Permanent link">&para;</a></h1>
-<p>Azure OpenAI operational notes and deep-dive references.</p>
+<div class="kb-summary">
+Azure OpenAI Service hosts GPT-4o, GPT-4, and GPT-3.5 models within Azure regions, giving enterprise teams private endpoints, Entra ID authentication, and regional data residency. Unlike the public OpenAI API, models must be explicitly deployed to a named resource before use, and capacity is managed per deployment. Key operational concerns are deployment quota, network isolation for production workloads, and configuring content filters to meet compliance requirements.
+</div>
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="deployments/">
   <strong>Deployments</strong>
-  <span>Deployments notes, checks, references, and validation.</span>
+  <span>Creating and managing model deployments — Standard vs Provisioned Throughput Units (PTU), quota allocation, and deployment versioning.</span>
 </a>
 
 <a class="kb-card" href="model-access/">
   <strong>Model Access</strong>
-  <span>Model Access notes, checks, references, and validation.</span>
+  <span>Requesting model access per region, supported model versions, availability by geography, and capacity planning.</span>
 </a>
 
 <a class="kb-card" href="networking/">
   <strong>Networking</strong>
-  <span>Networking notes, checks, references, and validation.</span>
+  <span>Private Endpoint configuration, VNet integration, disabling public network access, and DNS resolution for private endpoints.</span>
 </a>
 
 <a class="kb-card" href="security/">
   <strong>Security</strong>
-  <span>Security notes, checks, references, and validation.</span>
+  <span>Entra ID managed identity auth, API key rotation, content filtering policy, prompt shield, and RBAC role assignments.</span>
 </a>
 
 <a class="kb-card" href="monitoring/">
   <strong>Monitoring</strong>
-  <span>Monitoring notes, checks, references, and validation.</span>
+  <span>Azure Monitor diagnostic settings, Log Analytics queries for token usage and latency, alerting on error rates and quota exhaustion.</span>
 </a>
 
 </div>
+
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<h3 id="deployment-types">Deployment Types<a class="headerlink" href="#deployment-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Capacity</th>
+<th>Billing</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard</td>
+<td>Shared pool, auto-scaled</td>
+<td>Per token</td>
+<td>Variable workloads, dev/test</td>
+</tr>
+<tr>
+<td>Provisioned (PTU)</td>
+<td>Dedicated throughput units</td>
+<td>Reserved hourly</td>
+<td>Latency-sensitive, high-volume production</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-configuration-values">Key Configuration Values<a class="headerlink" href="#key-configuration-values" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value / Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base endpoint</td>
+<td><code>https://{resource-name}.openai.azure.com/</code></td>
+</tr>
+<tr>
+<td>API version (stable)</td>
+<td><code>2024-02-01</code></td>
+</tr>
+<tr>
+<td>Auth — API key</td>
+<td><code>api-key: {key}</code> header</td>
+</tr>
+<tr>
+<td>Auth — Entra ID</td>
+<td>Bearer token from <code>DefaultAzureCredential</code></td>
+</tr>
+<tr>
+<td>Deployment name</td>
+<td>Set at resource creation; used in URL path</td>
+</tr>
+<tr>
+<td>Quota unit</td>
+<td>TPM (tokens per minute) per deployment</td>
+</tr>
+</tbody>
+</table>
+<h3 id="content-filter-categories">Content Filter Categories<a class="headerlink" href="#content-filter-categories" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Severities</th>
+<th>Default Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Violence</td>
+<td>Low / Medium / High</td>
+<td>Block at High</td>
+</tr>
+<tr>
+<td>Sexual</td>
+<td>Low / Medium / High</td>
+<td>Block at High</td>
+</tr>
+<tr>
+<td>Self-harm</td>
+<td>Low / Medium / High</td>
+<td>Block at High</td>
+</tr>
+<tr>
+<td>Hate / Fairness</td>
+<td>Low / Medium / High</td>
+<td>Block at High</td>
+</tr>
+<tr>
+<td>Prompt Shield</td>
+<td>Jailbreak / Indirect attack</td>
+<td>Block</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-operations">Common Operations<a class="headerlink" href="#common-operations" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Set environment variables</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AZURE_OPENAI_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;https://my-resource.openai.azure.com/&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AZURE_OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;...&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">AZURE_OPENAI_DEPLOYMENT</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_VERSION</span><span class="o">=</span><span class="s2">&quot;2024-02-01&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Chat completion via REST</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AZURE_OPENAI_ENDPOINT</span><span class="si">}</span><span class="s2">openai/deployments/</span><span class="si">${</span><span class="nv">AZURE_OPENAI_DEPLOYMENT</span><span class="si">}</span><span class="s2">/chat/completions?api-version=</span><span class="si">${</span><span class="nv">OPENAI_API_VERSION</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;api-key: </span><span class="si">${</span><span class="nv">AZURE_OPENAI_API_KEY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="s1">    &quot;messages&quot;: [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Explain PTU deployments.&quot;}]</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># List deployments via Azure CLI</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>az<span class="w"> </span>cognitiveservices<span class="w"> </span>account<span class="w"> </span>deployment<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--name<span class="w"> </span>my-resource<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--resource-group<span class="w"> </span>my-rg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Check quota usage</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>az<span class="w"> </span>cognitiveservices<span class="w"> </span>account<span class="w"> </span>list-usage<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--name<span class="w"> </span>my-resource<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--resource-group<span class="w"> </span>my-rg
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureOpenAI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">azure.identity</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultAzureCredential</span><span class="p">,</span> <span class="n">get_bearer_token_provider</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Option 1: API key auth</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">AzureOpenAI</span><span class="p">(</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">azure_endpoint</span><span class="o">=</span><span class="s2">&quot;https://my-resource.openai.azure.com/&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">api_version</span><span class="o">=</span><span class="s2">&quot;2024-02-01&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Option 2: Managed identity (preferred for production)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">token_provider</span> <span class="o">=</span> <span class="n">get_bearer_token_provider</span><span class="p">(</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">DefaultAzureCredential</span><span class="p">(),</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="s2">&quot;https://cognitiveservices.azure.com/.default&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">client</span> <span class="o">=</span> <span class="n">AzureOpenAI</span><span class="p">(</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">azure_endpoint</span><span class="o">=</span><span class="s2">&quot;https://my-resource.openai.azure.com/&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="n">azure_ad_token_provider</span><span class="o">=</span><span class="n">token_provider</span><span class="p">,</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="n">api_version</span><span class="o">=</span><span class="s2">&quot;2024-02-01&quot;</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="p">)</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>          <span class="c1"># deployment name, not model name</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">}]</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">)</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Log Analytics — KQL query for token usage over 1 hour</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Run in Azure Monitor &gt; Logs against your Log Analytics workspace</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">AzureDiagnostics</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">|</span> <span class="n">where</span> <span class="n">ResourceType</span> <span class="o">==</span> <span class="s2">&quot;OPENAI&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">|</span> <span class="n">where</span> <span class="n">TimeGenerated</span> <span class="o">&gt;</span> <span class="n">ago</span><span class="p">(</span><span class="mi">1</span><span class="n">h</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="o">|</span> <span class="n">summarize</span> <span class="n">TotalTokens</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">toint</span><span class="p">(</span><span class="n">promptTokens_d</span><span class="p">)</span> <span class="o">+</span> <span class="n">toint</span><span class="p">(</span><span class="n">completionTokens_d</span><span class="p">))</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">by</span> <span class="nb">bin</span><span class="p">(</span><span class="n">TimeGenerated</span><span class="p">,</span> <span class="mi">5</span><span class="n">m</span><span class="p">),</span> <span class="n">deploymentId_s</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="o">|</span> <span class="n">order</span> <span class="n">by</span> <span class="n">TimeGenerated</span> <span class="n">desc</span>
+</code></pre></div>
+<h2 id="key-considerations">Key Considerations<a class="headerlink" href="#key-considerations" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Deployment ≠ model:</strong> You deploy a model version to a named deployment. API calls reference the deployment name, not the model name. Changing the underlying model version requires creating a new deployment or updating the existing one.</li>
+<li><strong>PTU vs Standard:</strong> Standard is billed per token and scales automatically but can be rate-limited under burst load. PTU (Provisioned Throughput Units) gives consistent latency and throughput but requires capacity reservation — right-size carefully as PTU is billed hourly regardless of usage.</li>
+<li><strong>Network isolation:</strong> For production, disable public network access and use Private Endpoints. Ensure DNS resolution is configured so workloads resolve the private endpoint IP, not the public Azure IP.</li>
+<li><strong>Managed identity over API keys:</strong> Use <code>DefaultAzureCredential</code> with a managed identity assigned the <code>Cognitive Services OpenAI User</code> role. This eliminates key rotation overhead and reduces the risk of credential leakage.</li>
+<li><strong>Content filtering:</strong> Default filters block high-severity content. Customising filters (e.g., lowering thresholds for certain categories) requires an approved use-case request to Microsoft. Enable Prompt Shield to detect jailbreak and indirect injection attempts.</li>
+<li><strong>Monitoring gaps:</strong> Azure Monitor captures token counts and latency but not the full prompt/response content by default. Enable diagnostic logging to Log Analytics and build alerts on <code>4xx</code> error rates and TPM quota consumption to catch quota exhaustion before it impacts production.</li>
+</ul>
 
 
 

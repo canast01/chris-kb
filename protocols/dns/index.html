@@ -1156,10 +1156,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Quick Reference
       
     </span>
   </a>
@@ -1167,10 +1167,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#common-commands-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Common Commands / Config
       
     </span>
   </a>
@@ -1178,21 +1178,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Workflow
+        Troubleshooting
       
     </span>
   </a>
@@ -1905,10 +1894,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Quick Reference
       
     </span>
   </a>
@@ -1916,10 +1905,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#common-commands-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Common Commands / Config
       
     </span>
   </a>
@@ -1927,21 +1916,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Workflow
+        Troubleshooting
       
     </span>
   </a>
@@ -1984,72 +1962,232 @@
 
 
 <h1 id="dns">DNS<a class="headerlink" href="#dns" title="Permanent link">&para;</a></h1>
-<div class="kb-grid kb-grid-1">
+<div class="kb-summary">
+Domain Name System (DNS) is the foundational naming protocol of IP networks, resolving hostnames to addresses (and vice versa) over UDP and TCP port 53. It is a critical dependency for authentication (Kerberos, LDAP), certificate validation, cloud services, monitoring, and automation — meaning DNS failures cascade across the entire environment. Key operational concerns are zone hygiene, forwarder reliability, recursive vs authoritative role separation, and TTL management.
+</div>
+
+<div class="kb-grid kb-grid-5">
+
+<a class="kb-card" href="records/">
+  <strong>Records</strong>
+  <span>A, AAAA, CNAME, MX, PTR, NS, SOA, TXT, and SRV record types — creation, validation, and TTL tuning.</span>
+</a>
+
+<a class="kb-card" href="zones/">
+  <strong>Zones</strong>
+  <span>Primary, secondary, stub, and conditional forwarder zones — zone transfers, replication, and delegation.</span>
+</a>
 
 <a class="kb-card" href="lookups/">
   <strong>Lookups</strong>
-  <span>Lookups notes, checks, commands, and references.</span>
+  <span>Forward and reverse lookup validation, split-horizon DNS, and resolving recursive vs authoritative responses.</span>
+</a>
+
+<a class="kb-card" href="forwarders/">
+  <strong>Forwarders</strong>
+  <span>Upstream forwarder configuration, conditional forwarders, root hints, and DNS over HTTPS (DoH) forwarding.</span>
 </a>
 
 <a class="kb-card" href="troubleshooting/">
   <strong>Troubleshooting</strong>
-  <span>Common issues, diagnostic steps, and resolution guides.</span>
+  <span>NXDOMAIN, SERVFAIL, stale records, replication failures, split-horizon conflicts, and slow resolution.</span>
 </a>
 
 </div>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>DNS resolves names to IP addresses and is a critical dependency for authentication, applications, storage, cloud services, monitoring, and automation.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<p><strong>Record types:</strong></p>
 <table>
 <thead>
 <tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Verify forward and reverse lookup</td>
-<td></td>
-<td></td>
+<td>A</td>
+<td>IPv4 address</td>
+<td><code>host.example.com → 192.168.1.10</code></td>
 </tr>
 <tr>
-<td>Confirm DNS server availability</td>
-<td></td>
-<td></td>
+<td>AAAA</td>
+<td>IPv6 address</td>
+<td><code>host.example.com → 2001:db8::1</code></td>
 </tr>
 <tr>
-<td>Review stale or duplicate records</td>
-<td></td>
-<td></td>
+<td>CNAME</td>
+<td>Canonical name alias</td>
+<td><code>www → host.example.com</code></td>
 </tr>
 <tr>
-<td>Check zone replication</td>
-<td></td>
-<td></td>
+<td>MX</td>
+<td>Mail exchanger</td>
+<td><code>example.com → mail.example.com (priority 10)</code></td>
 </tr>
 <tr>
-<td>Validate conditional forwarders</td>
-<td></td>
-<td></td>
+<td>PTR</td>
+<td>Reverse lookup</td>
+<td><code>10.1.168.192.in-addr.arpa → host.example.com</code></td>
+</tr>
+<tr>
+<td>NS</td>
+<td>Nameserver delegation</td>
+<td><code>example.com → ns1.example.com</code></td>
+</tr>
+<tr>
+<td>SOA</td>
+<td>Zone authority</td>
+<td>Serial, refresh, retry, expire, minimum TTL</td>
+</tr>
+<tr>
+<td>TXT</td>
+<td>Text records</td>
+<td>SPF, DKIM, DMARC, domain verification</td>
+</tr>
+<tr>
+<td>SRV</td>
+<td>Service locator</td>
+<td><code>_ldap._tcp.example.com → dc01.example.com:389</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nslookup<span class="w"> </span>example.com
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dig<span class="w"> </span>example.com
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dig<span class="w"> </span>-x<span class="w"> </span><span class="m">10</span>.0.0.10
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ipconfig<span class="w"> </span>/displaydns
+<p><strong>Zone types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary</td>
+<td>Writable master copy of the zone</td>
+</tr>
+<tr>
+<td>Secondary</td>
+<td>Read-only replica via zone transfer (AXFR/IXFR)</td>
+</tr>
+<tr>
+<td>Stub</td>
+<td>Contains only NS records — used for delegation awareness</td>
+</tr>
+<tr>
+<td>Conditional forwarder</td>
+<td>Forwards specific domain queries to designated servers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Port summary:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>53/udp</td>
+<td>DNS</td>
+<td>Standard queries (responses ≤512 bytes or EDNS)</td>
+</tr>
+<tr>
+<td>53/tcp</td>
+<td>DNS</td>
+<td>Large responses, zone transfers (AXFR)</td>
+</tr>
+<tr>
+<td>853/tcp</td>
+<td>DNS over TLS (DoT)</td>
+<td>Encrypted recursive resolution</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-commands-config">Common Commands / Config<a class="headerlink" href="#common-commands-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Forward lookup with dig</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dig<span class="w"> </span>A<span class="w"> </span>host.example.com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Reverse lookup (PTR)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dig<span class="w"> </span>-x<span class="w"> </span><span class="m">192</span>.168.1.10
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Query a specific DNS server</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dig<span class="w"> </span>@192.168.1.10<span class="w"> </span>A<span class="w"> </span>host.example.com
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check authoritative nameservers for a zone</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>dig<span class="w"> </span>NS<span class="w"> </span>example.com
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Trace DNS resolution from root</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>dig<span class="w"> </span>+trace<span class="w"> </span>host.example.com
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Show full answer with TTL</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>dig<span class="w"> </span>+noall<span class="w"> </span>+answer<span class="w"> </span>host.example.com
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Check SOA record (serial number, refresh times)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>dig<span class="w"> </span>SOA<span class="w"> </span>example.com
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># nslookup (cross-platform)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>nslookup<span class="w"> </span>host.example.com
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>nslookup<span class="w"> </span>-type<span class="o">=</span>MX<span class="w"> </span>example.com
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Windows PowerShell</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>Resolve-DnsName<span class="w"> </span>host.example.com
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>Resolve-DnsName<span class="w"> </span>-Name<span class="w"> </span>host.example.com<span class="w"> </span>-Server<span class="w"> </span><span class="m">192</span>.168.1.10<span class="w"> </span>-Type<span class="w"> </span>PTR
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Windows: Flush DNS resolver cache</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>ipconfig<span class="w"> </span>/flushdns
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1"># Windows: View DNS cache</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>ipconfig<span class="w"> </span>/displaydns<span class="w"> </span><span class="p">|</span><span class="w"> </span>more
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="c1"># Linux: Flush systemd-resolved cache</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>systemd-resolve<span class="w"> </span>--flush-caches
 </code></pre></div>
-<h2 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Export or back up DNS zones</li>
-<li>Confirm replication health</li>
-<li>Apply OS or DNS service updates</li>
-<li>Validate name resolution</li>
-<li>Confirm dependent applications are healthy</li>
-</ol>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NXDOMAIN</code> for a known host</td>
+<td>Record exists in zone; TTL; split-horizon</td>
+<td>Check with <code>dig @&lt;authoritative-server&gt;</code>; verify record in zone; check if different internal/external zones exist</td>
+</tr>
+<tr>
+<td><code>SERVFAIL</code></td>
+<td>Authoritative server unreachable; DNSSEC validation failure</td>
+<td>Test with <code>dig +noedns</code>; check forwarder connectivity; verify DNSSEC chain if enabled</td>
+</tr>
+<tr>
+<td>Stale record returning wrong IP</td>
+<td>TTL too high; old record not deleted</td>
+<td>Flush resolver cache; remove stale record; lower TTL before planned IP changes</td>
+</tr>
+<tr>
+<td>Zone transfer failing</td>
+<td>ACL on primary; TCP 53 blocked</td>
+<td>Check <code>allow-transfer</code> in BIND config or Windows DNS zone properties; verify TCP port 53 is open</td>
+</tr>
+<tr>
+<td>Split-horizon conflict</td>
+<td>Client resolving external instead of internal</td>
+<td>Verify client is using internal DNS servers; check conditional forwarder or zone scope configuration</td>
+</tr>
+<tr>
+<td>Slow DNS resolution</td>
+<td>Forwarder unreachable; recursive resolver overloaded</td>
+<td>Test forwarder latency with <code>dig @&lt;forwarder&gt;</code>; switch to faster upstream; consider local caching resolver</td>
+</tr>
+</tbody>
+</table>
 
 
 

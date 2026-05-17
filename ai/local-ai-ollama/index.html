@@ -21,7 +21,7 @@
     
     
       
-        <title>Local Ai Ollama - Chris KB</title>
+        <title>Local AI — Ollama - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Local Ai Ollama · Chris KB">
+  <meta property="og:title" content="Local AI — Ollama · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Local Ai Ollama · Chris KB">
+  <meta name="twitter:title" content="Local AI — Ollama · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Local Ai Ollama
+              Local AI — Ollama
             
           </span>
         </div>
@@ -1062,6 +1062,86 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-models-and-vram-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Models and VRAM Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-api-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1160,11 @@
 
 
 
-<h1 id="local-ai-ollama">Local Ai Ollama<a class="headerlink" href="#local-ai-ollama" title="Permanent link">&para;</a></h1>
-<p>Local Ai Ollama operational notes and deep-dive references.</p>
+<h1 id="local-ai-ollama">Local AI — Ollama<a class="headerlink" href="#local-ai-ollama" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Ollama runs open-weight large language models locally, exposing a REST API that is compatible with the OpenAI API format. It handles model download, quantisation, and GPU layer offloading automatically — supporting NVIDIA CUDA and Apple Silicon Metal backends. Key operational concerns are VRAM availability for larger models, choosing the right quantisation level (Q4_K_M is the standard trade-off), and network binding when exposing the API beyond localhost.
+</div>
+
 <div class="kb-grid kb-grid-6">
 
 <a class="kb-card" href="cli-reference/">
@@ -1091,30 +1174,245 @@
 
 <a class="kb-card" href="install-notes/">
   <strong>Install Notes</strong>
-  <span>Install Notes notes, checks, references, and validation.</span>
+  <span>Installation on Linux, macOS, and Docker; systemd service configuration; environment variable setup for model storage and GPU layers.</span>
 </a>
 
 <a class="kb-card" href="models/">
   <strong>Models</strong>
-  <span>Models notes, checks, references, and validation.</span>
+  <span>Available model families (Llama, Mistral, Phi, Gemma, CodeLlama), quantisation variants, VRAM requirements, and embedding models.</span>
 </a>
 
 <a class="kb-card" href="gpu-usage/">
-  <strong>Gpu Usage</strong>
-  <span>Gpu Usage notes, checks, references, and validation.</span>
+  <strong>GPU Usage</strong>
+  <span>CUDA and Metal GPU detection, OLLAMA_GPU_LAYERS config, VRAM usage monitoring, and CPU fallback behaviour.</span>
 </a>
 
 <a class="kb-card" href="testing/">
   <strong>Testing</strong>
-  <span>Testing notes, checks, references, and validation.</span>
+  <span>REST API testing with curl and Python, OpenAI-compatible client usage, response validation, and benchmark approaches.</span>
 </a>
 
 <a class="kb-card" href="troubleshooting/">
   <strong>Troubleshooting</strong>
-  <span>Troubleshooting notes, checks, references, and validation.</span>
+  <span>GPU not detected, out-of-VRAM errors, slow inference on CPU, model load failures, and API connectivity issues.</span>
 </a>
 
 </div>
+
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<h3 id="common-models-and-vram-requirements">Common Models and VRAM Requirements<a class="headerlink" href="#common-models-and-vram-requirements" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Tag</th>
+<th>VRAM (Q4_K_M)</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>llama3.2</code></td>
+<td><code>llama3.2:3b</code></td>
+<td>~2 GB</td>
+<td>Fast responses, resource-constrained</td>
+</tr>
+<tr>
+<td><code>llama3.2</code></td>
+<td><code>llama3.2:latest</code> (8B)</td>
+<td>~5 GB</td>
+<td>General tasks, good quality</td>
+</tr>
+<tr>
+<td><code>llama3.1</code></td>
+<td><code>llama3.1:70b</code></td>
+<td>~40 GB</td>
+<td>High-quality reasoning, large VRAM needed</td>
+</tr>
+<tr>
+<td><code>mistral</code></td>
+<td><code>mistral:latest</code> (7B)</td>
+<td>~4.5 GB</td>
+<td>Instruction following, low latency</td>
+</tr>
+<tr>
+<td><code>phi3</code></td>
+<td><code>phi3:mini</code> (3.8B)</td>
+<td>~2.5 GB</td>
+<td>Coding, reasoning, small footprint</td>
+</tr>
+<tr>
+<td><code>gemma2</code></td>
+<td><code>gemma2:9b</code></td>
+<td>~6 GB</td>
+<td>Balanced general use</td>
+</tr>
+<tr>
+<td><code>codellama</code></td>
+<td><code>codellama:13b</code></td>
+<td>~8 GB</td>
+<td>Code generation and completion</td>
+</tr>
+<tr>
+<td><code>nomic-embed-text</code></td>
+<td><code>nomic-embed-text:latest</code></td>
+<td>~300 MB</td>
+<td>Embeddings for RAG pipelines</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-environment-variables">Key Environment Variables<a class="headerlink" href="#key-environment-variables" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OLLAMA_HOST</code></td>
+<td><code>127.0.0.1:11434</code></td>
+<td>Bind address — set to <code>0.0.0.0:11434</code> to expose on network</td>
+</tr>
+<tr>
+<td><code>OLLAMA_MODELS</code></td>
+<td><code>~/.ollama/models</code></td>
+<td>Model storage directory</td>
+</tr>
+<tr>
+<td><code>OLLAMA_GPU_LAYERS</code></td>
+<td>auto</td>
+<td>Number of transformer layers to offload to GPU</td>
+</tr>
+<tr>
+<td><code>OLLAMA_NUM_PARALLEL</code></td>
+<td><code>1</code></td>
+<td>Number of concurrent model requests</td>
+</tr>
+<tr>
+<td><code>OLLAMA_MAX_LOADED_MODELS</code></td>
+<td><code>1</code></td>
+<td>How many models to keep loaded in VRAM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rest-api-endpoints">REST API Endpoints<a class="headerlink" href="#rest-api-endpoints" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/generate</code></td>
+<td>POST</td>
+<td>Single-turn text generation</td>
+</tr>
+<tr>
+<td><code>/api/chat</code></td>
+<td>POST</td>
+<td>Multi-turn chat (OpenAI messages format)</td>
+</tr>
+<tr>
+<td><code>/api/embed</code></td>
+<td>POST</td>
+<td>Generate embeddings</td>
+</tr>
+<tr>
+<td><code>/api/tags</code></td>
+<td>GET</td>
+<td>List locally available models</td>
+</tr>
+<tr>
+<td><code>/api/show</code></td>
+<td>POST</td>
+<td>Model metadata and parameters</td>
+</tr>
+<tr>
+<td><code>/api/pull</code></td>
+<td>POST</td>
+<td>Pull a model from registry</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-operations">Common Operations<a class="headerlink" href="#common-operations" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Pull a model</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ollama<span class="w"> </span>pull<span class="w"> </span>llama3.2
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ollama<span class="w"> </span>pull<span class="w"> </span>nomic-embed-text
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Run interactively</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ollama<span class="w"> </span>run<span class="w"> </span>llama3.2
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Run with a one-shot prompt (non-interactive)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ollama<span class="w"> </span>run<span class="w"> </span>mistral<span class="w"> </span><span class="s2">&quot;Explain VLAN tagging in one paragraph&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># List downloaded models</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ollama<span class="w"> </span>list
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Show running models and VRAM usage</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ollama<span class="w"> </span>ps
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Remove a model</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ollama<span class="w"> </span>rm<span class="w"> </span>codellama:13b
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Start the server manually (if not running as a service)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>ollama<span class="w"> </span>serve
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Check API is up</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>curl<span class="w"> </span>http://localhost:11434/api/tags
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Single generate call</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>curl<span class="w"> </span>http://localhost:11434/api/generate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;model&quot;: &quot;llama3.2&quot;, &quot;prompt&quot;: &quot;What is BGP?&quot;, &quot;stream&quot;: false}&#39;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Chat endpoint (OpenAI-compatible format)</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>curl<span class="w"> </span>http://localhost:11434/api/chat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="s1">    &quot;model&quot;: &quot;llama3.2&quot;,</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="s1">    &quot;messages&quot;: [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Explain subnetting&quot;}],</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="s1">    &quot;stream&quot;: false</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="c1"># Generate embeddings</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>curl<span class="w"> </span>http://localhost:11434/api/embed<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;model&quot;: &quot;nomic-embed-text&quot;, &quot;input&quot;: &quot;Text to embed&quot;}&#39;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Use Ollama via the OpenAI-compatible client</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434/v1&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;ollama&quot;</span>  <span class="c1"># required by client, not validated by Ollama</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.2&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Summarise BGP route selection&quot;</span><span class="p">}]</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Generate embeddings for RAG</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;nomic-embed-text&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="nb">input</span><span class="o">=</span><span class="s2">&quot;Infrastructure as Code with Terraform&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="p">)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">vector</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">embedding</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Embedding dimensions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="key-considerations">Key Considerations<a class="headerlink" href="#key-considerations" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>VRAM is the primary constraint:</strong> A model must fit in VRAM for GPU-accelerated inference. If VRAM is insufficient, Ollama falls back to CPU for the overflow layers — this is much slower. Use <code>ollama ps</code> to see how many layers are GPU-offloaded vs CPU-resident.</li>
+<li><strong>Quantisation trade-off:</strong> <code>Q4_K_M</code> (4-bit with medium quality) is the recommended default — it halves VRAM vs FP16 with minimal quality loss. <code>Q8_0</code> is near-FP16 quality at 8-bit. Avoid <code>Q2</code> quantisation as quality degrades significantly.</li>
+<li><strong>Network exposure:</strong> By default Ollama binds to <code>127.0.0.1</code> only. To expose it on a network (e.g., for use by other services), set <code>OLLAMA_HOST=0.0.0.0:11434</code> and ensure firewall rules restrict access appropriately — there is no built-in authentication.</li>
+<li><strong>Model loading latency:</strong> The first request after a model is pulled loads it into VRAM, which takes a few seconds. Subsequent requests are fast. <code>OLLAMA_MAX_LOADED_MODELS</code> controls how many models stay resident; increase this if switching between models frequently.</li>
+<li><strong>OpenAI API compatibility:</strong> Ollama's <code>/v1/chat/completions</code> and <code>/v1/embeddings</code> endpoints are compatible with the OpenAI SDK — just change <code>base_url</code> and set a dummy <code>api_key</code>. This makes it easy to swap between local and cloud models in development.</li>
+<li><strong>Resource cleanup:</strong> Long-running ollama processes hold models in VRAM indefinitely. On shared machines, use <code>ollama stop &lt;model&gt;</code> or restart the service to free VRAM after workloads complete.</li>
+</ul>
 
 
 

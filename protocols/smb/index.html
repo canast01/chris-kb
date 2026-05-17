@@ -897,6 +897,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -913,6 +931,58 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-commands-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Commands / Config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1817,6 +1887,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-commands-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Commands / Config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1851,35 +1962,220 @@
 
 
 <h1 id="smb">SMB<a class="headerlink" href="#smb" title="Permanent link">&para;</a></h1>
-<p>SMB operational notes and deep-dive references.</p>
+<div class="kb-summary">
+Server Message Block (SMB) is a network file sharing protocol running over TCP port 445, used for file shares, printer sharing, and inter-process communication in Windows environments and increasingly in mixed Linux/macOS fleets via Samba. The critical operational concerns are version enforcement (SMB1 must be disabled; SMB3 is required for encryption and signing), the interaction between share permissions and NTFS permissions (most restrictive wins), and diagnosing authentication and session failures in domain environments.
+</div>
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="shares/">
   <strong>Shares</strong>
-  <span>Shares notes, checks, references, and validation.</span>
+  <span>Creating and managing SMB shares, UNC paths, DFS namespaces, and share-level access control.</span>
 </a>
 
 <a class="kb-card" href="permissions/">
   <strong>Permissions</strong>
-  <span>Permissions notes, checks, references, and validation.</span>
+  <span>Share permissions vs NTFS permissions, most-restrictive-wins rule, and effective access evaluation.</span>
 </a>
 
 <a class="kb-card" href="sessions/">
   <strong>Sessions</strong>
-  <span>Sessions notes, checks, references, and validation.</span>
+  <span>Active session inspection, disconnected sessions, SMB signing, multichannel, and session limits.</span>
 </a>
 
 <a class="kb-card" href="ntfs/">
-  <strong>Ntfs</strong>
-  <span>Ntfs notes, checks, references, and validation.</span>
+  <strong>NTFS</strong>
+  <span>NTFS ACL inheritance, explicit vs inherited permissions, ownership, and icacls / Get-Acl management.</span>
 </a>
 
 <a class="kb-card" href="troubleshooting/">
   <strong>Troubleshooting</strong>
-  <span>Troubleshooting notes, checks, references, and validation.</span>
+  <span>Access denied errors, credential caching issues, SMB dialect negotiation failures, and event log analysis.</span>
 </a>
 
 </div>
+
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Status</th>
+<th>Key features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SMB 1.0</td>
+<td>Disabled — remove it</td>
+<td>No encryption, no signing by default; EternalBlue vulnerable</td>
+</tr>
+<tr>
+<td>SMB 2.0</td>
+<td>Acceptable (Windows Vista+)</td>
+<td>Pipelining, larger MTU, durable handles</td>
+</tr>
+<tr>
+<td>SMB 2.1</td>
+<td>Acceptable (Windows 7+)</td>
+<td>Opportunistic locking improvements</td>
+</tr>
+<tr>
+<td>SMB 3.0</td>
+<td>Recommended (Windows 8+)</td>
+<td>End-to-end encryption, SMB Multichannel</td>
+</tr>
+<tr>
+<td>SMB 3.1.1</td>
+<td>Preferred (Windows 10+)</td>
+<td>Pre-auth integrity check, AES-128-GCM encryption</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Permission interaction (most restrictive wins):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Share permission</th>
+<th>NTFS permission</th>
+<th>Effective access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full Control</td>
+<td>Read</td>
+<td>Read</td>
+</tr>
+<tr>
+<td>Read</td>
+<td>Full Control</td>
+<td>Read</td>
+</tr>
+<tr>
+<td>Full Control</td>
+<td>Full Control</td>
+<td>Full Control</td>
+</tr>
+<tr>
+<td>Change</td>
+<td>Modify</td>
+<td>Modify</td>
+</tr>
+<tr>
+<td>No access (Deny)</td>
+<td>Full Control</td>
+<td>No access</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key ports:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>445/tcp</td>
+<td>SMB direct</td>
+<td>Primary — all modern SMB traffic</td>
+</tr>
+<tr>
+<td>139/tcp</td>
+<td>NetBIOS session</td>
+<td>Legacy only (SMB over NetBIOS)</td>
+</tr>
+<tr>
+<td>137–138/udp</td>
+<td>NetBIOS</td>
+<td>Name resolution — legacy</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-commands-config">Common Commands / Config<a class="headerlink" href="#common-commands-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Windows: Test connectivity to SMB port (PowerShell)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>&lt;server&gt;<span class="w"> </span>-Port<span class="w"> </span><span class="m">445</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Windows: Map a network drive</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>net<span class="w"> </span>use<span class="w"> </span>Z:<span class="w"> </span><span class="se">\\</span>&lt;server&gt;<span class="se">\&lt;</span>share&gt;<span class="w"> </span>/user:&lt;domain&gt;<span class="se">\&lt;</span>username&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Persistent:</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>net<span class="w"> </span>use<span class="w"> </span>Z:<span class="w"> </span><span class="se">\\</span>&lt;server&gt;<span class="se">\&lt;</span>share&gt;<span class="w"> </span>/persistent:yes
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Windows: Disconnect a mapped drive</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>net<span class="w"> </span>use<span class="w"> </span>Z:<span class="w"> </span>/delete
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Windows: List all SMB shares on a server (PowerShell)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Get-SmbShare<span class="w"> </span>-CimSession<span class="w"> </span>&lt;server&gt;
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Windows: Create a new SMB share (PowerShell)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>New-SmbShare<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Data&quot;</span><span class="w"> </span>-Path<span class="w"> </span><span class="s2">&quot;D:\Data&quot;</span><span class="w"> </span><span class="sb">`</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>-FullAccess<span class="w"> </span><span class="s2">&quot;DOMAIN\Admins&quot;</span><span class="w"> </span>-ReadAccess<span class="w"> </span><span class="s2">&quot;DOMAIN\Users&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Windows: Show active SMB sessions on a server</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Get-SmbSession<span class="w"> </span>-CimSession<span class="w"> </span>&lt;server&gt;
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Windows: Check SMB signing and encryption settings</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>Get-SmbServerConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>RequireSecuritySignature,<span class="w"> </span>EncryptData
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Windows: Enforce SMB signing (server-side)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>Set-SmbServerConfiguration<span class="w"> </span>-RequireSecuritySignature<span class="w"> </span><span class="nv">$true</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Windows: Check which SMB versions are enabled</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>Get-SmbServerConfiguration<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>EnableSMB1Protocol,<span class="w"> </span>EnableSMB2Protocol
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1"># Linux (smbclient): List shares on a remote server</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>smbclient<span class="w"> </span>-L<span class="w"> </span>//&lt;server&gt;<span class="w"> </span>-U<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="c1"># Linux: Mount an SMB share</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>mount<span class="w"> </span>-t<span class="w"> </span>cifs<span class="w"> </span>//&lt;server&gt;/&lt;share&gt;<span class="w"> </span>/mnt/smb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">username</span><span class="o">=</span>&lt;user&gt;,password<span class="o">=</span>&lt;pass&gt;,vers<span class="o">=</span><span class="m">3</span>.0,domain<span class="o">=</span>&lt;domain&gt;
+</code></pre></div>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Access Denied</code> accessing share</td>
+<td>Share vs NTFS permissions; credential context</td>
+<td>Verify share permission grants access; check NTFS ACL with <code>icacls</code>; confirm user is in correct group; test with <code>Get-SmbShareAccess</code></td>
+</tr>
+<tr>
+<td>SMB1 negotiated instead of SMB3</td>
+<td>Old client or forced dialect</td>
+<td>Disable SMB1: <code>Set-SmbServerConfiguration -EnableSMB1Protocol $false</code>; update legacy clients</td>
+</tr>
+<tr>
+<td><code>The network path was not found</code></td>
+<td>Port 445 blocked; server not reachable</td>
+<td>Test with <code>Test-NetConnection &lt;server&gt; -Port 445</code>; check firewall rules; verify server name resolves</td>
+</tr>
+<tr>
+<td>Credential prompt loop</td>
+<td>Cached credentials conflict</td>
+<td>Clear with <code>net use * /delete</code>; check Windows Credential Manager; verify domain trust</td>
+</tr>
+<tr>
+<td>Slow file copy over SMB</td>
+<td>SMB Multichannel not active; MTU issues</td>
+<td>Verify with <code>Get-SmbMultichannelConnection</code>; ensure NICs support RSS; check MTU consistency</td>
+</tr>
+<tr>
+<td><code>The specified network name is no longer available</code></td>
+<td>Session timeout; disconnected session</td>
+<td>Increase <code>AutoDisconnectTimeout</code>; check server event log (Event ID 3033, 3034)</td>
+</tr>
+</tbody>
+</table>
 
 
 

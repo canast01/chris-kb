@@ -1000,10 +1000,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Quick Reference
       
     </span>
   </a>
@@ -1011,10 +1011,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#common-commands-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Common Commands / Config
       
     </span>
   </a>
@@ -1022,21 +1022,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Workflow
+        Troubleshooting
       
     </span>
   </a>
@@ -1905,10 +1894,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Quick Reference
       
     </span>
   </a>
@@ -1916,10 +1905,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#common-commands-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Common Commands / Config
       
     </span>
   </a>
@@ -1927,21 +1916,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Workflow
+        Troubleshooting
       
     </span>
   </a>
@@ -1984,72 +1962,261 @@
 
 
 <h1 id="ntp">NTP<a class="headerlink" href="#ntp" title="Permanent link">&para;</a></h1>
-<div class="kb-grid kb-grid-1">
+<div class="kb-summary">
+Network Time Protocol (NTP) synchronises system clocks across infrastructure over UDP port 123, using a hierarchical stratum model where stratum 0 is the reference clock (GPS, atomic) and each layer adds one stratum. Time accuracy is foundational: clock skew breaks Kerberos authentication (5-minute tolerance), invalidates TLS certificates, corrupts log correlation, and causes replication and clustering failures. VMware environments require particular care — ESXi hosts and guest VMs must not both sync to external NTP simultaneously.
+</div>
 
-<a class="kb-card" href="firewalls/">
-  <strong>Firewalls</strong>
-  <span>Firewalls notes, checks, commands, and references.</span>
+<div class="kb-grid kb-grid-5">
+
+<a class="kb-card" href="sources/">
+  <strong>Sources</strong>
+  <span>Configuring NTP servers, pool.ntp.org, GPS reference clocks, and upstream stratum selection.</span>
 </a>
 
-<a class="kb-card" href="sync-state/">
-  <strong>Sync State</strong>
-  <span>Sync State notes, checks, commands, and references.</span>
+<a class="kb-card" href="stratum/">
+  <strong>Stratum</strong>
+  <span>Stratum hierarchy (0–15), reference clocks, stratum selection strategy, and loop prevention.</span>
 </a>
 
-<a class="kb-card" href="validation/">
-  <strong>Validation</strong>
-  <span>Validation notes, checks, commands, and references.</span>
+<a class="kb-card" href="sync/">
+  <strong>Sync</strong>
+  <span>Offset, drift, and jitter metrics — how to read chronyc tracking and w32tm /query output.</span>
+</a>
+
+<a class="kb-card" href="pools/">
+  <strong>Pools</strong>
+  <span>pool.ntp.org configuration, regional pool selection, and running an internal NTP pool for the organisation.</span>
+</a>
+
+<a class="kb-card" href="config/">
+  <strong>Config</strong>
+  <span>chrony vs ntpd vs Windows Time Service — configuration files, service management, and hardening.</span>
 </a>
 
 </div>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>NTP keeps infrastructure time synchronized. Time drift can break authentication, certificates, logging, replication, clustering, and audit trails.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<p><strong>Stratum levels:</strong></p>
 <table>
 <thead>
 <tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
+<th>Stratum</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Confirm time source is reachable</td>
-<td></td>
-<td></td>
+<td>0</td>
+<td>Reference clock (GPS, atomic, radio) — not directly on network</td>
 </tr>
 <tr>
-<td>Check drift offset</td>
-<td></td>
-<td></td>
+<td>1</td>
+<td>Server directly attached to stratum-0 device</td>
 </tr>
 <tr>
-<td>Validate domain time hierarchy</td>
-<td></td>
-<td></td>
+<td>2</td>
+<td>Server synced from stratum-1</td>
 </tr>
 <tr>
-<td>Review time sync errors</td>
-<td></td>
-<td></td>
+<td>3–14</td>
+<td>Cascading sync hierarchy</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Unsynchronised / unreachable</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Clock unsynchronised (NTP sentinel value)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ntpq<span class="w"> </span>-p
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>chronyc<span class="w"> </span>sources
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>w32tm<span class="w"> </span>/query<span class="w"> </span>/status
+<p><strong>Key time metrics:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+<th>Acceptable range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Offset</td>
+<td>Difference between local clock and NTP source</td>
+<td>&lt; 1 ms (LAN), &lt; 50 ms (WAN)</td>
+</tr>
+<tr>
+<td>Drift</td>
+<td>Clock frequency error (ppm)</td>
+<td>&lt; 100 ppm</td>
+</tr>
+<tr>
+<td>Jitter</td>
+<td>Variation in offset over time</td>
+<td>&lt; 10 ms</td>
+</tr>
+<tr>
+<td>Stratum</td>
+<td>Hops from reference clock</td>
+<td>≤ 3 for servers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Implementation comparison:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>NTP daemon</th>
+<th>Config file</th>
+<th>Status command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux (modern)</td>
+<td>chrony</td>
+<td><code>/etc/chrony.conf</code></td>
+<td><code>chronyc tracking</code></td>
+</tr>
+<tr>
+<td>Linux (legacy)</td>
+<td>ntpd</td>
+<td><code>/etc/ntp.conf</code></td>
+<td><code>ntpq -p</code></td>
+</tr>
+<tr>
+<td>Windows Server</td>
+<td>Windows Time (w32tm)</td>
+<td>Registry / GPO</td>
+<td><code>w32tm /query /status</code></td>
+</tr>
+<tr>
+<td>VMware ESXi</td>
+<td>vmtools / host time</td>
+<td>vSphere config</td>
+<td><code>esxcli system time get</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>VMware time sync rules:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM with VMware Tools</td>
+<td>Disable NTP in guest; use host time sync via VMware Tools OR use external NTP — not both</td>
+</tr>
+<tr>
+<td>ESXi host</td>
+<td>Sync to external NTP servers; disable VMware Tools time sync in guest VMs that have their own NTP</td>
+</tr>
+<tr>
+<td>Domain controllers (VM)</td>
+<td>Use external NTP; disable VMware Tools time sync; PDC emulator syncs to external source</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-commands-config">Common Commands / Config<a class="headerlink" href="#common-commands-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># chrony: Show current sync status (offset, stratum, reference)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># chrony: Show all configured sources and their state</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># chrony: Show source statistics (jitter, drift)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>chronyc<span class="w"> </span>sourcestats
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># chrony: Force immediate time sync</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>chronyc<span class="w"> </span>makestep
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># systemd-timesyncd / timedatectl: Check sync status</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>timedatectl<span class="w"> </span>show-timesync<span class="w"> </span>--all
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># ntpd: Show configured peers and sync status</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ntpq<span class="w"> </span>-p
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># ntpd: Force time sync (step mode)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>ntpd<span class="w"> </span>-gq
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># Windows: Check time sync status</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>w32tm<span class="w"> </span>/query<span class="w"> </span>/status
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Windows: Show configured NTP source</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>w32tm<span class="w"> </span>/query<span class="w"> </span>/source
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Windows: Resync time immediately</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>w32tm<span class="w"> </span>/resync<span class="w"> </span>/force
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># Windows: Configure NTP server (run as admin)</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>w32tm<span class="w"> </span>/config<span class="w"> </span>/manualpeerlist:<span class="s2">&quot;pool.ntp.org&quot;</span><span class="w"> </span>/syncfromflags:manual<span class="w"> </span>/reliable:yes<span class="w"> </span>/update
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="c1"># VMware: Check ESXi time sync</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ntpClient
 </code></pre></div>
-<h2 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm authoritative time sources</li>
-<li>Update NTP or chrony configuration</li>
-<li>Restart time service</li>
-<li>Validate offset and synchronization</li>
-<li>Monitor logs for drift warnings</li>
-</ol>
+<p><strong>chrony configuration example (/etc/chrony.conf):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Use regional NTP pool</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pool<span class="w"> </span><span class="m">2</span>.pool.ntp.org<span class="w"> </span>iburst<span class="w"> </span>maxsources<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Allow local subnet to use this server as NTP source</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>allow<span class="w"> </span><span class="m">192</span>.168.0.0/16
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Serve time even when not sync&#39;d (for local clients)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">local</span><span class="w"> </span>stratum<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Log measurements</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>logdir<span class="w"> </span>/var/log/chrony
+</code></pre></div></p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kerberos authentication failing</td>
+<td>Clock skew &gt; 5 minutes</td>
+<td>Run <code>chronyc makestep</code> or <code>w32tm /resync /force</code>; verify NTP source is reachable</td>
+</tr>
+<tr>
+<td><code>chronyc tracking</code> shows large offset</td>
+<td>NTP source unreachable; firewall blocking 123/udp</td>
+<td>Test with <code>ntpdate -d &lt;ntp-server&gt;</code>; open 123/udp outbound; check <code>chronyc sources</code> for unreachable peers</td>
+</tr>
+<tr>
+<td>Stratum 16 (unsynchronised)</td>
+<td>No reachable NTP sources; all sources marked falseticker</td>
+<td>Verify at least 3 sources configured; check network path to NTP servers; <code>chronyc sources -v</code> for per-source state</td>
+</tr>
+<tr>
+<td>Time jumps backwards in VM</td>
+<td>VMware Tools + guest NTP both active</td>
+<td>Disable one: either turn off VMware Tools time sync (<code>vmware-toolsd --cmd "vmx.set_option synctime 0"</code>) or remove NTP from guest</td>
+</tr>
+<tr>
+<td>w32tm shows wrong source</td>
+<td>PDC emulator not syncing externally</td>
+<td>On PDC: <code>w32tm /config /manualpeerlist:"&lt;ntp-server&gt;" /syncfromflags:manual</code>; other DCs sync from PDC</td>
+</tr>
+<tr>
+<td>NTP drift increasing over time</td>
+<td>Large drift file; hardware clock issues</td>
+<td>Check <code>/var/lib/chrony/drift</code>; if drift &gt; 1000 ppm, hardware clock may be failing; consider virtual hardware clock tuning</td>
+</tr>
+</tbody>
+</table>
 
 
 

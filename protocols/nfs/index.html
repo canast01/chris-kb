@@ -845,6 +845,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -861,6 +879,58 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-commands-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Commands / Config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1817,6 +1887,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-commands-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Commands / Config
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1851,35 +1962,215 @@
 
 
 <h1 id="nfs">NFS<a class="headerlink" href="#nfs" title="Permanent link">&para;</a></h1>
-<p>NFS operational notes and deep-dive references.</p>
+<div class="kb-summary">
+Network File System (NFS) is a distributed file system protocol that operates at the application layer, allowing hosts to mount remote directories over TCP (and UDP for legacy deployments). The primary operational concerns for infrastructure engineers are version selection (NFSv4.1 for modern workloads), export security, and mount option tuning — particularly hard vs soft mounts, sync vs async, and the rpcbind dependency for NFSv3.
+</div>
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="exports/">
   <strong>Exports</strong>
-  <span>Exports notes, checks, references, and validation.</span>
+  <span>Configuring /etc/exports, export rules, squash options, and reloading exports with exportfs.</span>
 </a>
 
 <a class="kb-card" href="mounts/">
   <strong>Mounts</strong>
-  <span>Mounts notes, checks, references, and validation.</span>
+  <span>Mount options (hard/soft, sync/async, noatime, rsize/wsize), /etc/fstab entries, and autofs.</span>
 </a>
 
 <a class="kb-card" href="permissions/">
   <strong>Permissions</strong>
-  <span>Permissions notes, checks, references, and validation.</span>
+  <span>UID/GID mapping, root squash, no_root_squash, and Kerberos-based identity with NFSv4.</span>
 </a>
 
 <a class="kb-card" href="versions/">
   <strong>Versions</strong>
-  <span>Versions notes, checks, references, and validation.</span>
+  <span>NFSv3 vs NFSv4 vs NFSv4.1 feature comparison, stateful sessions, pNFS, and protocol negotiation.</span>
 </a>
 
 <a class="kb-card" href="troubleshooting/">
   <strong>Troubleshooting</strong>
-  <span>Troubleshooting notes, checks, references, and validation.</span>
+  <span>Stale file handles, mount timeouts, permission denied errors, rpcbind failures, and nfsstat analysis.</span>
 </a>
 
 </div>
+
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>NFSv3</th>
+<th>NFSv4</th>
+<th>NFSv4.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport</td>
+<td>TCP / UDP</td>
+<td>TCP only</td>
+<td>TCP only</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>2049 + rpcbind (111)</td>
+<td>2049 only</td>
+<td>2049 only</td>
+</tr>
+<tr>
+<td>Stateful</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Locking</td>
+<td>NLM (separate daemon)</td>
+<td>Built-in</td>
+<td>Built-in</td>
+</tr>
+<tr>
+<td>Kerberos auth</td>
+<td>Optional</td>
+<td>Supported</td>
+<td>Supported</td>
+</tr>
+<tr>
+<td>pNFS (parallel)</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Recommended use</td>
+<td>Legacy / simple</td>
+<td>General</td>
+<td>High-performance / modern</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common mount options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hard</code></td>
+<td>Retries indefinitely on server failure — recommended for data integrity</td>
+</tr>
+<tr>
+<td><code>soft</code></td>
+<td>Returns error after timeout — use only for non-critical mounts</td>
+</tr>
+<tr>
+<td><code>sync</code></td>
+<td>Writes confirmed before returning — safer, slower</td>
+</tr>
+<tr>
+<td><code>async</code></td>
+<td>Writes buffered — faster, risk of data loss on crash</td>
+</tr>
+<tr>
+<td><code>noatime</code></td>
+<td>Disables access time updates — reduces write traffic</td>
+</tr>
+<tr>
+<td><code>rsize=1048576</code></td>
+<td>Read buffer size (1 MiB) — tune for throughput</td>
+</tr>
+<tr>
+<td><code>wsize=1048576</code></td>
+<td>Write buffer size (1 MiB) — tune for throughput</td>
+</tr>
+<tr>
+<td><code>nfsvers=4.1</code></td>
+<td>Force specific NFS version</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-commands-config">Common Commands / Config<a class="headerlink" href="#common-commands-config" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Show exports from a remote NFS server</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>showmount<span class="w"> </span>-e<span class="w"> </span>&lt;nfs-server&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Mount an NFS share manually (NFSv4.1, hard mount)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>-o<span class="w"> </span><span class="nv">vers</span><span class="o">=</span><span class="m">4</span>.1,hard,noatime,rsize<span class="o">=</span><span class="m">1048576</span>,wsize<span class="o">=</span><span class="m">1048576</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>&lt;nfs-server&gt;:/export/path<span class="w"> </span>/mnt/nfs
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># /etc/fstab entry for persistent NFSv4 mount</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># &lt;nfs-server&gt;:/export/path  /mnt/nfs  nfs  vers=4,hard,noatime,_netdev  0 0</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Reload exports after editing /etc/exports (no restart needed)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>exportfs<span class="w"> </span>-ra
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Show currently active exports</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>exportfs<span class="w"> </span>-v
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Display NFS client and server statistics</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>nfsstat<span class="w"> </span>-c<span class="w">   </span><span class="c1"># client stats</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>nfsstat<span class="w"> </span>-s<span class="w">   </span><span class="c1"># server stats</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>nfsstat<span class="w"> </span>-m<span class="w">   </span><span class="c1"># mounted filesystems and options</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Check RPC services (needed for NFSv3 portmapper)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>rpcinfo<span class="w"> </span>-p<span class="w"> </span>&lt;nfs-server&gt;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Unmount a stuck NFS mount (lazy unmount)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>umount<span class="w"> </span>-l<span class="w"> </span>/mnt/nfs
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Check NFS mount details including negotiated version</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs
+</code></pre></div>
+<p><strong>Example /etc/exports entry:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/exports</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/data/shared<span class="w">  </span><span class="m">192</span>.168.1.0/24<span class="o">(</span>rw,sync,no_subtree_check,root_squash<span class="o">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/data/readonly<span class="w">  </span><span class="m">10</span>.0.0.0/8<span class="o">(</span>ro,sync,no_subtree_check,all_squash<span class="o">)</span>
+</code></pre></div></p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mount.nfs: Connection timed out</code></td>
+<td>Firewall on port 2049; rpcbind (111) for v3</td>
+<td>Open port 2049/tcp; for NFSv3 also open 111/tcp+udp and ensure rpcbind is running</td>
+</tr>
+<tr>
+<td><code>Stale file handle</code></td>
+<td>Server-side export was removed or path changed</td>
+<td>Unmount (<code>umount -l</code>) and remount; verify export still exists with <code>showmount -e</code></td>
+</tr>
+<tr>
+<td><code>Permission denied</code> on client</td>
+<td>UID/GID mismatch between client and server</td>
+<td>Confirm UIDs match or configure <code>all_squash</code> + <code>anonuid</code>/<code>anongid</code> in exports</td>
+</tr>
+<tr>
+<td>Mount hangs indefinitely</td>
+<td>Hard mount + server unreachable</td>
+<td>Use <code>umount -l</code> (lazy); consider <code>soft,timeo=30</code> for non-critical mounts</td>
+</tr>
+<tr>
+<td><code>rpc.statd: unable to register</code></td>
+<td>rpcbind not running</td>
+<td>Start rpcbind: <code>systemctl start rpcbind</code></td>
+</tr>
+<tr>
+<td>High NFS latency</td>
+<td>rsize/wsize too small; async disabled</td>
+<td>Increase rsize/wsize to 1 MiB; consider <code>async</code> if data loss risk is acceptable</td>
+</tr>
+</tbody>
+</table>
 
 
 
