@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Integrations - Chris KB</title>
+        <title>Dell AIOps — Integrations - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Integrations · Chris KB">
+  <meta property="og:title" content="Dell AIOps — Integrations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Integrations · Chris KB">
+  <meta name="twitter:title" content="Dell AIOps — Integrations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-integrations" class="md-skip">
+        <a href="#dell-aiops-integrations" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Integrations
+              Dell AIOps — Integrations
             
           </span>
         </div>
@@ -1062,6 +1062,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supported-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Platforms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notification-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notification Channels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apex-console-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APEX Console API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-servicenow-cmdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with ServiceNow CMDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1132,93 @@
 
 
 
-<h1 id="architecture-integrations">Architecture — Integrations<a class="headerlink" href="#architecture-integrations" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="dell-aiops-integrations">Dell AIOps — Integrations<a class="headerlink" href="#dell-aiops-integrations" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Dell AIOps is embedded in CloudIQ — integrations are shared. Supported Dell array types, notification channels, and the APEX Console API are the key integration surfaces.
+</div>
+
+<h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
+<p>Dell AIOps draws telemetry from all arrays registered to CloudIQ via the SCG:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>AIOps Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerMax</td>
+<td>Capacity forecasting, SRDF anomaly detection, workload fingerprinting</td>
+</tr>
+<tr>
+<td>PowerStore</td>
+<td>Anomaly detection on latency, capacity forecast</td>
+</tr>
+<tr>
+<td>PowerScale</td>
+<td>Node health anomalies, capacity projection, quota trending</td>
+</tr>
+<tr>
+<td>Unity XT</td>
+<td>Pool capacity forecast, SP health anomaly</td>
+</tr>
+<tr>
+<td>Data Domain</td>
+<td>Dedup ratio anomaly, capacity forecast</td>
+</tr>
+</tbody>
+</table>
+<h2 id="notification-channels">Notification Channels<a class="headerlink" href="#notification-channels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>Trigger</th>
+<th>Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Email</td>
+<td>Critical recommendation or anomaly</td>
+<td>CloudIQ portal → Settings → Notifications</td>
+</tr>
+<tr>
+<td>ServiceNow</td>
+<td>Critical severity</td>
+<td>CloudIQ portal → Settings → ServiceNow connector</td>
+</tr>
+<tr>
+<td>Webhook</td>
+<td>Any severity</td>
+<td>CloudIQ portal → Settings → Webhook; POST to custom URL</td>
+</tr>
+<tr>
+<td>Slack / Teams</td>
+<td>Warning+</td>
+<td>Via CloudIQ webhook to Slack incoming webhook URL</td>
+</tr>
+</tbody>
+</table>
+<h2 id="apex-console-api">APEX Console API<a class="headerlink" href="#apex-console-api" title="Permanent link">&para;</a></h2>
+<p>The APEX Console (which surfaces AIOps recommendations) is accessible via the CloudIQ REST API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List active AIOps recommendations</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>https://cloudiq.dell.com/v1/recommendations?status<span class="o">=</span>active
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Acknowledge a recommendation</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;status&quot;: &quot;acknowledged&quot;, &quot;comment&quot;: &quot;Scheduled for next change window&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>https://cloudiq.dell.com/v1/recommendations/<span class="o">{</span>id<span class="o">}</span>
+</code></pre></div>
+<h2 id="integration-with-servicenow-cmdb">Integration with ServiceNow CMDB<a class="headerlink" href="#integration-with-servicenow-cmdb" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AIOps anomaly alerts can auto-create ServiceNow incidents linked to the affected CI</li>
+<li>Requires SCG → CloudIQ → ServiceNow connector configured with the correct CMDB table mapping (<code>cmdb_ci_storage_server</code>)</li>
+<li>Map CloudIQ array names to ServiceNow CI names to ensure correct CI assignment on incident creation</li>
+</ul>
 
 
 

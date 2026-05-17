@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>InsightIQ — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="InsightIQ — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="InsightIQ — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#insightiq-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              InsightIQ — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vm-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retention-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retention Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1143,150 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="insightiq-design-standards">InsightIQ — Design Standards<a class="headerlink" href="#insightiq-design-standards" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+VM sizing, data retention policy, network access requirements, naming conventions, and configuration baselines for InsightIQ deployments.
+</div>
+
+<h2 id="vm-sizing">VM Sizing<a class="headerlink" href="#vm-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Minimum</th>
+<th>Recommended (production)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCPU</td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>8 GB</td>
+<td>16 GB</td>
+</tr>
+<tr>
+<td>OS disk</td>
+<td>100 GB</td>
+<td>100 GB</td>
+</tr>
+<tr>
+<td>Data disk</td>
+<td>500 GB</td>
+<td>1–2 TB (per retention requirements)</td>
+</tr>
+</tbody>
+</table>
+<p>Data disk sizing: approximately 10 GB per monitored node per month of retention. A 4-node cluster at 12-month retention requires ~480 GB.</p>
+<h2 id="retention-policy">Retention Policy<a class="headerlink" href="#retention-policy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Data Granularity</th>
+<th>Default Retention</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5-second samples</td>
+<td>14 days</td>
+<td>14 days</td>
+</tr>
+<tr>
+<td>30-second rollup</td>
+<td>3 months</td>
+<td>6 months</td>
+</tr>
+<tr>
+<td>5-minute rollup</td>
+<td>12 months</td>
+<td>24 months</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Do not extend fine-grained retention beyond 30 days — disk growth is significant</li>
+<li>Increase 5-minute rollup retention for capacity trending purposes</li>
+</ul>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>InsightIQ VM</td>
+<td><code>insightiq-{site}-{seq}</code></td>
+<td><code>insightiq-dc1-01</code></td>
+</tr>
+<tr>
+<td>Monitored cluster display name</td>
+<td>Match OneFS cluster name exactly</td>
+<td><code>ps-cluster-prod-01</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="network-requirements">Network Requirements<a class="headerlink" href="#network-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Protocol</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>InsightIQ VM</td>
+<td>PowerScale mgmt IP</td>
+<td>HTTPS</td>
+<td>8080</td>
+<td>OneFS REST API (data collection)</td>
+</tr>
+<tr>
+<td>InsightIQ VM</td>
+<td>PowerScale mgmt IP</td>
+<td>HTTPS</td>
+<td>443</td>
+<td>OneFS REST API (newer OneFS versions)</td>
+</tr>
+<tr>
+<td>Admin workstation</td>
+<td>InsightIQ VM</td>
+<td>HTTPS</td>
+<td>443</td>
+<td>Web dashboard access</td>
+</tr>
+<tr>
+<td>InsightIQ VM</td>
+<td>SMTP relay</td>
+<td>SMTP</td>
+<td>25 / 587</td>
+<td>Alert email delivery</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] InsightIQ OVA deployed on management cluster</li>
+<li>[ ] Static IP assigned; hostname resolves in DNS</li>
+<li>[ ] Service account created on each PowerScale cluster (read-only, audit role)</li>
+<li>[ ] Each PowerScale cluster added to InsightIQ with service account credentials</li>
+<li>[ ] Data collection status green for all clusters</li>
+<li>[ ] Retention policy configured per standards above</li>
+<li>[ ] Email notification configured for capacity threshold alerts</li>
+<li>[ ] Backup: VM snapshot or file-level backup of data disk, daily</li>
+</ul>
 
 
 

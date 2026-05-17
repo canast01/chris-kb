@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>Nexus Dashboard — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="Nexus Dashboard — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="Nexus Dashboard — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#nexus-dashboard-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              Nexus Dashboard — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#form-factor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Form Factor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ip-addressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IP Addressing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1143,134 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="nexus-dashboard-design-standards">Nexus Dashboard — Design Standards<a class="headerlink" href="#nexus-dashboard-design-standards" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Cluster sizing, form factor selection, IP addressing, naming conventions, and configuration baselines for Cisco Nexus Dashboard deployments.
+</div>
+
+<h2 id="cluster-sizing">Cluster Sizing<a class="headerlink" href="#cluster-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cluster Size</th>
+<th>When to Use</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3 nodes</td>
+<td>Standard production (single service at scale)</td>
+<td>NDFC <strong>or</strong> NDI — not both at maximum scale</td>
+</tr>
+<tr>
+<td>5 nodes</td>
+<td>Multi-service or HA-critical deployments</td>
+<td>Run NDFC + NDI at full scale simultaneously</td>
+</tr>
+<tr>
+<td>1 node</td>
+<td>Lab only</td>
+<td>Not supported for production; no quorum</td>
+</tr>
+</tbody>
+</table>
+<p>Use 5 nodes when:
+- Both NDFC and NDI are deployed with &gt; 100 switches
+- SLA requires zero downtime during node failure (5-node cluster tolerates 2 failures vs 3-node tolerating 1)</p>
+<h2 id="form-factor">Form Factor<a class="headerlink" href="#form-factor" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Form Factor</th>
+<th>Use Case</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physical appliance (UCS C220)</td>
+<td>Production; performance-sensitive</td>
+<td>Recommended for large fabrics</td>
+</tr>
+<tr>
+<td>VMware virtual (OVA)</td>
+<td>Smaller fabrics; lab</td>
+<td>≤ 50 switches per node recommended</td>
+</tr>
+<tr>
+<td>AWS cloud</td>
+<td>Remote site management</td>
+<td>Limited to NDFC SAN mode</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ip-addressing">IP Addressing<a class="headerlink" href="#ip-addressing" title="Permanent link">&para;</a></h2>
+<p>Each Nexus Dashboard cluster requires:</p>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Count</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management interface</td>
+<td>1 per node + 1 cluster VIP</td>
+<td>Admin access and cluster API</td>
+</tr>
+<tr>
+<td>Data interface</td>
+<td>1 per node</td>
+<td>Fabric connectivity (NDFC, NDI telemetry)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Management and data interfaces must be in <strong>different subnets</strong></li>
+<li>Cluster VIP must be in the same subnet as management interfaces</li>
+<li>Use <code>/24</code> or larger subnets; avoid <code>/30</code> or <code>/31</code></li>
+</ul>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster hostname</td>
+<td><code>nd-{site}-{seq}</code></td>
+<td><code>nd-dc1-01</code></td>
+</tr>
+<tr>
+<td>Node name</td>
+<td><code>nd-{site}-node-{n}</code></td>
+<td><code>nd-dc1-node-1</code></td>
+</tr>
+<tr>
+<td>Application display name</td>
+<td>Match Cisco product name</td>
+<td><code>NDFC</code>, <code>NDI</code>, <code>NDO</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] 3 or 5 nodes deployed and cluster formation complete</li>
+<li>[ ] Management VIP resolves in DNS</li>
+<li>[ ] NTP configured on all nodes (same source as managed switches)</li>
+<li>[ ] LDAP / TACACS+ authentication configured; local fallback account in CyberArk</li>
+<li>[ ] TLS certificate replaced (default self-signed → org PKI certificate)</li>
+<li>[ ] Backup job configured (daily config export via ND API or snapshot)</li>
+<li>[ ] NDFC / NDI licences applied and validated</li>
+<li>[ ] Fabric discovery completed and all switches reachable</li>
+</ul>
 
 
 

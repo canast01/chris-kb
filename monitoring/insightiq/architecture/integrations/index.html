@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Integrations - Chris KB</title>
+        <title>InsightIQ — Integrations - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Integrations · Chris KB">
+  <meta property="og:title" content="InsightIQ — Integrations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Integrations · Chris KB">
+  <meta name="twitter:title" content="InsightIQ — Integrations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-integrations" class="md-skip">
+        <a href="#insightiq-integrations" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Integrations
+              InsightIQ — Integrations
             
           </span>
         </div>
@@ -1062,6 +1062,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#powerscale-onefs-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerScale OneFS Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-and-notification-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert and Notification Integrations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#insightiq-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InsightIQ REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scope-limitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope Limitation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1132,85 @@
 
 
 
-<h1 id="architecture-integrations">Architecture — Integrations<a class="headerlink" href="#architecture-integrations" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="insightiq-integrations">InsightIQ — Integrations<a class="headerlink" href="#insightiq-integrations" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+InsightIQ integrates exclusively with PowerScale (Isilon) clusters via the OneFS REST API. External integrations are limited to email alerting, syslog forwarding, and the InsightIQ REST API for report automation.
+</div>
+
+<h2 id="powerscale-onefs-integration">PowerScale OneFS Integration<a class="headerlink" href="#powerscale-onefs-integration" title="Permanent link">&para;</a></h2>
+<p>InsightIQ collects data from PowerScale using a dedicated read-only API account:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create read-only service account on PowerScale</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span>insightiq-svc<span class="w"> </span>--enabled<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--set-password
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Assign audit and read-only platform API role</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>AuditAdmin<span class="w"> </span>--add-user<span class="w"> </span>insightiq-svc
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>OneFS Version</th>
+<th>API Port</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8.x</td>
+<td>8080</td>
+<td>Legacy PAPI</td>
+</tr>
+<tr>
+<td>9.0+</td>
+<td>443</td>
+<td>Unified REST API; 8080 still works</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alert-and-notification-integrations">Alert and Notification Integrations<a class="headerlink" href="#alert-and-notification-integrations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>Configuration</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Email (SMTP)</td>
+<td>Settings → Notifications → Email</td>
+<td>Capacity threshold alerts</td>
+</tr>
+<tr>
+<td>Syslog</td>
+<td>Settings → Notifications → Syslog</td>
+<td>Forward events to SIEM</td>
+</tr>
+</tbody>
+</table>
+<p>Syslog format is RFC 5424; configure your SIEM to parse InsightIQ facility <code>local0</code>.</p>
+<h2 id="insightiq-rest-api">InsightIQ REST API<a class="headerlink" href="#insightiq-rest-api" title="Permanent link">&para;</a></h2>
+<p>InsightIQ exposes a REST API for automating report generation and exporting metrics:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://insightiq.corp.example.com/api/v1/auth<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># List monitored clusters</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Cookie: session=&lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>https://insightiq.corp.example.com/api/v1/clusters
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Get cluster capacity summary</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Cookie: session=&lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="s2">&quot;https://insightiq.corp.example.com/api/v1/clusters/{cluster_id}/capacity&quot;</span>
+</code></pre></div>
+<h2 id="scope-limitation">Scope Limitation<a class="headerlink" href="#scope-limitation" title="Permanent link">&para;</a></h2>
+<ul>
+<li>InsightIQ monitors <strong>PowerScale only</strong> — it does not support PowerStore, Unity, or PowerMax</li>
+<li>For multi-vendor monitoring, use CloudIQ (Dell) or Aria Operations with storage Management Packs</li>
+<li>No native CMDB connector — update CMDB entries manually or via API scripting</li>
+</ul>
 
 
 

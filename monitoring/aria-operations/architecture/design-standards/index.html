@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>Aria Operations — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="Aria Operations — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="Aria Operations — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#aria-operations-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              Aria Operations — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-sizing-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Sizing Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-configuration-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Configuration Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#management-pack-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Management Pack Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1154,167 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="aria-operations-design-standards">Aria Operations — Design Standards<a class="headerlink" href="#aria-operations-design-standards" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Cluster sizing, Management Pack governance, alert configuration baselines, naming conventions, and configuration standards for Aria Operations deployments.
+</div>
+
+<h2 id="cluster-sizing-standards">Cluster Sizing Standards<a class="headerlink" href="#cluster-sizing-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Topology</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lab / PoC</td>
+<td>1-node xSmall</td>
+<td>No HA; dev/test only</td>
+</tr>
+<tr>
+<td>Production ≤ 3,000 VMs</td>
+<td>Primary + Replica</td>
+<td>Standard HA pair</td>
+</tr>
+<tr>
+<td>Production ≤ 10,000 VMs</td>
+<td>Primary + Replica + 2–4 Data Nodes</td>
+<td>Scale-out for metric volume</td>
+</tr>
+<tr>
+<td>Enterprise fleet &gt; 10,000 VMs</td>
+<td>Primary + Replica + 4+ Data Nodes</td>
+<td>Maximum scale</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Always deploy an even number of Data Nodes (analytics partitioning)</li>
+<li>Remote Collectors required for any site &gt; 100ms RTT from the analytics cluster</li>
+<li>Dedicate at least one Remote Collector per site; do not co-locate with the cluster nodes</li>
+</ul>
+<h2 id="vm-sizing">VM Sizing<a class="headerlink" href="#vm-sizing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Node Role</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary / Replica (Medium)</td>
+<td>8</td>
+<td>32 GB</td>
+<td>1 TB</td>
+</tr>
+<tr>
+<td>Primary / Replica (Large)</td>
+<td>16</td>
+<td>48 GB</td>
+<td>2 TB</td>
+</tr>
+<tr>
+<td>Data Node</td>
+<td>8</td>
+<td>32 GB</td>
+<td>2 TB</td>
+</tr>
+<tr>
+<td>Remote Collector</td>
+<td>4</td>
+<td>16 GB</td>
+<td>100 GB</td>
+</tr>
+</tbody>
+</table>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Analytics cluster node</td>
+<td><code>ariaops-{role}-{site}-{seq}</code></td>
+<td><code>ariaops-primary-dc1-01</code></td>
+</tr>
+<tr>
+<td>Remote Collector</td>
+<td><code>ariaops-rc-{site}-{seq}</code></td>
+<td><code>ariaops-rc-dc2-01</code></td>
+</tr>
+<tr>
+<td>Management Pack</td>
+<td>Match vendor name exactly</td>
+<td><code>VMware NSX-T Management Pack</code></td>
+</tr>
+<tr>
+<td>Alert definition</td>
+<td><code>{Severity} - {Object type} - {Condition}</code></td>
+<td><code>Critical - VM - CPU Contention &gt; 90%</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="alert-configuration-baseline">Alert Configuration Baseline<a class="headerlink" href="#alert-configuration-baseline" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Alert Tier</th>
+<th>Notification Target</th>
+<th>SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>PagerDuty / on-call runbook</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td>Warning</td>
+<td>Email distribution list</td>
+<td>4-hour acknowledgement</td>
+</tr>
+<tr>
+<td>Info</td>
+<td>Dashboard only</td>
+<td>No notification</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Suppress alert storms during maintenance windows using Maintenance Mode on affected objects</li>
+<li>Set <code>Alert Expiry</code> to 7 days for warning-level alerts; 30 days for info</li>
+<li>Enable <code>Auto-Cancel</code> only for alerts with self-healing remediation</li>
+</ul>
+<h2 id="management-pack-standards">Management Pack Standards<a class="headerlink" href="#management-pack-standards" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Install Management Packs only from the VMware Marketplace or vendor-official sources</li>
+<li>Validate MP version compatibility with the Aria Operations release before upgrade</li>
+<li>Restrict MP installation to the <code>ariaops-admin</code> service account — not personal accounts</li>
+<li>Document all installed MPs in the CMDB with version and owning team</li>
+<li>Review unused MPs quarterly and remove if no active dashboards or alerts depend on them</li>
+</ul>
+<h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] NTP configured on all nodes (source: site NTP server, not ESXi host)</li>
+<li>[ ] SMTP relay configured and tested (send test alert)</li>
+<li>[ ] LDAP / AD authentication configured; local admin account documented in CyberArk</li>
+<li>[ ] Remote Collectors registered and health-green in the cluster inventory</li>
+<li>[ ] vCenter adapter added and collection status healthy</li>
+<li>[ ] Retention policy set per org standard (default: 6 months for fine-grained, 12 months for rollup)</li>
+<li>[ ] Backup job scheduled (snapshot or file-level of the VM, daily)</li>
+</ul>
 
 
 

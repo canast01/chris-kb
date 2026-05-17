@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>VxRail — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="VxRail — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="VxRail — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#vxrail-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              VxRail — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-sizing-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Sizing Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-families" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Families
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-storage-policy-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Storage Policy Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1154,207 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="vxrail-design-standards">VxRail — Design Standards<a class="headerlink" href="#vxrail-design-standards" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Node count requirements, cluster naming, vSAN policy standards, network design rules, and configuration baselines for VxRail HCI deployments.
+</div>
+
+<h2 id="cluster-sizing-standards">Cluster Sizing Standards<a class="headerlink" href="#cluster-sizing-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Minimum</th>
+<th>Recommended</th>
+<th>Maximum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nodes per cluster</td>
+<td>3</td>
+<td>4–8</td>
+<td>64</td>
+</tr>
+<tr>
+<td>FTT=1 (RAID-1 / RAID-5)</td>
+<td>3 (RAID-1) or 4 (RAID-5)</td>
+<td>4 (RAID-5 for capacity efficiency)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>FTT=2 (RAID-6)</td>
+<td>6</td>
+<td>6+</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Dedicated management nodes</td>
+<td>Optional</td>
+<td>Separate cluster for vCenter/management</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Use <strong>FTT=1 RAID-5</strong> for ≥ 4 nodes with mixed workloads (best capacity:performance balance)</li>
+<li>Use <strong>FTT=1 RAID-1</strong> for 3-node clusters and latency-sensitive workloads</li>
+<li>Use <strong>FTT=2 RAID-6</strong> for workloads requiring dual-drive failure tolerance</li>
+</ul>
+<h2 id="node-families">Node Families<a class="headerlink" href="#node-families" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Profile</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P-series (NVMe AF)</td>
+<td>All-flash NVMe</td>
+<td>Latency-sensitive; maximum IOPS</td>
+</tr>
+<tr>
+<td>V-series (Hybrid)</td>
+<td>SSD cache + SAS capacity</td>
+<td>Mixed workloads; cost-optimised</td>
+</tr>
+<tr>
+<td>E-series (Entry AF)</td>
+<td>All-flash SAS</td>
+<td>Mid-range; standard enterprise workloads</td>
+</tr>
+<tr>
+<td>D-series (Dense)</td>
+<td>Large capacity</td>
+<td>Data-intensive; backup targets</td>
+</tr>
+</tbody>
+</table>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Convention</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster name</td>
+<td><code>vxrail-{site}-{seq}</code></td>
+<td><code>vxrail-dc1-01</code></td>
+</tr>
+<tr>
+<td>Node name</td>
+<td><code>{cluster}-node-{n}</code></td>
+<td><code>vxrail-dc1-01-node-1</code></td>
+</tr>
+<tr>
+<td>vSAN datastore</td>
+<td><code>vsds-{cluster}</code></td>
+<td><code>vsds-vxrail-dc1-01</code></td>
+</tr>
+<tr>
+<td>vSAN storage policy</td>
+<td><code>vsp-{ftt}-{type}-{tier}</code></td>
+<td><code>vsp-ftt1-raid5-gold</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="vsan-storage-policy-standards">vSAN Storage Policy Standards<a class="headerlink" href="#vsan-storage-policy-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Policy Name</th>
+<th>FTT</th>
+<th>Method</th>
+<th>Target Workload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vsp-ftt1-raid5-gold</code></td>
+<td>1</td>
+<td>RAID-5</td>
+<td>Standard VMs; balanced capacity/resilience</td>
+</tr>
+<tr>
+<td><code>vsp-ftt1-raid1-platinum</code></td>
+<td>1</td>
+<td>RAID-1</td>
+<td>Latency-sensitive; databases</td>
+</tr>
+<tr>
+<td><code>vsp-ftt2-raid6-gold</code></td>
+<td>2</td>
+<td>RAID-6</td>
+<td>Dual-failure tolerance; critical workloads</td>
+</tr>
+<tr>
+<td><code>vsp-ftt1-raid1-mgmt</code></td>
+<td>1</td>
+<td>RAID-1</td>
+<td>Management VMs (vCenter, VxRail Manager)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="network-design">Network Design<a class="headerlink" href="#network-design" title="Permanent link">&para;</a></h2>
+<p>VxRail requires four VMkernel networks per node, separated by VLAN:</p>
+<table>
+<thead>
+<tr>
+<th>VMkernel</th>
+<th>Purpose</th>
+<th>VLAN</th>
+<th>MTU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management (vmk0)</td>
+<td>ESXi host management</td>
+<td>Mgmt VLAN</td>
+<td>1500</td>
+</tr>
+<tr>
+<td>vSAN (vmk1)</td>
+<td>vSAN storage traffic</td>
+<td>vSAN VLAN</td>
+<td>9000 (jumbo)</td>
+</tr>
+<tr>
+<td>vMotion (vmk2)</td>
+<td>Live migration</td>
+<td>vMotion VLAN</td>
+<td>9000 (jumbo)</td>
+</tr>
+<tr>
+<td>VxRail Management</td>
+<td>VxRail Manager to iDRAC</td>
+<td>VxRail Mgmt VLAN</td>
+<td>1500</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Use 25GbE or higher for all node uplinks in production</li>
+<li>Bond two uplinks per node (LACP or active-standby) for redundancy</li>
+</ul>
+<h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] LCM Composite Bundle downloaded and staged before deployment</li>
+<li>[ ] DNS entries created for each node management IP and vCenter VIP</li>
+<li>[ ] NTP configured (VxRail Manager inherits from ESXi; set ESXi NTP first)</li>
+<li>[ ] vSAN storage policies created and assigned to VMs by workload tier</li>
+<li>[ ] iDRAC access credentials stored in CyberArk</li>
+<li>[ ] VxRail Manager admin credentials stored in CyberArk</li>
+<li>[ ] Proactive HA / vSAN health checks green in vCenter</li>
+<li>[ ] SupportAssist registered for warranty and firmware update eligibility</li>
+</ul>
 
 
 

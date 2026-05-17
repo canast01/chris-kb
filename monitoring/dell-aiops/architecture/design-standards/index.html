@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Design Standards - Chris KB</title>
+        <title>Dell AIOps — Design Standards - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Design Standards · Chris KB">
+  <meta property="og:title" content="Dell AIOps — Design Standards · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Design Standards · Chris KB">
+  <meta name="twitter:title" content="Dell AIOps — Design Standards · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-design-standards" class="md-skip">
+        <a href="#dell-aiops-design-standards" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Design Standards
+              Dell AIOps — Design Standards
             
           </span>
         </div>
@@ -1062,6 +1062,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation-acknowledgement-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation Acknowledgement Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-threshold-baselines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Threshold Baselines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1132,114 @@
 
 
 
-<h1 id="architecture-design-standards">Architecture — Design Standards<a class="headerlink" href="#architecture-design-standards" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="dell-aiops-design-standards">Dell AIOps — Design Standards<a class="headerlink" href="#dell-aiops-design-standards" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+SCG prerequisites, configuration baselines, alert acknowledgement workflow, and operational standards for Dell AIOps.
+</div>
+
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>Dell AIOps capability is delivered through the CloudIQ platform — no separate AIOps appliance is deployed. The prerequisites mirror the CloudIQ SCG deployment:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SCG deployed</td>
+<td>One SCG per site (see CloudIQ design standards)</td>
+</tr>
+<tr>
+<td>Arrays connected</td>
+<td>All managed arrays registered and collection green in CloudIQ</td>
+</tr>
+<tr>
+<td>Portal access</td>
+<td>CloudIQ portal account with admin or operator role</td>
+</tr>
+<tr>
+<td>Licensing</td>
+<td>AIOps features included in CloudIQ subscription (no extra licence)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recommendation-acknowledgement-workflow">Recommendation Acknowledgement Workflow<a class="headerlink" href="#recommendation-acknowledgement-workflow" title="Permanent link">&para;</a></h2>
+<p>AIOps surfaces prioritised recommendations. Follow this workflow to close the loop:</p>
+<ol>
+<li><strong>Review</strong> recommendations weekly in the CloudIQ APEX Console</li>
+<li><strong>Assign</strong> each active recommendation to the responsible team member</li>
+<li><strong>Act</strong> — apply the recommendation within the SLA below, or document a deferral reason</li>
+<li><strong>Dismiss</strong> recommendations that are accepted risks (with a comment)</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Recommendation Severity</th>
+<th>Action SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical (capacity or health risk)</td>
+<td>5 business days</td>
+</tr>
+<tr>
+<td>High</td>
+<td>15 business days</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>30 days or next change window</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>Review quarterly</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alert-threshold-baselines">Alert Threshold Baselines<a class="headerlink" href="#alert-threshold-baselines" title="Permanent link">&para;</a></h2>
+<p>Thresholds are configured in CloudIQ and feed into the AIOps anomaly engine:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capacity utilisation</td>
+<td>75%</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>IOPS anomaly (% above baseline)</td>
+<td>50%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Latency anomaly (% above baseline)</td>
+<td>50%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Component health fault</td>
+<td>Any component fault</td>
+<td>Multiple component faults</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-checklist">Configuration Checklist<a class="headerlink" href="#configuration-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] SCG deployed and all arrays reporting collection-healthy</li>
+<li>[ ] AIOps / CloudIQ portal login verified for storage team accounts</li>
+<li>[ ] Notification rules set (email + ServiceNow for Critical)</li>
+<li>[ ] Weekly recommendation review scheduled as recurring calendar event</li>
+<li>[ ] APEX Console bookmarked and access verified for on-call engineer</li>
+</ul>
 
 
 

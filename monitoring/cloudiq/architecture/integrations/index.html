@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Integrations - Chris KB</title>
+        <title>CloudIQ — Integrations - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Integrations · Chris KB">
+  <meta property="og:title" content="CloudIQ — Integrations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Integrations · Chris KB">
+  <meta name="twitter:title" content="CloudIQ — Integrations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-integrations" class="md-skip">
+        <a href="#cloudiq-integrations" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Integrations
+              CloudIQ — Integrations
             
           </span>
         </div>
@@ -1062,6 +1062,75 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supported-dell-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Dell Platforms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#itsm-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ITSM Integrations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ITSM Integrations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#servicenow-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1149,114 @@
 
 
 
-<h1 id="architecture-integrations">Architecture — Integrations<a class="headerlink" href="#architecture-integrations" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="cloudiq-integrations">CloudIQ — Integrations<a class="headerlink" href="#cloudiq-integrations" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+CloudIQ integrates natively with Dell storage arrays via the SCG, and outbound to ITSM and notification systems via the REST API and webhook connectors.
+</div>
+
+<h2 id="supported-dell-platforms">Supported Dell Platforms<a class="headerlink" href="#supported-dell-platforms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Collection Method</th>
+<th>Data Available</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerMax / VMAX</td>
+<td>HTTPS via Unisphere</td>
+<td>Performance, capacity, SRDF state, health</td>
+</tr>
+<tr>
+<td>PowerStore</td>
+<td>HTTPS via REST API</td>
+<td>Volume health, capacity, performance</td>
+</tr>
+<tr>
+<td>PowerScale (Isilon)</td>
+<td>SSH / OneFS REST API</td>
+<td>Cluster capacity, node health, quotas</td>
+</tr>
+<tr>
+<td>Unity XT</td>
+<td>HTTPS via Unisphere</td>
+<td>Pool capacity, SP health, replication status</td>
+</tr>
+<tr>
+<td>PowerFlex (VxFlex OS)</td>
+<td>HTTPS REST API</td>
+<td>Cluster health, volume capacity</td>
+</tr>
+<tr>
+<td>Data Domain</td>
+<td>HTTPS REST API</td>
+<td>Dedup savings, capacity, replication</td>
+</tr>
+</tbody>
+</table>
+<h2 id="itsm-integrations">ITSM Integrations<a class="headerlink" href="#itsm-integrations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>Mechanism</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ServiceNow</td>
+<td>REST outbound (CloudIQ connector)</td>
+<td>Auto-create incidents on Critical alerts</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>SMTP relay via CloudIQ cloud</td>
+<td>Alert notifications to DL or individual</td>
+</tr>
+<tr>
+<td>Webhook</td>
+<td>HTTPS POST (custom)</td>
+<td>PagerDuty, Slack, or custom endpoint</td>
+</tr>
+</tbody>
+</table>
+<h3 id="servicenow-setup">ServiceNow Setup<a class="headerlink" href="#servicenow-setup" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In CloudIQ portal: <strong>Settings → Notifications → ServiceNow</strong></li>
+<li>Enter ServiceNow instance URL, username, and password (or OAuth token)</li>
+<li>Map CloudIQ severity levels to ServiceNow Priority values</li>
+<li>Test with a manually triggered notification</li>
+</ol>
+<h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
+<p>CloudIQ provides a REST API for programmatic access to fleet metrics:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Get API token (OAuth client credentials)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://cloudiq.dell.com/auth/token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=&lt;id&gt;&amp;client_secret=&lt;secret&gt;&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># List all systems and health scores</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>https://cloudiq.dell.com/v1/storage-systems
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Get capacity for a specific system</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="s2">&quot;https://cloudiq.dell.com/v1/storage-systems/{id}/capacity&quot;</span>
+</code></pre></div>
+<h2 id="integration-architecture">Integration Architecture<a class="headerlink" href="#integration-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  PM["PowerMax"] &amp; UN["Unity XT"] &amp; PS["PowerScale"] --&gt; SCG["Secure Connect Gateway\n(on-premises OVA)"]
+  SCG --&gt;|"HTTPS outbound only"| CIQ["Dell CloudIQ\n(SaaS)"]
+  CIQ --&gt; SN["ServiceNow"]
+  CIQ --&gt; EMAIL["Email / Webhook"]
+  CIQ --&gt; API["REST API\n(reporting tools)"]
+  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+  classDef host fill:#15803d,stroke:#166534,color:#fff
+  class SCG ctrl
+  class PM,UN,PS host
+  class CIQ,SN,EMAIL,API cloud</code></pre>
 
 
 

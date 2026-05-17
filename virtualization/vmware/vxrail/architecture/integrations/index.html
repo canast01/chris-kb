@@ -21,7 +21,7 @@
     
     
       
-        <title>Architecture — Integrations - Chris KB</title>
+        <title>VxRail — Integrations - Chris KB</title>
       
     
     
@@ -71,10 +71,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Architecture — Integrations · Chris KB">
+  <meta property="og:title" content="VxRail — Integrations · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Architecture — Integrations · Chris KB">
+  <meta name="twitter:title" content="VxRail — Integrations · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -96,7 +96,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-integrations" class="md-skip">
+        <a href="#vxrail-integrations" class="md-skip">
           Skip to content
         </a>
       
@@ -132,7 +132,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture — Integrations
+              VxRail — Integrations
             
           </span>
         </div>
@@ -1062,6 +1062,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-t-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX-T Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dell-supportassist-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell SupportAssist Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vxrail-manager-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VxRail Manager REST API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cmdb-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMDB Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1080,8 +1154,161 @@
 
 
 
-<h1 id="architecture-integrations">Architecture — Integrations<a class="headerlink" href="#architecture-integrations" title="Permanent link">&para;</a></h1>
-<p>Content being built out.</p>
+<h1 id="vxrail-integrations">VxRail — Integrations<a class="headerlink" href="#vxrail-integrations" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+VxRail integrates natively with vCenter, NSX-T, Aria Operations, and Dell SupportAssist. External CMDB and monitoring integrations consume the VxRail Manager REST API.
+</div>
+
+<h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
+<p>VxRail Manager embeds a vCenter Server plugin that adds HCI-specific capabilities:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VxRail plugin tab</td>
+<td>Cluster health, LCM bundle status, node expansion wizard</td>
+</tr>
+<tr>
+<td>vSAN datastore</td>
+<td>Automatically created and managed by VxRail Manager</td>
+</tr>
+<tr>
+<td>HA / DRS</td>
+<td>Configured by VxRail at deployment; treat as standard vSphere HA/DRS</td>
+</tr>
+<tr>
+<td>vCenter appliance</td>
+<td>Can be embedded on VxRail (VxRail-managed vCenter) or external</td>
+</tr>
+</tbody>
+</table>
+<p><strong>External vCenter</strong>: VxRail Manager manages the ESXi and vSAN layers; vCenter manages the VM and DRS layers independently.</p>
+<h2 id="nsx-t-integration">NSX-T Integration<a class="headerlink" href="#nsx-t-integration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overlay networking</td>
+<td>VxRail nodes act as ESXi Transport Nodes in the NSX-T fabric</td>
+</tr>
+<tr>
+<td>VDS configuration</td>
+<td>NSX-T VDS is deployed on VxRail nodes via standard NSX-T host prep</td>
+</tr>
+<tr>
+<td>LCM compatibility</td>
+<td>NSX-T version must be validated in the VxRail Compatibility Matrix before upgrade</td>
+</tr>
+<tr>
+<td>Network requirement</td>
+<td>TEP VLAN required; 9000 MTU on TEP VMkernel</td>
+</tr>
+</tbody>
+</table>
+<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Management Pack</th>
+<th>Data Collected</th>
+<th>Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter adapter</td>
+<td>VMs, hosts, cluster, vSAN performance</td>
+<td>Standard Aria Ops vCenter adapter</td>
+</tr>
+<tr>
+<td>vSAN adapter (built-in)</td>
+<td>Disk group health, vSAN capacity, IOPS</td>
+<td>Part of vCenter adapter — no separate config</td>
+</tr>
+<tr>
+<td>VxRail Management Pack</td>
+<td>VxRail Manager health, LCM status, firmware versions</td>
+<td>Install VxRail MP from VMware Marketplace</td>
+</tr>
+</tbody>
+</table>
+<h2 id="dell-supportassist-integration">Dell SupportAssist Integration<a class="headerlink" href="#dell-supportassist-integration" title="Permanent link">&para;</a></h2>
+<p>SupportAssist (formerly "Secure Remote Services") provides:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proactive monitoring</td>
+<td>Dell monitors hardware health; opens support cases automatically on failure</td>
+</tr>
+<tr>
+<td>Remote support tunnel</td>
+<td>Dell engineers can open a secure session with customer approval</td>
+</tr>
+<tr>
+<td>Firmware update eligibility</td>
+<td>SupportAssist registration required for LCM bundle downloads</td>
+</tr>
+</tbody>
+</table>
+<p>Configure SupportAssist during initial VxRail deployment — it cannot be retrofitted easily without re-running the VxRail initialisation workflow.</p>
+<h2 id="vxrail-manager-rest-api">VxRail Manager REST API<a class="headerlink" href="#vxrail-manager-rest-api" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://vxrail-mgr.corp.example.com/rest/vxm/v1/tokens<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Get cluster info</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>curl<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>https://vxrail-mgr.corp.example.com/rest/vxm/v1/cluster
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List nodes and health</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-AUTH-TOKEN: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>https://vxrail-mgr.corp.example.com/rest/vxm/v1/hosts
+</code></pre></div>
+<h2 id="cmdb-integration">CMDB Integration<a class="headerlink" href="#cmdb-integration" title="Permanent link">&para;</a></h2>
+<p>VxRail nodes and the vSAN datastore should be registered in the CMDB:</p>
+<table>
+<thead>
+<tr>
+<th>CI Type</th>
+<th>Source of Truth</th>
+<th>Sync Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VxRail node</td>
+<td>VxRail Manager API <code>/hosts</code></td>
+<td>Script or ServiceNow Discovery via MID Server</td>
+</tr>
+<tr>
+<td>vSAN datastore</td>
+<td>vCenter API</td>
+<td>ServiceNow Discovery or Aria Automation CMDB sync</td>
+</tr>
+<tr>
+<td>VxRail Manager VM</td>
+<td>vCenter</td>
+<td>Auto-discovered by ServiceNow Discovery</td>
+</tr>
+</tbody>
+</table>
 
 
 
