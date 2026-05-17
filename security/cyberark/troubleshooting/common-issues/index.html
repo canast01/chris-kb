@@ -1069,10 +1069,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
+  <a href="#vault-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Known Issues
+        Vault Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pvwa-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PVWA Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#psm-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PSM Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpm-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPM Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-cross-component-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General / Cross-Component Issues
       
     </span>
   </a>
@@ -1100,9 +1144,182 @@
 
 
 <h1 id="cyberark-common-issues">CyberArk — Common Issues<a class="headerlink" href="#cyberark-common-issues" title="Permanent link">&para;</a></h1>
-<p>Known issues and resolution steps for frequent CyberArk problems.</p>
-<h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
-<p>Add known issues here as they come up.</p>
+<p>Known issues and resolution steps for frequent CyberArk problems, covering the Vault, PVWA, PSM, and CPM components.</p>
+<h2 id="vault-issues">Vault Issues<a class="headerlink" href="#vault-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vault service fails to start</td>
+<td>CorVault.exe crash or locked DR file</td>
+<td>Check Windows Event Log and <code>vault.log</code> under <code>C:\Program Files (x86)\PrivateArk\Server\Logs</code>; verify the Vault license has not expired</td>
+</tr>
+<tr>
+<td>"ITATS006E" — Vault locked out</td>
+<td>Too many failed login attempts from a Vault user account</td>
+<td>Unlock the user via PrivateArk Client: <code>Tools &gt; Administrative Tools &gt; Users and Groups</code>; review source of repeated failures</td>
+</tr>
+<tr>
+<td>Vault DR replication lag</td>
+<td>Network interruption between Primary and DR Vault</td>
+<td>Check <code>PADR.log</code> on the DR host; confirm the DR user password matches and the replication service is running</td>
+</tr>
+<tr>
+<td>Safe ownership mismatch after restore</td>
+<td>Backup restored to a different Vault with different internal user IDs</td>
+<td>Re-assign Safe Owners via PrivateArk Client after restore; do not rely on SID-based ownership across Vault instances</td>
+</tr>
+<tr>
+<td>Vault cannot connect to external LDAP</td>
+<td>Certificate CN mismatch or LDAPS port blocked</td>
+<td>Verify <code>vault.ini</code> LDAP settings; confirm port 636 is reachable from the Vault server; check the LDAP server certificate SAN</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pvwa-issues">PVWA Issues<a class="headerlink" href="#pvwa-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PVWA returns HTTP 500 on login</td>
+<td>IIS application pool crash or missing Vault connectivity</td>
+<td>Restart the <code>CyberArk Vault</code> IIS app pool; check <code>C:\CyberArk\Password Vault Web Access\Logs\WebApplication.log</code> for exception detail</td>
+</tr>
+<tr>
+<td>"Vault is not responding" banner</td>
+<td>PVWA lost TCP connection to the Vault on port 1858</td>
+<td>Confirm firewall rules; test with <code>telnet &lt;vault-ip&gt; 1858</code>; check Vault service status</td>
+</tr>
+<tr>
+<td>MFA not prompting for LDAP users</td>
+<td>RADIUS integration misconfigured or LDAP bind failing</td>
+<td>Verify PVWA <code>web.config</code> RADIUS settings; confirm the Vault LDAP directory integration user can bind to AD</td>
+</tr>
+<tr>
+<td>Session timeout too aggressive</td>
+<td>Default <code>InactivityTimeout</code> in <code>web.config</code> set too low</td>
+<td>Adjust <code>InactivityTimeout</code> parameter in <code>C:\CyberArk\Password Vault Web Access\web.config</code>; redeploy/recycle app pool</td>
+</tr>
+<tr>
+<td>PVWA certificate error in browser</td>
+<td>Self-signed or expired IIS cert</td>
+<td>Replace the IIS site binding certificate; ensure the issuing CA is trusted by end-user browsers or the enterprise trust store</td>
+</tr>
+</tbody>
+</table>
+<h2 id="psm-issues">PSM Issues<a class="headerlink" href="#psm-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PSM connection fails with "No available connections"</td>
+<td>PSM connection components at maximum concurrent sessions</td>
+<td>Increase <code>MaxConcurrentConnections</code> in <code>C:\Program Files\CyberArk\PSM\Hardening\PSMHardening.ps1</code> output policies; or scale out PSM nodes</td>
+</tr>
+<tr>
+<td>RDP session launches but disconnects immediately</td>
+<td>Windows RDP licensing not activated on PSM host</td>
+<td>Activate the Remote Desktop Services CAL on the PSM Windows Server; apply through the RD Licensing Manager</td>
+</tr>
+<tr>
+<td>PSM recording files not appearing in PVWA</td>
+<td>PSMRecordings Safe permission issue or storage path misconfigured</td>
+<td>Confirm the PSM App user has <code>Add Files</code> and <code>List Files</code> on the PSMRecordings Safe; verify <code>PSM.ini</code> <code>RecordingsPath</code></td>
+</tr>
+<tr>
+<td>Session recording playback is corrupted</td>
+<td>Disk full on PSM recording partition</td>
+<td>Free space on the PSM recording disk; purge old recordings per retention policy; extend the volume if needed</td>
+</tr>
+<tr>
+<td>Privileged account password is not auto-changed after PSM session</td>
+<td>CPM exclusion list or reconcile account not configured</td>
+<td>Check the platform's CPM settings; ensure the account has a reconcile account configured if the target requires elevated rights to change passwords</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cpm-issues">CPM Issues<a class="headerlink" href="#cpm-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPM fails to change Windows domain account password</td>
+<td>CPM machine account lacks sufficient AD permissions</td>
+<td>Grant the CPM service account <code>Reset Password</code> rights on the target OU in Active Directory</td>
+</tr>
+<tr>
+<td>"APPAP007E" — CPM cannot connect to target</td>
+<td>Network block or wrong address in account properties</td>
+<td>Verify network connectivity from the CPM host; confirm the <code>Address</code> field on the account record matches the reachable hostname/IP</td>
+</tr>
+<tr>
+<td>Password change succeeds but application still fails auth</td>
+<td>Platform's <code>ChangeNotificationService</code> not configured</td>
+<td>Configure the change notification plugin for the application type (e.g., IIS app pool, Windows service) in the platform settings</td>
+</tr>
+<tr>
+<td>CPM stuck in "Change In Process" state</td>
+<td>A previous change attempt left the account locked</td>
+<td>Use PVWA to manually unlock the account on the target system; then trigger a CPM <code>Change</code> from PVWA</td>
+</tr>
+<tr>
+<td>SSH key rotation fails for Unix accounts</td>
+<td>SSH key method not enabled in the Unix platform</td>
+<td>Enable <code>PerformPeriodicChange</code> and set the SSH key method in the platform's <code>Automatic Password Management</code> settings</td>
+</tr>
+</tbody>
+</table>
+<h2 id="general-cross-component-issues">General / Cross-Component Issues<a class="headerlink" href="#general-cross-component-issues" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CyberArk components not visible in syslog / SIEM</td>
+<td>Syslog forwarding not configured in Vault</td>
+<td>Configure <code>SYSLOG</code> section in <code>vault.ini</code> with the SIEM IP and port; restart the Vault service</td>
+</tr>
+<tr>
+<td>Accounts duplicated after HR feed</td>
+<td>CyberArk Privileged Access Manager provisioning rules matching too broadly</td>
+<td>Narrow the Provisioner search filter in the directory mapping; enable duplicate detection in the provisioning workflow</td>
+</tr>
+<tr>
+<td>License capacity warning</td>
+<td>Too many active Vault users or too many managed accounts</td>
+<td>Run the license report from PrivateArk Client; deactivate stale users; archive unmanaged accounts</td>
+</tr>
+</tbody>
+</table>
 
 
 

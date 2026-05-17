@@ -1062,6 +1062,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1082,6 +1112,7 @@
 
 <h1 id="venafi-hardening">Venafi — Hardening<a class="headerlink" href="#venafi-hardening" title="Permanent link">&para;</a></h1>
 <p>All certificate lifecycle events are captured in the Venafi audit log and should be forwarded to a SIEM via the Log Server. Admin and service accounts should be reviewed quarterly.</p>
+<h2 id="hardening-controls">Hardening Controls<a class="headerlink" href="#hardening-controls" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1101,6 +1132,104 @@
 <tr>
 <td>Admin account review</td>
 <td>Quarterly review of Venafi admin and service accounts</td>
+</tr>
+<tr>
+<td>Admin account separation</td>
+<td>Dedicated named admin accounts only; no shared <code>admin</code> credential; break-glass account stored in CyberArk with dual-approval workflow</td>
+</tr>
+<tr>
+<td>MFA for console access</td>
+<td>SAML 2.0 SSO with MFA enforced for all Venafi Trust Protection Platform (TPP) web console logins; local fallback accounts disabled except break-glass</td>
+</tr>
+<tr>
+<td>Service account least privilege</td>
+<td>Venafi SDK / REST API service accounts granted only the policy folder permissions required for their function; no global admin role for automation accounts</td>
+</tr>
+<tr>
+<td>API access controls</td>
+<td>API keys scoped per application; key expiry set to 90 days maximum in TPP <code>Access Management</code>; unused API keys revoked on detection</td>
+</tr>
+<tr>
+<td>TLS version enforcement</td>
+<td>TLS 1.2 minimum on all TPP web endpoints; configured in IIS bindings and confirmed via <code>appsettings.json</code>; SSLv3 / TLS 1.0 / TLS 1.1 explicitly disabled</td>
+</tr>
+<tr>
+<td>Network ACLs</td>
+<td>TPP web console (443) accessible only from approved admin VLANs and automation subnets; direct database port (1433) blocked from all external hosts</td>
+</tr>
+<tr>
+<td>Log forwarding</td>
+<td>TPP Log Server configured to forward to SIEM (Splunk/QRadar) via syslog-TLS; alert on failed login bursts and policy override events</td>
+</tr>
+<tr>
+<td>Patch management</td>
+<td>TPP hotfixes applied within 30 days of release; OS patches applied monthly; patching performed in non-prod first with a 7-day soak period</td>
+</tr>
+<tr>
+<td>Outbound CA connectivity</td>
+<td>TPP connections to upstream CAs (DigiCert, Entrust, internal EJBCA) restricted by egress firewall rule to approved IP ranges on port 443 only</td>
+</tr>
+</tbody>
+</table>
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Status Indicator</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSO + MFA enforced for web console</td>
+<td>Verify via TPP <code>Configuration &gt; Certificates &gt; Permissions</code> and IDP configuration</td>
+<td>No local password logins for standard admins</td>
+</tr>
+<tr>
+<td>Break-glass account in CyberArk</td>
+<td>Confirm account in CyberArk PAM with dual-approval access policy</td>
+<td>Rotate password after each use</td>
+</tr>
+<tr>
+<td>API key expiry ≤ 90 days</td>
+<td>Review in <code>Access Management &gt; Application Integrations</code></td>
+<td>Alert on keys nearing expiry</td>
+</tr>
+<tr>
+<td>TLS 1.0/1.1 disabled</td>
+<td>Run <code>nmap --script ssl-enum-ciphers</code> against TPP hostname</td>
+<td>Must show TLS 1.2+ only</td>
+</tr>
+<tr>
+<td>SIEM log forwarding active</td>
+<td>Confirm log events appearing in SIEM within 5 minutes of a test certificate request</td>
+<td>Check Log Server service status if delayed</td>
+</tr>
+<tr>
+<td>Network ACL — admin VLAN only</td>
+<td>Verify firewall rule restricting port 443 to approved source ranges</td>
+<td>Quarterly review with network team</td>
+</tr>
+<tr>
+<td>Service account permission audit</td>
+<td>Export TPP permission report; cross-reference with CMDB service account register</td>
+<td>Revoke excess permissions on finding</td>
+</tr>
+<tr>
+<td>Database port blocked externally</td>
+<td>Confirm SQL port 1433 not reachable from DMZ or internet via firewall rule review</td>
+<td>TPP app server should be the only permitted SQL client</td>
+</tr>
+<tr>
+<td>Quarterly account review completed</td>
+<td>Evidence in change ticket; stale accounts deactivated</td>
+<td>Accounts inactive &gt; 90 days should be disabled</td>
+</tr>
+<tr>
+<td>HSM partition PIN changed on personnel change</td>
+<td>Confirm with security team; document in HSM runbook</td>
+<td>Required after any HSM admin departure</td>
 </tr>
 </tbody>
 </table>

@@ -1062,6 +1062,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#encryption-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-management-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Management Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1082,6 +1112,7 @@
 
 <h1 id="cyberark-encryption">CyberArk — Encryption<a class="headerlink" href="#cyberark-encryption" title="Permanent link">&para;</a></h1>
 <p>Session recordings are encrypted at rest using AES-256. Vault audit log integrity is protected by the Vault's internal signing mechanism. PVWA enforces TLS 1.2 minimum for all connections.</p>
+<h2 id="encryption-controls">Encryption Controls<a class="headerlink" href="#encryption-controls" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1101,6 +1132,84 @@
 <tr>
 <td>PVWA TLS</td>
 <td>TLS 1.2+ only; valid internal CA certificate</td>
+</tr>
+<tr>
+<td>Vault server-to-server encryption</td>
+<td>All traffic between Primary Vault and DR Vault encrypted over a dedicated replication channel using AES-256; configured in <code>vault.ini</code> under the <code>[SYSLOGNG]</code> and replication sections</td>
+</tr>
+<tr>
+<td>DR Vault replication encryption</td>
+<td>Replication stream between Primary and DR protected by the Vault's internal PKI; the DR Vault certificate is enrolled during initial DR configuration and must be renewed before expiry</td>
+</tr>
+<tr>
+<td>PSM recording encryption key rotation</td>
+<td>AES-256 key used for recording storage rotated annually or on security team request; key managed by the Vault's internal key store; old key retained for decryption of existing recordings per retention period</td>
+</tr>
+<tr>
+<td>Safe-level encryption at rest</td>
+<td>Each Safe's contents encrypted individually using a per-Safe key derived from the Vault master key; Safe key re-encryption required if the Vault master key is rotated</td>
+</tr>
+<tr>
+<td>Credential transmission</td>
+<td>Passwords retrieved via PVWA, REST API, or SDK are transmitted exclusively over TLS 1.2+; plaintext retrieval over HTTP is disabled by default and enforced by Vault policy</td>
+</tr>
+<tr>
+<td>Vault master key protection</td>
+<td>The Vault master key is split using Shamir's Secret Sharing across operator key files; a configurable quorum (e.g., 3 of 5) of key holders is required to unseal the Vault after a restart</td>
+</tr>
+<tr>
+<td>CPM-to-target credential change</td>
+<td>CPM transmits new credentials to target systems over the native protocol of the platform (SSH for Unix, SMB/LDAP for Windows AD); all communication from CPM is over encrypted channels</td>
+</tr>
+<tr>
+<td>PSM RDP/SSH gateway encryption</td>
+<td>RDP sessions proxied by PSM use TLS transport; SSH sessions use SSH protocol v2 only; SSHv1 and unencrypted RDP (Security Layer: RDP) are disabled in PSM hardening policy</td>
+</tr>
+<tr>
+<td>API and SDK credential transport</td>
+<td>CyberArk REST API and PSMP use HTTPS (TLS 1.2+) exclusively; API tokens are short-lived (default 20-minute expiry) and invalidated on logout</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-management-reference">Key Management Reference<a class="headerlink" href="#key-management-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Key / Material</th>
+<th>Storage Location</th>
+<th>Rotation Cadence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vault master key</td>
+<td>Split across operator key files (Shamir); never stored whole on disk</td>
+<td>On suspected compromise or key holder personnel change</td>
+</tr>
+<tr>
+<td>Safe encryption keys</td>
+<td>Derived from Vault master key; stored internally in Vault</td>
+<td>Automatically on master key rotation</td>
+</tr>
+<tr>
+<td>PSM recording AES-256 key</td>
+<td>Vault internal key store</td>
+<td>Annual or on security event</td>
+</tr>
+<tr>
+<td>DR replication certificate</td>
+<td>Vault internal PKI; stored on DR host</td>
+<td>Before certificate expiry (track in Venafi or calendar alert)</td>
+</tr>
+<tr>
+<td>PVWA TLS certificate</td>
+<td>IIS certificate store</td>
+<td>Per certificate validity; minimum annual renewal</td>
+</tr>
+<tr>
+<td>CPM service account credential</td>
+<td>CyberArk Safe (self-managed by CPM)</td>
+<td>90-day CPM automatic rotation</td>
 </tr>
 </tbody>
 </table>
