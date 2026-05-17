@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-this-means" class="md-nav__link">
+  <a href="#failure-domain-taxonomy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What This Means
+        Failure Domain Taxonomy
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#typical-failure-domains" class="md-nav__link">
+  <a href="#vsan-ftt-and-raid-policy-mapping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Typical Failure Domains
+        vSAN FTT and RAID Policy Mapping
       
     </span>
   </a>
@@ -1091,21 +1091,110 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-it-matters" class="md-nav__link">
+  <a href="#vsan-fault-domain-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why It Matters
+        vSAN Fault Domain Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vSAN Fault Domain Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#view-current-fault-domain-assignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View current fault domain assignment
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#operational-checks" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#create-or-update-fault-domains" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operational Checks
+        Create or update fault domains
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-host-affinity-and-anti-affinity-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM-Host Affinity and Anti-Affinity Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VM-Host Affinity and Anti-Affinity Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-configure-affinity-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why configure affinity rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-vm-anti-affinity-rule-keep-vms-apart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a VM anti-affinity rule (keep VMs apart)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-a-vm-host-affinity-rule-pin-vms-to-a-host-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a VM-Host affinity rule (pin VMs to a host group)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list-and-audit-all-drs-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List and audit all DRS rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-domain-verification-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure Domain Verification Table
       
     </span>
   </a>
@@ -1133,30 +1222,228 @@
 
 
 <h1 id="cluster-failure-domains">Cluster Failure Domains<a class="headerlink" href="#cluster-failure-domains" title="Permanent link">&para;</a></h1>
-<h2 id="what-this-means">What This Means<a class="headerlink" href="#what-this-means" title="Permanent link">&para;</a></h2>
-<p>A failure domain is the boundary where a single failure can impact multiple workloads.</p>
-<h2 id="typical-failure-domains">Typical Failure Domains<a class="headerlink" href="#typical-failure-domains" title="Permanent link">&para;</a></h2>
-<p>Host<br />
-Rack<br />
-Power feed<br />
-Network switch<br />
-Storage controller<br />
-Availability zone</p>
-<h2 id="why-it-matters">Why It Matters<a class="headerlink" href="#why-it-matters" title="Permanent link">&para;</a></h2>
-<p>Failure domains determine:</p>
+<p>A failure domain is the blast radius of a single fault: the set of hosts, storage, or network paths that share a common point of failure. Correctly mapping and configuring failure domains is the foundation of vSAN resilience, HA placement, and maintenance safety.</p>
+<hr />
+<h2 id="failure-domain-taxonomy">Failure Domain Taxonomy<a class="headerlink" href="#failure-domain-taxonomy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Domain Level</th>
+<th>What It Covers</th>
+<th>Impact of Single Failure</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Host</strong></td>
+<td>One ESXi server (CPU, RAM, local NICs)</td>
+<td>All VMs on that host lose compute</td>
+<td>HA restart; vSAN FTT ≥ 1</td>
+</tr>
+<tr>
+<td><strong>Rack</strong></td>
+<td>All hosts sharing a physical rack</td>
+<td>Multiple hosts lose power/top-of-rack switching</td>
+<td>Spread hosts across racks; vSAN rack-aware fault domains</td>
+</tr>
+<tr>
+<td><strong>Power feed</strong></td>
+<td>All hosts on one PDU or UPS string</td>
+<td>Full PDU failure takes down the rack's feed</td>
+<td>Dual-corded hosts; A/B feed distribution across racks</td>
+</tr>
+<tr>
+<td><strong>Network switch</strong></td>
+<td>All ports on one ToR or aggregation switch</td>
+<td>Management, vSAN, and vMotion paths affected</td>
+<td>NIC teaming across separate switches; separate vSAN VMkernel on redundant switch</td>
+</tr>
+<tr>
+<td><strong>Storage controller</strong></td>
+<td>One HBA or NVMe controller inside a host</td>
+<td>Disk group goes offline for that host</td>
+<td>Dual disk groups per host where possible; vSAN deduplication/RAID-5/6 for capacity tier</td>
+</tr>
+<tr>
+<td><strong>Availability zone</strong></td>
+<td>An entire datacenter or building</td>
+<td>Full site outage</td>
+<td>Stretched cluster (2 sites + witness); or cross-site replication via SRM/Zerto</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vsan-ftt-and-raid-policy-mapping">vSAN FTT and RAID Policy Mapping<a class="headerlink" href="#vsan-ftt-and-raid-policy-mapping" title="Permanent link">&para;</a></h2>
+<p>Choose a storage policy based on how many simultaneous failure domains you can tolerate.</p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>FTT</th>
+<th>RAID</th>
+<th>Min Hosts Required</th>
+<th>Capacity Overhead</th>
+<th>Typical Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAID-1 mirror</td>
+<td>1</td>
+<td>RAID-1</td>
+<td>3</td>
+<td>2× (50% usable)</td>
+<td>Small clusters (3–4 nodes), low-latency workloads</td>
+</tr>
+<tr>
+<td>RAID-5 erasure coding</td>
+<td>1</td>
+<td>RAID-5</td>
+<td>4</td>
+<td>1.33× (75% usable)</td>
+<td>All-flash 4+ node clusters, capacity-sensitive</td>
+</tr>
+<tr>
+<td>RAID-1 mirror</td>
+<td>2</td>
+<td>RAID-1</td>
+<td>5</td>
+<td>3× (33% usable)</td>
+<td>Mission-critical VMs requiring two simultaneous host failures</td>
+</tr>
+<tr>
+<td>RAID-6 erasure coding</td>
+<td>2</td>
+<td>RAID-6</td>
+<td>6</td>
+<td>1.5× (67% usable)</td>
+<td>All-flash 6+ node clusters, maximum capacity efficiency at FTT=2</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> Erasure coding (RAID-5/6) requires all-flash disk groups. Mixed (hybrid) configurations must use RAID-1.</p>
+</blockquote>
+<p>Set the policy per VM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># View current storage policies</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-SpbmStoragePolicy</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Description</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Assign a policy to a VM</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VM</span> <span class="s2">&quot;prod-db-01&quot;</span> <span class="p">|</span> <span class="nb">Set-SpbmEntityConfiguration</span> <span class="n">-StoragePolicy</span> <span class="p">(</span><span class="nb">Get-SpbmStoragePolicy</span> <span class="s2">&quot;vSAN FTT=2 RAID-6&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="vsan-fault-domain-configuration">vSAN Fault Domain Configuration<a class="headerlink" href="#vsan-fault-domain-configuration" title="Permanent link">&para;</a></h2>
+<p>Rack-aware fault domains tell vSAN to treat all hosts in a rack as a single failure boundary, preventing both copies of an object landing in the same rack.</p>
+<h3 id="view-current-fault-domain-assignment">View current fault domain assignment<a class="headerlink" href="#view-current-fault-domain-assignment" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From ESXi host SSH</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>fault<span class="w"> </span>domain<span class="w"> </span>list
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VsanFaultDomainConfiguration</span> <span class="n">-Cluster</span> <span class="p">&lt;</span><span class="n">ClusterName</span><span class="p">&gt;</span>
+</code></pre></div>
+<h3 id="create-or-update-fault-domains">Create or update fault domains<a class="headerlink" href="#create-or-update-fault-domains" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Create fault domains per rack</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-VsanFaultDomain</span> <span class="n">-Cluster</span> <span class="s2">&quot;Prod-Cluster&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Rack-A&quot;</span> <span class="n">-VMHost</span> <span class="p">@(</span><span class="s2">&quot;esxi-01&quot;</span><span class="p">,</span> <span class="s2">&quot;esxi-02&quot;</span><span class="p">,</span> <span class="s2">&quot;esxi-03&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">New-VsanFaultDomain</span> <span class="n">-Cluster</span> <span class="s2">&quot;Prod-Cluster&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Rack-B&quot;</span> <span class="n">-VMHost</span> <span class="p">@(</span><span class="s2">&quot;esxi-04&quot;</span><span class="p">,</span> <span class="s2">&quot;esxi-05&quot;</span><span class="p">,</span> <span class="s2">&quot;esxi-06&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>After configuration, confirm each host shows its fault domain:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FaultDomain&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConfigManager</span><span class="p">.</span><span class="n">VsanSystem</span><span class="p">).</span><span class="n">GetRuntimeStats</span><span class="p">().</span><span class="n">FaultDomainName</span> <span class="p">}}</span>
+</code></pre></div>
+<hr />
+<h2 id="vm-host-affinity-and-anti-affinity-rules">VM-Host Affinity and Anti-Affinity Rules<a class="headerlink" href="#vm-host-affinity-and-anti-affinity-rules" title="Permanent link">&para;</a></h2>
+<p>DRS rules enforce placement across failure domains. Anti-affinity rules are critical for HA pairs (e.g., primary/secondary databases, paired application tiers).</p>
+<h3 id="why-configure-affinity-rules">Why configure affinity rules<a class="headerlink" href="#why-configure-affinity-rules" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Resiliency</li>
-<li>HA behavior</li>
-<li>Recovery speed</li>
-<li>Maintenance safety</li>
+<li><strong>Anti-affinity (VM-VM):</strong> Prevents two VMs from running on the same host. Use for active/passive pairs.</li>
+<li><strong>Anti-affinity (VM-Host):</strong> Prevents specific VMs from running on specific hosts (e.g., keep licensing VMs off hosts under maintenance rotation).</li>
+<li><strong>Affinity (VM-Host):</strong> Pins VMs to a host group — use for NUMA-sensitive or hardware-licensed workloads.</li>
 </ul>
-<h2 id="operational-checks">Operational Checks<a class="headerlink" href="#operational-checks" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Confirm host distribution across racks</li>
-<li>Confirm power diversity</li>
-<li>Confirm storage path redundancy</li>
-<li>Confirm network uplink diversity</li>
-</ul>
+<h3 id="create-a-vm-anti-affinity-rule-keep-vms-apart">Create a VM anti-affinity rule (keep VMs apart)<a class="headerlink" href="#create-a-vm-anti-affinity-rule-keep-vms-apart" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Create VM anti-affinity rule: prod-db-01 and prod-db-02 must not share a host</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-DrsRule</span> <span class="n">-Cluster</span> <span class="s2">&quot;Prod-Cluster&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;AntiAffinity-DB-Pair&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">-KeepTogether</span> <span class="nv">$false</span> <span class="p">`</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;prod-db-01&quot;</span><span class="p">,</span> <span class="s2">&quot;prod-db-02&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">-Enabled</span> <span class="nv">$true</span>
+</code></pre></div>
+<h3 id="create-a-vm-host-affinity-rule-pin-vms-to-a-host-group">Create a VM-Host affinity rule (pin VMs to a host group)<a class="headerlink" href="#create-a-vm-host-affinity-rule-pin-vms-to-a-host-group" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Step 1: Create host group</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">New-DrsClusterGroup</span> <span class="n">-Cluster</span> <span class="s2">&quot;Prod-Cluster&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Rack-A-Hosts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01&quot;</span><span class="p">,</span> <span class="s2">&quot;esxi-02&quot;</span><span class="p">,</span> <span class="s2">&quot;esxi-03&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Step 2: Create VM group</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">New-DrsClusterGroup</span> <span class="n">-Cluster</span> <span class="s2">&quot;Prod-Cluster&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Licensing-VMs&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">-VM</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="s2">&quot;license-server-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Step 3: Create VM-Host rule</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">New-DrsVMHostRule</span> <span class="n">-Cluster</span> <span class="s2">&quot;Prod-Cluster&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;License-Pinned-RackA&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="n">-VMGroup</span> <span class="s2">&quot;Licensing-VMs&quot;</span> <span class="n">-VMHostGroup</span> <span class="s2">&quot;Rack-A-Hosts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">-Type</span> <span class="n">MustRunOn</span> <span class="n">-Enabled</span> <span class="nv">$true</span>
+</code></pre></div>
+<h3 id="list-and-audit-all-drs-rules">List and audit all DRS rules<a class="headerlink" href="#list-and-audit-all-drs-rules" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># All DRS rules in all clusters</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-DrsRule</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Cluster</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">KeepTogether</span><span class="p">,</span> <span class="nb">Type</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># VM-Host rules specifically</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Get-DrsVMHostRule</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Cluster</span><span class="p">,</span> <span class="n">VMGroup</span><span class="p">,</span> <span class="n">VMHostGroup</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Enabled</span>
+</code></pre></div>
+<hr />
+<h2 id="failure-domain-verification-table">Failure Domain Verification Table<a class="headerlink" href="#failure-domain-verification-table" title="Permanent link">&para;</a></h2>
+<p>After configuring failure domains, confirm each layer is correctly set up.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Verification Method</th>
+<th>Command / Check</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN fault domains</td>
+<td>Check all hosts assigned</td>
+<td><code>esxcli vsan fault domain list</code></td>
+<td>Each host shows a named fault domain; no host in <code>None</code></td>
+</tr>
+<tr>
+<td>Fault domain count</td>
+<td>Minimum fault domains for policy</td>
+<td><code>Get-VsanFaultDomainConfiguration</code></td>
+<td>FTT=1 needs ≥ 3 domains; FTT=2 needs ≥ 5 domains</td>
+</tr>
+<tr>
+<td>Object placement</td>
+<td>Objects span domains</td>
+<td><code>esxcli vsan debug object list</code></td>
+<td>Component owners are in different fault domains</td>
+</tr>
+<tr>
+<td>Network uplink diversity</td>
+<td>NIC team split across switches</td>
+<td>vSphere → Host → Configure → Virtual Switches</td>
+<td>Each VMNIC on a separate physical switch</td>
+</tr>
+<tr>
+<td>Power feed diversity</td>
+<td>Hosts on separate PDUs</td>
+<td>Physical audit or DCIM tool</td>
+<td>No two hosts in same fault domain share a PDU</td>
+</tr>
+<tr>
+<td>DRS anti-affinity rules</td>
+<td>Critical VM pairs are split</td>
+<td><code>Get-DrsRule \| Where-Object { $_.KeepTogether -eq $false }</code></td>
+<td>At least one rule per HA-sensitive VM pair</td>
+</tr>
+<tr>
+<td>HA host failures to tolerate</td>
+<td>HA setting matches FTT</td>
+<td><code>(Get-Cluster &lt;name&gt;).HAFailoverLevel</code></td>
+<td>Matches vSAN FTT setting</td>
+</tr>
+</tbody>
+</table>
 
 
 

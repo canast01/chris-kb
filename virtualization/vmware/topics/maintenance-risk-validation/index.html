@@ -1069,10 +1069,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#before-maintenance" class="md-nav__link">
+  <a href="#pre-maintenance-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Before Maintenance
+        Pre-Maintenance Validation
       
     </span>
   </a>
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#red-flags" class="md-nav__link">
+  <a href="#red-flag-conditions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Red Flags
+        Red-Flag Conditions
       
     </span>
   </a>
@@ -1091,10 +1091,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#safe-state" class="md-nav__link">
+  <a href="#safe-to-proceed-validation-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Safe State
+        Safe-to-Proceed Validation Checklist
       
     </span>
   </a>
@@ -1122,33 +1122,219 @@
 
 
 <h1 id="maintenance-risk-validation">Maintenance Risk Validation<a class="headerlink" href="#maintenance-risk-validation" title="Permanent link">&para;</a></h1>
-<h2 id="before-maintenance">Before Maintenance<a class="headerlink" href="#before-maintenance" title="Permanent link">&para;</a></h2>
-<p>Check:</p>
-<ul>
-<li>Cluster capacity</li>
-<li>vSAN health</li>
-<li>Storage latency</li>
-<li>Network stability</li>
-<li>Active resync</li>
-<li>Backup status</li>
-</ul>
-<h2 id="red-flags">Red Flags<a class="headerlink" href="#red-flags" title="Permanent link">&para;</a></h2>
-<p>Do NOT proceed if:</p>
-<ul>
-<li>Resync in progress</li>
-<li>Capacity below threshold</li>
-<li>Host hardware alerts</li>
-<li>Network instability</li>
-<li>Unresolved alarms</li>
-</ul>
-<h2 id="safe-state">Safe State<a class="headerlink" href="#safe-state" title="Permanent link">&para;</a></h2>
-<p>Maintenance is safe when:</p>
-<ul>
-<li>No active resync</li>
-<li>Capacity healthy</li>
-<li>Cluster stable</li>
-<li>Monitoring normal</li>
-</ul>
+<p>Validate cluster health before any maintenance window. All checks must pass before placing a host into maintenance mode or performing upgrades. Use the tables below as a structured pre-flight checklist.</p>
+<hr />
+<h2 id="pre-maintenance-validation">Pre-Maintenance Validation<a class="headerlink" href="#pre-maintenance-validation" title="Permanent link">&para;</a></h2>
+<p>Run these commands before every maintenance operation. Resolve any failures before proceeding.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN cluster health</td>
+<td><code>esxcli vsan health cluster get</code></td>
+<td>All tests green; no failures or warnings</td>
+</tr>
+<tr>
+<td>vSAN health (PowerCLI)</td>
+<td><code>Get-VsanClusterHealthSummary -Cluster &lt;name&gt;</code></td>
+<td><code>OverallHealth: green</code></td>
+</tr>
+<tr>
+<td>vSAN resync status</td>
+<td><code>esxcli vsan debug resync list</code></td>
+<td>Empty output (no objects resyncing)</td>
+</tr>
+<tr>
+<td>vSAN capacity</td>
+<td><code>Get-VsanSpaceUsage -Cluster &lt;name&gt;</code></td>
+<td>Free capacity &gt; 30%</td>
+</tr>
+<tr>
+<td>Host power state</td>
+<td><code>Get-VMHost \| Where-Object { $_.PowerState -ne "PoweredOn" }</code></td>
+<td>Empty — all hosts powered on</td>
+</tr>
+<tr>
+<td>Host connection state</td>
+<td><code>Get-VMHost \| Where-Object { $_.ConnectionState -ne "Connected" }</code></td>
+<td>Empty — all hosts connected</td>
+</tr>
+<tr>
+<td>Active alarms</td>
+<td><code>Get-AlarmAction \| Where-Object { $_.Alarm.Info.Enabled }</code></td>
+<td>No critical active alarms on cluster or hosts</td>
+</tr>
+<tr>
+<td>HA admission control</td>
+<td><code>(Get-Cluster &lt;name&gt;).HAAdmissionControlEnabled</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>DRS enabled</td>
+<td><code>(Get-Cluster &lt;name&gt;).DrsEnabled</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>vSAN cluster config</td>
+<td><code>Get-VsanClusterConfiguration -Cluster &lt;name&gt;</code></td>
+<td><code>SpaceEfficiencyEnabled</code>, <code>FaultDomainsEnabled</code> match expected config</td>
+</tr>
+<tr>
+<td>Storage latency</td>
+<td><code>esxcli storage core adapter stats get</code></td>
+<td>Read/write latency &lt; 20 ms</td>
+</tr>
+<tr>
+<td>Network uplinks</td>
+<td><code>esxcli network nic list</code></td>
+<td>All uplinks <code>Link: Up</code>; no unexpected <code>Down</code></td>
+</tr>
+<tr>
+<td>Backup jobs</td>
+<td>Check backup tool (Veeam, VADP) last run status</td>
+<td>All VMs backed up within RPO window</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="red-flag-conditions">Red-Flag Conditions<a class="headerlink" href="#red-flag-conditions" title="Permanent link">&para;</a></h2>
+<p>Do NOT proceed with maintenance if any of the following thresholds are breached.</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Threshold / Signal</th>
+<th>Check Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN resync bytes outstanding</td>
+<td>&gt; 0 bytes (any resync in progress)</td>
+<td><code>esxcli vsan debug resync list</code></td>
+</tr>
+<tr>
+<td>vSAN capacity free</td>
+<td>&lt; 25% free</td>
+<td><code>Get-VsanSpaceUsage -Cluster &lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>vSAN component repair delay active</td>
+<td>Delay timer &gt; 0 (objects awaiting repair)</td>
+<td><code>esxcli vsan debug object list \| grep -i degraded</code></td>
+</tr>
+<tr>
+<td>Host hardware alerts</td>
+<td>Any IPMI / iDRAC / ILO critical alerts</td>
+<td>Check hardware OOB console; <code>Get-VMHostHardware -VMHost &lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>vSAN disk group degraded</td>
+<td>Any disk group not fully operational</td>
+<td><code>esxcli vsan storage list</code> → check <code>In CMMDS: true</code> for all disks</td>
+</tr>
+<tr>
+<td>Network uplink down</td>
+<td>Any vmnic with <code>Link: Down</code> on a vSAN or management VMNIC</td>
+<td><code>esxcli network nic list</code></td>
+</tr>
+<tr>
+<td>Active HA failover</td>
+<td>HA failover event in the last 24 h</td>
+<td>vCenter Events → filter <code>com.vmware.vc.ha.VmFailoverSucceededEvent</code></td>
+</tr>
+<tr>
+<td>Unsaved/unpresented snapshots</td>
+<td>Snapshots older than 72 h</td>
+<td><code>Get-VM \| Get-Snapshot \| Where-Object { $_.Created -lt (Get-Date).AddHours(-72) }</code></td>
+</tr>
+<tr>
+<td>DRS fully disabled</td>
+<td>DRS mode is <code>Manual</code> or disabled on maintenance target cluster</td>
+<td><code>(Get-Cluster &lt;name&gt;).DrsAutomationLevel</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="safe-to-proceed-validation-checklist">Safe-to-Proceed Validation Checklist<a class="headerlink" href="#safe-to-proceed-validation-checklist" title="Permanent link">&para;</a></h2>
+<p>All rows must show <strong>Pass</strong> before placing a host into maintenance mode.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Expected State</th>
+<th>Verified</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN health summary</td>
+<td>Green (no failures)</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Resync queue</td>
+<td>Empty</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Capacity free</td>
+<td>&gt; 30%</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>All hosts connected and powered on</td>
+<td>True</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>No critical active alarms</td>
+<td>True</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>HA admission control</td>
+<td>Enabled</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>DRS mode</td>
+<td>FullyAutomated</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>All disk groups healthy</td>
+<td>True</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Network uplinks all up</td>
+<td>True</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>VMs backed up within RPO</td>
+<td>True</td>
+<td>[ ]</td>
+</tr>
+<tr>
+<td>Change freeze / CAB approval</td>
+<td>Approved</td>
+<td>[ ]</td>
+</tr>
+</tbody>
+</table>
+<p>Once all items are verified, proceed with: <code>Set-VMHost -VMHost &lt;hostname&gt; -State Maintenance</code></p>
+<p>After the host enters maintenance mode, confirm with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Expected: ConnectionState: Maintenance</span>
+</code></pre></div>
 
 
 
