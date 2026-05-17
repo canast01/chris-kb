@@ -4,6 +4,8 @@
 Dell PowerStore is a mid-range all-flash platform with an active-active dual-node appliance architecture built on an NVMe internal fabric. It runs PowerStoreOS (microservices-based) and supports Metro Volume for zero-RPO synchronous replication.
 </div>
 
+![PowerStore Architecture](../../../../assets/powerstore-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="how-it-works/">
     <div class="kb-card-icon">⚙️</div>

@@ -4,6 +4,8 @@
 Cloud-native AIOps SaaS platform hosted by Dell. Receives telemetry from on-premises Dell arrays via the Secure Connect Gateway and produces health scores (0–100), capacity forecasts, and AI-driven recommendations. No on-premises compute required beyond the SCG.
 </div>
 
+![CloudIQ Architecture](../../../../assets/dell-cloudiq-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with Dell arrays, Secure Connect Gateway, and REST API.</span></a>

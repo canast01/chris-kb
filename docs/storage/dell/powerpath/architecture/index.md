@@ -4,6 +4,8 @@
 Host-side multipath I/O driver for Dell/EMC arrays. Intercepts block I/O and distributes it across all available HBA paths with ALUA-aware load balancing (CLAROpt policy) and automatic sub-millisecond failover on path loss.
 </div>
 
+![PowerPath Architecture](../../../../assets/powerpath-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Integration with PowerMax, Unity, and host OS multipath frameworks.</span></a>
