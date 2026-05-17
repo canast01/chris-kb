@@ -4,6 +4,8 @@
 VMware Site Recovery Manager DR orchestration — vCenter plugin that automates storage presentation, VM registration, power-on sequencing, and IP customisation across a site pair.
 </div>
 
+![SRM Architecture](../../../../assets/srm-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Site pair topology, recovery plan boot sequence, recovery modes, SRAs, and vSphere Replication.</span></a>
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>Dell EMC, Pure Storage, and NetApp SRA integrations; vSphere Replication appliance.</span></a>
