@@ -1,5 +1,11 @@
 # AWS Monitoring
 
+<div class="kb-summary">
+AWS observability is built on CloudWatch (metrics, logs, alarms), CloudTrail (API audit trail), and EventBridge (event-driven automation). CloudWatch Agent extends coverage to OS-level memory and disk metrics. AWS Health surfaces service incidents and planned maintenance at the account and org level.
+</div>
+
+![AWS Monitoring Architecture](../../../assets/aws-monitoring-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cloudwatch/">

@@ -1,5 +1,11 @@
 # AWS Cost
 
+<div class="kb-summary">
+AWS cost management combines visibility (Cost Explorer, CUR, Anomaly Detection) with optimisation (Reserved Instances, Savings Plans, Spot) and governance (Budgets with actions, cost allocation tags). Committed spend via RIs and Savings Plans drives discounts; tagging enables chargeback by team and environment.
+</div>
+
+![AWS Cost Architecture](../../../assets/aws-cost-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cost-explorer-billing/">

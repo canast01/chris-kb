@@ -1,5 +1,11 @@
 # AWS Networking
 
+<div class="kb-summary">
+AWS networking is built around VPCs with public and private subnets across availability zones. Transit Gateway provides hub-and-spoke connectivity between accounts and on-premises. Security Groups and NACLs layer stateful and stateless filtering; Route 53 handles DNS with health-check-based failover.
+</div>
+
+![AWS Networking Architecture](../../../assets/aws-networking-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="vpc/">

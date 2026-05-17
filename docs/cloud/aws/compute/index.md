@@ -1,5 +1,11 @@
 # AWS Compute
 
+<div class="kb-summary">
+AWS compute spans EC2 virtual machines, Auto Scaling groups, Lambda serverless functions, and ECS/EKS containers. Fleet management runs through Systems Manager — no bastion hosts required. AMI standardisation and Patch Manager enforce OS hygiene across the fleet.
+</div>
+
+![AWS Compute Architecture](../../../assets/aws-compute-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="ec2/">

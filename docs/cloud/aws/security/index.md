@@ -1,5 +1,11 @@
 # AWS — Security
 
+<div class="kb-summary">
+AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (KMS, Secrets Manager, ACM), and threat detection (GuardDuty, Security Hub, Inspector). SCPs provide org-wide preventive guardrails; Config and Security Hub score detective compliance posture.
+</div>
+
+![AWS Security Architecture](../../../assets/aws-security-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

@@ -1,5 +1,11 @@
 # AWS Governance
 
+<div class="kb-summary">
+AWS governance is structured around AWS Organizations with a management account, Security/Log Archive accounts, and workload accounts per environment. SCPs enforce preventive guardrails at the OU level; AWS Config with conformance packs handles detective compliance. Tagging standards and naming conventions underpin cost allocation and resource ownership.
+</div>
+
+![AWS Governance Architecture](../../../assets/aws-governance-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="aws-config/">
