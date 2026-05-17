@@ -1,7 +1,7 @@
 # Dell Storage
 
 <div class="kb-summary">
-Dell storage knowledge base covering PowerMax, PowerScale, PowerStore, Unity, VPLEX, Data Domain, ECS, and PowerPath. Includes architecture references, operational procedures, CLI commands, replication, data protection, and troubleshooting guides across Dell block, file, and object storage platforms.
+Dell enterprise storage portfolio — block, file, object, and data protection platforms. Coverage includes architecture, provisioning, multipathing, replication, and operational procedures for each product.
 </div>
 
 <div class="kb-grid kb-grid-3">

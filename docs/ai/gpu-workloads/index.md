@@ -1,7 +1,7 @@
 # GPU Workloads
 
 <div class="kb-summary">
-GPU compute for AI/ML workloads relies primarily on the NVIDIA CUDA platform, with a layered software stack of driver, CUDA toolkit, and cuDNN. Selecting the right GPU family depends on whether the workload is training (requires high-bandwidth HBM memory, e.g., A100/H100) or inference (tolerates lower-bandwidth GDDR, e.g., L4/A30). Key operational concerns are VRAM sizing for model fit, driver/CUDA version compatibility, and maintaining visibility into utilisation and thermal health.
+GPU compute for AI/ML workloads runs on the NVIDIA CUDA platform (driver, CUDA toolkit, cuDNN). Coverage includes GPU family selection for training vs inference, VRAM sizing, driver/CUDA compatibility, performance tuning, and monitoring thermal health and ECC errors.
 </div>
 
 <div class="kb-grid kb-grid-5">

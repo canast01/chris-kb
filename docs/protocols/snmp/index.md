@@ -1,7 +1,7 @@
 # SNMP
 
 <div class="kb-summary">
-Simple Network Management Protocol (SNMP) is an application-layer protocol used to poll device metrics and receive asynchronous fault notifications (traps) from network infrastructure, servers, and storage. It operates over UDP — port 161 for polling, port 162 for traps — and the version in use matters significantly: SNMPv1 and v2c use plaintext community strings, while SNMPv3 adds authentication and encryption via the User Security Model (USM).
+Simple Network Management Protocol (SNMP) polls device metrics and receives asynchronous fault notifications (traps) over UDP — port 161 for polling, 162 for traps. SNMPv1/v2c use plaintext community strings; SNMPv3 adds authentication and encryption via the User Security Model (USM). Coverage includes OID polling, trap handling, and monitoring integration.
 </div>
 
 <div class="kb-grid kb-grid-5">

@@ -1,7 +1,7 @@
 # AWS Bedrock
 
 <div class="kb-summary">
-AWS Bedrock is a fully managed serverless service for invoking foundation models from Anthropic, Meta, Mistral, Amazon, and others — without managing any inference infrastructure. Authentication uses standard AWS IAM (SigV4 signed requests via boto3), and model access must be requested per model per region before use. Key operational concerns are enabling model access, designing IAM policies with least privilege, and choosing between on-demand pricing and Provisioned Throughput for latency-sensitive workloads.
+AWS Bedrock is a fully managed serverless service for invoking foundation models (Anthropic, Meta, Mistral, Amazon) without managing inference infrastructure. Coverage includes model access enablement, IAM policy design, Provisioned Throughput vs on-demand pricing, Knowledge Bases (RAG), Agents, and monitoring.
 </div>
 
 <div class="kb-grid kb-grid-5">

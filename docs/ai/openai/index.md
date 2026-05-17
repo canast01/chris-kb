@@ -1,7 +1,7 @@
 # OpenAI
 
 <div class="kb-summary">
-OpenAI provides a REST API for accessing GPT-4o, embedding, image generation, and transcription models. It integrates directly via HTTPS using a Bearer token — no SDK required, though the official Python and Node libraries are commonly used. Key operational concerns are cost control (output tokens cost 2-3x input), rate limit tiers (TPM/RPM per org), and keeping API keys out of logs and source control.
+The OpenAI API provides REST access to GPT-4o, embedding, image generation, and transcription models via Bearer token auth. Coverage includes cost control, rate limit tiers (TPM/RPM), API key security, prompt patterns, and automation use cases.
 </div>
 
 <div class="kb-grid kb-grid-5">

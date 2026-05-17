@@ -1,7 +1,7 @@
 # NTP
 
 <div class="kb-summary">
-Network Time Protocol (NTP) synchronises system clocks across infrastructure over UDP port 123, using a hierarchical stratum model where stratum 0 is the reference clock (GPS, atomic) and each layer adds one stratum. Time accuracy is foundational: clock skew breaks Kerberos authentication (5-minute tolerance), invalidates TLS certificates, corrupts log correlation, and causes replication and clustering failures. VMware environments require particular care — ESXi hosts and guest VMs must not both sync to external NTP simultaneously.
+Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a hierarchical stratum model. Clock skew breaks Kerberos auth, TLS validity, and log correlation. Coverage includes chrony/ntpd/w32tm configuration, stratum selection, sync health metrics, and VMware time sync rules.
 </div>
 
 <div class="kb-grid kb-grid-5">

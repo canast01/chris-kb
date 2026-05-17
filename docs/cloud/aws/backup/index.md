@@ -1,7 +1,7 @@
 # AWS Backup
 
 <div class="kb-summary">
-AWS Backup provides centralised backup management across EC2, EBS, RDS, DynamoDB, EFS, FSx, and S3. Backup Plans define schedules and lifecycle rules; Backup Vaults with Vault Lock enforce immutable retention. Restore Testing Plans automate recoverability validation; Audit Manager generates compliance evidence.
+AWS Backup provides centralised backup management across EC2, EBS, RDS, DynamoDB, EFS, FSx, and S3, with Backup Plans defining schedules and Vault Lock enforcing immutable retention. Coverage includes backup job monitoring, restore testing, and compliance reporting.
 </div>
 
 ![AWS Backup Architecture](../../../assets/aws-backup-overview.svg)
