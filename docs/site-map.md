@@ -4,7 +4,7 @@
 
 | Section | Pages |
 |---|---|
-| [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [VxRail](virtualization/vxrail/index.md) · [Hyper-V](virtualization/hyper-v/index.md) · [Kubernetes](virtualization/kubernetes/index.md) · [OpenShift](virtualization/openshift/index.md) · [Operations](virtualization/operations/index.md) · [Reference](virtualization/reference/index.md) |
+| [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [VxRail](virtualization/vxrail/index.md) · [Operations](virtualization/operations/index.md) · [Reference](virtualization/reference/index.md) |
 | [Storage](storage/index.md) | [Dell](storage/dell/index.md) · [Pure Storage](storage/pure/index.md) · [NetApp](storage/netapp/index.md) |
 | [SAN](san/index.md) | [Cisco MDS](san/cisco/index.md) · [Brocade](san/brocade/index.md) |
 | [Compute](compute/index.md) | [Linux](compute/linux/index.md) · [Windows Server](compute/windows-server/index.md) |
@@ -17,7 +17,6 @@
 | Section | Pages |
 |---|---|
 | [Disaster Recovery](disaster-recovery/index.md) | [RASR](disaster-recovery/rasr/index.md) · [SRM](disaster-recovery/srm/index.md) · [SRDF/A](disaster-recovery/srdf-a/index.md) · [SRDF/S](disaster-recovery/srdf-s/index.md) · [RecoverPoint](disaster-recovery/recoverpoint/index.md) · [Veeam](disaster-recovery/veeam/index.md) · [Commvault](disaster-recovery/commvault/index.md) · [NetBackup](disaster-recovery/netbackup/index.md) · [Superna Eyeglass](disaster-recovery/superna-eyeglass/index.md) · [IRE](disaster-recovery/isolated-recovery-environment-ire/index.md) · [Failover](disaster-recovery/failover-procedure/index.md) · [Failback](disaster-recovery/failback-procedure/index.md) · [Runbook](disaster-recovery/runbook/index.md) |
-| [Backup](backup/index.md) | [Veeam](backup/veeam/index.md) · [Commvault](backup/commvault/index.md) · [NetBackup](backup/netbackup/index.md) |
 | [Data Protection](data-protection/index.md) | [Backup Validation](data-protection/backup-validation/index.md) · [Data Classification](data-protection/data-classification/index.md) · [Data Encryption](data-protection/data-encryption/index.md) · [Data Governance](data-protection/data-governance/index.md) · [Retention Policy](data-protection/data-retention-policy/index.md) · [Key Management](data-protection/key-management/index.md) · [Recovery Testing](data-protection/recovery-testing/index.md) |
 | [Performance](performance/index.md) | [Baselining](performance/performance-baselining/index.md) · [Capacity Forecasting](performance/capacity-forecasting/index.md) · [SLOs](performance/service-level-objectives/index.md) · [Reliability Engineering](performance/reliability-engineering/index.md) · [Resource Optimization](performance/resource-optimization/index.md) · [Service Availability](performance/service-availability/index.md) · [Failure Testing](performance/failure-testing/index.md) |
 | [Architecture](architecture/index.md) | [High Availability](architecture/high-availability/index.md) · [DR Design](architecture/disaster-recovery-design/index.md) · [Network Design](architecture/network-design/index.md) · [Storage Design](architecture/storage-design/index.md) |
