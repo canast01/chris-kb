@@ -4,6 +4,8 @@
 HCI appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Managed as a system through VxRail Manager — all firmware, vSphere, and vSAN upgrades go through the LCM workflow via Composite Bundle, never independently.
 </div>
 
+![VxRail Architecture](../../../assets/vxrail-architecture-overview.svg)
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
 <a class="kb-card" href="../../integration/"><strong>Integration</strong><span>Integration with vCenter, NSX, Aria Operations, and Dell SupportAssist.</span></a>
