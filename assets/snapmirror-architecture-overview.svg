@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 750" width="820" height="750">
+  <!-- Background -->
+  <rect width="820" height="750" fill="#f8fafc"/>
+
+  <!-- Title bar -->
+  <rect x="0" y="0" width="820" height="60" fill="#1a2744"/>
+  <text x="410" y="38" font-family="Arial,sans-serif" font-size="22" font-weight="bold" fill="white" text-anchor="middle">SnapMirror — Architecture Overview</text>
+
+  <!-- Column 1 header: Replication Types (blue) -->
+  <rect x="20" y="70" width="250" height="36" rx="4" fill="#2563eb"/>
+  <text x="145" y="93" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="middle">REPLICATION TYPES</text>
+
+  <rect x="20" y="116" width="250" height="32" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="145" y="132" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="-2">SnapMirror Async (DP)</text>
+  <text x="145" y="132" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="+9">scheduled incremental block diff</text>
+
+  <rect x="20" y="156" width="250" height="32" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="145" y="172" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="-2">SnapMirror Sync</text>
+  <text x="145" y="172" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="+9">zero RPO — write ack on both ends</text>
+
+  <rect x="20" y="196" width="250" height="32" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="145" y="212" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="-2">SMBC (AutomatedFailOver)</text>
+  <text x="145" y="212" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="+9">consistency group, mediator-assisted</text>
+
+  <rect x="20" y="236" width="250" height="32" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="145" y="252" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="-2">SnapVault / XDP</text>
+  <text x="145" y="252" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="+9">extended retention, archive copies</text>
+
+  <rect x="20" y="286" width="250" height="36" rx="4" fill="#2563eb"/>
+  <text x="145" y="309" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="middle">SCOPE</text>
+
+  <rect x="20" y="332" width="250" height="32" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="145" y="348" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="-2">Volume SnapMirror</text>
+  <text x="145" y="348" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="+9">single volume replication</text>
+
+  <rect x="20" y="372" width="250" height="32" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="145" y="388" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="-2">SVM DR (SVM-level)</text>
+  <text x="145" y="388" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="+9">replicates all volumes + SVM config</text>
+
+  <rect x="20" y="412" width="250" height="32" rx="3" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="145" y="428" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="-2">Cloud Volumes ONTAP</text>
+  <text x="145" y="428" font-family="Arial,sans-serif" font-size="10" fill="#1e3a5f" text-anchor="middle" dy="+9">replicate to/from cloud ONTAP</text>
+
+  <!-- Column 2 header: Data Flow (green) -->
+  <rect x="287" y="70" width="250" height="36" rx="4" fill="#15803d"/>
+  <text x="412" y="93" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="middle">DATA FLOW</text>
+
+  <rect x="287" y="116" width="250" height="32" rx="3" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="412" y="132" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="-2">Source Volume (SVM / Cluster A)</text>
+  <text x="412" y="132" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="+9">read/write, production data</text>
+
+  <rect x="287" y="156" width="250" height="32" rx="3" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="412" y="172" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="-2">Incremental Block Transfer</text>
+  <text x="412" y="172" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="+9">only changed blocks sent over network</text>
+
+  <rect x="287" y="196" width="250" height="32" rx="3" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="412" y="212" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="-2">Destination Volume (Cluster B)</text>
+  <text x="412" y="212" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="+9">read-only DP volume (until break)</text>
+
+  <rect x="287" y="236" width="250" height="32" rx="3" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="412" y="252" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="-2">Local Snapshots (source)</text>
+  <text x="412" y="252" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="+9">common snapshot = transfer baseline</text>
+
+  <rect x="287" y="286" width="250" height="36" rx="4" fill="#15803d"/>
+  <text x="412" y="309" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="middle">DR FAILOVER</text>
+
+  <rect x="287" y="332" width="250" height="32" rx="3" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="412" y="348" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="-2">snapmirror break</text>
+  <text x="412" y="348" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="+9">makes destination read/write</text>
+
+  <rect x="287" y="372" width="250" height="32" rx="3" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="412" y="388" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="-2">Resync after recovery</text>
+  <text x="412" y="388" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="+9">re-establish replication relationship</text>
+
+  <rect x="287" y="412" width="250" height="32" rx="3" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="412" y="428" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="-2">SMBC — transparent auto failover</text>
+  <text x="412" y="428" font-family="Arial,sans-serif" font-size="10" fill="#14532d" text-anchor="middle" dy="+9">no host reconfiguration needed</text>
+
+  <!-- Column 3 header: Policies and Connectivity (purple) -->
+  <rect x="553" y="70" width="250" height="36" rx="4" fill="#7c3aed"/>
+  <text x="678" y="93" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="middle">POLICIES &amp; CONNECTIVITY</text>
+
+  <rect x="553" y="116" width="250" height="32" rx="3" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="678" y="132" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="-2">SnapMirror Policies</text>
+  <text x="678" y="132" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="+9">schedule, throttle, rule-based</text>
+
+  <rect x="553" y="156" width="250" height="32" rx="3" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="678" y="172" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="-2">Intercluster LIFs</text>
+  <text x="678" y="172" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="+9">dedicated replication network endpoints</text>
+
+  <rect x="553" y="196" width="250" height="32" rx="3" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="678" y="212" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="-2">Cluster Peering</text>
+  <text x="678" y="212" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="+9">prerequisite for cross-cluster replication</text>
+
+  <rect x="553" y="236" width="250" height="32" rx="3" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="678" y="252" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="-2">ONTAP Mediator</text>
+  <text x="678" y="252" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="+9">SMBC quorum — arbitration node</text>
+
+  <rect x="553" y="286" width="250" height="36" rx="4" fill="#7c3aed"/>
+  <text x="678" y="309" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="middle">EXTENDED PROTECTION</text>
+
+  <rect x="553" y="332" width="250" height="32" rx="3" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="678" y="348" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="-2">SnapVault (XDP)</text>
+  <text x="678" y="348" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="+9">independent retention on destination</text>
+
+  <rect x="553" y="372" width="250" height="32" rx="3" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="678" y="388" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="-2">Cloud Volumes ONTAP target</text>
+  <text x="678" y="388" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="+9">AWS / Azure / GCP DR</text>
+
+  <rect x="553" y="412" width="250" height="32" rx="3" fill="#faf5ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="678" y="428" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="-2">SnapMirror to Cloud</text>
+  <text x="678" y="428" font-family="Arial,sans-serif" font-size="10" fill="#4c1d95" text-anchor="middle" dy="+9">object store archival (S3/Azure Blob)</text>
+
+  <!-- Comparison table -->
+  <rect x="20" y="462" width="783" height="30" fill="#1e293b"/>
+  <text x="100" y="482" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Type</text>
+  <text x="260" y="482" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">RPO</text>
+  <text x="490" y="482" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Description</text>
+
+  <rect x="20" y="492" width="783" height="26" fill="#f1f5f9"/>
+  <text x="100" y="509" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Async</text>
+  <text x="260" y="509" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Minutes to hours</text>
+  <text x="490" y="509" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Scheduled transfers; destination read-only DP volume</text>
+
+  <rect x="20" y="518" width="783" height="26" fill="#ffffff"/>
+  <text x="100" y="535" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Sync</text>
+  <text x="260" y="535" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Zero RPO</text>
+  <text x="490" y="535" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Every write ack'd on both; requires &lt;5ms RTT</text>
+
+  <rect x="20" y="544" width="783" height="26" fill="#f1f5f9"/>
+  <text x="100" y="561" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">SMBC</text>
+  <text x="260" y="561" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Zero RPO + auto failover</text>
+  <text x="490" y="561" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Consistency group; mediator-assisted; no host reconfig</text>
+
+  <rect x="20" y="570" width="783" height="26" fill="#ffffff"/>
+  <text x="100" y="587" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">SnapVault / XDP</text>
+  <text x="260" y="587" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Daily / weekly</text>
+  <text x="490" y="587" font-family="Arial,sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Extended retention; independent schedule on destination</text>
+
+  <!-- Key notes -->
+  <rect x="20" y="608" width="783" height="26" fill="#dbeafe" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="410" y="625" font-family="Arial,sans-serif" font-size="11" fill="#1e3a5f" text-anchor="middle">Cluster peering and intercluster LIFs must be configured on both clusters before any relationship is created</text>
+
+  <rect x="20" y="640" width="783" height="26" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="410" y="657" font-family="Arial,sans-serif" font-size="11" fill="#14532d" text-anchor="middle">SnapMirror transfers only incremental changed blocks — baseline is a common Snapshot copy</text>
+
+  <rect x="20" y="672" width="783" height="26" fill="#f3e8ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="410" y="689" font-family="Arial,sans-serif" font-size="11" fill="#4c1d95" text-anchor="middle">SMBC requires ONTAP Mediator for automatic failover arbitration — prevents split-brain scenarios</text>
+
+  <!-- Footer -->
+  <rect x="0" y="720" width="820" height="30" fill="#1a2744"/>
+  <text x="410" y="739" font-family="Arial,sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">chris-kb — infrastructure knowledge base</text>
+</svg>
