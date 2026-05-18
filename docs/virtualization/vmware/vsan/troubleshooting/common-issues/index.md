@@ -39,6 +39,104 @@ Get-VsanClusterHealthSummary -Cluster (Get-Cluster "VSAN-LON-01") -FetchFromCach
 
 ---
 
+## Disk Replacement Procedure
+
+Step-by-step procedure for a failed vSAN disk or disk group.
+
+```
+VSAN DISK FAILS
+         │
+         ▼
+┌─────────────────────────────────────────┐
+│  STEP 1 — Identify                      │
+│  vCenter → vSAN → Monitor tab           │
+│  Failed disk shows RED                  │
+│  vSAN starts resyncing automatically    │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 2 — Hardware vendor               │
+│  Open Dell/HP ticket                    │
+│  Get failed disk replacement scheduled  │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 3 — Delete disk group             │
+│  vCenter → host → Configure tab         │
+│  → vSAN → Disk Management               │
+│  → Find disk group with failed disk     │
+│  → Right click → Remove disk group      │
+│  → Check "evacuate data" if possible    │
+│  → Confirm deletion                     │
+│  → Disk group removed from vSAN         │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 4 — Install new disk              │
+│  Hardware vendor replaces disk          │
+│  Confirm new disk visible in iDRAC      │
+│  Confirm new disk visible in vCenter    │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 5 — Recreate disk group           │
+│  vCenter → host → Configure tab         │
+│  → vSAN → Disk Management               │
+│  → Click Add Disk Group                 │
+│  → Select cache disk (SSD)              │
+│  → Select capacity disks                │
+│  → Click Create                         │
+│  → Disk group joins vSAN cluster        │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 6 — Self heal                     │
+│  vSAN resyncs automatically             │
+│  vCenter → vSAN → Monitor tab           │
+│  → Resyncing components                 │
+│  Wait until 0 resyncing components      │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 7 — Verify                        │
+│  vSAN Monitor tab → all GREEN           │
+│  Capacity restored                      │
+└─────────────────────────────────────────┘
+```
+
+### Why VMs Slow Down During Resync
+
+When a disk or host fails, vSAN rebuilds data across the remaining hosts. This puts extra I/O load on those hosts until the rebuild completes.
+
+```
+Normal vSAN:
+Host 1 ──── data copy 1
+Host 2 ──── data copy 2  ← redundancy
+Host 3 ──── data copy 3
+
+If Host 2 goes down or a disk fails:
+Host 1 ──── data copy 1
+Host 2 ──── REBUILDING ← resync happening
+Host 3 ──── data copy 3
+              │
+              └── heavy I/O on remaining hosts
+                  → VM performance suffers
+```
+
+Monitor resync progress:
+```bash
+esxcli vsan debug resync summary get
+# Wait until bytesToSync = 0
+```
+
+---
+
 ## Degraded Object Recovery Flow
 
 ```mermaid

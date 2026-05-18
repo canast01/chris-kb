@@ -1,5 +1,139 @@
 # VM Performance Troubleshooting
 
+## Triage Flow — Quick Start
+
+Start here. OS first, then hypervisor, then storage/hardware.
+
+```
+USER SAYS VM IS SLOW
+         │
+         ▼
+┌─────────────────────────────────────────┐
+│  STEP 1 — OS level FIRST                │
+│  Remote into the VM                     │
+│  Windows → Task Manager                 │
+│             ├── CPU % by process        │
+│             ├── Memory % by process     │
+│             └── Disk I/O by process     │
+│  Linux   → top or htop                  │
+│             ├── CPU % by process        │
+│             ├── Memory % by process     │
+│             └── iostat for disk         │
+│  Is one process eating everything?      │
+│  → App team issue, not infrastructure   │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 2 — vCenter                       │
+│  Find VM → Summary tab                  │
+│  CPU, memory, storage capacity          │
+│  over 80% = problem                     │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 3 — vROps                         │
+│  Deep dive                              │
+│  Storage  → IOPS, latency, throughput   │
+│  CPU      → CPU ready time              │
+│  Memory   → ballooning, swap            │
+└──────┬──────────────┬───────────────────┘
+       │              │
+       ▼              ▼
+┌──────────────────┐ ┌────────────────────┐
+│ STEP 4a          │ │ STEP 4b            │
+│ Storage high     │ │ CPU/Memory high    │
+│ → Pure GUI       │ │ → iDRAC            │
+│   latency, IOPS, │ │   hardware errors  │
+│   throughput     │ │                    │
+└──────┬───────────┘ └──────────┬─────────┘
+       │                        │
+       └───────────┬────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────┐
+│  STEP 5 — Escalate                      │
+│  Open vendor ticket                     │
+│  └── VMware, Pure Storage, or app team  │
+└─────────────────────────────────────────┘
+```
+
+## Triage Flow — With Thresholds
+
+Use this when you need specific numbers to confirm whether a metric is a problem.
+
+```
+USER SAYS VM IS SLOW
+         │
+         ▼
+┌─────────────────────────────────────────┐
+│  STEP 1 — vCenter                       │
+│  Find VM → Summary tab                  │
+│  CPU      → over 80% = problem          │
+│  Memory   → over 80% = problem          │
+│  Storage  → over 80% = problem          │
+└─────────────┬───────────────────────────┘
+              │
+              ▼
+┌─────────────────────────────────────────┐
+│  STEP 2 — vROps                         │
+│  Find VM → Performance tab              │
+│  Storage  → Performance → Disk          │
+│             ├── IOPS     → depends on   │
+│             │              workload     │
+│             ├── Latency  → over 1ms     │
+│             │              = warning    │
+│             │              over 5ms     │
+│             │              = problem    │
+│             └── Queue    → over 32      │
+│                depth       = problem    │
+│  CPU      → Performance → CPU           │
+│             └── CPU ready → over 5%     │
+│                             = warning   │
+│                             over 10%    │
+│                             = problem   │
+│  Memory   → Performance → Memory        │
+│             ├── Balloon  → VMware       │
+│             │              stealing RAM │
+│             │              back from VM │
+│             │              any = warning│
+│             └── Swap     → VM memory    │
+│                            written to   │
+│                            disk         │
+│                            any = problem│
+└──────┬──────────────┬───────────────────┘
+       │              │
+       ▼              ▼
+┌──────────────────┐ ┌────────────────────┐
+│ STEP 3a          │ │ STEP 3b            │
+│ Storage high     │ │ CPU/Memory high    │
+│ → Pure GUI       │ │ → vCenter          │
+│ → Dashboard tab  │ │   Host → Monitor   │
+│   ├── Latency    │ │   tab → Hardware   │
+│   │   over 1ms   │ │ → iDRAC emails     │
+│   │   = problem  │ │                    │
+│   ├── IOPS       │ │                    │
+│   │   spiking    │ │                    │
+│   │   = problem  │ │                    │
+│   └── Throughput │ │                    │
+│       (MB/s)     │ │                    │
+│       maxing out │ │                    │
+│       = problem  │ │                    │
+└──────┬───────────┘ └──────────┬─────────┘
+       │                        │
+       └───────────┬────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────┐
+│  STEP 4 — Escalate                      │
+│  Nothing found?                         │
+│  └── Network team or app team           │
+└─────────────────────────────────────────┘
+```
+
+---
+
 ## Overview
 
 VM performance degradation can originate at the hypervisor layer (CPU ready, memory balloon, storage path), at the vSphere infrastructure layer (DRS, resource pools, vSAN), or inside the guest OS. Effective diagnosis requires correlating esxtop counters with guest-level symptoms and recent infrastructure changes. This guide focuses on VMware ESXi 7.x/8.x environments with vSphere.
