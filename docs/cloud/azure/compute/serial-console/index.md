@@ -1,6 +1,34 @@
 # Serial Console
 
-Azure Serial Console provides out-of-band terminal access to a VM's serial port. It works independently of the VM's network and is accessible even when the VM is unreachable via SSH or RDP, making it invaluable for diagnosing boot failures and locked-out scenarios.
+Azure Serial Console provides out-of-band terminal access to a VM's serial port.
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                  Serial Console Flow                     │
+│                                                          │
+│  ┌──────────┐   portal/API    ┌────────────────────────┐ │
+│  │  Operator│────────────────►│  Azure Platform        │ │
+│  │ (browser)│                 │  (boot diagnostics     │ │
+│  └──────────┘                 │   must be enabled)     │ │
+│                               └───────────┬────────────┘ │
+│                                           │              │
+│                                           ▼              │
+│                               ┌────────────────────────┐ │
+│                               │  VM Serial Port        │ │
+│                               │  (ttyS0 / SAC)         │ │
+│                               └───────────┬────────────┘ │
+│                                           │              │
+│                          ┌────────────────┴──────────┐   │
+│                          ▼                           ▼   │
+│                  ┌──────────────┐         ┌────────────┐  │
+│                  │  Linux shell │         │  Windows   │  │
+│                  │  (emergency) │         │  SAC shell │  │
+│                  │  passwd/fsck │         │  chkdsk    │  │
+│                  └──────────────┘         └────────────┘  │
+│                                                          │
+│  Works without network ─── out-of-band emergency access │
+└──────────────────────────────────────────────────────────┘
+``` It works independently of the VM's network and is accessible even when the VM is unreachable via SSH or RDP, making it invaluable for diagnosing boot failures and locked-out scenarios.
 
 ---
 

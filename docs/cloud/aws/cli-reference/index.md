@@ -1,5 +1,29 @@
 # AWS CLI Reference
 
+```
+AWS CLI Command Categories
+──────────────────────────────────────────────────────────────
+
+  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐
+  │   aws ec2  │ │   aws s3   │ │   aws iam  │ │   aws rds  │
+  │            │ │            │ │            │ │            │
+  │ instances  │ │ ls/cp/sync │ │ users      │ │ instances  │
+  │ volumes    │ │ mb/rb      │ │ roles      │ │ snapshots  │
+  │ snapshots  │ │ presign    │ │ policies   │ │ restore    │
+  │ security   │ │            │ │ assume-role│ │            │
+  │ groups     │ │            │ │            │ │            │
+  └────────────┘ └────────────┘ └────────────┘ └────────────┘
+
+  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐
+  │aws lambda  │ │aws cloudwt.│ │   aws ssm  │ │   aws eks  │
+  │            │ │            │ │            │ │            │
+  │ list-fns   │ │ alarms     │ │ sessions   │ │ clusters   │
+  │ invoke     │ │ metrics    │ │ run-cmd    │ │ nodegroups │
+  │ update-code│ │ logs       │ │ parameters │ │ kubeconfig │
+  │ list-fns   │ │            │ │ patching   │ │            │
+  └────────────┘ └────────────┘ └────────────┘ └────────────┘
+```
+
 Commonly used AWS CLI commands for managing compute, storage, networking, identity, and monitoring. The AWS CLI is a command-line tool that talks directly to AWS APIs — everything you can do in the console, you can automate with the CLI.
 
 > Requires `aws configure` or environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`).

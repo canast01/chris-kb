@@ -1,4 +1,33 @@
 # AWS Tagging Standards
+
+```
+Tagging Standards: Mandatory Tags → Enforcement → Reporting
+──────────────────────────────────────────────────────────────
+
+  Mandatory Tags on every resource:
+  ┌──────────────────────────────────────────────────────┐
+  │  Key: env          Values: prod / staging / dev      │
+  │  Key: owner        Values: team-name / email         │
+  │  Key: cost-centre  Values: CC-XXX                    │
+  │  Key: application  Values: app short name            │
+  └──────────────────────────────────────────────────────┘
+           │
+           ▼ enforce via
+  ┌──────────────────────────────────────────────────────┐
+  │  Enforcement                                         │
+  │  AWS Config rule: required-tags ─► NON_COMPLIANT     │
+  │  SCP: deny resource create if tag missing (optional) │
+  │  AWS Tag Policies (via Organizations)                │
+  └──────────────────────────────────────────────────────┘
+           │
+           ▼ reporting via
+  ┌──────────────────────────────────────────────────────┐
+  │  Cost Explorer                                       │
+  │  Group by tag ──► chargeback per team/cost-centre    │
+  │  Tag coverage report ──► untagged resources flagged  │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 AWS Tagging Standards notes for day-to-day infrastructure operations.

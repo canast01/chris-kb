@@ -2,6 +2,31 @@
 
 > Part of the Azure CLI Reference.
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    Identity CLI Flow                         │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │                   Entra ID                             │  │
+│  │  az ad user list/create     az ad group list/create    │  │
+│  │  az ad sp create-for-rbac   az ad app list             │  │
+│  └───────────────────────┬────────────────────────────────┘  │
+│                          │                                   │
+│                          ▼                                   │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │                Role Assignment                         │  │
+│  │  az role assignment create                             │  │
+│  │      --assignee  <user / group / sp>                   │  │
+│  │      --role      "Contributor" / custom                │  │
+│  │      --scope     /subscriptions/<id>/...               │  │
+│  └───────────────────────┬────────────────────────────────┘  │
+│                          │ inherits down                     │
+│          ┌───────────────┼──────────────────┐                │
+│          ▼               ▼                  ▼                │
+│   Mgmt Group     Subscription        Resource Group          │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ```bash

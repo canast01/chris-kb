@@ -1,6 +1,33 @@
 # Workbooks
 
-Azure Monitor Workbooks are interactive, parameterised reports that combine text, queries, metrics, and visualisations in a single pane. They are used for operational dashboards, cost reports, capacity planning, and compliance views that require richer formatting than a standard dashboard.
+Azure Monitor Workbooks are interactive, parameterised reports that combine text, queries, metrics, and visualisations in a single pane.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                   Workbook Architecture                      │
+│                                                              │
+│  Parameters  ┌─────────────────────────────────────────┐    │
+│  ┌─────────┐  │  Time range │ Subscription │ Resource   │    │
+│  │ User    │─►│  (filter all queries below)            │    │
+│  │ selects │  └─────────────────────────────────────────┘    │
+│  └─────────┘            │ applied to                        │
+│                         ▼                                   │
+│  Data Sources                                               │
+│  ┌───────────┐  ┌───────────┐  ┌───────────────────────┐    │
+│  │  Metrics  │  │   Logs    │  │  Azure Resource       │    │
+│  │  (charts) │  │  (KQL)    │  │  Graph (ARG)          │    │
+│  └─────┬─────┘  └─────┬─────┘  └──────────┬────────────┘    │
+│        └──────────────┴──────────────────┘                  │
+│                               │                             │
+│                               ▼                             │
+│  Visualisations  ┌────────────────────────────────────┐     │
+│                  │  Grid │ Chart │ Map │ Text │ Tiles  │     │
+│                  └────────────────────────────────────┘     │
+│                               │ share via RBAC              │
+│                               ▼                             │
+│             Team workbook  (kind: shared)                   │
+└──────────────────────────────────────────────────────────────┘
+``` They are used for operational dashboards, cost reports, capacity planning, and compliance views that require richer formatting than a standard dashboard.
 
 ## Workbook Templates
 

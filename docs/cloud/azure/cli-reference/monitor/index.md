@@ -2,6 +2,30 @@
 
 > Part of the Azure CLI Reference.
 
+```
+┌──────────────────────────────────────────────────────────┐
+│                 Monitor CLI Flow                         │
+│                                                          │
+│  Azure Resources                                         │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │  Metrics (CPU, mem, disk, network...)              │  │
+│  │  Logs (activity log, diagnostics)                  │  │
+│  └──────────────────────┬─────────────────────────────┘  │
+│                         │                               │
+│         ┌───────────────┼────────────────┐              │
+│         ▼               ▼                ▼              │
+│  az monitor      az monitor       az monitor            │
+│  metrics list    activity-log     diagnostic-settings   │
+│                  list             create                │
+│         │                                               │
+│         ▼                                               │
+│  ┌──────────────────┐                                   │
+│  │  Alert Rule      │ ──► Action Group                  │
+│  │  (threshold)     │     (email/webhook/func)          │
+│  └──────────────────┘                                   │
+└──────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ```bash

@@ -1,5 +1,31 @@
 # EC2 — Instances
 
+```
+EC2 Instance CLI: State Management
+──────────────────────────────────────────────────────────────
+
+  describe-instances (filter by tag / ID)
+          │
+          ▼
+  ┌───────────────────────────────────────────┐
+  │         Instance States                   │
+  │                                           │
+  │  stopped ──► start-instances ──► running  │
+  │  running ──► stop-instances  ──► stopped  │
+  │  running ──► reboot-instances             │
+  │  any     ──► terminate-instances──► term. │
+  └───────────────────────────────────────────┘
+
+  ┌─────────────────┐    ┌──────────────────────────┐
+  │  Key Pairs      │    │  Security Groups          │
+  │                 │    │                           │
+  │ describe-key-   │    │ describe-security-groups  │
+  │   pairs         │    │ authorize-sg-ingress      │
+  │ create-key-pair │    │ revoke-sg-ingress         │
+  │  → key.pem      │    │                           │
+  └─────────────────┘    └──────────────────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

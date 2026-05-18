@@ -2,6 +2,28 @@
 
 > Part of the Azure CLI Reference.
 
+```
+┌──────────────────────────────────────────────────────────┐
+│                    VM CLI Flow                           │
+│                                                          │
+│  az vm create ─────────────────────► Azure VM           │
+│                                           │             │
+│         ┌─────────────────────────────────┘             │
+│         │          Lifecycle commands                   │
+│         ▼                                               │
+│  ┌─────────────┐  az vm start      ┌─────────────────┐  │
+│  │  Stopped /  │──────────────────►│    Running      │  │
+│  │ Deallocated │◄──────────────────│                 │  │
+│  └─────────────┘  az vm stop       └────────┬────────┘  │
+│                   az vm deallocate           │           │
+│                                     az vm resize         │
+│                                     az vm run-command    │
+│                                             │           │
+│                                             ▼           │
+│                                    resized / cmd output │
+└──────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ```bash

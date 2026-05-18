@@ -4,6 +4,36 @@
 AWS cost management combines visibility tools (Cost Explorer, Anomaly Detection) with spend optimisation (Reserved Instances, Savings Plans) and governance via Budgets and cost allocation tags. Coverage includes chargeback tagging, RI/Savings Plan planning, and anomaly investigation workflows.
 </div>
 
+```
+  AWS Account Usage
+        │
+        ▼
+  ┌─────────────────────┐    ┌──────────────────────────────┐
+  │  Cost Explorer      │    │  Cost Anomaly Detection      │
+  │                     │    │                              │
+  │ Service/acct/region │    │ ML baseline ──► spike found  │
+  │ tag breakdowns      │    │ alert ──► SNS ──► triage     │
+  │ forecast            │    └──────────────────────────────┘
+  └─────────────────────┘
+        │
+        ▼
+  ┌─────────────────────┐    ┌──────────────────────────────┐
+  │  Budgets            │    │  Cost Allocation Tags        │
+  │                     │    │                              │
+  │ threshold ──► alert │    │ tag: env, owner, cost-centre │
+  │ SNS ──► email/slack │    │ activate ──► filter in CE    │
+  │ action: deny new    │    └──────────────────────────────┘
+  └─────────────────────┘
+        │
+        ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Savings Commitments                                │
+  │  Reserved Instances  │  Savings Plans               │
+  │  1yr / 3yr term      │  Compute / EC2 / SageMaker   │
+  │  utilisation track   │  commitment vs flexibility   │
+  └─────────────────────────────────────────────────────┘
+```
+
 ![AWS Cost Architecture](../../../assets/aws-cost-overview.svg)
 
 <div class="kb-grid kb-grid-3">

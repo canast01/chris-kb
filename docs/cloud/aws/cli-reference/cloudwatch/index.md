@@ -1,5 +1,41 @@
 # CloudWatch
 
+```
+CloudWatch CLI: Metrics → Alarms → Logs
+──────────────────────────────────────────────────────────────
+
+  AWS Service (EC2/RDS/Lambda...)
+       │  emits
+       ▼
+  ┌──────────────────────┐     put-metric-data (custom)
+  │  Metrics             │◄──────────────────────────────
+  │  list-metrics        │
+  │  get-metric-statistics│
+  └──────────┬───────────┘
+             │  threshold breach
+             ▼
+  ┌──────────────────────┐
+  │  Alarms              │
+  │  describe-alarms     │
+  │  ┌────────────────┐  │
+  │  │ OK / ALARM /   │  │───► SNS / Auto Scaling / EC2
+  │  │ INSUFFICIENT   │  │     action
+  │  └────────────────┘  │
+  │  set-alarm-state     │
+  └──────────────────────┘
+
+  Application / Service logs
+       │
+       ▼
+  ┌──────────────────────┐
+  │  Log Groups / Streams│
+  │  describe-log-groups │
+  │  get-log-events      │
+  │  filter-log-events   │
+  │  logs tail --follow  │
+  └──────────────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

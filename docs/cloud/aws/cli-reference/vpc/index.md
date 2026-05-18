@@ -1,5 +1,33 @@
 # VPC & Networking
 
+```
+VPC CLI: Network Resource Hierarchy
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────────────────────────────┐
+  │  VPC  (describe-vpcs / create-vpc --cidr 10.0.0.0/16)│
+  │                                                      │
+  │  ┌─────────────────────┐  ┌──────────────────────┐   │
+  │  │  Public Subnet      │  │  Private Subnet      │   │
+  │  │  describe-subnets   │  │  describe-subnets    │   │
+  │  │  create-subnet      │  │  create-subnet       │   │
+  │  └──────────┬──────────┘  └──────────────────────┘   │
+  │             │                                        │
+  │  ┌──────────▼──────────┐  ┌──────────────────────┐   │
+  │  │  Internet Gateway   │  │  Route Table         │   │
+  │  │  create-igw         │  │  describe-route-     │   │
+  │  │  attach-igw         │  │   tables             │   │
+  │  └─────────────────────┘  │  create-route        │   │
+  │                           │   0.0.0.0/0 → igw    │   │
+  │  ┌─────────────────────┐  └──────────────────────┘   │
+  │  │  Security Groups    │                             │
+  │  │  describe-sg        │                             │
+  │  │  authorize-sg-      │                             │
+  │  │   ingress/egress    │                             │
+  │  └─────────────────────┘                             │
+  └──────────────────────────────────────────────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

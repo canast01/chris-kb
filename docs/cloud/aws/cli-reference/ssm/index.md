@@ -1,5 +1,30 @@
 # Systems Manager (SSM)
 
+```
+SSM CLI: Session · Command · Parameter Store · Patching
+──────────────────────────────────────────────────────────────
+
+  ┌────────────────────┐   ┌───────────────────────────────┐
+  │  Session Manager   │   │  Run Command                  │
+  │                    │   │                               │
+  │ start-session      │   │ send-command                  │
+  │  --target <i-id>   │   │  --document AWS-RunShellScript│
+  │                    │   │  --parameters commands="..."  │
+  │ No SSH, no port 22 │   │ list-command-invocations      │
+  └────────────────────┘   └───────────────────────────────┘
+
+  ┌────────────────────┐   ┌───────────────────────────────┐
+  │  Parameter Store   │   │  Patch Management             │
+  │                    │   │                               │
+  │ get-parameter      │   │ describe-patch-baselines      │
+  │  --with-decryption │   │ describe-instance-patch-states│
+  │ put-parameter      │   │ send-command                  │
+  │  --type SecureString│  │  AWS-RunPatchBaseline         │
+  │ get-parameters-    │   │  Operation=Scan / Install     │
+  │  by-path /my/      │   │                               │
+  └────────────────────┘   └───────────────────────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

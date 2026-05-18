@@ -2,6 +2,29 @@
 
 Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and restore validation.
 
+```
+┌─────────────┐     backup      ┌──────────────────────┐
+│  Azure VM   │────────────────►│ Recovery Services    │
+│  (source)   │                 │       Vault          │
+└─────────────┘                 └──────────┬───────────┘
+                                           │
+                     ┌─────────────────────┼──────────────────────┐
+                     │                     │                       │
+                     ▼                     ▼                       ▼
+              ┌─────────────┐   ┌──────────────────┐   ┌──────────────────┐
+              │  Snapshot   │   │  Backup Job      │   │  Recovery Point  │
+              │ (instant RP)│   │  triggered/runs  │   │  (daily/weekly/  │
+              └─────────────┘   └──────────┬───────┘   │   monthly)       │
+                                           │            └────────┬─────────┘
+                                           ▼                     │
+                                   ┌───────────────┐             │ restore
+                                   │  Completed ✓  │             ▼
+                                   │  Failed ✗     │   ┌──────────────────┐
+                                   └───────────────┘   │  Restored VM /   │
+                                                        │  Disk / Files    │
+                                                        └──────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="azure-backup/">

@@ -1,5 +1,34 @@
 # EKS
 
+```
+EKS CLI: Cluster → Nodes → Workloads
+──────────────────────────────────────────────────────────────
+
+  ┌─────────────────────────────────────────────────────┐
+  │  EKS Control Plane (AWS managed)                    │
+  │  describe-cluster / list-clusters                   │
+  │  update-kubeconfig ──► ~/.kube/config               │
+  └────────────────────────┬────────────────────────────┘
+                           │ kubectl now works
+                           ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Node Groups / Fargate Profiles                     │
+  │  list-nodegroups                                    │
+  │  describe-nodegroup                                 │
+  │  update-nodegroup-config (scale min/max/desired)    │
+  └────────────────────────┬────────────────────────────┘
+                           │
+             ┌─────────────┼─────────────┐
+             ▼             ▼             ▼
+         ┌────────┐   ┌─────────┐   ┌────────────┐
+         │Add-ons │   │  OIDC   │   │Pod Identity│
+         │coredns │   │provider │   │Associations│
+         │vpc-cni │   │(IRSA)   │   │            │
+         │kube-   │   │         │   │            │
+         │proxy   │   │         │   │            │
+         └────────┘   └─────────┘   └────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

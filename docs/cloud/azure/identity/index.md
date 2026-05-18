@@ -4,6 +4,28 @@
 Azure Identity articles, operational checks, troubleshooting notes, and references.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│                   Azure Identity Overview                    │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐     │
+│  │  Microsoft Entra ID  (identity platform)            │     │
+│  │                                                     │     │
+│  │  Users ──► Groups ──► App Registrations             │     │
+│  │  Managed Identities    Service Principals           │     │
+│  └──────────────────────────┬──────────────────────────┘     │
+│                             │                                │
+│          ┌──────────────────┼───────────────────────┐        │
+│          ▼                  ▼                       ▼        │
+│  ┌──────────────┐   ┌──────────────┐   ┌─────────────────┐   │
+│  │     RBAC     │   │ Conditional  │   │ Managed         │   │
+│  │  role assign │   │ Access       │   │ Identities      │   │
+│  │  (who can do │   │ (MFA, device │   │ (no creds in    │   │
+│  │   what/where)│   │  compliance) │   │  code)          │   │
+│  └──────────────┘   └──────────────┘   └─────────────────┘   │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

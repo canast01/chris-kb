@@ -1,5 +1,33 @@
 # Identity & Access (IAM / STS)
 
+```
+IAM CLI: Users · Roles · Policies · STS
+──────────────────────────────────────────────────────────────
+
+  sts get-caller-identity (always run first)
+          │
+          ▼
+  ┌─────────────┐   ┌─────────────┐   ┌─────────────────┐
+  │  IAM Users  │   │  IAM Roles  │   │  IAM Policies   │
+  │             │   │             │   │                 │
+  │ list-users  │   │ list-roles  │   │ attach-role-    │
+  │ create-user │   │ create-role │   │   policy        │
+  │ delete-user │   │ get-role    │   │ attach-user-    │
+  │             │   │             │   │   policy        │
+  │ list-access │   │             │   │                 │
+  │   -keys     │   │             │   │                 │
+  └──────┬──────┘   └──────┬──────┘   └─────────────────┘
+         │                 │
+         │                 ▼ sts assume-role
+         │          ┌─────────────────────────┐
+         │          │  Temporary Credentials  │
+         │          │  (STS token, 1-12h)     │
+         │          │  AccessKeyId            │
+         │          │  SecretAccessKey        │
+         │          │  SessionToken           │
+         └─────────►└─────────────────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

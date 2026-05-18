@@ -4,6 +4,28 @@
 Azure Compute articles, operational checks, troubleshooting notes, and references.
 </div>
 
+```
+┌───────────────────────────────────────────────────────────────┐
+│                    Azure Compute Services                     │
+│                                                               │
+│  ┌──────────────┐  ┌────────────────┐  ┌───────────────────┐  │
+│  │  Virtual     │  │  VM Scale      │  │  AKS              │  │
+│  │  Machines    │  │  Sets (VMSS)   │  │  (Kubernetes)     │  │
+│  │  (IaaS)      │  │  (autoscale)   │  │                   │  │
+│  └──────────────┘  └────────────────┘  └───────────────────┘  │
+│                                                               │
+│  ┌──────────────────────┐  ┌──────────────────────────────┐   │
+│  │  App Service         │  │  Azure Functions             │   │
+│  │  (PaaS web apps)     │  │  (serverless compute)        │   │
+│  └──────────────────────┘  └──────────────────────────────┘   │
+│                                                               │
+│  Availability ──► ┌──────────────┐  ┌──────────────────────┐  │
+│                   │  Avail. Sets │  │  Avail. Zones        │  │
+│                   │  (rack HA)   │  │  (datacenter HA)     │  │
+│                   └──────────────┘  └──────────────────────┘  │
+└───────────────────────────────────────────────────────────────┘
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

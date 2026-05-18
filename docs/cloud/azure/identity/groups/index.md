@@ -1,6 +1,30 @@
 # Azure — Groups
 
-Entra ID (Azure AD) groups are the primary mechanism for managing access at scale. Assign roles and permissions to groups rather than individual users.
+Entra ID (Azure AD) groups are the primary mechanism for managing access at scale.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                  Entra ID Group Flow                         │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Security Group  (type: security, assignable to role)│    │
+│  │                                                      │    │
+│  │  Members ──► users / nested groups / service prncpls │    │
+│  └──────────────────────────┬─────────────────────────┘     │
+│                             │                                │
+│                             ▼ role assignment                │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  RBAC Role Assignment                                │    │
+│  │  Group ──► "Contributor" ──► /subscriptions/.../rg   │    │
+│  └──────────────────────────┬─────────────────────────┘     │
+│                             │                                │
+│                             ▼ access scope                   │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Resource Group / Resource  (inherited by all members│    │
+│  │  including transitive nested group membership)       │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+``` Assign roles and permissions to groups rather than individual users.
 
 ## Group Types
 

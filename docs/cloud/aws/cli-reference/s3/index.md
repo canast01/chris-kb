@@ -1,5 +1,36 @@
 # S3
 
+```
+S3 CLI: Buckets → Objects → Sync
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Bucket Operations (aws s3)                          │
+  │  ls  ──► list all buckets                            │
+  │  mb  ──► make bucket                                 │
+  │  rb  ──► remove bucket (--force)                     │
+  └──────────────────────────────────────────────────────┘
+           │
+           ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  Object Operations                                   │
+  │  cp  <local> s3://bucket/key  (upload)               │
+  │  cp  s3://bucket/key <local>  (download)             │
+  │  mv  s3://src s3://dst                               │
+  │  rm  s3://bucket/key                                 │
+  │  sync <dir> s3://bucket/prefix  (delta copy)         │
+  │  presign s3://bucket/key --expires-in 3600           │
+  └──────────────────────────────────────────────────────┘
+           │
+           ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  S3 API (aws s3api) — policy / lifecycle / versioning│
+  │  get-bucket-versioning  put-bucket-versioning        │
+  │  get-bucket-policy      list-object-versions         │
+  │  put-bucket-lifecycle-configuration                  │
+  └──────────────────────────────────────────────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

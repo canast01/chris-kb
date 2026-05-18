@@ -1,6 +1,30 @@
 # Azure — Managed Identities
 
-Managed identities give Azure resources an identity in Entra ID without requiring credentials in code or config. Azure manages credential rotation and renewal automatically.
+Managed identities give Azure resources an identity in Entra ID without requiring credentials in code or config.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│               Managed Identity Flow                          │
+│                                                              │
+│  ┌──────────────────┐   system-assigned  ┌────────────────┐  │
+│  │  Azure VM /      │───────────────────►│  Entra ID      │  │
+│  │  App Service /   │   user-assigned    │  (identity     │  │
+│  │  AKS Pod         │◄───────────────────│   registered)  │  │
+│  └────────┬─────────┘                   └────────────────┘  │
+│           │                                                  │
+│           │ code calls IMDS endpoint                        │
+│           ▼  (169.254.169.254)                               │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  MSI Token Endpoint  ──►  access token (OAuth2)      │    │
+│  └──────────────────────────┬─────────────────────────┘     │
+│                             │ token attached to request      │
+│                             ▼                                │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Target Resource  (Key Vault / Storage / SQL / ...)  │    │
+│  │  RBAC validates: principal has required role ✓       │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+``` Azure manages credential rotation and renewal automatically.
 
 ## Identity Types
 

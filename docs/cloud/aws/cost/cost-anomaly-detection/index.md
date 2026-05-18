@@ -1,4 +1,35 @@
 # AWS Cost Anomaly Detection
+
+```
+Cost Anomaly Detection: ML Baseline → Alert → Triage
+──────────────────────────────────────────────────────────────
+
+  ┌─────────────────────────────────────────────────────┐
+  │  Historical spend data                              │
+  │  (AWS builds usage baseline automatically)          │
+  └──────────────────────────┬──────────────────────────┘
+                             │
+                             ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  ML Model evaluates daily spend                     │
+  │  Considers: day-of-week, seasonality, growth trends │
+  └──────────────────────────┬──────────────────────────┘
+                             │ anomaly detected
+                             ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Anomaly Alert                                      │
+  │  Impact: $X above expected                          │
+  │  Monitor: service / linked account / cost category  │
+  └────────┬───────────────────────┬────────────────────┘
+           │                       │
+           ▼                       ▼
+  ┌─────────────────┐    ┌──────────────────────────────┐
+  │  SNS → email    │    │  Triage in Cost Explorer     │
+  │  / Slack        │    │  Drill into service / tag    │
+  └─────────────────┘    │  Find root cause             │
+                         └──────────────────────────────┘
+```
+
 ## Overview
 
 AWS Cost Anomaly Detection notes for day-to-day infrastructure operations.

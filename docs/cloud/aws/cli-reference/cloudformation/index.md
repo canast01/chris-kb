@@ -1,5 +1,38 @@
 # CloudFormation
 
+```
+CloudFormation CLI: Stack Lifecycle
+──────────────────────────────────────────────────────────────
+
+  template.yaml
+       │
+       ▼ validate-template
+  ┌────────────────────────────────────────────────┐
+  │ aws cloudformation create-stack               │
+  │   --stack-name  --template-body  --parameters │
+  └────────────────────┬───────────────────────────┘
+                       │
+                       ▼
+  ┌──────────────────────────────────────┐
+  │  Stack: CREATE_IN_PROGRESS           │
+  │  ──────────────────────────────────  │
+  │  describe-stack-events (watch)       │
+  │  wait stack-create-complete          │
+  └──────────────────┬───────────────────┘
+                     │
+        ┌────────────┼───────────────┐
+        ▼            ▼               ▼
+  CREATE_COMPLETE  UPDATE_*    ROLLBACK_*
+  ┌──────────────┐  update-stack   continue-update-rollback
+  │list-stack-   │
+  │  resources   │
+  │describe-stack│
+  └──────────────┘
+          │ done
+          ▼
+  delete-stack ──► DELETE_COMPLETE
+```
+
 > Part of the AWS CLI Reference.
 
 ---

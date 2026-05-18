@@ -4,6 +4,33 @@
 AWS Backup provides centralised backup management across EC2, EBS, RDS, DynamoDB, EFS, FSx, and S3, with Backup Plans defining schedules and Vault Lock enforcing immutable retention. Coverage includes backup job monitoring, restore testing, and compliance reporting.
 </div>
 
+```
+┌─────────────┐    ┌──────────────────────────────────────────────┐
+│  Resources  │    │              Backup Plan                      │
+│  ┌────────┐ │    │  ┌──────────────┐   ┌────────────────────┐  │
+│  │ EC2/EBS│ │───►│  │ Rule: Daily  │   │ Rule: Weekly       │  │
+│  │ RDS    │ │    │  │ 02:00 UTC    │   │ Sun 03:00 UTC      │  │
+│  │ EFS    │ │    │  │ Retain 30d   │   │ Retain 90d         │  │
+│  │ S3     │ │    │  └──────┬───────┘   └─────────┬──────────┘  │
+│  │DynamoDB│ │    │         │                     │              │
+│  └────────┘ │    └─────────┼─────────────────────┼─────────────┘
+└─────────────┘              │                     │
+                             ▼                     ▼
+              ┌──────────────────────┐   ┌─────────────────────┐
+              │    Backup Vault      │   │  DR Vault (x-region)│
+              │  ┌────────────────┐  │   │  ┌───────────────┐  │
+              │  │ KMS Encrypted  │  │   │  │ Cross-region  │  │
+              │  │ Vault Lock     │  │   │  │ copy enabled  │  │
+              │  │ Access Policy  │  │   │  └───────────────┘  │
+              │  └────────┬───────┘  │   └─────────────────────┘
+              └───────────┼──────────┘
+                          ▼
+              ┌──────────────────────┐
+              │   Recovery Points    │
+              │  (Snapshots/Backups) │◄─── Restore Job ───► Target
+              └──────────────────────┘
+```
+
 ![AWS Backup Architecture](../../../assets/aws-backup-overview.svg)
 
 <div class="kb-grid kb-grid-3">

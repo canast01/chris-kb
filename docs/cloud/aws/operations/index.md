@@ -1,5 +1,29 @@
 # AWS — Operations
 
+```
+AWS Operations: Daily Rhythm
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Morning Health Checks                               │
+  │  Personal Health Dashboard ──► any AWS service issues│
+  │  CloudWatch alarms ──────────► ALARM state = 0       │
+  │  EC2 / RDS status ───────────► all OK / available    │
+  │  AWS Backup jobs ────────────► last 24h completed    │
+  └───────────────────────┬──────────────────────────────┘
+                          │
+          ┌───────────────┼──────────────────────┐
+          ▼               ▼                      ▼
+  ┌───────────────┐ ┌──────────────┐  ┌────────────────────┐
+  │  Patching     │ │  Backup      │  │  Incident Triage   │
+  │               │ │  & Restore   │  │                    │
+  │  SSM Patch    │ │  AWS Backup  │  │  CloudTrail lookup │
+  │  Manager      │ │  vault check │  │  VPC Flow Logs     │
+  │  Maintenance  │ │  restore job │  │  SSM Session Mgr   │
+  │  window       │ │  test        │  │  Support case      │
+  └───────────────┘ └──────────────┘  └────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

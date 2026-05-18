@@ -1,6 +1,42 @@
 # Restore Testing
 
-Restore testing validates that backup data is usable and that recovery procedures work as documented. Regular restore tests are a compliance requirement for most organisations and should be part of every DR programme.
+Restore testing validates that backup data is usable and that recovery procedures work as documented.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  Restore Test Workflow                      │
+└─────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌──────────────────┐     select      ┌──────────────────────┐
+│  Recovery Svcs   │────────────────►│  Recovery Point      │
+│  Vault           │                 │  (daily/weekly/etc.)  │
+└──────────────────┘                 └───────────┬──────────┘
+                                                 │
+                                                 ▼
+                                    ┌──────────────────────┐
+                                    │  Test Restore        │
+                                    │  (to staging RG)     │
+                                    └───────────┬──────────┘
+                                                │
+                          ┌─────────────────────┼─────────────────────┐
+                          ▼                     ▼                     ▼
+                 ┌────────────────┐   ┌─────────────────┐   ┌────────────────┐
+                 │  Restore disks │   │  Boot restored  │   │  Validate app  │
+                 │  to staging SA │   │  VM             │   │  service runs  │
+                 └────────────────┘   └─────────────────┘   └────────────────┘
+                                                │
+                                                ▼
+                                    ┌──────────────────────┐
+                                    │  Pass ✓ / Fail ✗     │
+                                    │  Document result     │
+                                    └───────────┬──────────┘
+                                                │
+                                                ▼
+                                    ┌──────────────────────┐
+                                    │  Cleanup staging RG  │
+                                    └──────────────────────┘
+``` Regular restore tests are a compliance requirement for most organisations and should be part of every DR programme.
 
 ---
 

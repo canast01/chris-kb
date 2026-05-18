@@ -1,4 +1,33 @@
 # AWS Compliance Review
+
+```
+Compliance Review: Config → Security Hub → Remediation
+──────────────────────────────────────────────────────────────
+
+  ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+  │ AWS Config    │   │ GuardDuty     │   │ Inspector     │
+  │ Rules         │   │ Findings      │   │ Findings      │
+  │ NON_COMPLIANT │   │ MEDIUM/HIGH   │   │ CVEs/vulns    │
+  └───────┬───────┘   └───────┬───────┘   └───────┬───────┘
+          └─────────────────┬─┘                   │
+                            ▼                     │
+                  ┌─────────────────────┐         │
+                  │   Security Hub      │◄────────┘
+                  │   Aggregated view   │
+                  │   Security Score    │
+                  │   Standard: CIS /   │
+                  │   AWS Foundational  │
+                  └──────────┬──────────┘
+                             │
+               ┌─────────────┼──────────────┐
+               ▼             ▼              ▼
+  ┌───────────────┐  ┌──────────────┐  ┌──────────────┐
+  │  SUPPRESS     │  │  REMEDIATE   │  │  ESCALATE    │
+  │  (accepted    │  │  SSM Autom.  │  │  ticket /    │
+  │   risk)       │  │  manual fix  │  │  CAB review  │
+  └───────────────┘  └──────────────┘  └──────────────┘
+```
+
 ## Overview
 
 AWS Compliance Review notes for day-to-day infrastructure operations.

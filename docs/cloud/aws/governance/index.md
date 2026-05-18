@@ -4,6 +4,37 @@
 AWS governance is structured around AWS Organizations with SCPs enforcing preventive guardrails at the OU level and AWS Config handling detective compliance. Coverage includes account structure, Service Control Policies, tagging standards, and compliance review.
 </div>
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │  AWS Organizations (Management Account)              │
+  │  Root ──► OUs ──► Member Accounts                   │
+  └───────────────────┬──────────────────────────────────┘
+                      │ Service Control Policies (SCPs)
+                      │ attached at Root / OU / Account
+                      ▼
+  ┌────────────────────────────────────────────────────┐
+  │  Preventive Guardrails (SCPs)                      │
+  │  Deny unapproved regions                           │
+  │  Deny root account actions                         │
+  │  Deny S3 public access disable                     │
+  └───────────────────┬────────────────────────────────┘
+                      │ detective compliance
+                      ▼
+  ┌────────────────────────────────────────────────────┐
+  │  AWS Config (per account / aggregated)             │
+  │  Record all resource configs                       │
+  │  Evaluate rules ──► COMPLIANT / NON_COMPLIANT      │
+  └───────────────────┬────────────────────────────────┘
+                      │
+          ┌───────────┴─────────────┐
+          ▼                         ▼
+  ┌──────────────────┐   ┌──────────────────────────┐
+  │  Tagging         │   │  Compliance Dashboard    │
+  │  Enforcement     │   │  (Security Hub aggregate)│
+  │  env/owner/cc    │   └──────────────────────────┘
+  └──────────────────┘
+```
+
 ![AWS Governance Architecture](../../../assets/aws-governance-overview.svg)
 
 <div class="kb-grid kb-grid-3">

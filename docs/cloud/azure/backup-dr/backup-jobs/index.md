@@ -1,6 +1,33 @@
 # Backup Jobs
 
-Azure Backup jobs represent discrete backup, restore, and configuration operations. Monitoring job status is essential for confirming scheduled backups ran successfully and for diagnosing failures.
+Azure Backup jobs represent discrete backup, restore, and configuration operations.
+
+```
+  Trigger
+     │
+     ▼
+┌────────────────────────────────────────────────────────┐
+│              Backup Job Lifecycle                      │
+│                                                        │
+│  ┌──────────┐   ┌──────────┐   ┌───────────────────┐  │
+│  │ Triggered│──►│  Running │──►│   Completed ✓     │  │
+│  └──────────┘   └────┬─────┘   └───────────────────┘  │
+│                      │                                 │
+│                      ▼                                 │
+│               ┌─────────────┐   ┌───────────────────┐ │
+│               │   Failed ✗  │──►│  Alert fired      │ │
+│               └─────────────┘   └────────┬──────────┘ │
+│                      │                   │             │
+│                      ▼                   ▼             │
+│               ┌─────────────┐   ┌───────────────────┐ │
+│               │  Cancelled  │   │  Action Group     │ │
+│               └─────────────┘   │  (email / webhook)│ │
+│                                 └───────────────────┘ │
+└────────────────────────────────────────────────────────┘
+     │
+     ▼
+  az backup job list --status Failed
+``` Monitoring job status is essential for confirming scheduled backups ran successfully and for diagnosing failures.
 
 ---
 

@@ -1,6 +1,37 @@
 # VPN Gateway
 
-Azure VPN Gateway provides encrypted connectivity between Azure VNets and on-premises networks over IPsec/IKE tunnels. It supports site-to-site (S2S), point-to-site (P2S), and VNet-to-VNet connections. For production use, deploy zone-redundant SKUs and enable active-active mode.
+Azure VPN Gateway provides encrypted connectivity between Azure VNets and on-premises networks over IPsec/IKE tunnels.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                  VPN Gateway Flow                            │
+│                                                              │
+│  Azure VNet  (10.0.0.0/16)                                   │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │  ┌──────────────┐   ┌──────────────────────────────┐  │   │
+│  │  │  Workload    │   │  GatewaySubnet               │  │   │
+│  │  │  Subnet(s)   │   │  10.0.255.0/27               │  │   │
+│  │  └──────────────┘   └──────────────┬───────────────┘  │   │
+│  └───────────────────────────────────┼───────────────────┘   │
+│                                      │                       │
+│                                      ▼                       │
+│                          ┌───────────────────────┐           │
+│                          │  VPN Gateway          │           │
+│                          │  (public IP assigned) │           │
+│                          └──────────┬────────────┘           │
+│                                     │ IPsec/IKE tunnel        │
+│                                     ▼                        │
+│                          ┌───────────────────────┐           │
+│                          │  Local Network Gateway │           │
+│                          │  (on-prem public IP +  │           │
+│                          │   address space)       │           │
+│                          └──────────┬────────────┘           │
+│                                     │                        │
+│                                     ▼                        │
+│                          On-premises network                  │
+│                          (192.168.0.0/16)                    │
+└──────────────────────────────────────────────────────────────┘
+``` It supports site-to-site (S2S), point-to-site (P2S), and VNet-to-VNet connections. For production use, deploy zone-redundant SKUs and enable active-active mode.
 
 ## VPN Gateway SKUs
 

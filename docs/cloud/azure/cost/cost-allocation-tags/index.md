@@ -1,6 +1,32 @@
 # Cost Allocation Tags
 
-Tags are the primary mechanism for attributing Azure costs to teams, projects, environments, and cost centres. Effective tag strategy combined with policy enforcement ensures cost data is always actionable.
+Tags are the primary mechanism for attributing Azure costs to teams, projects, environments, and cost centres.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                  Cost Tag Flow                               │
+│                                                              │
+│  Resource Group / Resource                                   │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  tag: environment = prod                               │  │
+│  │  tag: team        = platform                          │  │
+│  │  tag: cost-centre = CC-1001                           │  │
+│  └───────────────────────────┬────────────────────────────┘  │
+│                              │ tags flow into billing         │
+│                              ▼                               │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │           Cost Management                              │  │
+│  │  Filter by tag ──► cost-centre = CC-1001               │  │
+│  │  Group by tag  ──► per-team spend breakdown            │  │
+│  └───────────────────────────┬────────────────────────────┘  │
+│                              │                               │
+│                              ▼                               │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Department / Finance Report                           │  │
+│  │  (chargeback / showback)                               │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+``` Effective tag strategy combined with policy enforcement ensures cost data is always actionable.
 
 ## Tag Strategy
 

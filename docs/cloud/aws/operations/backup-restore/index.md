@@ -1,5 +1,29 @@
 # AWS — Backup & Restore
 
+```
+AWS Backup & Restore Flow
+──────────────────────────────────────────────────────────────
+
+  Resources (EC2/RDS/EFS/S3/DynamoDB)
+          │ AWS Backup plan (daily cron)
+          ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  AWS Backup Vault                                    │
+  │  Recovery Points (encrypted snapshots)               │
+  └───────────────────────┬──────────────────────────────┘
+                          │
+            ┌─────────────┼──────────────────┐
+            ▼             ▼                  ▼
+  ┌──────────────┐ ┌────────────────┐ ┌────────────────┐
+  │  EC2 Restore │ │  RDS Restore   │ │  S3 Restore    │
+  │              │ │                │ │                │
+  │  Snapshot →  │ │  Snapshot →    │ │  Versioning:   │
+  │  new volume  │ │  new instance  │ │  delete marker │
+  │  attach to   │ │  OR PITR to    │ │  removal       │
+  │  instance    │ │  timestamp     │ │                │
+  └──────────────┘ └────────────────┘ └────────────────┘
+```
+
 ---
 
 ## What to Back Up

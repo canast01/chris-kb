@@ -1,4 +1,32 @@
 # AWS Cost Explorer / Billing
+
+```
+Cost Explorer Billing: Account → Breakdown → Report
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────────────────────────────┐
+  │  AWS Account (or Management Account)                 │
+  │  Billing period: monthly                             │
+  └──────────────────────────┬───────────────────────────┘
+                             │
+                ┌────────────┼───────────────────┐
+                ▼            ▼                   ▼
+  ┌─────────────────┐ ┌─────────────────┐ ┌──────────────┐
+  │  By Service     │ │  By Account     │ │  By Region   │
+  │  EC2: $X        │ │  Prod: $X       │ │  eu-west: $X │
+  │  RDS: $Y        │ │  Dev:  $Y       │ │  us-east: $Y │
+  │  S3:  $Z        │ │  Staging: $Z    │ │              │
+  └─────────────────┘ └─────────────────┘ └──────────────┘
+                             │
+                ┌────────────┼───────────────────┐
+                ▼            ▼                   ▼
+  ┌─────────────────┐ ┌─────────────────┐ ┌──────────────┐
+  │  By Tag         │ │  Forecast       │ │  RI / SP     │
+  │  env=prod       │ │  Next 30 days   │ │  Coverage    │
+  │  team=platform  │ │  trend line     │ │  Utilisation │
+  └─────────────────┘ └─────────────────┘ └──────────────┘
+```
+
 ## Overview
 
 AWS Cost Explorer / Billing notes for day-to-day infrastructure operations.

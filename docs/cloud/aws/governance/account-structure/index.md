@@ -1,4 +1,33 @@
 # AWS Account Structure
+
+```
+AWS Account Structure: Management → OUs → Members
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Management Account (Root)                          │
+  │  Billing, SCPs, Organizations                       │
+  └───────────────────────┬──────────────────────────────┘
+             ┌────────────┼──────────────────┐
+             ▼            ▼                  ▼
+  ┌──────────────┐ ┌─────────────┐ ┌─────────────────┐
+  │  OU: Security│ │ OU: Workload│ │ OU: Sandbox     │
+  │              │ │             │ │                 │
+  │ ┌──────────┐ │ │ ┌─────────┐ │ │ ┌─────────────┐ │
+  │ │ Log      │ │ │ │ Prod    │ │ │ │ Developer   │ │
+  │ │ Archive  │ │ │ │ Account │ │ │ │ Accounts    │ │
+  │ │ Account  │ │ │ └─────────┘ │ │ └─────────────┘ │
+  │ └──────────┘ │ │ ┌─────────┐ │ └─────────────────┘
+  │ ┌──────────┐ │ │ │ Staging │ │
+  │ │ Audit    │ │ │ │ Account │ │
+  │ │ Account  │ │ │ └─────────┘ │
+  │ └──────────┘ │ │ ┌─────────┐ │
+  └──────────────┘ │ │ Dev     │ │
+                   │ │ Account │ │
+                   │ └─────────┘ │
+                   └─────────────┘
+```
+
 ## Overview
 
 AWS Account Structure notes for day-to-day infrastructure operations.

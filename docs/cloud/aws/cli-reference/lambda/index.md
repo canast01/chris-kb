@@ -1,5 +1,36 @@
 # Lambda
 
+```
+Lambda CLI: Deploy → Invoke → Monitor
+──────────────────────────────────────────────────────────────
+
+  function.zip
+       │ update-function-code
+       ▼
+  ┌────────────────────────────────────────────────────┐
+  │  Lambda Function                                   │
+  │  list-functions / get-function                     │
+  │  ┌──────────────────────────────────────────────┐  │
+  │  │ Versions: publish-version ($LATEST → v1,v2)  │  │
+  │  │ Aliases:  create-alias (prod → v7)            │  │
+  │  │ Layers:   update-function-configuration       │  │
+  │  └──────────────────────────────────────────────┘  │
+  └────────────────────────────────────────────────────┘
+          │ invoke (sync)          │ event source mapping
+          ▼                        ▼
+  ┌───────────────┐       ┌─────────────────────┐
+  │  Response     │       │  SQS / Kinesis      │
+  │  response.json│       │  create-event-      │
+  │               │       │  source-mapping     │
+  └───────────────┘       └─────────────────────┘
+          │
+          ▼ logs tail /aws/lambda/<fn> --follow
+  ┌───────────────────────────────────┐
+  │  CloudWatch Logs                  │
+  │  filter-log-events "ERROR"        │
+  └───────────────────────────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

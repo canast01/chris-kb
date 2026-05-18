@@ -4,6 +4,31 @@
 Azure Governance articles, operational checks, troubleshooting notes, and references.
 </div>
 
+```
+┌────────────────────────────────────────────────────────────┐
+│                  Azure Governance Hierarchy                │
+│                                                            │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Management Group  (tenant root / custom hierarchy)  │  │
+│  └──────────────────────────┬─────────────────────────┘  │
+│                             │ Policy + RBAC inherit ▼     │
+│  ┌──────────────────────────┴─────────────────────────┐   │
+│  │  Subscription  (billing + access boundary)         │   │
+│  └──────────────────────────┬───────────────────────┘    │
+│                             │ Policy + RBAC inherit ▼     │
+│  ┌──────────────────────────┴────────────────────────┐    │
+│  │  Resource Group  (lifecycle container)            │    │
+│  └──────────────────────────┬──────────────────────┘     │
+│                             │                             │
+│  ┌──────────────────────────┴──────────────────────────┐  │
+│  │  Resources  (VMs, Storage, Network, etc.)           │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                            │
+│  Azure Policy ──► audit / deny / modify at any scope      │
+│  RBAC         ──► role assignments inherit downward       │
+└────────────────────────────────────────────────────────────┘
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

@@ -2,6 +2,26 @@
 
 Availability Sets provide high availability for Azure VMs by distributing them across fault domains (separate physical hardware) and update domains (staggered maintenance windows). They protect against both hardware failures and planned maintenance events.
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   Availability Set                          │
+│                                                             │
+│   Fault Domain 0       Fault Domain 1       Fault Domain 2  │
+│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐ │
+│  │  ┌────────┐  │     │  ┌────────┐  │     │  ┌────────┐  │ │
+│  │  │ VM-1   │  │     │  │ VM-2   │  │     │  │ VM-3   │  │ │
+│  │  │ (UD 0) │  │     │  │ (UD 1) │  │     │  │ (UD 2) │  │ │
+│  │  └────────┘  │     │  └────────┘  │     │  └────────┘  │ │
+│  │  separate    │     │  separate    │     │  separate    │ │
+│  │  power/NIC   │     │  power/NIC   │     │  power/NIC   │ │
+│  └──────────────┘     └──────────────┘     └──────────────┘ │
+│                                                             │
+│  Hardware failure ──► only 1 FD affected                    │
+│  Planned maintenance ──► only 1 UD rebooted at a time       │
+│  SLA: 99.95% with 2+ VMs across the set                     │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Core Concepts

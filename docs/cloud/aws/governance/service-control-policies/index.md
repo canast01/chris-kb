@@ -1,4 +1,36 @@
 # AWS Service Control Policies
+
+```
+SCPs: Org Root → OU → Account → IAM Policy evaluation
+──────────────────────────────────────────────────────────────
+
+  Request arrives at AWS API
+          │
+          ▼
+  ┌──────────────────────┐
+  │  Root SCP            │ ── Deny? ──► ACCESS DENIED
+  └──────────┬───────────┘
+             │ allow
+             ▼
+  ┌──────────────────────┐
+  │  OU SCP              │ ── Deny? ──► ACCESS DENIED
+  └──────────┬───────────┘
+             │ allow
+             ▼
+  ┌──────────────────────┐
+  │  Account SCP         │ ── Deny? ──► ACCESS DENIED
+  └──────────┬───────────┘
+             │ allow (max permissions boundary set)
+             ▼
+  ┌──────────────────────┐
+  │  IAM Policy          │ ── Allow? ──► ACCESS GRANTED
+  │  (identity/resource) │ ── Deny? ───► ACCESS DENIED
+  └──────────────────────┘
+
+  Note: SCPs do not grant permissions — they only restrict.
+  A SCP Allow + no IAM Allow = still denied.
+```
+
 ## Overview
 
 AWS Service Control Policies notes for day-to-day infrastructure operations.

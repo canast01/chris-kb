@@ -3,6 +3,28 @@
 Commonly used Azure CLI (`az`) commands for managing compute, storage, networking, identity, and monitoring. The Azure CLI is a cross-platform tool that talks directly to Azure APIs — everything you can do in the portal, you can automate with `az`.
 
 > Requires `az login` or service principal credentials. Use `az account set --subscription <id>` to target a specific subscription.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                  Azure CLI Command Categories                │
+│                                                              │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌──────────┐  │
+│  │  az vm    │  │az network │  │az storage │  │az monitor│  │
+│  │           │  │           │  │           │  │          │  │
+│  │ create    │  │ vnet      │  │ account   │  │ metrics  │  │
+│  │ start/stop│  │ subnet    │  │ container │  │ alerts   │  │
+│  │ resize    │  │ nsg       │  │ blob      │  │ logs     │  │
+│  └───────────┘  └───────────┘  └───────────┘  └──────────┘  │
+│                                                              │
+│  ┌───────────────────────┐     ┌──────────────────────────┐  │
+│  │     az identity       │     │      az backup           │  │
+│  │                       │     │                          │  │
+│  │  az ad user/group     │     │  vault / item / job      │  │
+│  │  az ad sp             │     │  policy / restore        │  │
+│  │  az role assignment   │     │                          │  │
+│  └───────────────────────┘     └──────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
 ---
 
 

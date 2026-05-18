@@ -1,5 +1,33 @@
 # RDS
 
+```
+RDS CLI: Instances · Snapshots · Events
+──────────────────────────────────────────────────────────────
+
+  describe-db-instances (list all / describe one)
+          │
+          ▼
+  ┌────────────────────────────────────────────────────┐
+  │  RDS Instance                                      │
+  │  start / stop / reboot-db-instance                 │
+  │  modify-db-instance (class, params, multi-az)      │
+  └───────────────────┬────────────────────────────────┘
+                      │
+          ┌───────────┼───────────────┐
+          ▼           ▼               ▼
+  ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
+  │  Snapshots   │ │  Read        │ │  Events          │
+  │              │ │  Replicas    │ │                  │
+  │ create-db-   │ │  create-db-  │ │ describe-events  │
+  │  snapshot    │ │  instance-   │ │ create-event-    │
+  │ restore-db-  │ │  read-       │ │  subscription    │
+  │  instance-   │ │  replica     │ │  (SNS alerts)    │
+  │  from-snap   │ │  promote-    │ │                  │
+  │  (PITR also) │ │  read-       │ │                  │
+  └──────────────┘ │  replica     │ └──────────────────┘
+                   └──────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

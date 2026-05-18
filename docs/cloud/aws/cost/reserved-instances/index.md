@@ -1,4 +1,34 @@
 # AWS Reserved Instances
+
+```
+Reserved Instances: On-Demand vs RI Pricing
+──────────────────────────────────────────────────────────────
+
+  On-Demand                  Reserved Instance (RI)
+  ┌─────────────┐            ┌──────────────────────────────┐
+  │ Pay per hour│            │ Commit 1yr or 3yr term       │
+  │ No upfront  │            │                              │
+  │ Full price  │            │ Payment Options:             │
+  └─────────────┘            │ ┌──────────┐ ┌────────────┐ │
+                             │ │ All      │ │ Partial    │ │
+  Savings vs On-Demand:      │ │ Upfront  │ │ Upfront    │ │
+  1yr All Upfront ─► ~40%    │ │ (max sav)│ │ (balanced) │ │
+  3yr All Upfront ─► ~60%    │ └──────────┘ └────────────┘ │
+                             │ ┌──────────────────────────┐ │
+                             │ │ No Upfront (lowest       │ │
+                             │ │ commitment, hourly bill) │ │
+                             │ └──────────────────────────┘ │
+                             └──────────────────────────────┘
+                                          │
+                                          ▼
+                             ┌──────────────────────────────┐
+                             │ Utilisation Tracking         │
+                             │ Cost Explorer → RI reports   │
+                             │ Low utilisation → sell on    │
+                             │ Marketplace or modify        │
+                             └──────────────────────────────┘
+```
+
 ## Overview
 
 AWS Reserved Instances notes for day-to-day infrastructure operations.

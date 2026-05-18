@@ -1,6 +1,33 @@
 # Load Balancer
 
-Azure Load Balancer is a Layer 4 (TCP/UDP) load balancer for distributing inbound traffic to backend VMs or scale sets. The Standard SKU supports availability zones, cross-region load balancing, and detailed metrics. The Basic SKU is being retired.
+Azure Load Balancer is a Layer 4 (TCP/UDP) load balancer for distributing inbound traffic to backend VMs or scale sets.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                Azure Load Balancer Flow                      │
+│                                                              │
+│  Client ──────────────────────────────────────────────────►  │
+│                                                              │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │  Frontend IP  (public static IP or internal private)  │   │
+│  └──────────────────────────┬────────────────────────────┘   │
+│                             │ LB rules (port mapping)        │
+│                             ▼                                │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │  Health Probe  (TCP:80 / HTTP /health)                 │   │
+│  │  ── healthy ──► included in pool                       │   │
+│  │  ── unhealthy ──► excluded from rotation               │   │
+│  └──────────────────────────┬────────────────────────────┘   │
+│                             │                                │
+│                             ▼                                │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │  Backend Pool                                         │   │
+│  │  ┌─────────┐   ┌─────────┐   ┌─────────┐             │   │
+│  │  │  VM-1   │   │  VM-2   │   │  VM-3   │             │   │
+│  │  └─────────┘   └─────────┘   └─────────┘             │   │
+│  └───────────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────┘
+``` The Standard SKU supports availability zones, cross-region load balancing, and detailed metrics. The Basic SKU is being retired.
 
 ## Creating a Standard Load Balancer
 

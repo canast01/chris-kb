@@ -4,6 +4,33 @@
 Azure Monitoring articles, operational checks, troubleshooting notes, and references.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│                   Azure Monitor Overview                     │
+│                                                              │
+│  Data Sources                                                │
+│  ┌───────────┐  ┌───────────┐  ┌──────────────────────────┐  │
+│  │  Metrics  │  │   Logs    │  │  Activity Log            │  │
+│  │  (numeric │  │  (Log     │  │  (control-plane ops)     │  │
+│  │  timeseries│  │Analytics) │  │                          │  │
+│  └─────┬─────┘  └─────┬─────┘  └─────────────┬────────────┘  │
+│        └──────────────┴───────────────────────┘              │
+│                               │                              │
+│                               ▼                              │
+│  ┌─────────────────────────────────────────────────────┐     │
+│  │            Alert Rules  (metric / log / activity)   │     │
+│  └──────────────────────────────┬──────────────────────┘     │
+│                                 │                            │
+│                                 ▼                            │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Action Group  (email / SMS / webhook / automation)  │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  Dashboards ◄──── metrics + log queries pinned               │
+│  Workbooks  ◄──── parameterised interactive reports          │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

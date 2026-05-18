@@ -1,4 +1,32 @@
 # Azure Cost Management
+
+```
+┌──────────────────────────────────────────────────────────┐
+│              Azure Cost Management Flow                  │
+│                                                          │
+│  Azure Resources                                         │
+│  (VMs, Storage, Networking, PaaS...)                     │
+│         │ spending                                       │
+│         ▼                                               │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │           Cost Management                       │   │
+│  │  Cost Analysis ──► trend charts / breakdowns    │   │
+│  └──────────────────────┬───────────────────────────┘   │
+│                         │                               │
+│                         ▼                               │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  Budget  (e.g. $500/month)                       │   │
+│  │  ──► 80% threshold ──► warning alert             │   │
+│  │  ──► 100% threshold ──► breach alert             │   │
+│  └──────────────────────┬───────────────────────────┘   │
+│                         │                               │
+│                         ▼                               │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  Action Group  (email / webhook / automation)    │   │
+│  └──────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 Azure Cost Management is a core cloud infrastructure service used for production operations, automation, monitoring, and platform support.

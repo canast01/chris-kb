@@ -1,5 +1,29 @@
 # EC2 — Images, Volumes & Snapshots
 
+```
+EC2 Storage CLI: AMIs · EBS Volumes · Snapshots
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────┐     create-image      ┌──────────────────┐
+  │  EC2 Instance│────────────────────► │  AMI             │
+  └──────────────┘                      │  describe-images  │
+                                        └──────────────────┘
+  ┌──────────────┐    create-volume      ┌──────────────────┐
+  │  attach-vol  │◄─────────────────────│  EBS Volume      │
+  │  (to EC2)    │                      │  describe-volumes │
+  │  detach-vol  │                      │  delete-volume    │
+  └──────────────┘                      └────────┬─────────┘
+                                                 │ create-snapshot
+                                                 ▼
+                                        ┌──────────────────┐
+                                        │  EBS Snapshot    │
+                                        │  describe-snaps  │
+                                        │  delete-snapshot │
+                                        │  copy-snapshot   │
+                                        │  (cross-region)  │
+                                        └──────────────────┘
+```
+
 > Part of the AWS CLI Reference.
 
 ---

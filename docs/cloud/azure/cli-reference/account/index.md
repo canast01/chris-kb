@@ -2,6 +2,30 @@
 
 > Part of the Azure CLI Reference.
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│                  Account CLI Flow                            │
+│                                                              │
+│  ┌────────────┐   az login    ┌────────────────────────────┐ │
+│  │  User /    │──────────────►│  Entra ID Token            │ │
+│  │  Service   │               │  (access + refresh)        │ │
+│  │  Principal │               └──────────────┬─────────────┘ │
+│  └────────────┘                              │               │
+│                                              ▼               │
+│                               ┌────────────────────────────┐ │
+│  az account list              │  Subscription List         │ │
+│  az account show  ◄──────────►│  (tenant scope)            │ │
+│  az account set               └──────────────┬─────────────┘ │
+│                                              │               │
+│                                              ▼               │
+│                               ┌────────────────────────────┐ │
+│                               │  Active Subscription       │ │
+│                               │  (all az commands target   │ │
+│                               │   this subscription)       │ │
+│                               └────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ```bash

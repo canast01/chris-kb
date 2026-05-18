@@ -1,4 +1,34 @@
 # AWS Savings Plans
+
+```
+Savings Plans: Commitment vs Flexibility
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Savings Plan Types                                  │
+  │                                                      │
+  │  ┌──────────────────┐  ┌──────────────────────────┐  │
+  │  │ Compute SP       │  │ EC2 Instance SP          │  │
+  │  │                  │  │                          │  │
+  │  │ Any EC2, Lambda, │  │ Specific instance family │  │
+  │  │ Fargate          │  │ in a region              │  │
+  │  │ Most flexible    │  │ Higher discount          │  │
+  │  └──────────────────┘  └──────────────────────────┘  │
+  │                                                      │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │ SageMaker SP  (for ML workloads)             │    │
+  │  └──────────────────────────────────────────────┘    │
+  └───────────────────────────┬──────────────────────────┘
+                              │ commit $/hour for 1yr/3yr
+                              ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  Utilisation Dashboard (Cost Explorer)               │
+  │  Commitment covered usage ────────────►  savings     │
+  │  On-demand overspill ──────────────────►  full price │
+  │  Unused commitment ────────────────────►  wasted     │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 AWS Savings Plans notes for day-to-day infrastructure operations.

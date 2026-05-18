@@ -1,5 +1,32 @@
 # AWS — CLI Reference
 
+```
+AWS CLI Daily Ops: Top Commands
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Auth & Identity                                     │
+  │  aws sts get-caller-identity  (confirm account/role) │
+  │  aws sso login --profile prod                        │
+  └──────────────────────────────────────────────────────┘
+  ┌────────────────────┐  ┌───────────────────────────┐
+  │  EC2               │  │  RDS                      │
+  │  describe-instances│  │  describe-db-instances    │
+  │  stop/start        │  │  create-db-snapshot       │
+  │  get-console-output│  │  modify-db-instance       │
+  └────────────────────┘  └───────────────────────────┘
+  ┌────────────────────┐  ┌───────────────────────────┐
+  │  S3                │  │  CloudWatch               │
+  │  ls / cp / sync    │  │  describe-alarms ALARM    │
+  │  s3api get-policy  │  │  get-metric-statistics    │
+  └────────────────────┘  └───────────────────────────┘
+  ┌────────────────────┐  ┌───────────────────────────┐
+  │  EKS               │  │  SSM                      │
+  │  update-kubeconfig │  │  start-session            │
+  │  list-nodegroups   │  │  send-command             │
+  └────────────────────┘  └───────────────────────────┘
+```
+
 ---
 
 ## Setup and Authentication

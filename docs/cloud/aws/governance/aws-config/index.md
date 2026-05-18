@@ -1,4 +1,38 @@
 # AWS AWS Config
+
+```
+AWS Config: Resource Recording → Rules → Compliance
+──────────────────────────────────────────────────────────────
+
+  ┌────────────────────────────────────────────────────┐
+  │  AWS Resources (EC2, S3, RDS, IAM, SGs, ...)       │
+  │  Config Change occurs                               │
+  └───────────────────────┬────────────────────────────┘
+                          │ recorded
+                          ▼
+  ┌────────────────────────────────────────────────────┐
+  │  Configuration Recorder                            │
+  │  Stores resource config snapshot to S3             │
+  │  Sends to Config delivery channel                  │
+  └───────────────────────┬────────────────────────────┘
+                          │ evaluated against
+                          ▼
+  ┌────────────────────────────────────────────────────┐
+  │  Config Rules (managed or custom Lambda)           │
+  │  s3-bucket-public-read-prohibited                  │
+  │  encrypted-volumes                                 │
+  │  root-account-mfa-enabled                         │
+  └───────────────────────┬────────────────────────────┘
+                          │
+              ┌───────────┴────────────┐
+              ▼                        ▼
+  ┌─────────────────────┐   ┌──────────────────────────┐
+  │  COMPLIANT          │   │  NON_COMPLIANT           │
+  │  (no action)        │   │  → SSM Remediation or    │
+  │                     │   │    Security Hub finding  │
+  └─────────────────────┘   └──────────────────────────┘
+```
+
 ## Overview
 
 AWS AWS Config notes for day-to-day infrastructure operations.

@@ -1,4 +1,31 @@
 # AWS Cost Explorer
+
+```
+Cost Explorer: Usage Graph → Filter → Forecast
+──────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Usage / Spend Graph (monthly bars)                  │
+  │  Jan  Feb  Mar  Apr  May ...                         │
+  │  ███  ███  ████ ███  ████                            │
+  └───────────────────┬──────────────────────────────────┘
+                      │ apply filters
+          ┌───────────┼──────────────────┐
+          ▼           ▼                  ▼
+  ┌─────────────┐ ┌─────────────┐ ┌────────────────┐
+  │ Filter by   │ │ Filter by   │ │ Filter by      │
+  │ Service     │ │ Account     │ │ Tag            │
+  │ EC2 / RDS   │ │ Linked acct │ │ env=prod       │
+  └─────────────┘ └─────────────┘ └────────────────┘
+                      │
+                      ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  Forecast (28/91 day projection)                     │
+  │  Based on trend line + seasonality                   │
+  │  Confidence interval shown                           │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 AWS Cost Explorer is a core cloud infrastructure service used for production operations, automation, monitoring, and platform support.

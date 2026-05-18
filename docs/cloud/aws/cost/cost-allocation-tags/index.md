@@ -1,4 +1,33 @@
 # AWS Cost Allocation Tags
+
+```
+Cost Allocation Tags: Tag → Activate → Report
+──────────────────────────────────────────────────────────────
+
+  ┌─────────────────────────────────────────────────────┐
+  │  Resource Tags (applied at resource creation)       │
+  │  ┌────────────────┐  ┌───────────┐  ┌────────────┐  │
+  │  │ Key: env       │  │Key: owner │  │Key: cost-  │  │
+  │  │ Val: prod      │  │Val: team-A│  │     centre │  │
+  │  └────────────────┘  └───────────┘  │Val: CC-123 │  │
+  │                                     └────────────┘  │
+  └──────────────────────────┬──────────────────────────┘
+                             │ activate in Billing console
+                             ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  AWS Billing — Activate Cost Allocation Tags        │
+  │  (up to 24h delay before tags appear in reports)    │
+  └──────────────────────────┬──────────────────────────┘
+                             │
+                             ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Cost Explorer — Filter & Group by tag              │
+  │  Group by: env → prod: $X  /  staging: $Y           │
+  │  Group by: owner → team-A: $X  /  team-B: $Y        │
+  │  Export ──► chargeback / showback report            │
+  └─────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 AWS Cost Allocation Tags notes for day-to-day infrastructure operations.
