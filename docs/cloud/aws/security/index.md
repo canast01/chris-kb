@@ -4,6 +4,34 @@
 AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (KMS, Secrets Manager, ACM), and threat detection (GuardDuty, Security Hub, Inspector). SCPs provide org-wide preventive guardrails; Config and Security Hub score detective compliance posture.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│                   AWS Security Stack                         │
+├──────────────────────────────────────────────────────────────┤
+│  PREVENTIVE                  DETECTIVE             RESPONSIVE │
+│                                                              │
+│  ┌──────────┐  ┌────────┐   ┌───────────┐  ┌────────────┐  │
+│  │   IAM    │  │  KMS   │   │ GuardDuty │  │ Security   │  │
+│  │ Identity │  │ Encrypt│   │ Threat    │  │ Hub        │  │
+│  │ + MFA    │  │ at rest│   │ Detection │  │ Score +    │  │
+│  └────┬─────┘  └───┬────┘   └─────┬─────┘  │ Dashboard  │  │
+│       │            │              │         └─────┬──────┘  │
+│  ┌────┴──────┐     │         ┌────┴─────┐         │         │
+│  │   SCP    │     │         │Inspector │         │         │
+│  │ (Org-    │     │         │ CVE scan │         │         │
+│  │ level    │     │         │ EC2/ECR  │         │         │
+│  │ guardrail│     │         └─────┬────┘         │         │
+│  └──────────┘     │               │              │         │
+│                   │               └──────────────┘         │
+│                   │                    ▼                    │
+│                   │         ┌──────────────────┐           │
+│                   └────────►│  AWS Config      │           │
+│                             │  Compliance      │           │
+│                             │  Recording       │           │
+│                             └──────────────────┘           │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ![AWS Security Architecture](../../../assets/aws-security-overview.svg)
 
 <div class="kb-grid kb-grid-3">

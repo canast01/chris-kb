@@ -1,5 +1,37 @@
 # Azure — TLS Validation
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│                  TLS Validation Flow                          │
+└──────────────────────────────────────────────────────────────┘
+
+  Client
+    │ HTTPS request
+    ▼
+  ┌──────────────────────────────────────┐
+  │  TLS Termination Point               │
+  │  (App Gateway / Front Door /         │
+  │   App Service / API Management)      │
+  │                                      │
+  │  1. Certificate chain check          │
+  │     └─ root CA trusted?              │
+  │  2. Expiry check                     │
+  │     └─ notAfter > now?               │
+  │  3. Cipher suite negotiation         │
+  │     └─ TLS 1.2+ required             │
+  │  4. SNI hostname match               │
+  └────────────────┬─────────────────────┘
+                   │  cert from Key Vault (auto-renew)
+                   │  or managed cert (auto-renew)
+                   ▼
+  ┌──────────────────────────────────────┐
+  │  Backend / Origin (optional          │
+  │  end-to-end TLS — re-encrypt)        │
+  └──────────────────────────────────────┘
+
+  Monitoring: openssl s_client / Prometheus blackbox → expiry alert
+```
+
 TLS validation in Azure covers certificate management for App Gateway, App Service custom domains, API Management, and Azure Front Door, plus monitoring expiry across all endpoints.
 
 ## TLS Termination Points in Azure

@@ -1,5 +1,36 @@
 # Azure Storage — Capacity Monitoring
 
+```
+┌────────────────────────────────────────────────────────────────┐
+│              Storage Capacity Monitoring Flow                   │
+└────────────────────────────────────────────────────────────────┘
+
+  Storage Account
+       │
+       │ UsedCapacity / BlobCapacity / FileCapacity metrics
+       ▼
+  ┌────────────────────────────────────┐
+  │         Azure Monitor              │
+  │  ┌──────────────────────────────┐  │
+  │  │  Metrics (93-day retention)  │  │
+  │  │  interval: P1D (daily trend) │  │
+  │  └──────────────────────────────┘  │
+  └──────────────────┬─────────────────┘
+                     │ threshold crossed (e.g. 80%)
+                     ▼
+          ┌──────────────────────┐
+          │   Metric Alert Rule  │
+          │   avg BlobCapacity   │
+          │   > 858 GB (80% TiB) │
+          └──────────┬───────────┘
+                     │
+                     ▼
+          ┌──────────────────────┐     ┌──────────────────────┐
+          │   Action Group       │────►│  Review + Forecast   │
+          │  (email / webhook)   │     │  (30-day trend data) │
+          └──────────────────────┘     └──────────────────────┘
+```
+
 ## Overview
 
 Monitoring storage capacity in Azure involves tracking used capacity at the account and container level, setting metric alerts before quotas are hit, and projecting growth to plan ahead. Azure Monitor provides built-in storage metrics with 93-day retention.

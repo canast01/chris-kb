@@ -1,5 +1,36 @@
 # AWS — Diagnostics
 
+```
+┌──────────────────────────────────────────────────────────┐
+│              AWS Diagnostic Toolchain                    │
+└──────────────────────────────────────────────────────────┘
+
+  WHAT HAPPENED?          WHERE IS IT?          WHY IS IT SLOW?
+  ──────────────          ────────────          ───────────────
+  CloudTrail              VPC Flow Logs          X-Ray Trace
+  lookup-events           (Logs Insights         (service map
+  │ who/when/what         filter REJECT)         + latency)
+  │                       │                      │
+  ▼                       ▼                      ▼
+  CloudWatch Logs    Network Reachability    CloudWatch
+  filter-log-events  Analyzer               Metrics
+  (ERROR / pattern)  (path analysis)        (CPU/Mem/IO)
+  │                       │                      │
+  └───────────────┬────────┴──────────────────────┘
+                  ▼
+  ┌──────────────────────────┐
+  │  SSM Session Manager     │
+  │  (live shell on EC2 —    │
+  │   no SSH key needed)     │
+  └──────────────────────────┘
+  ┌──────────────────────────┐
+  │  EC2 Console Output      │
+  │  get-console-output      │
+  │  (boot log when          │
+  │   unreachable via SSM)   │
+  └──────────────────────────┘
+```
+
 ---
 
 ## Identify Current Identity and Account

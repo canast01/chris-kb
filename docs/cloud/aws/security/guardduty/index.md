@@ -1,4 +1,41 @@
 # AWS GuardDuty
+
+```
+┌──────────────────────────────────────────────────────────┐
+│              GuardDuty — Threat Detection                │
+└──────────────────────────────────────────────────────────┘
+
+  DATA SOURCES
+  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+  │  VPC Flow   │  │  DNS Query  │  │  CloudTrail │
+  │  Logs       │  │  Logs       │  │  Events     │
+  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘
+         │                │                │
+         └────────────────┼────────────────┘
+                          ▼
+              ┌───────────────────────┐
+              │  GuardDuty ML /       │
+              │  Threat Intel Engine  │
+              │  (anomaly + IOC match)│
+              └───────────┬───────────┘
+                          │ finding generated
+                          ▼
+              ┌───────────────────────┐
+              │  Finding              │
+              │  (severity: LOW /     │
+              │   MEDIUM / HIGH /     │
+              │   CRITICAL)           │
+              └───────────┬───────────┘
+                          │
+            ┌─────────────┴──────────────┐
+            ▼                            ▼
+  ┌──────────────────┐        ┌──────────────────┐
+  │  EventBridge     │        │  Security Hub    │
+  │  rule →          │        │  (normalized     │
+  │  SNS → alert     │        │  finding import) │
+  └──────────────────┘        └──────────────────┘
+```
+
 ## Overview
 
 AWS GuardDuty notes for day-to-day infrastructure operations.

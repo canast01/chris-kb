@@ -1,4 +1,46 @@
 # AWS Certificate Manager
+
+```
+┌──────────────────────────────────────────────────────────┐
+│         ACM — Certificate Lifecycle                      │
+└──────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────┐
+  │  Request Certificate │
+  │  (domain + SANs)     │
+  └──────────┬──────────┘
+             │
+     ┌───────┴──────────┐
+     ▼                  ▼
+  DNS Validation     Email Validation
+  (add CNAME to      (click link sent
+   Route 53 / DNS)    to domain owner)
+     │                  │
+     └────────┬─────────┘
+              ▼
+  ┌─────────────────────┐
+  │  Certificate Issued  │
+  │  (ACM manages        │
+  │   private key)       │
+  └──────────┬──────────┘
+             │  attach to
+     ┌───────┴──────────┐
+     ▼                  ▼
+  ┌──────────┐     ┌────────────┐
+  │   ALB    │     │ CloudFront │
+  │ (HTTPS   │     │ (HTTPS     │
+  │ listener)│     │ distrib.)  │
+  └──────────┘     └────────────┘
+             │
+             ▼
+  ┌─────────────────────┐
+  │  Auto-Renewal       │
+  │  (60 days before    │
+  │   expiry, ACM       │
+  │   re-validates DNS) │
+  └─────────────────────┘
+```
+
 ## Overview
 
 AWS Certificate Manager notes for day-to-day infrastructure operations.

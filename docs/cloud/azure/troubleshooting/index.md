@@ -1,5 +1,30 @@
 # Azure — Troubleshooting
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│            Azure Troubleshooting Decision Tree                │
+└──────────────────────────────────────────────────────────────┘
+
+              Issue reported
+                   │
+       ┌───────────┼──────────────┬─────────────────┐
+       ▼           ▼              ▼                 ▼
+  ┌─────────┐ ┌─────────┐ ┌──────────────┐ ┌──────────────┐
+  │Connectiv│ │  Auth   │ │     Cost     │ │ Performance  │
+  │ -ity    │ │ Failure │ │  Anomaly     │ │  Degradation │
+  └────┬────┘ └────┬────┘ └──────┬───────┘ └──────┬───────┘
+       │           │             │                 │
+       ▼           ▼             ▼                 ▼
+  NSG/UDR    Entra ID       Cost Mgmt        Monitor metrics
+  Watcher    sign-in logs   budget alerts    + Activity Log
+  flow logs  SP expiry      Advisor recs     + Diagnostics
+       │           │             │                 │
+       └───────────┴─────────────┴─────────────────┘
+                               │
+                               ▼
+                    Resolved? ─── No ──► Escalate to MSFT Support
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">

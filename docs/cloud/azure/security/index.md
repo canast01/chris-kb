@@ -1,5 +1,23 @@
 # Azure — Security
 
+```
+┌────────────────────────────────────────────────────────────────────┐
+│                     Azure Security Layers                           │
+├────────────────────────────────────────────────────────────────────┤
+│  Identity        │  Entra ID  ──  MFA  ──  Conditional Access      │
+├────────────────────────────────────────────────────────────────────┤
+│  Access Control  │  RBAC  ──  PIM (JIT)  ──  Managed Identities    │
+├────────────────────────────────────────────────────────────────────┤
+│  Data Protection │  Key Vault  ──  CMK  ──  SSE  ──  TDE           │
+├────────────────────────────────────────────────────────────────────┤
+│  Network         │  NSG  ──  Private Link  ──  Azure Firewall       │
+├────────────────────────────────────────────────────────────────────┤
+│  Threat Detect.  │  Defender for Cloud  ──  Secure Score           │
+├────────────────────────────────────────────────────────────────────┤
+│  Governance      │  Azure Policy  ──  Blueprints  ──  Resource Locks│
+└────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

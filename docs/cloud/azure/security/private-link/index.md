@@ -1,5 +1,34 @@
 # Azure — Private Link
 
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                    Azure Private Link Flow                        │
+└──────────────────────────────────────────────────────────────────┘
+
+  ┌────────────────────────────────────────────────┐
+  │                   Your VNet                    │
+  │                                                │
+  │  ┌──────────┐   DNS query    ┌───────────────┐ │
+  │  │   App /  │──────────────►│ Private DNS   │ │
+  │  │   VM     │               │ Zone override │ │
+  │  └──────────┘               │ → 10.1.0.5    │ │
+  │       │                     └───────────────┘ │
+  │       │ TCP to 10.1.0.5 (private IP)           │
+  │       ▼                                        │
+  │  ┌──────────────────┐                          │
+  │  │ Private Endpoint │                          │
+  │  │ NIC (private IP) │                          │
+  │  └────────┬─────────┘                          │
+  └───────────┼────────────────────────────────────┘
+              │  Azure backbone (no internet)
+              ▼
+  ┌────────────────────────────────────┐
+  │  Azure PaaS Service                │
+  │  (Key Vault / Storage / SQL / etc) │
+  │  Public access: Disabled           │
+  └────────────────────────────────────┘
+```
+
 Azure Private Link enables private connectivity to Azure PaaS services (Storage, Key Vault, SQL, etc.) over a private endpoint in your VNet — eliminating exposure to the public internet.
 
 ## Concepts

@@ -1,5 +1,37 @@
 # Azure — Authentication
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│                  Azure Authentication Flow                    │
+└──────────────────────────────────────────────────────────────┘
+
+  User / App / SP
+       │
+       ▼
+  ┌─────────────────────────────────────┐
+  │          Microsoft Entra ID         │
+  │  ┌─────────────┐ ┌───────────────┐  │
+  │  │  MFA check  │ │  Conditional  │  │
+  │  │  (FIDO2 /   │ │  Access Policy│  │
+  │  │  Authntctr) │ │  evaluation   │  │
+  │  └─────────────┘ └───────────────┘  │
+  └────────────────────┬────────────────┘
+                       │  token issued (OAuth2 / OIDC)
+                       ▼
+          ┌────────────────────────┐
+          │  Access Token (JWT)    │
+          │  + optional ID Token   │
+          └────────────┬───────────┘
+                       │
+       ┌───────────────┼───────────────┐
+       ▼               ▼               ▼
+  ┌─────────┐   ┌──────────────┐  ┌──────────┐
+  │ Azure   │   │  Key Vault   │  │  Graph / │
+  │ Resource│   │  / Storage   │  │  Custom  │
+  │ Manager │   │  data plane  │  │  API     │
+  └─────────┘   └──────────────┘  └──────────┘
+```
+
 Azure authentication is managed through Microsoft Entra ID (formerly Azure Active Directory). All Azure resource access, API calls, and administrative actions authenticate through Entra ID.
 
 ---

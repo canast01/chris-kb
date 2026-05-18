@@ -1,5 +1,37 @@
 # AWS — Troubleshooting
 
+```
+┌──────────────────────────────────────────────────────────┐
+│          AWS Troubleshooting Decision Tree               │
+└──────────────────────────────────────────────────────────┘
+
+  Issue reported
+        │
+        ▼
+  ┌───────────────────────────────────────────┐
+  │  What is the symptom?                     │
+  └─────┬──────────┬───────────┬─────────────┘
+        │          │           │              │
+        ▼          ▼           ▼              ▼
+  Connectivity  IAM Access  Cost spike   Performance
+  failure       Denied                   degradation
+        │          │           │              │
+        ▼          ▼           ▼              ▼
+  Check SG /   Simulate    Cost Explorer  CW Metrics
+  NACL /       principal   daily diff     CPU/Mem/IO
+  routes       policy      top services   X-Ray trace
+        │          │           │              │
+        └──────────┴───────────┴──────────────┘
+                        │
+                        ▼
+                  Resolved? ──No──► Escalate to AWS Support
+                      │
+                     Yes
+                      │
+                      ▼
+                  RCA + Change Record
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">

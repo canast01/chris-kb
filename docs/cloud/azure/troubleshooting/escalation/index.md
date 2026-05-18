@@ -1,5 +1,32 @@
 # Azure — Escalation
 
+```
+┌────────────────────────────────────────────────────────────────┐
+│                  Azure Support Escalation Path                  │
+└────────────────────────────────────────────────────────────────┘
+
+  Issue cannot be self-resolved
+             │
+             ▼
+  Collect: sub ID, resource IDs, region,
+           timestamps, Activity Log, diagnostics
+             │
+             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │              Support Plan (choose by severity)            │
+  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────────┐  │
+  │  │Developer │ │Standard  │ │Prof.Direct│ │Premier/    │  │
+  │  │< 8 hr    │ │< 2 hr    │ │< 1 hr    │ │Unified     │  │
+  │  │biz hours │ │24/7      │ │24/7      │ │< 15 min+TAM│  │
+  │  └──────────┘ └──────────┘ └──────────┘ └────────────┘  │
+  └──────────────────────────────┬───────────────────────────┘
+                                 │
+                                 ▼
+                    portal.azure.com → Help + Support
+                    → Create support request
+                    → Severity A/B/C → assign TAM if Premier
+```
+
 > What to collect before opening a support case and how to engage Microsoft support.
 
 ---

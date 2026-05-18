@@ -1,5 +1,35 @@
 # Azure — Hardening
 
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                  Azure Hardening Improvement Path                 │
+└──────────────────────────────────────────────────────────────────┘
+
+  ┌───────────────┐   ┌──────────────────────────────────────────┐
+  │ Defender for  │──►│  Secure Score  (baseline assessment)     │
+  │ Cloud enabled │   └──────────────────┬───────────────────────┘
+  └───────────────┘                      │
+                                         ▼ high-impact recommendations
+  ┌────────────────────────────────────────────────────────────┐
+  │  Remediation Actions                                        │
+  │  ┌───────────┐  ┌──────────────┐  ┌─────────────────────┐  │
+  │  │ MFA via   │  │  PIM (no     │  │  JIT VM access      │  │
+  │  │ Cond.Acc. │  │  standing    │  │  (block RDP/SSH by  │  │
+  │  │           │  │  Owner)      │  │   default)          │  │
+  │  └───────────┘  └──────────────┘  └─────────────────────┘  │
+  │  ┌───────────┐  ┌──────────────┐                            │
+  │  │ NSG flow  │  │  Azure Policy│                            │
+  │  │ logs on   │  │  (TLS, HTTPS │                            │
+  │  │ all NSGs  │  │   only, etc.)│                            │
+  │  └───────────┘  └──────────────┘                            │
+  └────────────────────────────────────────────────────────────┘
+                         │ score rises toward 100%
+                         ▼
+               ┌──────────────────┐
+               │  Secure Score ▲  │
+               └──────────────────┘
+```
+
 Azure hardening applies the principle of least privilege, reduces the attack surface, and enforces security configuration standards across subscriptions, resource groups, and individual resources.
 
 ---

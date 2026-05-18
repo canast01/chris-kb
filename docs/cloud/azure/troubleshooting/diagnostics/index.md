@@ -1,5 +1,30 @@
 # Azure — Diagnostics
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│               Azure Diagnostics — Data Sources               │
+└──────────────────────────────────────────────────────────────┘
+
+  Resource Under Investigation
+            │
+  ┌─────────┴──────────────────────────────────────────────┐
+  │                                                         │
+  ▼                     ▼                    ▼             ▼
+┌──────────────┐  ┌───────────────┐  ┌─────────────┐  ┌──────────┐
+│ Activity Log │  │Resource Health│  │  Network    │  │  Log     │
+│ (control     │  │(is the        │  │  Watcher    │  │Analytics │
+│  plane ops)  │  │ resource up?) │  │ (NSG/routes │  │(Insights,│
+│              │  │               │  │  + capture) │  │ KQL)     │
+└──────┬───────┘  └───────┬───────┘  └──────┬──────┘  └────┬─────┘
+       └──────────────────┴─────────────────┴──────────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │  Correlate findings  │
+                         │  → root cause        │
+                         └──────────────────────┘
+```
+
 > Diagnostic commands, log locations, and data collection procedures.
 
 ---

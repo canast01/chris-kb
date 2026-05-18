@@ -1,4 +1,41 @@
 # AWS Security Hub
+
+```
+┌──────────────────────────────────────────────────────────┐
+│         Security Hub — Findings Aggregation              │
+└──────────────────────────────────────────────────────────┘
+
+  FINDING SOURCES
+  ┌───────────┐ ┌───────────┐ ┌──────────┐ ┌──────────┐
+  │ GuardDuty │ │ Inspector │ │  Config  │ │  Macie   │
+  │ (threats) │ │  (CVEs)   │ │ (rules)  │ │  (data)  │
+  └─────┬─────┘ └─────┬─────┘ └─────┬────┘ └─────┬────┘
+        │             │             │             │
+        └─────────────┼─────────────┼─────────────┘
+                      ▼
+          ┌───────────────────────┐
+          │  Security Hub         │
+          │  Normalization        │
+          │  (ASFF format)        │
+          └───────────┬───────────┘
+                      │
+          ┌───────────┴──────────────┐
+          ▼                          ▼
+  ┌──────────────────┐    ┌──────────────────────┐
+  │  Security Score  │    │  Standards            │
+  │  (0–100 per      │    │  CIS / PCI DSS /      │
+  │   standard)      │    │  AWS Foundational     │
+  └──────────────────┘    └──────────────────────┘
+          │
+          ▼
+  ┌──────────────────┐
+  │  Dashboard +     │
+  │  Insights view   │
+  │  EventBridge ►   │
+  │  SNS / ticketing │
+  └──────────────────┘
+```
+
 ## Overview
 
 AWS Security Hub notes for day-to-day infrastructure operations.

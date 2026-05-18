@@ -1,5 +1,45 @@
 # AWS — Encryption
 
+```
+┌──────────────────────────────────────────────────────────┐
+│         AWS Envelope Encryption with KMS                 │
+└──────────────────────────────────────────────────────────┘
+
+  ┌──────────────────────┐
+  │  Application / AWS   │
+  │  Service (S3, RDS,   │
+  │  EBS, Secrets Mgr)   │
+  └──────────┬───────────┘
+             │ GenerateDataKey request
+             ▼
+  ┌──────────────────────┐
+  │  AWS KMS             │
+  │  CMK (Customer       │
+  │  Managed Key)        │
+  └──────────┬───────────┘
+             │ returns
+     ┌───────┴──────────┐
+     ▼                  ▼
+  Plaintext          Encrypted
+  Data Key           Data Key
+  (in memory)        (stored with data)
+     │
+     ▼
+  ┌──────────────────────┐
+  │  Encrypt data with   │
+  │  plaintext data key  │
+  │  (AES-256-GCM)       │
+  └──────────┬───────────┘
+             │
+             ▼
+  ┌──────────────────────┐
+  │  Encrypted Data +    │
+  │  Encrypted Data Key  │
+  │  stored together     │  ◄── plaintext key discarded
+  └──────────────────────┘
+  CloudTrail logs every KMS API call (CMK use audit trail)
+```
+
 ---
 
 ## Encryption Coverage Overview

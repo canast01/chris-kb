@@ -1,5 +1,34 @@
 # Azure — Key Vault
 
+```
+┌────────────────────────────────────────────────────────────────┐
+│                  Azure Key Vault Access Flow                    │
+└────────────────────────────────────────────────────────────────┘
+
+  App / Pipeline / VM (via Managed Identity)
+            │
+            │ HTTPS request + Entra ID token
+            ▼
+  ┌─────────────────────────────────────────────┐
+  │               Azure Key Vault               │
+  │                                             │
+  │  ┌───────────┐ ┌──────────┐ ┌────────────┐  │
+  │  │  Secrets  │ │   Keys   │ │   Certs    │  │
+  │  │ (db-pass) │ │(RSA/EC)  │ │ (X.509)    │  │
+  │  └───────────┘ └──────────┘ └────────────┘  │
+  │                                             │
+  │  Access: RBAC role assignment (preferred)   │
+  │  e.g. Key Vault Secrets User → read secrets │
+  └──────────────────────┬──────────────────────┘
+                         │ all operations
+                         ▼
+              ┌─────────────────────┐
+              │   Audit Log         │
+              │  (AuditEvent →      │
+              │   Log Analytics)    │
+              └─────────────────────┘
+```
+
 Azure Key Vault is a managed service for storing and controlling access to secrets, encryption keys, and certificates. It provides hardware security module (HSM) backing, RBAC-based access control, soft-delete protection, and audit logging.
 
 ## Vault vs Managed HSM

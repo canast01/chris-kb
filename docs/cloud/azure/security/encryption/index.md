@@ -1,5 +1,32 @@
 # Azure — Encryption
 
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                    Azure Encryption Architecture                  │
+└──────────────────────────────────────────────────────────────────┘
+
+  Data at Rest                         Key Management
+  ────────────                         ──────────────
+  ┌──────────────────────┐             ┌──────────────────────┐
+  │  Storage / Blobs     │──SSE AES-256►│   Key Vault (CMK)   │
+  │  Azure Files         │             │   ┌──────────────┐   │
+  │  Queues / Tables     │             │   │  RSA 4096 key│   │
+  └──────────────────────┘             │   │  (wrap/unwrap│   │
+  ┌──────────────────────┐             │   │   envelope)  │   │
+  │  Managed Disk        │──DES+CMK───►│   └──────────────┘   │
+  │  (Disk Encryption Set│             └──────────┬───────────┘
+  └──────────────────────┘                        │
+  ┌──────────────────────┐                        │ RBAC / access policy
+  │  Azure SQL / SQL MI  │──TDE (PMK/CMK)─────────┤
+  └──────────────────────┘                        │ audit log
+  ┌──────────────────────┐                        │ → Log Analytics
+  │  ADE (BitLocker /    │──OS-layer encrypt.──────┘
+  │  DM-Crypt) on VM OS  │
+  └──────────────────────┘
+
+  Data in Transit: TLS 1.2+ enforced on all Azure service endpoints
+```
+
 Azure encrypts all data at rest by default using platform-managed keys (PMK). Customer-managed keys (CMK) in Azure Key Vault give you control over the encryption key lifecycle. Data in transit is protected by TLS 1.2+ for all Azure service endpoints.
 
 ---

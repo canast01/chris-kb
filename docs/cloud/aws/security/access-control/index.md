@@ -1,5 +1,37 @@
 # AWS — Access Control
 
+```
+┌──────────────────────────────────────────────────────────┐
+│           IAM Policy Evaluation Order                    │
+└──────────────────────────────────────────────────────────┘
+
+  Principal makes API request
+           │
+           ▼
+  ┌─────────────────┐   Explicit Deny?  ──► DENY
+  │  SCP check      │
+  │  (Org-level)    │   Not allowed?    ──► DENY
+  └────────┬────────┘
+           ▼
+  ┌─────────────────┐   Explicit Deny?  ──► DENY
+  │  Permission     │
+  │  Boundary       │   Not in boundary?──► DENY
+  └────────┬────────┘
+           ▼
+  ┌─────────────────┐   Explicit Deny?  ──► DENY
+  │  Identity-based │
+  │  Policy (IAM)   │
+  └────────┬────────┘
+           ▼
+  ┌─────────────────┐   Explicit Deny?  ──► DENY
+  │  Resource-based │
+  │  Policy (S3/KMS)│   No Allow found? ──► DENY
+  └────────┬────────┘
+           │  All checks passed
+           ▼
+         ALLOW ✓
+```
+
 ---
 
 ## IAM Fundamentals

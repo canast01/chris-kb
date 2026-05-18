@@ -1,4 +1,47 @@
 # AWS Secrets Manager
+
+```
+┌──────────────────────────────────────────────────────────┐
+│         Secrets Manager — Secret Lifecycle               │
+└──────────────────────────────────────────────────────────┘
+
+  ┌──────────────────────┐
+  │  Secret stored       │
+  │  (encrypted by KMS   │
+  │   CMK at rest)       │
+  └──────────┬───────────┘
+             │
+             │  Application retrieves secret
+             ▼
+  ┌──────────────────────┐
+  │  GetSecretValue API  │
+  │  (SDK / CLI call)    │
+  └──────────┬───────────┘
+             │  IAM auth + KMS decrypt
+             ▼
+  ┌──────────────────────┐
+  │  Secret value        │
+  │  returned in memory  │
+  │  (never stored       │
+  │   in code / env var) │
+  └──────────────────────┘
+
+  AUTO-ROTATION
+  ┌──────────────────────┐
+  │  Rotation schedule   │
+  │  (e.g. every 30d)    │
+  └──────────┬───────────┘
+             ▼
+  ┌──────────────────────┐
+  │  Lambda rotation     │
+  │  function            │
+  │  (createSecret ►     │
+  │   setSecret ►        │
+  │   testSecret ►       │
+  │   finishSecret)      │
+  └──────────────────────┘
+```
+
 ## Overview
 
 AWS Secrets Manager notes for day-to-day infrastructure operations.

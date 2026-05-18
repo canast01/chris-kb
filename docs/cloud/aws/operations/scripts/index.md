@@ -2,6 +2,35 @@
 
 > Part of the [Operations](../) section.
 
+```
+┌──────────────────────────────────────────────────────────┐
+│          boto3 / AWS CLI Automation Patterns             │
+└──────────────────────────────────────────────────────────┘
+
+  ┌─────────────┐    ┌──────────────┐    ┌───────────────┐
+  │  boto3      │    │  AWS CLI     │    │  Ansible      │
+  │  Session    │    │  (bash/bat/  │    │  amazon.aws   │
+  │  (Python)   │    │   PowerShell)│    │  collection   │
+  └──────┬──────┘    └──────┬───────┘    └──────┬────────┘
+         │                  │                   │
+         └──────────┬───────┘                   │
+                    ▼                           │
+         ┌──────────────────┐                  │
+         │  AWS API calls   │◄─────────────────┘
+         │  (signed SigV4)  │
+         └──────────┬───────┘
+                    │
+       ┌────────────┼────────────┐
+       ▼            ▼            ▼
+ ┌──────────┐ ┌──────────┐ ┌──────────┐
+ │  EC2     │ │   S3 /   │ │  IAM /   │
+ │  Audit   │ │  Cost    │ │  Key     │
+ │  Report  │ │  Report  │ │  Audit   │
+ │  (CSV)   │ │  (table) │ │  (flags) │
+ └──────────┘ └──────────┘ └──────────┘
+         exit 0 (pass) / exit 1 (failures found)
+```
+
 ---
 
 ## AWS Account Health Check
