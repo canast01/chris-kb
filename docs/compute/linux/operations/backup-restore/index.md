@@ -11,21 +11,21 @@ Veeam Agent for Linux backup jobs, restore procedures, and validation steps.
 └────────┬────────┴─────────┬─────────┴────────┬──────────┘
          ▼                  ▼                  ▼
 ┌────────────────────────────────────────────────────────┐
-│                    Schedule (cron / veeamconfig)       │
-│        Daily 02:00  │  Weekly Sunday 03:00             │
+│                    Schedule (cron / veeamconfig)        │
+│        Daily 02:00  │  Weekly Sunday 03:00              │
 └────────────────────────────┬───────────────────────────┘
                              ▼
 ┌────────────────────────────────────────────────────────┐
-│             Backup Repository (NAS/NFS/SMB)            │
-│         14 daily  │  4 weekly  │  3 monthly            │
+│             Backup Repository (NAS/NFS/SMB)             │
+│         14 daily  │  4 weekly  │  3 monthly             │
 └────────────────────────────┬───────────────────────────┘
                              ▼
          ┌───────────────────┴───────────────────┐
          ▼                                       ▼
 ┌─────────────────┐                  ┌───────────────────┐
-│  File-Level     │                  │  Bare Metal       │
-│  Restore        │                  │  Restore (BMR)    │
-│  mount → copy   │                  │  Recovery ISO     │
+│  File-Level     │                  │  Bare Metal        │
+│  Restore        │                  │  Restore (BMR)     │
+│  mount → copy   │                  │  Recovery ISO      │
 └─────────────────┘                  └───────────────────┘
 ```
 

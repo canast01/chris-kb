@@ -5,22 +5,22 @@
 │         Aria Ops for Logs RBAC Model                        │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  AD Groups (via LDAPS)     →  Role Assignment              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  GG-VRLI-Admins          →  Super Admin              │  │
-│  │  GG-VRLI-Operators       →  Admin                    │  │
-│  │  GG-VRLI-ReadOnly        →  User                     │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  AD Groups (via LDAPS)     →  Role Assignment               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  GG-VRLI-Admins          →  Super Admin              │   │
+│  │  GG-VRLI-Operators       →  Admin                    │   │
+│  │  GG-VRLI-ReadOnly        →  User                     │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  Role Capabilities:                                        │
-│  Super Admin — cluster config · users · all settings       │
-│  Admin       — content · alerts · dashboards               │
-│  User        — Interactive Analytics query/view only       │
+│  Role Capabilities:                                         │
+│  Super Admin — cluster config · users · all settings        │
+│  Admin       — content · alerts · dashboards                │
+│  User        — Interactive Analytics query/view only        │
 │                                                             │
-│  Local Accounts (break-glass only):                        │
-│  admin → Super Admin (change password immediately)         │
-│  svc-vrli-api → Admin (automation scripts)                 │
-│  svc-monitoring → User (read-only queries)                 │
+│  Local Accounts (break-glass only):                         │
+│  admin → Super Admin (change password immediately)          │
+│  svc-vrli-api → Admin (automation scripts)                  │
+│  svc-monitoring → User (read-only queries)                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 

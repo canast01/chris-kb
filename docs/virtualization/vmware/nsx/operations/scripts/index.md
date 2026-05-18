@@ -22,7 +22,7 @@
 │                           ▼                                 │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │  Result: PASS / WARNING / CRITICAL                   │   │
-│  │  exit 0 (clean) | exit 1 (warn) | exit 2 (critical) │   │
+│  │  exit 0 (clean) | exit 1 (warn) | exit 2 (critical) │    │
 │  │  Output to stdout, monitoring system, or SIEM        │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘

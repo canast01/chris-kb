@@ -4,20 +4,20 @@
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                  NSX Upgrade Sequence                                    │
 │                                                                          │
-│  Step 1: NSX Upgrade Coordinator pre-check                              │
+│  Step 1: NSX Upgrade Coordinator pre-check                               │
 │          │                                                               │
 │          ▼                                                               │
-│  Step 2: NSX Manager nodes (rolling — one at a time)                   │
+│  Step 2: NSX Manager nodes (rolling — one at a time)                     │
 │          │                                                               │
 │          ▼                                                               │
-│  Step 3: Edge nodes (most failure-prone — snapshot first)               │
+│  Step 3: Edge nodes (most failure-prone — snapshot first)                │
 │          │                                                               │
 │          ▼                                                               │
-│  Step 4: Host transport nodes (one cluster at a time)                  │
+│  Step 4: Host transport nodes (one cluster at a time)                    │
 │          │                                                               │
 │          ▼                                                               │
-│  Step 5: Post-upgrade validation                                        │
-│          MP=STABLE │ Edge nodes Up │ BGP=Established │ DFW rules OK    │
+│  Step 5: Post-upgrade validation                                         │
+│          MP=STABLE │ Edge nodes Up │ BGP=Established │ DFW rules OK      │
 └──────────────────────────────────────────────────────────────────────────┘
   Pre-req: vCenter compatible │ NSX backup done │ No critical alarms
 ```

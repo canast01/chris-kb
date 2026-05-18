@@ -19,7 +19,7 @@
 │  │  Max RTT: 100ms between sites                        │     │
 │  └─────────────────────────────────────────────────────┘     │
 │                                                              │
-│  Target datastore = source disk + (N points × avg delta)    │
+│  Target datastore = source disk + (N points × avg delta)     │
 └──────────────────────────────────────────────────────────────┘
 ```
 

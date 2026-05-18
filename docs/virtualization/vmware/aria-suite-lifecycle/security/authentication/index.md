@@ -4,7 +4,7 @@
   LCM Authentication Architecture
 ┌─────────────────────────────────────────────────────────────────┐
 │  Interactive Users                                              │
-│  Browser → LCM UI → VIDM (SAML redirect) → AD/LDAP             │
+│  Browser → LCM UI → VIDM (SAML redirect) → AD/LDAP              │
 │               └──────────────────────────────► LCM session      │
 │                                                                 │
 │  API / Scripts                                                  │

@@ -10,9 +10,9 @@
 ├──────────────────────┼─────────────┼─────────────┼────────────┼──────────────┤
 │ vCenter Server       │  8.0 U3     │     —       │ Oct 2027   │  Low         │
 │ ESXi (prod)          │  8.0 U3     │     —       │ Oct 2027   │  Low         │
-│ ESXi (mgmt)          │  8.0 U2b    │  8.0 U3     │ Oct 2027   │  Medium ⚠   │
+│ ESXi (mgmt)          │  8.0 U2b    │  8.0 U3     │ Oct 2027   │  Medium ⚠    │
 │ vSAN                 │  8.0 U3     │     —       │ Oct 2027   │  Low         │
-│ NSX-T                │  4.1.2      │  4.2.x      │ Oct 2027   │  Medium ⚠   │
+│ NSX-T                │  4.1.2      │  4.2.x      │ Oct 2027   │  Medium ⚠    │
 ├──────────────────────┼─────────────┼─────────────┼────────────┼──────────────┤
 │ VxRail Manager       │  8.0.300    │  8.0.310    │     —      │  Planned     │
 │ Aria Operations      │  8.16       │     —       │     —      │  Low         │

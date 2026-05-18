@@ -5,11 +5,11 @@
 │                                                                                │
 │  Data in Transit                                                               │
 │  ┌─────────────────────────────────────────────────────────────────────────┐  │
-│  │  Browser ──── TLS 1.2/1.3 HTTPS ──────────────────► Platform VM :443  │  │
-│  │  REST API ─── TLS 1.2/1.3 HTTPS ──────────────────► Platform VM :443  │  │
-│  │  Collector ── TLS 1.2/1.3 HTTPS (pinned cert) ─────► Platform VM :443 │  │
-│  │  Collector ── TLS HTTPS ────────────────────────────► vCenter/NSX :443 │  │
-│  │  Switches  ── UDP 2055 NetFlow (UNENCRYPTED) ───────► Collector VM    │  │
+│  │  Browser ──── TLS 1.2/1.3 HTTPS ──────────────────► Platform VM :443  │    │
+│  │  REST API ─── TLS 1.2/1.3 HTTPS ──────────────────► Platform VM :443  │    │
+│  │  Collector ── TLS 1.2/1.3 HTTPS (pinned cert) ─────► Platform VM :443 │    │
+│  │  Collector ── TLS HTTPS ────────────────────────────► vCenter/NSX :443 │   │
+│  │  Switches  ── UDP 2055 NetFlow (UNENCRYPTED) ───────► Collector VM    │    │
 │  └─────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                │
 │  TLS Hardening (Nginx on Platform VM)                                          │
@@ -18,9 +18,9 @@
 │                                                                                │
 │  Data at Rest                                                                  │
 │  ┌─────────────────────────────────────────────────────────────────────────┐  │
-│  │  Stored credentials ── AES-256 in Platform VM keystore                 │  │
-│  │  Platform VM disks  ── vSphere VM Encryption / encrypted datastore     │  │
-│  │  Collector VM disks ── optional vSphere VM Encryption                  │  │
+│  │  Stored credentials ── AES-256 in Platform VM keystore                 │   │
+│  │  Platform VM disks  ── vSphere VM Encryption / encrypted datastore     │   │
+│  │  Collector VM disks ── optional vSphere VM Encryption                  │   │
 │  └─────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                │
 │  Certificate: self-signed (default) ── replace with CA-signed before prod     │

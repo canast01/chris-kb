@@ -12,7 +12,7 @@ Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Iden
 │  ├── Log Archive Account  (CloudTrail · Config logs)    │
 │  ├── Audit Account        (Security Hub · GuardDuty)    │
 │  └── Production Account   (workload VPC)                │
-│       └── Transit Gateway ◄─── On-Premises (DX/VPN)    │
+│       └── Transit Gateway ◄─── On-Premises (DX/VPN)     │
 │            ├── Shared Services VPC (10.0.0.0/16)        │
 │            ├── Production VPC      (10.1.0.0/16)        │
 │            └── Dev/Staging VPC     (10.2.0.0/16)        │

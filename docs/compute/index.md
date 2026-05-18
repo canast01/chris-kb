@@ -15,7 +15,7 @@ Compute platform knowledge base covering Windows Server and Linux host operation
 │         VMware ESXi  │  Hyper-V  │  Physical            │
 ├─────────────────────────────────────────────────────────┤
 │                 Shared Infrastructure                   │
-│   Storage (SAN/NAS)  │  Network (VLANs/Bonds/NIC)      │
+│   Storage (SAN/NAS)  │  Network (VLANs/Bonds/NIC)       │
 │   AD/DNS/DHCP        │  Monitoring / Backup             │
 └─────────────────────────────────────────────────────────┘
          ▼ Operations    ▼ Security    ▼ Troubleshooting

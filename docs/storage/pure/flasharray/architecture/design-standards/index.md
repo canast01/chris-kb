@@ -13,7 +13,7 @@ FlashArray Design Checklist — Key Areas
 ├──────────────────────────────────────────────────────────┤
 │  Capacity       │  < 80% used; account for snapshots     │
 ├──────────────────────────────────────────────────────────┤
-│  Security       │  RBAC, SafeMode, SAML/LDAP, TLS syslog│
+│  Security       │  RBAC, SafeMode, SAML/LDAP, TLS syslog │
 └──────────────────────────────────────────────────────────┘
 ```
 

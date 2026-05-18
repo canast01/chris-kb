@@ -3,18 +3,18 @@
 ```
 VCF Integration Topology
 ┌─────────────────────────────────────────────────────┐
-│  SDDC Manager (integration hub)                     │
+│  SDDC Manager (integration hub)                      │
 └──┬──────┬──────┬──────┬──────┬──────────────────────┘
    │      │      │      │      │
    ▼      ▼      ▼      ▼      ▼
 ┌──────┐ ┌────┐ ┌────┐ ┌────┐ ┌──────────────────────┐
-│ Aria │ │Aria│ │ AD │ │SIEM│ │  Backup              │
-│ Ops  │ │Auto│ │LDAP│ │Sys-│ │  (Veeam/NetBackup)   │
-│      │ │    │ │    │ │log │ │                      │
-│VCF MP│ │Cloud│ │SSO│ │TLS │ │  per-domain vCenter  │
-│ adds │ │Acct│ │IDp │ │6514│ │  as managed server   │
-│ SDDC │ │+NSX│ │    │ │    │ │                      │
-│ data │ │creds│ │    │ │    │ │  SFTP for SDDC Mgr  │
+│ Aria │ │Aria│ │ AD │ │SIEM│ │  Backup                │
+│ Ops  │ │Auto│ │LDAP│ │Sys-│ │  (Veeam/NetBackup)     │
+│      │ │    │ │    │ │log │ │                        │
+│VCF MP│ │Cloud│ │SSO│ │TLS │ │  per-domain vCenter    │
+│ adds │ │Acct│ │IDp │ │6514│ │  as managed server     │
+│ SDDC │ │+NSX│ │    │ │    │ │                        │
+│ data │ │creds│ │    │ │    │ │  SFTP for SDDC Mgr    │
 └──────┘ └────┘ └────┘ └────┘ └──────────────────────┘
 
 NSX Federation (multi-site)
@@ -23,11 +23,11 @@ NSX Federation (multi-site)
 │                        │ global policy               │
 │              ┌─────────┴──────────┐                  │
 │              ▼                    ▼                  │
-│   ┌──────────────────┐  ┌──────────────────┐        │
-│   │ VCF Site A       │  │ VCF Site B       │        │
-│   │ Local NSX Mgr    │  │ Local NSX Mgr    │        │
-│   │ (data plane)     │  │ (data plane)     │        │
-│   └──────────────────┘  └──────────────────┘        │
+│   ┌──────────────────┐  ┌──────────────────┐         │
+│   │ VCF Site A       │  │ VCF Site B       │         │
+│   │ Local NSX Mgr    │  │ Local NSX Mgr    │         │
+│   │ (data plane)     │  │ (data plane)     │         │
+│   └──────────────────┘  └──────────────────┘         │
 └──────────────────────────────────────────────────────┘
 ```
 

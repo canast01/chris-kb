@@ -5,25 +5,25 @@ Aria Operations — Security Architecture
 ┌─────────────────────────────────────────────────────┐
 │  Identity and Authentication                        │
 │                                                     │
-│  Active Directory / LDAPS (port 636)               │
+│  Active Directory / LDAPS (port 636)                │
 │      │                                              │
 │      ▼                                              │
-│  Administration → Authentication Sources           │
-│  → AD groups imported → roles assigned             │
+│  Administration → Authentication Sources            │
+│  → AD groups imported → roles assigned              │
 │                                                     │
-│  VIDM (Workspace ONE Access) for SAML SSO          │
-│  Local admin account → break-glass only            │
+│  VIDM (Workspace ONE Access) for SAML SSO           │
+│  Local admin account → break-glass only             │
 └──────────────────────┬──────────────────────────────┘
                        │
                        ▼
 ┌─────────────────────────────────────────────────────┐
 │  RBAC Roles                                         │
-│  Administrator  → full system access               │
-│  Content Admin  → dashboards, alerts, policies     │
-│  Operator       → acknowledge alerts, run actions  │
-│  Read Only      → view only, no actions            │
+│  Administrator  → full system access                │
+│  Content Admin  → dashboards, alerts, policies      │
+│  Operator       → acknowledge alerts, run actions   │
+│  Read Only      → view only, no actions             │
 │                                                     │
-│  Object Permissions → scope users to specific DC   │
+│  Object Permissions → scope users to specific DC    │
 └──────────────────────┬──────────────────────────────┘
                        │
                        ▼
@@ -32,7 +32,7 @@ Aria Operations — Security Architecture
 │  Self-signed → replace with CA-signed cert          │
 │  vracli certificate import --cert --key --ca        │
 │  Cluster node-to-node: auto-managed TLS             │
-│  Data at rest: storage-layer encryption (vSAN/SAN) │
+│  Data at rest: storage-layer encryption (vSAN/SAN)  │
 └─────────────────────────────────────────────────────┘
 ```
 

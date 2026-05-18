@@ -9,8 +9,8 @@ Restore testing validates that backup data is usable and that recovery procedure
          │
          ▼
 ┌──────────────────┐     select      ┌──────────────────────┐
-│  Recovery Svcs   │────────────────►│  Recovery Point      │
-│  Vault           │                 │  (daily/weekly/etc.)  │
+│  Recovery Svcs   │────────────────►│  Recovery Point        │
+│  Vault           │                 │  (daily/weekly/etc.)   │
 └──────────────────┘                 └───────────┬──────────┘
                                                  │
                                                  ▼

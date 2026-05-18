@@ -15,9 +15,9 @@
 │       ▼                                                                         │
 │  Microsegmentation analysis                                                     │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Define application (VM names / NSX tags / subnets)                     │  │
-│  │  Observe 7–30 days ► View Flows tab ► intra/inter-tier/external         │  │
-│  │  Plan & Assess ► Recommendations ► review ► Export CSV or Push to NSX  │  │
+│  │  Define application (VM names / NSX tags / subnets)                     │   │
+│  │  Observe 7–30 days ► View Flows tab ► intra/inter-tier/external         │   │
+│  │  Plan & Assess ► Recommendations ► review ► Export CSV or Push to NSX  │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │       │                                                                         │
 │       ▼                                                                         │

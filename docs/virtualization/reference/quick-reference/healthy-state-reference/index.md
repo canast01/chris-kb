@@ -12,7 +12,7 @@
 │ vSAN            │ Skyline Health all green │ 0 degraded objects        │
 │                 │ No active resync (outside maint) │ Disk groups Up   │
 │ NSX             │ MP=STABLE │ Edge nodes Up │ BGP=Established          │
-│ Datastores      │ All mounted │ APD=0 │ PDL=0 │ < 75% used           │
+│ Datastores      │ All mounted │ APD=0 │ PDL=0 │ < 75% used            │
 │ VMs             │ No consolidation warnings │ Tools running+current   │
 │                 │ CPU Ready < 5% │ Balloon = 0 │ No swap              │
 │ Backups         │ Last job: success │ No missed jobs in 24h           │

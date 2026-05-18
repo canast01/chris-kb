@@ -8,25 +8,25 @@ Node count requirements, cluster naming, vSAN policy standards, network design r
 ┌──────────────── VxRail Design: Rack Layout & Network Standards ─────────────────┐
 │                                                                                  │
 │   Rack A                              Rack B                                    │
-│  ┌─────────┐                         ┌─────────┐                               │
-│  │ Node-01 │ ESXi ◄─────────────────►│ Node-04 │ ESXi                          │
-│  │ Node-02 │ ESXi                    │ Node-05 │ ESXi                          │
-│  │ Node-03 │ ESXi ◄─────────────────►│ Node-06 │ ESXi                          │
-│  └────┬────┘                         └────┬────┘                               │
+│  ┌─────────┐                         ┌─────────┐                                │
+│  │ Node-01 │ ESXi ◄─────────────────►│ Node-04 │ ESXi                           │
+│  │ Node-02 │ ESXi                    │ Node-05 │ ESXi                           │
+│  │ Node-03 │ ESXi ◄─────────────────►│ Node-06 │ ESXi                           │
+│  └────┬────┘                         └────┬────┘                                │
 │       │ 25 GbE dual-uplink LACP            │ 25 GbE dual-uplink LACP            │
-│  ┌────▼────┐                         ┌────▼────┐                               │
-│  │ ToR-A   ├─────── vSAN VLAN ───────┤ ToR-B   │  MTU 9000                     │
-│  │ Switch  ├─────── vMotion VLAN ────┤ Switch  │  MTU 9000                     │
-│  │         ├─────── Mgmt VLAN ───────┤         │  MTU 1500                     │
-│  └─────────┘                         └─────────┘                               │
+│  ┌────▼────┐                         ┌────▼────┐                                │
+│  │ ToR-A   ├─────── vSAN VLAN ───────┤ ToR-B   │  MTU 9000                      │
+│  │ Switch  ├─────── vMotion VLAN ────┤ Switch  │  MTU 9000                      │
+│  │         ├─────── Mgmt VLAN ───────┤         │  MTU 1500                      │
+│  └─────────┘                         └─────────┘                                │
 │                                                                                  │
 │  Per-Node VMkernel layout:                                                       │
 │  ┌──────────────────────────────────────────────────────────────────────────┐   │
-│  │ vmk0 (Management, VLAN mgmt, MTU 1500) │ vmk1 (vSAN, VLAN vsan, MTU 9K) │   │
-│  │ vmk2 (vMotion, VLAN vmot, MTU 9000)    │ vmk3 (VxRail Mgmt, MTU 1500)   │   │
+│  │ vmk0 (Management, VLAN mgmt, MTU 1500) │ vmk1 (vSAN, VLAN vsan, MTU 9K) │    │
+│  │ vmk2 (vMotion, VLAN vmot, MTU 9000)    │ vmk3 (VxRail Mgmt, MTU 1500)   │    │
 │  └──────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                  │
-│  vSAN Policy tiers:  FTT=1/RAID-5 (gold) │ FTT=1/RAID-1 (platinum) │ FTT=2/R6 │
+│  vSAN Policy tiers:  FTT=1/RAID-5 (gold) │ FTT=1/RAID-1 (platinum) │ FTT=2/R6   │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 

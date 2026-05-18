@@ -12,7 +12,7 @@
 ├──────────────────────┼──────────────────────────────────────┤
 │  Network Access      │  Least Privilege                     │
 │  ──────────────────  │  ────────────────────────────────    │
-│  SSH: mgmt CIDR only │  svc-vra: no Admin role in vCenter  │
+│  SSH: mgmt CIDR only │  svc-vra: no Admin role in vCenter   │
 │  VAMI :5480 firewalled│  Encrypted Prop Groups for secrets  │
 │  K8s API local only  │  Git content source: read-only PAT   │
 ├──────────────────────┼──────────────────────────────────────┤

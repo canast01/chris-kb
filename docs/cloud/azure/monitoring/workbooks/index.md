@@ -6,26 +6,26 @@ Azure Monitor Workbooks are interactive, parameterised reports that combine text
 ┌──────────────────────────────────────────────────────────────┐
 │                   Workbook Architecture                      │
 │                                                              │
-│  Parameters  ┌─────────────────────────────────────────┐    │
+│  Parameters  ┌─────────────────────────────────────────┐     │
 │  ┌─────────┐  │  Time range │ Subscription │ Resource   │    │
-│  │ User    │─►│  (filter all queries below)            │    │
+│  │ User    │─►│  (filter all queries below)            │     │
 │  │ selects │  └─────────────────────────────────────────┘    │
-│  └─────────┘            │ applied to                        │
-│                         ▼                                   │
-│  Data Sources                                               │
-│  ┌───────────┐  ┌───────────┐  ┌───────────────────────┐    │
-│  │  Metrics  │  │   Logs    │  │  Azure Resource       │    │
-│  │  (charts) │  │  (KQL)    │  │  Graph (ARG)          │    │
-│  └─────┬─────┘  └─────┬─────┘  └──────────┬────────────┘    │
-│        └──────────────┴──────────────────┘                  │
-│                               │                             │
-│                               ▼                             │
-│  Visualisations  ┌────────────────────────────────────┐     │
+│  └─────────┘            │ applied to                         │
+│                         ▼                                    │
+│  Data Sources                                                │
+│  ┌───────────┐  ┌───────────┐  ┌───────────────────────┐     │
+│  │  Metrics  │  │   Logs    │  │  Azure Resource       │     │
+│  │  (charts) │  │  (KQL)    │  │  Graph (ARG)          │     │
+│  └─────┬─────┘  └─────┬─────┘  └──────────┬────────────┘     │
+│        └──────────────┴──────────────────┘                   │
+│                               │                              │
+│                               ▼                              │
+│  Visualisations  ┌────────────────────────────────────┐      │
 │                  │  Grid │ Chart │ Map │ Text │ Tiles  │     │
-│                  └────────────────────────────────────┘     │
-│                               │ share via RBAC              │
-│                               ▼                             │
-│             Team workbook  (kind: shared)                   │
+│                  └────────────────────────────────────┘      │
+│                               │ share via RBAC               │
+│                               ▼                              │
+│             Team workbook  (kind: shared)                    │
 └──────────────────────────────────────────────────────────────┘
 ``` They are used for operational dashboards, cost reports, capacity planning, and compliance views that require richer formatting than a standard dashboard.
 

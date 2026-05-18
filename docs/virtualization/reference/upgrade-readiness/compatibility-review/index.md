@@ -11,11 +11,11 @@ Verify version compatibility across the full VMware stack before any upgrade. Up
 │ vCenter ↔ ESXi          │ interopmatrix.vmware.com                       │
 │ vCenter ↔ NSX           │ NSX install guide + interop matrix             │
 │ VxRail ↔ vCenter/ESXi   │ VxRail release notes (VxRail owns combination) │
-│ Aria LCM ↔ Aria products│ Aria LCM release notes                        │
+│ Aria LCM ↔ Aria products│ Aria LCM release notes                         │
 │ HBA/NIC drivers         │ VMware HCL (vmware.com/resources/compatibility)│
 │ Storage array           │ VMware HCL + array vendor support matrix       │
 │ Veeam                   │ veeam.com/kb2443                               │
-│ VM Tools / HW version   │ PowerCLI: Get-VM | ToolsVersionStatus         │
+│ VM Tools / HW version   │ PowerCLI: Get-VM | ToolsVersionStatus          │
 │ Certificates            │ Check expiry before window: openssl s_client   │
 └─────────────────────────┴────────────────────────────────────────────────┘
 ```

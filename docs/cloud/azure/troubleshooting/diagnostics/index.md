@@ -2,7 +2,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│               Azure Diagnostics — Data Sources               │
+│               Azure Diagnostics — Data Sources                 │
 └──────────────────────────────────────────────────────────────┘
 
   Resource Under Investigation

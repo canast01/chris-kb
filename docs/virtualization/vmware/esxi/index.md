@@ -10,7 +10,7 @@ ESXi Host — Component Overview
 │  VMkernel (ESXi Hypervisor)                             │
 │  ├── CPU Scheduler (NUMA-aware, vCPU scheduling)        │
 │  ├── Memory Manager (TPS, balloon, swap hierarchy)      │
-│  ├── Storage Stack (NMP, PSP, SATP, VAAI)              │
+│  ├── Storage Stack (NMP, PSP, SATP, VAAI)               │
 │  └── Network Stack (vSwitch / vDS, port groups)         │
 │                                                         │
 │  Management Agents                                      │
@@ -19,7 +19,7 @@ ESXi Host — Component Overview
 │  └── fdm      ← vSphere HA (Fault Domain Manager)       │
 │                                                         │
 │  Virtual Machines                                       │
-│  ├── VM1 (vmx + vCPU + vRAM + vmdk)                   │
+│  ├── VM1 (vmx + vCPU + vRAM + vmdk)                     │
 │  ├── VM2                                                │
 │  └── VM3                                                │
 └────────────────┬──────────────┬────────────────────────┘

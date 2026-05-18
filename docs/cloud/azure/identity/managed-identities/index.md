@@ -10,13 +10,13 @@ Managed identities give Azure resources an identity in Entra ID without requirin
 │  │  Azure VM /      │───────────────────►│  Entra ID      │  │
 │  │  App Service /   │   user-assigned    │  (identity     │  │
 │  │  AKS Pod         │◄───────────────────│   registered)  │  │
-│  └────────┬─────────┘                   └────────────────┘  │
+│  └────────┬─────────┘                   └────────────────┘   │
 │           │                                                  │
-│           │ code calls IMDS endpoint                        │
+│           │ code calls IMDS endpoint                         │
 │           ▼  (169.254.169.254)                               │
 │  ┌──────────────────────────────────────────────────────┐    │
 │  │  MSI Token Endpoint  ──►  access token (OAuth2)      │    │
-│  └──────────────────────────┬─────────────────────────┘     │
+│  └──────────────────────────┬─────────────────────────┘      │
 │                             │ token attached to request      │
 │                             ▼                                │
 │  ┌──────────────────────────────────────────────────────┐    │

@@ -4,7 +4,7 @@
   vSphere Replication Operations Overview
 ┌─────────────────────────────────────────────────────────────┐
 │  Lifecycle                                                  │
-│  Install (OVA deploy) ──► Register ──► Pair sites          │
+│  Install (OVA deploy) ──► Register ──► Pair sites           │
 │       │                                   │                 │
 │       ▼                                   ▼                 │
 │  ┌─────────┐                    ┌──────────────────┐        │
@@ -13,7 +13,7 @@
 │  │per VM   │                    │  VRA disk / svc  │        │
 │  └─────────┘                    └──────────────────┘        │
 │                                                             │
-│  Procedures ◄──── Scripts (RPO report) ◄──── CLI/REST API  │
+│  Procedures ◄──── Scripts (RPO report) ◄──── CLI/REST API   │
 └─────────────────────────────────────────────────────────────┘
 ```
 

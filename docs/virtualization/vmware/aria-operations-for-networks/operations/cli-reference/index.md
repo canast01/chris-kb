@@ -5,20 +5,20 @@
 │                                                                                 │
 │  Platform VM (ssh ubuntu@aon-platform)                                          │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  cat /etc/build.info              ── show version/build                 │  │
-│  │  systemctl status vrni-platform   ── main app service                  │  │
-│  │  systemctl status nginx cassandra kafka elasticsearch postgres          │  │
-│  │  df -hT / df -h /var/lib/cassandra ── disk usage                       │  │
-│  │  nc -zv <collector-ip> 443        ── test collector reachability        │  │
+│  │  cat /etc/build.info              ── show version/build                 │   │
+│  │  systemctl status vrni-platform   ── main app service                  │    │
+│  │  systemctl status nginx cassandra kafka elasticsearch postgres          │   │
+│  │  df -hT / df -h /var/lib/cassandra ── disk usage                       │    │
+│  │  nc -zv <collector-ip> 443        ── test collector reachability        │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Collector VM (ssh ubuntu@aon-collector)                                         │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  systemctl status ni-collector    ── collector service                  │  │
-│  │  journalctl -u ni-collector -f    ── follow collector log               │  │
-│  │  sudo pairing.sh                  ── re-pair to Platform VM             │  │
-│  │  tcpdump -i eth0 udp port 2055    ── verify NetFlow arriving            │  │
-│  │  nc -zv aon-platform 443          ── test upload path                  │  │
+│  │  systemctl status ni-collector    ── collector service                  │   │
+│  │  journalctl -u ni-collector -f    ── follow collector log               │   │
+│  │  sudo pairing.sh                  ── re-pair to Platform VM             │   │
+│  │  tcpdump -i eth0 udp port 2055    ── verify NetFlow arriving            │   │
+│  │  nc -zv aon-platform 443          ── test upload path                  │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  REST API (from anywhere):                                                      │

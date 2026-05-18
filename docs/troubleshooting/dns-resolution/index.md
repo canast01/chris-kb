@@ -6,28 +6,28 @@
 │                                                                      │
 │  Name not resolving                                                  │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  nslookup <name>  /  dig <name>                                │ │
-│  │  NXDOMAIN ──► record missing in zone                          │ │
-│  │  SERVFAIL ──► DNS server error / forwarding loop              │ │
-│  │  Timeout  ──► DNS server unreachable (UDP 53 blocked?)        │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
-│        │ resolves but wrong IP                                      │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  dig <name> @<specific-dns-server>                             │ │
-│  │  Check each DNS server in hierarchy                            │ │
-│  │  Stale cached record ──► ipconfig /flushdns · rndc flush      │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  nslookup <name>  /  dig <name>                                │  │
+│  │  NXDOMAIN ──► record missing in zone                          │   │
+│  │  SERVFAIL ──► DNS server error / forwarding loop              │   │
+│  │  Timeout  ──► DNS server unreachable (UDP 53 blocked?)        │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
+│        │ resolves but wrong IP                                       │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  dig <name> @<specific-dns-server>                             │  │
+│  │  Check each DNS server in hierarchy                            │  │
+│  │  Stale cached record ──► ipconfig /flushdns · rndc flush      │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check conditional forwarder (cross-domain / external names)   │ │
-│  │  Forwarder IP wrong or unreachable ──► update DNS config      │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check conditional forwarder (cross-domain / external names)   │  │
+│  │  Forwarder IP wrong or unreachable ──► update DNS config      │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check zone file / dynamic DNS update health                  │ │
-│  │  Create/fix A record ──► verify PTR (reverse DNS)             │ │
-│  └────────────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check zone file / dynamic DNS update health                  │   │
+│  │  Create/fix A record ──► verify PTR (reverse DNS)             │   │
+│  └────────────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

@@ -5,14 +5,14 @@ VCF Escalation Workflow
 ┌─────────────────────────────────────────────────────┐
 │  Before Opening SR — Collect:                       │
 │                                                     │
-│  ① SDDC Manager version (Admin → About)            │
-│  ② SoS health check output                         │
+│  ① SDDC Manager version (Admin → About)             │
+│  ② SoS health check output                          │
 │     sudo python3 /opt/vmware/sddc-support/sos       │
 │       --health-summary                              │
-│  ③ SDDC Manager support bundle                     │
+│  ③ SDDC Manager support bundle                      │
 │     vcf-support-bundle --type sddc                  │
 │  ④ Component-specific bundle (NSX, vCenter)         │
-│  ⑤ Timeline: last known good → first failure       │
+│  ⑤ Timeline: last known good → first failure        │
 │  ⑥ Screenshots of task failures or error messages   │
 └──────────────────────────┬──────────────────────────┘
                            │

@@ -8,7 +8,7 @@ All-flash block storage running Purity//FA — ActiveDR, ActiveCluster, NVMe/FC,
 Pure FlashArray — HA Controller Pair
 ┌─────────────────────────────────────────────────────────────┐
 │  Controller CT0 — Active                                    │
-│  ├── Front-End Ports: FC / iSCSI / NVMe-oF                 │
+│  ├── Front-End Ports: FC / iSCSI / NVMe-oF                  │
 │  ├── NVRAM (write acknowledged here — < 1 ms)               │
 │  ├── Inline Dedup + Compression engine                      │
 │  └── Back-End: NVMe Flash Shelves                           │

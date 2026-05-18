@@ -4,29 +4,29 @@
 VCF RBAC Model — Role Assignment Flow
 ┌─────────────────────────────────────────────────────┐
 │  Active Directory                                   │
-│  ┌──────────────────────────────────────────────┐  │
-│  │  GG-VCF-Admins · GG-VCF-Operators · ...     │  │
-│  └──────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────┐   │
+│  │  GG-VCF-Admins · GG-VCF-Operators · ...     │    │
+│  └──────────────────────────────────────────────┘   │
 └───────────────────────┬─────────────────────────────┘
                         │ AD groups mapped to roles
           ┌─────────────┼──────────────┐
           ▼             ▼              ▼
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
-│ SDDC Manager │ │ NSX Manager  │ │ vCenter Server   │
-│              │ │              │ │ (per domain)     │
-│ ADMIN        │ │ Enterprise   │ │ Administrator    │
-│ OPERATOR     │ │   Admin      │ │ ReadOnly         │
-│ VIEWER       │ │ Network Eng  │ │ CloudAdmin (VVF) │
-│              │ │ Security Eng │ │                  │
-│              │ │ Auditor      │ │ Apply at lowest  │
-│              │ │              │ │ inventory level  │
+│ SDDC Manager │ │ NSX Manager  │ │ vCenter Server    │
+│              │ │              │ │ (per domain)      │
+│ ADMIN        │ │ Enterprise   │ │ Administrator     │
+│ OPERATOR     │ │   Admin      │ │ ReadOnly          │
+│ VIEWER       │ │ Network Eng  │ │ CloudAdmin (VVF)  │
+│              │ │ Security Eng │ │                   │
+│              │ │ Auditor      │ │ Apply at lowest   │
+│              │ │              │ │ inventory level   │
 └──────────────┘ └──────────────┘ └──────────────────┘
 
 Credential Rotation (all via SDDC Manager — never manually):
 ┌─────────────────────────────────────────────────────┐
-│  SDDC Manager → Security → Credentials → Rotate    │
-│  ESXi root · vCenter SSO admin · NSX admin         │
-│  SDDC Manager admin · vSAN iSCSI accounts          │
+│  SDDC Manager → Security → Credentials → Rotate     │
+│  ESXi root · vCenter SSO admin · NSX admin          │
+│  SDDC Manager admin · vSAN iSCSI accounts           │
 │  Schedule: every 90 days (or per policy)            │
 └─────────────────────────────────────────────────────┘
 ```

@@ -11,7 +11,7 @@
 │  │ SRM service down?│         └──────────────────────────┘   │
 │  └──────────────────┘                                        │
 │                                                              │
-│  Recovery Plan stuck?         Test failover: VMs fail on?   │
+│  Recovery Plan stuck?         Test failover: VMs fail on?    │
 │  ┌──────────────────┐         ┌──────────────────────────┐   │
 │  │ Manual step wait │         │ Network mapping missing? │   │
 │  │  for approval?   │         │ Placeholder VM stale?    │   │

@@ -4,7 +4,7 @@
 VxRail LCM Flow — How It Works
 ┌─────────────────────────────────────────────────────────────┐
 │  VxRail Manager (VM on cluster)                             │
-│  LCM Engine · vCenter plugin · REST API · Health monitor   │
+│  LCM Engine · vCenter plugin · REST API · Health monitor    │
 └───────────────┬─────────────────────────────────────────────┘
                 │ orchestrates
     ┌───────────▼──────────────────────────────────────┐

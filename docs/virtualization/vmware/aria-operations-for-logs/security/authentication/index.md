@@ -5,21 +5,21 @@
 │         Aria Ops for Logs Authentication Flow               │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Browser / API Client                                      │
-│       │                                                    │
+│  Browser / API Client                                       │
+│       │                                                     │
 │       ├── Local account → admin (System Domain, break-glass)│
-│       │                                                    │
-│       ├── AD (LDAPS) → Administration → Authentication     │
-│       │   dc01.corp.local:636  ·  svc-vrli-ldap bind       │
-│       │   group membership → role at login time            │
-│       │                                                    │
-│       └── VIDM (SSO) → redirect to VIDM login page         │
-│           (LCM-managed deployments)                        │
-│                           │                                │
-│                           ▼                                │
-│  Aria Ops for Logs session (UI) or HTTP Basic (API)        │
-│  API: -u 'admin:<pw>' per request — no token               │
-│  UI: session timeout 10 hours (no configurable setting)    │
+│       │                                                     │
+│       ├── AD (LDAPS) → Administration → Authentication      │
+│       │   dc01.corp.local:636  ·  svc-vrli-ldap bind        │
+│       │   group membership → role at login time             │
+│       │                                                     │
+│       └── VIDM (SSO) → redirect to VIDM login page          │
+│           (LCM-managed deployments)                         │
+│                           │                                 │
+│                           ▼                                 │
+│  Aria Ops for Logs session (UI) or HTTP Basic (API)         │
+│  API: -u 'admin:<pw>' per request — no token                │
+│  UI: session timeout 10 hours (no configurable setting)     │
 └─────────────────────────────────────────────────────────────┘
 ```
 

@@ -13,20 +13,20 @@ VCF Operations — Day-to-Day Workflow
        │          │            │
        ▼          ▼            ▼
 ┌──────────┐ ┌─────────┐ ┌──────────────────────────┐
-│ Health   │ │ LCM     │ │ Security                 │
-│ Checks   │ │ Upgrades│ │ Passwords · Certs        │
-│          │ │         │ │                          │
-│ SoS tool │ │ Bundles │ │ SDDC Mgr → Security      │
-│ --health │ │ Pre-chk │ │ → Password Management    │
-│ -summary │ │ Schedule│ │ → Cert Management        │
+│ Health   │ │ LCM     │ │ Security                   │
+│ Checks   │ │ Upgrades│ │ Passwords · Certs          │
+│          │ │         │ │                            │
+│ SoS tool │ │ Bundles │ │ SDDC Mgr → Security        │
+│ --health │ │ Pre-chk │ │ → Password Management      │
+│ -summary │ │ Schedule│ │ → Cert Management          │
 └──────────┘ └─────────┘ └──────────────────────────┘
        │          │            │
        ▼          ▼            ▼
 ┌─────────────────────────────────────────────────────┐
 │  Backup & Restore                                   │
-│  SDDC Manager (SFTP) → NSX Manager (SFTP)          │
-│  → vCenter (FBB/SFTP)                              │
-│  Restore order: SDDC Mgr → NSX → vCenter           │
+│  SDDC Manager (SFTP) → NSX Manager (SFTP)           │
+│  → vCenter (FBB/SFTP)                               │
+│  Restore order: SDDC Mgr → NSX → vCenter            │
 └─────────────────────────────────────────────────────┘
 ```
 

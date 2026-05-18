@@ -11,12 +11,12 @@
 │  Phase  │  Steps                                                         │
 ├─────────┼────────────────────────────────────────────────────────────────┤
 │ Install │ Vendor ISO (Dell VIB bundle) │ VMFS 6 boot │ scratch on local  │
-│ Network │ vmk0=mgmt(1500) │ vmk1=vMotion(9000) │ vmk2=vSAN(9000)       │
+│ Network │ vmk0=mgmt(1500) │ vmk1=vMotion(9000) │ vmk2=vSAN(9000)         │
 │         │ vmk3=NSX-TEP(9000) │ All uplinks to vDS                        │
-│ System  │ Hostname in DNS (fwd+rev) │ NTP (2 servers) │ Syslog → Aria   │
-│ Security│ Lockdown Mode ON │ SSH off │ Root → CyberArk │ Host Profile   │
-│ Firmware│ BIOS/iDRAC/HBA/NIC at approved baseline                       │
-│ vCenter │ Add to vCenter → correct cluster │ Host Profile applied       │
+│ System  │ Hostname in DNS (fwd+rev) │ NTP (2 servers) │ Syslog → Aria    │
+│ Security│ Lockdown Mode ON │ SSH off │ Root → CyberArk │ Host Profile    │
+│ Firmware│ BIOS/iDRAC/HBA/NIC at approved baseline                        │
+│ vCenter │ Add to vCenter → correct cluster │ Host Profile applied        │
 │ Monitor │ Add to monitoring platform │ Inventory updated                 │
 └─────────┴────────────────────────────────────────────────────────────────┘
 ```

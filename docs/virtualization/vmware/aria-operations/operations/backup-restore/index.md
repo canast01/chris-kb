@@ -4,9 +4,9 @@
 Aria Operations — Backup Architecture
 ┌─────────────────────────────────────────────────────┐
 │  Aria Operations Cluster                            │
-│  ┌──────────┐  ┌──────────┐  ┌────────────────┐   │
-│  │ Primary  │  │ Replica  │  │ Data nodes     │   │
-│  └──────────┘  └──────────┘  └────────────────┘   │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────┐     │
+│  │ Primary  │  │ Replica  │  │ Data nodes     │     │
+│  └──────────┘  └──────────┘  └────────────────┘     │
 └──────────────────────┬──────────────────────────────┘
                        │ file-based backup
                        │ (config only — not metric data)
@@ -17,18 +17,18 @@ Aria Operations — Backup Architecture
 │  SFTP: backup-srv.corp.local (port 22)              │
 │                                                     │
 │  What IS backed up:                                 │
-│    alert definitions · dashboards · user accounts  │
-│    adapter configs (not credentials) · policies    │
+│    alert definitions · dashboards · user accounts   │
+│    adapter configs (not credentials) · policies     │
 │                                                     │
 │  What is NOT backed up:                             │
-│    metric time-series data · alert history         │
+│    metric time-series data · alert history          │
 │    log data                                         │
 └──────────────────────┬──────────────────────────────┘
                        │ restore
                        ▼
 ┌─────────────────────────────────────────────────────┐
 │  Restore Process                                    │
-│  Admin → Backup/Restore → select backup → Restore  │
+│  Admin → Backup/Restore → select backup → Restore   │
 │  10–20 min unavailability during restore            │
 │  Re-enter all adapter credentials after restore     │
 │                                                     │

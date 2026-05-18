@@ -8,26 +8,26 @@ Veeam Backup & Replication — Backup Server scheduling, Proxy data movement via
 ┌──────────────────────────────────────────────────────────────────────┐
 │                     Veeam Architecture                               │
 │                                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │              Backup Job (schedule + policy)                  │   │
-│  │     Veeam Backup Server ──► vCenter API ──► snapshot VM      │   │
-│  └──────────────────────────────┬───────────────────────────────┘   │
-│                                 │ data movement                     │
-│  ┌──────────────────────────────▼───────────────────────────────┐   │
-│  │              Veeam Proxy (VADP / agent)                      │   │
-│  │  Hot-add transport · NBD · Direct SAN · Linux agent          │   │
-│  └──────────────────────────────┬───────────────────────────────┘   │
-│                                 │                                   │
-│  ┌──────────────────────────────▼───────────────────────────────┐   │
-│  │         Backup Repository (Scale-Out / SOBR)                 │   │
-│  │  Primary extent (fast disk)  ──►  Capacity tier (S3/object) │   │
-│  │  Immutable (hardened Linux)  ──►  Archive tier (tape/cloud) │   │
-│  └──────────────────────────────┬───────────────────────────────┘   │
-│                                 │ replication (DR)                  │
-│  ┌──────────────────────────────▼───────────────────────────────┐   │
-│  │              Secondary Site / Cloud Connect                  │   │
-│  │          Restore: FLR · VM restore · Instant recovery        │   │
-│  └──────────────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────────────┐    │
+│  │              Backup Job (schedule + policy)                  │    │
+│  │     Veeam Backup Server ──► vCenter API ──► snapshot VM      │    │
+│  └──────────────────────────────┬───────────────────────────────┘    │
+│                                 │ data movement                      │
+│  ┌──────────────────────────────▼───────────────────────────────┐    │
+│  │              Veeam Proxy (VADP / agent)                      │    │
+│  │  Hot-add transport · NBD · Direct SAN · Linux agent          │    │
+│  └──────────────────────────────┬───────────────────────────────┘    │
+│                                 │                                    │
+│  ┌──────────────────────────────▼───────────────────────────────┐    │
+│  │         Backup Repository (Scale-Out / SOBR)                 │    │
+│  │  Primary extent (fast disk)  ──►  Capacity tier (S3/object) │     │
+│  │  Immutable (hardened Linux)  ──►  Archive tier (tape/cloud) │     │
+│  └──────────────────────────────┬───────────────────────────────┘    │
+│                                 │ replication (DR)                   │
+│  ┌──────────────────────────────▼───────────────────────────────┐    │
+│  │              Secondary Site / Cloud Connect                  │    │
+│  │          Restore: FLR · VM restore · Instant recovery        │    │
+│  └──────────────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

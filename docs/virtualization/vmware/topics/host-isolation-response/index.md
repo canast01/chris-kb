@@ -5,11 +5,11 @@
 ┌────────────── Host Isolation: Heartbeat Lost to VM Restart ────────────────────┐
 │                                                                                 │
 │  Normal operation:                                                              │
-│  Host ◄──── management heartbeat ────► vCenter / FDM peers                    │
+│  Host ◄──── management heartbeat ────► vCenter / FDM peers                     │
 │  Host ◄──── datastore heartbeat  ────► shared datastore                        │
 │                                                                                 │
 │  Network failure on isolated host:                                              │
-│  Host ──✕── management network ─────► vCenter (no response)                   │
+│  Host ──✕── management network ─────► vCenter (no response)                    │
 │       │                                                                         │
 │       ▼ 10 seconds                                                              │
 │  HA marks host as potentially isolated                                          │

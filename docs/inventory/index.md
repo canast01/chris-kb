@@ -4,23 +4,23 @@
 ┌──────────────────────────────────────────────────────────────────────┐
 │                   Inventory Management Flow                          │
 │                                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │                         CMDB                                 │   │
-│  │             (ServiceNow · Netbox · Spreadsheet)              │   │
-│  └────────┬──────────────────────────────┬─────────────────────┘   │
-│           │  auto-discovery              │  manual entry            │
-│  ┌────────▼──────────────┐   ┌───────────▼───────────────────────┐  │
-│  │  Discovery tools      │   │   Manual inventory                │  │
-│  │  vCenter inventory    │   │   New hardware installs           │  │
-│  │  AWS/Azure resource   │   │   Appliance deployments           │  │
-│  │  groups               │   │                                   │  │
-│  └───────────────────────┘   └───────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────────────┐    │
+│  │                         CMDB                                 │    │
+│  │             (ServiceNow · Netbox · Spreadsheet)              │    │
+│  └────────┬──────────────────────────────┬─────────────────────┘     │
+│           │  auto-discovery              │  manual entry             │
+│  ┌────────▼──────────────┐   ┌───────────▼───────────────────────┐   │
+│  │  Discovery tools      │   │   Manual inventory                │   │
+│  │  vCenter inventory    │   │   New hardware installs           │   │
+│  │  AWS/Azure resource   │   │   Appliance deployments           │   │
+│  │  groups               │   │                                   │   │
+│  └───────────────────────┘   └───────────────────────────────────┘   │
 │                                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  Audit (quarterly)                                          │   │
-│  │  Verify CI accuracy ──► identify orphans ──► cleanup        │   │
-│  │  Lifecycle state: Active · EOL · Decommissioned             │   │
-│  └──────────────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────────────┐    │
+│  │  Audit (quarterly)                                          │     │
+│  │  Verify CI accuracy ──► identify orphans ──► cleanup        │     │
+│  │  Lifecycle state: Active · EOL · Decommissioned             │     │
+│  └──────────────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

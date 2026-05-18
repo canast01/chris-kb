@@ -6,15 +6,15 @@ Fast operational tools for troubleshooting and validation.
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                     Quick Reference Hub                                 │
 ├──────────────────────┬────────────────────────┬────────────────────────┤
-│   Decision Trees     │   Cheat Sheets         │  Reference Docs        │
-│                      │                        │                        │
-│ ► VM Slow            │ ► Command Cheat Sheet  │ ► Glossary             │
-│ ► Host Down          │ ► vCenter Commands     │ ► Healthy State Ref    │
-│ ► Storage Latency    │ ► vSAN Quick Ref       │ ► Environment Baseline │
-│ ► Network Issue      │ ► Snapshot Quick Ref   │ ► Escalation Checklist │
-│                      │ ► Cert Quick Ref       │ ► Logs Quick Ref       │
-│                      │ ► VM Perf Checks       │ ► Daily Workflow       │
-│                      │                        │ ► Emergency Checks     │
+│   Decision Trees     │   Cheat Sheets         │  Reference Docs         │
+│                      │                        │                         │
+│ ► VM Slow            │ ► Command Cheat Sheet  │ ► Glossary              │
+│ ► Host Down          │ ► vCenter Commands     │ ► Healthy State Ref     │
+│ ► Storage Latency    │ ► vSAN Quick Ref       │ ► Environment Baseline  │
+│ ► Network Issue      │ ► Snapshot Quick Ref   │ ► Escalation Checklist  │
+│                      │ ► Cert Quick Ref       │ ► Logs Quick Ref        │
+│                      │ ► VM Perf Checks       │ ► Daily Workflow        │
+│                      │                        │ ► Emergency Checks      │
 └──────────────────────┴────────────────────────┴────────────────────────┘
 ```
 

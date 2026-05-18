@@ -10,13 +10,13 @@ Entra ID (Azure AD) groups are the primary mechanism for managing access at scal
 │  │  Security Group  (type: security, assignable to role)│    │
 │  │                                                      │    │
 │  │  Members ──► users / nested groups / service prncpls │    │
-│  └──────────────────────────┬─────────────────────────┘     │
+│  └──────────────────────────┬─────────────────────────┘      │
 │                             │                                │
 │                             ▼ role assignment                │
 │  ┌──────────────────────────────────────────────────────┐    │
 │  │  RBAC Role Assignment                                │    │
 │  │  Group ──► "Contributor" ──► /subscriptions/.../rg   │    │
-│  └──────────────────────────┬─────────────────────────┘     │
+│  └──────────────────────────┬─────────────────────────┘      │
 │                             │                                │
 │                             ▼ access scope                   │
 │  ┌──────────────────────────────────────────────────────┐    │

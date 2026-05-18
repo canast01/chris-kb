@@ -5,22 +5,22 @@
 │            AWS Hardening Checklist (Priority)            │
 ├──────────────────────────────────────────────────────────┤
 │  CRITICAL                                                │
-│  ├── Root account: no access keys, MFA enabled          │
-│  ├── IMDSv2 required on all EC2 instances               │
-│  ├── S3 Block Public Access (account level)             │
-│  └── CloudTrail: all-region, S3 + CloudWatch Logs       │
+│  ├── Root account: no access keys, MFA enabled           │
+│  ├── IMDSv2 required on all EC2 instances                │
+│  ├── S3 Block Public Access (account level)              │
+│  └── CloudTrail: all-region, S3 + CloudWatch Logs        │
 ├──────────────────────────────────────────────────────────┤
 │  HIGH                                                    │
-│  ├── GuardDuty enabled (all features + S3/EKS)          │
-│  ├── Security Hub + CIS Benchmark standard enabled      │
-│  ├── AWS Config recording all resource types            │
-│  ├── No IAM users with AdministratorAccess (use roles)  │
-│  ├── Access keys rotated ≤ 90 days                      │
-│  └── IAM password policy: length ≥ 14, rotation 90d    │
+│  ├── GuardDuty enabled (all features + S3/EKS)           │
+│  ├── Security Hub + CIS Benchmark standard enabled       │
+│  ├── AWS Config recording all resource types             │
+│  ├── No IAM users with AdministratorAccess (use roles)   │
+│  ├── Access keys rotated ≤ 90 days                       │
+│  └── IAM password policy: length ≥ 14, rotation 90d      │
 ├──────────────────────────────────────────────────────────┤
 │  MEDIUM                                                  │
-│  ├── VPC Flow Logs enabled                              │
-│  └── Default VPC deleted or unused                      │
+│  ├── VPC Flow Logs enabled                               │
+│  └── Default VPC deleted or unused                       │
 └──────────────────────────────────────────────────────────┘
   GuardDuty ──► Security Hub ──► Findings Dashboard
   Config    ──► Security Hub ──► Compliance Score

@@ -9,14 +9,14 @@
 │  Manual log collection if UI unavailable:                                       │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Platform VM                                                             │  │
-│  │  /var/log/vmware/hms/      ── core platform service                    │  │
-│  │  journalctl -u hms -f      ── follow HMS service log                   │  │
-│  │  journalctl -u nginx -f    ── API gateway log                          │  │
+│  │  /var/log/vmware/hms/      ── core platform service                    │    │
+│  │  journalctl -u hms -f      ── follow HMS service log                   │    │
+│  │  journalctl -u nginx -f    ── API gateway log                          │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Collector VM                                                            │  │
-│  │  /var/log/vmware/collector/ ── data collection logs                    │  │
-│  │  journalctl -u hms -f       ── collector agent log                     │  │
+│  │  /var/log/vmware/collector/ ── data collection logs                    │    │
+│  │  journalctl -u hms -f       ── collector agent log                     │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Connectivity tests (from Collector VM):                                         │

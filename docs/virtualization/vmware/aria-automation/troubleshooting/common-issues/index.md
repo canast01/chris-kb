@@ -5,26 +5,26 @@
 │         Aria Automation Issue Triage Flow                   │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Symptom                   First Check                     │
-│  ─────────────────────     ─────────────────────────────   │
-│  Deployment stuck/failed → Deployments → History tab       │
-│                           kubectl logs -n prelude          │
-│                           iaas-gateway / assembler logs    │
+│  Symptom                   First Check                      │
+│  ─────────────────────     ─────────────────────────────    │
+│  Deployment stuck/failed → Deployments → History tab        │
+│                           kubectl logs -n prelude           │
+│                           iaas-gateway / assembler logs     │
 │                                                             │
-│  Cloud account red      → curl vCenter:443 (401=reachable) │
+│  Cloud account red      → curl vCenter:443 (401=reachable)  │
 │                           service account password expired? │
 │                                                             │
-│  Blueprint error        → validate via API before publish  │
-│                           resource type / flavor / image   │
+│  Blueprint error        → validate via API before publish   │
+│                           resource type / flavor / image    │
 │                                                             │
-│  ABX action failing     → Extensibility → Last Runs        │
-│                           dependency missing / timeout?    │
+│  ABX action failing     → Extensibility → Last Runs         │
+│                           dependency missing / timeout?     │
 │                                                             │
-│  Auth failure (VIDM)    → curl vidm.../health (UP?)        │
-│                           VIDM cert / AD connector status  │
+│  Auth failure (VIDM)    → curl vidm.../health (UP?)         │
+│                           VIDM cert / AD connector status   │
 │                                                             │
-│  Pod CrashLoopBackOff   → kubectl describe pod -n prelude  │
-│                           df -h / (disk full?)             │
+│  Pod CrashLoopBackOff   → kubectl describe pod -n prelude   │
+│                           df -h / (disk full?)              │
 └─────────────────────────────────────────────────────────────┘
 ```
 

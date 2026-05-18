@@ -5,25 +5,25 @@
 │         Aria Ops for Logs Issue Triage Flow                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Ingestion 0 events/sec?                                   │
-│  └──► ss -tulnp | grep 514/1514/9543  (ports listening?)   │
-│       df -h /var/log/loginsight  (disk full = stop ingest) │
-│       grep drop ingestion.log                              │
+│  Ingestion 0 events/sec?                                    │
+│  └──► ss -tulnp | grep 514/1514/9543  (ports listening?)    │
+│       df -h /var/log/loginsight  (disk full = stop ingest)  │
+│       grep drop ingestion.log                               │
 │                                                             │
-│  Agent stale / not delivering?                             │
-│  └──► systemctl status liagentd                            │
-│       nc -zv vrli-prod-01:9543  (TCP reachable?)           │
-│       liagent.log → ssl/connect errors                     │
+│  Agent stale / not delivering?                              │
+│  └──► systemctl status liagentd                             │
+│       nc -zv vrli-prod-01:9543  (TCP reachable?)            │
+│       liagent.log → ssl/connect errors                      │
 │                                                             │
-│  Queries slow / timing out?                                │
-│  └──► nodetool compactionstats (Cassandra compacting?)     │
-│       nodetool info | grep heap  (>90% = slow)             │
+│  Queries slow / timing out?                                 │
+│  └──► nodetool compactionstats (Cassandra compacting?)      │
+│       nodetool info | grep heap  (>90% = slow)              │
 │                                                             │
-│  Cluster node not joining?                                 │
-│  └──► DNS forward+reverse · NTP delta (<60s) · cert match  │
+│  Cluster node not joining?                                  │
+│  └──► DNS forward+reverse · NTP delta (<60s) · cert match   │
 │                                                             │
-│  Alerts not firing?                                        │
-│  └──► alert enabled? threshold too high? SMTP reachable?   │
+│  Alerts not firing?                                         │
+│  └──► alert enabled? threshold too high? SMTP reachable?    │
 └─────────────────────────────────────────────────────────────┘
 ```
 

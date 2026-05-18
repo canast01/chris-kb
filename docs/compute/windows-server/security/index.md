@@ -5,19 +5,19 @@
 │             Windows Server Security Layers            │
 ├───────────────────────────────────────────────────────┤
 │  Identity & Access                                    │
-│  AD DS → Kerberos/NTLM → RBAC (AD groups)            │
-│  GPO User Rights Assignments │ JEA (PS remoting)     │
+│  AD DS → Kerberos/NTLM → RBAC (AD groups)             │
+│  GPO User Rights Assignments │ JEA (PS remoting)      │
 ├───────────────────────────────────────────────────────┤
 │  Policy Enforcement                                   │
-│  GPO ──► Computer Config ──► Security Settings       │
+│  GPO ──► Computer Config ──► Security Settings        │
 │          Account Policy │ Audit Policy │ Sec Options  │
 ├───────────────────────────────────────────────────────┤
 │  Endpoint Protection                                  │
-│  Windows Defender AV │ ASR rules │ Credential Guard  │
+│  Windows Defender AV │ ASR rules │ Credential Guard   │
 │  BitLocker (disk) │ Windows Firewall                  │
 ├───────────────────────────────────────────────────────┤
 │  Audit & Monitoring                                   │
-│  auditpol → Security Event Log → SIEM forwarding     │
+│  auditpol → Security Event Log → SIEM forwarding      │
 └───────────────────────────────────────────────────────┘
 ```
 

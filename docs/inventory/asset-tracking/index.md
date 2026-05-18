@@ -14,8 +14,8 @@ Track hardware and cloud resources from procurement through decommission to main
       │                                        ┌────────┘
       ▼                                        ▼
 ┌──────────────────┐                  ┌──────────────────┐
-│  Asset Register  │                  │  CMDB CI Record  │
-│  (CMDB / ITSM)   │◄─────────────────│  linked to asset │
+│  Asset Register  │                  │  CMDB CI Record                            │
+│  (CMDB / ITSM)   │◄─────────────────│  linked to asset                           │
 └──────────────────┘                  └──────────────────┘
 ```
 

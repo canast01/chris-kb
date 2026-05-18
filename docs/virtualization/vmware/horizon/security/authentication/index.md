@@ -4,13 +4,13 @@
   Authentication Flow
 ┌────────────┐    ┌──────────────┐    ┌─────────────────────────────┐
 │  User      │    │  Workspace   │    │  Connection Server          │
-│            │───►│  ONE / vIDM  │───►│  ┌─────────────────────┐   │
-│  1. Login  │    │  (SAML IdP)  │    │  │ AD Kerberos / NTLM  │   │
-│            │    │  ┌─────────┐ │    │  │ RADIUS (2FA)        │   │
+│            │───►│  ONE / vIDM  │───►│  ┌─────────────────────┐    │
+│  1. Login  │    │  (SAML IdP)  │    │  │ AD Kerberos / NTLM  │    │
+│            │    │  ┌─────────┐ │    │  │ RADIUS (2FA)        │    │
 │            │    │  │ MFA /   │ │    │  │ Smart Card (PIV/CAC) │   │
-│            │    │  │ FIDO2 / │ │    │  └─────────────────────┘   │
+│            │    │  │ FIDO2 / │ │    │  └─────────────────────┘    │
 │            │    │  │ LDAP    │ │    │                             │
-│            │    │  └─────────┘ │    │  True SSO (cert issued)    │
+│            │    │  └─────────┘ │    │  True SSO (cert issued)     │
 └────────────┘    └──────────────┘    │  ┌─────────────────────┐   │
                                       │  │ Enrollment Server   │   │
                                       │  │ → short-lived cert  │   │

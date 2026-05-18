@@ -5,28 +5,28 @@
 │                                                                                 │
 │  CPU Contention                                                                 │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  %RDY < 5%: Normal │ 5–10%: Monitor │ >10%: Contention │ >20%: Severe  │  │
-│  │  Detection: esxtop 'c' ── %RDY column per world                         │  │
-│  │  Response: vMotion VMs to less-loaded host │ review DRS settings        │  │
+│  │  %RDY < 5%: Normal │ 5–10%: Monitor │ >10%: Contention │ >20%: Severe  │    │
+│  │  Detection: esxtop 'c' ── %RDY column per world                         │   │
+│  │  Response: vMotion VMs to less-loaded host │ review DRS settings        │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Memory Contention                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Balloon > 0: host reclaiming ── vMotion or add RAM                     │  │
-│  │  Swap > 0:    CRITICAL ── swapping to disk = huge latency hit           │  │
-│  │  Detection: esxtop 'm' ── MCTLSZ (balloon) │ SWPRD/SWPWT (swap)        │  │
+│  │  Balloon > 0: host reclaiming ── vMotion or add RAM                     │   │
+│  │  Swap > 0:    CRITICAL ── swapping to disk = huge latency hit           │   │
+│  │  Detection: esxtop 'm' ── MCTLSZ (balloon) │ SWPRD/SWPWT (swap)        │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Storage Latency                                                                │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  <10ms: Normal │ 10–20ms: Warning │ >20ms: Problem │ >50ms: App timeout │  │
-│  │  Detection: esxtop 'u' ── DAVG/cmd (device) │ KAVG (kernel queue)      │  │
+│  │  <10ms: Normal │ 10–20ms: Warning │ >20ms: Problem │ >50ms: App timeout │   │
+│  │  Detection: esxtop 'u' ── DAVG/cmd (device) │ KAVG (kernel queue)      │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Network Saturation                                                             │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Drops > 0: ring buffer full │ RX/TX >80%: NIC saturation               │  │
-│  │  Detection: esxcli network nic stats │ esxtop 'n'                       │  │
+│  │  Drops > 0: ring buffer full │ RX/TX >80%: NIC saturation               │   │
+│  │  Detection: esxcli network nic stats │ esxtop 'n'                       │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```

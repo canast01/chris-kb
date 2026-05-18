@@ -10,7 +10,7 @@ AWS Route 53 notes for day-to-day infrastructure operations.
 │  Hosted Zone (example.com)                              │
 │  ├── A record: www → ALB alias                          │
 │  ├── CNAME: api.example.com → internal.example.com      │
-│  └── MX, TXT, NS, SOA records                          │
+│  └── MX, TXT, NS, SOA records                           │
 │                                                         │
 │  Routing Policies:                                      │
 │  ├── Simple        one IP / one resource                │

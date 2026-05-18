@@ -3,17 +3,17 @@
 ```
 ┌───────────────────── Tanzu Operations Overview ───────────────────────────────┐
 │                                                                                │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │ CLI Ref     │  │ Health      │  │ Procedures  │  │ Install & Upgrade   │ │
-│  │ tanzu/kubectl│  │ Checks      │  │ Namespaces  │  │ Supervisor ► mgmt   │ │
-│  │ Carvel/Velero│ │ Supervisor  │  │ RBAC, Ingress│  │ cluster ► workload  │ │
-│  │ Harbor CLI  │  │ TKC ► nodes │  │ Helm deploy │  │ rolling upgrade     │ │
-│  └─────────────┘  │ PVCs/certs  │  └─────────────┘  └─────────────────────┘ │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐   │
+│  │ CLI Ref     │  │ Health      │  │ Procedures  │  │ Install & Upgrade   │   │
+│  │ tanzu/kubectl│  │ Checks      │  │ Namespaces  │  │ Supervisor ► mgmt   │  │
+│  │ Carvel/Velero│ │ Supervisor  │  │ RBAC, Ingress│  │ cluster ► workload  │  │
+│  │ Harbor CLI  │  │ TKC ► nodes │  │ Helm deploy │  │ rolling upgrade     │   │
+│  └─────────────┘  │ PVCs/certs  │  └─────────────┘  └─────────────────────┘   │
 │                   └─────────────┘                                              │
 │  ┌─────────────┐  ┌─────────────────────────────────────────────────────────┐ │
 │  │ Backup &    │  │  Scripts                                                │ │
 │  │ Restore     │  │  List clusters │ PVC audit │ resource usage │ cert expiry│ │
-│  │ Velero/VCSA │  │  Harbor CVE scan │ Harbor vuln check                   │ │
+│  │ Velero/VCSA │  │  Harbor CVE scan │ Harbor vuln check                   │  │
 │  └─────────────┘  └─────────────────────────────────────────────────────────┘ │
 └───────────────────────────────────────────────────────────────────────────────┘
 ```

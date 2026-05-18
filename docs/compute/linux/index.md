@@ -22,7 +22,7 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
 │   └──────────┴──────────┴──────────────────────────┘  │
 ├─────────────────┬────────────────────────────────────┤
 │  Storage        │  Network                           │
-│  SAN/NAS/LVM    │  LACP bond → VLAN → switch        │
+│  SAN/NAS/LVM    │  LACP bond → VLAN → switch         │
 ├─────────────────┴────────────────────────────────────┤
 │  Users & Auth: PAM → SSSD → Active Directory         │
 └──────────────────────────────────────────────────────┘

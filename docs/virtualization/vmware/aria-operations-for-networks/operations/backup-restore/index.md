@@ -9,18 +9,18 @@
 │                                                                                 │
 │  Backup methods:                                                                │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  UI:       Settings ► Infrastructure ► Backup ► Download (.tar.gz)      │  │
-│  │  REST API: GET /api/ni/settings/backup ── requires auth token           │  │
-│  │  cron:     daily 02:00 ── aon-backup.sh ── retain 30 days              │  │
+│  │  UI:       Settings ► Infrastructure ► Backup ► Download (.tar.gz)      │   │
+│  │  REST API: GET /api/ni/settings/backup ── requires auth token           │   │
+│  │  cron:     daily 02:00 ── aon-backup.sh ── retain 30 days              │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Restore flow (same or new Platform VM):                                        │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  1. Deploy fresh Platform OVA (same version as backup)                  │  │
-│  │  2. Upload .tar.gz ► Settings ► Backup ► Restore                        │  │
-│  │  3. Re-pair each Collector: pairing.sh on Collector VM                  │  │
-│  │  4. Verify data source "Connected" + Last Sync timestamp                │  │
-│  │  5. Flow data rebuilds over next 30 days                                │  │
+│  │  1. Deploy fresh Platform OVA (same version as backup)                  │   │
+│  │  2. Upload .tar.gz ► Settings ► Backup ► Restore                        │   │
+│  │  3. Re-pair each Collector: pairing.sh on Collector VM                  │   │
+│  │  4. Verify data source "Connected" + Last Sync timestamp                │   │
+│  │  5. Flow data rebuilds over next 30 days                                │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Collectors: stateless — do NOT back up; redeploy OVA and re-pair if lost      │

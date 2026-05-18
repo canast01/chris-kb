@@ -10,7 +10,7 @@ AWS Patch Manager notes for day-to-day infrastructure operations.
 │  Patch Baseline                                         │
 │  ├── OS (Amazon Linux · RHEL · Windows …)               │
 │  ├── Auto-approve critical patches after N days         │
-│  └── Rejected patches list                             │
+│  └── Rejected patches list                              │
 │        │                                                │
 │        ▼                                                │
 │  Maintenance Window (schedule: cron expression)         │

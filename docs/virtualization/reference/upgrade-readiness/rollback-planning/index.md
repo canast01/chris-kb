@@ -16,7 +16,7 @@ Rollback options differ significantly by component. Establish the rollback path 
 │ Aria products        │ VM snapshot pre-upgrade   │ Yes (if snapped)      │
 │ VM Hardware version  │ No rollback               │ Permanent             │
 ├──────────────────────┴───────────────────────────┴───────────────────────┤
-│  Go/No-Go: all hosts + VMs OK → Go  │  Core service degraded → No-Go   │
+│  Go/No-Go: all hosts + VMs OK → Go  │  Core service degraded → No-Go     │
 │  Rollback decision must be made before window end — not after            │
 └──────────────────────────────────────────────────────────────────────────┘
 ```

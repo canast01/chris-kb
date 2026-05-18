@@ -5,17 +5,17 @@
 │                                                                                 │
 │  Pre-escalation (always collect first)                                          │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Settings ► Support ► Download Support Bundle (Platform + Collectors)   │  │
-│  │  Settings ► About ── version │ data source list ── screenshot           │  │
+│  │  Settings ► Support ► Download Support Bundle (Platform + Collectors)   │   │
+│  │  Settings ► About ── version │ data source list ── screenshot           │   │
 │  │  Symptom timeline: when started │ what changed │ exact error text        │  │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Severity ► response                                                             │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Sev 1: Platform down / no UI / no data ──► 30 min (call hotline)       │  │
-│  │  Sev 2: Major feature down (all flows missing) ──► 4 business hours     │  │
-│  │  Sev 3: Single collector/source failing ──► next business day           │  │
-│  │  Sev 4: How-to / feature request ──► standard queue                     │  │
+│  │  Sev 1: Platform down / no UI / no data ──► 30 min (call hotline)       │   │
+│  │  Sev 2: Major feature down (all flows missing) ──► 4 business hours     │   │
+│  │  Sev 3: Single collector/source failing ──► next business day           │   │
+│  │  Sev 4: How-to / feature request ──► standard queue                     │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Open case: customerconnect.vmware.com ► Aria Operations for Networks           │

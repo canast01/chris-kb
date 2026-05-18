@@ -4,30 +4,30 @@ Backup policies define when backups run, how many recovery points are retained, 
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                      Backup Policy                          │
+│                      Backup Policy                           │
 │                                                              │
-│  Schedule                        Retention                  │
-│  ┌──────────────────┐            ┌──────────────────────┐   │
-│  │ Daily  02:00 UTC │            │ Daily   → 30 days    │   │
-│  │ Weekly Sunday    │            │ Weekly  → 12 weeks   │   │
-│  └────────┬─────────┘            │ Monthly → 12 months  │   │
-│           │                      │ Yearly  → 1 year     │   │
-│           ▼                      └──────────┬───────────┘   │
-│  ┌──────────────────┐                       │               │
-│  │   Protected Item │                       │               │
-│  │   (VM / Files)   │                       │               │
-│  └────────┬─────────┘                       │               │
+│  Schedule                        Retention                   │
+│  ┌──────────────────┐            ┌──────────────────────┐    │
+│  │ Daily  02:00 UTC │            │ Daily   → 30 days    │    │
+│  │ Weekly Sunday    │            │ Weekly  → 12 weeks   │    │
+│  └────────┬─────────┘            │ Monthly → 12 months  │    │
+│           │                      │ Yearly  → 1 year     │    │
+│           ▼                      └──────────┬───────────┘    │
+│  ┌──────────────────┐                       │                │
+│  │   Protected Item │                       │                │
+│  │   (VM / Files)   │                       │                │
+│  └────────┬─────────┘                       │                │
 └───────────┼─────────────────────────────────┼───────────────┘
             │                                 │
             ▼                                 ▼
 ┌───────────────────────────────────────────────────────────┐
-│              Recovery Services Vault                      │
-│                                                           │
-│  ┌────────────┐  ┌────────────┐  ┌────────────────────┐  │
-│  │  Snapshot  │  │   Vault    │  │  Vault-Archive     │  │
-│  │ (instant   │  │  Standard  │  │  (long-term cold)  │  │
-│  │   restore) │  │  tier      │  │                    │  │
-│  └────────────┘  └────────────┘  └────────────────────┘  │
+│              Recovery Services Vault                         │
+│                                                              │
+│  ┌────────────┐  ┌────────────┐  ┌────────────────────┐      │
+│  │  Snapshot  │  │   Vault    │  │  Vault-Archive     │      │
+│  │ (instant   │  │  Standard  │  │  (long-term cold)  │      │
+│  │   restore) │  │  tier      │  │                    │      │
+│  └────────────┘  └────────────┘  └────────────────────┘      │
 └───────────────────────────────────────────────────────────┘
 ``` (snapshot, vault-standard). Policies are attached to protected items inside a Recovery Services Vault.
 

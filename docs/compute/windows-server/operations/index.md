@@ -13,10 +13,10 @@
 ├──────────────────────────────────────────────────────┤
 │               Backup & Restore                       │
 │  Veeam Agent (image) │ Windows Server Backup (WSB)   │
-│  VSS snapshot → repository → restore point          │
+│  VSS snapshot → repository → restore point           │
 ├─────────────────────────────────────────────────────┤
 │  Scripts & Automation  │  Install & Upgrade          │
-│  PowerShell / RSAT     │  WUA → reboot → validate   │
+│  PowerShell / RSAT     │  WUA → reboot → validate    │
 └────────────────────────┴────────────────────────────┘
 ```
 

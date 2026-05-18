@@ -7,24 +7,24 @@ Aria Operations — Health Check Coverage Map
 │  Admin → Cluster Management                         │
 │  vracli cluster health                              │
 │  Expected: all nodes ONLINE                         │
-│  Watch: OFFLINE · DEGRADED · SYNCING               │
+│  Watch: OFFLINE · DEGRADED · SYNCING                │
 └──────────────────────┬──────────────────────────────┘
                        │
           ┌────────────┼────────────────────┐
           ▼            ▼                    ▼
 ┌──────────────┐ ┌──────────────┐ ┌─────────────────┐
-│ Adapter      │ │ Disk         │ │ Service         │
-│ Health       │ │ Health       │ │ Health          │
-│              │ │              │ │                 │
-│ Admin        │ │ /storage/db  │ │ systemctl       │
-│ → Solutions  │ │ warn: 70%    │ │ list-units      │
-│              │ │ crit: 80%    │ │ 'vmware-*'      │
-│ vracli       │ │              │ │                 │
-│ adapter list │ │ /storage/log │ │ analytics       │
-│              │ │ warn: 75%    │ │ cassandra       │
-│ Expected:    │ │ crit: 85%    │ │ gemfire         │
-│ Collecting   │ │              │ │ casa / nginx    │
-│ < 5 min ago  │ │ check inodes │ │ watchdog        │
+│ Adapter      │ │ Disk         │ │ Service           │
+│ Health       │ │ Health       │ │ Health            │
+│              │ │              │ │                   │
+│ Admin        │ │ /storage/db  │ │ systemctl         │
+│ → Solutions  │ │ warn: 70%    │ │ list-units        │
+│              │ │ crit: 80%    │ │ 'vmware-*'        │
+│ vracli       │ │              │ │                   │
+│ adapter list │ │ /storage/log │ │ analytics         │
+│              │ │ warn: 75%    │ │ cassandra         │
+│ Expected:    │ │ crit: 85%    │ │ gemfire           │
+│ Collecting   │ │              │ │ casa / nginx      │
+│ < 5 min ago  │ │ check inodes │ │ watchdog          │
 └──────────────┘ └──────────────┘ └─────────────────┘
           │
           ▼

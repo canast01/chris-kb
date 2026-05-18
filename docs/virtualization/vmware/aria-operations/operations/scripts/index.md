@@ -28,8 +28,8 @@ Aria Operations API — Script Interaction Pattern
 │  Output / Integration                               │
 │  → CSV export (alerts, capacity, idle VMs)          │
 │  → monitoring dashboard (HTTP POST)                 │
-│  → ITSM integration                                │
-│  NOTE: re-authenticate every 25 min for long runs  │
+│  → ITSM integration                                 │
+│  NOTE: re-authenticate every 25 min for long runs   │
 └─────────────────────────────────────────────────────┘
 ```
 

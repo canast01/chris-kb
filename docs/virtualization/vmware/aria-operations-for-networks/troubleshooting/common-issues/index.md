@@ -22,7 +22,7 @@
 │  No Flows Visible                                                               │
 │  ├── NetFlow not configured on switches (show flow exporter)                    │
 │  ├── UDP 2055 blocked ── tcpdump -i eth0 udp port 2055 on Collector            │
-│  └── ESXi vDS IPFIX not enabled ── vCenter ► vDS ► Configure ► NetFlow        │
+│  └── ESXi vDS IPFIX not enabled ── vCenter ► vDS ► Configure ► NetFlow         │
 │                                                                                 │
 │  Flow Data Stale / UI Slow                                                      │
 │  └── disk full on Collector or Platform ── df -h ► clear space ► restart svc   │

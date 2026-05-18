@@ -17,14 +17,14 @@ Tanzu knowledge base — architecture, operations, CLI references, security, and
 │                                │ provision TanzuKubernetesCluster               │
 │  ┌────────────────────────────▼───────────────────────────────────────────┐    │
 │  │  TKG Workload Cluster (Kubernetes)                                     │    │
-│  │  ┌───────────────┐   ┌───────────────────────────────────────────────┐│    │
-│  │  │ Control Plane │   │  Worker Nodes                                 ││    │
-│  │  │ (3 VMs)       │   │  ┌──────────┐ ┌──────────┐ ┌──────────┐     ││    │
-│  │  │ etcd/API Srv  │   │  │  Node-01 │ │  Node-02 │ │  Node-03 │     ││    │
-│  │  └───────────────┘   │  │  Pods►   │ │  Pods►   │ │  Pods►   │     ││    │
-│  │                       │  └──────────┘ └──────────┘ └──────────┘     ││    │
+│  │  ┌───────────────┐   ┌───────────────────────────────────────────────┐│     │
+│  │  │ Control Plane │   │  Worker Nodes                                 ││     │
+│  │  │ (3 VMs)       │   │  ┌──────────┐ ┌──────────┐ ┌──────────┐     ││       │
+│  │  │ etcd/API Srv  │   │  │  Node-01 │ │  Node-02 │ │  Node-03 │     ││       │
+│  │  └───────────────┘   │  │  Pods►   │ │  Pods►   │ │  Pods►   │     ││       │
+│  │                       │  └──────────┘ └──────────┘ └──────────┘     ││      │
 │  │                       └───────────────────────────────────────────────┘│    │
-│  │  vSphere CSI ► vSAN PVCs │ NSX/AVI ► LoadBalancer │ Harbor ► images   │    │
+│  │  vSphere CSI ► vSAN PVCs │ NSX/AVI ► LoadBalancer │ Harbor ► images   │     │
 │  └────────────────────────────────────────────────────────────────────────┘    │
 │                                Pinniped ► OIDC ► kubeconfig                     │
 └────────────────────────────────────────────────────────────────────────────────┘

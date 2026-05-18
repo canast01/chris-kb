@@ -15,9 +15,9 @@
 │ Cluster          │ <site>-<env>-cluster-<##>     │ syd-prod-cluster-01  │
 │ Datastore        │ ds-<env>-<storage>-<proto>-<##>│ ds-prod-powermax-fc-01│
 │ Port Group       │ pg-<vlan>-<description>       │ pg-1001-prod-vm      │
-│ Distributed vSwitch│ vds-<site>-<cluster>-<##>  │ vds-syd-compute-01   │
+│ Distributed vSwitch│ vds-<site>-<cluster>-<##>  │ vds-syd-compute-01    │
 │ Template         │ tmpl-<os>-<version>-<date>    │ tmpl-win2022-std-20260101│
-│ iDRAC/iLO        │ idrac-esx-<site>-<##>         │ idrac-esx-syd-01    │
+│ iDRAC/iLO        │ idrac-esx-<site>-<##>         │ idrac-esx-syd-01     │
 └──────────────────┴───────────────────────────────┴──────────────────────┘
   Tokens: env=prod/dev/test/uat/dr/mgmt │ site=syd/mel/etc.
 ```

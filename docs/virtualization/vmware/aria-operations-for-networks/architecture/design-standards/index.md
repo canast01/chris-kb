@@ -4,29 +4,29 @@
 ┌──────────── Aria Networks Design: Sizing & Collector Placement ─────────────────┐
 │                                                                                  │
 │  Deployment size selection (Platform VM):                                        │
-│  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │  Small (4vCPU/16GB) ── lab/PoC, ≤1K VMs, ≤2K flows/sec                │    │
-│  │  Medium (8/32GB)    ── mid-size, ≤3K VMs, ≤10K flows/sec              │    │
-│  │  Large  (16/64GB)   ── production, ≤10K VMs, ≤30K flows/sec           │    │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────────────────────────────┐     │
+│  │  Small (4vCPU/16GB) ── lab/PoC, ≤1K VMs, ≤2K flows/sec                │       │
+│  │  Medium (8/32GB)    ── mid-size, ≤3K VMs, ≤10K flows/sec              │       │
+│  │  Large  (16/64GB)   ── production, ≤10K VMs, ≤30K flows/sec           │       │
+│  └─────────────────────────────────────────────────────────────────────────┘     │
 │                                                                                  │
 │  Collector placement rules:                                                      │
-│  ┌─────────────────────────────────────────────────────────────────────────┐    │
-│  │  Site A                           Site B                                │    │
-│  │  ┌──────────────┐                 ┌──────────────┐                     │    │
-│  │  │ Collector-A  │                 │ Collector-B  │                     │    │
-│  │  │ polls:        │                 │ polls:       │                     │    │
-│  │  │  vCenter-A   │                 │  vCenter-B   │                     │    │
-│  │  │  NSX-T-A     │                 │  NSX-T-B     │                     │    │
-│  │  │  Switches-A  │                 │  Switches-B  │                     │    │
-│  │  └──────┬───────┘                 └──────┬───────┘                     │    │
-│  │         │ TCP 443 (upload)               │ TCP 443                     │    │
-│  │         └───────────────────┬────────────┘                             │    │
-│  │                             ▼                                           │    │
-│  │                       Platform VM (single)                              │    │
-│  └─────────────────────────────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────────────────────────────┐     │
+│  │  Site A                           Site B                                │     │
+│  │  ┌──────────────┐                 ┌──────────────┐                     │      │
+│  │  │ Collector-A  │                 │ Collector-B  │                     │      │
+│  │  │ polls:        │                 │ polls:       │                     │     │
+│  │  │  vCenter-A   │                 │  vCenter-B   │                     │      │
+│  │  │  NSX-T-A     │                 │  NSX-T-B     │                     │      │
+│  │  │  Switches-A  │                 │  Switches-B  │                     │      │
+│  │  └──────┬───────┘                 └──────┬───────┘                     │      │
+│  │         │ TCP 443 (upload)               │ TCP 443                     │      │
+│  │         └───────────────────┬────────────┘                             │      │
+│  │                             ▼                                           │     │
+│  │                       Platform VM (single)                              │     │
+│  └─────────────────────────────────────────────────────────────────────────┘     │
 │                                                                                  │
-│  NetFlow: Switches ──► UDP 2055 ──► Collector (must be L3 reachable)            │
+│  NetFlow: Switches ──► UDP 2055 ──► Collector (must be L3 reachable)             │
 └──────────────────────────────────────────────────────────────────────────────────┘
 ```
 

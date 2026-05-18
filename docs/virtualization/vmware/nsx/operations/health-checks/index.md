@@ -14,8 +14,8 @@
 │                         ▼                                   │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │  Edge Nodes                                          │   │
-│  │  BGP sessions: vrf <id> → get bgp neighbor summary  │   │
-│  │  HA state: get edge-cluster status → ACTIVE/STANDBY │   │
+│  │  BGP sessions: vrf <id> → get bgp neighbor summary  │    │
+│  │  HA state: get edge-cluster status → ACTIVE/STANDBY │    │
 │  └──────────────────────┬───────────────────────────────┘   │
 │                         │ data plane                        │
 │                         ▼                                   │

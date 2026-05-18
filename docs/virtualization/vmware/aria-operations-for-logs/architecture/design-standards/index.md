@@ -5,24 +5,24 @@
 │         Aria Ops for Logs — Cluster Design                  │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Production (HA — 3 nodes)                                 │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  vrli-prod-01 (Master)  8 vCPU · 18 GB · 500 GB     │  │
-│  │  vrli-prod-02 (Worker)  8 vCPU · 18 GB · 500 GB     │  │
-│  │  vrli-prod-03 (Worker)  8 vCPU · 18 GB · 500 GB     │  │
-│  │  Total: up to 225 GB/day ingestion                   │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  Production (HA — 3 nodes)                                  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  vrli-prod-01 (Master)  8 vCPU · 18 GB · 500 GB     │    │
+│  │  vrli-prod-02 (Worker)  8 vCPU · 18 GB · 500 GB     │    │
+│  │  vrli-prod-03 (Worker)  8 vCPU · 18 GB · 500 GB     │    │
+│  │  Total: up to 225 GB/day ingestion                   │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  Retention Tiers                                           │
-│  Hot (30 days, local disk)  →  Warm (NFS, 90–365 days)    │
+│  Retention Tiers                                            │
+│  Hot (30 days, local disk)  →  Warm (NFS, 90–365 days)      │
 │                                                             │
-│  Sizing Rules                                              │
-│  < 75% disk: normal  ·  75–80%: expand  ·  >80%: urgent   │
-│  Workers can be added online — no downtime                 │
+│  Sizing Rules                                               │
+│  < 75% disk: normal  ·  75–80%: expand  ·  >80%: urgent     │
+│  Workers can be added online — no downtime                  │
 │                                                             │
-│  Ports                                                     │
-│  UDP 514 (syslog)  ·  TCP 1514 (syslog)                   │
-│  TCP 9543 (cfapi/TLS)  ·  TCP 443 (UI/API)                │
+│  Ports                                                      │
+│  UDP 514 (syslog)  ·  TCP 1514 (syslog)                     │
+│  TCP 9543 (cfapi/TLS)  ·  TCP 443 (UI/API)                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 

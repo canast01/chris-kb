@@ -11,10 +11,10 @@ Maintain visibility of vendor support agreements to ensure infrastructure compon
          ┌────────────────────┼───────────────────┐
          ▼                    ▼                   ▼
 ┌─────────────────┐  ┌─────────────────┐  ┌──────────────────┐
-│  >120 days out  │  │  90 days out    │  │  <30 days out    │
-│                 │  │                 │  │                  │
-│ Review scope    │  │ Request quote   │  │ Submit PO        │
-│ add/remove CIs  │  │ route to proc.  │  │ confirm coverage │
+│  >120 days out  │  │  90 days out    │  │  <30 days out      │
+│                 │  │                 │  │                    │
+│ Review scope    │  │ Request quote   │  │ Submit PO          │
+│ add/remove CIs  │  │ route to proc.  │  │ confirm coverage   │
 └─────────────────┘  └────────┬────────┘  └──────────────────┘
                               │                   │
                               ▼                   ▼

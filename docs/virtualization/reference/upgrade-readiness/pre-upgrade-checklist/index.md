@@ -9,16 +9,16 @@ Complete all items before starting any vSphere upgrade (vCenter, ESXi, vSAN, NSX
 │  Category                   │  Required                                  │
 ├─────────────────────────────┼────────────────────────────────────────────┤
 │ Backups                     │ vCenter VAMI backup ✓ │ NSX backup ✓       │
-│                             │ Aria snapshot ✓ │ CR VM snapshots ✓       │
-│ Environment Health          │ 0 red alarms │ All hosts Connected        │
-│                             │ vSAN green │ No APD/PDL │ NSX STABLE      │
-│ Compatibility               │ Interop matrix ✓ │ HCL ✓ │ 3rd-party ✓   │
-│ Disk / Capacity             │ VCSA partitions < 70% │ DS > 100 GB free  │
-│ DNS / NTP                   │ Fwd+rev DNS OK │ NTP drift < 5s           │
-│ Certificates                │ No cert expiring within 30 days           │
-│ Access / Credentials        │ SSO admin works │ Break-glass documented  │
-│ Rollback                    │ Steps documented │ Snapshot confirmed ✓   │
-│ Change Management           │ CR approved │ App owners notified         │
+│                             │ Aria snapshot ✓ │ CR VM snapshots ✓        │
+│ Environment Health          │ 0 red alarms │ All hosts Connected         │
+│                             │ vSAN green │ No APD/PDL │ NSX STABLE       │
+│ Compatibility               │ Interop matrix ✓ │ HCL ✓ │ 3rd-party ✓     │
+│ Disk / Capacity             │ VCSA partitions < 70% │ DS > 100 GB free   │
+│ DNS / NTP                   │ Fwd+rev DNS OK │ NTP drift < 5s            │
+│ Certificates                │ No cert expiring within 30 days            │
+│ Access / Credentials        │ SSO admin works │ Break-glass documented   │
+│ Rollback                    │ Steps documented │ Snapshot confirmed ✓    │
+│ Change Management           │ CR approved │ App owners notified          │
 └─────────────────────────────┴────────────────────────────────────────────┘
 ```
 ## Backup and Recovery

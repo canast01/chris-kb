@@ -15,8 +15,8 @@ VCF Hardening — Network Access Control Model
     │ TCP 443       │ TCP 443       │ TCP 443, 902
     ▼               ▼               ▼
 ┌────────┐   ┌──────────┐   ┌───────────────────────┐
-│vCenter │   │NSX Mgr   │   │ESXi hosts             │
-│        │   │(3 nodes) │   │                       │
+│vCenter │   │NSX Mgr   │   │ESXi hosts               │
+│        │   │(3 nodes) │   │                         │
 └────────┘   └──────────┘   └───────────────────────┘
     │
     │ UDP/TCP 514 or TLS 6514

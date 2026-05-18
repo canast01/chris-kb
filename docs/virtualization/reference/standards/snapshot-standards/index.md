@@ -11,9 +11,9 @@
 │ Test / temporary           │ Remove within agreed test period            │
 │ Any snapshot (hard limit)  │ No snapshot > 7 days without reviewed justif│
 ├────────────────────────────┴─────────────────────────────────────────────┤
-│  Monitoring: alert on snapshots older than 3 days (Aria Ops or vCenter) │
+│  Monitoring: alert on snapshots older than 3 days (Aria Ops or vCenter)  │
 │  Risk: large delta grows continuously → fills datastore → VM perf impact │
-│  Stuck snapshot: do NOT force delete → open VMware SR                   │
+│  Stuck snapshot: do NOT force delete → open VMware SR                    │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 

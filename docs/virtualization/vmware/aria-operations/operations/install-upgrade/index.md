@@ -5,7 +5,7 @@ Aria Operations — Upgrade Paths
 ┌─────────────────────────────────────────────────────┐
 │  Option A: Aria Suite Lifecycle (Recommended)       │
 │                                                     │
-│  Aria LCM → Lifecycle Operations                   │
+│  Aria LCM → Lifecycle Operations                    │
 │  → select environment → Upgrade                     │
 │  → select target version from marketplace           │
 │  → run pre-upgrade health checks                    │
@@ -19,7 +19,7 @@ Aria Operations — Upgrade Paths
 ┌─────────────────────────────────────────────────────┐
 │  Option B: In-Product Upgrade (Standalone)          │
 │                                                     │
-│  Admin → Software Update → Upload PAK              │
+│  Admin → Software Update → Upload PAK               │
 │  → Run pre-check → Proceed                          │
 │                                                     │
 │  Air-gap:                                           │
@@ -29,7 +29,7 @@ Aria Operations — Upgrade Paths
                            ▼
 ┌─────────────────────────────────────────────────────┐
 │  Pre-Upgrade Gate (must pass before proceeding)     │
-│  ✔ All nodes Online (Admin → Cluster Management)   │
+│  ✔ All nodes Online (Admin → Cluster Management)    │
 │  ✔ All adapters Collecting                          │
 │  ✔ Disk < 70% on /storage/db                        │
 │  ✔ NTP delta < 1s on all nodes                      │

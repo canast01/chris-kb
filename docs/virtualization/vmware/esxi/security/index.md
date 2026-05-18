@@ -29,7 +29,7 @@ ESXi Security Layers
 │  └── UEFI Secure Boot + TPM 2.0 attestation            │
 ├────────────────────────────────────────────────────────┤
 │  Audit & Compliance                                    │
-│  ├── Syslog → SIEM (auth.log, shell.log, hostd.log)   │
+│  ├── Syslog → SIEM (auth.log, shell.log, hostd.log)    │
 │  ├── Host Profiles enforce baseline continuously       │
 │  └── VMware SCG / CIS / DISA STIG alignment            │
 └────────────────────────────────────────────────────────┘

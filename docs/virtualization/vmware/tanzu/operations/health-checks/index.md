@@ -5,8 +5,8 @@
 │                                                                                 │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  1. Supervisor Cluster                                                   │  │
-│  │     vCenter ► Workload Management ► Status: Running                     │  │
-│  │     kubectl vsphere login ► kubectl get namespaces                      │  │
+│  │     vCenter ► Workload Management ► Status: Running                     │   │
+│  │     kubectl vsphere login ► kubectl get namespaces                      │   │
 │  └───────────────────────────────┬──────────────────────────────────────────┘  │
 │                                  │ OK                                           │
 │  ┌───────────────────────────────▼──────────────────────────────────────────┐  │
@@ -23,8 +23,8 @@
 │                                  │ OK                                           │
 │  ┌───────────────────────────────▼──────────────────────────────────────────┐  │
 │  │  4. Workloads / Services                                                 │  │
-│  │     kubectl get pods -A | grep -v Running/Completed                     │  │
-│  │     kubectl get svc -A | grep LoadBalancer (EXTERNAL-IP assigned)       │  │
+│  │     kubectl get pods -A | grep -v Running/Completed                     │   │
+│  │     kubectl get svc -A | grep LoadBalancer (EXTERNAL-IP assigned)       │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```

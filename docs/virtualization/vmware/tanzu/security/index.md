@@ -3,13 +3,13 @@
 ```
 ┌──────────────── Tanzu Security Overview ───────────────────────────────────────┐
 │                                                                                 │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │
-│  │ Authentication│  │Access Control│  │  Encryption  │  │   Hardening     │  │
-│  │  Pinniped    │  │  vSphere NS  │  │  etcd secrets│  │  Pod Security   │  │
-│  │  OIDC/LDAP   │  │  RBAC roles  │  │  mTLS in     │  │  Net Policy     │  │
-│  │  kubeconfig  │  │  Harbor proj │  │  transit     │  │  OPA/Kyverno    │  │
-│  └──────────────┘  └──────────────┘  │  vSAN at rest│  │  Harbor scan    │  │
-│                                       └──────────────┘  └──────────────────┘  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐    │
+│  │ Authentication│  │Access Control│  │  Encryption  │  │   Hardening     │    │
+│  │  Pinniped    │  │  vSphere NS  │  │  etcd secrets│  │  Pod Security   │     │
+│  │  OIDC/LDAP   │  │  RBAC roles  │  │  mTLS in     │  │  Net Policy     │     │
+│  │  kubeconfig  │  │  Harbor proj │  │  transit     │  │  OPA/Kyverno    │     │
+│  └──────────────┘  └──────────────┘  │  vSAN at rest│  │  Harbor scan    │     │
+│                                       └──────────────┘  └──────────────────┘   │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```
 

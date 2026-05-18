@@ -7,25 +7,25 @@
 │                                                             │
 │  Symptom                                                    │
 │      │                                                      │
-│      ├──► No / stale metrics ──► Adapter layer             │
-│      │                           tail collector.log        │
-│      │                           vracli adapter list       │
-│      │                           restart watchdog          │
+│      ├──► No / stale metrics ──► Adapter layer              │
+│      │                           tail collector.log         │
+│      │                           vracli adapter list        │
+│      │                           restart watchdog           │
 │      │                                                      │
-│      ├──► Node offline ──► Collector / cluster layer       │
-│      │                     vracli status                   │
-│      │                     check NTP drift < 1s            │
-│      │                     ports 9543, 10010 open          │
+│      ├──► Node offline ──► Collector / cluster layer        │
+│      │                     vracli status                    │
+│      │                     check NTP drift < 1s             │
+│      │                     ports 9543, 10010 open           │
 │      │                                                      │
-│      ├──► Slow UI / timeout ──► Analytics layer            │
-│      │                          nodetool compactionstats   │
-│      │                          GemFire heap usage         │
-│      │                          Cassandra query log        │
+│      ├──► Slow UI / timeout ──► Analytics layer             │
+│      │                          nodetool compactionstats    │
+│      │                          GemFire heap usage          │
+│      │                          Cassandra query log         │
 │      │                                                      │
-│      └──► LDAP login fail ──► Authentication layer         │
-│                               vracli auth test             │
-│                               ldapsearch -H ldaps://       │
-│                               re-import domain CA cert     │
+│      └──► LDAP login fail ──► Authentication layer          │
+│                               vracli auth test              │
+│                               ldapsearch -H ldaps://        │
+│                               re-import domain CA cert      │
 └─────────────────────────────────────────────────────────────┘
 ```
 

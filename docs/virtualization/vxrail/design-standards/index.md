@@ -7,10 +7,10 @@ VxRail Design Requirements — Key Standards
 ┌─────────────────────────────────────────────────────────────┐
 │  Network VLAN Separation (required)                         │
 │                                                             │
-│  VLAN: Management   MTU 1500   ESXi mgmt, vCenter          │
-│  VLAN: vMotion      MTU 9000   live VM migration (jumbo)   │
-│  VLAN: vSAN         MTU 9000   storage traffic (jumbo)     │
-│  VLAN: VxRail Mgmt  MTU 1500   VxRail Manager internal     │
+│  VLAN: Management   MTU 1500   ESXi mgmt, vCenter           │
+│  VLAN: vMotion      MTU 9000   live VM migration (jumbo)    │
+│  VLAN: vSAN         MTU 9000   storage traffic (jumbo)      │
+│  VLAN: VxRail Mgmt  MTU 1500   VxRail Manager internal      │
 │  VLAN: VM Traffic   per-app    workload connectivity        │
 └──────────────────────────────┬──────────────────────────────┘
                                │

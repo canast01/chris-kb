@@ -7,7 +7,7 @@ CIS benchmark GPO controls, Windows Defender configuration, audit policy, GPO ha
 │              Windows Server Hardening Flow               │
 ├──────────────────────────────────────────────────────────┤
 │  Baseline Source                                         │
-│  CIS Benchmark / Microsoft SCT  ──►  GPO backup import  │
+│  CIS Benchmark / Microsoft SCT  ──►  GPO backup import   │
 ├──────────────────────────────────────────────────────────┤
 │  GPO Controls Applied                                    │
 │  ┌────────────┬─────────────┬──────────────────────────┐ │
@@ -17,8 +17,8 @@ CIS benchmark GPO controls, Windows Defender configuration, audit policy, GPO ha
 │  └────────────┴─────────────┴──────────────────────────┘ │
 ├──────────────────────────────────────────────────────────┤
 │  Endpoint Hardening                                      │
-│  SMBv1 disabled │ RDP TLS+NLA │ PS script block logging │
-│  Defender AV + ASR rules  │  Credential Guard / RunAsPPL│
+│  SMBv1 disabled │ RDP TLS+NLA │ PS script block logging  │
+│  Defender AV + ASR rules  │  Credential Guard / RunAsPPL │
 ├──────────────────────────────────────────────────────────┤
 │  Validate: Policy Analyzer / CIS-CAT / manual checks     │
 └──────────────────────────────────────────────────────────┘

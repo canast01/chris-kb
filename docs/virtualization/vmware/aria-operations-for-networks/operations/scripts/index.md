@@ -15,10 +15,10 @@
 │  │  list_data_sources()        ── vcenters / nsxt / physical devices        │  │
 │  │  get_flows_for_vm(name)     ── POST /api/ni/search ── flow query         │  │
 │  │  get_open_problems()        ── GET /api/ni/problems ── paginated         │  │
-│  │  export_security_recs()     ── GET microseg recommendations ► CSV       │  │
-│  │  check_data_source_health() ── all sources Connected? ► exit 0/1        │  │
-│  │  add_ips_to_application()   ── POST /api/ni/groups/applications/{id}    │  │
-│  │  daily_health_report()      ── problems count + critical list ── cron   │  │
+│  │  export_security_recs()     ── GET microseg recommendations ► CSV       │   │
+│  │  check_data_source_health() ── all sources Connected? ► exit 0/1        │   │
+│  │  add_ips_to_application()   ── POST /api/ni/groups/applications/{id}    │   │
+│  │  daily_health_report()      ── problems count + critical list ── cron   │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```

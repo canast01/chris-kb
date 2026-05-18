@@ -24,7 +24,7 @@
 │                                          │                                      │
 │  Auth                                    ▼                                      │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  kubectl logs -n pinniped-supervisor ► OIDC/LDAP flow errors            │  │
+│  │  kubectl logs -n pinniped-supervisor ► OIDC/LDAP flow errors            │   │
 │  │  kubectl logs -n pinniped-concierge ► token validation errors            │  │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────────────────────────────┘

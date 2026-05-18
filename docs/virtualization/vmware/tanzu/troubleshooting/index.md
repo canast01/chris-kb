@@ -16,9 +16,9 @@
 │      │                                                                          │
 │      ├── Pod CrashLoopBackOff    ──► kubectl logs --previous ► app errors      │
 │      │                                                                          │
-│      ├── Storage not provisioning──► CSI driver pods ► StorageClass ► vSAN    │
+│      ├── Storage not provisioning──► CSI driver pods ► StorageClass ► vSAN     │
 │      │                                                                          │
-│      └── Auth failure            ──► Pinniped supervisor logs ► OIDC/LDAP     │
+│      └── Auth failure            ──► Pinniped supervisor logs ► OIDC/LDAP      │
 │                                       token expiry ► re-login                  │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```

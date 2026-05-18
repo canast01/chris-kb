@@ -5,27 +5,27 @@
 │              NSX Encryption Planes                          │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Management Plane — TLS                                    │
-│  ┌─────────────┐  TLS 1.2+  ┌──────────────────────────┐  │
-│  │ Client/API  │◄──────────►│ NSX Manager VIP  :443    │  │
-│  └─────────────┘            └──────────────────────────┘  │
+│  Management Plane — TLS                                     │
+│  ┌─────────────┐  TLS 1.2+  ┌──────────────────────────┐    │
+│  │ Client/API  │◄──────────►│ NSX Manager VIP  :443    │    │
+│  └─────────────┘            └──────────────────────────┘    │
 │                                                             │
-│  Control Plane — TLS (inter-node)                          │
-│  ┌──────────┐  TLS  ┌──────────┐  TLS  ┌──────────┐       │
-│  │ Mgr-01   │◄─────►│ Mgr-02   │◄─────►│ Mgr-03   │       │
-│  └──────────┘       └──────────┘       └──────────┘       │
+│  Control Plane — TLS (inter-node)                           │
+│  ┌──────────┐  TLS  ┌──────────┐  TLS  ┌──────────┐         │
+│  │ Mgr-01   │◄─────►│ Mgr-02   │◄─────►│ Mgr-03   │         │
+│  └──────────┘       └──────────┘       └──────────┘         │
 │                                                             │
-│  Data Plane — IPsec (optional overlay encryption)          │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  ESXi TEP ──── Geneve/IPsec ────► Remote ESXi TEP   │  │
-│  │  UDP 6081  (encrypted if transport-zone encryption   │  │
-│  │             is enabled — AES-NI hardware required)   │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  Data Plane — IPsec (optional overlay encryption)           │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  ESXi TEP ──── Geneve/IPsec ────► Remote ESXi TEP   │    │
+│  │  UDP 6081  (encrypted if transport-zone encryption   │   │
+│  │             is enabled — AES-NI hardware required)   │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  Backup Encryption                                         │
-│  Backup bundle ── AES-256 passphrase ──► SFTP target       │
+│  Backup Encryption                                          │
+│  Backup bundle ── AES-256 passphrase ──► SFTP target        │
 │                                                             │
-│  Syslog: Manager/Edge ── TLS :6514 ──► SIEM               │
+│  Syslog: Manager/Edge ── TLS :6514 ──► SIEM                 │
 └─────────────────────────────────────────────────────────────┘
 ```
 

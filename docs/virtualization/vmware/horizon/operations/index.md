@@ -5,16 +5,16 @@
 ┌─────────────────────────────────────────────────────────────┐
 │           Horizon Operations Workflow                        │
 │                                                             │
-│  Install/Upgrade ──► Health Checks ──► Procedures          │
+│  Install/Upgrade ──► Health Checks ──► Procedures           │
 │       │                    │                │               │
 │       ▼                    ▼                ▼               │
-│  ┌─────────┐        ┌──────────┐     ┌──────────────┐      │
-│  │ CS + UAG│        │ Sessions │     │ Pool create  │      │
-│  │ Agent   │        │ Pools    │     │ Image push   │      │
-│  │ install │        │ UAG/AV   │     │ Entitlement  │      │
-│  └─────────┘        └──────────┘     └──────────────┘      │
+│  ┌─────────┐        ┌──────────┐     ┌──────────────┐       │
+│  │ CS + UAG│        │ Sessions │     │ Pool create  │       │
+│  │ Agent   │        │ Pools    │     │ Image push   │       │
+│  │ install │        │ UAG/AV   │     │ Entitlement  │       │
+│  └─────────┘        └──────────┘     └──────────────┘       │
 │                                                             │
-│  Backup/Restore ◄──── Scripts ◄──── CLI Reference          │
+│  Backup/Restore ◄──── Scripts ◄──── CLI Reference           │
 └─────────────────────────────────────────────────────────────┘
 ```
 

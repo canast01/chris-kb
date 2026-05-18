@@ -5,18 +5,18 @@ FlashArray Encryption Architecture
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on, no config required)              │
 │                                                            │
-│  Write I/O ──► NVRAM ──► NVMe SED                         │
+│  Write I/O ──► NVRAM ──► NVMe SED                          │
 │                            ├── DEK (per-drive, internal)   │
 │                            └── KEK (Purity, stored NVRAM)  │
 │                                                            │
 │  AES-256-XTS hardware encryption in drive                  │
-│  Removed drive: cryptographic erase (NIST SP 800-88)      │
+│  Removed drive: cryptographic erase (NIST SP 800-88)       │
 └────────────────────────────────────────────────────────────┘
 ┌────────────────────────────────────────────────────────────┐
 │  Data in Transit (TLS, always-on)                          │
 │  ├── Management: HTTPS (443) + SSH (22)                    │
 │  ├── Replication: TLS between arrays                       │
-│  └── Pure1 phone-home: HTTPS (443) outbound               │
+│  └── Pure1 phone-home: HTTPS (443) outbound                │
 └────────────────────────────────────────────────────────────┘
 ```
 

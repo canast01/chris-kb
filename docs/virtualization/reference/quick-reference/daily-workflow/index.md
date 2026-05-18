@@ -6,31 +6,31 @@ A repeatable morning workflow to confirm the environment is healthy before the b
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                   Daily Operations Sequence (~20 min)                    │
 ├───────────────────────────────────────────────────────────────────────── │
-│  1. vCenter Alarms (5m)  ──►  Red = fix now  │  Yellow = log + assign   │
+│  1. vCenter Alarms (5m)  ──►  Red = fix now  │  Yellow = log + assign    │
 │         │                                                                │
 │         ▼                                                                │
-│  2. Host Health (3m)     ──►  Disconnected?  │  Unexpected maintenance? │
+│  2. Host Health (3m)     ──►  Disconnected?  │  Unexpected maintenance?  │
 │         │                                                                │
 │         ▼                                                                │
-│  3. Cluster HA/DRS (2m)  ──►  HA=On  │  DRS=FullyAutomated             │
+│  3. Cluster HA/DRS (2m)  ──►  HA=On  │  DRS=FullyAutomated               │
 │         │                                                                │
 │         ▼                                                                │
-│  4. Datastore Capacity (3m) ─►  Any > 75%?  →  Action required         │
+│  4. Datastore Capacity (3m) ─►  Any > 75%?  →  Action required           │
 │         │                                                                │
 │         ▼                                                                │
-│  5. vSAN Health (2m)     ──►  No red items  │  No unexpected resync     │
+│  5. vSAN Health (2m)     ──►  No red items  │  No unexpected resync      │
 │         │                                                                │
 │         ▼                                                                │
-│  6. Failed Tasks (2m)    ──►  Last 24h  │  Snapshot fails / DRS stuck  │
+│  6. Failed Tasks (2m)    ──►  Last 24h  │  Snapshot fails / DRS stuck    │
 │         │                                                                │
 │         ▼                                                                │
-│  7. Backup Status (3m)   ──►  Veeam / CommVault / NBU  │  0 failures   │
+│  7. Backup Status (3m)   ──►  Veeam / CommVault / NBU  │  0 failures     │
 │         │                                                                │
 │         ▼                                                                │
-│  8. Monitoring (2m)      ──►  Aria Ops green  │  Collection state OK   │
+│  8. Monitoring (2m)      ──►  Aria Ops green  │  Collection state OK     │
 │         │                                                                │
 │         ▼                                                                │
-│  9. Repeat Alerts        ──►  >24h unack → assign owner + task         │
+│  9. Repeat Alerts        ──►  >24h unack → assign owner + task           │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 ## Step 1 — vCenter Alarm Triage (5 min)

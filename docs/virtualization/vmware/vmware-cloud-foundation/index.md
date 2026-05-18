@@ -7,21 +7,21 @@ Technical and operational reference for VMware Cloud Foundation (VCF). Covers SD
 ```
 VMware Cloud Foundation (VCF) — Full Stack Overview
 ┌─────────────────────────────────────────────────────┐
-│  SDDC Manager                                       │
-│  lifecycle orchestration · inventory · passwords    │
-│  certificates · network pools · LCM upgrades        │
+│  SDDC Manager                                        │
+│  lifecycle orchestration · inventory · passwords     │
+│  certificates · network pools · LCM upgrades         │
 └──────────┬───────────────┬──────────────────────────┘
            │               │
            ▼               ▼
 ┌──────────────────┐  ┌────────────────────────────────┐
 │ Management       │  │ Workload Domains (up to 15)    │
 │ Domain           │  │                                │
-│ ┌─────────────┐  │  │  ┌──────────┐  ┌──────────┐  │
-│ │  vCenter    │  │  │  │  VI WLD  │  │ VVF WLD  │  │
-│ │  NSX Mgr   │  │  │  │ vCenter  │  │ vCenter  │  │
-│ │  vSAN      │  │  │  │ NSX      │  │ NSX      │  │
-│ └─────────────┘  │  │  │ vSAN    │  │ vSAN+TKG │  │
-│ 4+ ESXi hosts   │  │  └──────────┘  └──────────┘  │
+│ ┌─────────────┐  │  │  ┌──────────┐  ┌──────────┐    │
+│ │  vCenter    │  │  │  │  VI WLD  │  │ VVF WLD  │    │
+│ │  NSX Mgr   │  │  │  │ vCenter  │  │ vCenter  │     │
+│ │  vSAN      │  │  │  │ NSX      │  │ NSX      │     │
+│ └─────────────┘  │  │  │ vSAN    │  │ vSAN+TKG │     │
+│ 4+ ESXi hosts   │  │  └──────────┘  └──────────┘     │
 └──────────────────┘  └────────────────────────────────┘
            │                        │
            ▼                        ▼

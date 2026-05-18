@@ -11,10 +11,10 @@
          Yes ◄───┤──► No
          ▼               ▼
 ┌───────────────┐  ┌─────────────────────────────────┐
-│  Services     │  │  Identify symptom               │
+│  Services     │  │  Identify symptom                  │
 │  sc query /   │  ├──────────┬──────────┬───────────┤
-│  Get-Service  │  │  Service │ Network  │  AD Auth  │
-│  Event ID     │  │  stopped │ no route │  failures │
+│  Get-Service  │  │  Service │ Network  │  AD Auth     │
+│  Event ID     │  │  stopped │ no route │  failures    │
 │  7034/7036    │  └────┬─────┴────┬─────┴─────┬─────┘
 └───────────────┘       ▼          ▼           ▼ 
                ┌──────────────┐ ┌──────────┐ ┌──────────────┐

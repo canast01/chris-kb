@@ -18,7 +18,7 @@
 │  VR Appliance Snapshot + VAMI config backup                  │
 │  ┌──────────────────────────────────────────────────────┐    │
 │  │  VRA registration + certificates                     │    │
-│  │  → VRA VAMI → Administration → Backup               │    │
+│  │  → VRA VAMI → Administration → Backup               │     │
 │  └──────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
 ```

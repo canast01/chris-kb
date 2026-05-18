@@ -8,15 +8,15 @@
          ┌─────────────┼──────────────┐
          ▼             ▼              ▼
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐
-│   Personal   │ │  CloudWatch  │ │   Trusted Advisor    │
-│   Health     │ │   Alarms     │ │   (Cost / Security / │
-│  Dashboard   │ │              │ │    Fault Tolerance)  │
+│   Personal   │ │  CloudWatch  │ │   Trusted Advisor     │
+│   Health     │ │   Alarms     │ │   (Cost / Security /  │
+│  Dashboard   │ │              │ │    Fault Tolerance)   │
 └──────┬───────┘ └──────┬───────┘ └──────────┬───────────┘
        │                │                    │
        ▼                ▼                    ▼
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐
-│  AWS Health  │ │  EC2/RDS/EKS │ │   Security Hub       │
-│  Events API  │ │   Metrics    │ │   Findings Summary   │
+│  AWS Health  │ │  EC2/RDS/EKS │ │   Security Hub        │
+│  Events API  │ │   Metrics    │ │   Findings Summary    │
 └──────┬───────┘ └──────┬───────┘ └──────────┬───────────┘
        │                │                    │
        └────────────────┴────────────────────┘

@@ -5,18 +5,18 @@
 │                                                                                 │
 │  kubectl / tanzu CLI automation                                                 │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │ list-clusters.sh   ── kubectl get tanzukubernetescluster -A             │  │
-│  │ list-pvcs.sh       ── kubectl get pvc -A (flag unbound PVCs)            │  │
-│  │ resource-usage.sh  ── kubectl top nodes / top pods                      │  │
-│  │ export-ns.sh       ── kubectl get deployments/svc/cm/secrets -o yaml    │  │
+│  │ list-clusters.sh   ── kubectl get tanzukubernetescluster -A             │   │
+│  │ list-pvcs.sh       ── kubectl get pvc -A (flag unbound PVCs)            │   │
+│  │ resource-usage.sh  ── kubectl top nodes / top pods                      │   │
+│  │ export-ns.sh       ── kubectl get deployments/svc/cm/secrets -o yaml    │   │
 │  │ cert-expiry.sh     ── openssl s_client for all cluster API endpoints     │  │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Harbor REST API (Python)                                                       │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │ check-vuln-scan.py ── GET /api/v2.0/projects → verify auto_scan=true    │  │
-│  │ list-critical-cves.py ── GET artifacts?with_scan_overview=true          │  │
-│  │                        ── flag critical CVE count > 0                   │  │
+│  │ check-vuln-scan.py ── GET /api/v2.0/projects → verify auto_scan=true    │   │
+│  │ list-critical-cves.py ── GET artifacts?with_scan_overview=true          │   │
+│  │                        ── flag critical CVE count > 0                   │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Common pattern:   kubectl vsphere login ► context switch ► run checks          │

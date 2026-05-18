@@ -7,16 +7,16 @@
 │                                                             │
 │  Problem                                                    │
 │      │                                                      │
-│      ├──► Adapter / data issue  ──► Common Issues          │
-│      │    Node offline / slow UI                           │
-│      │    LDAP login failure                               │
+│      ├──► Adapter / data issue  ──► Common Issues           │
+│      │    Node offline / slow UI                            │
+│      │    LDAP login failure                                │
 │      │                                                      │
-│      ├──► Need logs / bundle    ──► Diagnostics            │
-│      │    Support bundle                                   │
-│      │    Log file paths                                   │
-│      │    Capacity planning                                │
+│      ├──► Need logs / bundle    ──► Diagnostics             │
+│      │    Support bundle                                    │
+│      │    Log file paths                                    │
+│      │    Capacity planning                                 │
 │      │                                                      │
-│      └──► Cannot resolve        ──► Escalation            │
+│      └──► Cannot resolve        ──► Escalation              │
 │           Broadcom TAC                                      │
 │           P1–P4 SLA tiers                                   │
 └─────────────────────────────────────────────────────────────┘

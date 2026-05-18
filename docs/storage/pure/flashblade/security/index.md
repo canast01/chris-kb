@@ -4,20 +4,20 @@
 FlashBlade Security Layers
 ┌──────────────────────────────────────────────────────────┐
 │  Identity & Auth                                         │
-│  ├── SAML SSO for GUI                                   │
-│  ├── AD for SMB authentication + NFS Kerberos           │
-│  └── API tokens for automation                          │
+│  ├── SAML SSO for GUI                                    │
+│  ├── AD for SMB authentication + NFS Kerberos            │
+│  └── API tokens for automation                           │
 ├──────────────────────────────────────────────────────────┤
 │  RBAC                                                    │
 │  array_admin │ storage_admin │ ops_admin │ readonly      │
 ├──────────────────────────────────────────────────────────┤
 │  Protocol Controls                                       │
-│  ├── NFS export policy (allowed IPs / CIDR)             │
-│  ├── SMB share ACLs (AD groups)                         │
-│  └── S3 bucket policies + IAM-style keys                │
+│  ├── NFS export policy (allowed IPs / CIDR)              │
+│  ├── SMB share ACLs (AD groups)                          │
+│  └── S3 bucket policies + IAM-style keys                 │
 ├──────────────────────────────────────────────────────────┤
 │  Data at Rest                                            │
-│  └── XTS-AES-256 (always-on, cannot be disabled)        │
+│  └── XTS-AES-256 (always-on, cannot be disabled)         │
 └──────────────────────────────────────────────────────────┘
 ```
 

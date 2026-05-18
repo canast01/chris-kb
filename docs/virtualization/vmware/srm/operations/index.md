@@ -5,17 +5,17 @@
 ┌─────────────────────────────────────────────────────────────┐
 │  Day-to-Day Operations                                      │
 │                                                             │
-│  Health Checks ──► RPO compliance ──► Protection Group OK? │
+│  Health Checks ──► RPO compliance ──► Protection Group OK?  │
 │       │                                        │            │
 │       ▼                                        ▼            │
-│  ┌─────────┐                         ┌─────────────────┐   │
-│  │ Monthly │                         │ Procedures:     │   │
-│  │ test    │                         │ Add VM to PG    │   │
-│  │ failover│                         │ Create plan     │   │
-│  │ + clean │                         │ Planned migrate │   │
-│  └─────────┘                         └─────────────────┘   │
+│  ┌─────────┐                         ┌─────────────────┐    │
+│  │ Monthly │                         │ Procedures:     │    │
+│  │ test    │                         │ Add VM to PG    │    │
+│  │ failover│                         │ Create plan     │    │
+│  │ + clean │                         │ Planned migrate │    │
+│  └─────────┘                         └─────────────────┘    │
 │                                                             │
-│  Install/Upgrade ◄──── Scripts ◄──── CLI Reference         │
+│  Install/Upgrade ◄──── Scripts ◄──── CLI Reference          │
 └─────────────────────────────────────────────────────────────┘
 ```
 

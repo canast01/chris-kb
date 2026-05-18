@@ -10,24 +10,24 @@ Dell RASR (Recovery and System Restore) bare-metal recovery for Windows Server �
 │                                                                      │
 │  Backup phase:                                                       │
 │  ┌────────────────────────────────────────────────────────────────┐  │
-│  │  Windows Server (running)                                     │  │
-│  │    │  VSS snapshot (app-consistent)                           │  │
+│  │  Windows Server (running)                                     │   │
+│  │    │  VSS snapshot (app-consistent)                           │   │
 │  │    ▼                                                           │  │
-│  │  RASR captures sector-level image ──► USB / network share    │  │
+│  │  RASR captures sector-level image ──► USB / network share    │    │
 │  └────────────────────────────────────────────────────────────────┘  │
 │                                                                      │
 │  Restore phase (bare-metal):                                         │
 │  ┌────────────────────────────────────────────────────────────────┐  │
-│  │  Boot via WinPE (USB / iDRAC Virtual Media)                   │  │
+│  │  Boot via WinPE (USB / iDRAC Virtual Media)                   │   │
 │  │    │                                                           │  │
 │  │    ▼                                                           │  │
-│  │  RASR restores image to target disk (same or replacement HW)  │  │
+│  │  RASR restores image to target disk (same or replacement HW)  │   │
 │  │    │                                                           │  │
 │  │    ▼                                                           │  │
-│  │  Windows boots ──► post-restore validation ──► rejoin domain  │  │
+│  │  Windows boots ──► post-restore validation ──► rejoin domain  │   │
 │  └────────────────────────────────────────────────────────────────┘  │
 │                                                                      │
-│  Headless recovery via iDRAC: mount ISO remotely via virtual media  │
+│  Headless recovery via iDRAC: mount ISO remotely via virtual media   │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

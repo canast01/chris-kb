@@ -10,20 +10,20 @@ Switching and routing knowledge base covering VLANs, inter-VLAN routing, BGP, OS
 │                                                                      │
 │      WAN / Internet                                                  │
 │           │  BGP                                                     │
-│  ┌────────▼──────────────────────────────────────────┐              │
-│  │          Core Switches (L3 — SVIs / OSPF)         │              │
-│  │          Cisco Nexus 9504 vPC pair                │              │
-│  └────────┬──────────────────────────────────────────┘              │
+│  ┌────────▼──────────────────────────────────────────┐               │
+│  │          Core Switches (L3 — SVIs / OSPF)         │               │
+│  │          Cisco Nexus 9504 vPC pair                │               │
+│  └────────┬──────────────────────────────────────────┘               │
 │           │  OSPF / ECMP                                             │
-│  ┌────────▼──────────┐       ┌──────────────────────┐               │
-│  │  Distribution     │◄─────►│  Distribution        │  BGP/OSPF    │
-│  │  Sw A (L2/L3)     │  vPC  │  Sw B (L2/L3)        │  boundary    │
-│  └────────┬──────────┘       └──────────┬───────────┘               │
+│  ┌────────▼──────────┐       ┌──────────────────────┐                │
+│  │  Distribution     │◄─────►│  Distribution        │  BGP/OSPF      │
+│  │  Sw A (L2/L3)     │  vPC  │  Sw B (L2/L3)        │  boundary      │
+│  └────────┬──────────┘       └──────────┬───────────┘                │
 │           │  LACP                        │                           │
-│  ┌────────▼──────────┐       ┌──────────▼───────────┐               │
-│  │  ToR A (L2)       │◄─────►│  ToR B (L2)          │  STP root    │
-│  │  VM port VLANs    │  vPC  │  VM port VLANs        │  bridge     │
-│  └────────┬──────────┘       └──────────┬───────────┘               │
+│  ┌────────▼──────────┐       ┌──────────▼───────────┐                │
+│  │  ToR A (L2)       │◄─────►│  ToR B (L2)          │  STP root      │
+│  │  VM port VLANs    │  vPC  │  VM port VLANs        │  bridge       │
+│  └────────┬──────────┘       └──────────┬───────────┘                │
 │           │  NIC A                       │  NIC B                    │
 │  ┌────────▼─────────────────────────────▼────────────┐               │
 │  │          ESXi Hosts  (LACP 802.3ad bonded)         │               │

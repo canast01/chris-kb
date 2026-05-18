@@ -12,10 +12,10 @@
          │                                   │
          ▼                                   ▼
 ┌─────────────────┐                 ┌─────────────────────┐
-│ Discover new    │                 │ Decommission check  │
-│ system → record │                 │ remove from monitor │
-│ details →       │                 │ firewall rules, DNS │
-│ assign owner →  │                 │ CMDB → retired      │
+│ Discover new    │                 │ Decommission check                 │
+│ system → record │                 │ remove from monitor                │
+│ details →       │                 │ firewall rules, DNS                │
+│ assign owner →  │                 │ CMDB → retired                     │
 │ update inventory│                 └─────────────────────┘
 └─────────────────┘
 ```

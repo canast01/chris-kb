@@ -4,7 +4,7 @@
   TLS Encryption Path: Client to Desktop
 ┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐
 │  Horizon     │─────────────►│  UAG      │────────────►│  Connection      │
-│  Client      │  443 (HTTPS)│  (DMZ)    │  443/proxy  │  Server          │
+│  Client      │  443 (HTTPS)│  (DMZ)    │  443/proxy  │  Server           │
 │  (external)  │             └───────────┘             └──────────────────┘
 └──────────────┘                                                 │
                                                         TLS / Blast AES-256

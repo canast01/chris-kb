@@ -8,22 +8,22 @@ Project and operational management references — change management, maintenance
 ┌──────────────────────────────────────────────────────────────────────┐
 │                 Operational Management Frameworks                    │
 │                                                                      │
-│  ┌────────────────────────┐      ┌────────────────────────────────┐ │
-│  │  Incident Management   │      │    Change Management           │ │
-│  │  Detect ──► Triage     │      │    Request ──► Assess          │ │
-│  │  Escalate ──► Resolve  │      │    Approve ──► Execute         │ │
-│  │  PIR ──► Close         │      │    Validate ──► Close          │ │
-│  └────────────────────────┘      └────────────────────────────────┘ │
+│  ┌────────────────────────┐      ┌────────────────────────────────┐  │
+│  │  Incident Management   │      │    Change Management           │  │
+│  │  Detect ──► Triage     │      │    Request ──► Assess          │  │
+│  │  Escalate ──► Resolve  │      │    Approve ──► Execute         │  │
+│  │  PIR ──► Close         │      │    Validate ──► Close          │  │
+│  └────────────────────────┘      └────────────────────────────────┘  │
 │                                                                      │
-│  ┌────────────────────────┐      ┌────────────────────────────────┐ │
-│  │  Maintenance Windows   │      │      Health Checks             │ │
-│  │  Plan ──► Comms        │      │    Daily ──► Pre-change        │ │
-│  │  Execute ──► Validate  │      │    Post-change ──► Evidence    │ │
-│  │  Closeout ──► Record   │      │    Follow-up ──► Escalate      │ │
-│  └────────────────────────┘      └────────────────────────────────┘ │
+│  ┌────────────────────────┐      ┌────────────────────────────────┐  │
+│  │  Maintenance Windows   │      │      Health Checks             │  │
+│  │  Plan ──► Comms        │      │    Daily ──► Pre-change        │  │
+│  │  Execute ──► Validate  │      │    Post-change ──► Evidence    │  │
+│  │  Closeout ──► Record   │      │    Follow-up ──► Escalate      │  │
+│  └────────────────────────┘      └────────────────────────────────┘  │
 │                                                                      │
 │  ┌─────────────────────────────────────────────────────────────────┐ │
-│  │  Asset Inventory: CMDB ──► auto-discover ──► audit ──► cleanup │ │
+│  │  Asset Inventory: CMDB ──► auto-discover ──► audit ──► cleanup │  │
 │  └─────────────────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────────────────┘
 ```

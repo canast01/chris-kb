@@ -5,23 +5,23 @@
 │         Aria Automation Encryption Layers                   │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Transport (in-flight)                                     │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Browser / API  ──TLS 1.2/1.3──►  :443 (UI/API)     │  │
-│  │  Aria Auto      ──TLS──►  vCenter :443 / NSX :443    │  │
-│  │  Aria Auto      ──TLS──►  VIDM :443                  │  │
-│  │  Kubernetes internal mTLS between microservices      │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  Transport (in-flight)                                      │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Browser / API  ──TLS 1.2/1.3──►  :443 (UI/API)     │    │
+│  │  Aria Auto      ──TLS──►  vCenter :443 / NSX :443    │   │
+│  │  Aria Auto      ──TLS──►  VIDM :443                  │   │
+│  │  Kubernetes internal mTLS between microservices      │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  Secrets (at rest)                                         │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Encrypted Property Groups (PostgreSQL, AES)         │  │
-│  │  HashiCorp Vault (AppRole / K8s JWT)                 │  │
-│  │  ABX Action Constants (runtime-only, not logged)     │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  Secrets (at rest)                                          │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Encrypted Property Groups (PostgreSQL, AES)         │   │
+│  │  HashiCorp Vault (AppRole / K8s JWT)                 │   │
+│  │  ABX Action Constants (runtime-only, not logged)     │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  Storage (data at rest)                                    │
-│  vSAN encryption / SAN volume / vSphere VM Encryption      │
+│  Storage (data at rest)                                     │
+│  vSAN encryption / SAN volume / vSphere VM Encryption       │
 └─────────────────────────────────────────────────────────────┘
 ```
 

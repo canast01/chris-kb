@@ -16,7 +16,7 @@
 │  │                     │     │  read-only; no write ops    │    │
 │  └─────────────────────┘     └─────────────────────────────┘    │
 │                                                                 │
-│  API service account: svc-lcm-api@local → min required role    │
+│  API service account: svc-lcm-api@local → min required role     │
 │  Never assign roles to individual user accounts                 │
 └─────────────────────────────────────────────────────────────────┘
 ```

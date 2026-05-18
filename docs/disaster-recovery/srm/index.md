@@ -8,22 +8,22 @@ VMware Site Recovery Manager DR orchestration — vCenter plugin automating stor
 ┌──────────────────────────────────────────────────────────────────────┐
 │                       SRM Architecture                               │
 │                                                                      │
-│  Primary Site                           DR Site                     │
-│  ┌──────────────────────┐               ┌──────────────────────┐    │
-│  │  vCenter + SRM       │◄─────────────►│  vCenter + SRM       │    │
-│  │  (protected site)    │  site pair    │  (recovery site)     │    │
-│  └──────────┬───────────┘               └──────────┬───────────┘    │
-│             │                                      │               │
-│  ┌──────────▼───────────┐               ┌──────────▼───────────┐    │
-│  │  Protection Groups   │               │  Recovery Plans      │    │
-│  │  VMs grouped by tier │──replication─►│  Boot sequence       │    │
-│  │  vSphere Replication │               │  IP customisation    │    │
-│  │  Array SRA           │               │  Test failover       │    │
-│  └──────────────────────┘               └──────────┬───────────┘    │
-│                                                    │               │
-│               Failover process:                    │               │
-│               Trigger ──► Activate ──► Power on ──► Validate      │
-│               Failback: Re-protect ──► Reverse replication         │
+│  Primary Site                           DR Site                      │
+│  ┌──────────────────────┐               ┌──────────────────────┐     │
+│  │  vCenter + SRM       │◄─────────────►│  vCenter + SRM       │     │
+│  │  (protected site)    │  site pair    │  (recovery site)     │     │
+│  └──────────┬───────────┘               └──────────┬───────────┘     │
+│             │                                      │                 │
+│  ┌──────────▼───────────┐               ┌──────────▼───────────┐     │
+│  │  Protection Groups   │               │  Recovery Plans      │     │
+│  │  VMs grouped by tier │──replication─►│  Boot sequence       │     │
+│  │  vSphere Replication │               │  IP customisation    │     │
+│  │  Array SRA           │               │  Test failover       │     │
+│  └──────────────────────┘               └──────────┬───────────┘     │
+│                                                    │                 │
+│               Failover process:                    │                 │
+│               Trigger ──► Activate ──► Power on ──► Validate         │
+│               Failback: Re-protect ──► Reverse replication           │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

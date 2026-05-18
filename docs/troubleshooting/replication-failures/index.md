@@ -6,27 +6,27 @@
 │                                                                      │
 │  Replication lag alert / job failed                                  │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check network path to DR site                                 │ │
-│  │  ping · traceroute · check replication VLAN/circuit bandwidth  │ │
-│  │  Network issue ──► escalate to network team                   │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
-│        │ network OK                                                 │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check credentials / service account                          │ │
-│  │  SRDF: symrdf query · SnapMirror: snapmirror show             │ │
-│  │  Auth fail ──► rotate service account · re-initialize pair    │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
-│        │ credentials OK                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check destination space                                       │ │
-│  │  df -h on target · check array capacity · thin pool utilisation│ │
-│  │  Space issue ──► free capacity or expand target volume        │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check network path to DR site                                 │  │
+│  │  ping · traceroute · check replication VLAN/circuit bandwidth  │  │
+│  │  Network issue ──► escalate to network team                   │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
+│        │ network OK                                                  │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check credentials / service account                          │   │
+│  │  SRDF: symrdf query · SnapMirror: snapmirror show             │   │
+│  │  Auth fail ──► rotate service account · re-initialize pair    │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
+│        │ credentials OK                                              │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check destination space                                       │  │
+│  │  df -h on target · check array capacity · thin pool utilisation│  │
+│  │  Space issue ──► free capacity or expand target volume        │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Re-sync / re-baseline if link was down  ·  Assess RPO breach  │ │
-│  └────────────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Re-sync / re-baseline if link was down  ·  Assess RPO breach  │  │
+│  └────────────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

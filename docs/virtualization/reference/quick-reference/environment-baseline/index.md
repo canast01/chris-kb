@@ -4,7 +4,7 @@
 ┌─────────────────────────────────────────────────────────────────────────┐
 │               Environment Baseline — Normal Thresholds                  │
 ├──────────────────┬──────────────────────────────────────────────────────┤
-│  Platform        │  vCenter ver ___  │  ESXi ver ___  │  Clusters ___  │
+│  Platform        │  vCenter ver ___  │  ESXi ver ___  │  Clusters ___   │
 ├──────────────────┼──────────────────────────────────────────────────────┤
 │  CPU             │  Avg host util < 70%  │  CPU Ready < 5%              │
 │  Memory          │  Balloon = 0          │  Swap = 0  │  < 80% consumed │
@@ -14,7 +14,7 @@
 │  vSAN            │  Resync = 0 (normal)  │  All objects Healthy         │
 ├──────────────────┼──────────────────────────────────────────────────────┤
 │  Backup          │  Tool: ___  │  Freq: ___  │  Last restore: ___       │
-│  Monitoring      │  System: ___  │  Alerts to: ___  │  Retention: ___  │
+│  Monitoring      │  System: ___  │  Alerts to: ___  │  Retention: ___   │
 └──────────────────┴──────────────────────────────────────────────────────┘
 ```
 

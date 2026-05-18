@@ -6,20 +6,20 @@
 ├────────────────┬─────────────────────────────────────────┤
 │  SYMPTOM       │  FIRST CHECK                            │
 ├────────────────┼─────────────────────────────────────────┤
-│  EC2           │  Security group ► NACL ► route table   │
+│  EC2           │  Security group ► NACL ► route table    │
 │  unreachable   │  ► instance status check ► SSM session  │
 ├────────────────┼─────────────────────────────────────────┤
-│  S3 Access     │  Bucket policy ► IAM simulate ►        │
-│  Denied        │  Block Public Access ► SCP ► KMS key   │
+│  S3 Access     │  Bucket policy ► IAM simulate ►         │
+│  Denied        │  Block Public Access ► SCP ► KMS key    │
 ├────────────────┼─────────────────────────────────────────┤
-│  Lambda        │  Increase timeout ► check VPC/NAT ►    │
+│  Lambda        │  Increase timeout ► check VPC/NAT ►     │
 │  timeout       │  CloudWatch logs ► X-Ray trace          │
 ├────────────────┼─────────────────────────────────────────┤
-│  RDS           │  Security group ► subnet routing ►     │
+│  RDS           │  Security group ► subnet routing ►      │
 │  connection    │  instance status ► TLS param group      │
 │  refused       │                                         │
 ├────────────────┼─────────────────────────────────────────┤
-│  IAM Access    │  Explicit Deny check ► SCP ► boundary  │
+│  IAM Access    │  Explicit Deny check ► SCP ► boundary   │
 │  Denied        │  ► iam:simulate-principal-policy        │
 └────────────────┴─────────────────────────────────────────┘
 ```

@@ -4,8 +4,8 @@
 Add Node Flow
 ┌──────────────────────────────────────────────────────────────┐
 │  Planning                                                    │
-│  same SKU as cluster · compatible firmware · IP/DNS ready   │
-│  network cabling plan · iDRAC IP assigned                   │
+│  same SKU as cluster · compatible firmware · IP/DNS ready    │
+│  network cabling plan · iDRAC IP assigned                    │
 └──────────────────────────────┬───────────────────────────────┘
                                │
               ┌────────────────▼────────────────┐

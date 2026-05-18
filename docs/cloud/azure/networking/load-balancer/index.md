@@ -22,9 +22,9 @@ Azure Load Balancer is a Layer 4 (TCP/UDP) load balancer for distributing inboun
 │                             ▼                                │
 │  ┌───────────────────────────────────────────────────────┐   │
 │  │  Backend Pool                                         │   │
-│  │  ┌─────────┐   ┌─────────┐   ┌─────────┐             │   │
-│  │  │  VM-1   │   │  VM-2   │   │  VM-3   │             │   │
-│  │  └─────────┘   └─────────┘   └─────────┘             │   │
+│  │  ┌─────────┐   ┌─────────┐   ┌─────────┐             │    │
+│  │  │  VM-1   │   │  VM-2   │   │  VM-3   │             │    │
+│  │  └─────────┘   └─────────┘   └─────────┘             │    │
 │  └───────────────────────────────────────────────────────┘   │
 └──────────────────────────────────────────────────────────────┘
 ``` The Standard SKU supports availability zones, cross-region load balancing, and detailed metrics. The Basic SKU is being retired.

@@ -16,7 +16,7 @@ vSphere Replication knowledge base — architecture, operations, CLI references,
 │                            │                │                           │
 │  VR Appliance (VRMS)       │                │  Recover VM               │
 │  ┌──────────────────────┐  │  TCP 44046     │  ┌─────────────────────┐  │
-│  │  Manages replication │◄─┼──────────────►│  │  (standalone or via │  │
+│  │  Manages replication │◄─┼──────────────►│  │  (standalone or via │   │
 │  │  schedules + RPO     │  │  (mgmt plane)  │  │   SRM orchestration)│  │
 │  └──────────────────────┘  │                │  └─────────────────────┘  │
 └────────────────────────────┘                └───────────────────────────┘

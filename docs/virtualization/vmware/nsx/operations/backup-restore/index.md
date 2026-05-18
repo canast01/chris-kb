@@ -5,25 +5,25 @@
 │                    NSX Manager Backup Flow                  │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  ┌──────────────────────┐   trigger (schedule / manual)    │
-│  │   NSX Manager Cluster │──────────────────────┐          │
-│  │  (3-node, Corfu DB)  │                       ▼          │
-│  └──────────────────────┘         ┌─────────────────────┐  │
-│            │                      │   Backup Service    │  │
-│   encrypts │ AES-256 passphrase   │  (management plane) │  │
-│            ▼                      └──────────┬──────────┘  │
-│  ┌──────────────────────┐                    │             │
-│  │  backup bundle       │◄───────────────────┘             │
-│  │  (policy + certs +   │                                  │
-│  │   roles + IPAM)      │   SFTP / SCP                     │
-│  └──────────────────────┘──────────────────────────────►   │
-│                               ┌──────────────────────────┐ │
-│                               │  Remote SFTP / S3 Target │ │
-│                               │  /backups/nsx/           │ │
-│                               └──────────────────────────┘ │
+│  ┌──────────────────────┐   trigger (schedule / manual)     │
+│  │   NSX Manager Cluster │──────────────────────┐           │
+│  │  (3-node, Corfu DB)  │                       ▼           │
+│  └──────────────────────┘         ┌─────────────────────┐   │
+│            │                      │   Backup Service    │   │
+│   encrypts │ AES-256 passphrase   │  (management plane) │   │
+│            ▼                      └──────────┬──────────┘   │
+│  ┌──────────────────────┐                    │              │
+│  │  backup bundle       │◄───────────────────┘              │
+│  │  (policy + certs +   │                                   │
+│  │   roles + IPAM)      │   SFTP / SCP                      │
+│  └──────────────────────┘──────────────────────────────►    │
+│                               ┌──────────────────────────┐  │
+│                               │  Remote SFTP / S3 Target │  │
+│                               │  /backups/nsx/           │  │
+│                               └──────────────────────────┘  │
 │                                                             │
 │  Restore: fresh Manager OVA → UI restore wizard → passphrase│
-│  ► re-joins vCenter ► re-pushes config to transport nodes  │
+│  ► re-joins vCenter ► re-pushes config to transport nodes   │
 └─────────────────────────────────────────────────────────────┘
 ```
 

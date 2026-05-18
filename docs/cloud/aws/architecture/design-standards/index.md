@@ -6,10 +6,10 @@
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│              AWS Design Standards Checklist             │
+│              AWS Design Standards Checklist              │
 │                                                          │
-│  Account       Multi-account org · no workloads in mgmt │
-│  Networking    VPC /16 · subnets /24 · no overlap       │
+│  Account       Multi-account org · no workloads in mgmt  │
+│  Networking    VPC /16 · subnets /24 · no overlap        │
 │  Tagging       Environment · Owner · CostCentre · App    │
 │  IAM           No long-lived keys · roles only · MFA     │
 │  Encryption    SSE-KMS on S3/EBS/RDS · TLS enforced      │

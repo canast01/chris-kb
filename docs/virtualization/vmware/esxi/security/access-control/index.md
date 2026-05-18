@@ -16,7 +16,7 @@ ESXi Access Control Model
 │  ├── SSH: BLOCKED for all except exception users     │
 │  ├── API: BLOCKED for direct connections             │
 │  ├── DCUI: ACCESSIBLE (local console only)           │
-│  └── Exception users: 1 named break-glass account   │
+│  └── Exception users: 1 named break-glass account    │
 │                                                      │
 │  Lockdown Mode — Strict                              │
 │  ├── SSH: BLOCKED                                    │

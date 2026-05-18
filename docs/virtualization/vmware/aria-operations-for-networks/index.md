@@ -8,21 +8,21 @@ Aria Operations for Networks knowledge base — architecture, operations, CLI re
 ┌──────────── Aria Operations for Networks: Data Flow ───────────────────────────┐
 │                                                                                 │
 │  Data Sources                      Collector VM              Platform VM       │
-│  ┌─────────────┐  API poll        ┌──────────────┐          ┌──────────────┐  │
-│  │  vCenter    ├─────────────────►│              │   TLS    │              │  │
-│  ├─────────────┤  API poll        │  Collector   ├─────────►│  Platform    │  │
-│  │  NSX-T Mgr  ├─────────────────►│  VM          │  upload  │  VM          │  │
-│  ├─────────────┤                  │              │          │              │  │
-│  │  Phys Switch├─ NetFlow/IPFIX ─►│  UDP 2055    │          │  Cassandra   │  │
-│  │  (Cisco/    │  UDP 2055        │  listener    │          │  Elastic     │  │
-│  │  Arista/JNX)│                  │              │          │  PostgreSQL  │  │
-│  ├─────────────┤                  └──────────────┘          │  Kafka       │  │
-│  │  ESXi vDS   ├─ IPFIX ─────────►(same collector)          └──────┬───────┘  │
+│  ┌─────────────┐  API poll        ┌──────────────┐          ┌──────────────┐   │
+│  │  vCenter    ├─────────────────►│              │   TLS    │              │   │
+│  ├─────────────┤  API poll        │  Collector   ├─────────►│  Platform    │   │
+│  │  NSX-T Mgr  ├─────────────────►│  VM          │  upload  │  VM          │   │
+│  ├─────────────┤                  │              │          │              │   │
+│  │  Phys Switch├─ NetFlow/IPFIX ─►│  UDP 2055    │          │  Cassandra   │   │
+│  │  (Cisco/    │  UDP 2055        │  listener    │          │  Elastic     │   │
+│  │  Arista/JNX)│                  │              │          │  PostgreSQL  │   │
+│  ├─────────────┤                  └──────────────┘          │  Kafka       │   │
+│  │  ESXi vDS   ├─ IPFIX ─────────►(same collector)          └──────┬───────┘   │
 │  ├─────────────┤                                                    │          │
-│  │  Palo Alto  ├─ syslog/API ────►(collector or direct)            │          │
+│  │  Palo Alto  ├─ syslog/API ────►(collector or direct)            │           │
 │  └─────────────┘                                                    │          │
 │                                                                    ▼            │
-│  Admin/User ──── HTTPS 443 ────────────────────────────────►  UI / REST API   │
+│  Admin/User ──── HTTPS 443 ────────────────────────────────►  UI / REST API    │
 │                                       network map │ flow analysis │ microseg    │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```

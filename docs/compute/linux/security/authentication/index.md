@@ -15,9 +15,9 @@ PAM, SSH public key auth, SSSD/AD integration, sudo, and MFA configuration.
          ┌──────────┼──────────────┐
          ▼          ▼              ▼
 ┌──────────────┐ ┌──────────┐ ┌─────────────┐
-│  pam_unix    │ │ pam_sss  │ │pam_faillock │
-│  /etc/passwd │ │  SSSD    │ │ lockout N   │
-│  /etc/shadow │ └────┬─────┘ │ attempts    │
+│  pam_unix    │ │ pam_sss  │ │pam_faillock               │
+│  /etc/passwd │ │  SSSD    │ │ lockout N                 │
+│  /etc/shadow │ └────┬─────┘ │ attempts                  │
 └──────────────┘      │       └─────────────┘
                       ▼
             ┌──────────────────────┐

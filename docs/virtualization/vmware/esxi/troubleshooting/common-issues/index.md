@@ -4,7 +4,7 @@
 ESXi Common Issue Resolution Paths
 ┌────────────────────────────────────────────────────────┐
 │  Host Disconnected from vCenter                        │
-│  └── restart hostd → vpxa → check NTP / cert          │
+│  └── restart hostd → vpxa → check NTP / cert           │
 │                                                        │
 │  All Paths Down (APD)                                  │
 │  ├── State: APD → transient, paths may return          │

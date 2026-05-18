@@ -11,24 +11,24 @@ Network security knowledge base covering firewalls, VPN, rule validation, and ne
 │  ┌────────────┐                                                      │
 │  │  Internet  │  (untrusted)                                         │
 │  └─────┬──────┘                                                      │
-│        │  Allow: HTTPS/443, SMTP/25 inbound only                    │
-│  ┌─────▼──────────────────────────────────────┐                     │
-│  │  DMZ Zone (VLAN 10-99)                     │  ◄── WAF / IDS     │
-│  │  Reverse proxies · Public APIs · Bastion   │                     │
-│  └─────┬──────────────────────────────────────┘                     │
-│        │  Allow: specific app ports only                            │
-│  ┌─────▼──────────────────────────────────────┐                     │
-│  │  Production Zone (VLAN 100-199)            │  ◄── ACLs          │
-│  │  App servers · Databases · Services        │                     │
-│  └─────┬──────────────────────┬───────────────┘                     │
-│        │ iSCSI/NFS            │ Veeam agent                        │
-│  ┌─────▼──────────┐   ┌───────▼──────────┐                          │
-│  │ Storage Zone   │   │  Backup Zone     │                          │
-│  │ (VLAN 300-310) │   │  (VLAN 500-510)  │                          │
-│  └────────────────┘   └──────────────────┘                          │
-│  ┌─────────────────────────────────────────────────────────────┐    │
-│  │  NSX-T DFW: micro-segmentation within each zone             │    │
-│  └─────────────────────────────────────────────────────────────┘    │
+│        │  Allow: HTTPS/443, SMTP/25 inbound only                     │
+│  ┌─────▼──────────────────────────────────────┐                      │
+│  │  DMZ Zone (VLAN 10-99)                     │  ◄── WAF / IDS       │
+│  │  Reverse proxies · Public APIs · Bastion   │                      │
+│  └─────┬──────────────────────────────────────┘                      │
+│        │  Allow: specific app ports only                             │
+│  ┌─────▼──────────────────────────────────────┐                      │
+│  │  Production Zone (VLAN 100-199)            │  ◄── ACLs            │
+│  │  App servers · Databases · Services        │                      │
+│  └─────┬──────────────────────┬───────────────┘                      │
+│        │ iSCSI/NFS            │ Veeam agent                          │
+│  ┌─────▼──────────┐   ┌───────▼──────────┐                           │
+│  │ Storage Zone   │   │  Backup Zone     │                           │
+│  │ (VLAN 300-310) │   │  (VLAN 500-510)  │                           │
+│  └────────────────┘   └──────────────────┘                           │
+│  ┌─────────────────────────────────────────────────────────────┐     │
+│  │  NSX-T DFW: micro-segmentation within each zone             │     │
+│  └─────────────────────────────────────────────────────────────┘     │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

@@ -11,14 +11,14 @@ AWS compute spans EC2 virtual machines, Auto Scaling groups, Lambda serverless f
 │  AMI (snapshot + launch config)                         │
 │   │                                                     │
 │   ▼                                                     │
-│  Instance Type (family: t/m/c/r/x) + size              │
+│  Instance Type (family: t/m/c/r/x) + size               │
 │   │                                                     │
 │   ▼                                                     │
 │  EC2 Instance ── EBS root disk ── Security Group        │
 │   │                                                     │
 │   ├── Auto Scaling Group (min / desired / max)          │
 │   ├── Systems Manager Agent (patch · session · run)     │
-│   └── Lambda (event-driven · no server · scale to 0)   │
+│   └── Lambda (event-driven · no server · scale to 0)    │
 └─────────────────────────────────────────────────────────┘
 ```
 

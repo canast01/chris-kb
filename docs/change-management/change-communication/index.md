@@ -16,9 +16,9 @@ Structured approach to notifying stakeholders before, during, and after changes 
          │                  ┌──────────────────────────────────────────────────┘
          ▼                  ▼
 ┌──────────────────────────────────┐
-│       Audience Matrix            │
-│ End users / Owners / On-call /   │
-│ Mgmt (P1) / Security (sec chg)   │
+│       Audience Matrix                                                                │
+│ End users / Owners / On-call /                                                       │
+│ Mgmt (P1) / Security (sec chg)                                                       │
 └──────────────────────────────────┘
 ```
 

@@ -12,12 +12,12 @@
 ├──────────────────┼───────────────────────────────────────────────────────┤
 │ Template         │ Approved tmpl-<os>-<ver>-<date> │ Quarterly refresh   │
 │ VMware Tools     │ Installed + running + current version │ Mandatory      │
-│ Hardware Version │ HW21 (vSphere 8.0) for all new VMs                   │
+│ Hardware Version │ HW21 (vSphere 8.0) for all new VMs                    │
 │ CPU              │ No CPU limits on prod │ No Hot Add unless required    │
 │ Memory           │ No mem limits │ No reservation unless tier-1          │
-│ Disk Controller  │ PVSCSI (data disks) │ Eager Zeroed for high-I/O      │
+│ Disk Controller  │ PVSCSI (data disks) │ Eager Zeroed for high-I/O       │
 │ NIC              │ VMXNET3 │ 1 NIC unless app requires separation        │
-│ Snapshots        │ No standing snapshots │ Alert > 72h │ 7d hard limit  │
+│ Snapshots        │ No standing snapshots │ Alert > 72h │ 7d hard limit   │
 ├──────────────────┴───────────────────────────────────────────────────────┤
 │  Required tags: Environment │ Application │ Backup Tier │ Owner          │
 └──────────────────────────────────────────────────────────────────────────┘

@@ -16,10 +16,10 @@ Azure Cost articles, operational checks, troubleshooting notes, and references.
 │  ┌────────────────────────────────────────────────────────┐  │
 │  │              Cost Management                           │  │
 │  │                                                        │  │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  │  │
-│  │  │  Budgets     │  │  Cost        │  │  Advisor    │  │  │
-│  │  │  (thresholds)│  │  Analysis    │  │  Recomm.    │  │  │
-│  │  └──────┬───────┘  └──────────────┘  └─────────────┘  │  │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  │   │
+│  │  │  Budgets     │  │  Cost        │  │  Advisor    │  │   │
+│  │  │  (thresholds)│  │  Analysis    │  │  Recomm.    │  │   │
+│  │  └──────┬───────┘  └──────────────┘  └─────────────┘  │   │
 │  └─────────┼──────────────────────────────────────────────┘  │
 │            │ threshold breach                                 │
 │            ▼                                                  │

@@ -14,9 +14,9 @@ VMkernel Internals — Resource Stack
 │  Storage Stack                    Network Stack            │
 │  ├── PSA (Pluggable Storage Arch) ├── vSwitch / vDS        │
 │  │   ├── NMP (multipathing)       ├── Port groups          │
-│  │   │   ├── PSP (RR / MRU / FX) ├── vmkernel adapters    │
-│  │   │   └── SATP (array rules)  │   vmk0 mgmt            │
-│  │   └── VAAI (array offload)    │   vmk1 vMotion         │
+│  │   │   ├── PSP (RR / MRU / FX) ├── vmkernel adapters     │
+│  │   │   └── SATP (array rules)  │   vmk0 mgmt             │
+│  │   └── VAAI (array offload)    │   vmk1 vMotion          │
 │  └── Datastores                   │   vmk2 vSAN            │
 │      VMFS6 / NFS / vSAN           │   vmk3 iSCSI/NFS       │
 │                                   └── pNICs (vmnic0..n)    │

@@ -6,14 +6,14 @@ Build and operating standards for virtualization platforms.
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                    Virtualization Standards Hub                         │
 ├──────────────────┬──────────────────┬──────────────────────────────────┤
-│  Build Standards │  Config Standards│  Operational Standards           │
+│  Build Standards │  Config Standards│  Operational Standards            │
 ├──────────────────┼──────────────────┼──────────────────────────────────┤
-│ • Naming         │ • Cluster HA/DRS │ • Access / RBAC                  │
-│ • Host Build     │ • VM sizing      │ • Backup RPO/RTO tiers           │
-│ • VM template    │ • Datastore type │ • Snapshot age/cleanup           │
-│                  │   + thresholds   │ • Maintenance windows            │
-│                  │ • Network MTU    │ • Tagging (env/owner/tier)       │
-│                  │   + port groups  │                                  │
+│ • Naming         │ • Cluster HA/DRS │ • Access / RBAC                   │
+│ • Host Build     │ • VM sizing      │ • Backup RPO/RTO tiers            │
+│ • VM template    │ • Datastore type │ • Snapshot age/cleanup            │
+│                  │   + thresholds   │ • Maintenance windows             │
+│                  │ • Network MTU    │ • Tagging (env/owner/tier)        │
+│                  │   + port groups  │                                   │
 ├──────────────────┴──────────────────┴──────────────────────────────────┤
 │  All deviations must be documented with justification + team lead sign-off │
 └─────────────────────────────────────────────────────────────────────────┘

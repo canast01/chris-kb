@@ -5,21 +5,21 @@
 │         Aria Automation Operations Overview                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Day-to-Day Tasks                                          │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐│
-│  │ Health       │ │ Procedures   │ │ CLI Reference        ││
-│  │ Checks       │ │ service acct │ │ vracli / kubectl     ││
-│  │ pods / cloud │ │ rotation     │ │ REST API             ││
-│  │ accounts     │ │ stale deploy │ │                      ││
-│  └──────────────┘ └──────────────┘ └──────────────────────┘│
+│  Day-to-Day Tasks                                           │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐ │
+│  │ Health       │ │ Procedures   │ │ CLI Reference        │ │
+│  │ Checks       │ │ service acct │ │ vracli / kubectl     │ │
+│  │ pods / cloud │ │ rotation     │ │ REST API             │ │
+│  │ accounts     │ │ stale deploy │ │                      │ │
+│  └──────────────┘ └──────────────┘ └──────────────────────┘ │
 │                                                             │
-│  Lifecycle                                                 │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐│
-│  │ Install /    │ │ Backup /     │ │ Scripts              ││
-│  │ Upgrade      │ │ Restore      │ │ PowerShell / REST    ││
-│  │ LCM / VAMI / │ │ NFS/SFTP     │ │ deployment audit     ││
-│  │ PAK file     │ │ passphrase   │ │ cloud acct check     ││
-│  └──────────────┘ └──────────────┘ └──────────────────────┘│
+│  Lifecycle                                                  │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐ │
+│  │ Install /    │ │ Backup /     │ │ Scripts              │ │
+│  │ Upgrade      │ │ Restore      │ │ PowerShell / REST    │ │
+│  │ LCM / VAMI / │ │ NFS/SFTP     │ │ deployment audit     │ │
+│  │ PAK file     │ │ passphrase   │ │ cloud acct check     │ │
+│  └──────────────┘ └──────────────┘ └──────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
 ```
 

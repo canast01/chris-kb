@@ -5,21 +5,21 @@
 │         Aria Automation Script Pattern                      │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Script (PowerShell / Bash)                                │
-│       │                                                    │
-│       ▼                                                    │
-│  POST /csp/gateway/am/api/login → Bearer Token             │
-│       │                                                    │
-│       ▼                                                    │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │  Aria Automation REST API                          │   │
-│  │  /deployment/api/deployments  (list, delete)       │   │
-│  │  /blueprint/api/blueprints    (list, versions)     │   │
-│  │  /iaas/api/cloud-accounts     (status check)       │   │
-│  └────────────────────────────────────────────────────┘   │
-│       │                                                    │
-│       ▼                                                    │
-│  JSON response → filter/format → report/action             │
+│  Script (PowerShell / Bash)                                 │
+│       │                                                     │
+│       ▼                                                     │
+│  POST /csp/gateway/am/api/login → Bearer Token              │
+│       │                                                     │
+│       ▼                                                     │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  Aria Automation REST API                          │     │
+│  │  /deployment/api/deployments  (list, delete)       │     │
+│  │  /blueprint/api/blueprints    (list, versions)     │     │
+│  │  /iaas/api/cloud-accounts     (status check)       │     │
+│  └────────────────────────────────────────────────────┘     │
+│       │                                                     │
+│       ▼                                                     │
+│  JSON response → filter/format → report/action              │
 └─────────────────────────────────────────────────────────────┘
 ```
 

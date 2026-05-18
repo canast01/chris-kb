@@ -124,12 +124,12 @@ flowchart LR
 ┌──────────────────────────────────────────────────────────┐
 │              AWS Request Flow (web workload)             │
 │                                                          │
-│  User ──► Route 53 (DNS) ──► ALB (L7 load balancer)     │
-│                               │                         │
-│               ┌───────────────┼──────────────┐          │
-│               ▼               ▼              ▼          │
-│          EC2 (AZ-a)      EC2 (AZ-b)     EC2 (AZ-c)      │
-│               │                                         │
+│  User ──► Route 53 (DNS) ──► ALB (L7 load balancer)      │
+│                               │                          │
+│               ┌───────────────┼──────────────┐           │
+│               ▼               ▼              ▼           │
+│          EC2 (AZ-a)      EC2 (AZ-b)     EC2 (AZ-c)       │
+│               │                                          │
 │        ┌──────┴──────┐                                   │
 │        ▼             ▼                                   │
 │      RDS (primary)  EBS (data disk)                      │

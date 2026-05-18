@@ -5,28 +5,28 @@
 │           Aria Automation Backup Flow                       │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Aria Automation Cluster                             │  │
-│  │  (PostgreSQL DB + config files + ABX + pipelines)   │  │
-│  └────────────────────────┬─────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Aria Automation Cluster                             │   │
+│  │  (PostgreSQL DB + config files + ABX + pipelines)   │    │
+│  └────────────────────────┬─────────────────────────────┘   │
 │                           │  trigger (VAMI schedule/manual) │
-│                           ▼                                │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  vracli backup start                                 │  │
-│  │  Encrypts with passphrase (AES)                      │  │
-│  │  Exports: blueprints, projects, deployments,         │  │
-│  │   policies, ABX, pipelines, role assignments         │  │
-│  └────────────────────────┬─────────────────────────────┘  │
-│                           │  NFS mount or SFTP             │
-│                           ▼                                │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Backup target (NFS / SFTP)                          │  │
-│  │  /exports/vra-backup/                                │  │
-│  └──────────────────────────────────────────────────────┘  │
+│                           ▼                                 │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  vracli backup start                                 │   │
+│  │  Encrypts with passphrase (AES)                      │   │
+│  │  Exports: blueprints, projects, deployments,         │   │
+│  │   policies, ABX, pipelines, role assignments         │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│                           │  NFS mount or SFTP              │
+│                           ▼                                 │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Backup target (NFS / SFTP)                          │   │
+│  │  /exports/vra-backup/                                │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  Restore: VAMI → select backup → enter passphrase          │
-│  ► stops services ► restores DB ► restarts ► re-enter      │
-│  cloud account credentials (not backed up)                 │
+│  Restore: VAMI → select backup → enter passphrase           │
+│  ► stops services ► restores DB ► restarts ► re-enter       │
+│  cloud account credentials (not backed up)                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 

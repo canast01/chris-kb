@@ -8,15 +8,15 @@ VMware Horizon delivers virtual desktops and published applications through Conn
   Control Plane                   Data Plane
 ┌──────────────────────────┐    ┌──────────────────────────────────────────┐
 │  Pod Manager / CPA       │    │  ESXi Cluster — Desktop Pool             │
-│  ┌────────────────────┐  │    │  ┌─────────────┐  ┌─────────────────┐   │
-│  │  Connection Server │◄─┼────┼─►│ Parent VM / │  │ Instant Clone   │   │
-│  │  (primary)         │  │    │  │ Replica     │  │ Child VMs       │   │
-│  └────────────────────┘  │    │  └─────────────┘  └─────────────────┘   │
+│  ┌────────────────────┐  │    │  ┌─────────────┐  ┌─────────────────┐    │
+│  │  Connection Server │◄─┼────┼─►│ Parent VM / │  │ Instant Clone   │    │
+│  │  (primary)         │  │    │  │ Replica     │  │ Child VMs       │    │
+│  └────────────────────┘  │    │  └─────────────┘  └─────────────────┘    │
 │  ┌────────────────────┐  │    │         ▲                 │              │
-│  │  Connection Server │  │    │  ┌──────┴──────┐ ┌───────▼───────┐      │
-│  │  (replica)         │  │    │  │   vCenter   │ │  App Volumes  │      │
-│  └────────────────────┘  │    │  │  + vSAN     │ │  Manager/DEM  │      │
-│  ┌────────────────────┐  │    │  └─────────────┘ └───────────────┘      │
+│  │  Connection Server │  │    │  ┌──────┴──────┐ ┌───────▼───────┐       │
+│  │  (replica)         │  │    │  │   vCenter   │ │  App Volumes  │       │
+│  └────────────────────┘  │    │  │  + vSAN     │ │  Manager/DEM  │       │
+│  ┌────────────────────┐  │    │  └─────────────┘ └───────────────┘       │
 │  │  UAG (DMZ)         │◄─┼────┼──── External clients (Blast/PCoIP)       │
 │  └────────────────────┘  │    └──────────────────────────────────────────┘
 └──────────────────────────┘

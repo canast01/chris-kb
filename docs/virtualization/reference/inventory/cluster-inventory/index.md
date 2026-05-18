@@ -8,19 +8,19 @@
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                         Cluster Inventory Map                            │
 ├─────────────────────┬────────────┬──────────┬──────────┬────────────────┤
-│   Cluster Name      │  Hosts     │ HA / DRS │  vSAN    │  Resources     │
+│   Cluster Name      │  Hosts     │ HA / DRS │  vSAN    │  Resources      │
 ├─────────────────────┼────────────┼──────────┼──────────┼────────────────┤
-│ cl-prod-compute-01  │  8 hosts   │ HA ✓     │ 46 TB    │ 384 GHz / 12TB │
-│                     │            │ DRS Full │ Enabled  │                │
+│ cl-prod-compute-01  │  8 hosts   │ HA ✓     │ 46 TB    │ 384 GHz / 12TB  │
+│                     │            │ DRS Full │ Enabled  │                 │
 ├─────────────────────┼────────────┼──────────┼──────────┼────────────────┤
-│ cl-prod-edge-01     │  4 hosts   │ HA ✓     │ —        │  96 GHz / 2TB  │
-│                     │            │ DRS Full │ Disabled │                │
+│ cl-prod-edge-01     │  4 hosts   │ HA ✓     │ —        │  96 GHz / 2TB   │
+│                     │            │ DRS Full │ Disabled │                 │
 ├─────────────────────┼────────────┼──────────┼──────────┼────────────────┤
-│ cl-prod-mgmt-01     │  3 hosts   │ HA ✓     │ 14 TB    │  72 GHz / 3TB  │
-│                     │            │ DRS Part │ Enabled  │                │
+│ cl-prod-mgmt-01     │  3 hosts   │ HA ✓     │ 14 TB    │  72 GHz / 3TB   │
+│                     │            │ DRS Part │ Enabled  │                 │
 ├─────────────────────┼────────────┼──────────┼──────────┼────────────────┤
-│ cl-dr-compute-01    │  4 hosts   │ HA ✓     │ 23 TB    │ 192 GHz / 6TB  │
-│                     │            │ DRS Full │ Enabled  │                │
+│ cl-dr-compute-01    │  4 hosts   │ HA ✓     │ 23 TB    │ 192 GHz / 6TB   │
+│                     │            │ DRS Full │ Enabled  │                 │
 └─────────────────────┴────────────┴──────────┴──────────┴────────────────┘
 ```
 ## Overview

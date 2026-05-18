@@ -15,7 +15,7 @@
 │                                                          │
 │  Identity                                                │
 │  ├── AD Connector  → proxy auth to on-prem AD            │
-│  └── IAM Identity Center → SSO → permission sets        │
+│  └── IAM Identity Center → SSO → permission sets         │
 │                                                          │
 │  Observability                                           │
 │  └── CloudTrail → S3 (log archive) → Kinesis → SIEM      │

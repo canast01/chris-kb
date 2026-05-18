@@ -20,7 +20,7 @@
 │  Registry / Supply Chain                                                        │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Harbor: auto-scan on push │ prevent pull if Critical/High CVEs          │  │
-│  │  Audit logging: kube-apiserver audit-policy.yaml ► Secrets/deletes      │  │
+│  │  Audit logging: kube-apiserver audit-policy.yaml ► Secrets/deletes      │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Node Access: no direct SSH (kubectl debug node instead)                        │

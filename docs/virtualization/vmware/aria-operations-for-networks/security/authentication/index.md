@@ -8,16 +8,16 @@
 │                                                                                 │
 │  Method 2: LDAP / Active Directory                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Platform VM ──ldaps:636──► AD server                                   │  │
-│  │  bind DN ► user search ► sAMAccountName match ► group lookup            │  │
-│  │  Settings ► Role Mappings: AD group ──► vRNI role                       │  │
+│  │  Platform VM ──ldaps:636──► AD server                                   │   │
+│  │  bind DN ► user search ► sAMAccountName match ► group lookup            │   │
+│  │  Settings ► Role Mappings: AD group ──► vRNI role                       │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Method 3: SAML / vIDM (SSO)                                                   │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  User browser ──► vRNI SP ──► redirect ──► vIDM IdP                    │  │
-│  │  vIDM authenticates ──► SAML assertion ──► vRNI role mapping            │  │
-│  │  SP Metadata export ──► import into vIDM service provider               │  │
+│  │  User browser ──► vRNI SP ──► redirect ──► vIDM IdP                    │    │
+│  │  vIDM authenticates ──► SAML assertion ──► vRNI role mapping            │   │
+│  │  SP Metadata export ──► import into vIDM service provider               │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Method 4: API Token                                                            │

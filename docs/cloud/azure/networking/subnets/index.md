@@ -22,7 +22,7 @@ Subnets segment a Virtual Network address space into smaller ranges.
 │  │  (optional)      │  │                  │               │
 │  └──────────────────┘  └──────────────────┘               │
 │                                                           │
-│  Azure reserves 5 IPs per subnet (first 4 + last 1)      │
+│  Azure reserves 5 IPs per subnet (first 4 + last 1)       │
 └───────────────────────────────────────────────────────────┘
 ``` Each subnet can have an NSG, route table, service endpoints, and delegations independently configured. Azure reserves 5 addresses in each subnet (first 4 and last 1).
 

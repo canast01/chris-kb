@@ -8,7 +8,7 @@ AWS FSx notes for day-to-day infrastructure operations.
 │                  FSx Variants                           │
 │                                                         │
 │  FSx for Windows File Server                            │
-│  ├── Protocol: SMB (2.1 / 3.0 / 3.1.1)                 │
+│  ├── Protocol: SMB (2.1 / 3.0 / 3.1.1)                  │
 │  ├── AD-integrated (user auth via AD groups)            │
 │  └── Use: Windows apps · DFS shares · home dirs         │
 │                                                         │

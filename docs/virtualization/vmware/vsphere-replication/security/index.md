@@ -10,7 +10,7 @@
 │  │   store)     │   │  VR-Recovery │    │  opt. AES-256│     │
 │  │ VRA local:   │   │              │    │  per-VM      │     │
 │  │  admin/root  │   │ Least priv.: │    │              │     │
-│  │  (change     │   │  Recover    │    │ At rest:     │     │
+│  │  (change     │   │  Recover    │    │ At rest:     │      │
 │  │   on deploy) │   │  privilege   │    │  vSAN / VM   │     │
 │  └──────────────┘   │  DR team only│    │  encryption  │     │
 │                     └──────────────┘    └──────────────┘     │

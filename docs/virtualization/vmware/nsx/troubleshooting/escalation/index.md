@@ -5,32 +5,32 @@
 │                 NSX Escalation Path                         │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Internal L1 / NOC                                         │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Run documented triage checklist                     │  │
-│  │  Collect: version, cluster status, support bundle    │  │
-│  └────────────────────────┬─────────────────────────────┘  │
-│       not resolved (2h)   │                                │
-│                           ▼                                │
-│  Internal L2 / NSX SME                                     │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Deep-dive: Corfu DB, DFW realisation, Edge logs     │  │
-│  └────────────────────────┬─────────────────────────────┘  │
-│     not resolved / P1/P2  │                                │
-│                           ▼                                │
-│  Broadcom TAC                                              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  support.broadcom.com → Create Case                  │  │
-│  │  P1: 30 min response (24x7) — call immediately       │  │
-│  │  P2: 4 hour response (24x7)                          │  │
-│  │  Attach: support bundle, cluster status, version     │  │
-│  └────────────────────────┬─────────────────────────────┘  │
-│          no progress      │                                │
-│                           ▼                                │
-│  TAM / Escalation Management                               │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Portal escalation button → duty manager             │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  Internal L1 / NOC                                          │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Run documented triage checklist                     │   │
+│  │  Collect: version, cluster status, support bundle    │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│       not resolved (2h)   │                                 │
+│                           ▼                                 │
+│  Internal L2 / NSX SME                                      │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Deep-dive: Corfu DB, DFW realisation, Edge logs     │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│     not resolved / P1/P2  │                                 │
+│                           ▼                                 │
+│  Broadcom TAC                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  support.broadcom.com → Create Case                  │   │
+│  │  P1: 30 min response (24x7) — call immediately       │   │
+│  │  P2: 4 hour response (24x7)                          │   │
+│  │  Attach: support bundle, cluster status, version     │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│          no progress      │                                 │
+│                           ▼                                 │
+│  TAM / Escalation Management                                │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Portal escalation button → duty manager             │   │
+│  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
 

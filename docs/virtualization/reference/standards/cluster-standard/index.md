@@ -17,9 +17,9 @@
 │  Heartbeat DSs: ≥ 2           │                                          │
 ├───────────────────────────────┴──────────────────────────────────────────┤
 │   EVC: Enabled (lowest CPU baseline in cluster)                          │
-│   vSAN: RAID-1 FTT=1 min │ Dedup+Compress On (all-flash) │ Health green │
-│   Resource Pools: rp-prod-critical │ rp-prod-standard │ rp-dev          │
-│   Min hosts: 3 (prod/mgmt/DR)  │  2 (edge/NSX only)                    │
+│   vSAN: RAID-1 FTT=1 min │ Dedup+Compress On (all-flash) │ Health green  │
+│   Resource Pools: rp-prod-critical │ rp-prod-standard │ rp-dev           │
+│   Min hosts: 3 (prod/mgmt/DR)  │  2 (edge/NSX only)                      │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 ## Overview

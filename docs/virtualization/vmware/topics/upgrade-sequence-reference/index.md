@@ -3,7 +3,7 @@
 ```
 ┌──────────── VMware Component Upgrade Order ────────────────────────────────────┐
 │                                                                                 │
-│  1. Aria Suite Lifecycle (LCM)  ◄── always first if LCM is used               │
+│  1. Aria Suite Lifecycle (LCM)  ◄── always first if LCM is used                │
 │         │                                                                       │
 │  2. Workspace ONE Access (vIDM) ◄── must precede Aria product upgrades         │
 │         │                                                                       │
@@ -13,7 +13,7 @@
 │         │                                                                       │
 │  5. ESXi hosts  (rolling, one at a time)                                        │
 │     ┌──────────────────────────────────────────────────────────────────────┐   │
-│     │  maintenance mode ► DRS migrates VMs ► upgrade ► reboot ► exit MM   │   │
+│     │  maintenance mode ► DRS migrates VMs ► upgrade ► reboot ► exit MM   │    │
 │     └──────────────────────────────────────────────────────────────────────┘   │
 │         │                                                                       │
 │  6. vSAN on-disk format         ◄── after ALL ESXi at target version           │

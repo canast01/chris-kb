@@ -9,8 +9,8 @@ Tags are the primary mechanism for attributing Azure costs to teams, projects, e
 │  Resource Group / Resource                                   │
 │  ┌────────────────────────────────────────────────────────┐  │
 │  │  tag: environment = prod                               │  │
-│  │  tag: team        = platform                          │  │
-│  │  tag: cost-centre = CC-1001                           │  │
+│  │  tag: team        = platform                          │   │
+│  │  tag: cost-centre = CC-1001                           │   │
 │  └───────────────────────────┬────────────────────────────┘  │
 │                              │ tags flow into billing         │
 │                              ▼                               │

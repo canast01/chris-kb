@@ -8,16 +8,16 @@ Unified fast file and object storage running Purity//FB — NFS, SMB, S3, and HD
 Pure FlashBlade — Scale-Out Architecture
 ┌─────────────────────────────────────────────────────────────┐
 │  Chassis                                                    │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │
-│  │ Blade 1  │ │ Blade 2  │ │ Blade 3  │ │ Blade N  │      │
-│  │ flash +  │ │ flash +  │ │ flash +  │ │ flash +  │      │
-│  │ compute  │ │ compute  │ │ compute  │ │ compute  │      │
-│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘      │
-│       └────────────┴────────────┴────────────┘             │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
+│  │ Blade 1  │ │ Blade 2  │ │ Blade 3  │ │ Blade N  │        │
+│  │ flash +  │ │ flash +  │ │ flash +  │ │ flash +  │        │
+│  │ compute  │ │ compute  │ │ compute  │ │ compute  │        │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘        │
+│       └────────────┴────────────┴────────────┘              │
 │                       │ NVMe-oF internal fabric             │
-│              ┌────────▼────────┐                           │
+│              ┌────────▼────────┐                            │
 │              │ Fabric Module   │ (high-speed interconnect)  │
-│              └────────┬────────┘                           │
+│              └────────┬────────┘                            │
 └───────────────────────┼─────────────────────────────────────┘
                         │ 10/25/100 GbE data ports
                         ▼

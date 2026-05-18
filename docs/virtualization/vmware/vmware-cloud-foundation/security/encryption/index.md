@@ -8,16 +8,16 @@ VCF Encryption — Certificate and Data Flow
 │  Internal CA (VMCA) or Enterprise CA                │
 │       │                                             │
 │       ▼                                             │
-│  SDDC Manager → Security → Certificate Management  │
+│  SDDC Manager → Security → Certificate Management   │
 │  1. Generate CSR for component                      │
 │  2. Submit to CA → receive signed cert + chain      │
 │  3. Import into SDDC Manager                        │
 │  4. SDDC Manager installs cert, restarts service    │
 │                                                     │
 │  Rotation order:                                    │
-│  SDDC Manager → vCenter → NSX Manager → ESXi       │
+│  SDDC Manager → vCenter → NSX Manager → ESXi        │
 │                                                     │
-│  Timeline:  60d → plan   30d → schedule   7d → P2  │
+│  Timeline:  60d → plan   30d → schedule   7d → P2   │
 └──────────────────────────┬──────────────────────────┘
                            │
                            ▼
@@ -25,7 +25,7 @@ VCF Encryption — Certificate and Data Flow
 │  vSAN Data-at-Rest Encryption                       │
 │                                                     │
 │  KMS Server ──► vCenter vSAN configuration          │
-│  Cluster → Configure → vSAN → Services             │
+│  Cluster → Configure → vSAN → Services              │
 │  → Data-at-Rest Encryption → Enable                 │
 │                                                     │
 │  Key rotation: live operation (no downtime)         │

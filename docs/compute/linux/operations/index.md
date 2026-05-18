@@ -14,9 +14,9 @@
 │                   Backup & Restore                  │
 │   Veeam Agent for Linux  │  rsync  │  tar snapshots │
 ├──────────────┬──────────────────────────────────────┤
-│  Scripts &   │  Install & Upgrade                  │
-│  Automation  │  dnf/apt  →  reboot  →  validate    │
-│  (Ansible)   │                                     │
+│  Scripts &   │  Install & Upgrade                   │
+│  Automation  │  dnf/apt  →  reboot  →  validate     │
+│  (Ansible)   │                                      │
 └──────────────┴─────────────────────────────────────┘
 ```
 

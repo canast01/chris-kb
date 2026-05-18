@@ -17,7 +17,7 @@
 │                                          │ Fully Automated mode                 │
 │  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
 │  │  vMotion executes                                                        │  │
-│  │  source host ──── memory pre-copy ──── final switchover ───► target host│  │
+│  │  source host ──── memory pre-copy ──── final switchover ───► target host│   │
 │  │  (brief pause < 1s during final memory sync)                             │  │
 │  └───────────────────────────────────────┬──────────────────────────────────┘  │
 │                                          │                                      │

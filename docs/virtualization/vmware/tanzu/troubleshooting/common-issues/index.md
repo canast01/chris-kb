@@ -5,14 +5,14 @@
 │                                                                                 │
 │  Supervisor issues                                                              │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Stuck "Configuring" ► DNS/NTP/NSX-T load balancer / content library    │  │
+│  │  Stuck "Configuring" ► DNS/NTP/NSX-T load balancer / content library    │   │
 │  │  API unreachable ► check control plane VM IPs and network routing        │  │
 │  └───────────────────────────────────────┬──────────────────────────────────┘  │
 │                                          │                                      │
 │  TKG Cluster issues                      ▼                                      │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Cluster stuck "creating" ► kubectl describe Machine ► image pull/creds  │  │
-│  │  Namespace resource quota hit ► vCenter ► Workload Mgmt ► Namespaces    │  │
+│  │  Namespace resource quota hit ► vCenter ► Workload Mgmt ► Namespaces    │   │
 │  └───────────────────────────────────────┬──────────────────────────────────┘  │
 │                                          │                                      │
 │  Node / Pod issues                       ▼                                      │

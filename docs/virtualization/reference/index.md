@@ -6,17 +6,17 @@ Standards, inventory, upgrade readiness checklists, and quick reference material
 ┌─────────────────────────────────────────────────────────────────┐
 │                  Virtualization Reference Hub                   │
 ├──────────────────┬──────────────────┬──────────────┬───────────┤
-│    Standards     │    Inventory     │   Upgrade    │  Quick    │
-│                  │                  │  Readiness   │ Reference │
+│    Standards     │    Inventory     │   Upgrade    │  Quick     │
+│                  │                  │  Readiness   │ Reference  │
 ├──────────────────┼──────────────────┼──────────────┼───────────┤
-│ • Naming         │ • Hosts          │ • Planning   │ • Cheat   │
-│ • Host Build     │ • Clusters       │ • Pre-checks │   Sheets  │
-│ • Cluster        │ • Datastores     │ • Compat.    │ • Decision│
-│ • VM             │ • Networks       │   Review     │   Trees   │
-│ • Datastore      │ • Versions       │ • Rollback   │ • Glossary│
-│ • Access         │ • Certs          │ • Post-val.  │ • Logs    │
+│ • Naming         │ • Hosts          │ • Planning   │ • Cheat    │
+│ • Host Build     │ • Clusters       │ • Pre-checks │   Sheets   │
+│ • Cluster        │ • Datastores     │ • Compat.    │ • Decision │
+│ • VM             │ • Networks       │   Review     │   Trees    │
+│ • Datastore      │ • Versions       │ • Rollback   │ • Glossary │
+│ • Access         │ • Certs          │ • Post-val.  │ • Logs     │
 │ • Backup         │ • Svc Accounts   │ • Lessons    │ • Emergency│
-│ • Snapshot       │ • Backup Cover.  │              │           │
+│ • Snapshot       │ • Backup Cover.  │              │            │
 └──────────────────┴──────────────────┴──────────────┴───────────┘
 ```
 

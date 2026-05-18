@@ -6,22 +6,22 @@
 ┌──────────────────────────────────────────────────────────┐
 │                 Storage CLI Flow                         │
 │                                                          │
-│  az storage account create ──────► Storage Account      │
-│                                           │             │
-│  az storage container create ────────────►│             │
-│                                    Container(s)         │
-│                                           │             │
-│        ┌──────────────────────────────────┘             │
-│        │                                               │
-│        ▼                                               │
-│  az storage blob upload   ──────► Blob (object)        │
-│  az storage blob download ◄──────                      │
-│  az storage blob copy                                  │
-│                                                        │
-│  az storage container generate-sas                     │
-│        │                                               │
-│        ▼                                               │
-│  SAS token (time-limited URL for external access)      │
+│  az storage account create ──────► Storage Account       │
+│                                           │              │
+│  az storage container create ────────────►│              │
+│                                    Container(s)          │
+│                                           │              │
+│        ┌──────────────────────────────────┘              │
+│        │                                                 │
+│        ▼                                                 │
+│  az storage blob upload   ──────► Blob (object)          │
+│  az storage blob download ◄──────                        │
+│  az storage blob copy                                    │
+│                                                          │
+│  az storage container generate-sas                       │
+│        │                                                 │
+│        ▼                                                 │
+│  SAS token (time-limited URL for external access)        │
 └──────────────────────────────────────────────────────────┘
 ```
 

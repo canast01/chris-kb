@@ -11,7 +11,7 @@
 │  │  ws_tomcat-<date>.txt      │   │  config/logs/collect   │ │
 │  └────────────────────────────┘   └────────────────────────┘ │
 │                                                              │
-│  Desktop VM (guest)               DCT Support Bundle        │
+│  Desktop VM (guest)               DCT Support Bundle         │
 │  ┌────────────────────────────┐   ┌────────────────────────┐ │
 │  │ C:\ProgramData\VMware\VDM\ │   │ Horizon Console →      │ │
 │  │  logs\ (Horizon Agent)     │   │  Help → Download       │ │

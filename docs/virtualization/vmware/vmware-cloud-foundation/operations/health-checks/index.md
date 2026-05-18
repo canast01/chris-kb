@@ -5,7 +5,7 @@ VCF Daily Health Check — Coverage Map
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager                                       │
 │  ├─ Dashboard: all domains green?                   │
-│  ├─ Security → Certs: no expiry < 60 days?         │
+│  ├─ Security → Certs: no expiry < 60 days?          │
 │  ├─ LCM → Bundles: critical patches pending?        │
 │  └─ Admin → Backup: last backup timestamp OK?       │
 └──────────────────────┬──────────────────────────────┘
@@ -13,16 +13,16 @@ VCF Daily Health Check — Coverage Map
           ┌────────────┼────────────┐
           ▼            ▼            ▼
 ┌──────────────┐ ┌──────────┐ ┌──────────────────────┐
-│ NSX Manager  │ │ vCenter  │ │ SDDC Manager         │
+│ NSX Manager  │ │ vCenter  │ │ SDDC Manager          │
 │              │ │ per WLD  │ │ appliance disk        │
-│ Fabric/Nodes:│ │          │ │                      │
-│ all Up?      │ │ Hosts:   │ │ df -h                │
-│              │ │ Connected│ │ Alert if /data > 80% │
-│ BGP peers:   │ │          │ │                      │
-│ Established? │ │ vSAN:    │ │                      │
-│              │ │ Skyline  │ │                      │
-│ Transport    │ │ Health   │ │                      │
-│ zones: OK?   │ │ green?   │ │                      │
+│ Fabric/Nodes:│ │          │ │                       │
+│ all Up?      │ │ Hosts:   │ │ df -h                 │
+│              │ │ Connected│ │ Alert if /data > 80%  │
+│ BGP peers:   │ │          │ │                       │
+│ Established? │ │ vSAN:    │ │                       │
+│              │ │ Skyline  │ │                       │
+│ Transport    │ │ Health   │ │                       │
+│ zones: OK?   │ │ green?   │ │                       │
 └──────────────┘ └──────────┘ └──────────────────────┘
 ```
 

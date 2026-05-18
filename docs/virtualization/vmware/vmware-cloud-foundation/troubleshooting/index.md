@@ -13,13 +13,13 @@ VCF Troubleshooting — Triage Decision Map
         ┌──────────────┼──────────────────────┐
         ▼              ▼                      ▼
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
-│ SDDC Manager │ │ LCM / Bundle │ │ Network / Overlay│
-│ UI or API    │ │ failure      │ │ NSX / TEP issue  │
-│              │ │              │ │                  │
-│ → check      │ │ → lcm-debug  │ │ → NSX transport  │
-│   services   │ │   .log       │ │   node status    │
-│ → ops-mgr    │ │ → depot      │ │ → TEP ping test  │
-│   .log       │ │   connect?   │ │ → BGP status     │
+│ SDDC Manager │ │ LCM / Bundle │ │ Network / Overlay │
+│ UI or API    │ │ failure      │ │ NSX / TEP issue   │
+│              │ │              │ │                   │
+│ → check      │ │ → lcm-debug  │ │ → NSX transport   │
+│   services   │ │   .log       │ │   node status     │
+│ → ops-mgr    │ │ → depot      │ │ → TEP ping test   │
+│   .log       │ │   connect?   │ │ → BGP status      │
 └──────────────┘ └──────────────┘ └──────────────────┘
         │              │                      │
         └──────────────┴──────────────────────┘

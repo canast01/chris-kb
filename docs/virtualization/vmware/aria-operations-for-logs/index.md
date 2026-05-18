@@ -9,23 +9,23 @@ Technical and operational reference for VMware Aria Operations for Logs. Covers 
 │         Aria Operations for Logs — Data Flow                │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Log Sources                                               │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
-│  │ ESXi     │  │ vCenter  │  │ NSX-T    │  │ Linux/   │  │
-│  │ syslog   │  │ syslog   │  │ syslog   │  │ Win VMs  │  │
-│  │ UDP 514  │  │ UDP 514  │  │ UDP 514  │  │ LI Agent │  │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘  │
-│       └─────────────┴─────────────┴──────────────┘        │
+│  Log Sources                                                │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
+│  │ ESXi     │  │ vCenter  │  │ NSX-T    │  │ Linux/   │     │
+│  │ syslog   │  │ syslog   │  │ syslog   │  │ Win VMs  │     │
+│  │ UDP 514  │  │ UDP 514  │  │ UDP 514  │  │ LI Agent │     │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘     │
+│       └─────────────┴─────────────┴──────────────┘          │
 │                           │ cfapi TLS :9543 / UDP :514      │
-│                           ▼                                │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Aria Ops for Logs Cluster (1 Master + 2 Workers)    │  │
-│  │  Cassandra index  ·  Content Packs  ·  Alert Engine  │  │
-│  └────────────────────────┬─────────────────────────────┘  │
-│                           │                                │
-│              ┌────────────┼────────────┐                   │
-│              ▼            ▼            ▼                   │
-│           Query UI      Alerts      vROps (bi-dir)         │
+│                           ▼                                 │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Aria Ops for Logs Cluster (1 Master + 2 Workers)    │   │
+│  │  Cassandra index  ·  Content Packs  ·  Alert Engine  │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│                           │                                 │
+│              ┌────────────┼────────────┐                    │
+│              ▼            ▼            ▼                    │
+│           Query UI      Alerts      vROps (bi-dir)          │
 └─────────────────────────────────────────────────────────────┘
 ```
 

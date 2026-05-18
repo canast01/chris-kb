@@ -4,22 +4,22 @@
   LCM Troubleshooting Decision Tree
 ┌─────────────────────────────────────────────────────────────────┐
 │  LCM UI accessible?                                             │
-│    No  → check vmware-vrlcm / nginx services; vracli status    │
+│    No  → check vmware-vrlcm / nginx services; vracli status     │
 │    Yes ▼                                                        │
 │  Product cards all GREEN?                                       │
-│    No  → click red card → check service / disk / cert on prod  │
+│    No  → click red card → check service / disk / cert on prod   │
 │    Yes ▼                                                        │
-│  Upgrade/deploy request stuck (RUNNING > 2h)?                  │
-│    Yes → check lcm-app.log for timeout; do NOT power off VMs   │
-│           → Common Issues: Upgrade Stuck                       │
+│  Upgrade/deploy request stuck (RUNNING > 2h)?                   │
+│    Yes → check lcm-app.log for timeout; do NOT power off VMs    │
+│           → Common Issues: Upgrade Stuck                        │
 │    No  ▼                                                        │
 │  VIDM login broken?                                             │
-│    Yes → VIDM health check; re-register VIDM in LCM            │
+│    Yes → VIDM health check; re-register VIDM in LCM             │
 │    No  ▼                                                        │
 │  Certificate import / replacement failing?                      │
-│    Yes → openssl verify chain; key modulus check; passphrase   │
-│           → Common Issues: Locker Cert Import Fails            │
-│    No  → Diagnostics → support bundle → Escalation             │
+│    Yes → openssl verify chain; key modulus check; passphrase    │
+│           → Common Issues: Locker Cert Import Fails             │
+│    No  → Diagnostics → support bundle → Escalation              │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

@@ -17,7 +17,7 @@
 │                    │                                         │
 │                    ▼                                         │
 │  If SRA involved: open SR with VMware AND storage vendor     │
-│  TAM / Critical Escalation if Sev 1 unresolved > 2 hours    │
+│  TAM / Critical Escalation if Sev 1 unresolved > 2 hours     │
 └──────────────────────────────────────────────────────────────┘
 ```
 

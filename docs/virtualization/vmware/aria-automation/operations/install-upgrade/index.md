@@ -5,30 +5,30 @@
 │         Aria Automation Upgrade Sequence (ASLM)             │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Step 1: Upgrade LCM first (required)                      │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Aria Suite Lifecycle Manager (LCM) upgraded         │  │
-│  └────────────────────────┬─────────────────────────────┘  │
-│                           │                                │
-│                           ▼                                │
-│  Step 2: LCM takes VM snapshots automatically             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Snapshots: aria-auto-dc1-01/02/03 pre-upgrade       │  │
-│  └────────────────────────┬─────────────────────────────┘  │
-│                           │                                │
-│                           ▼                                │
-│  Step 3: LCM upgrades nodes sequentially (rolling)        │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
-│  │ Node-01  │  │ Node-02  │  │ Node-03  │                 │
-│  │ upgrade  │  │ upgrade  │  │ upgrade  │                 │
-│  │ restart  │  │ restart  │  │ restart  │                 │
-│  └──────────┘  └──────────┘  └──────────┘                 │
-│  Cluster partially available during upgrade                │
-│                           │                                │
-│                           ▼                                │
-│  Step 4: Post-upgrade validation                          │
-│  vracli version  ·  kubectl get pods  ·  cloud accts green │
-│  Rollback: LCM revert to snapshots if validation fails     │
+│  Step 1: Upgrade LCM first (required)                       │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Aria Suite Lifecycle Manager (LCM) upgraded         │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│                           │                                 │
+│                           ▼                                 │
+│  Step 2: LCM takes VM snapshots automatically               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Snapshots: aria-auto-dc1-01/02/03 pre-upgrade       │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│                           │                                 │
+│                           ▼                                 │
+│  Step 3: LCM upgrades nodes sequentially (rolling)          │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                   │
+│  │ Node-01  │  │ Node-02  │  │ Node-03  │                   │
+│  │ upgrade  │  │ upgrade  │  │ upgrade  │                   │
+│  │ restart  │  │ restart  │  │ restart  │                   │
+│  └──────────┘  └──────────┘  └──────────┘                   │
+│  Cluster partially available during upgrade                 │
+│                           │                                 │
+│                           ▼                                 │
+│  Step 4: Post-upgrade validation                            │
+│  vracli version  ·  kubectl get pods  ·  cloud accts green  │
+│  Rollback: LCM revert to snapshots if validation fails      │
 └─────────────────────────────────────────────────────────────┘
 ```
 

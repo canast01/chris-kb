@@ -10,16 +10,16 @@
          │                                                │
          ▼                                                ▼
 ┌──────────────────┐                         ┌──────────────────┐
-│  UAG             │                         │  Active Directory │
-│  (port 443/8443  │                         │  (LDAP/Kerberos  │
-│   reachable?)    │                         │   connectivity?) │
+│  UAG             │                         │  Active Directory   │
+│  (port 443/8443  │                         │  (LDAP/Kerberos     │
+│   reachable?)    │                         │   connectivity?)    │
 └──────────────────┘                         └──────────────────┘
          │
          ▼
 ┌──────────────────┐
-│  Desktop Pools   │
-│  (Available > 0, │
-│   Error = 0?)    │
+│  Desktop Pools                                                   │
+│  (Available > 0,                                                 │
+│   Error = 0?)                                                    │
 └──────────────────┘
 ```
 

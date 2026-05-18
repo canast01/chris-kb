@@ -5,17 +5,17 @@
 │         Aria Automation Troubleshooting Decision Tree       │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Deployment failing / stuck?                               │
-│  └──► Common Issues — blueprint errors, cloud acct,        │
-│        stuck CREATE_INPROGRESS, ABX failures               │
+│  Deployment failing / stuck?                                │
+│  └──► Common Issues — blueprint errors, cloud acct,         │
+│        stuck CREATE_INPROGRESS, ABX failures                │
 │                                                             │
-│  Need logs / deeper investigation?                         │
-│  └──► Diagnostics — kubectl logs, API events, support      │
-│        bundle, request/deployment event trail              │
+│  Need logs / deeper investigation?                          │
+│  └──► Diagnostics — kubectl logs, API events, support       │
+│        bundle, request/deployment event trail               │
 │                                                             │
-│  Internal troubleshooting exhausted?                       │
-│  └──► Escalation — Broadcom SR, support bundle,            │
-│        priority tiers, TAM engagement                      │
+│  Internal troubleshooting exhausted?                        │
+│  └──► Escalation — Broadcom SR, support bundle,             │
+│        priority tiers, TAM engagement                       │
 └─────────────────────────────────────────────────────────────┘
 ```
 

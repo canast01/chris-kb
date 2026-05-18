@@ -8,24 +8,24 @@ Dell EMC RecoverPoint journal-based continuous data protection — RPA clusters 
 ┌──────────────────────────────────────────────────────────────────────┐
 │                   RecoverPoint Architecture                          │
 │                                                                      │
-│  Primary Site                         DR Site                       │
-│  ┌────────────────────────┐           ┌────────────────────────┐    │
-│  │  Host / ESXi           │           │  Host / ESXi           │    │
-│  │  (writes I/O)          │           │  (standby / copy)      │    │
-│  └──────────┬─────────────┘           └─────────────┬──────────┘    │
-│             │ via splitter (kernel/                 │               │
-│             │  array-based)                         │               │
-│  ┌──────────▼─────────────┐           ┌─────────────▼──────────┐    │
-│  │  RPA Cluster (source)  │──────────►│  RPA Cluster (target)  │    │
-│  │  Journal: rolling CDP  │  WAN repl │  Journal: remote copy  │    │
-│  └──────────┬─────────────┘           └─────────────┬──────────┘    │
-│             │                                       │               │
-│  ┌──────────▼─────────────┐           ┌─────────────▼──────────┐    │
+│  Primary Site                         DR Site                        │
+│  ┌────────────────────────┐           ┌────────────────────────┐     │
+│  │  Host / ESXi           │           │  Host / ESXi           │     │
+│  │  (writes I/O)          │           │  (standby / copy)      │     │
+│  └──────────┬─────────────┘           └─────────────┬──────────┘     │
+│             │ via splitter (kernel/                 │                │
+│             │  array-based)                         │                │
+│  ┌──────────▼─────────────┐           ┌─────────────▼──────────┐     │
+│  │  RPA Cluster (source)  │──────────►│  RPA Cluster (target)  │     │
+│  │  Journal: rolling CDP  │  WAN repl │  Journal: remote copy  │     │
+│  └──────────┬─────────────┘           └─────────────┬──────────┘     │
+│             │                                       │                │
+│  ┌──────────▼─────────────┐           ┌─────────────▼──────────┐     │
 │  │  Source Array           │           │  Target Array          │    │
 │  │  (production LUNs)      │           │  (replica LUNs)        │    │
 │  └─────────────────────────┘           └────────────────────────┘    │
 │                                                                      │
-│  RPO = journal depth   ·   RTO = activate copy (minutes)            │
+│  RPO = journal depth   ·   RTO = activate copy (minutes)             │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

@@ -7,20 +7,20 @@
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Stratum 0: GPS/atomic reference clock                                   │  │
 │  │       │                                                                  │  │
-│  │  Stratum 1: NTP server (ntp.corp.local) ◄── all hosts must point here  │  │
+│  │  Stratum 1: NTP server (ntp.corp.local) ◄── all hosts must point here  │    │
 │  │       │                                                                  │  │
-│  │  ┌────▼──────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐        │  │
-│  │  │  vCenter  │  │   ESXi-01  │  │   ESXi-02  │  │  NSX Mgr  │        │  │
-│  │  │  (VCSA)   │  │  ntpd sync │  │  ntpd sync │  │  chrony    │        │  │
-│  │  └───────────┘  └────────────┘  └────────────┘  └────────────┘        │  │
-│  │  offset threshold: < 1 second (Kerberos fails if > 5 minutes)          │  │
+│  │  ┌────▼──────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐        │     │
+│  │  │  vCenter  │  │   ESXi-01  │  │   ESXi-02  │  │  NSX Mgr  │        │      │
+│  │  │  (VCSA)   │  │  ntpd sync │  │  ntpd sync │  │  chrony    │        │     │
+│  │  └───────────┘  └────────────┘  └────────────┘  └────────────┘        │     │
+│  │  offset threshold: < 1 second (Kerberos fails if > 5 minutes)          │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  DNS validation (per host)                                                      │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Forward:  nslookup esxi-01.corp.local  ──► resolves to correct IP      │  │
-│  │  Reverse:  nslookup 10.x.x.x            ──► resolves to correct FQDN   │  │
-│  │  vCenter:  nslookup vcenter.corp.local  ──► resolves (required for SSO) │  │
+│  │  Forward:  nslookup esxi-01.corp.local  ──► resolves to correct IP      │   │
+│  │  Reverse:  nslookup 10.x.x.x            ──► resolves to correct FQDN   │    │
+│  │  vCenter:  nslookup vcenter.corp.local  ──► resolves (required for SSO) │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Time drift > 5 min ──► Kerberos fails ──► hosts disconnect from vCenter        │

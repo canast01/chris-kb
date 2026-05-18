@@ -4,23 +4,23 @@
   SRM Troubleshooting Decision Tree
 ┌──────────────────────────────────────────────────────────┐
 │  Is site pairing Connected?                              │
-│   No ──► Cert thumbprint / TCP 9086 / SRM service       │
-│   Yes ──► continue                                      │
+│   No ──► Cert thumbprint / TCP 9086 / SRM service        │
+│   Yes ──► continue                                       │
 │                   │                                      │
 │                   ▼                                      │
 │  Are Protection Groups all OK?                           │
 │   No ──► RPO lag / VRA unreachable / SRA error           │
-│   Yes ──► continue                                      │
+│   Yes ──► continue                                       │
 │                   │                                      │
 │                   ▼                                      │
 │  Does Recovery Plan pre-check pass?                      │
 │   No ──► Network mapping / resource pool / placeholder   │
-│   Yes ──► Run test failover                             │
+│   Yes ──► Run test failover                              │
 │                   │                                      │
 │                   ▼                                      │
 │  Test failover VMs power on and respond?                 │
 │   No ──► Resource / IP customization / network issue     │
-│   Yes ──► Cleanup and document result                   │
+│   Yes ──► Cleanup and document result                    │
 └──────────────────────────────────────────────────────────┘
 ```
 

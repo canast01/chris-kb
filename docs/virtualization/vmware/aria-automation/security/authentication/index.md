@@ -5,23 +5,23 @@
 │         Aria Automation Authentication Flow                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Browser / API Client                                      │
-│       │                                                    │
-│       ▼  SAML redirect (UI) or POST /login (API)           │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  Workspace ONE Access (VIDM)                        │   │
-│  │  SAML IdP  ·  AD/LDAP connector  ·  MFA policies   │   │
-│  └────────────────────────┬────────────────────────────┘   │
+│  Browser / API Client                                       │
+│       │                                                     │
+│       ▼  SAML redirect (UI) or POST /login (API)            │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  Workspace ONE Access (VIDM)                        │    │
+│  │  SAML IdP  ·  AD/LDAP connector  ·  MFA policies   │     │
+│  └────────────────────────┬────────────────────────────┘    │
 │                           │ AD LDAPS (port 636)             │
-│                           ▼                                │
-│  Active Directory  →  group membership → role mapping      │
-│                           │                                │
-│                           ▼                                │
-│  Aria Automation issues JWT Bearer token (8h lifetime)     │
-│  Local admin fallback: System Domain via VIDM              │
+│                           ▼                                 │
+│  Active Directory  →  group membership → role mapping       │
+│                           │                                 │
+│                           ▼                                 │
+│  Aria Automation issues JWT Bearer token (8h lifetime)      │
+│  Local admin fallback: System Domain via VIDM               │
 │                                                             │
-│  Service Account Pattern:                                  │
-│  svc-vra-api (System Domain) → Member role → API calls     │
+│  Service Account Pattern:                                   │
+│  svc-vra-api (System Domain) → Member role → API calls      │
 └─────────────────────────────────────────────────────────────┘
 ```
 

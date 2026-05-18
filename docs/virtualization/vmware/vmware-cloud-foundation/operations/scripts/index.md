@@ -10,14 +10,14 @@ VCF API Automation — Data Flow
                        ▼
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager REST API                              │
-│  https://<sddc-mgr>/v1                             │
+│  https://<sddc-mgr>/v1                              │
 │                                                     │
-│  GET /v1/domains      ◄── list workload domains    │
-│  GET /v1/clusters     ◄── list all clusters        │
-│  GET /v1/hosts        ◄── list managed hosts       │
-│  POST /v1/system/     ◄── trigger health check     │
-│       health-summary                               │
-│  PATCH /v1/credentials ◄── rotate credentials     │
+│  GET /v1/domains      ◄── list workload domains     │
+│  GET /v1/clusters     ◄── list all clusters         │
+│  GET /v1/hosts        ◄── list managed hosts        │
+│  POST /v1/system/     ◄── trigger health check      │
+│       health-summary                                │
+│  PATCH /v1/credentials ◄── rotate credentials       │
 └──────────────────────┬──────────────────────────────┘
                        │ returns JSON
                        ▼
@@ -25,8 +25,8 @@ VCF API Automation — Data Flow
 │  Script Output / Integration                        │
 │  → stdout / CSV / JSON                              │
 │  → monitoring platform (HTTP POST)                  │
-│  → ITSM ticketing system                           │
-│  → CMDB asset discovery                            │
+│  → ITSM ticketing system                            │
+│  → CMDB asset discovery                             │
 └─────────────────────────────────────────────────────┘
 ```
 

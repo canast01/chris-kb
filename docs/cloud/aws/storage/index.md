@@ -16,8 +16,8 @@ AWS storage covers three models: EBS block volumes for EC2 boot and data disks, 
 │      tiers: Standard → IA → Glacier → Deep Archive      │
 │                                                         │
 │  File Storage                                           │
-│  ├── EFS  — NFS4.1 · shared across EC2s · multi-AZ     │
-│  └── FSx  — Windows (SMB) · Lustre (HPC) · ONTAP       │
+│  ├── EFS  — NFS4.1 · shared across EC2s · multi-AZ      │
+│  └── FSx  — Windows (SMB) · Lustre (HPC) · ONTAP        │
 └─────────────────────────────────────────────────────────┘
 ```
 

@@ -17,10 +17,10 @@ VCF Physical and Logical Design Requirements
 ┌─────────────────────────────────────────────────────┐
 │  VMkernel Requirements (per host)                   │
 │                                                     │
-│  vmk0  Management      ≥ 1 GbE   VCF-managed VDS   │
-│  vmk1  vMotion         ≥ 10 GbE  VCF-managed VDS   │
-│  vmk2  vSAN            ≥ 10 GbE  VCF-managed VDS   │
-│  vmkX  NSX TEP         ≥ 10 GbE  VCF-managed VDS   │
+│  vmk0  Management      ≥ 1 GbE   VCF-managed VDS    │
+│  vmk1  vMotion         ≥ 10 GbE  VCF-managed VDS    │
+│  vmk2  vSAN            ≥ 10 GbE  VCF-managed VDS    │
+│  vmkX  NSX TEP         ≥ 10 GbE  VCF-managed VDS    │
 │                                                     │
 │  Standard vSwitches are NOT supported               │
 └─────────────────────────────────────────────────────┘
@@ -29,8 +29,8 @@ VCF Physical and Logical Design Requirements
 ┌─────────────────────────────────────────────────────┐
 │  Management Domain Minimum Build                    │
 │                                                     │
-│  4 x ESXi hosts (vSAN-Ready Node, HCL-validated)   │
-│  SDDC Manager   4 vCPU / 16 GB  (8/24 recommended) │
+│  4 x ESXi hosts (vSAN-Ready Node, HCL-validated)    │
+│  SDDC Manager   4 vCPU / 16 GB  (8/24 recommended)  │
 │  vCenter        small 14 GB RAM (medium 24 GB)      │
 │  NSX Manager    3-node cluster                      │
 │                                                     │

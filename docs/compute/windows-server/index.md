@@ -8,14 +8,14 @@ Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB f
 ┌──────────────────────────────────────────────────────────┐
 │                 Windows Server Stack                     │
 ├────────────────┬─────────────┬────────────┬─────────────┤
-│  AD DS / DNS   │  DHCP       │  IIS       │  Hyper-V    │
-│  (DC role)     │             │  (web)     │  (VMs)      │
+│  AD DS / DNS   │  DHCP       │  IIS       │  Hyper-V     │
+│  (DC role)     │             │  (web)     │  (VMs)       │
 ├────────────────┴─────────────┴────────────┴─────────────┤
-│          SMB / File Services  │  WinRM / PowerShell     │
+│          SMB / File Services  │  WinRM / PowerShell      │
 ├──────────────────────────────────────────────────────────┤
 │                  Windows Server Core                     │
-│   Services (SCM)  │  Event Log  │  Registry             │
-│   WMI / CIM       │  Task Scheduler                     │
+│   Services (SCM)  │  Event Log  │  Registry              │
+│   WMI / CIM       │  Task Scheduler                      │
 ├──────────────────────────────────────────────────────────┤
 │  Management: RSAT │ WSUS │ Windows Admin Center          │
 ├────────────────────────────┬─────────────────────────────┤

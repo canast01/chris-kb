@@ -117,11 +117,11 @@ Your data is wrapped inside an outer packet before it crosses the internet. Nobo
 
 ```
 VPN Gateway (on-prem)
-│
+                                              │
 │  ← takes traffic from core network
 │  ← encrypts it with IPSec
 │  ← wraps it in a tunnel packet
-│
+                                              │
 PUBLIC INTERNET
 ══════════════════════════════════════════
 ║                                        ║
@@ -138,19 +138,19 @@ PUBLIC INTERNET
 ║   Anyone snooping sees OUTER PACKET    ║
 ║   only — inner data is unreadable      ║
 ══════════════════════════════════════════
-│
+                                              │
 VPN Gateway (AWS / Azure side)
 │  ← receives tunnel packet
 │  ← decrypts it
 │  ← delivers your actual data
-│
+                                              │
 ┌───────────────┬───────────────┐
-│     AWS       │     AZURE     │
-│  VPC          │  VNet         │
-│  ├── EC2      │  ├── IaaS VM  │
-│  ├── EBS      │  ├── Managed  │
-│  └── S3       │  │   Disks    │
-│               │  └── Files    │
+│     AWS       │     AZURE                   │
+│  VPC          │  VNet                       │
+│  ├── EC2      │  ├── IaaS VM                │
+│  ├── EBS      │  ├── Managed                │
+│  └── S3       │  │   Disks                  │
+│               │  └── Files                  │
 └───────────────┴───────────────┘
 
 HOW THE TUNNEL WORKS:

@@ -13,7 +13,7 @@ AWS Internet Gateway notes for day-to-day infrastructure operations.
 │  IGW (attached to VPC — one IGW per VPC)                │
 │     │                                                   │
 │     ▼                                                   │
-│  Public Subnet (route 0.0.0.0/0 → igw-xxxx)            │
+│  Public Subnet (route 0.0.0.0/0 → igw-xxxx)             │
 │  └── Resource with public IP / Elastic IP               │
 │                                                         │
 │  IGW performs NAT for public IP ↔ private IP mapping    │

@@ -19,16 +19,16 @@ Technical and operational reference for Dell VxRail. Covers VxRail Manager, HCI 
 │     │ configures / upgrades                                       │ monitors     │
 │  ┌──▼─────────────────────────────────────────────────────────┐  │              │
 │  │                  VxRail HCI Nodes                          │  │              │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │  │              │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │  │               │
 │  │  │  Node-01     │  │  Node-02     │  │  Node-03 ...  │     │  │              │
-│  │  │ ESXi │ iDRAC │  │ ESXi │ iDRAC │  │ ESXi │ iDRAC │     │  │              │
-│  │  │  NVMe/SSD    │  │  NVMe/SSD    │  │  NVMe/SSD    │     │  │              │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘     │  │              │
+│  │  │ ESXi │ iDRAC │  │ ESXi │ iDRAC │  │ ESXi │ iDRAC │     │  │               │
+│  │  │  NVMe/SSD    │  │  NVMe/SSD    │  │  NVMe/SSD    │     │  │               │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘     │  │               │
 │  └──────────────────────────┬─────────────────────────────────┘  │              │
 │                              │ contributes disks                  │ iDRAC HW     │
 │  ┌──────────────────────────▼─────────────────────────────────────▼─────────┐   │
 │  │      vSAN Datastore (software-defined storage across all nodes)          │   │
-│  │           FTT policy │ RAID-5/6 │ Disk Groups │ Resync                  │   │
+│  │           FTT policy │ RAID-5/6 │ Disk Groups │ Resync                  │    │
 │  └──────────────────────────────────────────────────────────────────────────┘   │
 │                                        │ NSX transport nodes (optional)          │
 └─────────────────────────────────────────────────────────────────────────────────┘

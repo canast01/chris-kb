@@ -4,7 +4,7 @@
 ESXi Host Design Checklist — Standard Layout
 ┌──────────────────────────────────────────────────────────┐
 │  Naming & DNS                                            │
-│  └── FQDN: esxi-<nn>.<domain>  (A + PTR records)        │
+│  └── FQDN: esxi-<nn>.<domain>  (A + PTR records)         │
 │                                                          │
 │  BIOS / UEFI Baseline                                    │
 │  ├── Hyperthreading: Enabled                             │
@@ -12,7 +12,7 @@ ESXi Host Design Checklist — Standard Layout
 │  ├── C-States: Disabled (or C1 only)                     │
 │  ├── IOMMU / VT-d: Enabled                               │
 │  ├── Secure Boot + TPM 2.0: Enabled                      │
-│  └── IPMI / iDRAC / iLO: Enabled on OOB NIC             │
+│  └── IPMI / iDRAC / iLO: Enabled on OOB NIC              │
 │                                                          │
 │  NIC Layout (vDS — 4 pNICs minimum)                      │
 │  ├── vmnic0 + vmnic1 → vDS uplinks (active/active)       │

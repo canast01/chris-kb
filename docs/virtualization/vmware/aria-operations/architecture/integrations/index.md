@@ -5,14 +5,14 @@ Aria Operations — Adapter and Outbound Integration Map
 ┌─────────────────────────────────────────────────────┐
 │  Data Sources (Inbound Adapters)                    │
 │                                                     │
-│  ┌──────────┐  ┌──────────┐  ┌────────────────────┐│
-│  │ vCenter  │  │  NSX-T   │  │  Storage           ││
-│  │ Adapter  │  │ Adapter  │  │  (Pure, NetApp,    ││
-│  │          │  │          │  │   vSAN built-in)   ││
-│  │ read-only│  │ auditor  │  │                    ││
-│  │ min. role│  │ role min.│  │                    ││
-│  └────┬─────┘  └────┬─────┘  └─────────┬──────────┘│
-│       └─────────────┴──────────────────┘           │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────────┐ │
+│  │ vCenter  │  │  NSX-T   │  │  Storage           │ │
+│  │ Adapter  │  │ Adapter  │  │  (Pure, NetApp,    │ │
+│  │          │  │          │  │   vSAN built-in)   │ │
+│  │ read-only│  │ auditor  │  │                    │ │
+│  │ min. role│  │ role min.│  │                    │ │
+│  └────┬─────┘  └────┬─────┘  └─────────┬──────────┘ │
+│       └─────────────┴──────────────────┘            │
 │                          │                          │
 └──────────────────────────┼──────────────────────────┘
                            │ metrics + events
@@ -25,9 +25,9 @@ Aria Operations — Adapter and Outbound Integration Map
           ┌────────────────┼──────────────────────┐
           ▼                ▼                      ▼
 ┌──────────────┐  ┌──────────────┐  ┌────────────────┐
-│  SMTP        │  │  ServiceNow  │  │  Webhook / REST│
-│  (email      │  │  (ITSM       │  │  (Slack, Teams,│
-│   alerts)    │  │   incidents) │  │   custom ITSM) │
+│  SMTP        │  │  ServiceNow  │  │  Webhook / REST │
+│  (email      │  │  (ITSM       │  │  (Slack, Teams, │
+│   alerts)    │  │   incidents) │  │   custom ITSM)  │
 └──────────────┘  └──────────────┘  └────────────────┘
           │
           ▼

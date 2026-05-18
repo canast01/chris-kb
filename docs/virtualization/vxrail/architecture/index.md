@@ -8,11 +8,11 @@ HCI appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Man
 VxRail Node Anatomy + Cluster Connectivity
 ┌──────────────────────────────────────────────────────────────┐
 │  VxRail Node (PowerEdge)                                     │
-│  ┌──────────┐ ┌──────────┐ ┌──────────────────────────────┐ │
-│  │  CPU(s)  │ │  RAM     │ │  NVMe Cache + Capacity Disks │ │
-│  │  Intel   │ │  up to   │ │  vSAN disk group             │ │
-│  │  Xeon    │ │  6 TB    │ │  cache tier + data tier      │ │
-│  └──────────┘ └──────────┘ └──────────────────────────────┘ │
+│  ┌──────────┐ ┌──────────┐ ┌──────────────────────────────┐  │
+│  │  CPU(s)  │ │  RAM     │ │  NVMe Cache + Capacity Disks │  │
+│  │  Intel   │ │  up to   │ │  vSAN disk group             │  │
+│  │  Xeon    │ │  6 TB    │ │  cache tier + data tier      │  │
+│  └──────────┘ └──────────┘ └──────────────────────────────┘  │
 │  ┌──────────────────────┐   ┌───────────────────────────────┐│
 │  │  Dual-port 25/100GbE │   │  iDRAC (OOB management)       ││
 │  │  mgmt · vSAN · vMtn  │   │  hardware health · RACADM     ││

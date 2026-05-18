@@ -10,25 +10,25 @@ AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (K
 ├──────────────────────────────────────────────────────────────┤
 │  PREVENTIVE                  DETECTIVE             RESPONSIVE │
 │                                                              │
-│  ┌──────────┐  ┌────────┐   ┌───────────┐  ┌────────────┐  │
-│  │   IAM    │  │  KMS   │   │ GuardDuty │  │ Security   │  │
-│  │ Identity │  │ Encrypt│   │ Threat    │  │ Hub        │  │
-│  │ + MFA    │  │ at rest│   │ Detection │  │ Score +    │  │
-│  └────┬─────┘  └───┬────┘   └─────┬─────┘  │ Dashboard  │  │
-│       │            │              │         └─────┬──────┘  │
-│  ┌────┴──────┐     │         ┌────┴─────┐         │         │
-│  │   SCP    │     │         │Inspector │         │         │
-│  │ (Org-    │     │         │ CVE scan │         │         │
-│  │ level    │     │         │ EC2/ECR  │         │         │
-│  │ guardrail│     │         └─────┬────┘         │         │
-│  └──────────┘     │               │              │         │
-│                   │               └──────────────┘         │
-│                   │                    ▼                    │
-│                   │         ┌──────────────────┐           │
-│                   └────────►│  AWS Config      │           │
-│                             │  Compliance      │           │
-│                             │  Recording       │           │
-│                             └──────────────────┘           │
+│  ┌──────────┐  ┌────────┐   ┌───────────┐  ┌────────────┐    │
+│  │   IAM    │  │  KMS   │   │ GuardDuty │  │ Security   │    │
+│  │ Identity │  │ Encrypt│   │ Threat    │  │ Hub        │    │
+│  │ + MFA    │  │ at rest│   │ Detection │  │ Score +    │    │
+│  └────┬─────┘  └───┬────┘   └─────┬─────┘  │ Dashboard  │    │
+│       │            │              │         └─────┬──────┘   │
+│  ┌────┴──────┐     │         ┌────┴─────┐         │          │
+│  │   SCP    │     │         │Inspector │         │           │
+│  │ (Org-    │     │         │ CVE scan │         │           │
+│  │ level    │     │         │ EC2/ECR  │         │           │
+│  │ guardrail│     │         └─────┬────┘         │           │
+│  └──────────┘     │               │              │           │
+│                   │               └──────────────┘           │
+│                   │                    ▼                     │
+│                   │         ┌──────────────────┐             │
+│                   └────────►│  AWS Config      │             │
+│                             │  Compliance      │             │
+│                             │  Recording       │             │
+│                             └──────────────────┘             │
 └──────────────────────────────────────────────────────────────┘
 ```
 

@@ -11,11 +11,11 @@ Track software entitlements, monitor utilisation against purchased seats, and pr
          ┌──────────────────┼──────────────────┐
          ▼                  ▼                  ▼
 ┌─────────────────┐  ┌─────────────┐  ┌──────────────────┐
-│   Assigned      │  │  Consumed   │  │ Compliance Gap   │
-│                 │  │             │  │                  │
-│ Deployed count  │  │ Active use  │  │ Assigned >       │
-│ from discovery  │  │ last 90d    │  │ Purchased        │
-│ = 480           │  │ = 410       │  │ → BUY MORE       │
+│   Assigned      │  │  Consumed   │  │ Compliance Gap        │
+│                 │  │             │  │                       │
+│ Deployed count  │  │ Active use  │  │ Assigned >            │
+│ from discovery  │  │ last 90d    │  │ Purchased             │
+│ = 480           │  │ = 410       │  │ → BUY MORE            │
 └────────┬────────┘  └──────┬──────┘  │ Deployed <       │
          │                  │         │ Purchased         │
          │                  │         │ → RECLAIM         │

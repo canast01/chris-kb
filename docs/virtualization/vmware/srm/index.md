@@ -7,15 +7,15 @@ Site Recovery Manager knowledge base — architecture, operations, CLI reference
 ```
   Protected Site                                Recovery Site
 ┌──────────────────────────┐                ┌──────────────────────────┐
-│  vCenter (Protected)     │◄──── SRM ────►│  vCenter (Recovery)      │
+│  vCenter (Protected)     │◄──── SRM ────►│  vCenter (Recovery)       │
 │  ┌──────────────────┐    │   site pair    │  ┌──────────────────┐    │
 │  │  Production VMs  │    │                │  │  Placeholder VMs │    │
 │  │  ┌────────────┐  │    │                │  │  (shadow)        │    │
-│  │  │  Replicated│──┼────┼────────────────┼─►│  ┌────────────┐  │   │
-│  │  │  via VR or │  │    │                │  │  │ Recover on │  │   │
-│  │  │  SAN array │  │    │                │  │  │ failover   │  │   │
-│  │  └────────────┘  │    │                │  │  └────────────┘  │   │
-│  └──────────────────┘    │                │  └──────────────────┘   │
+│  │  │  Replicated│──┼────┼────────────────┼─►│  ┌────────────┐  │    │
+│  │  │  via VR or │  │    │                │  │  │ Recover on │  │    │
+│  │  │  SAN array │  │    │                │  │  │ failover   │  │    │
+│  │  └────────────┘  │    │                │  │  └────────────┘  │    │
+│  └──────────────────┘    │                │  └──────────────────┘    │
 │                          │                │                          │
 │  Test ──► Failover ──► Failback           │  Recovery Plan runs:     │
 │           (Planned Migration / DR)         │  Priority 1 → 2 → 3 → 4 │

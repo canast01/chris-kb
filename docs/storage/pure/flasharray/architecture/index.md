@@ -8,7 +8,7 @@ Architecture reference for Pure Storage FlashArray. Covers the dual-controller H
 FlashArray — Dual-Controller Architecture
 ┌──────────────────────────────┐  ┌──────────────────────────────┐
 │  CT0 (Active)                │  │  CT1 (Active)                │
-│  ├── FC / iSCSI / NVMe-oF   │  │  ├── FC / iSCSI / NVMe-oF   │
+│  ├── FC / iSCSI / NVMe-oF   │  │  ├── FC / iSCSI / NVMe-oF     │
 │  ├── NVRAM write cache       │◄─►│  ├── NVRAM mirror            │
 │  └── Dedupe + compress       │  │  └── Dedupe + compress       │
 └──────────────┬───────────────┘  └───────────────┬──────────────┘

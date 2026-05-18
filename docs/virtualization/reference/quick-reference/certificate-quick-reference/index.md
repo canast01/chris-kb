@@ -2,16 +2,16 @@
 
 ```
 ┌───────────────────┬───────────────────────────┬────────────────────────────────┐
-│   Component       │  Expiry Check             │  Renewal Steps                 │
+│   Component       │  Expiry Check             │  Renewal Steps                  │
 ├───────────────────┼───────────────────────────┼────────────────────────────────┤
-│ vCenter SSL       │ VAMI :5480 → Certs        │ vSphere Client → Cert Mgmt     │
-│ vCenter STS       │ vecs-cli entry list       │ STS renewal via KB procedure   │
-│ NSX Manager       │ NSX UI → System → Certs   │ Generate CSR → import signed   │
-│ Aria endpoints    │ Aria Admin → Settings     │ Custom CA → import via UI      │
+│ vCenter SSL       │ VAMI :5480 → Certs        │ vSphere Client → Cert Mgmt      │
+│ vCenter STS       │ vecs-cli entry list       │ STS renewal via KB procedure    │
+│ NSX Manager       │ NSX UI → System → Certs   │ Generate CSR → import signed    │
+│ Aria endpoints    │ Aria Admin → Settings     │ Custom CA → import via UI       │
 ├───────────────────┴───────────────────────────┴────────────────────────────────┤
-│  openssl: openssl s_client -connect <host>:443 2>/dev/null | openssl x509      │
+│  openssl: openssl s_client -connect <host>:443 2>/dev/null | openssl x509       │
 │           -noout -dates                                                         │
-│  Alert threshold: < 60 days to expiry  │  Review: monthly                      │
+│  Alert threshold: < 60 days to expiry  │  Review: monthly                       │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 ## Check Expiration Quickly

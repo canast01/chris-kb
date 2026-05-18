@@ -17,7 +17,7 @@
 │  │                         until COMPLETED/FAILED           │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                 │
-│  All scripts: POST /lcm/authz/api/v2/login → bearer token      │
+│  All scripts: POST /lcm/authz/api/v2/login → bearer token       │
 │  API base: https://<lcm>/lcm/lcmservice/api/v2                  │
 └─────────────────────────────────────────────────────────────────┘
 ```

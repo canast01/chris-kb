@@ -4,34 +4,34 @@
 VCF Upgrade Flow — SDDC Manager Orchestration
 ┌─────────────────────────────────────────────────────┐
 │  Step 1: Bundle Acquisition                         │
-│  depot.vmware.com ──► SDDC Manager bundle store    │
-│  (or offline: .tar file ► local depot)             │
+│  depot.vmware.com ──► SDDC Manager bundle store     │
+│  (or offline: .tar file ► local depot)              │
 └──────────────────────────┬──────────────────────────┘
                            │
                            ▼
 ┌─────────────────────────────────────────────────────┐
 │  Step 2: Pre-Check (SDDC Manager validates)         │
-│  DNS ✔  NTP ✔  Certs ✔  vSAN health ✔             │
-│  Password rotation ✔  HCL ✔  Disk space ✔          │
+│  DNS ✔  NTP ✔  Certs ✔  vSAN health ✔               │
+│  Password rotation ✔  HCL ✔  Disk space ✔           │
 └──────────────────────────┬──────────────────────────┘
                            │ all checks pass
                            ▼
 ┌─────────────────────────────────────────────────────┐
 │  Step 3: Upgrade Sequence (BOM order, no skipping)  │
 │                                                     │
-│  ① SDDC Manager (always first)                     │
+│  ① SDDC Manager (always first)                      │
 │         │                                           │
 │         ▼                                           │
-│  ② vCenter (management domain, then workload)      │
+│  ② vCenter (management domain, then workload)       │
 │         │                                           │
 │         ▼                                           │
-│  ③ ESXi hosts (rolling, cluster by cluster)        │
+│  ③ ESXi hosts (rolling, cluster by cluster)         │
 │         │                                           │
 │         ▼                                           │
-│  ④ NSX-T Manager cluster → Edge clusters           │
+│  ④ NSX-T Manager cluster → Edge clusters            │
 │         │                                           │
 │         ▼                                           │
-│  ⑤ vSAN firmware/driver (HCL-validated)            │
+│  ⑤ vSAN firmware/driver (HCL-validated)             │
 └──────────────────────────┬──────────────────────────┘
                            │
                            ▼

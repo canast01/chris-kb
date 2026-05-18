@@ -3,7 +3,7 @@
 ```
   VR Deployment and Upgrade Workflow
 ┌──────────────────────────────────────────────────────────────┐
-│  Deploy VRA OVA ──► Register with vCenter ──► Pair sites    │
+│  Deploy VRA OVA ──► Register with vCenter ──► Pair sites     │
 │  (both sites)        (VAMI port 5480)         (accept certs) │
 │       │                                            │         │
 │       ▼                                            ▼         │

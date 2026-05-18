@@ -8,23 +8,23 @@ Technical and operational reference for VMware Aria Operations. Covers performan
 Aria Operations — Data Collection and Analytics Flow
 ┌──────────────────────────────────────────────────┐
 │  Monitored Sources                               │
-│  ESXi hosts · vCenter · NSX-T · vSAN            │
+│  ESXi hosts · vCenter · NSX-T · vSAN             │
 │  storage arrays · cloud accounts                 │
 └──────────┬───────────────────────────────────────┘
            │ adapters pull metrics, events, props
            ▼
 ┌──────────────────────────────────────────────────┐
 │  Remote Collectors / Cloud Proxies               │
-│  (optional — extend reach to remote sites/DMZs) │
+│  (optional — extend reach to remote sites/DMZs)  │
 └──────────┬───────────────────────────────────────┘
            │ forward to analytics cluster
            ▼
 ┌──────────────────────────────────────────────────┐
 │  Aria Operations Analytics Cluster               │
-│  ┌────────────┐  ┌──────────┐  ┌──────────────┐ │
-│  │  Primary   │  │ Replica  │  │  Data nodes  │ │
-│  │  (UI/API)  │  │ (standby)│  │  (scale-out) │ │
-│  └────────────┘  └──────────┘  └──────────────┘ │
+│  ┌────────────┐  ┌──────────┐  ┌──────────────┐  │
+│  │  Primary   │  │ Replica  │  │  Data nodes  │  │
+│  │  (UI/API)  │  │ (standby)│  │  (scale-out) │  │
+│  └────────────┘  └──────────┘  └──────────────┘  │
 │       │                                          │
 │  Cassandra (time-series) · GemFire (cache)       │
 └──────────┬───────────────────────────────────────┘
@@ -32,10 +32,10 @@ Aria Operations — Data Collection and Analytics Flow
            ▼
 ┌──────────────────────────────────────────────────┐
 │  Consumers                                       │
-│  ┌──────────────┐  ┌────────────┐  ┌──────────┐ │
-│  │  Dashboards  │  │  Email /   │  │  ITSM /  │ │
-│  │  (browser)   │  │  Webhook   │  │  SN tick │ │
-│  └──────────────┘  └────────────┘  └──────────┘ │
+│  ┌──────────────┐  ┌────────────┐  ┌──────────┐  │
+│  │  Dashboards  │  │  Email /   │  │  ITSM /  │  │
+│  │  (browser)   │  │  Webhook   │  │  SN tick │  │
+│  └──────────────┘  └────────────┘  └──────────┘  │
 └──────────────────────────────────────────────────┘
 ```
 

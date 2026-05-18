@@ -26,7 +26,7 @@ Azure Serial Console provides out-of-band terminal access to a VM's serial port.
 │                  │  passwd/fsck │         │  chkdsk    │  │
 │                  └──────────────┘         └────────────┘  │
 │                                                          │
-│  Works without network ─── out-of-band emergency access │
+│  Works without network ─── out-of-band emergency access  │
 └──────────────────────────────────────────────────────────┘
 ``` It works independently of the VM's network and is accessible even when the VM is unreachable via SSH or RDP, making it invaluable for diagnosing boot failures and locked-out scenarios.
 

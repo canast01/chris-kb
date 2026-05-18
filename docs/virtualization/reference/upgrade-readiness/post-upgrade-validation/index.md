@@ -13,7 +13,7 @@ Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Docum
 │ Cluster HA/DRS      │ HA=On │ DRS=On+correct level │ Admission ctrl OK │
 │ vSAN                │ Skyline Health green │ 0 degraded objects        │
 │                     │ No unexpected resync                             │
-│ NSX                 │ get cluster status=STABLE │ Edges Up │ BGP OK   │
+│ NSX                 │ get cluster status=STABLE │ Edges Up │ BGP OK    │
 │ VxRail              │ VxRail Manager all nodes Healthy                 │
 │ Aria Suite          │ LCM green │ Ops collection OK │ Auto services up │
 │ Backups             │ Test backup of 1 non-crit VM completes OK        │

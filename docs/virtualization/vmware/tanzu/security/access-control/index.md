@@ -5,22 +5,22 @@
 │                                                                                 │
 │  vSphere Namespace (Supervisor level)                                           │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Owner  ── deploy/delete TKG clusters, manage all resources             │  │
-│  │  Edit   ── deploy workloads, create PVCs (no cluster delete)            │  │
-│  │  View   ── read-only                                                    │  │
+│  │  Owner  ── deploy/delete TKG clusters, manage all resources             │   │
+│  │  Edit   ── deploy workloads, create PVCs (no cluster delete)            │   │
+│  │  View   ── read-only                                                    │   │
 │  └───────────────────────────────────────┬──────────────────────────────────┘  │
 │                                          │ Pinniped ► OIDC ► AD group           │
 │  Kubernetes ClusterRole (workload cluster)│                                      │
 │  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
-│  │  cluster-admin   ── ops team (ClusterRoleBinding)                       │  │
-│  │  edit (namespace) ── dev team (RoleBinding in namespace)                │  │
-│  │  view             ── audit/monitoring teams (ClusterRoleBinding)        │  │
+│  │  cluster-admin   ── ops team (ClusterRoleBinding)                       │   │
+│  │  edit (namespace) ── dev team (RoleBinding in namespace)                │   │
+│  │  view             ── audit/monitoring teams (ClusterRoleBinding)        │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Harbor Project Roles                                                           │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Project Admin ► Maintainer ► Developer ► Guest ► Limited Guest         │  │
-│  │  Map AD groups via LDAP or OIDC                                         │  │
+│  │  Project Admin ► Maintainer ► Developer ► Guest ► Limited Guest         │   │
+│  │  Map AD groups via LDAP or OIDC                                         │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Network Policy: default-deny-all per namespace ► explicit allow rules          │

@@ -10,10 +10,10 @@
 │  │                 │      │ VRA disk full?    │─► expand VMDK   │
 │  └─────────────────┘      └──────────────────┘                  │
 │  ┌─────────────────┐      ┌──────────────────┐                  │
-│  │ Site Pair       │─────►│ VRA services up?  │─► start hms/   │
+│  │ Site Pair       │─────►│ VRA services up?  │─► start hms/    │
 │  │ Disconnected    │      │ TCP 44046 open?   │   vrms          │
 │  │                 │      │ Cert expired?     │─► refresh       │
-│  └─────────────────┘      └──────────────────┘   thumbprints   │
+│  └─────────────────┘      └──────────────────┘   thumbprints    │
 │  ┌─────────────────┐      ┌──────────────────┐                  │
 │  │ Conn Refused /  │─────►│ TCP 31031 open?   │─► firewall      │
 │  │ Initial Sync    │      │ Route to VRA?     │   rule / seed   │

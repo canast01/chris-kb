@@ -5,22 +5,22 @@
 │         Aria Automation RBAC Model                          │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Organisation Level (platform-wide)                        │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  VIDM AD Groups  →  Org Role                         │  │
-│  │  GG-VRA-Admins   →  Administrator (full access)      │  │
-│  │  GG-VRA-Users    →  Member (project access only)     │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                           │                                │
-│                           ▼                                │
-│  Project Level (resource isolation boundary)               │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Project: proj-app-lon-prod                          │  │
-│  │  ├── Owner  — GG-APP-TEAM-LON  (manage + deploy)    │  │
-│  │  ├── Member — GG-APP-TEAM-LON-DEV  (catalog + own)  │  │
-│  │  └── Viewer — GG-OPS-READONLY  (read-only)          │  │
-│  │  Cloud Zones · Quotas · Content Sharing              │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  Organisation Level (platform-wide)                         │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  VIDM AD Groups  →  Org Role                         │   │
+│  │  GG-VRA-Admins   →  Administrator (full access)      │   │
+│  │  GG-VRA-Users    →  Member (project access only)     │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                           │                                 │
+│                           ▼                                 │
+│  Project Level (resource isolation boundary)                │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Project: proj-app-lon-prod                          │   │
+│  │  ├── Owner  — GG-APP-TEAM-LON  (manage + deploy)    │    │
+│  │  ├── Member — GG-APP-TEAM-LON-DEV  (catalog + own)  │    │
+│  │  └── Viewer — GG-OPS-READONLY  (read-only)          │    │
+│  │  Cloud Zones · Quotas · Content Sharing              │   │
+│  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
 

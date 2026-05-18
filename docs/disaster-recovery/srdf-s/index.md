@@ -8,22 +8,22 @@ Dell PowerMax SRDF/S synchronous replication — every host write committed to b
 ┌──────────────────────────────────────────────────────────────────────┐
 │                      SRDF/S Architecture                             │
 │                                                                      │
-│  Primary Site (R1)                    DR Site (R2)                  │
-│  ┌────────────────────┐               ┌────────────────────────┐    │
-│  │  Host              │               │  PowerMax R2           │    │
-│  │  Write I/O ──►     │               │                        │    │
-│  │  PowerMax R1       │──sync write──►│  Write confirmed on R2 │    │
-│  │  (holds ACK        │  (≤10ms RTT)  │  ──► ACK sent to R1    │    │
-│  │   until R2         │               │                        │    │
-│  │   confirms)        │◄──── ACK ─────│                        │    │
-│  │  ──► ACK to host   │               │                        │    │
-│  └────────────────────┘               └────────────────────────┘    │
+│  Primary Site (R1)                    DR Site (R2)                   │
+│  ┌────────────────────┐               ┌────────────────────────┐     │
+│  │  Host              │               │  PowerMax R2           │     │
+│  │  Write I/O ──►     │               │                        │     │
+│  │  PowerMax R1       │──sync write──►│  Write confirmed on R2 │     │
+│  │  (holds ACK        │  (≤10ms RTT)  │  ──► ACK sent to R1    │     │
+│  │   until R2         │               │                        │     │
+│  │   confirms)        │◄──── ACK ─────│                        │     │
+│  │  ──► ACK to host   │               │                        │     │
+│  └────────────────────┘               └────────────────────────┘     │
 │                                                                      │
-│  RPO = 0 (zero data loss)                                           │
-│  RTO = activate R2 ──► failover (< 15 min with automation)         │
-│  RTT requirement: ≤ 10 ms (typically ≤ 5 ms recommended)           │
+│  RPO = 0 (zero data loss)                                            │
+│  RTO = activate R2 ──► failover (< 15 min with automation)           │
+│  RTT requirement: ≤ 10 ms (typically ≤ 5 ms recommended)             │
 │                                                                      │
-│  States: Synchronized ► Failed Over ► Suspended ► Re-sync          │
+│  States: Synchronized ► Failed Over ► Suspended ► Re-sync            │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

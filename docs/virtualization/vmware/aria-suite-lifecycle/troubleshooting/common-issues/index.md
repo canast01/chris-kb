@@ -19,7 +19,7 @@
 │  │ fails           │      │ key modulus match?│   passphrase    │
 │  └─────────────────┘      └──────────────────┘                  │
 │  ┌─────────────────┐      ┌──────────────────┐                  │
-│  │ VIDM auth fails │─────►│ VIDM health UP?   │─► LCM → re-reg │
+│  │ VIDM auth fails │─────►│ VIDM health UP?   │─► LCM → re-reg  │
 │  │ after PW change │      │ re-register VIDM  │   VIDM creds    │
 │  └─────────────────┘      └──────────────────┘                  │
 └─────────────────────────────────────────────────────────────────┘

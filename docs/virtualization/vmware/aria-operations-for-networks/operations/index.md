@@ -3,17 +3,17 @@
 ```
 ┌──────────── Aria Networks Operations Overview ─────────────────────────────────┐
 │                                                                                 │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────────────┐ │
-│  │ CLI Ref      │  │ Health Checks│  │  Procedures  │  │ Install & Upgrade │ │
-│  │ Platform CLI │  │ Platform VM  │  │ Add data src  │  │ OVA deploy order  │ │
-│  │ Collector CLI│  │ Collector    │  │ NetFlow config│  │ Platform first    │ │
-│  │ REST API     │  │ Data sources │  │ Microseg flow │  │ then Collectors   │ │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────────────┐   │
+│  │ CLI Ref      │  │ Health Checks│  │  Procedures  │  │ Install & Upgrade │   │
+│  │ Platform CLI │  │ Platform VM  │  │ Add data src  │  │ OVA deploy order  │  │
+│  │ Collector CLI│  │ Collector    │  │ NetFlow config│  │ Platform first    │  │
+│  │ REST API     │  │ Data sources │  │ Microseg flow │  │ then Collectors   │  │
 │  └──────────────┘  │ Flow ingestion│  │ Compliance rpt│  └───────────────────┘ │
 │                    └──────────────┘  └──────────────┘                          │
 │  ┌──────────────┐  ┌─────────────────────────────────────────────────────────┐ │
 │  │ Backup &     │  │  Scripts (Python)                                       │ │
 │  │ Restore      │  │  auth token │ list sources │ get flows │ open problems  │ │
-│  │ Config export│  │  security recs CSV │ health check │ daily report       │ │
+│  │ Config export│  │  security recs CSV │ health check │ daily report       │  │
 │  └──────────────┘  └─────────────────────────────────────────────────────────┘ │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```

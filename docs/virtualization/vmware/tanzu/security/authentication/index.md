@@ -8,12 +8,12 @@
 │      ▼                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Pinniped Supervisor (management cluster)                                │  │
-│  │  LDAPIdentityProvider ──► AD/LDAP ──► sAMAccountName / group search     │  │
+│  │  LDAPIdentityProvider ──► AD/LDAP ──► sAMAccountName / group search     │   │
 │  └────────────────────────────────────┬─────────────────────────────────────┘  │
 │                                        │ OIDC token exchange                    │
 │  ┌────────────────────────────────────▼──────────────────────────────────────┐ │
 │  │  Pinniped Concierge (per workload cluster)                                │ │
-│  │  JWT token ──► kubeconfig ──► kubectl context                            │ │
+│  │  JWT token ──► kubeconfig ──► kubectl context                            │  │
 │  └───────────────────────────────────────────────────────────────────────────┘ │
 │                                                                                 │
 │  Token TTL: short-lived (re-login when expired)                                 │

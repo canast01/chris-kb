@@ -5,25 +5,25 @@
 │         Aria Automation — Common Operational Tasks          │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Service Account Rotation                                  │
-│  vCenter/NSX password changed → Cloud Account → Validate  │
+│  Service Account Rotation                                   │
+│  vCenter/NSX password changed → Cloud Account → Validate    │
 │                                                             │
-│  Stale Deployment Cleanup                                  │
-│  API: status=CREATE_FAILED → DELETE  ·  UI: Force Delete   │
+│  Stale Deployment Cleanup                                   │
+│  API: status=CREATE_FAILED → DELETE  ·  UI: Force Delete    │
 │                                                             │
-│  Blueprint Versioning                                      │
-│  Design → Cloud Templates → Git Content Source → Sync      │
+│  Blueprint Versioning                                       │
+│  Design → Cloud Templates → Git Content Source → Sync       │
 │                                                             │
-│  Cloud Zone → Project                                      │
-│  New Cloud Zone → Add to Project → Image/Flavor Mappings   │
+│  Cloud Zone → Project                                       │
+│  New Cloud Zone → Add to Project → Image/Flavor Mappings    │
 │                                                             │
-│  Approval Policy                                           │
-│  Policies → Approval Policy → AD Approver Group            │
-│  auto-reject after 5 business days                         │
+│  Approval Policy                                            │
+│  Policies → Approval Policy → AD Approver Group             │
+│  auto-reject after 5 business days                          │
 │                                                             │
-│  ABX Action (Extensibility)                                │
-│  Actions (Python/Node/PS) → Test → Subscription            │
-│  Event topic: Deployment Success / Failure / etc.          │
+│  ABX Action (Extensibility)                                 │
+│  Actions (Python/Node/PS) → Test → Subscription             │
+│  Event topic: Deployment Success / Failure / etc.           │
 └─────────────────────────────────────────────────────────────┘
 ```
 

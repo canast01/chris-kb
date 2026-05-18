@@ -18,7 +18,7 @@ VxRail Upgrade Sequence
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 3–4: Bundle + Pre-check                              │
 │  Upload Composite Bundle → VxRail Manager validates         │
-│  Run LCM Pre-Check → all green before proceeding           │
+│  Run LCM Pre-Check → all green before proceeding            │
 └──────────────────────────┬──────────────────────────────────┘
                            │
           ┌────────────────▼──────────────────┐

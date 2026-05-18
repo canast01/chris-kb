@@ -6,31 +6,31 @@
 │                                                                      │
 │  Backup job failed / completed with warnings                         │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check backup agent on protected host                         │ │
-│  │  Veeam: Get-VBRJob · Commvault: event viewer · NBU: bpps      │ │
-│  │  Agent not running ──► restart agent service                  │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
-│        │ agent OK                                                   │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check network to backup target (proxy/repository)             │ │
-│  │  Test-NetConnection · ping · firewall port check               │ │
-│  │  Network blocked ──► open firewall rule                       │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
-│        │ network OK                                                 │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check target space (repository / media server)                │ │
-│  │  df -h · Get-VBRRepository · free up space / expand           │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
-│        │ space OK                                                   │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check snapshot / VSS (VM snapshots · vssadmin list writers)   │ │
-│  │  VSS writer failed ──► restart VSS writer service             │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check backup agent on protected host                         │   │
+│  │  Veeam: Get-VBRJob · Commvault: event viewer · NBU: bpps      │   │
+│  │  Agent not running ──► restart agent service                  │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
+│        │ agent OK                                                    │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check network to backup target (proxy/repository)             │  │
+│  │  Test-NetConnection · ping · firewall port check               │  │
+│  │  Network blocked ──► open firewall rule                       │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
+│        │ network OK                                                  │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check target space (repository / media server)                │  │
+│  │  df -h · Get-VBRRepository · free up space / expand           │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
+│        │ space OK                                                    │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check snapshot / VSS (VM snapshots · vssadmin list writers)   │  │
+│  │  VSS writer failed ──► restart VSS writer service             │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  App consistency check (SQL/Oracle log truncation, quiesce)    │ │
-│  └────────────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  App consistency check (SQL/Oracle log truncation, quiesce)    │  │
+│  └────────────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

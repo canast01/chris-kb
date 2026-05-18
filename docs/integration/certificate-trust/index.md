@@ -4,23 +4,23 @@
 ┌──────────────────────────────────────────────────────────────────────┐
 │                   Certificate Trust Chain                            │
 │                                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │               Internal Root CA Certificate                   │   │
-│  │           (self-signed, long-lived, offline)                 │   │
-│  └──────────────────────────┬───────────────────────────────────┘   │
-│                             │  signs                                │
-│  ┌──────────────────────────▼───────────────────────────────────┐   │
-│  │             Intermediate / Issuing CA                        │   │
-│  └──────────────────────────┬───────────────────────────────────┘   │
-│                             │  issues leaf certs                    │
+│  ┌──────────────────────────────────────────────────────────────┐    │
+│  │               Internal Root CA Certificate                   │    │
+│  │           (self-signed, long-lived, offline)                 │    │
+│  └──────────────────────────┬───────────────────────────────────┘    │
+│                             │  signs                                 │
+│  ┌──────────────────────────▼───────────────────────────────────┐    │
+│  │             Intermediate / Issuing CA                        │    │
+│  └──────────────────────────┬───────────────────────────────────┘    │
+│                             │  issues leaf certs                     │
 │                             ▼                                        │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌─────────────┐  │
-│  │  vCenter   │  │  vSAN/NSX  │  │ App Server │  │  Appliance  │  │
-│  │ leaf cert  │  │ leaf cert  │  │ leaf cert  │  │  leaf cert  │  │
-│  └────────────┘  └────────────┘  └────────────┘  └─────────────┘  │
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌─────────────┐     │
+│  │  vCenter   │  │  vSAN/NSX  │  │ App Server │  │  Appliance  │     │
+│  │ leaf cert  │  │ leaf cert  │  │ leaf cert  │  │  leaf cert  │     │
+│  └────────────┘  └────────────┘  └────────────┘  └─────────────┘     │
 │                                                                      │
-│  Root CA imported to trust store on each system → TLS validates     │
-│  Linux: update-ca-certificates  Windows: Cert:\LocalMachine\Root    │
+│  Root CA imported to trust store on each system → TLS validates      │
+│  Linux: update-ca-certificates  Windows: Cert:\LocalMachine\Root     │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

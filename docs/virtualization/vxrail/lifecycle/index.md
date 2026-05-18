@@ -6,7 +6,7 @@ VxRail lifecycle notes for upgrade planning, pre-checks, bundles, firmware, roll
 VxRail Version Lifecycle Flow
 ┌──────────────────────────────────────────────────────────────┐
 │  Current Version                                             │
-│  VxRail x.y.z  ·  ESXi a.b  ·  vSAN a.b  ·  FW bundle A   │
+│  VxRail x.y.z  ·  ESXi a.b  ·  vSAN a.b  ·  FW bundle A      │
 └───────────────────────┬──────────────────────────────────────┘
                         │
                         ▼

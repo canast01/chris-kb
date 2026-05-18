@@ -11,22 +11,22 @@ Veeam Agent for Windows, Windows Server Backup, restore procedures, and validati
 └──────────┬───────────────┴────────────┬──────────────────┘
            ▼                            ▼
 ┌─────────────────────────────────────────────────────────┐
-│              VSS (Volume Shadow Copy)                   │
-│   app-consistent snapshot → backup data stream          │
+│              VSS (Volume Shadow Copy)                    │
+│   app-consistent snapshot → backup data stream           │
 └──────────────────────────┬──────────────────────────────┘
                            ▼
 ┌─────────────────────────────────────────────────────────┐
-│              Backup Repository                          │
-│   NAS share │ Veeam repo │ local disk                   │
-│   14 daily  │ 4 weekly   │ 3 monthly (retention)        │
+│              Backup Repository                           │
+│   NAS share │ Veeam repo │ local disk                    │
+│   14 daily  │ 4 weekly   │ 3 monthly (retention)         │
 └──────────────────────────┬──────────────────────────────┘
                            ▼
          ┌─────────────────┴─────────────────┐
          ▼                                   ▼
 ┌─────────────────┐                ┌──────────────────────┐
-│  File-Level     │                │  Bare Metal Recovery │
-│  Restore        │                │  Boot Recovery Media │
-│  browse → copy  │                │  → select RP → write │
+│  File-Level     │                │  Bare Metal Recovery  │
+│  Restore        │                │  Boot Recovery Media  │
+│  browse → copy  │                │  → select RP → write  │
 └─────────────────┘                └──────────────────────┘
 ```
 

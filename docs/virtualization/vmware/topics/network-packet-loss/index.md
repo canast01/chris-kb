@@ -18,7 +18,7 @@
 │       │ no switch issues                                                         │
 │       ▼                                                                         │
 │  MTU                                                                            │
-│  ├── vmkping -I vmk2 -d -s 8972 <peer>  ── jumbo frames work end-to-end?      │
+│  ├── vmkping -I vmk2 -d -s 8972 <peer>  ── jumbo frames work end-to-end?       │
 │  └── Failure ──► align MTU on vSwitch + physical switch ports                  │
 │       │ MTU OK                                                                   │
 │       ▼                                                                         │

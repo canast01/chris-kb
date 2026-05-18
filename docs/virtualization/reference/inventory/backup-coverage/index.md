@@ -7,15 +7,15 @@ Live register of all VMs, their backup policy, and last verified restore test. R
 │   VM List    │──►│   Backup Job     │──►│  Last Good     │──►│  RPO Compliance  │
 │              │   │                  │   │  Backup        │   │                  │
 │ vcenter-prod │   │ Policy: daily    │   │ YYYY-MM-DD     │   │ Critical: ✓ 24h  │
-│ nsx-mgr-01   │   │ Schedule: 02:00  │   │ Status: Pass   │   │ High:    ✓ 24h  │
-│ app-prod-01  │   │ Retention: 30d   │   │ Size: OK       │   │ Standard: ✓ 7d  │
-│ app-dev-01   │   │ App-aware: Yes   │   │ Verified: Yes  │   │ Gap VMs: ✗ 0    │
+│ nsx-mgr-01   │   │ Schedule: 02:00  │   │ Status: Pass   │   │ High:    ✓ 24h   │
+│ app-prod-01  │   │ Retention: 30d   │   │ Size: OK       │   │ Standard: ✓ 7d   │
+│ app-dev-01   │   │ App-aware: Yes   │   │ Verified: Yes  │   │ Gap VMs: ✗ 0     │
 └──────────────┘   └──────────────────┘   └────────────────┘   └──────────────────┘
         │                                                                │
         ▼                                                                ▼
 ┌──────────────────────────────────┐            ┌────────────────────────────────┐
-│     Unprotected VM Log           │            │      Restore Test Log          │
-│ VM Name | Reason | Owner         │            │ VM | Date | RTO | Result       │
+│     Unprotected VM Log           │            │      Restore Test Log           │
+│ VM Name | Reason | Owner         │            │ VM | Date | RTO | Result        │
 └──────────────────────────────────┘            └────────────────────────────────┘
 ```
 ## Coverage Register

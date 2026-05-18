@@ -4,9 +4,9 @@
 ESXi Diagnostic Data Sources
 ┌──────────────────────────────────────────────────────────┐
 │  vSphere Client (GUI)                                    │
-│  ├── Host → Monitor → Issues & Alarms                   │
+│  ├── Host → Monitor → Issues & Alarms                    │
 │  ├── Host → Monitor → Tasks (recent task failures)       │
-│  └── Host → Monitor → Performance (CPU, mem, storage)   │
+│  └── Host → Monitor → Performance (CPU, mem, storage)    │
 ├──────────────────────────────────────────────────────────┤
 │  ESXi Shell / SSH (CLI)                                  │
 │  ├── /var/log/vmkernel.log  storage, network, drivers    │

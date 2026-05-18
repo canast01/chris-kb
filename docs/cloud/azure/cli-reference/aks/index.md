@@ -6,22 +6,22 @@
 ┌───────────────────────────────────────────────────────────┐
 │                    AKS CLI Flow                           │
 │                                                           │
-│  az aks create          ┌─────────────────────────────┐  │
-│  ──────────────────────►│  AKS Cluster                │  │
-│                         │  (managed control plane)    │  │
-│  az aks show            └──────────────┬──────────────┘  │
+│  az aks create          ┌─────────────────────────────┐   │
+│  ──────────────────────►│  AKS Cluster                │   │
+│                         │  (managed control plane)    │   │
+│  az aks show            └──────────────┬──────────────┘   │
 │  az aks upgrade                        │                  │
 │  az aks scale                          ▼                  │
-│                         ┌─────────────────────────────┐  │
-│  az aks get-credentials │  Node Pool(s)               │  │
-│  ──────────────────────►│  (VM scale sets)            │  │
-│         │               └─────────────────────────────┘  │
+│                         ┌─────────────────────────────┐   │
+│  az aks get-credentials │  Node Pool(s)               │   │
+│  ──────────────────────►│  (VM scale sets)            │   │
+│         │               └─────────────────────────────┘   │
 │         │                                                 │
 │         ▼                                                 │
 │  ~/.kube/config updated                                   │
 │         │                                                 │
 │         ▼                                                 │
-│  kubectl ──────────────► Kubernetes API ──► Workloads    │
+│  kubectl ──────────────► Kubernetes API ──► Workloads     │
 └───────────────────────────────────────────────────────────┘
 ```
 

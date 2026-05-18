@@ -7,7 +7,7 @@ LUKS/dm-crypt full-disk encryption, NBDE (Network Bound Disk Encryption), TLS fo
 │                Linux Encryption Layers                 │
 ├────────────────────────────────────────────────────────┤
 │  Disk: LUKS2 (dm-crypt)                                │
-│  /dev/sdX ──► luksFormat ──► luksOpen ──► /dev/mapper │
+│  /dev/sdX ──► luksFormat ──► luksOpen ──► /dev/mapper  │
 │  Key slots: passphrase │ keyfile │ Clevis/NBDE token   │
 │                                                        │
 │  NBDE auto-unlock at boot:                             │

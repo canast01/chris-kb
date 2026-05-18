@@ -5,21 +5,21 @@
 │         Aria Ops for Logs Script Pattern                    │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Script (Bash / PowerShell)                                │
-│       │                                                    │
-│       ▼  HTTP Basic auth per request                       │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │  Aria Ops for Logs REST API  (https://<vrli>)      │   │
-│  │  /api/v2/cluster/nodes    → node state             │   │
-│  │  /api/v2/cluster/stats    → eventsIngested, disk%  │   │
-│  │  /api/v2/agents           → stale agent detection  │   │
-│  │  /api/v2/alerts           → export / enable check  │   │
-│  │  /api/v2/events/ingest    → ad-hoc log query       │   │
-│  │  /api/v2/notification     → channel test           │   │
-│  └────────────────────────────────────────────────────┘   │
-│       │                                                    │
-│       ▼                                                    │
-│  JSON response → filter → report / alert / exit code       │
+│  Script (Bash / PowerShell)                                 │
+│       │                                                     │
+│       ▼  HTTP Basic auth per request                        │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  Aria Ops for Logs REST API  (https://<vrli>)      │     │
+│  │  /api/v2/cluster/nodes    → node state             │     │
+│  │  /api/v2/cluster/stats    → eventsIngested, disk%  │     │
+│  │  /api/v2/agents           → stale agent detection  │     │
+│  │  /api/v2/alerts           → export / enable check  │     │
+│  │  /api/v2/events/ingest    → ad-hoc log query       │     │
+│  │  /api/v2/notification     → channel test           │     │
+│  └────────────────────────────────────────────────────┘     │
+│       │                                                     │
+│       ▼                                                     │
+│  JSON response → filter → report / alert / exit code        │
 └─────────────────────────────────────────────────────────────┘
 ```
 

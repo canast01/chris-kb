@@ -13,7 +13,7 @@ AWS NAT Gateway notes for day-to-day infrastructure operations.
 │        ▼                                                │
 │  NAT Gateway (in public subnet · Elastic IP)            │
 │  ├── Source NATs request to its Elastic IP              │
-│  └── Returns response to originating EC2               │
+│  └── Returns response to originating EC2                │
 │        │                                                │
 │        ▼                                                │
 │  IGW ──► Internet (outbound only — inbound blocked)     │

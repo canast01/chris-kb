@@ -9,28 +9,28 @@ Technical and operational reference for VMware Aria Automation. Covers infrastru
 │              Aria Automation — Platform Flow                │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  User / CI-CD Pipeline                                     │
+│  User / CI-CD Pipeline                                      │
 │       │                                                     │
 │       ▼                                                     │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Service Catalog / Portal  (VIDM SSO)                │  │
-│  │  Request item → approval policy → approved           │  │
-│  └────────────────────────┬─────────────────────────────┘  │
-│                           │                                │
-│                           ▼                                │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Blueprint / Cloud Template                          │  │
-│  │  YAML → resources: VM + network + storage            │  │
-│  │  Constraints: project scope, cloud zone tags         │  │
-│  └───────────────┬──────────────────┬───────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Service Catalog / Portal  (VIDM SSO)                │   │
+│  │  Request item → approval policy → approved           │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│                           │                                 │
+│                           ▼                                 │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Blueprint / Cloud Template                          │   │
+│  │  YAML → resources: VM + network + storage            │   │
+│  │  Constraints: project scope, cloud zone tags         │   │
+│  └───────────────┬──────────────────┬───────────────────┘   │
 │                  │                  │                       │
 │                  ▼                  ▼                       │
-│  ┌───────────────────┐  ┌────────────────────────────────┐ │
-│  │  vCenter / vSphere│  │  NSX: segment / security group │ │
-│  │  VM provisioned   │  │  provisioned alongside VM      │ │
-│  └───────────────────┘  └────────────────────────────────┘ │
+│  ┌───────────────────┐  ┌────────────────────────────────┐  │
+│  │  vCenter / vSphere│  │  NSX: segment / security group │  │
+│  │  VM provisioned   │  │  provisioned alongside VM      │  │
+│  └───────────────────┘  └────────────────────────────────┘  │
 │                                                             │
-│  ABX actions / vRO workflows fire on provisioning events   │
+│  ABX actions / vRO workflows fire on provisioning events    │
 └─────────────────────────────────────────────────────────────┘
 ```
 

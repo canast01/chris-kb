@@ -17,16 +17,16 @@ ESXi Automation Scripts — Tool Selection
 
 Script Execution Flow (PowerCLI example)
 ┌─────────────────────────────────────────────────────┐
-│  Admin workstation (Windows / PowerShell)           │
-│  └── Connect-VIServer → vCenter                     │
-│           │                                         │
-│           ├── Get-VMHost → each ESXi host           │
-│           │   ├── Connection state check            │
-│           │   ├── Hardware sensor check             │
-│           │   ├── Datastore capacity check          │
-│           │   ├── Network adapter check             │
-│           │   └── Required services check           │
-│           └── Report: PASS / WARNING / CRITICAL     │
+│  Admin workstation (Windows / PowerShell)             │
+│  └── Connect-VIServer → vCenter                       │
+│           │                                           │
+│           ├── Get-VMHost → each ESXi host             │
+│           │   ├── Connection state check              │
+│           │   ├── Hardware sensor check               │
+│           │   ├── Datastore capacity check            │
+│           │   ├── Network adapter check               │
+│           │   └── Required services check             │
+│           └── Report: PASS / WARNING / CRITICAL       │
 └─────────────────────────────────────────────────────┘
 ```
 

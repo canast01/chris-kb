@@ -11,7 +11,7 @@
 │  │ 4. Aria Automation      │     │ Lg: 24vCPU / 48GB  large │   │
 │  │ 5. Aria Log Insight     │     └──────────────────────────┘   │
 │  │ 6. Aria Ops for Networks│                                    │
-│  └─────────────────────────┘     Certificates                  │
+│  └─────────────────────────┘     Certificates                   │
 │                                  ┌──────────────────────────┐   │
 │  Pre-Deploy Checklist            │ RSA 4096-bit, SHA-256    │   │
 │  ┌─────────────────────────┐     │ SAN: FQDN + VIP          │   │

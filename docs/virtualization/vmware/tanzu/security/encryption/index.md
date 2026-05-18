@@ -5,21 +5,21 @@
 │                                                                                 │
 │  Data at Rest                                                                   │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  etcd (K8s Secrets)  ──  EncryptionConfiguration (aescbc/kms provider)  │  │
-│  │  PersistentVolumes   ──  vSAN encrypted StorageClass (KMS required)     │  │
-│  │  Node disks          ──  vSphere VM Encryption (optional)               │  │
+│  │  etcd (K8s Secrets)  ──  EncryptionConfiguration (aescbc/kms provider)  │   │
+│  │  PersistentVolumes   ──  vSAN encrypted StorageClass (KMS required)     │   │
+│  │  Node disks          ──  vSphere VM Encryption (optional)               │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Data in Transit                                                                │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  K8s API ◄──── mTLS (built-in) ────► all components                    │  │
-│  │  App TLS: cert-manager ► ClusterIssuer ► Certificate ► Secret          │  │
+│  │  K8s API ◄──── mTLS (built-in) ────► all components                    │    │
+│  │  App TLS: cert-manager ► ClusterIssuer ► Certificate ► Secret          │    │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Image Trust                                                                    │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Cosign sign ──► Harbor ──► Kyverno/OPA policy verifyImages              │  │
-│  │  External Secrets Operator ──► HashiCorp Vault ──► K8s Secret           │  │
+│  │  External Secrets Operator ──► HashiCorp Vault ──► K8s Secret           │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────────────────────────────┘
 ```

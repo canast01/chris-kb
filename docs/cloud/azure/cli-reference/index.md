@@ -8,13 +8,13 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 ┌──────────────────────────────────────────────────────────────┐
 │                  Azure CLI Command Categories                │
 │                                                              │
-│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌──────────┐  │
-│  │  az vm    │  │az network │  │az storage │  │az monitor│  │
-│  │           │  │           │  │           │  │          │  │
-│  │ create    │  │ vnet      │  │ account   │  │ metrics  │  │
-│  │ start/stop│  │ subnet    │  │ container │  │ alerts   │  │
-│  │ resize    │  │ nsg       │  │ blob      │  │ logs     │  │
-│  └───────────┘  └───────────┘  └───────────┘  └──────────┘  │
+│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌──────────┐   │
+│  │  az vm    │  │az network │  │az storage │  │az monitor│   │
+│  │           │  │           │  │           │  │          │   │
+│  │ create    │  │ vnet      │  │ account   │  │ metrics  │   │
+│  │ start/stop│  │ subnet    │  │ container │  │ alerts   │   │
+│  │ resize    │  │ nsg       │  │ blob      │  │ logs     │   │
+│  └───────────┘  └───────────┘  └───────────┘  └──────────┘   │
 │                                                              │
 │  ┌───────────────────────┐     ┌──────────────────────────┐  │
 │  │     az identity       │     │      az backup           │  │

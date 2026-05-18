@@ -15,8 +15,8 @@ Track, baseline, and enforce system configurations across infrastructure to prev
          ▼                                            └──────────────────────┘
 ┌──────────────────────────────┐                               │
 │     CMDB (Config Items)      │◄──────────────────────────────┘
-│  hostname / IP / role / OS   │
-│  relationships / owner       │
+│  hostname / IP / role / OS                                                          │
+│  relationships / owner                                                              │
 └──────────────────────────────┘
 ```
 

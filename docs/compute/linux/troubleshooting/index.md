@@ -11,10 +11,10 @@
         Yes ◄───┤──► No
         ▼               ▼
 ┌──────────────┐  ┌───────────────────────────────────┐
-│  Boot issues │  │  Identify symptom                 │
+│  Boot issues │  │  Identify symptom                  │
 │  GRUB/initrd │  ├───────────┬──────────┬────────────┤
-│  journalctl  │  │  Service  │ Network  │  Disk/Perf │
-│  -b -1       │  │  failed   │ no route │  no space  │
+│  journalctl  │  │  Service  │ Network  │  Disk/Perf  │
+│  -b -1       │  │  failed   │ no route │  no space   │
 └──────────────┘  └─────┬─────┴────┬─────┴─────┬──────┘
                         ▼          ▼           ▼ 
                ┌──────────────┐ ┌──────────┐ ┌──────────────┐

@@ -14,8 +14,8 @@ Confirm database backups are completing successfully, files are intact, and rest
        │                                           │
        ▼                                           ▼
 ┌──────────────────┐                    ┌──────────────────┐
-│ Integrity check  │                    │ Alert on failure │
-│ checksum/prepare │                    │ → on-call + ITSM │
+│ Integrity check  │                    │ Alert on failure                         │
+│ checksum/prepare │                    │ → on-call + ITSM                         │
 └──────────────────┘                    └──────────────────┘
 ```
 

@@ -4,8 +4,8 @@
 FlashArray Security Layers
 ┌──────────────────────────────────────────────────────────┐
 │  Identity & Auth                                         │
-│  ├── SAML SSO (Okta / Azure AD) → MFA enforced          │
-│  ├── AD/LDAP group → role mapping                       │
+│  ├── SAML SSO (Okta / Azure AD) → MFA enforced           │
+│  ├── AD/LDAP group → role mapping                        │
 │  └── API tokens for automation (storage_admin / readonly)│
 ├──────────────────────────────────────────────────────────┤
 │  RBAC                                                    │
@@ -16,7 +16,7 @@ FlashArray Security Layers
 │  └── Replication on dedicated VLAN (TLS)                 │
 ├──────────────────────────────────────────────────────────┤
 │  Data at Rest                                            │
-│  └── AES-256-XTS (NVMe SEDs, always-on, hardware)       │
+│  └── AES-256-XTS (NVMe SEDs, always-on, hardware)        │
 ├──────────────────────────────────────────────────────────┤
 │  Immutability                                            │
 │  └── SafeMode — Pure Support required to destroy snaps   │

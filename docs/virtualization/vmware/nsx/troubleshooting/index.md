@@ -11,22 +11,22 @@ Troubleshooting reference for VMware NSX. Covers common overlay, gateway, and DF
 │                                                             │
 │  Problem reported                                           │
 │       │                                                     │
-│       ├──► Connectivity loss ──► Common Issues page        │
+│       ├──► Connectivity loss ──► Common Issues page         │
 │       │    (VM, gateway, BGP)                               │
 │       │                                                     │
-│       ├──► Need diagnostic data ──► Diagnostics page       │
+│       ├──► Need diagnostic data ──► Diagnostics page        │
 │       │    (logs, traceflow, capture,                       │
 │       │     support bundle)                                 │
 │       │                                                     │
 │       └──► Cannot resolve internally                        │
-│            │                                               │
-│            ▼                                               │
-│       ┌──────────────────────────────────────────────────┐ │
-│       │  Escalation page                                 │ │
-│       │  • When to escalate criteria                     │ │
-│       │  • Data to collect                               │ │
-│       │  • Broadcom TAC + SLA tiers                      │ │
-│       └──────────────────────────────────────────────────┘ │
+│            │                                                │
+│            ▼                                                │
+│       ┌──────────────────────────────────────────────────┐  │
+│       │  Escalation page                                 │  │
+│       │  • When to escalate criteria                     │  │
+│       │  • Data to collect                               │  │
+│       │  • Broadcom TAC + SLA tiers                      │  │
+│       └──────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
 

@@ -26,7 +26,7 @@ ESXi Host Hardening Layers
 │  └── Expiry monitored: alert at 60 days remaining       │
 ├─────────────────────────────────────────────────────────┤
 │  5. Audit & Compliance Enforcement                      │
-│  ├── Syslog → SIEM: auth.log, shell.log, hostd.log     │
+│  ├── Syslog → SIEM: auth.log, shell.log, hostd.log      │
 │  ├── Host Profile: enforces baseline across cluster     │
 │  └── Check Compliance after every change                │
 └─────────────────────────────────────────────────────────┘

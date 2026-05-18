@@ -17,7 +17,7 @@ VCF CLI Tool Map — Where to Run What
 │    --type lcm            LCM-specific bundle        │
 │    --type nsx            NSX-related events         │
 │                                                     │
-│  SDDC Manager REST API  (https://<sddc-mgr>/v1)    │
+│  SDDC Manager REST API  (https://<sddc-mgr>/v1)     │
 │    GET  /v1/domains      list all domains           │
 │    GET  /v1/clusters     list all clusters          │
 │    GET  /v1/hosts        list all hosts             │
@@ -26,9 +26,9 @@ VCF CLI Tool Map — Where to Run What
 └─────────────────────────────────────────────────────┘
 ┌─────────────────────────────────────────────────────┐
 │  Key Log Paths (SDDC Manager appliance)             │
-│  /var/log/vmware/vcf/lcm/lcm-debug.log             │
-│  /var/log/vmware/vcf/sddc-manager/sddc-manager.log │
-│  /var/log/vmware/vcf/domainmanager/dm.log          │
+│  /var/log/vmware/vcf/lcm/lcm-debug.log              │
+│  /var/log/vmware/vcf/sddc-manager/sddc-manager.log  │
+│  /var/log/vmware/vcf/domainmanager/dm.log           │
 └─────────────────────────────────────────────────────┘
 ```
 

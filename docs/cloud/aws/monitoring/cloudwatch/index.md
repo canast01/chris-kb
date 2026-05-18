@@ -18,7 +18,7 @@ AWS CloudWatch notes for day-to-day infrastructure operations.
 │  ├── CloudWatch Agent (OS: memory · disk · process)     │
 │  └── Custom metrics (PutMetricData API)                 │
 │                                                         │
-│  Retention: 1-min → 15 days · 5-min → 63 days          │
+│  Retention: 1-min → 15 days · 5-min → 63 days           │
 │             1-hr  → 455 days (15 months)                │
 └─────────────────────────────────────────────────────────┘
 ```

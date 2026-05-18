@@ -4,20 +4,20 @@
 ┌─────────────────────────────────────────────────────────────────────┐
 │                  AD / LDAP Integration Flow                         │
 │                                                                     │
-│  ┌──────────────────┐   LDAP bind (389/636)   ┌─────────────────┐  │
-│  │  Infrastructure  │────────────────────────►│  Domain         │  │
-│  │  Component       │                         │  Controller     │  │
-│  │  (Linux/Windows/ │◄────────────────────────│  (AD / LDAP)    │  │
-│  │   appliance)     │   authenticate result   └─────────────────┘  │
-│  └──────────┬───────┘                                              │
+│  ┌──────────────────┐   LDAP bind (389/636)   ┌─────────────────┐   │
+│  │  Infrastructure  │────────────────────────►│  Domain         │   │
+│  │  Component       │                         │  Controller     │   │
+│  │  (Linux/Windows/ │◄────────────────────────│  (AD / LDAP)    │   │
+│  │   appliance)     │   authenticate result   └─────────────────┘   │
+│  └──────────┬───────┘                                               │
 │             │                                                       │
-│   ┌─────────▼──────────────────────────────────────────────────┐   │
-│   │                  Auth Decision                             │   │
-│   │  User exists? ──► Group member? ──► Access granted/denied  │   │
-│   └────────────────────────────────────────────────────────────┘   │
+│   ┌─────────▼──────────────────────────────────────────────────┐    │
+│   │                  Auth Decision                             │    │
+│   │  User exists? ──► Group member? ──► Access granted/denied  │    │
+│   └────────────────────────────────────────────────────────────┘    │
 │                                                                     │
-│  Linux: SSSD (realmd) · Winbind    Windows: domain join (nltest)   │
-│  Protocols: Kerberos (88) · LDAP (389) · LDAPS (636)               │
+│  Linux: SSSD (realmd) · Winbind    Windows: domain join (nltest)    │
+│  Protocols: Kerberos (88) · LDAP (389) · LDAPS (636)                │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 

@@ -29,9 +29,9 @@
      ┌───────┴──────────┐
      ▼                  ▼
 ┌─────────┐       ┌──────────────────┐
-│  EC2    │       │  ASG — Instance  │
-│ Targets │       │  Refresh (blue/  │
-│ (SSM)   │       │  green replace)  │
+│  EC2    │       │  ASG — Instance                        │
+│ Targets │       │  Refresh (blue/                        │
+│ (SSM)   │       │  green replace)                        │
 └────┬────┘       └────────┬─────────┘
      │                     │
      └──────────┬──────────┘

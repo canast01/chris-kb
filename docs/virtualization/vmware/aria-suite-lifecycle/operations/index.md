@@ -14,8 +14,8 @@
 │  └──────────────┘   │  rotate password │    └──────────────┘    │
 │                     └──────────────────┘                        │
 │                                                                 │
-│  Backup:  VADP (nightly) + NFS snap + API JSON export          │
-│  CLI:     vracli status/services/certificate/proxy/ntp         │
+│  Backup:  VADP (nightly) + NFS snap + API JSON export           │
+│  CLI:     vracli status/services/certificate/proxy/ntp          │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

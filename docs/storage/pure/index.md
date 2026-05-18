@@ -10,11 +10,11 @@ Pure Storage Portfolio
 │  FlashArray (//X / //C / //E)                               │
 │  Block SAN — FC / iSCSI / NVMe-oF                           │
 │  ├── Dual-controller active/active HA                       │
-│  ├── ActiveCluster (sync, RPO=0) / ActiveDR (async)        │
+│  ├── ActiveCluster (sync, RPO=0) / ActiveDR (async)         │
 │  └── Purity//FA OS + Pure1 cloud management                 │
 ├─────────────────────────────────────────────────────────────┤
 │  FlashBlade (//S / //E)                                     │
-│  Unified file + object — NFS / SMB / S3 / HDFS             │
+│  Unified file + object — NFS / SMB / S3 / HDFS              │
 │  ├── Scale-out blades + Fabric Module                       │
 │  └── Purity//FB OS                                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -22,7 +22,7 @@ Pure Storage Portfolio
 │  Non-disruptive controller refreshes, CapEx subscription    │
 ├─────────────────────────────────────────────────────────────┤
 │  Evergreen//One                                             │
-│  STaaS — Pure-owned HW on-prem, consumption billing        │
+│  STaaS — Pure-owned HW on-prem, consumption billing         │
 └─────────────────────────────────────────────────────────────┘
                             │
                      Pure1 Cloud (SaaS)

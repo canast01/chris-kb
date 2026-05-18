@@ -6,27 +6,27 @@
 │                                                                      │
 │  Host / VM CPU high alert                                            │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Identify top processes                                        │ │
-│  │  Linux: top / htop / ps aux   Windows: Task Manager / perfmon  │ │
-│  │  Runaway process ──► investigate / restart / kill              │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
-│        │ legitimate load                                            │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check VM vCPU Ready % (esxtop %RDY)                           │ │
-│  │  %RDY > 5% ──► VM is waiting for physical CPU                 │ │
-│  │  Reduce vCPU count · migrate VM with vMotion                  │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
-│        │ %RDY OK                                                    │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check host overcommit ratio (vSphere cluster)                 │ │
-│  │  Over-committed ──► DRS rebalance · add host                  │ │
-│  └─────┬──────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Identify top processes                                        │  │
+│  │  Linux: top / htop / ps aux   Windows: Task Manager / perfmon  │  │
+│  │  Runaway process ──► investigate / restart / kill              │  │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
+│        │ legitimate load                                             │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check VM vCPU Ready % (esxtop %RDY)                           │  │
+│  │  %RDY > 5% ──► VM is waiting for physical CPU                 │   │
+│  │  Reduce vCPU count · migrate VM with vMotion                  │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
+│        │ %RDY OK                                                     │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check host overcommit ratio (vSphere cluster)                 │  │
+│  │  Over-committed ──► DRS rebalance · add host                  │   │
+│  └─────┬──────────────────────────────────────────────────────────┘  │
 │        │                                                             │
-│  ┌─────▼──────────────────────────────────────────────────────────┐ │
-│  │  Check for hardware issues (CPU temperature / throttling)      │ │
-│  │  iDRAC / iLO sensors · BIOS event log                         │ │
-│  └────────────────────────────────────────────────────────────────┘ │
+│  ┌─────▼──────────────────────────────────────────────────────────┐  │
+│  │  Check for hardware issues (CPU temperature / throttling)      │  │
+│  │  iDRAC / iLO sensors · BIOS event log                         │   │
+│  └────────────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

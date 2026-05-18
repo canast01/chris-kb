@@ -3,27 +3,27 @@
 ```
 ┌──────────────────── VxRail Operations Overview ─────────────────────────────────┐
 │                                                                                  │
-│  Daily      ┌──────────────────────────────────────────────────────────────┐   │
-│  Checks  ►  │ VxRail Plugin: Cluster Health │ Node Status │ vSAN Health    │   │
-│             │ iDRAC alarms │ ESXi Connected │ LCM status │ resync = 0      │   │
-│             └──────────────────────────────────────────────────────────────┘   │
+│  Daily      ┌──────────────────────────────────────────────────────────────┐    │
+│  Checks  ►  │ VxRail Plugin: Cluster Health │ Node Status │ vSAN Health    │    │
+│             │ iDRAC alarms │ ESXi Connected │ LCM status │ resync = 0      │    │
+│             └──────────────────────────────────────────────────────────────┘    │
 │                                │                                                 │
-│  LCM        ┌──────────────────▼──────────────────────────────────────────┐    │
-│  Upgrades ► │  Download Bundle ► Pre-Check ► Upgrade (node-by-node)       │    │
-│             │  Per node: maintenance mode ► ESXi/FW update ► reboot       │    │
-│             │  ► exit maintenance ► wait vSAN resync ► next node          │    │
-│             └──────────────────────────────────────────────────────────────┘   │
+│  LCM        ┌──────────────────▼──────────────────────────────────────────┐     │
+│  Upgrades ► │  Download Bundle ► Pre-Check ► Upgrade (node-by-node)       │     │
+│             │  Per node: maintenance mode ► ESXi/FW update ► reboot       │     │
+│             │  ► exit maintenance ► wait vSAN resync ► next node          │     │
+│             └──────────────────────────────────────────────────────────────┘    │
 │                                │                                                 │
-│  Node       ┌──────────────────▼──────────────────────────────────────────┐    │
-│  Expansion► │  iDRAC accessible ► VxRail plugin "Add Node"                │    │
-│             │  ► ESXi install ► join cluster ► vSAN adds disk groups      │    │
-│             │  ► rebalance (monitor: resync bytes = 0)                    │    │
-│             └──────────────────────────────────────────────────────────────┘   │
+│  Node       ┌──────────────────▼──────────────────────────────────────────┐     │
+│  Expansion► │  iDRAC accessible ► VxRail plugin "Add Node"                │     │
+│             │  ► ESXi install ► join cluster ► vSAN adds disk groups      │     │
+│             │  ► rebalance (monitor: resync bytes = 0)                    │     │
+│             └──────────────────────────────────────────────────────────────┘    │
 │                                │                                                 │
-│  Disk       ┌──────────────────▼──────────────────────────────────────────┐    │
-│  Failure  ► │  Alarm ► identify disk (vSAN Disk Mgmt) ► hot-swap          │    │
-│             │  ► claim replacement ► vSAN rebuilds ► resync completes     │    │
-│             └──────────────────────────────────────────────────────────────┘   │
+│  Disk       ┌──────────────────▼──────────────────────────────────────────┐     │
+│  Failure  ► │  Alarm ► identify disk (vSAN Disk Mgmt) ► hot-swap          │     │
+│             │  ► claim replacement ► vSAN rebuilds ► resync completes     │     │
+│             └──────────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 

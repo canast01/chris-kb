@@ -5,22 +5,22 @@
 │         Aria Ops for Logs — Backup Approach                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  Primary: VM-Level Backup (VADP)                           │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Veeam / Commvault / Veritas                         │  │
-│  │  Back up ALL nodes to same restore point (critical)  │  │
-│  │  App-consistent quiesce  ·  14-day retention min     │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  Primary: VM-Level Backup (VADP)                            │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Veeam / Commvault / Veritas                         │   │
+│  │  Back up ALL nodes to same restore point (critical)  │   │
+│  │  App-consistent quiesce  ·  14-day retention min     │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  Secondary: Config Export (rebuild reference)              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  curl /api/v2/alerts → vrli-alerts-YYYYMMDD.json     │  │
-│  │  curl /api/v2/notification → vrli-notifications.json │  │
-│  │  curl /api/v2/agents/groups → vrli-agent-groups.json │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  Secondary: Config Export (rebuild reference)               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  curl /api/v2/alerts → vrli-alerts-YYYYMMDD.json     │   │
+│  │  curl /api/v2/notification → vrli-notifications.json │   │
+│  │  curl /api/v2/agents/groups → vrli-agent-groups.json │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  Long-term Log Retention: NFS Archive (not a backup)       │
-│  Administration → Archiving → NFS → /exports/vrli-archive  │
+│  Long-term Log Retention: NFS Archive (not a backup)        │
+│  Administration → Archiving → NFS → /exports/vrli-archive   │
 └─────────────────────────────────────────────────────────────┘
 ```
 

@@ -8,7 +8,7 @@ Security reference for VMware Cloud Foundation. Covers SDDC Manager authenticati
 VCF Security Architecture
 ┌─────────────────────────────────────────────────────┐
 │  Identity Plane                                     │
-│  Active Directory ──► SDDC Manager SSO identity    │
+│  Active Directory ──► SDDC Manager SSO identity     │
 │                  ──► vCenter identity source        │
 │                  ──► NSX Manager identity source    │
 └──────────────────────────┬──────────────────────────┘
@@ -17,12 +17,12 @@ VCF Security Architecture
 ┌─────────────────────────────────────────────────────┐
 │  Access Control (RBAC)                              │
 │                                                     │
-│  SDDC Manager roles:                               │
+│  SDDC Manager roles:                                │
 │    ADMIN → full lifecycle + security access         │
 │    OPERATOR → health/tasks; no credentials          │
 │    VIEWER → read-only dashboards                    │
 │                                                     │
-│  NSX roles: Enterprise Admin · Network Eng         │
+│  NSX roles: Enterprise Admin · Network Eng          │
 │             Security Eng · Auditor                  │
 │                                                     │
 │  vCenter: AD group → vCenter Global Permissions     │
@@ -32,7 +32,7 @@ VCF Security Architecture
 ┌─────────────────────────────────────────────────────┐
 │  Certificate Management (SDDC Manager)              │
 │  VMCA (embedded) or third-party CA                  │
-│  Rotate order: SDDC Mgr → vCenter → NSX → ESXi    │
+│  Rotate order: SDDC Mgr → vCenter → NSX → ESXi      │
 └──────────────────────────┬──────────────────────────┘
                            │
                            ▼
@@ -40,7 +40,7 @@ VCF Security Architecture
 │  Network Isolation                                  │
 │  Management traffic ─► management network only      │
 │  SDDC Manager UI (443) ─► jump-host CIDR only       │
-│  Syslog ──► SIEM (TLS 6514)                        │
+│  Syslog ──► SIEM (TLS 6514)                         │
 └─────────────────────────────────────────────────────┘
 ```
 

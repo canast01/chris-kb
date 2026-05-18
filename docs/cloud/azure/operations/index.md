@@ -8,17 +8,17 @@
     ┌───────────┴───────────┐
     ▼                       ▼
 ┌───────────────┐   ┌───────────────────────────────────────────┐
-│  Health Layer │   │              Operational Layer             │
-│               │   │                                           │
-│ Service Health│   │  ┌──────────────┐  ┌──────────────────┐  │
-│ Resource Health│  │  │  Backup Jobs │  │  Azure Update Mgr│  │
-│ Monitor Alerts│   │  │  (RSV Vault) │  │  (VM Patching)   │  │
+│  Health Layer │   │              Operational Layer              │
+│               │   │                                             │
+│ Service Health│   │  ┌──────────────┐  ┌──────────────────┐     │
+│ Resource Health│  │  │  Backup Jobs │  │  Azure Update Mgr│     │
+│ Monitor Alerts│   │  │  (RSV Vault) │  │  (VM Patching)   │     │
 └───────┬───────┘   │  └──────────────┘  └──────────────────┘  │
         │           │  ┌──────────────┐  ┌──────────────────┐  │
         ▼           │  │  Azure CLI   │  │  Scripts / Auto  │  │
 ┌───────────────┐   │  │  (az vm, az  │  │  (Runbooks, PS)  │  │
-│  Action Group │   │  │   monitor)   │  │                  │  │
-│  → email/ITSM │   │  └──────────────┘  └──────────────────┘  │
+│  Action Group │   │  │   monitor)   │  │                  │     │
+│  → email/ITSM │   │  └──────────────┘  └──────────────────┘     │
 └───────────────┘   └───────────────────────────────────────────┘
 ```
 

@@ -3,32 +3,32 @@
 ```
 Aria Operations — CLI Command Reference Map
 ┌─────────────────────────────────────────────────────┐
-│  SSH: admin@<aria-ops-primary-fqdn>                │
+│  SSH: admin@<aria-ops-primary-fqdn>                 │
 │       (sudo -i for advanced maintenance tasks)      │
 └──────────────────────┬──────────────────────────────┘
                        │
           ┌────────────┼──────────────┐
           ▼            ▼              ▼
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
-│ Cluster Mgmt │ │ Adapters     │ │ Certificates     │
-│              │ │              │ │                  │
-│ vracli       │ │ vracli       │ │ vracli           │
-│ cluster      │ │ adapter list │ │ certificate show │
-│ health       │ │              │ │                  │
-│              │ │ vracli       │ │ vracli           │
-│ vracli       │ │ adapter list │ │ certificate      │
-│ cluster      │ │ --verbose    │ │ import           │
-│ list-nodes   │ │              │ │ --cert --key --ca│
-│              │ │ vracli       │ │                  │
+│ Cluster Mgmt │ │ Adapters     │ │ Certificates      │
+│              │ │              │ │                   │
+│ vracli       │ │ vracli       │ │ vracli            │
+│ cluster      │ │ adapter list │ │ certificate show  │
+│ health       │ │              │ │                   │
+│              │ │ vracli       │ │ vracli            │
+│ vracli       │ │ adapter list │ │ certificate       │
+│ cluster      │ │ --verbose    │ │ import            │
+│ list-nodes   │ │              │ │ --cert --key --ca │
+│              │ │ vracli       │ │                   │
 │ vracli       │ │ adapter      │ └──────────────────┘
-│ version      │ │ restart      │
-│              │ │ --id <id>    │
+│ version      │ │ restart                            │
+│              │ │ --id <id>                          │
 │ vracli       │ └──────────────┘
-│ cluster      │
-│ restart      │
+│ cluster                                             │
+│ restart                                             │
 └──────────────┘
 ┌─────────────────────────────────────────────────────┐
-│  REST API  base: https://<aria-ops>/suite-api/api  │
+│  REST API  base: https://<aria-ops>/suite-api/api   │
 │  POST /api/auth/token/acquire   authenticate        │
 │  GET  /api/resources            list objects        │
 │  GET  /api/alerts?activeOnly=true  active alerts    │

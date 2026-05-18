@@ -8,18 +8,18 @@ Infrastructure lifecycle management covering installation, upgrade, patching, de
 ┌──────────────────────────────────────────────────────────────────────┐
 │                    System Lifecycle Stages                           │
 │                                                                      │
-│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────────────┐ │
-│  │ Onboard  │──►│ Baseline │──►│ Operate  │──►│    Upgrade       │ │
-│  │ CMDB reg │   │ Config   │   │ Monitor  │   │  Readiness       │ │
-│  │ DNS/IP   │   │ Harden   │   │ Patch    │   │  validation      │ │
-│  │ monitoring│  │ Backup   │   │ Health ✓ │   │  Post-upgrade ✓  │ │
-│  └──────────┘   └──────────┘   └──────────┘   └────────┬─────────┘ │
-│                                                         │           │
-│  ┌─────────────────────────────────────────────────────▼──────────┐ │
-│  │                   Decommission                                 │ │
-│  │   Data archive ──► access revoke ──► DNS cleanup ──► CMDB CI  │ │
-│  │   Hardware wipe / recycle  ·  License release                 │ │
-│  └────────────────────────────────────────────────────────────────┘ │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────────────┐   │
+│  │ Onboard  │──►│ Baseline │──►│ Operate  │──►│    Upgrade       │   │
+│  │ CMDB reg │   │ Config   │   │ Monitor  │   │  Readiness       │   │
+│  │ DNS/IP   │   │ Harden   │   │ Patch    │   │  validation      │   │
+│  │ monitoring│  │ Backup   │   │ Health ✓ │   │  Post-upgrade ✓  │   │
+│  └──────────┘   └──────────┘   └──────────┘   └────────┬─────────┘   │
+│                                                         │            │
+│  ┌─────────────────────────────────────────────────────▼──────────┐  │
+│  │                   Decommission                                 │  │
+│  │   Data archive ──► access revoke ──► DNS cleanup ──► CMDB CI  │   │
+│  │   Hardware wipe / recycle  ·  License release                 │   │
+│  └────────────────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 

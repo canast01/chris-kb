@@ -12,11 +12,11 @@ Use it when you need quick notes, runbooks, checks, standards, commands, or trou
          ┌───────────────────────┼───────────────────────┐
          ▼                       ▼                       ▼
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────────┐
-│  Pick Section   │    │  Pick Section    │    │   Pick Section      │
-│                 │    │                  │    │                     │
-│ Virtualization  │    │ Storage / SAN    │    │ Cloud / Automation  │
-│ VMware / VCF    │    │ Dell / Pure /    │    │ AWS / Azure /       │
-│ VxRail / NSX    │    │ NetApp / Backup  │    │ Ansible / Terraform │
+│  Pick Section   │    │  Pick Section    │    │   Pick Section       │
+│                 │    │                  │    │                      │
+│ Virtualization  │    │ Storage / SAN    │    │ Cloud / Automation   │
+│ VMware / VCF    │    │ Dell / Pure /    │    │ AWS / Azure /        │
+│ VxRail / NSX    │    │ NetApp / Backup  │    │ Ansible / Terraform  │
 └────────┬────────┘    └────────┬─────────┘    └──────────┬──────────┘
          └─────────────────────┬┴──────────────────────────┘
                                │

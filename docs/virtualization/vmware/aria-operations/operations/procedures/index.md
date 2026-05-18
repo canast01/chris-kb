@@ -10,7 +10,7 @@ Aria Operations — Alert Lifecycle
                        ▼
 ┌─────────────────────────────────────────────────────┐
 │  Notification Delivered                             │
-│  → email (SMTP) · ServiceNow ticket · webhook      │
+│  → email (SMTP) · ServiceNow ticket · webhook       │
 └──────────────────────┬──────────────────────────────┘
                        │
                        ▼
@@ -25,10 +25,10 @@ Aria Operations — Alert Lifecycle
                 │ Yes         │ No
                 ▼             ▼
 ┌───────────────────┐  ┌─────────────────────────────┐
-│ Acknowledge alert │  │ Escalate · add notes        │
-│ Resolve issue     │  │ Open ITSM ticket            │
+│ Acknowledge alert │  │ Escalate · add notes         │
+│ Resolve issue     │  │ Open ITSM ticket             │
 │ Cancel alert only │  └─────────────────────────────┘
-│ after full fix    │
+│ after full fix                                      │
 └───────────────────┘
           │
           ▼

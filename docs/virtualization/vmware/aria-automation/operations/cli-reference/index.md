@@ -18,7 +18,7 @@
 │ vracli certificate import│                                  │
 │ vracli support-bundle    │  REST API base:                  │
 │ vracli software-update   │  /csp/gateway/am/api/login       │
-│   install --file <pak>   │  /iaas/api/  /deployment/api/   │
+│   install --file <pak>   │  /iaas/api/  /deployment/api/    │
 │                          │  /blueprint/api/                 │
 └──────────────────────────┴──────────────────────────────────┘
 ```
