@@ -1480,6 +1480,29 @@
 
 <h1 id="windows-server-access-control">Windows Server — Access Control<a class="headerlink" href="#windows-server-access-control" title="Permanent link">&para;</a></h1>
 <p>AD group design, GPO user rights, Just Enough Administration (JEA), LAPS, and built-in group review.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│           Windows Access Control Model (AGDLP)         │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  User Account (A)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>       ▼
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  Global Group (G)  ──  &quot;GG-ServerAdmins&quot;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>       ▼
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  Domain Local Group (DL) ── &quot;DL-FileShare-Finance-RW&quot;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>       ▼
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  ┌────────────────────────────────────────────────────┐
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  Resource Permissions (P)                         │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  ├──────────────────┬────────────────────────────────┤
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  Share Perms     │  NTFS ACL                      │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  (Full/Read/No)  │  (Allow/Deny + Inheritance)    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  └──────────────────┴────────────────────────────────┘
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>       ▼
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  GPO User Rights ──► who can log on, debug, backup
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  JEA endpoint ──► constrained PS session per role
+</code></pre></div>
 <h2 id="active-directory-group-design">Active Directory Group Design<a class="headerlink" href="#active-directory-group-design" title="Permanent link">&para;</a></h2>
 <p>Structure groups using the AGDLP (Accounts → Global → Domain Local → Permissions) model to maintain role-based access control.</p>
 <table>
@@ -1513,22 +1536,22 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a Global group for a role</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;GG-ServerAdmins&quot;</span> <span class="n">-GroupScope</span> <span class="n">Global</span> <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=local&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;Server Administrators&quot;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Create a Domain Local group for the resource</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;DL-FileShare-FinanceData-RW&quot;</span> <span class="n">-GroupScope</span> <span class="n">DomainLocal</span> <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># Add the Global group to the Domain Local group</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;DL-FileShare-FinanceData-RW&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;GG-ServerAdmins&quot;</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># Add a user to the Global group</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;GG-ServerAdmins&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c"># View group members</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;GG-ServerAdmins&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">objectClass</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create a Global group for a role</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;GG-ServerAdmins&quot;</span> <span class="n">-GroupScope</span> <span class="n">Global</span> <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=local&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;Server Administrators&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Create a Domain Local group for the resource</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;DL-FileShare-FinanceData-RW&quot;</span> <span class="n">-GroupScope</span> <span class="n">DomainLocal</span> <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  <span class="n">-Path</span> <span class="s2">&quot;OU=Groups,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Add the Global group to the Domain Local group</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;DL-FileShare-FinanceData-RW&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;GG-ServerAdmins&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Add a user to the Global group</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Add-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;GG-ServerAdmins&quot;</span> <span class="n">-Members</span> <span class="s2">&quot;jsmith&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c"># View group members</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;GG-ServerAdmins&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">objectClass</span>
 </code></pre></div>
 <h2 id="gpo-user-rights-assignments">GPO — User Rights Assignments<a class="headerlink" href="#gpo-user-rights-assignments" title="Permanent link">&para;</a></h2>
 <p>User Rights are configured via GPO: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; User Rights Assignment.</p>
@@ -1594,175 +1617,175 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Review current local user rights (use secedit)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">secedit</span> <span class="p">/</span><span class="n">export</span> <span class="p">/</span><span class="n">cfg</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">security-policy</span><span class="p">.</span><span class="n">cfg</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-Content</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">security-policy</span><span class="p">.</span><span class="n">cfg</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;SeRemote|SeInteractive|SeNetwork|SeDeny&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Review current local user rights (use secedit)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">secedit</span> <span class="p">/</span><span class="n">export</span> <span class="p">/</span><span class="n">cfg</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">security-policy</span><span class="p">.</span><span class="n">cfg</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-Content</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">security-policy</span><span class="p">.</span><span class="n">cfg</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;SeRemote|SeInteractive|SeNetwork|SeDeny&quot;</span>
 </code></pre></div>
 <h3 id="apply-user-rights-via-gpo-powershell-dsc-reference">Apply User Rights via GPO (PowerShell DSC reference)<a class="headerlink" href="#apply-user-rights-via-gpo-powershell-dsc-reference" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Query user right assignment directly</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">(</span><span class="nb">Get-LocalUser</span><span class="p">).</span><span class="n">Name</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># For domain-aware rights, query via GPO result:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">gpresult</span> <span class="p">/</span><span class="nb">H </span><span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">gpo-report</span><span class="p">.</span><span class="n">html</span> <span class="p">/</span><span class="n">F</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Query user right assignment directly</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">(</span><span class="nb">Get-LocalUser</span><span class="p">).</span><span class="n">Name</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># For domain-aware rights, query via GPO result:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">gpresult</span> <span class="p">/</span><span class="nb">H </span><span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">gpo-report</span><span class="p">.</span><span class="n">html</span> <span class="p">/</span><span class="n">F</span>
 </code></pre></div>
 <h2 id="just-enough-administration-jea">Just Enough Administration (JEA)<a class="headerlink" href="#just-enough-administration-jea" title="Permanent link">&para;</a></h2>
 <p>JEA limits what administrators can do in remote PowerShell sessions to only the commands and parameters they need.</p>
 <h3 id="create-a-role-capability-file">Create a Role Capability File<a class="headerlink" href="#create-a-role-capability-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Generate the role capability template</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-PSRoleCapabilityFile</span> <span class="n">-Path</span> <span class="s2">&quot;C:\JEA\RoleCapabilities\WebAdmins.psrc&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Generate the role capability template</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-PSRoleCapabilityFile</span> <span class="n">-Path</span> <span class="s2">&quot;C:\JEA\RoleCapabilities\WebAdmins.psrc&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># C:\JEA\RoleCapabilities\WebAdmins.psrc</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">@{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">GUID</span>                    <span class="p">=</span> <span class="s1">&#39;a1b2c3d4-e5f6-7890-abcd-ef1234567890&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">Author</span>                  <span class="p">=</span> <span class="s1">&#39;Corp IT&#39;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">Description</span>             <span class="p">=</span> <span class="s1">&#39;Web server administration role&#39;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">ModulesToImport</span>         <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;WebAdministration&#39;</span><span class="p">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">VisibleCmdlets</span>          <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="s1">&#39;Get-Service&#39;</span><span class="p">,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="p">@{</span><span class="n">Name</span><span class="p">=</span><span class="s1">&#39;Restart-Service&#39;</span><span class="p">;</span> <span class="n">Parameters</span><span class="p">=@{</span><span class="n">Name</span><span class="p">=</span><span class="s1">&#39;Name&#39;</span><span class="p">;</span> <span class="k">ValidateSet</span><span class="p">=</span><span class="s1">&#39;IIS&#39;</span><span class="p">,</span><span class="s1">&#39;W3SVC&#39;</span><span class="p">}}</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="p">)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">VisibleFunctions</span>        <span class="p">=</span> <span class="p">@()</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">VisibleExternalCommands</span> <span class="p">=</span> <span class="p">@()</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="n">VisibleProviders</span>        <span class="p">=</span> <span class="p">@()</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># C:\JEA\RoleCapabilities\WebAdmins.psrc</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">@{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">GUID</span>                    <span class="p">=</span> <span class="s1">&#39;a1b2c3d4-e5f6-7890-abcd-ef1234567890&#39;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">Author</span>                  <span class="p">=</span> <span class="s1">&#39;Corp IT&#39;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">Description</span>             <span class="p">=</span> <span class="s1">&#39;Web server administration role&#39;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">ModulesToImport</span>         <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;WebAdministration&#39;</span><span class="p">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">VisibleCmdlets</span>          <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="s1">&#39;Get-Service&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        <span class="p">@{</span><span class="n">Name</span><span class="p">=</span><span class="s1">&#39;Restart-Service&#39;</span><span class="p">;</span> <span class="n">Parameters</span><span class="p">=@{</span><span class="n">Name</span><span class="p">=</span><span class="s1">&#39;Name&#39;</span><span class="p">;</span> <span class="k">ValidateSet</span><span class="p">=</span><span class="s1">&#39;IIS&#39;</span><span class="p">,</span><span class="s1">&#39;W3SVC&#39;</span><span class="p">}}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="n">VisibleFunctions</span>        <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">VisibleExternalCommands</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">VisibleProviders</span>        <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="create-a-session-configuration-file">Create a Session Configuration File<a class="headerlink" href="#create-a-session-configuration-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">New-PSSessionConfigurationFile</span> <span class="n">-Path</span> <span class="s2">&quot;C:\JEA\WebAdmins.pssc&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  <span class="n">-SessionType</span> <span class="n">RestrictedRemoteServer</span> <span class="p">`</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="n">-RunAsVirtualAccount</span> <span class="p">`</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="n">-TranscriptDirectory</span> <span class="s2">&quot;C:\JEA\Transcripts\&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="n">-RoleDefinitions</span> <span class="p">@{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s1">&#39;CORP\WebAdmins&#39;</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">RoleCapabilityFiles</span> <span class="p">=</span> <span class="s1">&#39;C:\JEA\RoleCapabilities\WebAdmins.psrc&#39;</span> <span class="p">}</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  <span class="p">}</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c"># Register the session configuration</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">Register-PSSessionConfiguration</span> <span class="n">-Name</span> <span class="s2">&quot;WebAdmins&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\JEA\WebAdmins.pssc&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Restart-Service</span> <span class="n">WinRM</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># Verify</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">Get-PSSessionConfiguration</span> <span class="n">-Name</span> <span class="s2">&quot;WebAdmins&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">New-PSSessionConfigurationFile</span> <span class="n">-Path</span> <span class="s2">&quot;C:\JEA\WebAdmins.pssc&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  <span class="n">-SessionType</span> <span class="n">RestrictedRemoteServer</span> <span class="p">`</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="n">-RunAsVirtualAccount</span> <span class="p">`</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="n">-TranscriptDirectory</span> <span class="s2">&quot;C:\JEA\Transcripts\&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  <span class="n">-RoleDefinitions</span> <span class="p">@{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="s1">&#39;CORP\WebAdmins&#39;</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">RoleCapabilityFiles</span> <span class="p">=</span> <span class="s1">&#39;C:\JEA\RoleCapabilities\WebAdmins.psrc&#39;</span> <span class="p">}</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  <span class="p">}</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Register the session configuration</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">Register-PSSessionConfiguration</span> <span class="n">-Name</span> <span class="s2">&quot;WebAdmins&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\JEA\WebAdmins.pssc&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">Restart-Service</span> <span class="n">WinRM</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Verify</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">Get-PSSessionConfiguration</span> <span class="n">-Name</span> <span class="s2">&quot;WebAdmins&quot;</span>
 </code></pre></div>
 <h3 id="connect-via-jea">Connect via JEA<a class="headerlink" href="#connect-via-jea" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># User connects to the JEA endpoint — only sees permitted commands</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Enter-PSSession</span> <span class="n">-ComputerName</span> <span class="n">webserver01</span> <span class="n">-ConfigurationName</span> <span class="n">WebAdmins</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Test what a user can do in the session</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Test-PSSessionConfigurationFile</span> <span class="n">-Path</span> <span class="s2">&quot;C:\JEA\WebAdmins.pssc&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># User connects to the JEA endpoint — only sees permitted commands</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Enter-PSSession</span> <span class="n">-ComputerName</span> <span class="n">webserver01</span> <span class="n">-ConfigurationName</span> <span class="n">WebAdmins</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Test what a user can do in the session</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Test-PSSessionConfigurationFile</span> <span class="n">-Path</span> <span class="s2">&quot;C:\JEA\WebAdmins.pssc&quot;</span>
 </code></pre></div>
 <h2 id="built-in-group-review">Built-in Group Review<a class="headerlink" href="#built-in-group-review" title="Permanent link">&para;</a></h2>
 <p>Built-in privileged groups should contain only required accounts. Review regularly.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Audit Domain Admins</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Domain Admins&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">objectClass</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Audit Administrators (local built-in)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Administrators&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># Audit Schema Admins (should be empty when not in use)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Schema Admins&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Audit Enterprise Admins</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Enterprise Admins&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c"># Audit Server Operators (can manage services and files)</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Server Operators&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c"># Audit Backup Operators (can bypass ACLs)</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Backup Operators&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Audit Domain Admins</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Domain Admins&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">objectClass</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Audit Administrators (local built-in)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Administrators&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Audit Schema Admins (should be empty when not in use)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Schema Admins&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># Audit Enterprise Admins</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Enterprise Admins&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c"># Audit Server Operators (can manage services and files)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Server Operators&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c"># Audit Backup Operators (can bypass ACLs)</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Backup Operators&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Comprehensive privileged group report</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$privilegedGroups</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;Domain Admins&quot;</span><span class="p">,</span><span class="s2">&quot;Enterprise Admins&quot;</span><span class="p">,</span><span class="s2">&quot;Schema Admins&quot;</span><span class="p">,</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="s2">&quot;Administrators&quot;</span><span class="p">,</span><span class="s2">&quot;Account Operators&quot;</span><span class="p">,</span><span class="s2">&quot;Backup Operators&quot;</span><span class="p">,</span><span class="s2">&quot;Server Operators&quot;</span><span class="p">,</span><span class="s2">&quot;Print Operators&quot;</span><span class="p">)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$group</span> <span class="k">in</span> <span class="nv">$privilegedGroups</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="nv">$members</span> <span class="p">=</span> <span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="nv">$group</span> <span class="n">-Recursive</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$members</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== $group ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="nv">$members</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">objectClass</span> <span class="p">|</span> <span class="nb">Format-Table</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="p">}</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Comprehensive privileged group report</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$privilegedGroups</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;Domain Admins&quot;</span><span class="p">,</span><span class="s2">&quot;Enterprise Admins&quot;</span><span class="p">,</span><span class="s2">&quot;Schema Admins&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="s2">&quot;Administrators&quot;</span><span class="p">,</span><span class="s2">&quot;Account Operators&quot;</span><span class="p">,</span><span class="s2">&quot;Backup Operators&quot;</span><span class="p">,</span><span class="s2">&quot;Server Operators&quot;</span><span class="p">,</span><span class="s2">&quot;Print Operators&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$group</span> <span class="k">in</span> <span class="nv">$privilegedGroups</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="nv">$members</span> <span class="p">=</span> <span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="nv">$group</span> <span class="n">-Recursive</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$members</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== $group ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Yellow</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        <span class="nv">$members</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">objectClass</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="p">}</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="file-and-share-permissions">File and Share Permissions<a class="headerlink" href="#file-and-share-permissions" title="Permanent link">&para;</a></h2>
 <h3 id="ntfs-permissions">NTFS Permissions<a class="headerlink" href="#ntfs-permissions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># View NTFS permissions on a folder</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Data\Finance&quot;</span><span class="p">).</span><span class="n">Access</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">IdentityReference</span><span class="p">,</span> <span class="n">FileSystemRights</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">IsInherited</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Grant a group read access</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Data\Finance&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAccessRule</span><span class="p">(</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="s2">&quot;CORP\FinanceReaders&quot;</span><span class="p">,</span> <span class="s2">&quot;Read&quot;</span><span class="p">,</span> <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Allow&quot;</span><span class="p">)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">AddAccessRule</span><span class="p">(</span><span class="nv">$rule</span><span class="p">)</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">Set-Acl</span> <span class="s2">&quot;C:\Data\Finance&quot;</span> <span class="nv">$acl</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c"># Remove all inherited permissions and set explicit (break inheritance)</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Data\Sensitive&quot;</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRuleProtection</span><span class="p">(</span><span class="nv">$true</span><span class="p">,</span> <span class="nv">$false</span><span class="p">)</span>   <span class="c"># isProtected=true, preserveInheritance=false</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="nb">Set-Acl</span> <span class="s2">&quot;C:\Data\Sensitive&quot;</span> <span class="nv">$acl</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># View NTFS permissions on a folder</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Data\Finance&quot;</span><span class="p">).</span><span class="n">Access</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">IdentityReference</span><span class="p">,</span> <span class="n">FileSystemRights</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">IsInherited</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Grant a group read access</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Data\Finance&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAccessRule</span><span class="p">(</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="s2">&quot;CORP\FinanceReaders&quot;</span><span class="p">,</span> <span class="s2">&quot;Read&quot;</span><span class="p">,</span> <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Allow&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">AddAccessRule</span><span class="p">(</span><span class="nv">$rule</span><span class="p">)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nb">Set-Acl</span> <span class="s2">&quot;C:\Data\Finance&quot;</span> <span class="nv">$acl</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c"># Remove all inherited permissions and set explicit (break inheritance)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Data\Sensitive&quot;</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRuleProtection</span><span class="p">(</span><span class="nv">$true</span><span class="p">,</span> <span class="nv">$false</span><span class="p">)</span>   <span class="c"># isProtected=true, preserveInheritance=false</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nb">Set-Acl</span> <span class="s2">&quot;C:\Data\Sensitive&quot;</span> <span class="nv">$acl</span>
 </code></pre></div>
 <h3 id="share-permissions">Share Permissions<a class="headerlink" href="#share-permissions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Create a share with restricted access</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">New-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Data\Finance&quot;</span> <span class="p">`</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  <span class="n">-FullAccess</span> <span class="s2">&quot;CORP\FinanceAdmins&quot;</span> <span class="p">`</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  <span class="n">-ReadAccess</span> <span class="s2">&quot;CORP\FinanceReaders&quot;</span> <span class="p">`</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  <span class="n">-NoAccess</span> <span class="s2">&quot;Everyone&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c"># View current share permissions</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nb">Get-SmbShareAccess</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c"># Revoke Everyone from a share</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nb">Revoke-SmbShareAccess</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-AccountName</span> <span class="s2">&quot;Everyone&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c"># Best practice: Share = Full Control to Authenticated Users, restrict at NTFS level</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Create a share with restricted access</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">New-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Data\Finance&quot;</span> <span class="p">`</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  <span class="n">-FullAccess</span> <span class="s2">&quot;CORP\FinanceAdmins&quot;</span> <span class="p">`</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  <span class="n">-ReadAccess</span> <span class="s2">&quot;CORP\FinanceReaders&quot;</span> <span class="p">`</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  <span class="n">-NoAccess</span> <span class="s2">&quot;Everyone&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c"># View current share permissions</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">Get-SmbShareAccess</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c"># Revoke Everyone from a share</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="nb">Revoke-SmbShareAccess</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-AccountName</span> <span class="s2">&quot;Everyone&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c"># Best practice: Share = Full Control to Authenticated Users, restrict at NTFS level</span>
 </code></pre></div>
 <h2 id="local-administrator-control">Local Administrator Control<a class="headerlink" href="#local-administrator-control" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Disable the built-in Administrator account (use LAPS-managed account instead)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Disable-LocalUser</span> <span class="n">-Name</span> <span class="s2">&quot;Administrator&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Rename the built-in Administrator (via GPO or locally)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Rename-LocalUser</span> <span class="n">-Name</span> <span class="s2">&quot;Administrator&quot;</span> <span class="n">-NewName</span> <span class="s2">&quot;CorpAdmin&quot;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c"># Rename the Guest account and disable it</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">Rename-LocalUser</span> <span class="n">-Name</span> <span class="s2">&quot;Guest&quot;</span> <span class="n">-NewName</span> <span class="s2">&quot;CorpGuest&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nb">Disable-LocalUser</span> <span class="n">-Name</span> <span class="s2">&quot;CorpGuest&quot;</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c"># View local group members (Administrators)</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c"># Remove domain user from local Administrators (clean up)</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="nb">Remove-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span> <span class="n">-Member</span> <span class="s2">&quot;CORP\jsmith&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Disable the built-in Administrator account (use LAPS-managed account instead)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Disable-LocalUser</span> <span class="n">-Name</span> <span class="s2">&quot;Administrator&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Rename the built-in Administrator (via GPO or locally)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Rename-LocalUser</span> <span class="n">-Name</span> <span class="s2">&quot;Administrator&quot;</span> <span class="n">-NewName</span> <span class="s2">&quot;CorpAdmin&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c"># Rename the Guest account and disable it</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nb">Rename-LocalUser</span> <span class="n">-Name</span> <span class="s2">&quot;Guest&quot;</span> <span class="n">-NewName</span> <span class="s2">&quot;CorpGuest&quot;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="nb">Disable-LocalUser</span> <span class="n">-Name</span> <span class="s2">&quot;CorpGuest&quot;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c"># View local group members (Administrators)</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="nb">Get-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c"># Remove domain user from local Administrators (clean up)</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="nb">Remove-LocalGroupMember</span> <span class="n">-Group</span> <span class="s2">&quot;Administrators&quot;</span> <span class="n">-Member</span> <span class="s2">&quot;CORP\jsmith&quot;</span>
 </code></pre></div>
 <h2 id="delegation-in-active-directory">Delegation in Active Directory<a class="headerlink" href="#delegation-in-active-directory" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Grant a helpdesk group permission to reset passwords in an OU</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c"># Use the Delegation of Control Wizard in ADUC, or via dsacls:</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">dsacls</span> <span class="s2">&quot;OU=Users,DC=corp,DC=local&quot;</span> <span class="p">/</span><span class="n">G</span> <span class="s2">&quot;CORP\Helpdesk:CA;Reset Password;user&quot;</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">dsacls</span> <span class="s2">&quot;OU=Users,DC=corp,DC=local&quot;</span> <span class="p">/</span><span class="n">G</span> <span class="s2">&quot;CORP\Helpdesk:CA;Change Password;user&quot;</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c"># View current delegation on an OU</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="n">dsacls</span> <span class="s2">&quot;OU=Users,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c"># View ACL via PowerShell</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="s2">&quot;AD:\OU=Users,DC=corp,DC=local&quot;</span><span class="p">).</span><span class="n">Access</span> <span class="p">|</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">IdentityReference</span> <span class="o">-like</span> <span class="s2">&quot;*Helpdesk*&quot;</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>  <span class="nb">Select-Object</span> <span class="n">IdentityReference</span><span class="p">,</span> <span class="n">ActiveDirectoryRights</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Grant a helpdesk group permission to reset passwords in an OU</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c"># Use the Delegation of Control Wizard in ADUC, or via dsacls:</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">dsacls</span> <span class="s2">&quot;OU=Users,DC=corp,DC=local&quot;</span> <span class="p">/</span><span class="n">G</span> <span class="s2">&quot;CORP\Helpdesk:CA;Reset Password;user&quot;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">dsacls</span> <span class="s2">&quot;OU=Users,DC=corp,DC=local&quot;</span> <span class="p">/</span><span class="n">G</span> <span class="s2">&quot;CORP\Helpdesk:CA;Change Password;user&quot;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c"># View current delegation on an OU</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="n">dsacls</span> <span class="s2">&quot;OU=Users,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c"># View ACL via PowerShell</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="s2">&quot;AD:\OU=Users,DC=corp,DC=local&quot;</span><span class="p">).</span><span class="n">Access</span> <span class="p">|</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">IdentityReference</span> <span class="o">-like</span> <span class="s2">&quot;*Helpdesk*&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>  <span class="nb">Select-Object</span> <span class="n">IdentityReference</span><span class="p">,</span> <span class="n">ActiveDirectoryRights</span>
 </code></pre></div>
 <h2 id="access-control-audit">Access Control Audit<a class="headerlink" href="#access-control-audit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Find all accounts with AdminCount=1 (ever been in a protected group)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">AdminCount</span> <span class="o">-eq</span> <span class="n">1</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">AdminCount</span> <span class="p">|</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">Enabled</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Enabled</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c"># Find stale admin accounts (no logon in 90 days)</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nv">$cutoff</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">90</span><span class="p">)</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">AdminCount</span> <span class="o">-eq</span> <span class="n">1</span> <span class="o">-and</span> <span class="n">LastLogonDate</span> <span class="o">-lt</span> <span class="nv">$cutoff</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  <span class="n">-Properties</span> <span class="n">LastLogonDate</span><span class="p">,</span> <span class="n">AdminCount</span> <span class="p">|</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">LastLogonDate</span><span class="p">,</span> <span class="n">Enabled</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c"># Find service accounts with Domain Admin membership</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Domain Admins&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SamAccountName</span> <span class="o">-like</span> <span class="s2">&quot;svc-*&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">SamAccountName</span> <span class="o">-like</span> <span class="s2">&quot;sa_*&quot;</span><span class="p">}</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c"># Accounts with password set to never expire (flag service accounts only)</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">PasswordNeverExpires</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="o">-and</span> <span class="n">Enabled</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>  <span class="n">-Properties</span> <span class="n">PasswordNeverExpires</span><span class="p">,</span> <span class="n">Description</span> <span class="p">|</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">Description</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Find all accounts with AdminCount=1 (ever been in a protected group)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">AdminCount</span> <span class="o">-eq</span> <span class="n">1</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">AdminCount</span> <span class="p">|</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">Enabled</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Enabled</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c"># Find stale admin accounts (no logon in 90 days)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nv">$cutoff</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">90</span><span class="p">)</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">AdminCount</span> <span class="o">-eq</span> <span class="n">1</span> <span class="o">-and</span> <span class="n">LastLogonDate</span> <span class="o">-lt</span> <span class="nv">$cutoff</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  <span class="n">-Properties</span> <span class="n">LastLogonDate</span><span class="p">,</span> <span class="n">AdminCount</span> <span class="p">|</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">LastLogonDate</span><span class="p">,</span> <span class="n">Enabled</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c"># Find service accounts with Domain Admin membership</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="nb">Get-ADGroupMember</span> <span class="s2">&quot;Domain Admins&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SamAccountName</span> <span class="o">-like</span> <span class="s2">&quot;svc-*&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">SamAccountName</span> <span class="o">-like</span> <span class="s2">&quot;sa_*&quot;</span><span class="p">}</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c"># Accounts with password set to never expire (flag service accounts only)</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">PasswordNeverExpires</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="o">-and</span> <span class="n">Enabled</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>  <span class="n">-Properties</span> <span class="n">PasswordNeverExpires</span><span class="p">,</span> <span class="n">Description</span> <span class="p">|</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">Description</span>
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
