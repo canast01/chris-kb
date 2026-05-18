@@ -1341,6 +1341,23 @@
 
 <h1 id="change-request-procedure">Change Request Procedure<a class="headerlink" href="#change-request-procedure" title="Permanent link">&para;</a></h1>
 <p>A Request for Change (RFC) documents a planned modification to infrastructure, applications, or configuration. Every non-standard change requires an RFC before implementation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Raise RFC   │   │    Classify      │   │  Impact /        │   │    Assign /     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│              │   │                  │   │  Risk Assess     │   │    Submit       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ Title / desc │   │ Standard →       │   │                  │   │                 │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ Justification│──►│ pre-approved     │──►│ Impact × Likeli  │──►│ Service owner   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│ Rollback plan│   │ Normal →         │   │ = Low/Med/High   │   │ → CAB queue     │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│ Impl steps   │   │ CAB required     │   │ Rollback tested? │   │ (5 biz days)    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│ Validation   │   │ Emergency →      │   │                  │   │                 │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└──────────────┘   │ eCAB/on-call     │   └──────────────────┘   └─────────────────┘
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                   └──────────────────┘
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                                                   ┌─────────────────────────────────┐
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                                                   │         RFC Lifecycle           │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                                                   │ Draft → Submitted → Reviewing → │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                                                   │ Approved → Scheduled →          │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                                                   │ In Progress → Completed         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                                                   └─────────────────────────────────┘
+</code></pre></div>
 <h2 id="rfc-required-fields">RFC Required Fields<a class="headerlink" href="#rfc-required-fields" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1419,35 +1436,35 @@
 </tbody>
 </table>
 <h2 id="rfc-template">RFC Template<a class="headerlink" href="#rfc-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Title:          [INFRA] Upgrade PostgreSQL 14 → 15 on db-prod-01
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Description:    In-place major version upgrade using pg_upgrade.
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Justification:  PG14 EoL November 2026; security patches no longer issued.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Systems:        db-prod-01 (CMDB: CI-4421), app-server-01 (connection pool restart)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Risk:           Medium — major version change; pg_upgrade has been tested
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Change Type:    Normal
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Window:         2026-05-12 22:00 UTC – 2026-05-13 01:00 UTC
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Rollback:       Restore from snapshot snap-xyz taken prior to upgrade; pg_upgrade preserves old cluster
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Implementation Steps:
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="k">1.</span> Take VM snapshot at 21:50 UTC
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="k">2.</span> Stop application connection pool on app-server-01
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="k">3.</span> Stop postgresql-14.service
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="k">4.</span> Run: pg_upgrade -b /usr/lib/postgresql/14/bin -B /usr/lib/postgresql/15/bin -d /var/lib/postgresql/14/main -D /var/lib/postgresql/15/main
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="k">5.</span> Start postgresql-15.service
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="k">6.</span> Run ./analyze_new_cluster.sh
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="k">7.</span> Start application connection pool
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="k">8.</span> Smoke test: psql -c &quot;SELECT version();&quot; and application health check
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Validation:
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>psql SELECT version() returns PostgreSQL 15.x
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>Application health endpoint returns HTTP 200
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>Error rate = 0% for 30 min post-restart
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Rollback Steps:
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="k">1.</span> Stop postgresql-15
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span><span class="k">2.</span> Restore VM to snapshot snap-xyz
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span><span class="k">3.</span> Start postgresql-14
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span><span class="k">4.</span> Notify stakeholders
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Title:          [INFRA] Upgrade PostgreSQL 14 → 15 on db-prod-01
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Description:    In-place major version upgrade using pg_upgrade.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Justification:  PG14 EoL November 2026; security patches no longer issued.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Systems:        db-prod-01 (CMDB: CI-4421), app-server-01 (connection pool restart)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Risk:           Medium — major version change; pg_upgrade has been tested
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Change Type:    Normal
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Window:         2026-05-12 22:00 UTC – 2026-05-13 01:00 UTC
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Rollback:       Restore from snapshot snap-xyz taken prior to upgrade; pg_upgrade preserves old cluster
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Implementation Steps:
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="k">1.</span> Take VM snapshot at 21:50 UTC
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="k">2.</span> Stop application connection pool on app-server-01
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="k">3.</span> Stop postgresql-14.service
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="k">4.</span> Run: pg_upgrade -b /usr/lib/postgresql/14/bin -B /usr/lib/postgresql/15/bin -d /var/lib/postgresql/14/main -D /var/lib/postgresql/15/main
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="k">5.</span> Start postgresql-15.service
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="k">6.</span> Run ./analyze_new_cluster.sh
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="k">7.</span> Start application connection pool
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="k">8.</span> Smoke test: psql -c &quot;SELECT version();&quot; and application health check
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Validation:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>psql SELECT version() returns PostgreSQL 15.x
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>Application health endpoint returns HTTP 200
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>Error rate = 0% for 30 min post-restart
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Rollback Steps:
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span><span class="k">1.</span> Stop postgresql-15
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">  </span><span class="k">2.</span> Restore VM to snapshot snap-xyz
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">  </span><span class="k">3.</span> Start postgresql-14
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">  </span><span class="k">4.</span> Notify stakeholders
 </code></pre></div>
 <h2 id="rfc-submission-process">RFC Submission Process<a class="headerlink" href="#rfc-submission-process" title="Permanent link">&para;</a></h2>
 <ol>
@@ -1488,9 +1505,9 @@
 </tbody>
 </table>
 <h2 id="rfc-status-lifecycle">RFC Status Lifecycle<a class="headerlink" href="#rfc-status-lifecycle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Draft → Submitted → Under Review → Approved / Rejected / Deferred
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                                         ↓
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                                   Scheduled → In Progress → Completed / Rolled Back
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Draft → Submitted → Under Review → Approved / Rejected / Deferred
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                                         ↓
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                                   Scheduled → In Progress → Completed / Rolled Back
 </code></pre></div>
 
 
