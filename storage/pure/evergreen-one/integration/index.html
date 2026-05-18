@@ -1340,6 +1340,29 @@
 
 
 <h1 id="pure-storage-evergreenone-integration">Pure Storage Evergreen//One Integration<a class="headerlink" href="#pure-storage-evergreenone-integration" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Evergreen//One Integration Landscape
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ┌───────────────┐   phonehome    ┌────────────────────┐
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  FlashArray / │──HTTPS 443────►│  Pure1 Portal      │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  FlashBlade   │◄───────────────│  SLA / Capacity /  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  (Pure-owned) │  telemetry     │  Health / Alerts   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  └───────┬───────┘                └────────┬───────────┘
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>          │                                 │ REST API
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>          │ FC/iSCSI/NVMe/NFS               ▼
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>          ▼                        ┌────────────────────┐
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  ┌───────────────┐                │  FinOps / CMDB /   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  vSphere /    │◄── VASA/VAAI   │  Billing systems   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  ESXi hosts   │                └────────────────────┘
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  └───────┬───────┘
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>          │ SRM / vVols
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>          ▼
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  ┌───────────────┐                ┌────────────────────┐
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  VMware SRM   │                │  Backup tools      │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  (DR orchestr)│                │  Veeam / Commvault │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  └───────────────┘                │  Rubrik / NetBackup│
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                                   └────────────────────┘
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  Snapshot capacity counts toward monthly consumption total
+</code></pre></div>
 <h2 id="pure1-integration">Pure1 Integration<a class="headerlink" href="#pure1-integration" title="Permanent link">&para;</a></h2>
 <p>Pure1 (https://pure1.purestorage.com) is the central management and reporting platform for all Evergreen//One deployments. Unlike standard Evergreen where Pure1 is a monitoring complement to local array management, for Evergreen//One Pure1 is the primary operational interface for the customer. All capacity reporting, SLA compliance tracking, billing data, and lifecycle management flow through Pure1.</p>
 <p>Key Pure1 capabilities for Evergreen//One:</p>
@@ -1431,9 +1454,9 @@
 </ul>
 <p>Confirm with the service agreement whether direct API access to the array management interface is included or requires Pure Support involvement.</p>
 <p>The <strong>Pure1 REST API</strong> is the preferred integration point for service-level data (capacity, SLA, billing) and does not require access to the individual array management interface:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Example: retrieve array metrics via Pure1 API</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;pure1-api-key&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/metrics?names=array_total_load&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Example: retrieve array metrics via Pure1 API</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;pure1-api-key&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.x/metrics?names=array_total_load&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <p>Use the Pure1 API for integration with FinOps platforms, CMDB automation, and capacity planning tools to avoid dependency on per-array management access.</p>
 

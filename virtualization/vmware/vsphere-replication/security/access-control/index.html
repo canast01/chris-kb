@@ -1362,6 +1362,23 @@
 
 
 <h1 id="vsphere-replication-access-control">vSphere Replication — Access Control<a class="headerlink" href="#vsphere-replication-access-control" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  vSphere Replication RBAC (via vCenter)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  AD Groups              vCenter Custom Roles                  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌────────────────┐     ┌───────────────────────────────┐    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ CORP\VR-       │────►│ VR-Operator                   │    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  Operators     │     │  vSphere Replication → Monitor│    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │                │     │  vSphere Replication → Manage │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  ├────────────────┤     ├───────────────────────────────┤    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │ CORP\DR-       │────►│ VR-Recovery                   │    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  Recovery-Team │     │  + vSphere Replication → Recover│  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │                │     │  (highest privilege — DR team)│    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  └────────────────┘     └───────────────────────────────┘    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                              │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  VRA local accounts: admin (VAMI) / root (SSH)               │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Change default passwords immediately after deployment       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="vsphere-replication-uses-vcenter-rbac">vSphere Replication Uses vCenter RBAC<a class="headerlink" href="#vsphere-replication-uses-vcenter-rbac" title="Permanent link">&para;</a></h2>
 <p>vSphere Replication has no separate user store. All access control is managed through vCenter permissions using VR-specific privileges.</p>
@@ -1391,25 +1408,25 @@
 </table>
 <hr />
 <h2 id="recommended-role-assignments">Recommended Role Assignments<a class="headerlink" href="#recommended-role-assignments" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter → Administration → Roles → Create Custom Role
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Role: VR-Operator
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Privileges:
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    vSphere Replication → Monitor
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    vSphere Replication → Manage
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    Virtual machine → Inventory (view)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    Datastore → Browse
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Role: VR-Recovery
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  Privileges (adds to VR-Operator):
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    vSphere Replication → Recover
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    Virtual machine → Provisioning → Deploy template
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    Virtual machine → Interaction → Power On
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → Administration → Roles → Create Custom Role
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Role: VR-Operator
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Privileges:
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    vSphere Replication → Monitor
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    vSphere Replication → Manage
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    Virtual machine → Inventory (view)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    Datastore → Browse
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Role: VR-Recovery
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Privileges (adds to VR-Operator):
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    vSphere Replication → Recover
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    Virtual machine → Provisioning → Deploy template
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    Virtual machine → Interaction → Power On
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → Administration → Global Permissions → Add Permission
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Group: CORP\VR-Operators → Role: VR-Operator
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Group: CORP\DR-Recovery-Team → Role: VR-Recovery
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Propagate: Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → Administration → Global Permissions → Add Permission
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Group: CORP\VR-Operators → Role: VR-Operator
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Group: CORP\DR-Recovery-Team → Role: VR-Recovery
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Propagate: Yes
 </code></pre></div>
 <hr />
 <h2 id="vra-appliance-admin-credentials">VRA Appliance Admin Credentials<a class="headerlink" href="#vra-appliance-admin-credentials" title="Permanent link">&para;</a></h2>
@@ -1433,7 +1450,7 @@
 </tbody>
 </table>
 <p>Change default admin password immediately after deployment:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VRA VAMI → Administration → Change Admin Password
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>VRA VAMI → Administration → Change Admin Password
 </code></pre></div></p>
 <p>Restrict SSH access to VRA to jump host IPs only (see Hardening page).</p>
 <hr />
@@ -1499,7 +1516,7 @@
 <hr />
 <h2 id="audit-access-to-recovery-operations">Audit Access to Recovery Operations<a class="headerlink" href="#audit-access-to-recovery-operations" title="Permanent link">&para;</a></h2>
 <p>All VR recovery operations are logged as vCenter events. Monitor:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Monitor → Events → filter by &quot;vr.&quot; (vSphere Replication events prefix)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Monitor → Events → filter by &quot;vr.&quot; (vSphere Replication events prefix)
 </code></pre></div>
 <p>Key events to alert on:
 - Recovery initiated (especially outside of planned maintenance windows)

@@ -1545,6 +1545,34 @@
 
 
 <h1 id="nsx-install-upgrade">NSX — Install &amp; Upgrade<a class="headerlink" href="#nsx-install-upgrade" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│              NSX Upgrade Sequence (Critical Order)          │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├─────────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                             │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Step 1: NSX Manager Cluster (3 nodes, rolling)            │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  Manager-01  │  │  Manager-02  │  │  Manager-03  │      │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  upgrade ►   │  │  upgrade ►   │  │  upgrade ►   │      │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  reboot      │  │  reboot      │  │  reboot      │      │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └──────────────┘  └──────────────┘  └──────────────┘      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│         VIP migrates between available nodes ▼             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Step 2: Edge Nodes (BGP reconvergence expected)           │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  ┌──────────────────────┐   ┌──────────────────────┐       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  Edge-Standby first  │──►│  Edge-Active upgrades │       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  upgrades + reboots  │   │  T0 fails over        │       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └──────────────────────┘   └──────────────────────┘       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│         BGP reconverges &lt; 30 sec (with BFD) ▼             │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                             │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Step 3: ESXi Transport Nodes (host-by-host, rolling)     │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐           │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  │ Host-1 │  │ Host-2 │  │ Host-3 │  │  ...   │           │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  │ VIBs   │  │ VIBs   │  │ VIBs   │  │        │           │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  │upgrade │  │upgrade │  │upgrade │  │        │           │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  └────────┘  └────────┘  └────────┘  └────────┘           │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  DRS migrates VMs; no manual maintenance mode needed       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="version-support-matrix">Version Support Matrix<a class="headerlink" href="#version-support-matrix" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1619,29 +1647,29 @@
 <p>Repeat for nodes 2 and 3. The first node deployed becomes the primary.</p>
 <h3 id="form-the-nsx-manager-cluster">Form the NSX Manager Cluster<a class="headerlink" href="#form-the-nsx-manager-cluster" title="Permanent link">&para;</a></h3>
 <p>After deploying all three nodes, join nodes 2 and 3 to the cluster:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to node 2</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nsxcli
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Join to the cluster (provide node 1&#39;s IP and certificate thumbprint)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>join<span class="w"> </span>management-plane<span class="w"> </span>&lt;node1-ip&gt;<span class="w"> </span>username<span class="w"> </span>admin<span class="w"> </span>thumbprint<span class="w"> </span>&lt;node1-thumbprint&gt;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Get node 1&#39;s thumbprint from node 1 CLI:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>get<span class="w"> </span>certificate<span class="w"> </span>api<span class="w"> </span>thumbprint
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to node 2</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nsxcli
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Join to the cluster (provide node 1&#39;s IP and certificate thumbprint)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>join<span class="w"> </span>management-plane<span class="w"> </span>&lt;node1-ip&gt;<span class="w"> </span>username<span class="w"> </span>admin<span class="w"> </span>thumbprint<span class="w"> </span>&lt;node1-thumbprint&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Get node 1&#39;s thumbprint from node 1 CLI:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>get<span class="w"> </span>certificate<span class="w"> </span>api<span class="w"> </span>thumbprint
 </code></pre></div>
 <p>After joining, verify on node 1:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>get<span class="w"> </span>managers
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Should list all 3 nodes with status CONNECTED</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Management Cluster Status: STABLE</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>get<span class="w"> </span>managers
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Should list all 3 nodes with status CONNECTED</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Management Cluster Status: STABLE</span>
 </code></pre></div>
 <h3 id="configure-virtual-ip-vip">Configure Virtual IP (VIP)<a class="headerlink" href="#configure-virtual-ip-vip" title="Permanent link">&para;</a></h3>
 <p>The VIP is the single management IP/FQDN used by all clients. All API and UI traffic goes to the VIP.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the cluster (from any node)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">set</span><span class="w"> </span>cluster<span class="w"> </span>virtual-ip<span class="w"> </span>&lt;vip-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>get<span class="w"> </span>cluster<span class="w"> </span>virtual-ip
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the cluster (from any node)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">set</span><span class="w"> </span>cluster<span class="w"> </span>virtual-ip<span class="w"> </span>&lt;vip-ip&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>get<span class="w"> </span>cluster<span class="w"> </span>virtual-ip
 </code></pre></div>
 <p>DNS for the NSX Manager FQDN (e.g., <code>nsx-manager.corp.local</code>) must point to this VIP.</p>
 <h3 id="register-vcenter-compute-manager">Register vCenter Compute Manager<a class="headerlink" href="#register-vcenter-compute-manager" title="Permanent link">&para;</a></h3>
@@ -1720,10 +1748,10 @@
 <h3 id="create-tep-ip-pool">Create TEP IP Pool<a class="headerlink" href="#create-tep-ip-pool" title="Permanent link">&para;</a></h3>
 <p><strong>Networking → IP Management → IP Address Pools → Add</strong></p>
 <p>Configure one pool per subnet:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Name: pool-tep-compute
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Subnet: 192.168.200.0/24
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Gateway: 192.168.200.1
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>IP Ranges: 192.168.200.10–192.168.200.254
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Name: pool-tep-compute
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Subnet: 192.168.200.0/24
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Gateway: 192.168.200.1
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>IP Ranges: 192.168.200.10–192.168.200.254
 </code></pre></div>
 <h3 id="create-host-transport-node-profile">Create Host Transport Node Profile<a class="headerlink" href="#create-host-transport-node-profile" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Profiles → Host Transport Node Profiles → Add</strong></p>
@@ -1735,11 +1763,11 @@
 <h3 id="apply-profile-to-vsphere-cluster">Apply Profile to vSphere Cluster<a class="headerlink" href="#apply-profile-to-vsphere-cluster" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Hosts → Configure NSX</strong></p>
 <p>Select the vCenter cluster and attach the Transport Node Profile. NSX prepares all hosts in the cluster. Monitor progress in the <strong>Configuration</strong> column — each host transitions through <code>In Progress</code> → <code>Success</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify from Manager CLI after preparation</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nsxcli
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>get<span class="w"> </span>transport-nodes
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>get<span class="w"> </span>transport-node-status
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># All hosts should show &quot;UP&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify from Manager CLI after preparation</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nsxcli
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>get<span class="w"> </span>transport-nodes
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>get<span class="w"> </span>transport-node-status
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># All hosts should show &quot;UP&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="nsx-manager-upgrade">NSX Manager Upgrade<a class="headerlink" href="#nsx-manager-upgrade" title="Permanent link">&para;</a></h2>
@@ -1762,20 +1790,20 @@
 </ol>
 <h3 id="upgrade-order-critical">Upgrade Order (Critical)<a class="headerlink" href="#upgrade-order-critical" title="Permanent link">&para;</a></h3>
 <p>NSX components must be upgraded in this sequence:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>1. NSX Manager (all 3 nodes) — control plane first
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2. Edge Nodes — north-south gateway impact; BGP reconverges
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>3. ESXi Transport Nodes (host-by-host) — data plane impact; rolling
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>1. NSX Manager (all 3 nodes) — control plane first
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>2. Edge Nodes — north-south gateway impact; BGP reconverges
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>3. ESXi Transport Nodes (host-by-host) — data plane impact; rolling
 </code></pre></div>
 <p><strong>Never upgrade Edge nodes before NSX Manager.</strong> The upgrade coordinator in the UI enforces this order.</p>
 <h3 id="upgrading-nsx-manager-nodes">Upgrading NSX Manager Nodes<a class="headerlink" href="#upgrading-nsx-manager-nodes" title="Permanent link">&para;</a></h3>
 <p>The upgrade coordinator upgrades one Manager node at a time. The cluster VIP migrates to an available node during each node's upgrade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Upgrade node 1 → node 1 reboots (cluster VIP on node 2 or 3)
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Upgrade node 2 → node 2 reboots
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Upgrade node 3 → node 3 reboots
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Upgrade node 1 → node 1 reboots (cluster VIP on node 2 or 3)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Upgrade node 2 → node 2 reboots
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Upgrade node 3 → node 3 reboots
 </code></pre></div>
 <p>Monitor via UI <strong>System → Upgrade → Upgrade Coordinator</strong> or via API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/upgrade/status-summary&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/upgrade/status-summary&quot;</span>
 </code></pre></div>
 <h3 id="upgrading-edge-nodes">Upgrading Edge Nodes<a class="headerlink" href="#upgrading-edge-nodes" title="Permanent link">&para;</a></h3>
 <p>Edge node upgrade causes BGP reconvergence. For ACTIVE_STANDBY T0 gateways:</p>
@@ -1786,10 +1814,10 @@
 <li>BGP reconverges (typically &lt; 30 seconds with BFD)</li>
 </ol>
 <p>Verify after Edge upgrade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On Edge node CLI</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>get<span class="w"> </span>version
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># All peers should be Established</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># On Edge node CLI</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>get<span class="w"> </span>version
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># All peers should be Established</span>
 </code></pre></div>
 <h3 id="upgrading-esxi-transport-nodes">Upgrading ESXi Transport Nodes<a class="headerlink" href="#upgrading-esxi-transport-nodes" title="Permanent link">&para;</a></h3>
 <p>ESXi transport node upgrade applies NSX VIB updates to each host. The host does not need to reboot for VIB updates in most patch releases, but major version upgrades require a reboot.</p>
@@ -1805,37 +1833,37 @@
 <li>Edge and host VIBs may need manual rollback — contact VMware Support</li>
 </ol>
 <p>Backup restore procedure: <strong>System → Backup &amp; Restore → Restore</strong> — the restore wipes the current NSX Manager cluster and replaces it with the backup state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify backup is restorable before the upgrade window</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Check backup files are present on SFTP server</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Confirm the passphrase is stored and accessible</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify backup is restorable before the upgrade window</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Check backup files are present on SFTP server</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Confirm the passphrase is stored and accessible</span>
 </code></pre></div>
 <hr />
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
 <p>Run these checks after each upgrade phase completes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># NSX Manager cluster health</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>nsxcli
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>get<span class="w"> </span>managers
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>get<span class="w"> </span>services
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Transport node health</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Check: up_count equals total_count</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Edge cluster health and BGP</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># SSH to each Edge node</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>get<span class="w"> </span>version<span class="w">                    </span><span class="c1"># Confirm new version</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">        </span><span class="c1"># All peers Established</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status<span class="w">         </span><span class="c1"># Active/Standby state confirmed</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Open alarms</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># Should return result_count: 0</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># DFW rule push</span>
-<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="c1"># Verify a test VM can still communicate as expected after upgrade</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># NSX Manager cluster health</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>nsxcli
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>get<span class="w"> </span>managers
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>get<span class="w"> </span>services
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Transport node health</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Check: up_count equals total_count</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Edge cluster health and BGP</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># SSH to each Edge node</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>get<span class="w"> </span>version<span class="w">                    </span><span class="c1"># Confirm new version</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">        </span><span class="c1"># All peers Established</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status<span class="w">         </span><span class="c1"># Active/Standby state confirmed</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Open alarms</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="c1"># Should return result_count: 0</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="c1"># DFW rule push</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="c1"># Verify a test VM can still communicate as expected after upgrade</span>
 </code></pre></div>
 
 

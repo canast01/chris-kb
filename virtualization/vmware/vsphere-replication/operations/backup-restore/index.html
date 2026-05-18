@@ -1362,6 +1362,26 @@
 
 
 <h1 id="vsphere-replication-backup-and-restore">vSphere Replication — Backup and Restore<a class="headerlink" href="#vsphere-replication-backup-and-restore" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  VR Backup Strategy
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  VRA Appliance                                               │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────────────────────────────────────┐    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ Config lives in vCenter DB ──► covered by VCSA backup│    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │ Snapshot before changes (govc snapshot.create)       │    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │ OVF export for cold backup / migration               │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │ VAMI config download (network, certs, registration)  │    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  └──────────────────────────────────────────────────────┘    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                              │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Replication data on target datastore                        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ┌──────────────────────────────────────────────────────┐    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │ .vrepl files = replica point-in-time images          │    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │ NOT a traditional backup — use for VM recovery       │    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │ Protected by target-site datastore redundancy (vSAN) │    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └──────────────────────────────────────────────────────┘    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                              │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Recovery: vCenter → Site Recovery → Replications → Recover  │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="what-to-back-up">What to Back Up<a class="headerlink" href="#what-to-back-up" title="Permanent link">&para;</a></h2>
 <table>
@@ -1403,29 +1423,29 @@
 <hr />
 <h2 id="vra-pre-upgrade-snapshot">VRA Pre-Upgrade Snapshot<a class="headerlink" href="#vra-pre-upgrade-snapshot" title="Permanent link">&para;</a></h2>
 <p>Always take a snapshot before upgrading or making significant changes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter → [VRA VM] → Snapshots → Take Snapshot
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Name: Pre-Upgrade-VRA-&lt;date&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Description: Pre-upgrade snapshot — VRA version &lt;current&gt;
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Memory: No (VRA is a stateless appliance — memory snapshot not needed)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → [VRA VM] → Snapshots → Take Snapshot
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Name: Pre-Upgrade-VRA-&lt;date&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Description: Pre-upgrade snapshot — VRA version &lt;current&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Memory: No (VRA is a stateless appliance — memory snapshot not needed)
 </code></pre></div>
 <p>Delete snapshot after confirming upgrade is successful (within 48 hours).</p>
 <hr />
 <h2 id="vra-configuration-backup-via-ovf-export">VRA Configuration Backup via OVF Export<a class="headerlink" href="#vra-configuration-backup-via-ovf-export" title="Permanent link">&para;</a></h2>
 <p>For a full appliance backup:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → [VRA VM] → right-click → Export OVF Template
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Format: Folder of files (OVF)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Destination: &lt;shared storage or SCP&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → [VRA VM] → right-click → Export OVF Template
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Format: Folder of files (OVF)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Destination: &lt;shared storage or SCP&gt;
 </code></pre></div>
 <p>Store OVF in a location accessible from both sites. This captures VM disk state including all configuration.</p>
 <hr />
 <h2 id="recover-a-vm-using-vsphere-replication-standalone">Recover a VM Using vSphere Replication (Standalone)<a class="headerlink" href="#recover-a-vm-using-vsphere-replication-standalone" title="Permanent link">&para;</a></h2>
 <p>When not using SRM, manual recovery from vSphere Replication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter (Target Site) → Site Recovery → Replications → [VM replication] → Recover
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Recovery type: Recovery to the configured target location
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Power state: Power on after recovery
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Recovery point: select from available recovery point instances
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>OR: &quot;Recover to alternate location&quot; to recover to a different datastore/host
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter (Target Site) → Site Recovery → Replications → [VM replication] → Recover
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Recovery type: Recovery to the configured target location
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Power state: Power on after recovery
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Recovery point: select from available recovery point instances
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>OR: &quot;Recover to alternate location&quot; to recover to a different datastore/host
 </code></pre></div>
 <p>Recovery destroys the replication relationship — re-configure replication after recovery if you want to continue replicating back.</p>
 <hr />
@@ -1437,16 +1457,16 @@
 <li>Older instances are replaced by newer ones automatically</li>
 </ul>
 <p>To change the number of recovery points:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → [VM] → right-click → Configure Replication → Edit
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Recovery point instances: 1–24
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → [VM] → right-click → Configure Replication → Edit
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Recovery point instances: 1–24
 </code></pre></div></p>
 <p>More instances = more disk space consumed at target site.</p>
 <hr />
 <h2 id="restore-vra-from-snapshot">Restore VRA from Snapshot<a class="headerlink" href="#restore-vra-from-snapshot" title="Permanent link">&para;</a></h2>
 <p>If VRA appliance has an issue after a change:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → [VRA VM] → Snapshots → Manage Snapshots
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Select pre-change snapshot → Revert
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Power on VRA
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → [VRA VM] → Snapshots → Manage Snapshots
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Select pre-change snapshot → Revert
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Power on VRA
 </code></pre></div>
 <p>After reverting, verify site pairing is still connected (VRA VAMI → Configuration).</p>
 <hr />

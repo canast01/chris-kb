@@ -1613,6 +1613,27 @@
 
 
 <h1 id="srm-design-standards">SRM — Design Standards<a class="headerlink" href="#srm-design-standards" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Replication Topology + Recovery Plan Structure
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Protected Site               Recovery Site                  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌────────────┐               ┌────────────┐                 │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ VMs on     │──VR/SRA──────►│ Replica    │                 │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │ replicated │  (RPO target) │ VMDKs      │                 │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │ datastore  │               └────────────┘                 │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └────────────┘                                              │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                              │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Recovery Plan (priority groups):                            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ┌───────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │  Priority 1: DCs / DNS / DHCP  ──► power on first    │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  Priority 2: Database servers  ──► wait for P1 done  │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  Priority 3: App servers       ──► wait for P2 done  │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  Priority 4: Web / LB          ──► wait for P3 done  │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  Priority 5: Non-critical      ──► last              │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └───────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                              │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Network Mapping: Protected VLAN ──► Recovery VLAN / Test    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="srm-server-sizing">SRM Server Sizing<a class="headerlink" href="#srm-server-sizing" title="Permanent link">&para;</a></h2>
 <h3 id="srm-appliance-8x">SRM Appliance (8.x+)<a class="headerlink" href="#srm-appliance-8x" title="Permanent link">&para;</a></h3>
 <p>VMware ships SRM as an OVA appliance from version 8.x. Sizing is based on the number of protected VMs.</p>
@@ -1843,29 +1864,29 @@
 <h3 id="shadow-port-groups">Shadow Port Groups<a class="headerlink" href="#shadow-port-groups" title="Permanent link">&para;</a></h3>
 <p>For every production VLAN at the protected site, create a corresponding port group at the recovery site. Common patterns:</p>
 <p><strong>Option A: Same VLAN IDs</strong> — If WAN connectivity is re-routed and the recovery site switches can accommodate the same VLAN IDs:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected: dvPG-App-VLAN100  →  Recovery: dvPG-App-VLAN100
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Protected: dvPG-DB-VLAN200   →  Recovery: dvPG-DB-VLAN200
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Protected: dvPG-App-VLAN100  →  Recovery: dvPG-App-VLAN100
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Protected: dvPG-DB-VLAN200   →  Recovery: dvPG-DB-VLAN200
 </code></pre></div>
 VMs retain their IPs. Routing updates (BGP, static routes) redirect traffic to recovery site.</p>
 <p><strong>Option B: Different VLAN IDs, same IP subnets</strong> — Recovery site uses different physical VLANs but same IP subnets (extended L3 or re-advertising the subnets):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Protected: dvPG-App-VLAN100 (10.10.0.0/24)  →  Recovery: dvPG-App-VLAN500 (10.10.0.0/24)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Protected: dvPG-App-VLAN100 (10.10.0.0/24)  →  Recovery: dvPG-App-VLAN500 (10.10.0.0/24)
 </code></pre></div>
 No IP customization needed. Requires routing coordination.</p>
 <p><strong>Option C: Different subnets with IP re-addressing</strong> — Recovery site uses entirely different IP ranges:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Protected: 10.10.0.0/24  →  Recovery: 10.20.0.0/24
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Protected: 10.10.0.0/24  →  Recovery: 10.20.0.0/24
 </code></pre></div>
 Requires SRM IP customization rules (subnet-level mapping). DNS updates required at recovery.</p>
 <h3 id="test-network-design">Test Network Design<a class="headerlink" href="#test-network-design" title="Permanent link">&para;</a></h3>
 <p>For test failovers, create isolated port groups with no uplink assignment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dvPG-SRM-Test-App     (no uplink — isolated bubble)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dvPG-SRM-Test-DB      (no uplink — isolated bubble)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dvPG-SRM-Test-App     (no uplink — isolated bubble)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dvPG-SRM-Test-DB      (no uplink — isolated bubble)
 </code></pre></div>
 <p>Map protected-site production port groups → isolated test port groups in SRM's test network mapping (separate from the production failover mapping). This prevents test VMs from reaching production systems.</p>
 <hr />
 <h2 id="ip-customization-strategy">IP Customization Strategy<a class="headerlink" href="#ip-customization-strategy" title="Permanent link">&para;</a></h2>
 <h3 id="when-to-use-subnet-level-mapping">When to Use Subnet-Level Mapping<a class="headerlink" href="#when-to-use-subnet-level-mapping" title="Permanent link">&para;</a></h3>
 <p>Best for large environments where subnets map cleanly between sites:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Source subnet: 10.10.0.0/24  →  Target subnet: 10.20.0.0/24
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Source subnet: 10.10.0.0/24  →  Target subnet: 10.20.0.0/24
 </code></pre></div>
 <p>All VMs with static IPs in <code>10.10.0.x</code> will be re-addressed to <code>10.20.0.x</code> (same host portion). Configure in SRM UI: Recovery Plan → IP Customization → <strong>Subnet Mappings</strong>.</p>
 <h3 id="when-to-use-per-vm-customization">When to Use Per-VM Customization<a class="headerlink" href="#when-to-use-per-vm-customization" title="Permanent link">&para;</a></h3>
@@ -2018,12 +2039,12 @@ Requires SRM IP customization rules (subnet-level mapping). DNS updates required
 </tbody>
 </table>
 <h3 id="bandwidth-estimation-for-vr">Bandwidth Estimation for VR<a class="headerlink" href="#bandwidth-estimation-for-vr" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Required bandwidth (Mbps) = (Daily change rate GB × 8192) / (86400 × efficiency factor)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Efficiency factor: 0.7 (compression enabled), 0.5 (no compression)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Example:
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>VM daily change rate = 50 GB
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>With compression: (50 × 8192) / (86400 × 0.7) = 6.8 Mbps
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Required bandwidth (Mbps) = (Daily change rate GB × 8192) / (86400 × efficiency factor)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Efficiency factor: 0.7 (compression enabled), 0.5 (no compression)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Example:
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>VM daily change rate = 50 GB
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>With compression: (50 × 8192) / (86400 × 0.7) = 6.8 Mbps
 </code></pre></div>
 <hr />
 <h2 id="test-frequency-recommendations">Test Frequency Recommendations<a class="headerlink" href="#test-frequency-recommendations" title="Permanent link">&para;</a></h2>

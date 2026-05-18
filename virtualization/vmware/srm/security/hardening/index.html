@@ -1384,24 +1384,44 @@
 
 
 <h1 id="srm-hardening">SRM — Hardening<a class="headerlink" href="#srm-hardening" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  SRM Hardening Controls
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Network Restrictions        Access Controls                 │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────┐    ┌──────────────────────────┐    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ SRM ← only from:     │    │ Separate config role from │    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  vCenter TCP 443     │    │  run role:                │    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  Remote SRM TCP 9086 │    │  SRM Admin: config+run   │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  Mgmt WS TCP 443     │    │  DR RunTeam: run only    │    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  └──────────────────────┘    └──────────────────────────┘    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                              │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Test Network Isolation      Credential Rotation             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ┌──────────────────────┐    ┌──────────────────────────┐    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │ Isolated portgroup:  │    │ SRA API token: rotate    │    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  no uplinks assigned │    │  quarterly               │    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │ Test VMs must NOT    │    │ 1. New token on array    │    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  reach production    │    │ 2. Update in SRM         │    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └──────────────────────┘    │ 3. Delete old token      │    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                              └──────────────────────────┘    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="restrict-srm-server-network-access">Restrict SRM Server Network Access<a class="headerlink" href="#restrict-srm-server-network-access" title="Permanent link">&para;</a></h2>
 <p>SRM Server should only be reachable from:
 - vCenter Servers (both sites) — TCP 443, TCP 9086
 - Remote SRM Server — TCP 9086
 - Management workstations — TCP 443</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Windows firewall rules on SRM Server:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-Name</span> <span class="s2">&quot;SRM-vCenter&quot;</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Allow vCenter to SRM&quot;</span> <span class="p">`</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">443</span><span class="p">,</span><span class="n">9086</span> <span class="p">`</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">100</span>  <span class="c"># vCenter IP</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-Name</span> <span class="s2">&quot;SRM-RemoteSRM&quot;</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Allow Remote SRM&quot;</span> <span class="p">`</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">9086</span> <span class="p">`</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">20</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">101</span>  <span class="c"># Remote SRM Server IP (recovery site)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-Name</span> <span class="s2">&quot;SRM-Mgmt&quot;</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Allow Management Hosts&quot;</span> <span class="p">`</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">443</span> <span class="p">`</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">/</span><span class="n">24</span>  <span class="c"># Management subnet</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Windows firewall rules on SRM Server:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-Name</span> <span class="s2">&quot;SRM-vCenter&quot;</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Allow vCenter to SRM&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">443</span><span class="p">,</span><span class="n">9086</span> <span class="p">`</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">100</span>  <span class="c"># vCenter IP</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-Name</span> <span class="s2">&quot;SRM-RemoteSRM&quot;</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Allow Remote SRM&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">9086</span> <span class="p">`</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">20</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">101</span>  <span class="c"># Remote SRM Server IP (recovery site)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-Name</span> <span class="s2">&quot;SRM-Mgmt&quot;</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Allow Management Hosts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">443</span> <span class="p">`</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">/</span><span class="n">24</span>  <span class="c"># Management subnet</span>
 </code></pre></div>
 <hr />
 <h2 id="least-privilege-sra-service-accounts">Least-Privilege SRA Service Accounts<a class="headerlink" href="#least-privilege-sra-service-accounts" title="Permanent link">&para;</a></h2>
@@ -1410,77 +1430,77 @@
 - Create API token with role: <code>readonly</code> for SRA discovery
 - Create separate API token with role: <code>array_admin</code> only for failover operations
 - Use the read-only token for normal operations; only use admin token during DR</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On FlashArray (CLI):</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureapitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>srm-readonly<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pureapitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>srm-failover<span class="w"> </span>--role<span class="w"> </span>storage_admin
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Use srm-readonly token in SRA — update to srm-failover only during DR</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On FlashArray (CLI):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureapitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>srm-readonly<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pureapitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>srm-failover<span class="w"> </span>--role<span class="w"> </span>storage_admin
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Use srm-readonly token in SRA — update to srm-failover only during DR</span>
 </code></pre></div>
 <hr />
 <h2 id="rotate-sra-credentials">Rotate SRA Credentials<a class="headerlink" href="#rotate-sra-credentials" title="Permanent link">&para;</a></h2>
 <p>Rotate array credentials in SRM on a regular schedule (quarterly or when personnel changes):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Create new API token / password on storage array
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter → Update credentials
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Test: Site Recovery → Storage → Array Pairs → Discover Devices (verify discovery succeeds)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>4. Delete old token / change old password on array
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>5. Repeat for recovery site SRM Server
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Create new API token / password on storage array
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter → Update credentials
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. Test: Site Recovery → Storage → Array Pairs → Discover Devices (verify discovery succeeds)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>4. Delete old token / change old password on array
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>5. Repeat for recovery site SRM Server
 </code></pre></div>
 <hr />
 <h2 id="test-recovery-plans-regularly">Test Recovery Plans Regularly<a class="headerlink" href="#test-recovery-plans-regularly" title="Permanent link">&para;</a></h2>
 <p>Monthly testing is the single most effective hardening measure for DR:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Site Recovery → Recovery Plans → [plan] → Test
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Frequency: monthly minimum for critical plans, quarterly for non-critical
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Document: pass/fail, duration, issues found, actions taken
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Site Recovery → Recovery Plans → [plan] → Test
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Frequency: monthly minimum for critical plans, quarterly for non-critical
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Document: pass/fail, duration, issues found, actions taken
 </code></pre></div>
 <p>An untested recovery plan is not a recovery plan — it's a guess.</p>
 <hr />
 <h2 id="restrict-who-can-execute-recovery">Restrict Who Can Execute Recovery<a class="headerlink" href="#restrict-who-can-execute-recovery" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Administration → Global Permissions
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  DR Run Team: Site Recovery Recovery Admin role (can execute plans, cannot configure)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  SRM Admins: Site Recovery Administrator role (can configure and execute)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Process: DR execution requires approval from two DR team members (documented in runbook)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Administration → Global Permissions
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  DR Run Team: Site Recovery Recovery Admin role (can execute plans, cannot configure)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  SRM Admins: Site Recovery Administrator role (can configure and execute)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Process: DR execution requires approval from two DR team members (documented in runbook)
 </code></pre></div>
 <hr />
 <h2 id="secure-recovery-site-network-design">Secure Recovery Site Network Design<a class="headerlink" href="#secure-recovery-site-network-design" title="Permanent link">&para;</a></h2>
 <p>Test failover uses an "isolated network" — verify it is truly isolated:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter (Recovery Site) → Networking → [isolated portgroup] → 
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Verify: no uplinks assigned (isolated portgroup = no physical NIC)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  OR: dedicated VLAN with all-deny firewall rule at switch
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>If test VMs can ping production IPs, the test network is NOT isolated.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vCenter (Recovery Site) → Networking → [isolated portgroup] → 
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Verify: no uplinks assigned (isolated portgroup = no physical NIC)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  OR: dedicated VLAN with all-deny firewall rule at switch
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>If test VMs can ping production IPs, the test network is NOT isolated.
 </code></pre></div>
 <hr />
 <h2 id="windows-hardening-of-srm-server">Windows Hardening of SRM Server<a class="headerlink" href="#windows-hardening-of-srm-server" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Disable unused services on SRM Server OS</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Stop-Service</span> <span class="n">-Name</span> <span class="s2">&quot;RemoteRegistry&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="s2">&quot;RemoteRegistry&quot;</span> <span class="n">-StartupType</span> <span class="n">Disabled</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Configure NTP</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;ntp.corp.local&quot;</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">update</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Enable Windows Defender or your corporate AV (with exclusions):</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Exclude: C:\Program Files\VMware\VMware vCenter Site Recovery Manager\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Disable unused services on SRM Server OS</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Stop-Service</span> <span class="n">-Name</span> <span class="s2">&quot;RemoteRegistry&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="s2">&quot;RemoteRegistry&quot;</span> <span class="n">-StartupType</span> <span class="n">Disabled</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Configure NTP</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;ntp.corp.local&quot;</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">update</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Enable Windows Defender or your corporate AV (with exclusions):</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Exclude: C:\Program Files\VMware\VMware vCenter Site Recovery Manager\</span>
 </code></pre></div>
 <hr />
 <h2 id="audit-recovery-plan-changes">Audit Recovery Plan Changes<a class="headerlink" href="#audit-recovery-plan-changes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter → Monitor → Events
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Filter: &quot;drm&quot; events (all SRM events)
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Alert on: Recovery Plan configuration changes, SRA credential updates
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Export weekly audit report:
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>vCenter → Monitor → Events → Export → filter by &quot;drm&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter → Monitor → Events
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Filter: &quot;drm&quot; events (all SRM events)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Alert on: Recovery Plan configuration changes, SRA credential updates
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Export weekly audit report:
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>vCenter → Monitor → Events → Export → filter by &quot;drm&quot;
 </code></pre></div>
 <hr />
 <h2 id="review-and-remove-stale-protection-groups">Review and Remove Stale Protection Groups<a class="headerlink" href="#review-and-remove-stale-protection-groups" title="Permanent link">&para;</a></h2>
 <p>Quarterly: audit protection groups for VMs that have been decommissioned:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="nv">$vmNames</span> <span class="p">=</span> <span class="nv">$vms</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">Vm</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">Name</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;PG: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> — VMs: </span><span class="p">$(</span><span class="nv">$vmNames</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Cross-reference with current VM inventory — remove protection for decommissioned VMs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nv">$vmNames</span> <span class="p">=</span> <span class="nv">$vms</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">Vm</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">Name</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;PG: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> — VMs: </span><span class="p">$(</span><span class="nv">$vmNames</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">}</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Cross-reference with current VM inventory — remove protection for decommissioned VMs</span>
 </code></pre></div>
 
 

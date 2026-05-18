@@ -1395,36 +1395,56 @@
 
 
 <h1 id="vsphere-replication-procedures">vSphere Replication — Procedures<a class="headerlink" href="#vsphere-replication-procedures" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Key Operational Procedures
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Configure Replication           Monitor + Manage            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────┐        ┌──────────────────────┐    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ vCenter → [VM] →     │        │ Pause / Resume       │    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  Configure Replication│       │ Sync Now (immediate) │    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  RPO: 5min–24hrs      │       │ Change RPO           │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  Target DS + VRS      │       │ Change target DS     │    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  Quiesce / encrypt    │       └──────────────────────┘    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └──────────────────────┘                                    │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                              │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Recover VM (standalone)         Add to SRM Protection Group │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ┌──────────────────────┐        ┌──────────────────────┐    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │ Target Site vCenter  │        │ 1. Configure VR on VM│    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │ → Replications →     │        │ 2. Wait for initial  │    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │   Recover            │        │    sync (status: OK) │    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │   (Test or actual)   │        │ 3. SRM → PG → Add VMs│    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  └──────────────────────┘        └──────────────────────┘    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="configure-replication-on-a-vm">Configure Replication on a VM<a class="headerlink" href="#configure-replication-on-a-vm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter → [VM] → right-click → vSphere Replication → Configure
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Step 1: Target site
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    Select: amsterdam (recovery site)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  Step 2: Target location
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    vCenter: vcenter-amsterdam.corp.local
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    Datastore: target-datastore-01
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  Step 3: Replication settings
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    RPO: 1 Hour (range: 5 minutes – 24 hours)
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    Recovery point instances: 3 (range: 1–24)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    Quiesce: Yes (for application consistency — requires VMware Tools)
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    Network compression: Yes (reduces bandwidth, adds CPU)
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    Encryption: Yes (if replicating over WAN)
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    VRS: Auto (or select specific VRS)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  Step 4: Seeds
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    Use existing data at target (if VM was previously copied to target site): saves initial sync time
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  → Finish
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → [VM] → right-click → vSphere Replication → Configure
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Step 1: Target site
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    Select: amsterdam (recovery site)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Step 2: Target location
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    vCenter: vcenter-amsterdam.corp.local
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    Datastore: target-datastore-01
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Step 3: Replication settings
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    RPO: 1 Hour (range: 5 minutes – 24 hours)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    Recovery point instances: 3 (range: 1–24)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    Quiesce: Yes (for application consistency — requires VMware Tools)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    Network compression: Yes (reduces bandwidth, adds CPU)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    Encryption: Yes (if replicating over WAN)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    VRS: Auto (or select specific VRS)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  Step 4: Seeds
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    Use existing data at target (if VM was previously copied to target site): saves initial sync time
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  → Finish
 </code></pre></div>
 <p>Initial sync begins immediately. Monitor in Site Recovery → Replications.</p>
 <hr />
 <h2 id="change-rpo-for-a-replicated-vm">Change RPO for a Replicated VM<a class="headerlink" href="#change-rpo-for-a-replicated-vm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Edit
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  RPO: change to new value
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  → OK → effective immediately
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Edit
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  RPO: change to new value
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  → OK → effective immediately
 </code></pre></div>
 <hr />
 <h2 id="add-vm-to-srm-protection-group-after-vr-configured">Add VM to SRM Protection Group After VR Configured<a class="headerlink" href="#add-vm-to-srm-protection-group-after-vr-configured" title="Permanent link">&para;</a></h2>
@@ -1433,61 +1453,61 @@
 <li>Configure VR replication on the VM (see above)</li>
 <li>Wait for initial sync to complete (status: OK)</li>
 <li>Then:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SRM → Protection → Protection Groups → [VR-based group] → Add VMs
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Select: the newly replicated VM
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SRM → Protection → Protection Groups → [VR-based group] → Add VMs
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Select: the newly replicated VM
 </code></pre></div></li>
 </ol>
 <hr />
 <h2 id="pause-and-resume-replication">Pause and Resume Replication<a class="headerlink" href="#pause-and-resume-replication" title="Permanent link">&para;</a></h2>
 <p>Pause replication temporarily (e.g., during storage maintenance):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Pause
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Pause
 </code></pre></div>
 <p>Resume:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Resume
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a># VM resumes from last sync point — only delta changes replicated after resume
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Resume
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a># VM resumes from last sync point — only delta changes replicated after resume
 </code></pre></div></p>
 <hr />
 <h2 id="recover-a-vm-standalone-vr">Recover a VM (Standalone VR)<a class="headerlink" href="#recover-a-vm-standalone-vr" title="Permanent link">&para;</a></h2>
 <p>For recovery without SRM — manual process:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter (Target Site) → Site Recovery → Replications → [VM]
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  → Recover
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    Recovery type: Recovery (destructive — intended for actual DR)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    Recovery Point: select from available instances
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    Target host/cluster/resource pool: select at recovery site
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    Power on after recovery: Yes
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>OR for testing (non-destructive):
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    Recovery type: Test (creates a copy in an isolated network)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vCenter (Target Site) → Site Recovery → Replications → [VM]
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  → Recover
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    Recovery type: Recovery (destructive — intended for actual DR)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    Recovery Point: select from available instances
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    Target host/cluster/resource pool: select at recovery site
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    Power on after recovery: Yes
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>OR for testing (non-destructive):
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    Recovery type: Test (creates a copy in an isolated network)
 </code></pre></div>
 <p>After recovery, the replication relationship is terminated. Re-configure replication if you want to replicate back (reverse protection).</p>
 <hr />
 <h2 id="change-replication-target-datastore">Change Replication Target Datastore<a class="headerlink" href="#change-replication-target-datastore" title="Permanent link">&para;</a></h2>
 <p>Move replica files to a different datastore at the target site:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Edit
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Target Location: change to new datastore
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  → OK
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Edit
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Target Location: change to new datastore
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  → OK
 </code></pre></div>
 <p>VR migrates the replica files to the new datastore during the next sync cycle. No replication interruption.</p>
 <hr />
 <h2 id="remove-replication-from-a-vm">Remove Replication from a VM<a class="headerlink" href="#remove-replication-from-a-vm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Remove Replication
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Remove replica files: Yes (clean up .vrepl/.hbr files from target) — recommended
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  OR: No (keep files — useful if you plan to use them as a seed for re-configuration)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Remove Replication
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Remove replica files: Yes (clean up .vrepl/.hbr files from target) — recommended
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  OR: No (keep files — useful if you plan to use them as a seed for re-configuration)
 </code></pre></div>
 <p>After removing, the replica VMDK files on the target datastore are deleted (if "Yes" selected).</p>
 <hr />
 <h2 id="force-sync-initial-sync-for-large-vms">Force Sync (Initial Sync for Large VMs)<a class="headerlink" href="#force-sync-initial-sync-for-large-vms" title="Permanent link">&para;</a></h2>
 <p>For VMs with large disks, the initial full sync can take many hours. Schedule during off-peak:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter → Site Recovery → Replications → [VM] → Sync Now
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vCenter → Site Recovery → Replications → [VM] → Sync Now
 </code></pre></div>
 <p>This triggers an out-of-schedule sync. The VM must not be powered off during sync unless quiescing.</p>
 <hr />
 <h2 id="add-a-vrs-to-distribute-load">Add a VRS to Distribute Load<a class="headerlink" href="#add-a-vrs-to-distribute-load" title="Permanent link">&para;</a></h2>
 <p>When a VRA is handling &gt;400 VMs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vCenter → Site Recovery → vSphere Replication → Replication Servers → Deploy VRS
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>After deploying VRS, reassign VMs to VRS:
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  Replications → [VM] → Edit → VRS: select specific VRS or Auto
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vCenter → Site Recovery → vSphere Replication → Replication Servers → Deploy VRS
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>After deploying VRS, reassign VMs to VRS:
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  Replications → [VM] → Edit → VRS: select specific VRS or Auto
 </code></pre></div>
 <p>Auto-assignment spreads new replications across all available VRS instances.</p>
 <hr />
@@ -1497,7 +1517,7 @@
 <li>Migrate all VM replications to a different VRA/VRS (Edit → change VRS assignment)</li>
 <li>Verify zero replications remain on the VRA</li>
 <li>Unregister from vCenter:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>VRA VAMI → Configuration → vCenter Server → Unregister
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>VRA VAMI → Configuration → vCenter Server → Unregister
 </code></pre></div></li>
 <li>Power off and delete the VRA VM from vCenter</li>
 </ol>

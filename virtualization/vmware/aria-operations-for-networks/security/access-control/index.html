@@ -1373,6 +1373,29 @@
 
 
 <h1 id="aria-operations-for-networks-access-control">Aria Operations for Networks — Access Control<a class="headerlink" href="#aria-operations-for-networks-access-control" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────── Aria Networks RBAC Model ──────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                 │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Identity source ──► LDAP/AD or vIDM SAML                                      │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│      │                                                                          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│      ▼                                                                          │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  Role assignment (Settings ► Authentication ► Role Mappings)                   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  AD Group: vRNI-Admins   ──► Super Admin   (full config access)         │  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  AD Group: vRNI-NetOps   ──► Network Eng.  (view flows/topology)        │  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  AD Group: vRNI-SecOps   ──► Security Eng. (view + push microseg)       │  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  AD Group: vRNI-Audit    ──► Auditor        (read-only all data)         │  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  └──────────────────────────────────────────────────────────────────────────┘  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                 │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Service accounts (minimum privilege)                                           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  vCenter: svc-vrni-vc   ──► Read Only role (propagate to root)          │  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │  NSX-T:   svc-vrni-nsx  ──► Auditor role (read-only)                   │  │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │  API tokens: named + scoped + expiry set ── stored in secrets manager   │  │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └──────────────────────────────────────────────────────────────────────────┘  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                 │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Network: Platform VM port 443 ── management VLAN only (no prod VLAN access)   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h2>
 <table>
@@ -1413,47 +1436,47 @@
 </table>
 <hr />
 <h2 id="ldap-active-directory-integration">LDAP / Active Directory Integration<a class="headerlink" href="#ldap-active-directory-integration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Settings → Authentication → LDAP → Configure
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Server URL:     ldaps://dc01.corp.local:636
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Base DN:        DC=corp,DC=local
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  Bind DN:        CN=svc-vrni,OU=ServiceAccounts,DC=corp,DC=local
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  Bind Password:  &lt;service account password&gt;
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  User Attribute: sAMAccountName
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Group Attribute: memberOf
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  Test Connection → &quot;Connection successful&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Settings → Authentication → LDAP → Configure
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Server URL:     ldaps://dc01.corp.local:636
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Base DN:        DC=corp,DC=local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Bind DN:        CN=svc-vrni,OU=ServiceAccounts,DC=corp,DC=local
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Bind Password:  &lt;service account password&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  User Attribute: sAMAccountName
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  Group Attribute: memberOf
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  Test Connection → &quot;Connection successful&quot;
 </code></pre></div>
 <p>Map AD groups to roles:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Settings → Authentication → Role Mappings → Add Mapping
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  CN=vRNI-Admins,OU=Groups,DC=corp,DC=local → Super Admin
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  CN=vRNI-NetOps,OU=Groups,DC=corp,DC=local → Network Engineer
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  CN=vRNI-SecOps,OU=Groups,DC=corp,DC=local → Security Engineer
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  CN=vRNI-Audit,OU=Groups,DC=corp,DC=local  → Auditor
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Settings → Authentication → Role Mappings → Add Mapping
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  CN=vRNI-Admins,OU=Groups,DC=corp,DC=local → Super Admin
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  CN=vRNI-NetOps,OU=Groups,DC=corp,DC=local → Network Engineer
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  CN=vRNI-SecOps,OU=Groups,DC=corp,DC=local → Security Engineer
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  CN=vRNI-Audit,OU=Groups,DC=corp,DC=local  → Auditor
 </code></pre></div>
 <hr />
 <h2 id="local-user-management">Local User Management<a class="headerlink" href="#local-user-management" title="Permanent link">&para;</a></h2>
 <p>Local users are managed via UI only (Settings → Users → Add User). The built-in <code>admin@local</code> account cannot be deleted.</p>
 <p>Change default admin password immediately after deployment:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Settings → My Account → Change Password
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Settings → My Account → Change Password
 </code></pre></div></p>
 <p>Disable unused local accounts:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Settings → Users → [user] → Deactivate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Settings → Users → [user] → Deactivate
 </code></pre></div></p>
 <hr />
 <h2 id="api-token-management">API Token Management<a class="headerlink" href="#api-token-management" title="Permanent link">&para;</a></h2>
 <p>Tokens authenticate REST API clients without using user credentials:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Settings → API Tokens → Generate Token
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Name:   &lt;descriptive name&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Role:   &lt;minimum required role&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Expiry: &lt;explicit date — set a reminder to rotate&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Settings → API Tokens → Generate Token
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Name:   &lt;descriptive name&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Role:   &lt;minimum required role&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Expiry: &lt;explicit date — set a reminder to rotate&gt;
 </code></pre></div>
 <p>Revoke tokens when no longer needed:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Settings → API Tokens → [token] → Revoke
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Settings → API Tokens → [token] → Revoke
 </code></pre></div></p>
 <p>API usage:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="s2">&quot;https://vrni.corp.local/api/ni/data-sources/vcenters&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="s2">&quot;https://vrni.corp.local/api/ni/data-sources/vcenters&quot;</span>
 </code></pre></div></p>
 <hr />
 <h2 id="network-level-access-control">Network-Level Access Control<a class="headerlink" href="#network-level-access-control" title="Permanent link">&para;</a></h2>
@@ -1523,22 +1546,22 @@
 <p>Restrict Platform VM port 443 to management VLAN only — deny direct access from production VLANs.</p>
 <hr />
 <h2 id="vcenter-service-account-minimum-privilege">vCenter Service Account (Minimum Privilege)<a class="headerlink" href="#vcenter-service-account-minimum-privilege" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter → Administration → Global Permissions → Add Permission
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  User: svc-vrni-vc@corp.local
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Role: Read Only
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Propagate to children: Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter → Administration → Global Permissions → Add Permission
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  User: svc-vrni-vc@corp.local
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Role: Read Only
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Propagate to children: Yes
 </code></pre></div>
 <hr />
 <h2 id="nsx-t-service-account-minimum-privilege">NSX-T Service Account (Minimum Privilege)<a class="headerlink" href="#nsx-t-service-account-minimum-privilege" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>NSX-T Manager → System → User Management → Add User
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Username: svc-vrni-nsx
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Role: Auditor (read-only)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>NSX-T Manager → System → User Management → Add User
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Username: svc-vrni-nsx
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Role: Auditor (read-only)
 </code></pre></div>
 <p>Never use NSX admin credentials — vRNI only reads topology. A separate account with NSX security group write access is needed only if you push microsegmentation recommendations back to NSX.</p>
 <hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All admin actions are logged. Access via:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Settings → Audit Logs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Settings → Audit Logs
 </code></pre></div></p>
 <p>Forward to SIEM via syslog (Settings → Notifications → Syslog). Alert on:
 - Failed login attempts

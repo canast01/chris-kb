@@ -1373,6 +1373,19 @@
 
 
 <h1 id="horizon-encryption">Horizon — Encryption<a class="headerlink" href="#horizon-encryption" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  TLS Encryption Path: Client to Desktop
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Horizon     │─────────────►│  UAG      │────────────►│  Connection      │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Client      │  443 (HTTPS)│  (DMZ)    │  443/proxy  │  Server          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  (external)  │             └───────────┘             └──────────────────┘
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└──────────────┘                                                 │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                                                        TLS / Blast AES-256
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>┌──────────────┐  Blast AES  ┌───────────┐                      ▼
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  (Blast)     │             └───────────┘              │  (Blast agent)   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└──────────────┘                                        └──────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="display-protocol-encryption">Display Protocol Encryption<a class="headerlink" href="#display-protocol-encryption" title="Permanent link">&para;</a></h2>
 <table>
@@ -1402,35 +1415,35 @@
 </tbody>
 </table>
 <p>Set Blast cipher strength via Horizon group policy (ADMX templates):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Computer Configuration → Policies → VMware Blast
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Encryption Algorithms: AES-256-GCM:AES-128-GCM
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  H264 Encoding: Enabled (reduce bandwidth without reducing encryption)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Computer Configuration → Policies → VMware Blast
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Encryption Algorithms: AES-256-GCM:AES-128-GCM
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  H264 Encoding: Enabled (reduce bandwidth without reducing encryption)
 </code></pre></div></p>
 <hr />
 <h2 id="connection-server-certificate">Connection Server Certificate<a class="headerlink" href="#connection-server-certificate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Install PFX certificate on Connection Server</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="s2">&quot;horizon-cs01.pfx&quot;</span> <span class="n">-CertStoreLocation</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;pfxpassword&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Get thumbprint of installed cert</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-match</span> <span class="s2">&quot;horizon-cs01&quot;</span> <span class="p">}</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Update Horizon Connection Server to use the new cert:</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Windows Certificate Manager → Lock the cert for vdm service:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Set the Friendly Name to &quot;vdm&quot; on the certificate</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Restart VMware Horizon View Connection Server service</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="s2">&quot;VMwareVDMDS&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Install PFX certificate on Connection Server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="s2">&quot;horizon-cs01.pfx&quot;</span> <span class="n">-CertStoreLocation</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;pfxpassword&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Get thumbprint of installed cert</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-match</span> <span class="s2">&quot;horizon-cs01&quot;</span> <span class="p">}</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Update Horizon Connection Server to use the new cert:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Windows Certificate Manager → Lock the cert for vdm service:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Set the Friendly Name to &quot;vdm&quot; on the certificate</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Restart VMware Horizon View Connection Server service</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="s2">&quot;VMwareVDMDS&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="uag-certificate">UAG Certificate<a class="headerlink" href="#uag-certificate" title="Permanent link">&para;</a></h2>
 <p>UAG serves the HTTPS termination point for external connections. Replace the self-signed cert:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Option 1: Via UAG Admin UI (port 9443) → SSL Server Certificate → Upload</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Upload PKCS12 (.pfx) or PEM (cert + key)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Option 2: Via UAG REST API</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://uag.corp.local:9443/rest/v1/config/certs/ssl&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/path/to/uag.pfx&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;password=pfxpassword&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Option 1: Via UAG Admin UI (port 9443) → SSL Server Certificate → Upload</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Upload PKCS12 (.pfx) or PEM (cert + key)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Option 2: Via UAG REST API</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://uag.corp.local:9443/rest/v1/config/certs/ssl&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/path/to/uag.pfx&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;password=pfxpassword&quot;</span>
 </code></pre></div>
 <p>UAG requires separate certificates for:
 - HTTPS admin interface (port 9443)
@@ -1438,21 +1451,21 @@
 <hr />
 <h2 id="clipboard-encryption-and-control">Clipboard Encryption and Control<a class="headerlink" href="#clipboard-encryption-and-control" title="Permanent link">&para;</a></h2>
 <p>Clipboard direction can be restricted via GPO to prevent data exfiltration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Group Policy → Computer Configuration → Policies → VMware Blast
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Clipboard Redirection:
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    - Disabled: no clipboard between client and desktop
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    - Client to Agent only: paste from client → desktop, not reverse
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    - Agent to Client only: paste from desktop → client, not reverse
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    - Enabled (bidirectional): default — not recommended for sensitive data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Group Policy → Computer Configuration → Policies → VMware Blast
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Clipboard Redirection:
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    - Disabled: no clipboard between client and desktop
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    - Client to Agent only: paste from client → desktop, not reverse
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    - Agent to Client only: paste from desktop → client, not reverse
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    - Enabled (bidirectional): default — not recommended for sensitive data
 </code></pre></div>
 <p>For high-security environments: set to "Client to Agent only" — users can copy instructions into the desktop but cannot exfiltrate data by copying out.</p>
 <hr />
 <h2 id="usb-redirection-encryption">USB Redirection Encryption<a class="headerlink" href="#usb-redirection-encryption" title="Permanent link">&para;</a></h2>
 <p>USB traffic is tunneled through the Blast or PCoIP protocol connection (encrypted). Restrict USB device types via policy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Group Policy → User Configuration → VMware Horizon Client Configuration → USB
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Allow USB Redirection: Enabled
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Exclude Device Family: Storage (block USB mass storage to prevent data exfiltration)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Allow specific VID/PID: &lt;CAC reader VID:PID&gt; (allow smart card readers only)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Group Policy → User Configuration → VMware Horizon Client Configuration → USB
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Allow USB Redirection: Enabled
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Exclude Device Family: Storage (block USB mass storage to prevent data exfiltration)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Allow specific VID/PID: &lt;CAC reader VID:PID&gt; (allow smart card readers only)
 </code></pre></div>
 <hr />
 <h2 id="persistent-disk-encryption">Persistent Disk Encryption<a class="headerlink" href="#persistent-disk-encryption" title="Permanent link">&para;</a></h2>
@@ -1465,21 +1478,21 @@
 <p>App Volumes writable volumes (VHD/VMDK files on a datastore) are not encrypted by default — protect via vSAN or datastore encryption.</p>
 <hr />
 <h2 id="tls-version-enforcement-on-connection-server">TLS Version Enforcement on Connection Server<a class="headerlink" href="#tls-version-enforcement-on-connection-server" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Restrict TLS on Connection Server to 1.2 and 1.3 only</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Edit locked.properties file:</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$lockedProps</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\VMware\VMware View\Server\sslgateway\conf\locked.properties&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Add-Content</span> <span class="nv">$lockedProps</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">sslprotocols=TLSv1.2,TLSv1.3&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Add-Content</span> <span class="nv">$lockedProps</span> <span class="s2">&quot;enabledCipherSuites=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Restart Connection Server service</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">Restart-Service</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Restrict TLS on Connection Server to 1.2 and 1.3 only</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Edit locked.properties file:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$lockedProps</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\VMware\VMware View\Server\sslgateway\conf\locked.properties&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Add-Content</span> <span class="nv">$lockedProps</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">sslprotocols=TLSv1.2,TLSv1.3&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Add-Content</span> <span class="nv">$lockedProps</span> <span class="s2">&quot;enabledCipherSuites=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Restart Connection Server service</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Restart-Service</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="drive-mapping-encryption">Drive Mapping Encryption<a class="headerlink" href="#drive-mapping-encryption" title="Permanent link">&para;</a></h2>
 <p>Drive redirection (mapping client drives in the desktop) goes through the encrypted display protocol tunnel. To disable drive mapping entirely for compliance:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Group Policy → Computer Configuration → VMware Horizon Agent
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Drive Redirection: Disabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Group Policy → Computer Configuration → VMware Horizon Agent
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Drive Redirection: Disabled
 </code></pre></div>
 
 

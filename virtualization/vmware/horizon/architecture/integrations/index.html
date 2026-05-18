@@ -1613,6 +1613,22 @@
 
 
 <h1 id="horizon-integrations">Horizon — Integrations<a class="headerlink" href="#horizon-integrations" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   Active     │   │   vCenter    │   │     NSX      │   │ Workspace ONE│
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Directory   │   │  (vSphere)   │   │  (segments)  │   │ Access/vIDM  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌────────┐  │   │  ┌────────┐  │   │  ┌────────┐  │   │  ┌────────┐  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ Auth / │  │   │  │ Pool   │  │   │  │Desktop │  │   │  │ True   │  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │ GPO /  │  │   │  │ prov.  │  │   │  │  VLAN  │  │   │  │ SSO /  │  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │ Groups │  │   │  │ IC fork│  │   │  │segmt.  │  │   │  │ SAML   │  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └───┬────┘  │   │  └───┬────┘  │   │  └───┬────┘  │   │  └───┬────┘  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└──────┼───────┘   └──────┼───────┘   └──────┼───────┘   └──────┼───────┘
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>       └──────────────────┴──────────────────┴──────────────────┘
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                                    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                          ┌─────────▼──────────┐
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                          │   Connection Server │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                          │  + App Volumes Mgr  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                          └─────────────────────┘
+</code></pre></div>
 <h2 id="active-directory">Active Directory<a class="headerlink" href="#active-directory" title="Permanent link">&para;</a></h2>
 <p>Active Directory is a hard dependency — Connection Server must be domain-joined. Horizon uses AD for:</p>
 <ul>
@@ -1624,22 +1640,22 @@
 </ul>
 <h3 id="connection-server-domain-join">Connection Server Domain Join<a class="headerlink" href="#connection-server-domain-join" title="Permanent link">&para;</a></h3>
 <p>The Connection Server is a standard domain member. Install Windows Server, join the domain, then install Horizon Connection Server software.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify domain join before CS install</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="no">[System.DirectoryServices.ActiveDirectory.Domain]</span><span class="p">::</span><span class="n">GetCurrentDomain</span><span class="p">()</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check DNS resolves AD DCs</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">nslookup</span> <span class="n">_ldap</span><span class="p">.</span><span class="n">_tcp</span><span class="p">.</span><span class="n">dc</span><span class="p">.</span><span class="n">_msdcs</span><span class="p">.&lt;</span><span class="n">your-domain</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify domain join before CS install</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="no">[System.DirectoryServices.ActiveDirectory.Domain]</span><span class="p">::</span><span class="n">GetCurrentDomain</span><span class="p">()</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check DNS resolves AD DCs</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">nslookup</span> <span class="n">_ldap</span><span class="p">.</span><span class="n">_tcp</span><span class="p">.</span><span class="n">dc</span><span class="p">.</span><span class="n">_msdcs</span><span class="p">.&lt;</span><span class="n">your-domain</span><span class="p">&gt;</span>
 </code></pre></div>
 <h3 id="horizon-admx-group-policy-templates">Horizon ADMX Group Policy Templates<a class="headerlink" href="#horizon-admx-group-policy-templates" title="Permanent link">&para;</a></h3>
 <p>Templates are located in the Horizon install media under <code>VMware-Horizon-Extras-Bundle\GPO</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VMware Horizon Client Configuration.admx
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VMware Horizon Agent Configuration.admx
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>VMware DEM Configuration.admx
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>VMware App Volumes.admx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VMware Horizon Client Configuration.admx
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>VMware Horizon Agent Configuration.admx
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>VMware DEM Configuration.admx
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>VMware App Volumes.admx
 </code></pre></div>
 <p><strong>Import into Group Policy:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>copy *.admx \\&lt;domain&gt;\SYSVOL\&lt;domain&gt;\Policies\PolicyDefinitions\
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>copy en-US\*.adml \\&lt;domain&gt;\SYSVOL\&lt;domain&gt;\Policies\PolicyDefinitions\en-US\
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>copy *.admx \\&lt;domain&gt;\SYSVOL\&lt;domain&gt;\Policies\PolicyDefinitions\
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>copy en-US\*.adml \\&lt;domain&gt;\SYSVOL\&lt;domain&gt;\Policies\PolicyDefinitions\en-US\
 </code></pre></div></p>
 <p>Key GPO paths (in GPMC):
 - <code>Computer Configuration &gt; Administrative Templates &gt; VMware Blast</code> — display protocol settings
@@ -1673,8 +1689,8 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dsacls &quot;OU=Horizon-Desktops,DC=corp,DC=example,DC=com&quot; /I:S /G &quot;CORP\svc-horizon-ic:CCDC;Computer&quot;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dsacls &quot;OU=Horizon-Desktops,DC=corp,DC=example,DC=com&quot; /I:S /G &quot;CORP\svc-horizon-ic:WP;;Computer&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dsacls &quot;OU=Horizon-Desktops,DC=corp,DC=example,DC=com&quot; /I:S /G &quot;CORP\svc-horizon-ic:CCDC;Computer&quot;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dsacls &quot;OU=Horizon-Desktops,DC=corp,DC=example,DC=com&quot; /I:S /G &quot;CORP\svc-horizon-ic:WP;;Computer&quot;
 </code></pre></div>
 <hr />
 <h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
@@ -1733,19 +1749,19 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — create and assign the role</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Connect-VIServer</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">$privIds</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  <span class="s2">&quot;VirtualMachine.Snapshot.Create&quot;</span><span class="p">,</span><span class="s2">&quot;VirtualMachine.Snapshot.RemoveAll&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="s2">&quot;VirtualMachine.Provisioning.Clone&quot;</span><span class="p">,</span><span class="s2">&quot;VirtualMachine.Provisioning.DeployTemplate&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span><span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  <span class="s2">&quot;VirtualMachine.Config.AddRemoveDevice&quot;</span><span class="p">,</span><span class="s2">&quot;Datastore.AllocateSpace&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="s2">&quot;Network.Assign&quot;</span><span class="p">,</span><span class="s2">&quot;Resource.AssignVMToPool&quot;</span><span class="p">,</span><span class="s2">&quot;Host.Local.ReconfigVM&quot;</span><span class="p">,</span><span class="s2">&quot;Global.DisableMethods&quot;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;Horizon-Service&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$privIds</span><span class="p">)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-Production&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  <span class="n">-Principal</span> <span class="s2">&quot;CORP\svc-horizon-vc&quot;</span> <span class="n">-Role</span> <span class="s2">&quot;Horizon-Service&quot;</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI — create and assign the role</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Connect-VIServer</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">$privIds</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="s2">&quot;VirtualMachine.Snapshot.Create&quot;</span><span class="p">,</span><span class="s2">&quot;VirtualMachine.Snapshot.RemoveAll&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="s2">&quot;VirtualMachine.Provisioning.Clone&quot;</span><span class="p">,</span><span class="s2">&quot;VirtualMachine.Provisioning.DeployTemplate&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span><span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  <span class="s2">&quot;VirtualMachine.Config.AddRemoveDevice&quot;</span><span class="p">,</span><span class="s2">&quot;Datastore.AllocateSpace&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  <span class="s2">&quot;Network.Assign&quot;</span><span class="p">,</span><span class="s2">&quot;Resource.AssignVMToPool&quot;</span><span class="p">,</span><span class="s2">&quot;Host.Local.ReconfigVM&quot;</span><span class="p">,</span><span class="s2">&quot;Global.DisableMethods&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;Horizon-Service&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$privIds</span><span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-Production&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  <span class="n">-Principal</span> <span class="s2">&quot;CORP\svc-horizon-vc&quot;</span> <span class="n">-Role</span> <span class="s2">&quot;Horizon-Service&quot;</span> <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
 <hr />
 <h2 id="vsan-integration">vSAN Integration<a class="headerlink" href="#vsan-integration" title="Permanent link">&para;</a></h2>
@@ -1759,12 +1775,12 @@
 <li>Thin provisioning: Instant Clone children are thin by design</li>
 <li>Enable vSAN deduplication and compression — desktop OS disks deduplicate heavily (50–70% savings typical)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Create a vSAN storage policy for desktop OS disks</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span><span class="nb">Get-SpbmCapability</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span><span class="p">)</span> <span class="n">-Value</span> <span class="n">1</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span><span class="nb">Get-SpbmCapability</span> <span class="s2">&quot;VSAN.stripeWidth&quot;</span><span class="p">)</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;Horizon-Desktop-OS-FTT1&quot;</span> <span class="n">-RuleSet</span> <span class="nv">$rule</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Create a vSAN storage policy for desktop OS disks</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span><span class="nb">Get-SpbmCapability</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span><span class="p">)</span> <span class="n">-Value</span> <span class="n">1</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="nb">New-SpbmRule</span> <span class="n">-Capability</span> <span class="p">(</span><span class="nb">Get-SpbmCapability</span> <span class="s2">&quot;VSAN.stripeWidth&quot;</span><span class="p">)</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;Horizon-Desktop-OS-FTT1&quot;</span> <span class="n">-RuleSet</span> <span class="nv">$rule</span>
 </code></pre></div>
 <hr />
 <h2 id="app-volumes-integration">App Volumes Integration<a class="headerlink" href="#app-volumes-integration" title="Permanent link">&para;</a></h2>
@@ -1805,19 +1821,19 @@
 <li>Assign AppStacks to users/groups/OUs/computers in App Volumes Manager</li>
 </ol>
 <h3 id="silent-agent-install-in-golden-image">Silent Agent Install in Golden Image<a class="headerlink" href="#silent-agent-install-in-golden-image" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>msiexec /i &quot;App Volumes Agent.msi&quot; /qn REBOOT=ReallySuppress ^
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  CLOUDVOLUMES_MANAGER_ADDR=appvol-mgr.corp.example.com ^
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  CLOUDVOLUMES_MANAGER_PORT=443
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>msiexec /i &quot;App Volumes Agent.msi&quot; /qn REBOOT=ReallySuppress ^
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  CLOUDVOLUMES_MANAGER_ADDR=appvol-mgr.corp.example.com ^
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  CLOUDVOLUMES_MANAGER_PORT=443
 </code></pre></div>
 <h3 id="appstack-vmdk-datastore-layout">AppStack VMDK Datastore Layout<a class="headerlink" href="#appstack-vmdk-datastore-layout" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>[SAN-Datastore01] cloudvolumes/
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  apps/
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    Office365-2406.vmdk
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    AdobeAcrobat-DC.vmdk
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    AutoCAD-2025.vmdk
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  writables/
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    CORP_jsmith.vmdk
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    CORP_jdoe.vmdk
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>[SAN-Datastore01] cloudvolumes/
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  apps/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    Office365-2406.vmdk
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    AdobeAcrobat-DC.vmdk
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    AutoCAD-2025.vmdk
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  writables/
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    CORP_jsmith.vmdk
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    CORP_jdoe.vmdk
 </code></pre></div>
 <hr />
 <h2 id="dynamic-environment-manager-dem-integration">Dynamic Environment Manager (DEM) Integration<a class="headerlink" href="#dynamic-environment-manager-dem-integration" title="Permanent link">&para;</a></h2>
@@ -1832,9 +1848,9 @@
 <ol>
 <li>
 <p>Create and share DEM Config Share:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="s2">&quot;D:\DEMConfig&quot;</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">New-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;DEMConfig&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;D:\DEMConfig&quot;</span> <span class="p">`</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">-ReadAccess</span> <span class="s2">&quot;Domain Users&quot;</span> <span class="n">-FullAccess</span> <span class="s2">&quot;CORP\svc-dem-admin&quot;</span><span class="p">,</span><span class="s2">&quot;CORP\Horizon-Admins&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="s2">&quot;D:\DEMConfig&quot;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">New-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;DEMConfig&quot;</span> <span class="n">-Path</span> <span class="s2">&quot;D:\DEMConfig&quot;</span> <span class="p">`</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="n">-ReadAccess</span> <span class="s2">&quot;Domain Users&quot;</span> <span class="n">-FullAccess</span> <span class="s2">&quot;CORP\svc-dem-admin&quot;</span><span class="p">,</span><span class="s2">&quot;CORP\Horizon-Admins&quot;</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -1848,10 +1864,10 @@
 <li><code>Computer Config &gt; VMware DEM &gt; FlexEngine &gt; Run at user logon</code> = Enabled</li>
 </ol>
 <h3 id="config-share-ntfs-permissions">Config Share NTFS Permissions<a class="headerlink" href="#config-share-ntfs-permissions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>CORP\Domain Users         — Read &amp; Execute (This folder, subfolders, files)
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>CORP\svc-dem-admin        — Full Control
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>CORP\Horizon-Admins       — Full Control
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>SYSTEM                    — Full Control
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>CORP\Domain Users         — Read &amp; Execute (This folder, subfolders, files)
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>CORP\svc-dem-admin        — Full Control
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>CORP\Horizon-Admins       — Full Control
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>SYSTEM                    — Full Control
 </code></pre></div>
 <hr />
 <h2 id="uag-deployment">UAG Deployment<a class="headerlink" href="#uag-deployment" title="Permanent link">&para;</a></h2>
@@ -1859,26 +1875,26 @@
 <h3 id="powershell-automated-deployment">PowerShell Automated Deployment<a class="headerlink" href="#powershell-automated-deployment" title="Permanent link">&para;</a></h3>
 <p>VMware provides <code>uagdeploy.ps1</code> in the UAG deployment bundle.</p>
 <p><strong>INI configuration file (uag-prod.ini):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">[General]</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="na">name</span><span class="o">=</span><span class="s">uag-prod-01</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="na">deploymentOption</span><span class="o">=</span><span class="s">onenic</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="na">ds</span><span class="o">=</span><span class="s">SAN-Datastore01</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="na">netInternet</span><span class="o">=</span><span class="s">VLAN-100-DMZ</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="na">source</span><span class="o">=</span><span class="s">.\VMware-UAG-2312.0-23064540_OVF10.ova</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="na">diskMode</span><span class="o">=</span><span class="s">thin</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">[Horizon]</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="na">proxyDestinationUrl</span><span class="o">=</span><span class="s">https://cs01.corp.example.com</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="na">proxyDestinationUrlThumbprint</span><span class="o">=</span><span class="s">sha256:AABBCC...</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="na">blastExternalUrl</span><span class="o">=</span><span class="s">https://vdi.example.com:8443</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="na">pcoipExternalUrl</span><span class="o">=</span><span class="s">203.0.113.10</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="na">tunnelExternalUrl</span><span class="o">=</span><span class="s">https://vdi.example.com:443</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">[General]</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="na">name</span><span class="o">=</span><span class="s">uag-prod-01</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="na">deploymentOption</span><span class="o">=</span><span class="s">onenic</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="na">ds</span><span class="o">=</span><span class="s">SAN-Datastore01</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="na">netInternet</span><span class="o">=</span><span class="s">VLAN-100-DMZ</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="na">source</span><span class="o">=</span><span class="s">.\VMware-UAG-2312.0-23064540_OVF10.ova</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="na">diskMode</span><span class="o">=</span><span class="s">thin</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="k">[Horizon]</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="na">proxyDestinationUrl</span><span class="o">=</span><span class="s">https://cs01.corp.example.com</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="na">proxyDestinationUrlThumbprint</span><span class="o">=</span><span class="s">sha256:AABBCC...</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="na">blastExternalUrl</span><span class="o">=</span><span class="s">https://vdi.example.com:8443</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="na">pcoipExternalUrl</span><span class="o">=</span><span class="s">203.0.113.10</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="na">tunnelExternalUrl</span><span class="o">=</span><span class="s">https://vdi.example.com:443</span>
 </code></pre></div></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Deploy</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="p">.\</span><span class="n">uagdeploy</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-iniFile</span> <span class="p">.\</span><span class="n">uag-prod</span><span class="p">.</span><span class="n">ini</span> <span class="p">`</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  <span class="n">-vCenterServer</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">`</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  <span class="n">-vCenterUser</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  <span class="n">-vCenterPassword</span> <span class="nv">$vcPass</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Deploy</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="p">.\</span><span class="n">uagdeploy</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-iniFile</span> <span class="p">.\</span><span class="n">uag-prod</span><span class="p">.</span><span class="n">ini</span> <span class="p">`</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  <span class="n">-vCenterServer</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">`</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  <span class="n">-vCenterUser</span> <span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  <span class="n">-vCenterPassword</span> <span class="nv">$vcPass</span>
 </code></pre></div>
 <h3 id="load-balancing-multiple-uags">Load Balancing Multiple UAGs<a class="headerlink" href="#load-balancing-multiple-uags" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1888,11 +1904,11 @@
 <li>Health check: <code>HTTPS GET https://&lt;uag-ip&gt;:443/favicon.ico</code> → expect 200</li>
 </ul>
 <p>LB listener ports:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>443/TCP    — HTTPS + Horizon tunnel
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>8443/TCP   — Blast Extreme (TCP mode)
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>8443/UDP   — Blast Extreme (UDP/adaptive transport)
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>4172/TCP   — PCoIP (TCP)
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>4172/UDP   — PCoIP (UDP)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>443/TCP    — HTTPS + Horizon tunnel
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>8443/TCP   — Blast Extreme (TCP mode)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>8443/UDP   — Blast Extreme (UDP/adaptive transport)
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>4172/TCP   — PCoIP (TCP)
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>4172/UDP   — PCoIP (UDP)
 </code></pre></div></p>
 <hr />
 <h2 id="true-sso-with-vidm-workspace-one">True SSO with vIDM / Workspace ONE<a class="headerlink" href="#true-sso-with-vidm-workspace-one" title="Permanent link">&para;</a></h2>
@@ -1927,9 +1943,9 @@
 <li>In Connection Server: <strong>Settings &gt; Servers &gt; Connection Servers &gt; [Edit] &gt; Authentication &gt; True SSO Authenticators</strong> — add Enrollment Server</li>
 <li>Configure SAML delegation on Connection Server to vIDM</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Verify Enrollment Server connectivity from Connection Server</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">enrollment-srv</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">32111</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">ca</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">135</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Verify Enrollment Server connectivity from Connection Server</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">enrollment-srv</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">32111</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">ca</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">135</span>
 </code></pre></div>
 <hr />
 <h2 id="saml-authentication">SAML Authentication<a class="headerlink" href="#saml-authentication" title="Permanent link">&para;</a></h2>
@@ -1939,11 +1955,11 @@
 - <code>Delegation of Authentication to VMware Access Point</code>: <strong>Allowed</strong> or <strong>Required</strong>
 - <code>SAML Authenticator</code>: enter SAML metadata URL from IdP</p>
 <p><strong>SAML flow:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>1. User hits IdP portal (e.g., Workspace ONE)
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>2. IdP authenticates user (MFA, LDAP, cert)
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>3. IdP issues signed SAML assertion → redirects to Connection Server / UAG
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>4. Connection Server validates assertion signature
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>5. True SSO issues short-lived cert → Windows session starts without password prompt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>1. User hits IdP portal (e.g., Workspace ONE)
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>2. IdP authenticates user (MFA, LDAP, cert)
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>3. IdP issues signed SAML assertion → redirects to Connection Server / UAG
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>4. Connection Server validates assertion signature
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>5. True SSO issues short-lived cert → Windows session starts without password prompt
 </code></pre></div></p>
 <hr />
 <h2 id="carbon-black-edr-integration">Carbon Black / EDR Integration<a class="headerlink" href="#carbon-black-edr-integration" title="Permanent link">&para;</a></h2>
@@ -1955,12 +1971,12 @@
 <li>CrowdStrike Falcon: use <code>--tags</code> at install time to group VDI sensors; enable sensor grouping policy</li>
 </ul>
 <p><strong>AV/EDR exclusions for Horizon directories:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>C:\Program Files\VMware\VMware View\Agent\
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>C:\ProgramData\VMware\VDM\
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>C:\Windows\Temp\vmware-viewcomposer-ga-new-*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>C:\Program Files\VMware\VMware View\Agent\
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>C:\ProgramData\VMware\VDM\
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>C:\Windows\Temp\vmware-viewcomposer-ga-new-*
 </code></pre></div>
 <p><strong>App Volumes mount point exclusions (real-time scanning):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>\\?\Volume{*}\   (all volumes — or specifically App Volumes mount GUIDs)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>\\?\Volume{*}\   (all volumes — or specifically App Volumes mount GUIDs)
 </code></pre></div></p>
 <p>Test logon duration before/after agent install — EDR agents can add 5–15 seconds to desktop logon in worst-case configurations.</p>
 

@@ -1362,6 +1362,24 @@
 
 
 <h1 id="srm-access-control">SRM — Access Control<a class="headerlink" href="#srm-access-control" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  SRM RBAC: Recovery Plan Roles → vCenter Permissions
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  AD Groups                SRM Roles (via vCenter Global Perms)│
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌────────────────┐       ┌───────────────────────────────┐   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ CORP\SRM-Admins│──────►│ Site Recovery Administrator   │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │                │       │ (configure + execute)         │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  ├────────────────┤       ├───────────────────────────────┤   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │ CORP\SRM-DR-   │──────►│ Site Recovery Recovery Admin  │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │ RunTeam        │       │ (execute only — no config)    │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  ├────────────────┤       ├───────────────────────────────┤   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │ CORP\Infra-    │──────►│ Site Recovery User            │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │ ReadOnly       │       │ (view only)                   │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └────────────────┘       └───────────────────────────────┘   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                               │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  SRA credentials: stored encrypted in SRM                    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Rotate: array API token ──► update in SRM ──► delete old    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="srm-uses-vcenter-rbac">SRM Uses vCenter RBAC<a class="headerlink" href="#srm-uses-vcenter-rbac" title="Permanent link">&para;</a></h2>
 <p>SRM does not have its own user store. All authentication and authorization goes through vCenter SSO. SRM-specific privileges are added to vCenter's permission model.</p>
@@ -1390,10 +1408,10 @@
 </tbody>
 </table>
 <p>These roles appear in vCenter after SRM is installed. Assign them via vCenter Permissions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter → Administration → Global Permissions → Add Permission
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  User/Group: CORP\SRM-Admins
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Role: Site Recovery Administrator
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Propagate: Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → Administration → Global Permissions → Add Permission
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  User/Group: CORP\SRM-Admins
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Role: Site Recovery Administrator
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Propagate: Yes
 </code></pre></div>
 <hr />
 <h2 id="least-privilege-role-assignments">Least-Privilege Role Assignments<a class="headerlink" href="#least-privilege-role-assignments" title="Permanent link">&para;</a></h2>
@@ -1427,14 +1445,14 @@
 <hr />
 <h2 id="sra-credential-management">SRA Credential Management<a class="headerlink" href="#sra-credential-management" title="Permanent link">&para;</a></h2>
 <p>SRA (Storage Replication Adapter) stores array credentials encrypted in SRM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Array credentials: FlashArray management IP + API token
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Credentials are stored encrypted — only SRM can decrypt them
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Array credentials: FlashArray management IP + API token
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Credentials are stored encrypted — only SRM can decrypt them
 </code></pre></div>
 <p>Rotate SRA credentials:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Create new API token on storage array
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Site Recovery → Storage → Array Pairs → [pair] → Edit → update credentials
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Delete old API token from array
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Create new API token on storage array
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Site Recovery → Storage → Array Pairs → [pair] → Edit → update credentials
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. Delete old API token from array
 </code></pre></div></p>
 <hr />
 <h2 id="separation-of-duties-for-recovery">Separation of Duties for Recovery<a class="headerlink" href="#separation-of-duties-for-recovery" title="Permanent link">&para;</a></h2>
@@ -1483,7 +1501,7 @@
 <hr />
 <h2 id="audit-trail">Audit Trail<a class="headerlink" href="#audit-trail" title="Permanent link">&para;</a></h2>
 <p>SRM logs all actions to vCenter events:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Monitor → Events → filter by &quot;drm&quot; (Site Recovery events prefix)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Monitor → Events → filter by &quot;drm&quot; (Site Recovery events prefix)
 </code></pre></div></p>
 <p>Key events to monitor:
 - Recovery Plan started (type, who initiated)

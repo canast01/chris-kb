@@ -1373,6 +1373,29 @@
 
 
 <h1 id="aria-suite-lifecycle-integrations">Aria Suite Lifecycle — Integrations<a class="headerlink" href="#aria-suite-lifecycle-integrations" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  LCM Integration Map
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Identity              Compute                  Storage          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌─────────────────┐   ┌──────────────────┐    ┌─────────────┐  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ Workspace ONE   │   │ vCenter Server   │    │ NFS Repo    │  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │ Access (VIDM)   │   │  deploy OVAs     │    │  /data      │  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  SSO for all    │   │  power mgmt      │    │  .pak files │  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  Aria products  │   │  VM snapshots    │    └─────────────┘  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  └────────┬────────┘   └────────┬─────────┘                    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│           │                    │                                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│           └────────────┬───────┘                               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                        ▼                                        │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│               LCM Appliance                                     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                        │                                        │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│           ┌────────────┼────────────────┐                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│           ▼            ▼                ▼                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│     ┌──────────┐ ┌──────────┐   ┌─────────────┐                │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│     │ NSX-T    │ │  SMTP    │   │ Proxy /     │                │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│     │(optional │ │  email   │   │ Offline     │                │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│     │ segments)│ │  alerts  │   │ Depot       │                │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│     └──────────┘ └──────────┘   └─────────────┘                │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="workspace-one-access-vidm">Workspace ONE Access (VIDM)<a class="headerlink" href="#workspace-one-access-vidm" title="Permanent link">&para;</a></h2>
 <p>Workspace ONE Access is the SSO identity provider for all Aria products — it is registered with LCM during initial setup.</p>
 <ol>
@@ -1381,9 +1404,9 @@
 <li>All subsequent product deployments inherit VIDM as their SSO source</li>
 </ol>
 <p>Verify VIDM integration health:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On LCM appliance (SSH)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://vidm.corp.local/SAAS/API/1.0/REST/system/health
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;UP&quot;}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On LCM appliance (SSH)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://vidm.corp.local/SAAS/API/1.0/REST/system/health
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;UP&quot;}</span>
 </code></pre></div></p>
 <h2 id="vcenter-server">vCenter Server<a class="headerlink" href="#vcenter-server" title="Permanent link">&para;</a></h2>
 <p>LCM requires vCenter to deploy and manage OVA-based product appliances:</p>
@@ -1393,10 +1416,10 @@
 <li>Select target datacenter, cluster, and datastore during product deployment</li>
 </ol>
 <p>Required vCenter permissions for the LCM service account:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Virtual Machine Power User (or equivalent)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Datastore — AllocateSpace
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Network — Assign
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Host — CIM interaction
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Virtual Machine Power User (or equivalent)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Datastore — AllocateSpace
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Network — Assign
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Host — CIM interaction
 </code></pre></div></p>
 <h2 id="nsx-t-integration-optional">NSX-T Integration (Optional)<a class="headerlink" href="#nsx-t-integration-optional" title="Permanent link">&para;</a></h2>
 <p>If LCM-deployed products require new overlay segments:
@@ -1411,13 +1434,13 @@
 <p>Test SMTP: LCM → Settings → SMTP → Send Test Email.</p>
 <h2 id="nfs-binary-repository">NFS Binary Repository<a class="headerlink" href="#nfs-binary-repository" title="Permanent link">&para;</a></h2>
 <p>LCM stores downloaded product bundles on an NFS share:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify NFS mount from LCM appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Should show: &lt;nfs-server&gt;:/lcm-repo on /data type nfs</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check available space (requires &gt; 50 GB free per product version)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify NFS mount from LCM appliance</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Should show: &lt;nfs-server&gt;:/lcm-repo on /data type nfs</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check available space (requires &gt; 50 GB free per product version)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/*
 </code></pre></div>
 <p>If NFS becomes unavailable: LCM upgrades will fail. Ensure NFS server HA (or VMware datastore-backed NFS).</p>
 <h2 id="proxy-offline-depot">Proxy / Offline Depot<a class="headerlink" href="#proxy-offline-depot" title="Permanent link">&para;</a></h2>
