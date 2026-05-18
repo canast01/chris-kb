@@ -2,6 +2,34 @@
 
 VxRail troubleshooting notes for lifecycle failures, manager issues, host alerts, vSAN alerts, bundles, and network alerts.
 
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │           VxRail Troubleshooting Decision Tree           │
+  │                                                          │
+  │                    Problem reported                      │
+  │                          │                              │
+  │          ┌───────────────┼──────────────────┐           │
+  │          ▼               ▼                  ▼           │
+  │   ┌────────────┐  ┌─────────────┐  ┌──────────────┐    │
+  │   │ Hardware   │  │   LCM /     │  │  vSAN health │    │
+  │   │ alert?     │  │  Manager    │  │  alert?      │    │
+  │   └─────┬──────┘  │  issue?     │  └──────┬───────┘    │
+  │         │         └──────┬──────┘         │            │
+  │         ▼                ▼                ▼            │
+  │  iDRAC / node    LCM job triage    Disk group /         │
+  │  health check    service restart   resync / capacity    │
+  │         │                │                │            │
+  │         └────────────────┴────────────────┘            │
+  │                          │                              │
+  │                          ▼                              │
+  │         ┌────────────────────────────────┐              │
+  │         │  Network alert?                │              │
+  │         │  NIC ──► dvSwitch ──► vSAN vmk │              │
+  │         │  ──► NSX ──► fabric            │              │
+  │         └────────────────────────────────┘              │
+  └──────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="lcm-failures/">

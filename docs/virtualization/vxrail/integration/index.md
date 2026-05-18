@@ -2,6 +2,30 @@
 
 > Part of the [VxRail](../) reference.
 
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │                   VxRail Integrations                    │
+  │                                                          │
+  │  ┌──────────────────────────────────────────────────┐    │
+  │  │               VxRail Cluster                     │    │
+  │  │  ┌──────────┐  ┌──────────┐  ┌──────────┐       │    │
+  │  │  │  Node 1  │  │  Node 2  │  │  Node N  │       │    │
+  │  │  └────┬─────┘  └────┬─────┘  └────┬─────┘       │    │
+  │  └───────┼─────────────┼─────────────┼──────────────┘    │
+  │          └─────────────┼─────────────┘                   │
+  │                        ▼                                  │
+  │  ┌─────────┐   ┌──────────────┐   ┌──────────────────┐   │
+  │  │ vCenter │◄──│VxRail Manager│──►│  Dell SRS/       │   │
+  │  │ plugin  │   │  REST API    │   │  SupportAssist   │   │
+  │  └────┬────┘   └──────────────┘   └──────────────────┘   │
+  │       │                                                   │
+  │       ├──► NSX Manager (overlay networking / TEPs)        │
+  │       ├──► Aria Operations (VxRail mgmt pack)             │
+  │       ├──► OpenManage Enterprise (HW asset mgmt)          │
+  │       └──► Veeam / NetBackup (VM backup via vCenter)      │
+  └──────────────────────────────────────────────────────────┘
+```
+
 ---
 ## vCenter Integration
 

@@ -2,6 +2,25 @@
 
 Document post-upgrade findings to improve future upgrade runbooks. Complete this within 48 hours of change record closure while details are fresh.
 
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│              Lessons Learned Entry — Template                            │
+├──────────────────────────────────────────────────────────────────────────┤
+│  Upgrade:  [Component] [From] → [To]  │  Date: YYYY-MM-DD              │
+│  Duration: Planned Xh / Actual Xh     │  CR: CHG-XXXXX                 │
+├───────────────────────┬──────────────────────────────────────────────────┤
+│  Step Timing          │  Issues Found                                   │
+├───────────────────────┼──────────────────────────────────────────────────┤
+│ vCenter backup: Xm    │ Issue │ Root Cause │ Fix │ Time Lost           │
+│ vCenter upgrade: Xm   │ ──────┼────────────┼─────┼─────────────        │
+│ ESXi per host: Xm     │       │            │     │                     │
+│ NSX upgrade: Xm       │       │            │     │                     │
+├───────────────────────┴──────────────────────────────────────────────────┤
+│  Common traps: VCSA /storage/log fills │ vCenter underestimated time    │
+│  NSX silent node failure │ ESXi 3rd-party VIBs incompatible             │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Template
 
 Copy this template to a new entry in your team's wiki or knowledge base after each significant upgrade.

@@ -1,4 +1,37 @@
 # vSAN Degraded Object Runbook
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SNAPSHOT CLEANUP FLOW                        │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │  Find Old Snapshots     │
+              │  Get-VM | Get-Snapshot  │
+              │  Filter: Created > 3d   │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │  Assess Delta Size      │
+              │  Sort by SizeGB         │
+              │  Check datastore space  │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │  Schedule Delete        │
+              │  Notify VM owner        │
+              │  Confirm maint window   │
+              │  for large deltas       │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │  Delete & Verify        │
+              │  Remove-Snapshot        │
+              │  Confirm consolidation  │
+              │  Check datastore free % │
+              └─────────────────────────┘
+```
+
 ## Confirm vSAN Health State
 
 - Open vCenter → Cluster → vSAN → Skyline Health

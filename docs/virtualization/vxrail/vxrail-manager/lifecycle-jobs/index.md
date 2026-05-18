@@ -3,6 +3,36 @@
 
 Lifecycle task review, bundle status, failed jobs, and retry planning.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │               VxRail LCM Job Flow                    │
+  │                                                      │
+  │  Initiate ──► POST /rest/vxm/v1/lcm/upgrade          │
+  │       │                                              │
+  │       ▼                                              │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  1. Bundle download / validation             │    │
+  │  │     bundle.zip ──► checksum ──► compatibility│    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  2. Pre-check                                │    │
+  │  │     cluster health │ vSAN │ cert │ DNS/NTP   │    │
+  │  │     FAIL ──► job stops, no change applied    │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  3. Remediate (rolling, node by node)        │    │
+  │  │     maintenance mode ──► update ──► reboot   │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  4. Post-check                               │    │
+  │  │     health validation ──► job complete       │    │
+  │  └──────────────────────────────────────────────┘    │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

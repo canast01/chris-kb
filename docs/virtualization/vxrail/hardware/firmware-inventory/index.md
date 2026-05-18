@@ -3,6 +3,31 @@
 
 Firmware versions, drift review, lifecycle alignment, and upgrade notes.
 
+```
+  ┌────────────────────────────────────────────────────┐
+  │            VxRail Firmware Inventory               │
+  └────────────────────────────────────────────────────┘
+  ┌─────────────┐
+  │  VxRail     │
+  │   Node      │
+  └──────┬──────┘
+         │
+         ├──► ┌────────────────────────────────────────┐
+         │    │ Component     │ Version    │ Target     │
+         │    ├───────────────┼────────────┼────────────┤
+         │    │ BIOS          │ x.x.x      │ y.y.y      │
+         │    │ iDRAC         │ x.x.x      │ y.y.y      │
+         │    │ NIC firmware  │ x.x.x      │ y.y.y      │
+         │    │ HBA firmware  │ x.x.x      │ y.y.y      │
+         │    │ Disk firmware │ x.x.x      │ y.y.y      │
+         │    │ CPLD          │ x.x.x      │ y.y.y      │
+         │    └────────────────────────────────────────┘
+         │
+         └──► iDRAC: racadm getversion -all
+              VxRail Manager: System → Software Versions
+              Drift ► LCM bundle remediation required
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

@@ -2,6 +2,24 @@
 
 Use these when there is a major incident.
 
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                     Emergency Check Sequence                             │
+├──────────────┬───────────────────────────────┬───────────────────────────┤
+│  Component   │  Check                        │  First Command            │
+├──────────────┼───────────────────────────────┼───────────────────────────┤
+│ vCenter      │ Login OK? Services up?        │ service-control --status  │
+│ ESXi Hosts   │ Connected? In maintenance?    │ Get-VMHost | Select State │
+│ VMs          │ Critical VMs powered on?      │ Get-VM | Where PowerState │
+│ Storage      │ Datastores mounted? Not full? │ Get-Datastore | Select %  │
+│ vSAN         │ Objects healthy? Resync?      │ esxcli vsan health ...    │
+│ Network      │ Mgmt + VM nets reachable?     │ vmkping + ping from VM    │
+│ Hardware     │ Disk/NIC/PSU/mem failures?    │ iDRAC/iLO event log       │
+│ Backups      │ Recent backup available?      │ Backup tool dashboard     │
+└──────────────┴───────────────────────────────┴───────────────────────────┘
+  Escalate: vSAN inaccessible → VMware SR  │  Hardware failure → Dell SR
+```
+
 | Area | Check |
 |---|---|
 | vCenter | Can you log in? Are services running? |

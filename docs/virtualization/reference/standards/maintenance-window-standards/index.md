@@ -1,4 +1,21 @@
 # VMware Maintenance Window Standards
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│               Maintenance Window — Pre / During / Post                   │
+├───────────────────┬──────────────────────┬───────────────────────────────┤
+│   Pre-Change      │   During             │   Post-Change                 │
+├───────────────────┼──────────────────────┼───────────────────────────────┤
+│ ☐ CR approved     │ ☐ Notify: work start │ ☐ Post-change validation      │
+│ ☐ Notify owners   │ ☐ Status updates if  │ ☐ App owner sign-off          │
+│   (24-48h notice) │   window extends     │ ☐ Attach pre+post screenshots │
+│ ☐ Health check    │ ☐ Rollback ready     │ ☐ Close CR with outcome note  │
+│   screenshots     │   and understood     │ ☐ Lessons learned if issues   │
+│ ☐ Backup confirmed│ ☐ Rollback gate:     │                               │
+│ ☐ Rollback        │   decide Go/No-Go    │                               │
+│   documented      │   before window ends │                               │
+└───────────────────┴──────────────────────┴───────────────────────────────┘
+```
 ## Change Ticket Requirement
 
 All maintenance windows require an approved change ticket before work begins.

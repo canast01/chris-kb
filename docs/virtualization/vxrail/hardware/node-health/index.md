@@ -3,6 +3,33 @@
 
 Node hardware status, sensors, alerts, and serviceability checks.
 
+```
+  ┌──────────────────────────────────────────────────┐
+  │                  VxRail Node                     │
+  │                                                  │
+  │  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐        │
+  │  │ CPU  │  │ MEM  │  │ Disk │  │ NIC  │        │
+  │  │ temp │  │ ECC  │  │ SMART│  │ link │        │
+  │  └──┬───┘  └──┬───┘  └──┬───┘  └──┬───┘        │
+  │     │         │         │         │              │
+  │  ┌──┴─────────┴────┐ ┌──┴─────────┴──┐          │
+  │  │   PSU / Fan     │ │  iDRAC (BMC)  │          │
+  │  │  redundancy     │ │  alert engine │          │
+  │  └──────────┬──────┘ └──────┬────────┘          │
+  └─────────────┼───────────────┼───────────────────┘
+                ▼               ▼
+     ┌──────────────┐  ┌────────────────────────┐
+     │ vCenter alarm│  │  VxRail Manager alert  │
+     │  Host health │  │  Hardware fault event  │
+     └──────────────┘  └────────────┬───────────┘
+                                    ▼
+                         ┌──────────────────────┐
+                         │  Remediation:        │
+                         │  Replace component / │
+                         │  open Dell SR        │
+                         └──────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

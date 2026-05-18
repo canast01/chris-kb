@@ -3,6 +3,33 @@
 
 Useful VxRail Manager logs, collection patterns, timestamps, and case evidence.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │             VxRail Manager Log Sources               │
+  │                                                      │
+  │  VxRail Manager UI                                   │
+  │  ──► System → Logs → view recent events             │
+  │                                                      │
+  │  SSH to VxRail Manager (mystic user):                │
+  │  ┌────────────────────────────────────────────────┐  │
+  │  │  /var/log/vmware/marvin/marvin.log             │  │
+  │  │  /var/log/vmware/marvin/upgrade.log            │  │
+  │  │  /var/log/vmware/marvin/health.log             │  │
+  │  │  journalctl -u marvin -f                       │  │
+  │  └────────────────────────────────────────────────┘  │
+  │                       │                              │
+  │                       ▼                              │
+  │  ┌────────────────────────────────────────────────┐  │
+  │  │  Support Bundle (full log collection)          │  │
+  │  │  VxRail Mgr UI → System → Support → Generate  │  │
+  │  │  ──► bundle.tar.gz                            │  │
+  │  │  Contains: marvin │ ESXi │ vSAN │ iDRAC logs  │  │
+  │  └────────────────────────────────────────────────┘  │
+  │                                                      │
+  │  Timestamp tip: correlate log times with NTP sync   │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

@@ -3,6 +3,33 @@
 
 VxRail networking symptoms, uplinks, VLANs, vmkernel checks, and connectivity validation.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │         VxRail Network Alert Triage Path             │
+  │                                                      │
+  │  Physical NIC                                        │
+  │  esxcli network nic list ──► link state / speed     │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  dvSwitch (vDS) uplinks                              │
+  │  vCenter ──► Networking ──► dvSwitch ──► uplinks    │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  vSAN vmkernel adapter                               │
+  │  vmk portgroup ──► VLAN tag correct?                 │
+  │  esxcli network ip interface list                    │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  NSX (if deployed)                                   │
+  │  TEP vmkernel ──► MTU 1600+ ──► GENEVE encap OK?    │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  Fabric / ToR switch                                 │
+  │  VLAN trunking │ jumbo frames │ LACP / LAG           │
+  │  ──► physical switch config alignment                │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

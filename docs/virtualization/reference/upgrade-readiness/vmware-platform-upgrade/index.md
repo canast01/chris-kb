@@ -1,6 +1,37 @@
 # VMware Platform Upgrade Procedure
 
 This procedure covers a full VMware platform upgrade including vCenter, ESXi, vSAN, NSX, and VCF-related components.
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│            VMware Platform Upgrade Order                                 │
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 1. Backup: vCenter (VAMI) + NSX + Aria snapshots + CR VM snaps    │ │
+│  └───────────────────────────────┬────────────────────────────────────┘ │
+│                                  ▼                                       │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 2. vCenter upgrade (must be ≥ ESXi version at all times)          │ │
+│  └───────────────────────────────┬────────────────────────────────────┘ │
+│                                  ▼                                       │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 3. NSX upgrade (Coordinator → Managers → Edges → Hosts)           │ │
+│  └───────────────────────────────┬────────────────────────────────────┘ │
+│                                  ▼                                       │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 4. ESXi host upgrades (one host at a time, via LCM)               │ │
+│  └───────────────────────────────┬────────────────────────────────────┘ │
+│                                  ▼                                       │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 5. vSAN disk format upgrade (after all hosts upgraded + health OK) │ │
+│  └───────────────────────────────┬────────────────────────────────────┘ │
+│                                  ▼                                       │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │ 6. Final validation + CR closure + version inventory update        │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│  VxRail: use VxRail LCM for all steps — do NOT upgrade ESXi manually   │
+└──────────────────────────────────────────────────────────────────────────┘
+```
 ## Roles and Responsibilities
 
 | Role | Responsibility |

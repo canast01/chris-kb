@@ -3,6 +3,31 @@
 
 Core operational reference for VxRail infrastructure.
 
+```
+  ┌────────────────────────────────────────────────────────┐
+  │                VxRail Field Reference Map              │
+  │                                                        │
+  │  Node Model ──► Part Numbers ──► Slot Layout           │
+  │       │                               │                │
+  │       ▼                               ▼                │
+  │  ┌─────────────────────┐   ┌──────────────────────┐    │
+  │  │  Front Panel        │   │  Drive Map           │    │
+  │  │  ┌──┬──┬──┬──┬──┐   │   │  Slot 0: cache NVMe  │    │
+  │  │  │0 │1 │2 │3 │4 │   │   │  Slot 1-N: capacity  │    │
+  │  │  └──┴──┴──┴──┴──┘   │   │  Slot X: hot spare   │    │
+  │  └─────────────────────┘   └──────────────────────┘    │
+  │                                                        │
+  │  LED Codes:                                            │
+  │  ┌──────────────────────────────────────────────────┐  │
+  │  │  Solid amber ► fault  │  Blinking ► identify    │  │
+  │  │  Solid green ► OK     │  Off ► no power/absent  │  │
+  │  └──────────────────────────────────────────────────┘  │
+  │                                                        │
+  │  iDRAC: racadm getsysinfo │ Service tag location:      │
+  │  pull-tab on drive bay or rear panel label             │
+  └────────────────────────────────────────────────────────┘
+```
+
 ## Daily Checks
 
 

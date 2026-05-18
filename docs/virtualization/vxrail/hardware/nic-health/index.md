@@ -3,6 +3,30 @@
 
 Physical NIC state, link status, uplinks, redundancy, and troubleshooting.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │                    VxRail Node                       │
+  │  ┌───────────┐  ┌───────────┐  ┌───────────┐        │
+  │  │  vmnic0   │  │  vmnic1   │  │  vmnic2   │  ...   │
+  │  │ (25GbE)   │  │ (25GbE)   │  │ (25GbE)   │        │
+  │  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘        │
+  │        │              │              │                │
+  │        └──────┬────────┘        ┌───┘                │
+  │               ▼                 ▼                     │
+  │  ┌──────────────────┐  ┌──────────────────┐          │
+  │  │  vDS (dvSwitch)  │  │  vDS (vSAN/vMot) │          │
+  │  │  Mgmt + VM traf. │  │  vSAN vmkernel   │          │
+  │  └──────────────────┘  └──────────────────┘          │
+  └──────────────────────────────────────────────────────┘
+         Link state │ Speed │ Errors
+  ┌──────────────────────────────────┐
+  │  Check: esxcli network nic list  │
+  │  Uplink: connected / disconnected│
+  │  Speed: 25000 Mb/s expected      │
+  │  Errors: RX/TX drop = 0 ideal    │
+  └──────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

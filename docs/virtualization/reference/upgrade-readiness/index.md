@@ -2,6 +2,22 @@
 
 Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
 
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                  Upgrade Readiness Flow                                  │
+├───────────────┬──────────────────┬───────────────┬────────────────────  │
+│   Planning    │   Pre-Checks     │   Execution   │   Post-Validation    │
+├───────────────┼──────────────────┼───────────────┼────────────────────  │
+│ • Version     │ • Compatibility  │ Order:        │ • vCenter login OK   │
+│   targets     │   review (HCL +  │  1. vCenter   │ • All hosts connected│
+│ • Upgrade     │   interop matrix)│  2. NSX       │ • HA/DRS re-enabled  │
+│   sequence    │ • Pre-upgrade    │  3. ESXi hosts│ • vSAN green         │
+│ • Risk assess │   checklist      │  4. vSAN fmt  │ • NSX cluster stable │
+│ • Rollback    │ • Backups done   │               │ • Backup job passes  │
+│   plan        │ • Health = green │               │ • Lessons learned    │
+└───────────────┴──────────────────┴───────────────┴────────────────────  ┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="upgrade-planning/">

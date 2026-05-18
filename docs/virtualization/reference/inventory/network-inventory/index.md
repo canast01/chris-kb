@@ -3,6 +3,24 @@
 > Part of the [Inventory](../) reference.
 
 ---
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      Virtual Network Inventory                          │
+├───────────────────────┬──────────┬────────┬──────────┬─────────────────┤
+│   Port Group          │  VLAN    │  MTU   │ vDS      │  Purpose        │
+├───────────────────────┼──────────┼────────┼──────────┼─────────────────┤
+│ pg-1001-prod-vm       │  1001    │ 1500   │ compute  │ VM traffic      │
+│ pg-1002-vmotion       │  1002    │ 9000   │ compute  │ vMotion vmk     │
+│ pg-1003-vsan          │  1003    │ 9000   │ compute  │ vSAN vmk        │
+│ pg-1004-mgmt          │  1004    │ 1500   │ compute  │ Host mgmt vmk   │
+│ pg-1005-nsx-overlay   │  Trunk   │ 9000   │ compute  │ NSX GENEVE/TEP  │
+├───────────────────────┴──────────┴────────┴──────────┴─────────────────┤
+│  Distributed Switches: vds-prod-compute-01 │ vds-prod-edge-01          │
+│                        vds-prod-mgmt-01    │                            │
+│  Uplinks: 4×25GbE (compute) │ 2×25GbE (edge/mgmt) │ MTU 9000 on jumbo │
+└───────────────────────────────────────────────────────────────────────┘
+```
 ## Overview
 
 Document all virtual networking components in the vSphere environment — distributed switches, port groups, VLANs, MTU settings, and uplink assignments. Update after any network configuration change.

@@ -1,5 +1,22 @@
 # VMware Snapshot Standards
 
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    Snapshot Policy — At a Glance                         │
+├────────────────────────────┬─────────────────────────────────────────────┤
+│  Use Case                  │  Rule                                       │
+├────────────────────────────┼─────────────────────────────────────────────┤
+│ Pre-change / maintenance   │ Remove within 24–48h of change completion   │
+│ Backup product snapshots   │ Backup tool manages; alert if > 24h old     │
+│ Test / temporary           │ Remove within agreed test period            │
+│ Any snapshot (hard limit)  │ No snapshot > 7 days without reviewed justif│
+├────────────────────────────┴─────────────────────────────────────────────┤
+│  Monitoring: alert on snapshots older than 3 days (Aria Ops or vCenter) │
+│  Risk: large delta grows continuously → fills datastore → VM perf impact │
+│  Stuck snapshot: do NOT force delete → open VMware SR                   │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Snapshots Are Temporary
 
 Snapshots are not backups. They should be used for short-term protection during changes and removed after validation.

@@ -3,6 +3,41 @@
 
 Disk fault workflow, vSAN impact, replacement validation, and vendor handoff.
 
+```
+  ┌──────────────────────────────────────────────────┐
+  │           VxRail Disk Replacement Flow           │
+  └──────────────────────────────────────────────────┘
+  ┌─────────────┐
+  │ iDRAC/vSAN  │  Disk fault detected
+  │   ALERT     │─────────────────────────────┐
+  └─────────────┘                             ▼
+                                   ┌─────────────────────┐
+                                   │  Identify Disk Slot  │
+                                   │  VxRail Mgr → Nodes  │
+                                   │  iDRAC → LED blink   │
+                                   └──────────┬──────────┘
+                                              ▼
+                                   ┌─────────────────────┐
+                                   │   Hot-Swap Disk      │
+                                   │   (no host shutdown) │
+                                   │   Replace via front  │
+                                   │   panel slot         │
+                                   └──────────┬──────────┘
+                                              ▼
+                                   ┌─────────────────────┐
+                                   │  vSAN Resync Begins  │
+                                   │  Monitor: vCenter    │
+                                   │  Cluster → vSAN      │
+                                   │  Resyncing Objects   │
+                                   └──────────┬──────────┘
+                                              ▼
+                                   ┌─────────────────────┐
+                                   │  Verify Health       │
+                                   │  vSAN ✓  iDRAC ✓    │
+                                   │  VxRail Manager ✓    │
+                                   └─────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

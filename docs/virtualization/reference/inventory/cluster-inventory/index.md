@@ -3,6 +3,26 @@
 > Part of the [Inventory](../) reference.
 
 ---
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         Cluster Inventory Map                            │
+├─────────────────────┬────────────┬──────────┬──────────┬────────────────┤
+│   Cluster Name      │  Hosts     │ HA / DRS │  vSAN    │  Resources     │
+├─────────────────────┼────────────┼──────────┼──────────┼────────────────┤
+│ cl-prod-compute-01  │  8 hosts   │ HA ✓     │ 46 TB    │ 384 GHz / 12TB │
+│                     │            │ DRS Full │ Enabled  │                │
+├─────────────────────┼────────────┼──────────┼──────────┼────────────────┤
+│ cl-prod-edge-01     │  4 hosts   │ HA ✓     │ —        │  96 GHz / 2TB  │
+│                     │            │ DRS Full │ Disabled │                │
+├─────────────────────┼────────────┼──────────┼──────────┼────────────────┤
+│ cl-prod-mgmt-01     │  3 hosts   │ HA ✓     │ 14 TB    │  72 GHz / 3TB  │
+│                     │            │ DRS Part │ Enabled  │                │
+├─────────────────────┼────────────┼──────────┼──────────┼────────────────┤
+│ cl-dr-compute-01    │  4 hosts   │ HA ✓     │ 23 TB    │ 192 GHz / 6TB  │
+│                     │            │ DRS Full │ Enabled  │                │
+└─────────────────────┴────────────┴──────────┴──────────┴────────────────┘
+```
 ## Overview
 
 Use this table format to document each vSphere cluster in the environment. Maintain one row per cluster and update after any cluster configuration change or capacity event.

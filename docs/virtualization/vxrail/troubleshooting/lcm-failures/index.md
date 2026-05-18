@@ -3,6 +3,33 @@
 
 Lifecycle Manager failures, pre-check errors, upgrade stops, and recovery workflow.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │           VxRail LCM Failure Triage                  │
+  │                                                      │
+  │  LCM job stuck / failed                             │
+  │                 │                                    │
+  │     ┌───────────┴───────────┐                        │
+  │     ▼                       ▼                        │
+  │  Pre-check fail         Bundle error                 │
+  │  ├── cluster health     ├── bad checksum             │
+  │  ├── vSAN not healthy   ├── incompatible version     │
+  │  ├── cert expired       └── upload interrupted       │
+  │  └── DNS / NTP skew                                  │
+  │     │                       │                        │
+  │     └───────────┬───────────┘                        │
+  │                 ▼                                    │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  Component error (during remediation)        │    │
+  │  │  node update failed ──► marvin log review    │    │
+  │  │  /var/log/vmware/marvin/upgrade.log          │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  Remediate ──► fix root cause ──► retry LCM job     │
+  │  Escalate ──► collect bundle ──► open Dell SR        │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

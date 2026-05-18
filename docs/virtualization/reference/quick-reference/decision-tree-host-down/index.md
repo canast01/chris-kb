@@ -1,6 +1,32 @@
 # Decision Tree: Host Down
 
 Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter.
+
+```
+                    Host: Not Responding / Disconnected
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │  Ping mgmt IP?      │
+                    └─────────────────────┘
+                    No ▼              Yes ▼
+          ┌──────────────────┐   ┌──────────────────────┐
+          │ Check switch/    │   │  SSH to host?        │
+          │ iDRAC powered on │   └──────────────────────┘
+          └──────────────────┘   No ▼              Yes ▼
+                              ┌───────────────┐  ┌──────────────────┐
+                              │ Restart agents│  │ Check hostd/vpxa │
+                              │ via iDRAC     │  │ status + restart  │
+                              │ console       │  └──────────────────┘
+                              └───────────────┘          │
+                                                         ▼
+                                              ┌────────────────────┐
+                                              │ PSOD on iDRAC      │
+                                              │ console?           │
+                                              │ → Cold restart     │
+                                              │ → VMware SR bundle │
+                                              └────────────────────┘
+```
 ## Step 1 — Can You Ping the Host Management IP?
 
 ```bash

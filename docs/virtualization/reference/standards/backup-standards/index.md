@@ -1,5 +1,25 @@
 # VMware Backup Standards
 
+```
+┌──────────────────┬──────────────────────────────────────────────────────┐
+│   Tier           │  Policy                                              │
+├──────────────────┼──────────────────────────────────────────────────────┤
+│ Critical VMs     │ Daily backup │ 30-day retention │ App-aware          │
+│                  │ Quarterly restore test                               │
+├──────────────────┼──────────────────────────────────────────────────────┤
+│ Standard VMs     │ Daily or weekly │ 14-day retention                   │
+│                  │ Annual restore test                                  │
+├──────────────────┼──────────────────────────────────────────────────────┤
+│ vCenter Appliance│ VAMI file-based backup daily │ 3 copies min          │
+│                  │ Target: off vSAN datastore                           │
+├──────────────────┼──────────────────────────────────────────────────────┤
+│ Snapshot cleanup │ Backup product owns its snapshots │ Alert > 24h old  │
+│                  │ Manual change snapshots: remove within 48h           │
+├──────────────────┴──────────────────────────────────────────────────────┤
+│  Monitor: daily job review  │  Escalate: retry → fail → 24h escalation │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Critical VM Backup Policy
 
 - Daily backup minimum

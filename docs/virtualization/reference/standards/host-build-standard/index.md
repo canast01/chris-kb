@@ -3,6 +3,23 @@
 > Part of the [Standards](../) reference.
 
 ---
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                  ESXi Host Build Checklist — Order                       │
+├─────────┬────────────────────────────────────────────────────────────────┤
+│  Phase  │  Steps                                                         │
+├─────────┼────────────────────────────────────────────────────────────────┤
+│ Install │ Vendor ISO (Dell VIB bundle) │ VMFS 6 boot │ scratch on local  │
+│ Network │ vmk0=mgmt(1500) │ vmk1=vMotion(9000) │ vmk2=vSAN(9000)       │
+│         │ vmk3=NSX-TEP(9000) │ All uplinks to vDS                        │
+│ System  │ Hostname in DNS (fwd+rev) │ NTP (2 servers) │ Syslog → Aria   │
+│ Security│ Lockdown Mode ON │ SSH off │ Root → CyberArk │ Host Profile   │
+│ Firmware│ BIOS/iDRAC/HBA/NIC at approved baseline                       │
+│ vCenter │ Add to vCenter → correct cluster │ Host Profile applied       │
+│ Monitor │ Add to monitoring platform │ Inventory updated                 │
+└─────────┴────────────────────────────────────────────────────────────────┘
+```
 ## Overview
 
 All ESXi hosts must be built to this standard before joining a cluster. Deviations require documented approval. This standard applies to bare-metal ESXi deployments and VxRail nodes (where applicable — VxRail nodes are managed via VxRail LCM and may have additional vendor-specific requirements).

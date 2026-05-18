@@ -2,6 +2,24 @@
 
 Standards, inventory, upgrade readiness checklists, and quick reference material for the virtualization platform.
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  Virtualization Reference Hub                   │
+├──────────────────┬──────────────────┬──────────────┬───────────┤
+│    Standards     │    Inventory     │   Upgrade    │  Quick    │
+│                  │                  │  Readiness   │ Reference │
+├──────────────────┼──────────────────┼──────────────┼───────────┤
+│ • Naming         │ • Hosts          │ • Planning   │ • Cheat   │
+│ • Host Build     │ • Clusters       │ • Pre-checks │   Sheets  │
+│ • Cluster        │ • Datastores     │ • Compat.    │ • Decision│
+│ • VM             │ • Networks       │   Review     │   Trees   │
+│ • Datastore      │ • Versions       │ • Rollback   │ • Glossary│
+│ • Access         │ • Certs          │ • Post-val.  │ • Logs    │
+│ • Backup         │ • Svc Accounts   │ • Lessons    │ • Emergency│
+│ • Snapshot       │ • Backup Cover.  │              │           │
+└──────────────────┴──────────────────┴──────────────┴───────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="standards/">

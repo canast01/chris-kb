@@ -2,6 +2,26 @@
 
 Inventory references for clusters, hosts, datastores, networks, management tools, and versions.
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Virtualization Inventory                     │
+├──────────────┬──────────────┬──────────────┬────────────────────┤
+│   Clusters   │    Hosts     │  Datastores  │     Networks       │
+│              │              │              │                    │
+│ Name/DC      │ Hostname/IP  │ Name/Type    │ vDS / Port Groups  │
+│ HA/DRS       │ Cluster/Ver  │ Capacity     │ VLANs / MTU        │
+│ CPU/RAM      │ Hardware     │ Free/Used%   │ Uplinks            │
+│ vSAN cap.    │ State        │ Backing arr. │ VMkernels          │
+├──────────────┼──────────────┼──────────────┼────────────────────┤
+│  Versions    │    Certs     │ Svc Accounts │  Backup Coverage   │
+│              │              │              │                    │
+│ Component    │ Component    │ Account name │ VM → Backup Job    │
+│ Current ver  │ FQDN/Expiry  │ Role/Scope   │ Schedule/Retention │
+│ Target ver   │ Issuer       │ Owner/Vault  │ Last Good / RPO    │
+│ EOL date     │ Renewal      │ Rotation     │ Restore tested     │
+└──────────────┴──────────────┴──────────────┴────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="cluster-inventory/">

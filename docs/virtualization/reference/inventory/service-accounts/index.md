@@ -1,6 +1,21 @@
 # VMware Service Account Inventory
 
 Service accounts used for VMware platform integrations. All accounts must be vault-managed and reviewed quarterly.
+
+```
+┌──────────────────────┬───────────────────────┬─────────────────┬──────────┬──────────┐
+│   Account            │  Target / Purpose     │  Role           │  Owner   │ Rotation │
+├──────────────────────┼───────────────────────┼─────────────────┼──────────┼──────────┤
+│ svc-vcenter-backup   │ vCenter → Veeam       │ Backup role     │ infra    │  90 days │
+│ svc-vcenter-aria     │ vCenter → Aria Ops    │ Read-only       │ infra    │  90 days │
+│ svc-vcenter-nsx      │ vCenter + NSX         │ Administrator   │ infra    │  90 days │
+│ svc-vcenter-veeam    │ vCenter → Veeam API   │ Veeam role      │ infra    │  90 days │
+│ svc-esxi-mgmt        │ ESXi hosts → Ansible  │ Host admin      │ infra    │  90 days │
+│ svc-aria-lcm         │ vCenter + LCM         │ Administrator   │ infra    │  90 days │
+├──────────────────────┴───────────────────────┴─────────────────┴──────────┴──────────┤
+│  All credentials stored in vault (kv/infra/...)  │  Quarterly review required         │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Account Register
 
 | Account | Purpose | Target System | Permission Level | Owner | Rotation | Vault Path | Last Reviewed |

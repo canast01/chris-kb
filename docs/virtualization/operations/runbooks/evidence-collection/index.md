@@ -1,5 +1,32 @@
 # Virtualization Evidence Collection
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  EVIDENCE COLLECTION WORKFLOW                   │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+   ┌───────────────────────▼───────────────────────┐
+   │  COLLECT                                      │
+   │  ┌─────────┐ ┌────────────┐ ┌──────────────┐ │
+   │  │  Logs   │ │Screenshots │ │ Support      │ │
+   │  │ hostd   │ │  alarms    │ │ Bundles      │ │
+   │  │ vpxa    │ │  tasks     │ │ vm-support   │ │
+   │  │ vmkernel│ │  events    │ │ vCenter logs │ │
+   │  └────┬────┘ └─────┬──────┘ └──────┬───────┘ │
+   └───────┼────────────┼───────────────┼──────────┘
+           └────────────┴───────┬────────┘
+                                ▼
+              ┌─────────────────────────────┐
+              │  Build Timeline             │
+              │  Affected objects, tz, IDs  │
+              └──────────────┬──────────────┘
+                             │
+              ┌──────────────▼──────────────┐
+              │  Bundle & Upload             │
+              │  Vendor portal / ticket      │
+              └─────────────────────────────┘
+```
+
 ## Overview
 
 Use this before vendor escalation, RCA work, or major incident review.

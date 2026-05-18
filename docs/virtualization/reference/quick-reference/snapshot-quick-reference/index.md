@@ -1,5 +1,21 @@
 # VMware Snapshot Quick Reference
 
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│  Snapshot Chain — Impact on VM I/O                                       │
+│                                                                          │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────────────────┐ │
+│  │ Base VMDK│──►│ Delta 1  │──►│ Delta 2  │──►│ Delta 3 (active I/O) │ │
+│  │(read-only│   │(read-only│   │(read-only│   │ Writes here; reads   │ │
+│  │ after    │   │ after    │   │ after    │   │ chain through all    │ │
+│  │ snapshot)│   │ next snap│   │ next snap│   │ previous deltas      │ │
+│  └──────────┘   └──────────┘   └──────────┘   └──────────────────────┘ │
+│                                                                          │
+│  Max age: 7 days  │  Max depth: 3  │  Delta > 10 GB = investigate       │
+│  Cleanup: Right-click VM → Snapshots → Delete (or Consolidate)          │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Find All Snapshots
 
 In vCenter: **Menu** → **Global Views** → **VMs and Templates** → Filter by snapshot state

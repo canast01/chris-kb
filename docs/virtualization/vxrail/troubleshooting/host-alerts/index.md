@@ -3,6 +3,35 @@
 
 ESXi host warnings, disconnected hosts, hardware alerts, and cluster impact.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │           VxRail Host Alert Triage Flow              │
+  │                                                      │
+  │  iDRAC hardware fault / ESXi host alarm triggered   │
+  │                       │                             │
+  │                       ▼                             │
+  │  ┌──────────────────────────────────────────────┐   │
+  │  │  Identify affected node                      │   │
+  │  │  vCenter ──► Hosts ──► Alarms tab            │   │
+  │  │  VxRail Mgr ──► Cluster ──► node status      │   │
+  │  └──────────────────────┬───────────────────────┘   │
+  │                         ▼                           │
+  │  ┌──────────────────────────────────────────────┐   │
+  │  │  Hardware fault?                             │   │
+  │  │  iDRAC SEL ──► racadm getsel                 │   │
+  │  │  Component: PSU │ Fan │ Disk │ NIC │ Memory  │   │
+  │  └──────────────────────┬───────────────────────┘   │
+  │                         ▼                           │
+  │  ┌──────────────────────────────────────────────┐   │
+  │  │  ESXi cluster impact?                        │   │
+  │  │  Host disconnected ──► vSAN degraded?        │   │
+  │  │  vMotion needed ──► enter maintenance mode   │   │
+  │  └──────────────────────┬───────────────────────┘   │
+  │                         ▼                           │
+  │  Remediate: replace hw │ restart service │ Dell SR  │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

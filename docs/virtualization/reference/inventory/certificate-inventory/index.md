@@ -1,5 +1,20 @@
 # VMware Certificate Inventory
 
+```
+┌─────────────────┬──────────────────────────┬───────────────┬─────────────────┐
+│   Component     │  Subject / FQDN          │   Expiry      │  Renewal Status │
+├─────────────────┼──────────────────────────┼───────────────┼─────────────────┤
+│ vCenter SSL     │ vcenter.domain.local     │ YYYY-MM-DD    │ VMCA-managed    │
+│ vCenter STS     │ vcenter.domain.local     │ YYYY-MM-DD    │ Self-signed     │
+│ NSX Manager     │ nsx.domain.local         │ YYYY-MM-DD    │ Custom CA       │
+│ Aria Operations │ aria-ops.domain.local    │ YYYY-MM-DD    │ Custom CA       │
+│ Aria Logs       │ aria-logs.domain.local   │ YYYY-MM-DD    │ Custom CA       │
+│ VxRail Manager  │ vxrail.domain.local      │ YYYY-MM-DD    │ Self-signed     │
+├─────────────────┴──────────────────────────┴───────────────┴─────────────────┤
+│  Review cadence: Monthly  │  Flag threshold: < 60 days to expiry             │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
 | Product | FQDN | Certificate Type | Issuer | Expiration | Owner | Last Renewed | Next Review |
 |---|---|---|---|---|---|---|---|
 | vCenter | vcenter.domain.local | Machine SSL | VMCA | YYYY-MM-DD | infra-team | YYYY-MM-DD | YYYY-MM-DD |

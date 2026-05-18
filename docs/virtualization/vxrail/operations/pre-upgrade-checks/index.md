@@ -4,6 +4,34 @@
 
 Use this page before VxRail lifecycle upgrades or firmware updates.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │             Pre-Upgrade Check Gate                   │
+  │                                                      │
+  │  Compatibility                                       │
+  │  Dell IMT ──► target version ──► vSphere/vSAN/NSX   │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  Cluster health                                      │
+  │  VxRail Mgr ──► all green │ no active faults        │
+  │  vSAN ──► no degraded disk groups                   │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  Free capacity                                       │
+  │  vSAN slack > 30% ──► sufficient for remediation    │
+  │  Datastore not full ──► ISOs / bundles fit           │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  Snapshots                                           │
+  │  No old/large snapshots on cluster VMs              │
+  │  Consolidate before LCM                             │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  All checks pass ──► proceed with LCM upgrade       │
+  │  Any fail ──► resolve before starting               │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Pre-Checks
 
 - Confirm scope.

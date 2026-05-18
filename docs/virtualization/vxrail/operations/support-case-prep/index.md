@@ -3,6 +3,37 @@
 
 Evidence, timeline, logs, screenshots, and clear issue summary for Dell support.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │            Dell Support Case Prep Flow               │
+  │                                                      │
+  │  Collect logs                                        │
+  │  VxRail Mgr → Support → Generate bundle             │
+  │  iDRAC → racadm getsel (hardware events)            │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  Timeline                                    │    │
+  │  │  When started │ what changed │ impact scope  │    │
+  │  │  Exact timestamps from logs / vCenter events │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  Screenshots                                 │    │
+  │  │  VxRail Mgr alert │ vCenter alarm │ error msg│    │
+  │  │  LCM job status if applicable                │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  Clear issue summary                         │    │
+  │  │  Service tag │ VxRail version │ node count   │    │
+  │  │  Symptom │ impact │ steps taken              │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  Open SR ──► attach bundle ──► paste summary        │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

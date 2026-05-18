@@ -3,6 +3,39 @@
 
 Validation after lifecycle, hardware, configuration, or support changes.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │          Post-Change Validation Checklist            │
+  │                                                      │
+  │  Change complete                                     │
+  │                 │                                    │
+  │                 ▼                                    │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  VxRail Manager health check                 │    │
+  │  │  API: /v1/cluster ──► health = Healthy       │    │
+  │  │  UI: no active critical alerts               │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  vSAN validation                             │    │
+  │  │  vCenter ──► vSAN ──► Health: all green      │    │
+  │  │  No resyncing objects outstanding            │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  vCenter checks                              │    │
+  │  │  All hosts: connected + no alarms            │    │
+  │  │  No DRS or HA issues                         │    │
+  │  └──────────────────────┬───────────────────────┘    │
+  │                         ▼                            │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  Workload check                              │    │
+  │  │  VMs running ──► no unexpected restarts      │    │
+  │  │  App-level health where applicable           │    │
+  │  └──────────────────────────────────────────────┘    │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

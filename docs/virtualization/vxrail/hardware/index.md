@@ -2,6 +2,32 @@
 
 VxRail hardware notes for nodes, disks, NICs, power, cooling, iDRAC, and firmware inventory.
 
+```
+┌─────────────────────────────────────────────────────┐
+│                   VxRail Chassis                    │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐          │
+│  │  Node 1  │  │  Node 2  │  │  Node N  │  ...     │
+│  │ ┌──────┐ │  │ ┌──────┐ │  │ ┌──────┐ │          │
+│  │ │ CPU  │ │  │ │ CPU  │ │  │ │ CPU  │ │          │
+│  │ │ MEM  │ │  │ │ MEM  │ │  │ │ MEM  │ │          │
+│  │ └──────┘ │  │ └──────┘ │  │ └──────┘ │          │
+│  │ ┌──────┐ │  │ ┌──────┐ │  │ ┌──────┐ │          │
+│  │ │Disks │ │  │ │Disks │ │  │ │Disks │ │          │
+│  │ │(vSAN)│ │  │ │(vSAN)│ │  │ │(vSAN)│ │          │
+│  │ └──────┘ │  │ └──────┘ │  │ └──────┘ │          │
+│  │ NIC PSU  │  │ NIC PSU  │  │ NIC PSU  │          │
+│  │ Fan iDRAC│  │ Fan iDRAC│  │ Fan iDRAC│          │
+│  └──────────┘  └──────────┘  └──────────┘          │
+│         │              │              │              │
+│         └──────────────┴──────────────┘             │
+│                  Management Network                  │
+│           ┌─────────────────────────┐               │
+│           │    VxRail Manager VM    │               │
+│           │  iDRAC ◄──► REST API   │               │
+│           └─────────────────────────┘               │
+└─────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="node-health/">

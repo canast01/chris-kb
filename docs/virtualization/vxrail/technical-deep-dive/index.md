@@ -3,6 +3,34 @@
 
 VxRail is part of the virtualization platform. This page is for technical operations, troubleshooting, upgrade planning, and support handoff.
 
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │                 VxRail Internals                         │
+  │                                                          │
+  │  Boot Sequence: BIOS ──► iDRAC init ──► ESXi boot       │
+  │                 ──► VxRail agent ──► VxRail Mgr reg.    │
+  │                                                          │
+  │  ┌──────────────────────────────────────────────────┐    │
+  │  │              Network Stack (per node)            │    │
+  │  │  vmnic0/1 ──► vDS ──► vmk0 (mgmt)               │    │
+  │  │                   ──► vmk1 (vSAN)                │    │
+  │  │                   ──► vmk2 (vMotion)             │    │
+  │  └──────────────────────────────────────────────────┘    │
+  │                                                          │
+  │  ┌──────────────────────────────────────────────────┐    │
+  │  │           vSAN Witness Placement                 │    │
+  │  │  Site A (N nodes) ◄──► Site B (N nodes)         │    │
+  │  │              │                  │               │    │
+  │  │              └────► Witness ◄───┘               │    │
+  │  │                   (tiebreaker)                   │    │
+  │  └──────────────────────────────────────────────────┘    │
+  │                                                          │
+  │  Internal APIs: VxRail Mgr ──► ptolemy (vSAN bridge)    │
+  │                             ──► marvin (LCM orchestr.)  │
+  │                             ──► mystic (external API)   │
+  └──────────────────────────────────────────────────────────┘
+```
+
 ## Platform Role
 
 VxRail is a Dell integrated HCI platform built on VMware vSphere and vSAN with Dell lifecycle, hardware, and support integration.

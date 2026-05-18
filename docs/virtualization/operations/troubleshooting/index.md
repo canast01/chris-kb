@@ -1,5 +1,37 @@
 # Virtualization Troubleshooting
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│          VIRTUALIZATION TROUBLESHOOTING DECISION TREE           │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │  Symptom?   │
+                    └──────┬──────┘
+          ┌────────────────┼─────────────────────┐
+          ▼                ▼                     ▼
+   ┌─────────────┐  ┌─────────────┐     ┌─────────────┐
+   │  VM Slow /  │  │ Host Down / │     │ Storage /   │
+   │  No Power   │  │ Disconnected│     │ Datastore   │
+   └──────┬──────┘  └──────┬──────┘     └──────┬──────┘
+          ▼                ▼                    ▼
+   ┌─────────────┐  ┌─────────────┐     ┌─────────────┐
+   │ CPU/Mem/Disk│  │ Ping ► SSH  │     │ Path state  │
+   │ Perf triage │  │ vpxa/hostd  │     │ APD/PDL/full│
+   └──────┬──────┘  └──────┬──────┘     └──────┬──────┘
+          │                │                    │
+          └────────────────┴──────────┬─────────┘
+                    ┌─────────────────▼──────────────────┐
+                    │  Network │ Certificate │ Login/Auth │
+                    │  NIC/PG  │  Expiry     │  SSO/AD    │
+                    └─────────────────┬──────────────────┘
+                                      ▼
+                          ┌───────────────────────┐
+                          │  Unresolved ► Escalate │
+                          │  Dell / VMware Support │
+                          └───────────────────────┘
+```
+
 Common virtualization troubleshooting workflows.
 
 ## Troubleshooting Flow

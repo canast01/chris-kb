@@ -1,4 +1,37 @@
 # ESXi Host Failure Runbook
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    HOST EVACUATION FLOW                         │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │   vMotion VMs Off Host  │
+              │  Confirm DRS active or  │
+              │  manually migrate VMs   │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │   DRS Assist            │
+              │  Check DRS balance      │
+              │  Resolve migration blkrs│
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │  Enter Maintenance Mode │
+              │  Right-click host ►     │
+              │  Maintenance Mode ►     │
+              │  Enter                  │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │   Validate Empty Host   │
+              │  0 VMs running          │
+              │  vSAN objects evacuated │
+              │  Ready for work         │
+              └─────────────────────────┘
+```
+
 ## Confirm Impact
 
 - Identify the affected host

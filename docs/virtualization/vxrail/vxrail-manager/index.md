@@ -2,6 +2,31 @@
 
 VxRail Manager notes for service health, lifecycle jobs, support bundles, connectivity, certificates, and logs.
 
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │                   VxRail Manager                         │
+  │                                                          │
+  │  ┌────────────────────────────────────────────────────┐  │
+  │  │  UI (HTTPS) / REST API (/rest/vxm/v1/...)          │  │
+  │  └──────────────────────────────────────────────────┬─┘  │
+  │                                                     │    │
+  │    ┌────────────────────┬────────────────────┐      │    │
+  │    ▼                    ▼                    ▼      │    │
+  │  ┌──────────┐  ┌──────────────┐  ┌──────────────┐  │    │
+  │  │  marvin  │  │    mystic    │  │   ptolemy    │  │    │
+  │  │  LCM     │  │  ext. API   │  │  vSAN bridge │  │    │
+  │  │ orchestr.│  │  cred. mgmt │  │  health      │  │    │
+  │  └────┬─────┘  └──────┬───────┘  └──────┬───────┘  │    │
+  │       │               │                 │           │    │
+  │       └───────────────┴─────────────────┘           │    │
+  │                        │                            │    │
+  │             ┌──────────┴───────────┐                │    │
+  │             ▼                      ▼                │    │
+  │         vCenter                  iDRAC              │    │
+  │         (cluster ops)            (hardware)         │    │
+  └──────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="service-health/">

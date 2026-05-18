@@ -1,6 +1,25 @@
 # Rollback Planning
 
 Rollback options differ significantly by component. Establish the rollback path before the maintenance window — not during an incident.
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                  Rollback Options by Component                           │
+├──────────────────────┬───────────────────────────┬───────────────────────┤
+│  Component           │  Rollback Method          │  Practical?           │
+├──────────────────────┼───────────────────────────┼───────────────────────┤
+│ vCenter VCSA         │ File-based backup restore │ Yes (~45 min)         │
+│ ESXi host            │ Boot from altbootbank     │ Yes (pre-config only) │
+│ NSX Manager          │ NSX backup + restore      │ Partial (2–4h)        │
+│ vSAN                 │ ESXi rollback covers vSAN │ No direct rollback    │
+│ VxRail               │ Dell support-assisted     │ Vendor only           │
+│ Aria products        │ VM snapshot pre-upgrade   │ Yes (if snapped)      │
+│ VM Hardware version  │ No rollback               │ Permanent             │
+├──────────────────────┴───────────────────────────┴───────────────────────┤
+│  Go/No-Go: all hosts + VMs OK → Go  │  Core service degraded → No-Go   │
+│  Rollback decision must be made before window end — not after            │
+└──────────────────────────────────────────────────────────────────────────┘
+```
 ## Rollback Readiness by Component
 
 | Component | Rollback Method | Practical Rollback? | Notes |

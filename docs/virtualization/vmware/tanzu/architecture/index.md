@@ -4,6 +4,33 @@
 VMware Tanzu provides Kubernetes-based application platform capabilities on top of vSphere, including Supervisor clusters, workload clusters, and namespace-based multi-tenancy.
 </div>
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     TANZU ARCHITECTURE                          │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+   ┌───────────────────────▼───────────────────────────────┐
+   │  vSphere Supervisor Cluster                           │
+   │  ┌─────────────────────────────────────────────────┐  │
+   │  │  vSphere Namespace  │  vSphere Namespace        │  │
+   │  │  (tenant / team)    │  (tenant / team)          │  │
+   │  └─────────────────────────────────────────────────┘  │
+   └───────────────────────┬───────────────────────────────┘
+                           │ provisions
+   ┌───────────────────────▼───────────────────────────────┐
+   │  TKG Workload Clusters (per namespace)                │
+   │  ┌───────────────┐  ┌───────────────┐                │
+   │  │  Control Plane│  │  Worker Nodes │                │
+   │  │  (K8s master) │  │  (VM-based)   │                │
+   │  └───────────────┘  └───────────────┘                │
+   └───────────────────────┬───────────────────────────────┘
+                           │ images from
+   ┌───────────────────────▼───────────────────────────────┐
+   │  Harbor Registry                                      │
+   │  OCI-compliant image store │ vulnerability scanning   │
+   └───────────────────────────────────────────────────────┘
+```
+
 ![Tanzu Architecture](../../../../assets/tanzu-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

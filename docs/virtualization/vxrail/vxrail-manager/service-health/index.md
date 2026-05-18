@@ -3,6 +3,33 @@
 
 VxRail Manager service status, UI access, alerts, and management plane checks.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │          VxRail Manager Service Health               │
+  │                                                      │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  marvin     ── LCM orchestration service     │    │
+  │  │  mystic     ── external API / credential svc │    │
+  │  │  ptolemy    ── vSAN health bridge            │    │
+  │  │  cetacean   ── node communication agent      │    │
+  │  └────────────────────┬─────────────────────────┘    │
+  │                       │                              │
+  │  systemctl status <service>                          │
+  │  systemctl list-units --type=service --state=running │
+  │                       │                              │
+  │                       ▼                              │
+  │  ┌──────────────────────────────────────────────┐    │
+  │  │  Service down?                               │    │
+  │  │  ├── Check /var/log/vmware/marvin/           │    │
+  │  │  ├── sudo systemctl restart marvin           │    │
+  │  │  └── Verify UI: https://<vxm-ip>            │    │
+  │  └──────────────────────────────────────────────┘    │
+  │                       │                              │
+  │                       ▼                              │
+  │  All services running ──► VxRail Manager healthy    │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

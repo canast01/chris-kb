@@ -3,6 +3,31 @@
 
 Connectivity to vCenter, hosts, Dell services, DNS, NTP, and support endpoints.
 
+```
+  ┌──────────────────────────────────────────────────────┐
+  │         VxRail Manager Connectivity Map              │
+  │                                                      │
+  │  ┌───────────────────────────────────────────────┐   │
+  │  │             VxRail Manager VM                 │   │
+  │  └────────────────────┬──────────────────────────┘   │
+  │                       │                              │
+  │     ┌─────────────────┼──────────────────┐           │
+  │     ▼                 ▼                  ▼           │
+  │  ┌────────┐  ┌─────────────────┐  ┌───────────────┐  │
+  │  │vCenter │  │  ESXi Hosts     │  │  iDRAC (BMC)  │  │
+  │  │:443    │  │  :443 (vpxd)    │  │  :443 / IPMI  │  │
+  │  └────────┘  └─────────────────┘  └───────────────┘  │
+  │     │                                                 │
+  │     ├──► DNS (port 53)  ── hostname resolution       │
+  │     ├──► NTP (port 123) ── time sync                 │
+  │     └──► Dell SRS/SupportAssist (HTTPS outbound)     │
+  │                                                      │
+  │  Failure path:                                       │
+  │  DNS fail ──► VxRail Mgr loses host connectivity    │
+  │  NTP skew ──► cert validation / LCM errors           │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

@@ -1,4 +1,21 @@
 # Command Cheat Sheet
+
+```
+┌─────────────────┬───────────────────────────┬────────────────────────────────┐
+│   Category      │  esxcli / esxcfg          │  PowerCLI                      │
+├─────────────────┼───────────────────────────┼────────────────────────────────┤
+│ Version / Info  │ vmware -v                 │ Get-VMHost | Select Version    │
+│ Services        │ services.sh status        │ (VAMI or service-control)      │
+│ Network NICs    │ esxcli network nic list   │ Get-VDSwitch                   │
+│ VMkernels       │ esxcli network ip iface.. │ Get-VMHostNetworkAdapter       │
+│ Storage paths   │ esxcli storage core path  │ Get-Datastore                  │
+│ vSAN health     │ esxcli vsan health ..     │ Get-VsanClusterConfiguration   │
+│ vSAN resync     │ esxcli vsan debug resync  │ Get-VsanResyncingComponent     │
+│ Ping vmkernel   │ vmkping -I vmk1 <ip>      │ —                              │
+├─────────────────┴───────────────────────────┴────────────────────────────────┤
+│  Logs: /var/log/hostd.log  │  vpxa.log  │  vmkernel.log  │  vobd.log         │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 ## ESXi Host Commands
 
 ```bash

@@ -1,4 +1,22 @@
 # VMware Logs Quick Reference
+
+```
+┌────────────────────────────────┬──────────────────────┬─────────────────────────────┐
+│   Component                    │  Log Path            │  Key Events / grep patterns │
+├────────────────────────────────┼──────────────────────┼─────────────────────────────┤
+│ ESXi – host daemon             │ /var/log/hostd.log   │ VM power, config, errors    │
+│ ESXi – vCenter agent           │ /var/log/vpxa.log    │ vCenter comms, reconnects   │
+│ ESXi – kernel                  │ /var/log/vmkernel.log│ Storage, network, hardware  │
+│ ESXi – hardware events         │ /var/log/vobd.log    │ Disk, NIC, PSU events       │
+│ ESXi – auth                    │ /var/log/auth.log    │ Login attempts, SSH         │
+├────────────────────────────────┼──────────────────────┼─────────────────────────────┤
+│ vCenter – server daemon        │ /var/log/vmware/vpxd/│ Inventory, task, alarm logs │
+│ vCenter – SSO                  │ /var/log/vmware/sso/ │ Login failures, token errors│
+│ vCenter – appliance mgmt       │ /var/log/vmware/appl.│ Backup, upgrade, cert events│
+└────────────────────────────────┴──────────────────────┴─────────────────────────────┘
+  Collect: vCenter → Administration → Support → Export Support Bundle
+           ESXi   → Right-click host → Export System Logs
+```
 ## ESXi Log Locations
 
 ```bash

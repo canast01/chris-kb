@@ -1,6 +1,32 @@
 # Decision Tree: Storage Latency
 
 Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN latency alarms trigger.
+
+```
+               Latency alert / VM storage slow
+                              │
+                              ▼
+               ┌──────────────────────────────┐
+               │ esxtop: GAVG > 20ms?         │
+               │ DAVG > 5ms?  KAVG > 2ms?     │
+               └──────────────────────────────┘
+                              │
+               ┌──────────────┼──────────────┐
+               ▼              ▼              ▼
+        ┌────────────┐ ┌────────────┐ ┌────────────────┐
+        │ vSAN active│ │ Array      │ │ Network /      │
+        │ resync?    │ │ health OK? │ │ HBA fabric?    │
+        │ Throttle   │ │ Check ctrl │ │ vmkping vSAN   │
+        │ resync     │ │ CPU/queue  │ │ FC HBA stats   │
+        └────────────┘ └────────────┘ └────────────────┘
+               │
+               ▼
+        ┌─────────────────────────────────┐
+        │ Hot-spot VM?  esxtop MBRS/MBWS  │
+        │ Snapshot chain > 3 deep?        │
+        │ Backup job running against VM?  │
+        └─────────────────────────────────┘
+```
 ## Step 1 — Confirm Latency Baseline Breach
 
 ```bash

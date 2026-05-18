@@ -3,6 +3,31 @@
 
 iDRAC access, hardware inventory, logs, alerts, and support evidence.
 
+```
+  ┌──────────────────────────────────────────────────┐
+  │                  VxRail Node                     │
+  │  ┌────────────────────────────────────────────┐  │
+  │  │              iDRAC (BMC)                   │  │
+  │  │  ┌──────────┐    ┌──────────────────────┐  │  │
+  │  │  │  IPMI    │    │    Redfish API        │  │  │
+  │  │  │ (legacy) │    │  GET /redfish/v1/...  │  │  │
+  │  │  └────┬─────┘    └──────────┬───────────┘  │  │
+  │  └───────┼───────────────────  ┼  ────────────┘  │
+  └──────────┼─────────────────────┼────────────────┘
+             ▼                     ▼
+  ┌─────────────────┐   ┌────────────────────────┐
+  │  Remote Console │   │   VxRail Manager       │
+  │  Power control  │   │   Hardware alerts      │
+  │  Virtual media  │   │   Lifecycle integration│
+  └─────────────────┘   └────────────────────────┘
+             │
+             ▼
+  ┌─────────────────────────────────────────────┐
+  │  iDRAC Data: sensors │ SEL │ lifecycle log  │
+  │  Fans  PSU  Temp  Disk  NIC  BIOS events    │
+  └─────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.

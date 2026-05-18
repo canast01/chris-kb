@@ -2,6 +2,34 @@
 
 > Part of the [VxRail](../) reference.
 
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │               VxRail Vendor Support Flow                 │
+  │                                                          │
+  │  Hardware fault                                          │
+  │  detected by iDRAC ──► SupportAssist (SRS) ──►          │
+  │                         Dell SR auto-opened             │
+  │                                                          │
+  │  Manual SR path:                                         │
+  │  ┌───────────────────────────────────────────────────┐   │
+  │  │  1. Collect logs (VxRail Mgr support bundle)      │   │
+  │  │  2. Dell portal ──► service tag lookup            │   │
+  │  │  3. Open SR: product=VxRail, category=hw/sw/net   │   │
+  │  │  4. Attach bundle + timeline + screenshots        │   │
+  │  └──────────────────────────┬────────────────────────┘   │
+  │                             │                            │
+  │                             ▼                            │
+  │  ┌──────────────────────────────────────────────────┐    │
+  │  │  SLA Tiers                                       │    │
+  │  │  Standard SR ──► Priority escalation             │    │
+  │  │  ──► Engineering escalation ──► Account team     │    │
+  │  └──────────────────────────────────────────────────┘    │
+  │                                                          │
+  │  ESE (Elite Support Engineer) engagement:               │
+  │  critical production issues ──► request in SR           │
+  └──────────────────────────────────────────────────────────┘
+```
+
 ---
 ## Opening a Support Request
 

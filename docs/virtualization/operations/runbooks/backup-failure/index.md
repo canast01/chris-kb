@@ -1,4 +1,41 @@
 # VMware Backup Failure Runbook
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  VEEAM BACKUP FAILURE TRIAGE                    │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │  Job Error  │ Review failed job, error msg,
+                    │  Detected   │ VM name, failure time
+                    └──────┬──────┘
+                           │
+           ┌───────────────┼───────────────┐
+           ▼               ▼               ▼
+    ┌──────────┐    ┌──────────┐    ┌──────────────┐
+    │Repository│    │ Snapshot │    │    Proxy     │
+    │  Space   │    │  State   │    │    Health    │
+    └────┬─────┘    └────┬─────┘    └──────┬───────┘
+         │               │                 │
+         ▼               ▼                 ▼
+    ┌──────────┐    ┌──────────┐    ┌──────────────┐
+    │Check free│    │Stale snap│    │ Proxy VM on? │
+    │space >20%│    │present?  │    │ Logs clean?  │
+    └────┬─────┘    └────┬─────┘    └──────┬───────┘
+         │               │                 │
+         └───────────────┴────────┬────────┘
+                                  ▼
+                         ┌─────────────────┐
+                         │   Remediate &   │
+                         │   Retry Job     │
+                         └────────┬────────┘
+                                  │
+                    ┌─────────────▼─────────────┐
+                    │  Retry passes? ► RESOLVED  │
+                    │  Retry fails?  ► ESCALATE  │
+                    └───────────────────────────┘
+```
+
 ## Identify Failed VMs
 
 - Review the backup platform for failed or missed backup jobs

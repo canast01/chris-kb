@@ -1,5 +1,33 @@
 # Known Issues and Fix Patterns
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  KNOWN ISSUE LOOKUP PATTERN                     │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+   ┌───────────────────────▼──────────────────────────────────┐
+   │  SYMPTOM                                                 │
+   │  Host disconnected │ Login failure │ vSAN degraded       │
+   │  PSOD │ Datastore inaccessible │ Service failed          │
+   └───────────────────────┬──────────────────────────────────┘
+                           │
+   ┌───────────────────────▼──────────────────────────────────┐
+   │  KB ARTICLE LOOKUP                                       │
+   │  Match symptom ► VMware KB / internal known-issue entry  │
+   └───────────────────────┬──────────────────────────────────┘
+                           │
+   ┌───────────────────────▼──────────────────────────────────┐
+   │  WORKAROUND / FIX STEPS                                  │
+   │  Apply documented commands or config change              │
+   └───────────────────────┬──────────────────────────────────┘
+                           │
+   ┌───────────────────────▼──────────────────────────────────┐
+   │  FIX VERSION                                             │
+   │  Confirm patch / build that resolves permanently         │
+   │  Schedule upgrade if fix version not yet applied         │
+   └──────────────────────────────────────────────────────────┘
+```
+
 Structured troubleshooting entries for common VMware/vSAN operational issues. Each entry includes specific diagnostic commands, relevant error messages or event IDs, and concrete fix steps.
 
 ---

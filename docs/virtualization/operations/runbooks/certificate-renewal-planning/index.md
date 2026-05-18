@@ -1,4 +1,43 @@
 # VMware Certificate Renewal Runbook
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│               CERTIFICATE RENEWAL PLANNING FLOW                 │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │   Inventory Expiry      │
+              │  Scan all certs: VCSA,  │
+              │  NSX, Aria, ESXi hosts  │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │   Plan Sequence         │
+              │  Identify dependencies  │
+              │  CA root ► intermediary │
+              │  ► leaf certs           │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │   Schedule Window       │
+              │  Outside peak hours     │
+              │  Confirm backup current │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │   Renew Certificate     │
+              │  VMCA / custom CA path  │
+              │  Restart required svcs  │
+              └────────────┬────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │   Validate & Close      │
+              │  Browser ✓ SSO ✓        │
+              │  Integrations ✓         │
+              │  Update inventory       │
+              └─────────────────────────┘
+```
+
 ## Identify the Expiring Certificate
 
 - Review certificate inventory

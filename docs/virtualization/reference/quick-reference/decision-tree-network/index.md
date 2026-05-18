@@ -1,6 +1,31 @@
 # Decision Tree: VM Network Issue
 
 Use this when a VM cannot communicate on the network — applies to both NSX-T overlay and standard vSphere networking.
+
+```
+                     VM: Cannot communicate
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Ping default GW?    │
+                    └─────────────────────┘
+               No ▼                       Yes ▼
+    ┌───────────────────────┐     ┌──────────────────────┐
+    │ Check portgroup/VLAN  │     │ Ping destination?    │
+    │ assignment            │     └──────────────────────┘
+    │ Check MTU mismatch    │     No ▼              Yes ▼
+    └───────────────────────┘  ┌──────────┐     ┌──────────────┐
+               │               │ Routing? │     │ NSX DFW rule │
+               ▼               │ Tier-0   │     │ blocking?    │
+    ┌───────────────────────┐  │ BGP peers│     │ Trace Flow   │
+    │ NSX segment check:    │  └──────────┘     └──────────────┘
+    │ correct tier-1 attach │         │
+    │ TEP reachability      │         ▼
+    └───────────────────────┘  ┌─────────────────────────┐
+                                │ pktcap-uw capture on   │
+                                │ vNIC → analyse in Wireshark │
+                                └─────────────────────────┘
+```
 ## Step 1 — Basic Connectivity Test
 
 ```bash
