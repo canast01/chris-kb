@@ -1585,6 +1585,32 @@
 
 
 <h1 id="known-issues-and-fix-patterns">Known Issues and Fix Patterns<a class="headerlink" href="#known-issues-and-fix-patterns" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                  KNOWN ISSUE LOOKUP PATTERN                     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└──────────────────────────┬──────────────────────────────────────┘
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                           │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   ┌───────────────────────▼──────────────────────────────────┐
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   │  SYMPTOM                                                 │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>   │  Host disconnected │ Login failure │ vSAN degraded       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   │  PSOD │ Datastore inaccessible │ Service failed          │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   └───────────────────────┬──────────────────────────────────┘
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                           │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   ┌───────────────────────▼──────────────────────────────────┐
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>   │  KB ARTICLE LOOKUP                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>   │  Match symptom ► VMware KB / internal known-issue entry  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>   └───────────────────────┬──────────────────────────────────┘
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>   ┌───────────────────────▼──────────────────────────────────┐
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>   │  WORKAROUND / FIX STEPS                                  │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>   │  Apply documented commands or config change              │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>   └───────────────────────┬──────────────────────────────────┘
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                           │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>   ┌───────────────────────▼──────────────────────────────────┐
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>   │  FIX VERSION                                             │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>   │  Confirm patch / build that resolves permanently         │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>   │  Schedule upgrade if fix version not yet applied         │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>   └──────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p>Structured troubleshooting entries for common VMware/vSAN operational issues. Each entry includes specific diagnostic commands, relevant error messages or event IDs, and concrete fix steps.</p>
 <hr />
 <h2 id="1-host-disconnected-from-vcenter">1. Host Disconnected from vCenter<a class="headerlink" href="#1-host-disconnected-from-vcenter" title="Permanent link">&para;</a></h2>
@@ -1645,13 +1671,13 @@
 <ol>
 <li>Confirm management network reachability — if no ping, check physical NIC, VLAN, and upstream switch port.</li>
 <li>If reachable, restart management agents from the DCUI or SSH:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># From host SSH</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From host SSH</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>/etc/init.d/vpxa<span class="w"> </span>restart
 </code></pre></div></li>
 <li>If DNS is the issue, fix <code>/etc/resolv.conf</code> on the host and confirm <code>nscd</code> is running:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>cat<span class="w"> </span>/etc/resolv.conf
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/etc/init.d/nscd<span class="w"> </span>restart
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/etc/init.d/nscd<span class="w"> </span>restart
 </code></pre></div></li>
 <li>If SSL certificate mismatch is in <code>vpxa.log</code>, reconnect the host from vCenter:</li>
 <li>Right-click host → <strong>Connection</strong> → <strong>Disconnect</strong>, wait 30 s, then <strong>Reconnect</strong>.</li>
@@ -1705,10 +1731,10 @@
 <h3 id="fix-steps_1">Fix Steps<a class="headerlink" href="#fix-steps_1" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Immediate:</strong> Delete stale VM snapshots that are consuming hidden capacity:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div></li>
 <li>If a large resync is in progress, wait for it to complete before taking action — do not add hosts or make policy changes mid-resync:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s1">&#39;esxcli vsan debug resync list&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s1">&#39;esxcli vsan debug resync list&#39;</span>
 </code></pre></div></li>
 <li>If capacity is genuinely exhausted, defer any maintenance window that would trigger additional resync.</li>
 <li>If running an erasure coding policy (RAID-5/6), consider whether switching lower-priority VMs to RAID-1 temporarily frees space (RAID-5 uses 1.33× vs RAID-1 at 2×).</li>
@@ -1767,23 +1793,23 @@
 <h3 id="fix-steps_2">Fix Steps<a class="headerlink" href="#fix-steps_2" title="Permanent link">&para;</a></h3>
 <ol>
 <li>If SSO is not running, restart it:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
 </code></pre></div></li>
 <li>If a specific service is failed, restart it individually and check its log:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-sso
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/sso/vmware-sts-idmd.log
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-sso
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/sso/vmware-sts-idmd.log
 </code></pre></div></li>
 <li>If certificates are expired, use the Certificate Manager to reissue:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Choose option 3 (Replace Machine SSL certificate) or option 6 (Fix all certificates)</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Choose option 3 (Replace Machine SSL certificate) or option 6 (Fix all certificates)</span>
 </code></pre></div></li>
 <li>If the SSO administrator password is locked, unlock it via VCSA shell:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>user<span class="w"> </span>modify<span class="w"> </span>--account<span class="w"> </span>administrator<span class="w"> </span>--domain<span class="w"> </span>vsphere.local<span class="w"> </span>--password-never-expires<span class="w"> </span><span class="nb">true</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>user<span class="w"> </span>modify<span class="w"> </span>--account<span class="w"> </span>administrator<span class="w"> </span>--domain<span class="w"> </span>vsphere.local<span class="w"> </span>--password-never-expires<span class="w"> </span><span class="nb">true</span>
 </code></pre></div></li>
 <li>If identity source (AD) is unreachable, verify DNS and connectivity to the domain controller from the VCSA:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>nslookup<span class="w"> </span>&lt;domain-controller-fqdn&gt;
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-ip&gt;<span class="w"> </span>-x<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=local&quot;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>nslookup<span class="w"> </span>&lt;domain-controller-fqdn&gt;
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-ip&gt;<span class="w"> </span>-x<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=local&quot;</span>
 </code></pre></div></li>
 </ol>
 <hr />
@@ -1843,22 +1869,22 @@
 </li>
 <li>
 <p>To monitor resync progress:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># From any host SSH — watch resync clear</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;esxcli vsan debug resync list&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From any host SSH — watch resync clear</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;esxcli vsan debug resync list&#39;</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>If the object remains inaccessible after the host recovers, force a resync via CLOM:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From host SSH — trigger CLOM to re-evaluate object placement</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>reconfigure<span class="w"> </span>--object-uuid<span class="w"> </span>&lt;uuid&gt;<span class="w"> </span>--policy<span class="w"> </span><span class="s2">&quot;&lt;storage-policy-XML&gt;&quot;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># From host SSH — trigger CLOM to re-evaluate object placement</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>reconfigure<span class="w"> </span>--object-uuid<span class="w"> </span>&lt;uuid&gt;<span class="w"> </span>--policy<span class="w"> </span><span class="s2">&quot;&lt;storage-policy-XML&gt;&quot;</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>If a disk group is permanently lost and components are unrecoverable, you can attempt to evacuate or reconstruct using RVC (Ruby vSphere Console):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List inaccessible objects</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>vsan.check_state<span class="w"> </span>-r<span class="w"> </span>/datacenter/host/&lt;cluster&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Force rebuild (use with caution)</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>vsan.obj_status_report<span class="w"> </span>-r<span class="w"> </span>/datacenter/host/&lt;cluster&gt;
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List inaccessible objects</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vsan.check_state<span class="w"> </span>-r<span class="w"> </span>/datacenter/host/&lt;cluster&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Force rebuild (use with caution)</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>vsan.obj_status_report<span class="w"> </span>-r<span class="w"> </span>/datacenter/host/&lt;cluster&gt;
 </code></pre></div></p>
 </li>
 <li>
@@ -1919,40 +1945,40 @@
 <ol>
 <li>
 <p>Identify the failed service and attempt a targeted restart:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-vpxd
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># or for vPostgres:</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vpostgres
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-vpxd
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># or for vPostgres:</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vpostgres
 </code></pre></div></p>
 </li>
 <li>
 <p>If the log partition is full (common cause), archive and truncate large logs:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/log
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Find large files</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log&quot;</span><span class="w"> </span>-size<span class="w"> </span>+500M
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Truncate (do not delete — open file handles)</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>&gt;<span class="w"> </span>/storage/log/vmware/vpxd/vpxd.log
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/log
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Find large files</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>find<span class="w"> </span>/storage/log<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log&quot;</span><span class="w"> </span>-size<span class="w"> </span>+500M
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Truncate (do not delete — open file handles)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>&gt;<span class="w"> </span>/storage/log/vmware/vpxd/vpxd.log
 </code></pre></div></p>
 </li>
 <li>
 <p>If the database is corrupted or <code>vpostgres</code> will not start:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check PostgreSQL logs</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/vpostgres/postgresql.log
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Attempt DB recovery</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>vmware-vpxd
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>/opt/vmware/vpostgres/current/bin/pg_resetwal<span class="w"> </span>-f<span class="w"> </span>/storage/db/vpostgres
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vpostgres
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check PostgreSQL logs</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/vpostgres/postgresql.log
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Attempt DB recovery</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>vmware-vpxd
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>/opt/vmware/vpostgres/current/bin/pg_resetwal<span class="w"> </span>-f<span class="w"> </span>/storage/db/vpostgres
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vpostgres
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
 </code></pre></div></p>
 </li>
 <li>
 <p>If a full service restart is required:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
 </code></pre></div></p>
 </li>
 <li>
 <p>If VAMI itself is inaccessible, the appliance management UI service can be restarted via SSH:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vami-lighttp
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vami-lighttp
 </code></pre></div></p>
 </li>
 </ol>
@@ -2016,21 +2042,21 @@
 <ol>
 <li>
 <p><strong>Immediate:</strong> If VMs were running on the host, confirm HA has restarted them on other hosts:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Host</span><span class="p">.</span><span class="n">Name</span> <span class="o">-ne</span> <span class="s2">&quot;&lt;failed-host&gt;&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Host</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c"># Check recent HA events</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">500</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-is</span> <span class="no">[VMware.Vim.VmFailoverSucceededEvent]</span> <span class="p">}</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Host</span><span class="p">.</span><span class="n">Name</span> <span class="o">-ne</span> <span class="s2">&quot;&lt;failed-host&gt;&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Host</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c"># Check recent HA events</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">500</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-is</span> <span class="no">[VMware.Vim.VmFailoverSucceededEvent]</span> <span class="p">}</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>Collect core dump before rebooting (if host is still reachable via SSH):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/core/
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Copy dump off-host</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>scp<span class="w"> </span>/var/core/*.zdump<span class="w"> </span>&lt;backup-host&gt;:/tmp/
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/core/
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># Copy dump off-host</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>scp<span class="w"> </span>/var/core/*.zdump<span class="w"> </span>&lt;backup-host&gt;:/tmp/
 </code></pre></div></p>
 </li>
 <li>
 <p>After reboot, check vmkernel log for the panic cause and module:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>grep<span class="w"> </span>-B5<span class="w"> </span>-A20<span class="w"> </span><span class="s2">&quot;PCPU&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>grep<span class="w"> </span>-B5<span class="w"> </span>-A20<span class="w"> </span><span class="s2">&quot;PCPU&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
 </code></pre></div></p>
 </li>
 <li>
@@ -2045,8 +2071,8 @@
 <p>After root cause is identified:</p>
 </li>
 <li>For driver bugs: apply the relevant VIB update:
-     <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>update<span class="w"> </span>-v<span class="w"> </span>&lt;vib-path&gt;
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>reboot
+     <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>update<span class="w"> </span>-v<span class="w"> </span>&lt;vib-path&gt;
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>reboot
 </code></pre></div></li>
 <li>For firmware bugs: update via vendor tooling (HPE SUM, Dell SUU, Lenovo UpdateXpress) before returning the host to the cluster.</li>
 <li>For hardware failure: replace the faulty component (DIMM, NIC, HBA) and run memory/hardware diagnostics (e.g., Memtest, vendor diagnostics) before re-adding to cluster.</li>

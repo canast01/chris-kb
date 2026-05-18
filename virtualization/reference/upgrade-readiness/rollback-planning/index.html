@@ -1363,6 +1363,23 @@
 
 <h1 id="rollback-planning">Rollback Planning<a class="headerlink" href="#rollback-planning" title="Permanent link">&para;</a></h1>
 <p>Rollback options differ significantly by component. Establish the rollback path before the maintenance window — not during an incident.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                  Rollback Options by Component                           │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├──────────────────────┬───────────────────────────┬───────────────────────┤
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Component           │  Rollback Method          │  Practical?           │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├──────────────────────┼───────────────────────────┼───────────────────────┤
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│ vCenter VCSA         │ File-based backup restore │ Yes (~45 min)         │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│ ESXi host            │ Boot from altbootbank     │ Yes (pre-config only) │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│ NSX Manager          │ NSX backup + restore      │ Partial (2–4h)        │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│ vSAN                 │ ESXi rollback covers vSAN │ No direct rollback    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│ VxRail               │ Dell support-assisted     │ Vendor only           │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│ Aria products        │ VM snapshot pre-upgrade   │ Yes (if snapped)      │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ VM Hardware version  │ No rollback               │ Permanent             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>├──────────────────────┴───────────────────────────┴───────────────────────┤
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Go/No-Go: all hosts + VMs OK → Go  │  Core service degraded → No-Go   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Rollback decision must be made before window end — not after            │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>└──────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="rollback-readiness-by-component">Rollback Readiness by Component<a class="headerlink" href="#rollback-readiness-by-component" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1431,12 +1448,12 @@
 </tbody>
 </table>
 <h2 id="vcenter-rollback-file-based-backup">vCenter Rollback (File-Based Backup)<a class="headerlink" href="#vcenter-rollback-file-based-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify backup exists (VAMI → Backup → show recent backups)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Backup location: defined at backup job configuration time</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># To restore: boot VCSA installer ISO → choose Restore</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Provide backup file path (FTP/HTTP/SCP/SMB) and SSO admin credentials</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Restoration process: ~45 minutes + replication sync time</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify backup exists (VAMI → Backup → show recent backups)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Backup location: defined at backup job configuration time</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># To restore: boot VCSA installer ISO → choose Restore</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Provide backup file path (FTP/HTTP/SCP/SMB) and SSO admin credentials</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Restoration process: ~45 minutes + replication sync time</span>
 </code></pre></div>
 <p><strong>Before upgrade:</strong>
 1. Confirm a file-based backup completed within 24 hours of the maintenance window.
@@ -1444,36 +1461,36 @@
 3. Document the current vCenter build number: <code>Get-View ServiceInstance | Select-Object -ExpandProperty ServerVersion</code>.</p>
 <h2 id="esxi-bootbank-rollback">ESXi Bootbank Rollback<a class="headerlink" href="#esxi-bootbank-rollback" title="Permanent link">&para;</a></h2>
 <p>ESXi maintains two bootbanks — the active one and the previous version:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to ESXi host — check bootbank contents</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>version<span class="w"> </span>get
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ls<span class="w"> </span>/bootbank<span class="w"> </span>/altbootbank
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Switch to previous bootbank (requires reboot)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">nextbootdir</span><span class="o">=</span>/altbootbank
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Or via Host Client: Manage → System → Boot Options → select previous</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to ESXi host — check bootbank contents</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>version<span class="w"> </span>get
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ls<span class="w"> </span>/bootbank<span class="w"> </span>/altbootbank
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Switch to previous bootbank (requires reboot)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">nextbootdir</span><span class="o">=</span>/altbootbank
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Or via Host Client: Manage → System → Boot Options → select previous</span>
 </code></pre></div>
 <p>This works immediately post-upgrade before any configuration changes are made. After hosts are rejoined to vCenter and NSX re-prepared, bootbank rollback becomes impractical.</p>
 <h2 id="nsx-backup-before-upgrade">NSX Backup Before Upgrade<a class="headerlink" href="#nsx-backup-before-upgrade" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger NSX Manager backup via API</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>POST<span class="w"> </span>https://nsxmanager/api/v1/cluster/backups?action<span class="o">=</span>start
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify backup completed</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>GET<span class="w"> </span>https://nsxmanager/api/v1/cluster/backups/history
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Backup stored to external SFTP target (configured in NSX → Backup &amp; Restore)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trigger NSX Manager backup via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>POST<span class="w"> </span>https://nsxmanager/api/v1/cluster/backups?action<span class="o">=</span>start
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify backup completed</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>GET<span class="w"> </span>https://nsxmanager/api/v1/cluster/backups/history
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Backup stored to external SFTP target (configured in NSX → Backup &amp; Restore)</span>
 </code></pre></div>
 <h2 id="aria-product-rollback-snapshots">Aria Product Rollback (Snapshots)<a class="headerlink" href="#aria-product-rollback-snapshots" title="Permanent link">&para;</a></h2>
 <p>Snapshot all Aria appliances before upgrade via LCM or directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Snapshot all Aria appliances before upgrade</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$ariaVMs</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;aria-ops-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-auto-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-li-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-lcm-01&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$ariaVMs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-upgrade-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-Memory</span> <span class="nv">$false</span> <span class="n">-Quiesce</span> <span class="nv">$false</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># After upgrade validation — delete snapshots (performance impact)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$ariaVMs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">Get-VM</span> <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;pre-upgrade&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Snapshot all Aria appliances before upgrade</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$ariaVMs</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;aria-ops-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-auto-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-li-01&quot;</span><span class="p">,</span><span class="s2">&quot;aria-lcm-01&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$ariaVMs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-upgrade-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">&quot;</span> <span class="n">-Memory</span> <span class="nv">$false</span> <span class="n">-Quiesce</span> <span class="nv">$false</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># After upgrade validation — delete snapshots (performance impact)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$ariaVMs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="nb">Get-VM</span> <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;pre-upgrade&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="go-no-go-decision-framework">Go / No-Go Decision Framework<a class="headerlink" href="#go-no-go-decision-framework" title="Permanent link">&para;</a></h2>
 <p>Define a decision point at the end of the upgrade window:</p>

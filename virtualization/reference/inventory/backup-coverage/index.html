@@ -1341,6 +1341,21 @@
 
 <h1 id="vmware-backup-coverage-inventory">VMware Backup Coverage Inventory<a class="headerlink" href="#vmware-backup-coverage-inventory" title="Permanent link">&para;</a></h1>
 <p>Live register of all VMs, their backup policy, and last verified restore test. Review monthly.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────┐   ┌──────────────────┐   ┌────────────────┐   ┌──────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   VM List    │──►│   Backup Job     │──►│  Last Good     │──►│  RPO Compliance  │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│              │   │                  │   │  Backup        │   │                  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ vcenter-prod │   │ Policy: daily    │   │ YYYY-MM-DD     │   │ Critical: ✓ 24h  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ nsx-mgr-01   │   │ Schedule: 02:00  │   │ Status: Pass   │   │ High:    ✓ 24h  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│ app-prod-01  │   │ Retention: 30d   │   │ Size: OK       │   │ Standard: ✓ 7d  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│ app-dev-01   │   │ App-aware: Yes   │   │ Verified: Yes  │   │ Gap VMs: ✗ 0    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└──────────────┘   └──────────────────┘   └────────────────┘   └──────────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        │                                                                │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        ▼                                                                ▼
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>┌──────────────────────────────────┐            ┌────────────────────────────────┐
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│     Unprotected VM Log           │            │      Restore Test Log          │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ VM Name | Reason | Owner         │            │ VM | Date | RTO | Result       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└──────────────────────────────────┘            └────────────────────────────────┘
+</code></pre></div>
 <h2 id="coverage-register">Coverage Register<a class="headerlink" href="#coverage-register" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1456,9 +1471,9 @@
 <ul>
 <li>[ ] Run a report of all protected VMs from backup tool</li>
 <li>[ ] Compare against vCenter VM inventory — identify any unprotected VMs
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all VMs (PowerCLI)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="n">all_vms</span><span class="p">.</span><span class="n">csv</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># Compare against Veeam/CommVault/NBU job report for protected VMs</span>
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List all VMs (PowerCLI)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="n">all_vms</span><span class="p">.</span><span class="n">csv</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Compare against Veeam/CommVault/NBU job report for protected VMs</span>
 </code></pre></div></li>
 <li>[ ] For any unprotected VM: check with application owner — intentional or oversight?</li>
 <li>[ ] Confirm all critical VMs have had a successful backup in the last 24 hours</li>

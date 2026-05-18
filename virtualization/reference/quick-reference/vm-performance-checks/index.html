@@ -1352,6 +1352,21 @@
 
 <h1 id="vm-performance-quick-checks">VM Performance Quick Checks<a class="headerlink" href="#vm-performance-quick-checks" title="Permanent link">&para;</a></h1>
 <p>When a VM is reported as slow, check these in order:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────┬───────────────────────────┬──────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Metric      │  esxtop Field / Location  │  Threshold / Action          │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├──────────────┼───────────────────────────┼──────────────────────────────┤
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│ CPU Ready    │ esxtop → %RDY             │ &gt; 5% → contention, check DRS │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ CPU Usage    │ esxtop → %USED            │ &gt; 90% sustained → rightsize  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│ Mem Balloon  │ esxtop → MCTLSZ           │ &gt; 0 → host memory pressure   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│ Mem Swap     │ esxtop → SWR/SWW          │ &gt; 0 → critical, add memory   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│ Disk DAVG    │ esxtop → DAVG/cmd         │ &gt; 5ms → array or path issue  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│ Disk GAVG    │ esxtop → GAVG/cmd         │ &gt; 20ms → investigate storage │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│ Net drops    │ esxtop → DRPTX/DRPRX      │ &gt; 0 → vDS config or uplink   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│ Tools state  │ vCenter VM Summary        │ Not current → update Tools   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>├──────────────┴───────────────────────────┴──────────────────────────────┤
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Start esxtop: SSH to host → esxtop  │  Press &#39;u&#39; = disk  &#39;d&#39; = adapter │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└─────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="cpu">CPU<a class="headerlink" href="#cpu" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>CPU Ready</strong> — time the VM is waiting for a physical CPU. Above 5% is worth investigating.</li>
@@ -1381,9 +1396,9 @@
 <li>Was a storage vMotion performed?</li>
 </ul>
 <h2 id="quick-commands-from-esxi">Quick Commands from ESXi<a class="headerlink" href="#quick-commands-from-esxi" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check VM disk stats (run from the ESXi host)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxtop
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Press &#39;u&#39; for storage view, &#39;d&#39; for disk adapter view</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check VM disk stats (run from the ESXi host)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxtop
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Press &#39;u&#39; for storage view, &#39;d&#39; for disk adapter view</span>
 </code></pre></div>
 
 
