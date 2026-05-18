@@ -1241,10 +1241,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#vpc-anatomy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        VPC Anatomy
       
     </span>
   </a>
@@ -1252,10 +1252,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-it-fits" class="md-nav__link">
+  <a href="#key-terms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where It Fits
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subnet-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subnet Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-to-on-premises-connection-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC to On-Premises — Connection Options
       
     </span>
   </a>
@@ -1274,54 +1296,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
         Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operational-tasks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Operational Tasks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
       
     </span>
   </a>
@@ -1373,110 +1351,200 @@
 
 
 <h1 id="aws-vpc">AWS VPC<a class="headerlink" href="#aws-vpc" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>AWS VPC notes for day-to-day infrastructure operations.</p>
-<h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
-<p>Use this page for build work, support checks, troubleshooting, standards, and operational review.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Confirm service health.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Review alerts.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Check recent changes.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Confirm capacity and performance are within normal range.</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Add environment-specific commands here</span>
+<div class="kb-summary">
+An AWS Virtual Private Cloud (VPC) is your own isolated private network inside AWS. You control the IP ranges, subnets, routing, and security. Everything you run in AWS lives inside a VPC.
+</div>
+
+<h2 id="vpc-anatomy">VPC Anatomy<a class="headerlink" href="#vpc-anatomy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>AWS VPC — Virtual Private Cloud
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ← your own private section of AWS
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ← isolated from other AWS customers
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ← you control the IP ranges, subnets,
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│     routing, and security
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>┌─────────────────────────────────────────┐
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│           AWS VPC                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│           (Virtual Private Cloud)       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│           IP range: 172.16.0.0/16       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                         │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ┌──────────────┐  ┌──────────────┐    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │ Public       │  │ Private      │    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │ Subnet       │  │ Subnet       │    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │              │  │              │    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │ ├── Load     │  │ ├── EC2      │    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │ │   Balancer │  │ │   Instance │    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  │ └── Bastion  │  │ │   (VM)     │    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  │     Host     │  │ │            │    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  │              │  │ ├── EBS      │    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  │  faces       │  │ │   Volume   │    │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  │  internet    │  │ │   (disk)   │    │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  │              │  │ │            │    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  │              │  │ └── RDS      │    │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  │              │  │     Database │    │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  └──────────────┘  └──────────────┘    │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│           │                │           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│     Internet           VPN Gateway     │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│     Gateway            (connects back  │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│     (public            to on-prem)     │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│      traffic)                          │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└─────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Misconfiguration after change work.</li>
-<li>Missing access or permissions.</li>
-<li>Alert noise without clear ownership.</li>
-<li>Drift from documented standards.</li>
-</ul>
-<h2 id="operational-tasks">Operational Tasks<a class="headerlink" href="#operational-tasks" title="Permanent link">&para;</a></h2>
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Task</th>
-<th>Command</th>
+<th>Term</th>
+<th>What It Is</th>
+<th>On-Premises Equivalent</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Review current configuration.</td>
-<td></td>
+<td>VPC</td>
+<td>Your own isolated network inside AWS</td>
+<td>Your data centre LAN</td>
 </tr>
 <tr>
-<td>Validate dependencies.</td>
-<td></td>
+<td>Subnet</td>
+<td>A smaller IP range inside the VPC (public or private)</td>
+<td>VLAN</td>
 </tr>
 <tr>
-<td>Record changes.</td>
-<td></td>
+<td>EC2</td>
+<td>A VM running in AWS</td>
+<td>ESXi virtual machine</td>
 </tr>
 <tr>
-<td>Confirm monitoring coverage.</td>
-<td></td>
+<td>EBS</td>
+<td>A disk attached to an EC2 instance</td>
+<td>Pure Storage LUN</td>
+</tr>
+<tr>
+<td>RDS</td>
+<td>Managed relational database (AWS runs the OS/DB)</td>
+<td>On-prem SQL Server</td>
+</tr>
+<tr>
+<td>IGW</td>
+<td>Internet Gateway — how public subnets reach the internet</td>
+<td>Firewall/router egress</td>
+</tr>
+<tr>
+<td>VGW</td>
+<td>Virtual Private Gateway — how the VPC connects to on-prem over VPN</td>
+<td>VPN endpoint</td>
+</tr>
+<tr>
+<td>NAT Gateway</td>
+<td>Lets private subnet instances reach the internet (outbound only)</td>
+<td>NAT firewall rule</td>
+</tr>
+<tr>
+<td>Security Group</td>
+<td>Stateful firewall rules per EC2 instance</td>
+<td>Host-based firewall</td>
+</tr>
+<tr>
+<td>NACL</td>
+<td>Network ACL — stateless rules per subnet</td>
+<td>VLAN ACL</td>
 </tr>
 </tbody>
 </table>
-<h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Check release notes before upgrades.</li>
-<li>Validate backup or rollback options.</li>
-<li>Confirm maintenance window and communication plan.</li>
-<li>Test after the change.</li>
-</ul>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="subnet-types">Subnet Types<a class="headerlink" href="#subnet-types" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>PUBLIC SUBNET                    PRIVATE SUBNET
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>─────────────────                ─────────────────
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Has a route to IGW               No direct internet route
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Instances can have public IPs    Instances use NAT Gateway
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Used for: load balancers,        Used for: app servers,
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>          bastion hosts,                   databases,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>          NAT Gateways                     internal services
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Traffic in:  internet → IGW → subnet    Traffic in:  VPN → VGW → subnet
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Traffic out: subnet → IGW → internet    Traffic out: subnet → NAT GW → IGW → internet
+</code></pre></div>
+<hr />
+<h2 id="vpc-to-on-premises-connection-options">VPC to On-Premises — Connection Options<a class="headerlink" href="#vpc-to-on-premises-connection-options" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>YOUR DATA CENTRE                 AWS
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>─────────────────                ─────────────────────────
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Core Network                     VPC
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>     │                                │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>     │                                │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  VPN GW ═══ IPSec tunnel ══════► VGW (Virtual Private Gateway)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>     │        (encrypted,             │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>     │         over internet)         └── your private subnets
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>     │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>     │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  Router ──── dedicated line ──► Direct Connect location
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>              (private, no           │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>               public internet)      └── VGW or Transit Gateway
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>VPN:            cheaper, uses internet, easy to set up
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>Direct Connect: faster, private, more expensive, needs carrier
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>Both can run:   Direct Connect primary + VPN as failover
+</code></pre></div>
+<hr />
+<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List VPCs in current region</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Vpcs[*].[VpcId,CidrBlock,Tags[?Key==`Name`].Value|[0]]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List subnets</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Subnets[*].[SubnetId,VpcId,CidrBlock,AvailabilityZone,MapPublicIpOnLaunch]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check route tables</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;RouteTables[*].[RouteTableId,VpcId,Routes[*].[DestinationCidrBlock,GatewayId]]&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check internet gateways</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-internet-gateways<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;InternetGateways[*].[InternetGatewayId,Attachments[*].VpcId]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Check NAT gateways and their state</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-nat-gateways<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;NatGateways[*].[NatGatewayId,VpcId,State,SubnetId]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Check VPN connections</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpn-connections<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;VpnConnections[*].[VpnConnectionId,State,VgwTelemetry[*].[OutsideIpAddress,Status]]&#39;</span><span class="w"> </span>--output<span class="w"> </span>text
+</code></pre></div>
+<hr />
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Recommendation</th>
-<th>Detail</th>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Check</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Keep naming consistent.</td>
-<td>Keep naming consistent.</td>
+<td>EC2 can't reach internet</td>
+<td>Missing IGW route or no public IP</td>
+<td>Route table — does 0.0.0.0/0 point to IGW?</td>
 </tr>
 <tr>
-<td>Document ownership.</td>
-<td>Document ownership.</td>
+<td>Private subnet EC2 can't reach internet</td>
+<td>Missing NAT Gateway or route</td>
+<td>Route table — does 0.0.0.0/0 point to NAT GW?</td>
 </tr>
 <tr>
-<td>Use least privilege access.</td>
-<td>Use least privilege access.</td>
+<td>Can't SSH/RDP to EC2</td>
+<td>Security group blocking port 22/3389</td>
+<td>Security group inbound rules</td>
 </tr>
 <tr>
-<td>Validate changes after implementation.</td>
-<td>Validate changes after implementation.</td>
+<td>Two subnets can't talk to each other</td>
+<td>Missing route or NACL blocking</td>
+<td>Route table + NACL rules</td>
+</tr>
+<tr>
+<td>On-prem can't reach VPC</td>
+<td>VPN tunnel down or BGP issue</td>
+<td>VPN connection status + BGP session</td>
+</tr>
+<tr>
+<td>EC2 can't reach on-prem</td>
+<td>Missing route to on-prem CIDR via VGW</td>
+<td>Route table — is on-prem CIDR routed to VGW?</td>
 </tr>
 </tbody>
 </table>
