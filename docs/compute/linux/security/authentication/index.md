@@ -2,6 +2,36 @@
 
 PAM, SSH public key auth, SSSD/AD integration, sudo, and MFA configuration.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│              Linux Authentication Flow                  │
+└───────────────────────┬─────────────────────────────────┘
+                        ▼
+            ┌───────────────────────┐
+            │  PAM stack (/etc/pam.d)│
+            │  auth → account →     │
+            │  password → session   │
+            └───────┬───────────────┘
+         ┌──────────┼──────────────┐
+         ▼          ▼              ▼
+┌──────────────┐ ┌──────────┐ ┌─────────────┐
+│  pam_unix    │ │ pam_sss  │ │pam_faillock │
+│  /etc/passwd │ │  SSSD    │ │ lockout N   │
+│  /etc/shadow │ └────┬─────┘ │ attempts    │
+└──────────────┘      │       └─────────────┘
+                      ▼
+            ┌──────────────────────┐
+            │  SSSD → AD/LDAP      │
+            │  Kerberos (KRB5)     │
+            │  realm join / realmd │
+            └──────────┬───────────┘
+                       ▼
+            ┌──────────────────────┐
+            │  sudo / wheel group  │
+            │  /etc/sudoers.d/     │
+            └──────────────────────┘
+```
+
 ## Local Accounts
 
 ### Account Management

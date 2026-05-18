@@ -1,5 +1,35 @@
 # Windows Server — Troubleshooting
 
+```
+┌───────────────────────────────────────────────────────┐
+│           Windows Server Triage Decision Tree         │
+└──────────────────────┬────────────────────────────────┘
+                       ▼
+          ┌────────────────────────┐
+          │  Server unreachable?   │
+          └──────┬─────────────────┘
+         Yes ◄───┤──► No
+         ▼               ▼
+┌───────────────┐  ┌─────────────────────────────────┐
+│  Services     │  │  Identify symptom               │
+│  sc query /   │  ├──────────┬──────────┬───────────┤
+│  Get-Service  │  │  Service │ Network  │  AD Auth  │
+│  Event ID     │  │  stopped │ no route │  failures │
+│  7034/7036    │  └────┬─────┴────┬─────┴─────┬─────┘
+└───────────────┘       ▼          ▼            ▼
+               ┌──────────────┐ ┌──────────┐ ┌──────────────┐
+               │ Get-WinEvent │ │ Test-Net │ │ dcdiag /test │
+               │ -LogName Sys │ │Connection│ │ :replications│
+               └──────┬───────┘ └────┬─────┘ └──────┬───────┘
+                      └──────────────┴───────────────┘
+                                     ▼
+                         ┌─────────────────────────┐
+                         │  Event Viewer / eventvwr │
+                         │  System │ Application    │
+                         │  Security log            │
+                         └─────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">

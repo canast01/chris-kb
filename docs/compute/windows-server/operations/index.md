@@ -1,5 +1,25 @@
 # Windows Server — Operations
 
+```
+┌──────────────────────────────────────────────────────┐
+│          Windows Server Operations Lifecycle         │
+├───────────────┬──────────────┬───────────────────────┤
+│   Patching    │  Event Log   │  Service Management   │
+│  WSUS/WUA     │  Get-WinEvent│  Get/Start/Stop-Svc   │
+│  PSWindowsUpd │  eventvwr    │  SCM                  │
+├───────────────┴──────────────┴───────────────────────┤
+│               Monitoring & Health                    │
+│  Get-Counter  │  perfmon     │  Task Manager / RAC   │
+├──────────────────────────────────────────────────────┤
+│               Backup & Restore                       │
+│  Veeam Agent (image) │ Windows Server Backup (WSB)   │
+│  VSS snapshot → repository → restore point          │
+├─────────────────────────────────────────────────────┤
+│  Scripts & Automation  │  Install & Upgrade          │
+│  PowerShell / RSAT     │  WUA → reboot → validate   │
+└────────────────────────┴────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
 <a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>
