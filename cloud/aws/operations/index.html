@@ -1351,6 +1351,28 @@
 
 
 <h1 id="aws-operations">AWS — Operations<a class="headerlink" href="#aws-operations" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>AWS Operations: Daily Rhythm
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>──────────────────────────────────────────────────────────────
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  ┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  │  Morning Health Checks                               │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  │  Personal Health Dashboard ──► any AWS service issues│
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  CloudWatch alarms ──────────► ALARM state = 0       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  EC2 / RDS status ───────────► all OK / available    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  │  AWS Backup jobs ────────────► last 24h completed    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  └───────────────────────┬──────────────────────────────┘
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>          ┌───────────────┼──────────────────────┐
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>          ▼               ▼                      ▼
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  ┌───────────────┐ ┌──────────────┐  ┌────────────────────┐
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  Patching     │ │  Backup      │  │  Incident Triage   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │               │ │  &amp; Restore   │  │                    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  │  SSM Patch    │ │  AWS Backup  │  │  CloudTrail lookup │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  │  Manager      │ │  vault check │  │  VPC Flow Logs     │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  Maintenance  │ │  restore job │  │  SSM Session Mgr   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  │  window       │ │  test        │  │  Support case      │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  └───────────────┘ └──────────────┘  └────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">
@@ -1452,25 +1474,25 @@
 <li>[ ] Check no VPN or Direct Connect tunnels are down</li>
 <li>[ ] Review AWS Health Dashboard for any active or upcoming events</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Confirm caller identity</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># EC2 instance status for all running instances</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instance-status<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--filter<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>instance-state-name,Values<span class="o">=</span>running<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceStatuses[*].[InstanceId,InstanceStatus.Status,SystemStatus.Status]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># RDS instance status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus,Engine]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Active CloudWatch alarms</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span>--state-value<span class="w"> </span>ALARM<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;MetricAlarms[*].[AlarmName,StateReason]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm caller identity</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># EC2 instance status for all running instances</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instance-status<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--filter<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>instance-state-name,Values<span class="o">=</span>running<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceStatuses[*].[InstanceId,InstanceStatus.Status,SystemStatus.Status]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># RDS instance status</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus,Engine]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Active CloudWatch alarms</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--state-value<span class="w"> </span>ALARM<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;MetricAlarms[*].[AlarmName,StateReason]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>

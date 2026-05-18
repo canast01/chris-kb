@@ -1241,40 +1241,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#identity-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Identity Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enable-on-a-resource" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Enable on a Resource
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Enable on a Resource">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#system-assigned" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        System-Assigned
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#user-assigned" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1282,11 +1248,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1407,43 +1368,51 @@
 
 
 <h1 id="azure-managed-identities">Azure — Managed Identities<a class="headerlink" href="#azure-managed-identities" title="Permanent link">&para;</a></h1>
-<p>Managed identities give Azure resources an identity in Entra ID without requiring credentials in code or config. Azure manages credential rotation and renewal automatically.</p>
-<h2 id="identity-types">Identity Types<a class="headerlink" href="#identity-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Lifecycle</th>
-<th>Shared across resources</th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>System-assigned</strong></td>
-<td>Tied to the resource; deleted with it</td>
-<td>No — 1:1 with the resource</td>
-<td>Single-resource workloads; simplest to set up</td>
-</tr>
-<tr>
-<td><strong>User-assigned</strong></td>
-<td>Independent; exists until explicitly deleted</td>
-<td>Yes — assign to many resources</td>
-<td>Shared identity across multiple resources; pre-provision before resource creation</td>
-</tr>
-</tbody>
-</table>
-<h2 id="enable-on-a-resource">Enable on a Resource<a class="headerlink" href="#enable-on-a-resource" title="Permanent link">&para;</a></h2>
-<h3 id="system-assigned">System-Assigned<a class="headerlink" href="#system-assigned" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enable on a VM</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>vm<span class="w"> </span>identity<span class="w"> </span>assign<span class="w"> </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Enable on App Service</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>az<span class="w"> </span>webapp<span class="w"> </span>identity<span class="w"> </span>assign<span class="w"> </span>--name<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Get the principal ID (object ID) — used for RBAC assignments</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>az<span class="w"> </span>vm<span class="w"> </span>identity<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--query<span class="w"> </span>principalId<span class="w"> </span>--output<span class="w"> </span>tsv
+<p>Managed identities give Azure resources an identity in Entra ID without requiring credentials in code or config.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│               Managed Identity Flow                          │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                              │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────┐   system-assigned  ┌────────────────┐  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  Azure VM /      │───────────────────►│  Entra ID      │  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  App Service /   │   user-assigned    │  (identity     │  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  AKS Pod         │◄───────────────────│   registered)  │  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └────────┬─────────┘                   └────────────────┘  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│           │                                                  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│           │ code calls IMDS endpoint                        │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│           ▼  (169.254.169.254)                               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ┌──────────────────────────────────────────────────────┐    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  MSI Token Endpoint  ──►  access token (OAuth2)      │    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  └──────────────────────────┬─────────────────────────┘     │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                             │ token attached to request      │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                             ▼                                │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  ┌──────────────────────────────────────────────────────┐    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │  Target Resource  (Key Vault / Storage / SQL / ...)  │    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  │  RBAC validates: principal has required role ✓       │    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  └──────────────────────────────────────────────────────┘    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└──────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>``` Azure manages credential rotation and renewal automatically.
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>## Identity Types
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| Type | Lifecycle | Shared across resources | Use case |
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>|---|---|---|---|
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| **System-assigned** | Tied to the resource; deleted with it | No — 1:1 with the resource | Single-resource workloads; simplest to set up |
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| **User-assigned** | Independent; exists until explicitly deleted | Yes — assign to many resources | Shared identity across multiple resources; pre-provision before resource creation |
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>## Enable on a Resource
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>### System-Assigned
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>```bash
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a># Enable on a VM
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>az vm identity assign --name &lt;vm-name&gt; --resource-group &lt;rg&gt;
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a># Enable on App Service
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>az webapp identity assign --name &lt;app-name&gt; --resource-group &lt;rg&gt;
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a># Get the principal ID (object ID) — used for RBAC assignments
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>az vm identity show --name &lt;vm-name&gt; --resource-group &lt;rg&gt; \
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>  --query principalId --output tsv
 </code></pre></div>
 <h3 id="user-assigned">User-Assigned<a class="headerlink" href="#user-assigned" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create</span>

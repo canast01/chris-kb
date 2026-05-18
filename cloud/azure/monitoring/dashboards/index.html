@@ -1241,17 +1241,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#creating-a-dashboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating a Dashboard
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#pinning-metrics-charts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1351,25 +1340,51 @@
 
 
 <h1 id="dashboards">Dashboards<a class="headerlink" href="#dashboards" title="Permanent link">&para;</a></h1>
-<p>Azure Dashboards provide a shared, customisable view of Azure resource telemetry. Tiles can display metrics charts, log query results, resource health, resource groups, and markdown text. Dashboards live in a subscription and can be shared across users and teams.</p>
-<h2 id="creating-a-dashboard">Creating a Dashboard<a class="headerlink" href="#creating-a-dashboard" title="Permanent link">&para;</a></h2>
-<p>Dashboards can be created from the Azure portal or deployed as ARM/Bicep templates via CLI.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a dashboard from a JSON definition file</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>portal<span class="w"> </span>dashboard<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;ops-overview-dashboard&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--input-path<span class="w"> </span>dashboard-definition.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--location<span class="w"> </span>eastus
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># List dashboards in a resource group</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>az<span class="w"> </span>portal<span class="w"> </span>dashboard<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Show a specific dashboard definition</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>az<span class="w"> </span>portal<span class="w"> </span>dashboard<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;ops-overview-dashboard&quot;</span>
+<p>Azure Dashboards provide a shared, customisable view of Azure resource telemetry.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                  Azure Dashboard Flow                        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                              │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Data Sources                                                │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌─────────────┐  ┌─────────────┐  ┌───────────────────┐    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  Metrics    │  │  Log query  │  │  Resource Health  │    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  (charts)   │  │  (tables)   │  │  / Maps           │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └──────┬──────┘  └──────┬──────┘  └────────┬──────────┘    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│         └───────────────┬┘                  │               │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                         │  pin to dashboard │               │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                         ▼                  ▼               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ┌────────────────────────────────────────────────────────┐  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │              Dashboard Tiles                           │  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  │ CPU chart│ │ Log table│ │ Health   │ │ Markdown │  │  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └────────────────────────────┬───────────────────────────┘  │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                               │ share via RBAC               │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                               ▼                              │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│               Role-scoped view  (Reader on dashboard)        │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└──────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>``` Tiles can display metrics charts, log query results, resource health, resource groups, and markdown text. Dashboards live in a subscription and can be shared across users and teams.
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>## Creating a Dashboard
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>Dashboards can be created from the Azure portal or deployed as ARM/Bicep templates via CLI.
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>```bash
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a># Create a dashboard from a JSON definition file
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>az portal dashboard create \
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  --resource-group myRG \
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>  --name &quot;ops-overview-dashboard&quot; \
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>  --input-path dashboard-definition.json \
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>  --location eastus
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a># List dashboards in a resource group
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>az portal dashboard list \
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>  --resource-group myRG \
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>  --output table
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a># Show a specific dashboard definition
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>az portal dashboard show \
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>  --resource-group myRG \
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>  --name &quot;ops-overview-dashboard&quot;
 </code></pre></div>
 <p>A minimal dashboard JSON skeleton:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>

@@ -1241,28 +1241,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#vpn-gateway-skus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VPN Gateway SKUs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#creating-a-vpn-gateway" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating a VPN Gateway
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#site-to-site-connection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1362,96 +1340,76 @@
 
 
 <h1 id="vpn-gateway">VPN Gateway<a class="headerlink" href="#vpn-gateway" title="Permanent link">&para;</a></h1>
-<p>Azure VPN Gateway provides encrypted connectivity between Azure VNets and on-premises networks over IPsec/IKE tunnels. It supports site-to-site (S2S), point-to-site (P2S), and VNet-to-VNet connections. For production use, deploy zone-redundant SKUs and enable active-active mode.</p>
-<h2 id="vpn-gateway-skus">VPN Gateway SKUs<a class="headerlink" href="#vpn-gateway-skus" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>SKU</th>
-<th>Throughput</th>
-<th>Tunnels</th>
-<th>BGP</th>
-<th>Zone-Redundant</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Basic</td>
-<td>100 Mbps</td>
-<td>10</td>
-<td>No</td>
-<td>No</td>
-<td>Dev/test only</td>
-</tr>
-<tr>
-<td>VpnGw1</td>
-<td>650 Mbps</td>
-<td>30</td>
-<td>Yes</td>
-<td>No</td>
-<td>Production entry</td>
-</tr>
-<tr>
-<td>VpnGw2</td>
-<td>1 Gbps</td>
-<td>30</td>
-<td>Yes</td>
-<td>No</td>
-<td>Standard production</td>
-</tr>
-<tr>
-<td>VpnGw3</td>
-<td>1.25 Gbps</td>
-<td>30</td>
-<td>Yes</td>
-<td>No</td>
-<td>High throughput</td>
-</tr>
-<tr>
-<td>VpnGw1AZ</td>
-<td>650 Mbps</td>
-<td>30</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Zone-redundant</td>
-</tr>
-<tr>
-<td>VpnGw2AZ</td>
-<td>1 Gbps</td>
-<td>30</td>
-<td>Yes</td>
-<td>Yes</td>
-<td>Zone-redundant</td>
-</tr>
-</tbody>
-</table>
-<h2 id="creating-a-vpn-gateway">Creating a VPN Gateway<a class="headerlink" href="#creating-a-vpn-gateway" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a GatewaySubnet (must be named GatewaySubnet)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>az<span class="w"> </span>network<span class="w"> </span>vnet<span class="w"> </span>subnet<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--vnet-name<span class="w"> </span>myVNet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--name<span class="w"> </span>GatewaySubnet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--address-prefix<span class="w"> </span><span class="m">10</span>.0.255.0/27
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Create a public IP for the gateway</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>az<span class="w"> </span>network<span class="w"> </span>public-ip<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--name<span class="w"> </span>vpn-gw-pip<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--sku<span class="w"> </span>Standard<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>--allocation-method<span class="w"> </span>Static<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>--zone<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Create the VPN Gateway (this takes 20-45 minutes)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>az<span class="w"> </span>network<span class="w"> </span>vnet-gateway<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span>--resource-group<span class="w"> </span>myRG<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>--name<span class="w"> </span>myVpnGateway<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>--vnet<span class="w"> </span>myVNet<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>--gateway-type<span class="w"> </span>Vpn<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>--vpn-type<span class="w"> </span>RouteBased<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>--sku<span class="w"> </span>VpnGw2AZ<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>--public-ip-address<span class="w"> </span>vpn-gw-pip<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span>--location<span class="w"> </span>eastus
+<p>Azure VPN Gateway provides encrypted connectivity between Azure VNets and on-premises networks over IPsec/IKE tunnels.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                  VPN Gateway Flow                            │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                              │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Azure VNet  (10.0.0.0/16)                                   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌───────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  ┌──────────────┐   ┌──────────────────────────────┐  │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  │  Workload    │   │  GatewaySubnet               │  │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  │  Subnet(s)   │   │  10.0.255.0/27               │  │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  └──────────────┘   └──────────────┬───────────────┘  │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └───────────────────────────────────┼───────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                      │                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                      ▼                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ┌───────────────────────┐           │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                          │  VPN Gateway          │           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          │  (public IP assigned) │           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          └──────────┬────────────┘           │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                     │ IPsec/IKE tunnel        │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                     ▼                        │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                          ┌───────────────────────┐           │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                          │  Local Network Gateway │           │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                          │  (on-prem public IP +  │           │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                          │   address space)       │           │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          └──────────┬────────────┘           │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                     │                        │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                     ▼                        │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                          On-premises network                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                          (192.168.0.0/16)                    │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└──────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>``` It supports site-to-site (S2S), point-to-site (P2S), and VNet-to-VNet connections. For production use, deploy zone-redundant SKUs and enable active-active mode.
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>## VPN Gateway SKUs
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>| SKU          | Throughput  | Tunnels | BGP | Zone-Redundant | Notes                  |
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>|--------------|-------------|---------|-----|----------------|------------------------|
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>| Basic        | 100 Mbps    | 10      | No  | No             | Dev/test only          |
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>| VpnGw1       | 650 Mbps    | 30      | Yes | No             | Production entry       |
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>| VpnGw2       | 1 Gbps      | 30      | Yes | No             | Standard production    |
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>| VpnGw3       | 1.25 Gbps   | 30      | Yes | No             | High throughput        |
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>| VpnGw1AZ     | 650 Mbps    | 30      | Yes | Yes            | Zone-redundant         |
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>| VpnGw2AZ     | 1 Gbps      | 30      | Yes | Yes            | Zone-redundant         |
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>## Creating a VPN Gateway
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>```bash
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a># Create a GatewaySubnet (must be named GatewaySubnet)
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>az network vnet subnet create \
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>  --resource-group myRG \
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>  --vnet-name myVNet \
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>  --name GatewaySubnet \
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>  --address-prefix 10.0.255.0/27
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a># Create a public IP for the gateway
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>az network public-ip create \
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>  --resource-group myRG \
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>  --name vpn-gw-pip \
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>  --sku Standard \
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>  --allocation-method Static \
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>  --zone 1 2 3
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a># Create the VPN Gateway (this takes 20-45 minutes)
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>az network vnet-gateway create \
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>  --resource-group myRG \
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>  --name myVpnGateway \
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>  --vnet myVNet \
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>  --gateway-type Vpn \
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>  --vpn-type RouteBased \
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>  --sku VpnGw2AZ \
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>  --public-ip-address vpn-gw-pip \
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>  --location eastus
 </code></pre></div>
 <h2 id="site-to-site-connection">Site-to-Site Connection<a class="headerlink" href="#site-to-site-connection" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a local network gateway (represents on-prem)</span>
