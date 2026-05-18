@@ -1,5 +1,36 @@
 # NSX — Design Standards
 
+```
+NSX Design Decisions — Key Layout
+┌────────────────────────────────────────────────────────┐
+│  Overlay Design                                        │
+│  ├── TEP VLAN: dedicated VLAN, MTU 9000 end-to-end     │
+│  ├── IP pools: separate for ESXi TEPs and Edge TEPs    │
+│  └── BFD on T0 uplinks: 500ms / x3 multiplier          │
+├────────────────────────────────────────────────────────┤
+│  Gateway Design                                        │
+│  ├── T0: ACTIVE_STANDBY (simple) or ACTIVE_ACTIVE (ECMP)│
+│  ├── T1: distributed (no Edge needed unless NAT/LB/VPN) │
+│  └── Separate Edge clusters per routing domain         │
+│      (prod T0 ≠ DMZ T0 → separate Edge clusters)       │
+├────────────────────────────────────────────────────────┤
+│  Firewall Design                                       │
+│  ├── Default deny: rule 65535 = any-any-drop           │
+│  ├── Use security groups — never raw IPs in rules      │
+│  ├── Category order: Emergency → Infra → Env → App     │
+│  └── Log deny rules in App and Environment categories  │
+├────────────────────────────────────────────────────────┤
+│  Transport Zone Scope                                  │
+│  ├── tz-overlay-compute  all ESXi hosts (VM segments)  │
+│  ├── tz-overlay-edge     Edge nodes (same overlay)     │
+│  └── tz-vlan-edge        Edge uplinks to physical LAN  │
+├────────────────────────────────────────────────────────┤
+│  Edge Sizing (production)                              │
+│  ├── Large VM (8vCPU / 32 GB): ~100 Gbps               │
+│  └── Bare Metal: line-rate on 25/100G NIC              │
+└────────────────────────────────────────────────────────┘
+```
+
 ## Naming Conventions
 
 Consistent naming across NSX objects is critical for operational clarity. The following conventions apply to all NSX-T environments.

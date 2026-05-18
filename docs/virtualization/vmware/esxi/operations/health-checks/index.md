@@ -1,5 +1,43 @@
 # ESXi — Health Checks
 
+```
+ESXi Health Check — Decision Flow
+┌─────────────────────────────────────────────────────┐
+│  START: Daily / Pre-Change Health Sweep             │
+└──────────────────────────┬──────────────────────────┘
+                           │
+           ┌───────────────▼───────────────┐
+           │  Host Connection State?        │
+           │  Get-VMHost | Select ...       │
+           └──────┬──────────────┬─────────┘
+                  │ Connected    │ Disconnected / NotResponding
+                  │              └──► restart hostd/vpxa or IPMI
+           ┌──────▼──────────────────────┐
+           │  Hardware Health?           │
+           │  esxcli hardware health get │
+           └──────┬──────────────────────┘
+                  │ Green        │ Warning/Error → alert ticket
+           ┌──────▼──────────────────────┐
+           │  Storage Paths?             │
+           │  esxcli storage core path   │
+           │  list | grep dead           │
+           └──────┬──────────────────────┘
+                  │ 0 dead paths │ Dead paths → rescan / escalate
+           ┌──────▼──────────────────────┐
+           │  NTP Running & Synced?      │
+           │  esxcli system ntp get      │
+           └──────┬──────────────────────┘
+                  │ Running=true │ Not synced → fix NTP config
+           ┌──────▼──────────────────────┐
+           │  vmnic Uplinks Up?          │
+           │  esxcli network nic list    │
+           └──────┬──────────────────────┘
+                  │ All up       │ Down links → check switch/cable
+           ┌──────▼──────────────┐
+           │  PASS — host healthy │
+           └─────────────────────┘
+```
+
 ## Daily Checks
 
 | Check | Command | Notes |

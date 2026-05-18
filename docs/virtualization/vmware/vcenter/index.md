@@ -4,6 +4,44 @@
 Technical and operational reference for VMware vCenter Server (VCSA). Covers architecture, cluster management, lifecycle, security, and troubleshooting for the vSphere management plane.
 </div>
 
+```
+vCenter in the VMware Stack
+════════════════════════════════════════════════════════
+
+  Consumers
+  ┌─────────────┐   ┌──────────────┐   ┌────────────────┐
+  │ vSphere     │   │  PowerCLI /  │   │  Aria Ops /    │
+  │ Client (UI) │   │  REST API    │   │  3rd-party     │
+  └──────┬──────┘   └──────┬───────┘   └───────┬────────┘
+         │                 │                   │
+         └─────────────────┼───────────────────┘
+                           │ HTTPS :443
+                    ┌──────▼───────┐
+                    │  vCenter     │  ← management plane
+                    │  Server      │    (VCSA / Photon OS)
+                    │  (VCSA)      │
+                    └──────┬───────┘
+          ┌────────────────┼────────────────┐
+          │                │                │
+   ┌──────▼──────┐  ┌──────▼──────┐  ┌─────▼───────┐
+   │  ESXi-01    │  │  ESXi-02    │  │  ESXi-03    │
+   │  (compute)  │  │  (compute)  │  │  (compute)  │
+   └──────┬──────┘  └──────┬──────┘  └─────┬───────┘
+          └────────────────┼────────────────┘
+                    ┌──────▼───────┐
+                    │  Shared      │
+                    │  Storage /   │
+                    │  vSAN / NFS  │
+                    └──────────────┘
+
+  Integrations (registered to vCenter)
+  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
+  │   NSX    │  │  vSAN    │  │  Aria    │  │  Backup  │
+  │ Manager  │  │ (built-  │  │  Suite   │  │  (VADP)  │
+  │          │  │  in)     │  │          │  │          │
+  └──────────┘  └──────────┘  └──────────┘  └──────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

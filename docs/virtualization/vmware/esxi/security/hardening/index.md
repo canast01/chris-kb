@@ -1,5 +1,38 @@
 # ESXi — Hardening
 
+```
+ESXi Host Hardening Layers
+┌─────────────────────────────────────────────────────────┐
+│  1. Network Attack Surface Reduction                    │
+│  ├── Lockdown Mode: Normal (blocks direct SSH/API)      │
+│  ├── Firewall: only required rulesets enabled           │
+│  ├── SSH access restricted by IP (admin subnet only)    │
+│  └── Telnet, FTP rulesets disabled                      │
+├─────────────────────────────────────────────────────────┤
+│  2. Authentication Hardening                            │
+│  ├── Shell + SSH: Stopped/Disabled in production        │
+│  ├── Shell timeout: 600s idle, 300s interactive         │
+│  ├── Password policy: complexity + lockout (5 fails)    │
+│  └── Login banner: /Config/Etc/issue                    │
+├─────────────────────────────────────────────────────────┤
+│  3. Boot Integrity                                      │
+│  ├── UEFI Secure Boot: Enabled in BIOS/UEFI             │
+│  ├── VIB acceptance: VMwareCertified / VMwareAccepted   │
+│  └── TPM 2.0 attestation enabled (vSphere 7.0+)         │
+├─────────────────────────────────────────────────────────┤
+│  4. Certificate Management                              │
+│  ├── VMCA (default): vCenter CA signs host certs        │
+│  ├── External CA mode: corporate CA for PCI/HIPAA       │
+│  └── Expiry monitored: alert at 60 days remaining       │
+├─────────────────────────────────────────────────────────┤
+│  5. Audit & Compliance Enforcement                      │
+│  ├── Syslog → SIEM: auth.log, shell.log, hostd.log     │
+│  ├── Host Profile: enforces baseline across cluster     │
+│  └── Check Compliance after every change                │
+└─────────────────────────────────────────────────────────┘
+  Reference: VMware vSphere SCG → CIS → DISA STIG
+```
+
 ## Hardening Baseline
 
 Follow the **VMware vSphere Security Configuration Guide (SCG)** for the specific ESXi version in use. Download from the Broadcom Knowledge Base (search "vSphere Security Configuration Guide"). The SCG maps to CIS Benchmarks and DISA STIG requirements.

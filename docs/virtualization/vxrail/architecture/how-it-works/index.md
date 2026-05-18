@@ -1,5 +1,36 @@
 # VxRail — How It Works
 
+```
+VxRail LCM Flow — How It Works
+┌─────────────────────────────────────────────────────────────┐
+│  VxRail Manager (VM on cluster)                             │
+│  LCM Engine · vCenter plugin · REST API · Health monitor   │
+└───────────────┬─────────────────────────────────────────────┘
+                │ orchestrates
+    ┌───────────▼──────────────────────────────────────┐
+    │  vSAN (built on top of ESXi node storage)         │
+    │  disk groups: 1 cache device + 1–7 capacity devs  │
+    │  FTT policy enforced across the cluster            │
+    └───────────┬──────────────────────────────────────┘
+                │
+    ┌───────────▼──────────────────────────────────────┐
+    │  LCM Upgrade Flow                                  │
+    │  Upload Bundle → Validate → Plan → Execute         │
+    │       │                               │            │
+    │  Composite Bundle              node-by-node:       │
+    │  (vSphere + vSAN +         evacuate → MM → update  │
+    │   firmware + VxRail)        → reboot → exit MM     │
+    └──────────────────────────────────────────────────┘
+                │
+    ┌───────────▼──────────────────────────────────────┐
+    │  Management Plane                                  │
+    │  VxRail Mgr  ──►  vCenter  ──►  NSX (optional)   │
+    │      │                                             │
+    │  iDRAC (per node)  ──►  hardware health           │
+    │  Dell SRS/SupportAssist ──►  auto SR creation     │
+    └──────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 VxRail is a hyper-converged infrastructure (HCI) appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Each node contributes local compute (CPU, RAM), NVMe flash cache, and capacity storage to a unified cluster. VxRail Manager orchestrates all lifecycle and configuration operations by communicating with vCenter.

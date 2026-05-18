@@ -2,6 +2,26 @@
 
 VxRail operations notes for daily checks, maintenance windows, node work, expansion, support cases, and post-change validation.
 
+```
+VxRail Daily Operations Touchpoints
+┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+│  VxRail Mgr  │   │   vCenter    │   │     ESXi     │   │    iDRAC     │
+│              │   │              │   │              │   │              │
+│ cluster hlth │ → │ host connect │ → │ no warnings  │ → │ hw alerts    │
+│ no LCM jobs  │   │ HA/DRS ok    │   │ services up  │   │ PSU/fan/disk │
+│ no alerts    │   │ no crit alrm │   │ vSAN health  │   │ all green    │
+└──────────────┘   └──────────────┘   └──────────────┘   └──────────────┘
+        │                                                        │
+        └────────────────────────────────────────────────────────┘
+                                    │
+                        ┌───────────▼──────────────┐
+                        │  Issues found?            │
+                        │  → triage by component    │
+                        │  → open support case      │
+                        │  → update change record   │
+                        └──────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="daily-checks/">

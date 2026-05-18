@@ -1,6 +1,38 @@
 # Management Access Check
 
 Run this check weekly to confirm all management endpoints are reachable and access controls are healthy.
+
+```
+Management Access Check Flow
+═══════════════════════════════════════════════════════════
+
+  DNS resolves? ──► HTTPS reachable? ──► Login OK?
+        │                │                   │
+       FAIL             FAIL                FAIL
+        │                │                   │
+  Check DNS        Check firewall       Check SSO/AD
+  or FQDN          or service           or creds
+
+  Endpoints to verify:
+  ┌─────────────────────────────────────────────────────┐
+  │  vCenter         https://vcenter.corp.local         │
+  │  ├─ SSO login    administrator@vsphere.local        │
+  │  └─ VAMI         https://vcenter.corp.local:5480    │
+  │                                                     │
+  │  NSX Manager     https://nsx.corp.local             │
+  │  ├─ Cluster      get cluster status → STABLE        │
+  │  └─ Services     get services → running             │
+  │                                                     │
+  │  Aria Operations https://aria-ops.corp.local        │
+  │  └─ Collection   State: OK (< 5 min lag)            │
+  │                                                     │
+  │  VxRail Manager  https://vxrail.corp.local          │
+  │  └─ Node health  All nodes: Healthy                 │
+  │                                                     │
+  │  iDRAC nodes     https://idrac-esx-<site>-<##>     │
+  │  └─ Hardware     No disk / NIC / PSU alerts         │
+  └─────────────────────────────────────────────────────┘
+```
 ## Connectivity Checks
 
 ```bash

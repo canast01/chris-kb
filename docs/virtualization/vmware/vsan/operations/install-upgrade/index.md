@@ -1,5 +1,43 @@
 # vSAN — Install & Upgrade
 
+```
+VSAN UPGRADE SEQUENCE (host-by-host rolling)
+
+  Pre-checks
+  ├── Health: all green
+  ├── No degraded objects
+  └── Resync queue empty
+         │
+         ▼
+  Step 1 — Upgrade vCenter Server (always first)
+         │
+         ▼
+  Step 2 — Update vLCM Cluster Image
+           (target ESXi build + certified driver versions)
+         │
+         ▼
+  ┌──────────────────────────────────────────────────┐
+  │  Per-Host Remediation Loop (one host at a time)  │
+  │                                                  │
+  │  ESXi-01 → Maintenance Mode (Full Data Mig.)     │
+  │          → vLCM upgrades ESXi + drivers          │
+  │          → Host exits maintenance mode           │
+  │          → Verify vSAN health (must be green)    │
+  │          → Verify resync complete (0 bytes)       │
+  │                                                  │
+  │  ESXi-02 → same sequence                         │
+  │  ESXi-03 → same sequence                         │
+  │  ... (all hosts)                                 │
+  └──────────────────────────────────────────────────┘
+         │
+         ▼
+  Post-upgrade validation
+  ├── All hosts on new ESXi build
+  ├── vSAN health all green
+  ├── Disk format version current
+  └── Object compliance 100%
+```
+
 ## vSAN Version Matrix
 
 vSAN versions are tied to vSphere releases. There is no standalone vSAN upgrade path — upgrading vSAN means upgrading vSphere.

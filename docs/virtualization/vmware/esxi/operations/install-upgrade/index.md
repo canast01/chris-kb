@@ -1,5 +1,42 @@
 # ESXi Install & Upgrade
 
+```
+ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
+┌─────────────────────────────────────────────────────────┐
+│  Pre-Upgrade                                            │
+│  ├── Confirm vCenter already at target-compatible ver   │
+│  ├── Check HCL for target ESXi + server model           │
+│  ├── Verify vSAN / NSX interop matrix                   │
+│  └── Take vCenter file-based backup                     │
+└──────────────────────────┬──────────────────────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │  vLCM: Set Cluster      │
+              │  Desired Image          │
+              │  ESXi base + vendor     │
+              │  add-on + VIBs          │
+              └────────────┬────────────┘
+                           │
+         ┌─────────────────▼──────────────────┐
+         │  For each host (one at a time):     │
+         │                                     │
+         │  1. Host → Maintenance Mode         │
+         │     DRS migrates VMs automatically  │
+         │  2. vLCM applies image + reboots    │
+         │  3. Host exits Maintenance Mode     │
+         │  4. Validate: Connected, no alarms, │
+         │     paths active, vSAN healthy      │
+         │  5. Wait 15–30 min before next host │
+         └─────────────────┬──────────────────┘
+                           │ Repeat for all hosts
+              ┌────────────▼────────────┐
+              │  Post-Upgrade           │
+              │  Confirm all hosts on   │
+              │  target version         │
+              │  All vSAN health green  │
+              └─────────────────────────┘
+```
+
 ## Version and Support Matrix
 
 | Version | Release | General Support End | Technical Guidance End |

@@ -1,5 +1,43 @@
 # vCenter — Procedures
 
+```
+VCSA Procedure Flow — Maintenance Window
+════════════════════════════════════════════════════════
+
+  Pre-Maintenance                During              Post-Validation
+  ┌───────────────────┐         ┌──────────┐         ┌─────────────────┐
+  │ 1. VCSA backup    │         │ Perform  │         │ services OK?    │
+  │    (VAMI→Backup)  │         │ change   │         │ hosts Connected?│
+  │                   │         │          │         │ DRS/HA active?  │
+  │ 2. Check df -h    │────────▶│ Monitor  │────────▶│ API responding? │
+  │                   │         │ vpxd.log │         │ no new errors?  │
+  │ 3. HA admission   │         │          │         │ close ticket    │
+  │    capacity check │         │          │         └─────────────────┘
+  │                   │         └──────────┘
+  │ 4. Notify teams   │
+  └───────────────────┘
+
+  Service Restart Order (dependency chain)
+  ┌──────────────────────────────────────────────────┐
+  │                                                  │
+  │  vmware-vpostgres  ←── must start first (DB)     │
+  │         │                                        │
+  │         ▼                                        │
+  │  vmware-stsd       ←── SSO token service         │
+  │         │                                        │
+  │         ▼                                        │
+  │  vmware-sts-idmd   ←── identity daemon           │
+  │         │                                        │
+  │         ▼                                        │
+  │  vpxd              ←── core vCenter daemon       │
+  │         │                                        │
+  │         ▼                                        │
+  │  vsphere-ui        ←── HTML5 client              │
+  │  vmware-eam        ←── ESX Agent Manager         │
+  │                                                  │
+  └──────────────────────────────────────────────────┘
+```
+
 ## Incident Triage
 
 Use this checklist at the start of any vCenter-related incident to establish scope before taking action.

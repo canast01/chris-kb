@@ -1,5 +1,43 @@
 # vSAN — Integrations
 
+```
+vSAN INTEGRATION MAP
+
+  ┌────────────────────────────────────────────────────────┐
+  │                    vCenter Server                      │
+  │  (management plane — all vSAN config flows through VC) │
+  └──────┬──────────┬──────────────┬──────────┬───────────┘
+         │          │              │          │
+         ▼          ▼              ▼          ▼
+  ┌──────────┐ ┌─────────┐ ┌──────────┐ ┌───────────┐
+  │  vSAN    │ │  NSX    │ │  vSphere │ │   Aria    │
+  │ Cluster  │ │         │ │Replication│ │Operations │
+  │(data     │ │TEP vmk  │ │          │ │(vROps)    │
+  │ plane)   │ │on hosts │ │RPO-based │ │           │
+  └────┬─────┘ └────┬────┘ │ VM rep.  │ └─────┬─────┘
+       │            │      └──────────┘        │
+       ▼            ▼                          │
+  ┌────────────────────────────┐               │
+  │     ESXi Hosts (shared)    │               │
+  │  vmk0 — Management         │◄──────────────┘
+  │  vmk1 — vMotion            │   (metrics, health,
+  │  vmk2 — vSAN (dedicated)   │    capacity alerts)
+  │  vmk3 — NSX TEP            │
+  │                            │
+  │  Disk Group                │
+  │  ├── Cache SSD/NVMe        │
+  │  └── Capacity disks        │
+  └────────────────────────────┘
+         │
+         ▼
+  ┌───────────────────────┐   ┌──────────────────────┐
+  │  vSAN File Services   │   │  Backup Tools        │
+  │  (NFS v3/v4.1, SMB)  │   │  (Veeam / Commvault  │
+  │  File Agent VMs per   │   │   via VADP + CBT)    │
+  │  host, IP pool req.   │   │                      │
+  └───────────────────────┘   └──────────────────────┘
+```
+
 ## vCenter (Required)
 
 vSAN is exclusively managed through vCenter Server. There is no standalone vSAN management interface — all cluster configuration, storage policy management, health monitoring, and capacity reporting is done through the vSphere Client connected to vCenter.

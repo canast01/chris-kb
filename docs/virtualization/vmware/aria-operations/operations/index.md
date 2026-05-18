@@ -1,5 +1,35 @@
 # Aria Operations — Operations
 
+```
+Aria Operations — Operations Overview
+┌─────────────────────────────────────────────────────┐
+│  Daily Operations Loop                              │
+│                                                     │
+│  ┌─────────────┐    ┌─────────────────────────────┐│
+│  │ Health Check│    │  Alert Triage               ││
+│  │             │    │                             ││
+│  │ vracli      │───►│  Alerts → All Alerts        ││
+│  │ cluster     │    │  filter by Critical/Immed.   ││
+│  │ health      │    │  → investigate → acknowledge ││
+│  └─────────────┘    └─────────────────────────────┘│
+│          │                                          │
+│          ▼                                          │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  Capacity Review (weekly)                   │   │
+│  │  Optimize → Capacity Overview               │   │
+│  │  → clusters/datastores < 60 days remaining  │   │
+│  │  → rightsizing: idle + oversized VMs        │   │
+│  └─────────────────────────────────────────────┘   │
+│          │                                          │
+│          ▼                                          │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  Lifecycle (upgrades via LCM or in-product) │   │
+│  │  Pre-check → snapshot VMs → upgrade nodes  │   │
+│  │  data → replica → primary (LCM order)       │   │
+│  └─────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

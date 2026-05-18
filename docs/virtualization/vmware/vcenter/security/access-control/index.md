@@ -1,5 +1,44 @@
 # vCenter Security — Access Control
 
+```
+RBAC Permission Model
+════════════════════════════════════════════════════════
+
+  vCenter Inventory Hierarchy (permission scope)
+  ┌─────────────────────────────────────────────────────┐
+  │  Global Permission  ← applies to ALL vCenters       │
+  │  (use sparingly)                                     │
+  └───────────────────────────┬─────────────────────────┘
+                              │ propagates down
+                    ┌─────────▼──────────┐
+                    │  vCenter            │
+                    └─────────┬──────────┘
+                              │
+                    ┌─────────▼──────────┐
+                    │  Datacenter (DC-X)  │ ← assign most roles here
+                    └─────────┬──────────┘
+                              │
+               ┌──────────────┼─────────────────┐
+               │              │                 │
+      ┌────────▼──────┐ ┌─────▼──────┐ ┌───────▼─────┐
+      │  Cluster      │ │  Folder    │ │  Host       │
+      │  (CL-X-PROD)  │ │            │ │  (esxi-01)  │
+      └───────┬───────┘ └────────────┘ └─────────────┘
+              │
+     ┌────────▼────────┐
+     │  VM             │  ← No Access here overrides Admin above
+     │  (app-server-01)│
+     └─────────────────┘
+
+  Permission Assignment = Principal + Role + Scope
+  ┌───────────────────────────────────────────────────┐
+  │  CORP\grp-vcenter-ops  +  VM Operator  +  DC-LON  │
+  │  svc-veeam-backup      +  BackupOp     +  DC-LON  │
+  │  svc-nsx-compute       +  NSX-Integration + DC-LON│
+  │  svc-aria-ops          +  Read-Only    +  Root     │
+  └───────────────────────────────────────────────────┘
+```
+
 ## Role-Based Access Control (RBAC)
 
 vCenter uses a privilege-based permission model. Permissions are assigned as: **principal (user/group) + role (privilege set) + inventory object (scope)** + optional propagation to children.

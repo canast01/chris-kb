@@ -2,6 +2,35 @@
 
 Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting vSAN clusters. vSAN is VMware's hyper-converged storage solution — it pools the local disks of multiple ESXi hosts into a shared datastore.
 
+```
+CLI TOOL CHAIN
+
+  Administrator
+       │
+       ├── PowerCLI (workstation / automation host)
+       │       │   Connect-VIServer → vCenter API (HTTPS/443)
+       │       │
+       │       ├── Get-VsanClusterHealthSummary  ──► health status
+       │       ├── Get-VsanDiskGroup             ──► disk group inventory
+       │       ├── Get-VsanSpaceUsage            ──► capacity report
+       │       └── Set-VsanClusterConfiguration  ──► config changes
+       │
+       └── ESXi Shell (SSH to ESXi host as root)
+               │   esxcli vsan <namespace> <command>
+               │
+               ├── vsan cluster get        ──► membership, master UUID
+               ├── vsan health cluster get ──► Skyline health tests
+               ├── vsan storage list       ──► disk groups, SSDs, caps
+               ├── vsan storage add/remove ──► disk group management
+               ├── vsan network list       ──► vmkernel network config
+               ├── vsan debug object list  ──► object health / UUID
+               ├── vsan debug resync ...   ──► resync status / throttle
+               └── vsan debug network test ──► unicast peer connectivity
+                           │
+                           ▼
+               vSAN Kernel Modules (LSOM / CLOM / DOM / CMMDS)
+```
+
 > All `esxcli vsan` commands run from the ESXi host shell (SSH as root). PowerCLI commands run from a Windows/Linux workstation with the VMware.PowerCLI module installed.
 
 ---

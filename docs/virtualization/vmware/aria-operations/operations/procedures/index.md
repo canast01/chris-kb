@@ -1,5 +1,44 @@
 # Aria Operations — Procedures
 
+```
+Aria Operations — Alert Lifecycle
+┌─────────────────────────────────────────────────────┐
+│  Alert Fires                                        │
+│  (symptom threshold breached for N wait cycles)     │
+└──────────────────────┬──────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  Notification Delivered                             │
+│  → email (SMTP) · ServiceNow ticket · webhook      │
+└──────────────────────┬──────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  Ops Team Triage                                    │
+│  Alerts → All Alerts → filter Critical/Immediate    │
+│  → open alert → Symptoms tab → affected object      │
+│  → review metric history                            │
+└──────────────────────┬──────────────────────────────┘
+                       │ root cause found?
+                ┌──────┴──────┐
+                │ Yes         │ No
+                ▼             ▼
+┌───────────────────┐  ┌─────────────────────────────┐
+│ Acknowledge alert │  │ Escalate · add notes        │
+│ Resolve issue     │  │ Open ITSM ticket            │
+│ Cancel alert only │  └─────────────────────────────┘
+│ after full fix    │
+└───────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  Planned Maintenance? → Create Maintenance Schedule │
+│  Admin → Maintenance Schedules → Add Schedule       │
+│  select objects + time window → alerts suppressed   │
+└─────────────────────────────────────────────────────┘
+```
+
 ## Alert Management
 
 ### Investigating and Acknowledging Alerts

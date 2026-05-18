@@ -2,6 +2,39 @@
 
 Diagnostic procedures for vSAN performance, object health, network issues, and disk failures. Use this page when initial health checks do not identify the root cause and deeper investigation is required.
 
+```
+DIAGNOSTIC TOOL CHAIN
+
+  Incident
+     │
+     ├── vSphere Client (GUI)
+     │       └── Cluster → Monitor → vSAN → Skyline Health
+     │                                    → Performance
+     │                                    → Virtual Objects
+     │
+     ├── ESXi Shell (esxcli vsan)
+     │       ├── cluster get        — membership, master, partition
+     │       ├── health cluster get — all built-in health tests
+     │       ├── debug object list  — per-object UUID + health state
+     │       ├── debug resync ...   — bytes remaining, throttle
+     │       ├── storage list       — disk group + disk health
+     │       └── debug network test — per-peer packet loss / latency
+     │
+     ├── Log Files (ESXi /var/log/)
+     │       ├── vmkernel.log  — disk I/O errors, NIC events
+     │       ├── clomd.log     — CLOM: placement, resync triggers
+     │       ├── cmmdsd.log    — CMMDS: host join/leave, partitions
+     │       └── vsanmgmt.log  — management plane: health, policy
+     │
+     └── Support Bundle (if escalating)
+             ├── vm-support --vsan  (per ESXi host)
+             ├── vc-support         (VCSA)
+             └── esxcli vsan trace get -t 300 -d /tmp/vsantrace
+                          │
+                          ▼
+                 Upload to Broadcom case
+```
+
 ---
 
 ## Diagnostic Sequence

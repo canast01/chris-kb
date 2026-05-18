@@ -2,6 +2,43 @@
 
 Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.
 
+```
+KEY PROCEDURE FLOWS
+
+  DISK REPLACEMENT (capacity disk)          HOST MAINTENANCE MODE
+  ─────────────────────────────────         ────────────────────────────────
+  Alert: capacity disk failed               Decision: Full Migration vs
+         │                                            Ensure Accessibility
+         ▼                                           │
+  esxcli vsan storage remove -d <naa>               ▼
+         │                               Full Data Migration
+         ▼                               ├── All components evacuated
+  Replace physical disk                   │   before host goes offline
+         │                               │   (safe, slow)
+         ▼                               └── Ensure Accessibility
+  esxcli vsan storage add                     ├── One copy per object
+    -s <cache_naa> -d <new_naa>               │   kept accessible
+         │                                   │   (faster, reduced protection)
+         ▼                                   └── Use for short reboots only
+  Monitor resync
+  esxcli vsan debug resync summary get
+
+  STORAGE POLICY CHANGE                     RESYNC THROTTLE
+  ──────────────────────────────            ────────────────────────────────
+  Old policy → New policy                   Business hours:
+  applied to running VM                     esxcli vsan debug resync
+         │                                    throttle set --throttle 500
+         ▼                                           │
+  CLOM detects non-compliance                        ▼
+         │                               Maintenance window:
+         ▼                               esxcli vsan debug resync
+  Resync triggered automatically           throttle set --throttle 0
+  (components rebuilt to new policy)
+         │
+         ▼
+  Monitor until compliant
+```
+
 ---
 
 ## Disk Groups

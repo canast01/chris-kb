@@ -1,5 +1,34 @@
 # ESXi Backup & Restore
 
+```
+ESXi Backup & Restore Flow
+┌────────────────────────────────────────────────────────┐
+│  ESXi Host Configuration Backup                        │
+│  ├── PowerCLI: Get-VMHostFirmware -BackupConfiguration │
+│  ├── vSphere Client: Host → Configure → Export         │
+│  └── Captures: network, storage, services, advanced    │
+│                                                        │
+│  VM Data Backup (via VADP / Veeam)                     │
+│  ├── CBT enabled → incremental block tracking          │
+│  ├── Transport: Hot-add (same host) preferred          │
+│  │              NBD (network) fallback                 │
+│  │              Direct SAN (FC/iSCSI proxy)            │
+│  └── Quiescing: VMware Tools snapshot for consistency  │
+└───────────────────────┬────────────────────────────────┘
+                        │
+┌───────────────────────▼────────────────────────────────┐
+│  Maintenance Mode — Pre-Change Checklist               │
+│  ├── Cluster capacity OK for N-1 hosts?                │
+│  ├── DRS ≥ Partially Automated?                        │
+│  ├── vSAN evacuation mode selected?                    │
+│  │   ├── Ensure Accessibility (fast)                   │
+│  │   └── Full Migration (safe — wait for resync)       │
+│  ├── Enter Maintenance Mode → VMs evacuate             │
+│  ├── Perform work                                      │
+│  └── Exit Maintenance Mode → validate reconnect        │
+└────────────────────────────────────────────────────────┘
+```
+
 ## Host Maintenance Mode Process
 
 ### Pre-Checks

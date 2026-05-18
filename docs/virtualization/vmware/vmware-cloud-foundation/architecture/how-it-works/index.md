@@ -1,5 +1,42 @@
 # VCF — How It Works
 
+```
+VCF Bring-Up and Lifecycle Flow
+┌──────────────────────────────────────────────────────┐
+│  Cloud Builder (bring-up tool)                       │
+│  reads deployment parameter workbook                 │
+└──────────────────────┬───────────────────────────────┘
+                       │ deploys
+                       ▼
+┌──────────────────────────────────────────────────────┐
+│  SDDC Manager (management domain)                    │
+│                                                      │
+│  ┌──────────┐  ┌────────────┐  ┌──────────────────┐ │
+│  │ vCenter  │  │ NSX Mgr    │  │  vSAN datastore  │ │
+│  │ (mgmt)   │  │ 3-node     │  │  (mgmt VMs)      │ │
+│  └──────────┘  └────────────┘  └──────────────────┘ │
+└─────────┬────────────────────────────────────────────┘
+          │ LCM orchestrates upgrades in BOM order
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  Upgrade Sequence                                    │
+│  SDDC Manager → vCenter → ESXi → NSX → vSAN FW     │
+│                                                      │
+│  1. Download bundle from depot                       │
+│  2. Run Precheck (DNS, NTP, certs, vSAN, passwords) │
+│  3. Resolve WARN/ERROR items                         │
+│  4. Schedule window → SDDC Manager applies BOM      │
+│  5. Post-upgrade validation                          │
+└─────────────────────────────────────────────────────┘
+          │ manages new workload domains
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  Workload Domain Provisioning                        │
+│  Commission hosts → Create domain → SDDC Manager   │
+│  deploys dedicated vCenter, NSX, vSAN as a unit     │
+└─────────────────────────────────────────────────────┘
+```
+
 ## SDDC Manager
 
 SDDC Manager is the central orchestrator for VCF. It manages the entire lifecycle of all components — deployment, upgrades, password rotation, certificate management, and inventory — across every workload domain.

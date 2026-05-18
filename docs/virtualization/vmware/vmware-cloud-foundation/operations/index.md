@@ -4,6 +4,32 @@
 Day-to-day operational reference for VMware Cloud Foundation. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and automation scripts.
 </div>
 
+```
+VCF Operations — Day-to-Day Workflow
+┌─────────────────────────────────────────────────────┐
+│  SDDC Manager UI / API                              │
+│  https://sddc-manager.corp.local                    │
+└──────┬──────────┬────────────┬──────────────────────┘
+       │          │            │
+       ▼          ▼            ▼
+┌──────────┐ ┌─────────┐ ┌──────────────────────────┐
+│ Health   │ │ LCM     │ │ Security                 │
+│ Checks   │ │ Upgrades│ │ Passwords · Certs        │
+│          │ │         │ │                          │
+│ SoS tool │ │ Bundles │ │ SDDC Mgr → Security      │
+│ --health │ │ Pre-chk │ │ → Password Management    │
+│ -summary │ │ Schedule│ │ → Cert Management        │
+└──────────┘ └─────────┘ └──────────────────────────┘
+       │          │            │
+       ▼          ▼            ▼
+┌─────────────────────────────────────────────────────┐
+│  Backup & Restore                                   │
+│  SDDC Manager (SFTP) → NSX Manager (SFTP)          │
+│  → vCenter (FBB/SFTP)                              │
+│  Restore order: SDDC Mgr → NSX → vCenter           │
+└─────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

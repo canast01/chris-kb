@@ -1,5 +1,50 @@
 # vCenter — Diagnostics
 
+```
+Diagnostic Chain — Priority Order
+════════════════════════════════════════════════════════
+
+  ┌─────┐
+  │  1  │  df -h
+  │     │  /storage/log · /storage/db · /storage/core
+  │     │  Full partition = root cause (stop here, fix disk first)
+  └──┬──┘
+     │
+  ┌──▼──┐
+  │  2  │  service-control --status --all
+  │     │  Identify stopped services → check dependency order
+  └──┬──┘
+     │
+  ┌──▼──┐
+  │  3  │  DNS + NTP
+  │     │  nslookup <vcenter-fqdn>  ·  timedatectl
+  │     │  Skew >5 min = Kerberos/SSO breaks
+  └──┬──┘
+     │
+  ┌──▼──┐
+  │  4  │  Certificates
+  │     │  VAMI → Certificate Management (expiry dates)
+  │     │  openssl s_client -connect <vcenter>:443
+  └──┬──┘
+     │
+  ┌──▼──┐
+  │  5  │  SSO / STS health
+  │     │  service-control --status vmware-stsd
+  │     │  vmafd-cli get-domain-name / get-ls-location
+  └──┬──┘
+     │
+  ┌──▼──┐
+  │  6  │  Log review
+  │     │  tail -f /var/log/vmware/vpxd/vpxd.log
+  │     │  tail -f /var/log/vmware/sso/vmware-sts-idmd.log
+  └──┬──┘
+     │
+  ┌──▼──┐
+  │  7  │  vm-support bundle
+  │     │  /usr/bin/vm-support  →  upload to Broadcom case
+  └─────┘
+```
+
 ## Diagnostic Priority Order
 
 ```mermaid

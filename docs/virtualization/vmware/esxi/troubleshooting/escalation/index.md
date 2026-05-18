@@ -1,5 +1,36 @@
 # ESXi Escalation
 
+```
+ESXi Escalation Path — Broadcom Support
+┌─────────────────────────────────────────────────────────┐
+│  Collect Before Calling                                 │
+│  ├── esxcli system version get  (ESXi version + build)  │
+│  ├── esxcli hardware platform get  (server model)       │
+│  ├── vm-support -w /tmp/  (full support bundle)         │
+│  └── esxtop -b -d 2 -n 30  (if performance issue)       │
+└──────────────────────────┬──────────────────────────────┘
+                           │
+┌──────────────────────────▼──────────────────────────────┐
+│  Case Severity                                          │
+│  ├── P1 Critical  Production down, data loss risk       │
+│  │                → 30 min response (Production tier)   │
+│  │                → 15 min (Business Critical tier)     │
+│  ├── P2 Major     Production degraded, workaround exists│
+│  ├── P3 Minor     Non-production affected               │
+│  └── P4 Info      Questions, how-to                     │
+└──────────────────────────┬──────────────────────────────┘
+                           │
+┌──────────────────────────▼──────────────────────────────┐
+│  Escalation Triggers                                    │
+│  ├── Case not progressing → request internal escalation │
+│  ├── Business Critical → TAM direct contact             │
+│  └── P1 stalled → Escalation Management request         │
+│                                                         │
+│  Portal: https://support.broadcom.com                   │
+│  HCL check: https://compatibilityguide.broadcom.com     │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Support Portal
 
 Broadcom acquired VMware in 2023. All VMware product support is now handled through the Broadcom Support Portal:

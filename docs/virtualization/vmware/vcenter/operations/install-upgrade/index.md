@@ -1,5 +1,52 @@
 # vCenter — Install & Upgrade
 
+```
+vSphere Upgrade Sequence
+════════════════════════════════════════════════════════
+
+  MUST follow this order — newer ESXi is NOT supported by older vCenter
+
+  ┌─────────────────┐
+  │ 1. Pre-checks   │  interop matrix · backup · disk space · certs
+  └────────┬────────┘
+           │
+           ▼
+  ┌─────────────────┐
+  │ 2. vCenter      │  Stage 1 (deploy new appliance alongside existing)
+  │    Server       │  Stage 2 (migrate data, cut over, old VCSA off)
+  │    (VCSA first) │  ← always upgrade vCenter before ESXi
+  └────────┬────────┘
+           │
+           ▼
+  ┌─────────────────┐
+  │ 3. vSAN         │  vSAN upgrade wizard (if deployed)
+  │    (if used)    │  must match vSphere release train
+  └────────┬────────┘
+           │
+           ▼
+  ┌─────────────────┐
+  │ 4. NSX Manager  │  check interop matrix for new vCenter version
+  │    (if used)    │
+  └────────┬────────┘
+           │
+           ▼
+  ┌─────────────────┐
+  │ 5. ESXi Hosts   │  vLCM cluster image remediation
+  │    (one cluster │  one host at a time → maintenance mode
+  │     at a time)  │  → apply image → reboot → exit maintenance
+  └────────┬────────┘
+           │
+           ▼
+  ┌─────────────────┐
+  │ 6. VM Hardware  │  optional — check guest OS compat first
+  │    + VMware     │
+  │    Tools        │
+  └─────────────────┘
+
+  Rollback: full restore from pre-upgrade backup only
+            (no in-place rollback; keep old VCSA off for 24h window)
+```
+
 ## Version and Support Matrix
 
 | Version | Release | General Support End | Technical Guidance End |

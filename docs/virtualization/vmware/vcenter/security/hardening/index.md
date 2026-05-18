@@ -1,5 +1,45 @@
 # vCenter Security — Hardening
 
+```
+vCenter Hardening Layers
+════════════════════════════════════════════════════════
+
+  Network Access Control
+  ┌──────────────────────────────────────────────────────┐
+  │  Firewall / ACL                                      │
+  │  :443  → admin jump hosts + monitoring only          │
+  │  :5480 → admin jump hosts only (VAMI)                │
+  │  :22   → disabled except break-glass                 │
+  └───────────────────────┬──────────────────────────────┘
+                          │ permitted traffic only
+  Authentication Controls ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  TLS 1.2+ enforced  (1.0 / 1.1 disabled)            │
+  │  SSO: 5 failed attempts → 5 min lockout              │
+  │  Password: 16 char min, 90 day max lifetime          │
+  │  AD via LDAPS (:636) — no plaintext LDAP             │
+  │  SAML federation → MFA at IdP                        │
+  └───────────────────────┬──────────────────────────────┘
+                          │
+  Host Lockdown Controls  ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  Normal Lockdown on all ESXi hosts                   │
+  │  ┌──────────────────┐   ┌──────────────────┐         │
+  │  │  Admin / Ops     │   │  ESXi Host        │         │
+  │  │                  │──▶│  (via vCenter     │         │
+  │  │  (no direct SSH  │   │   only)           │         │
+  │  │   to ESXi)       │   │                   │         │
+  │  └──────────────────┘   └──────────────────┘         │
+  └───────────────────────┬──────────────────────────────┘
+                          │
+  Logging / Visibility    ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  VAMI → Syslog → SIEM (TLS, port 6514)               │
+  │  Event retention: 90 days (vCenter + tasks)          │
+  │  SIEM alerts: LoginFailure, PermissionAdded, admin@  │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Hardening Baseline
 
 Follow the **VMware vSphere Security Configuration Guide (SCG)** published by Broadcom for the specific vSphere version. The SCG is the authoritative hardening reference and is updated with each vSphere release. Download from the Broadcom Knowledge Base for your version (search "vSphere Security Configuration Guide").

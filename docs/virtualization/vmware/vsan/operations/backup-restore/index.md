@@ -1,5 +1,41 @@
 # vSAN — Backup & Restore
 
+```
+BACKUP FLOW — vSAN VM TO TARGET
+
+  VM (on vSAN Datastore)
+         │
+         │  ① vSphere Snapshot (quiesce guest I/O)
+         ▼
+  Changed Block Tracking (CBT)
+  reads only changed blocks since last backup
+         │
+         │  ② VADP transport (NBD or Direct NFS)
+         ▼
+  Backup Proxy VM
+  (Veeam / Commvault VSA — on vSAN host)
+         │
+         │  ③ Data stream (compressed + deduped)
+         ├──────────────────────────────────────────►  Backup Repository
+         │                                             (NAS / object store)
+         │
+         │  ④ Snapshot commit / delete
+         ▼
+  VM resumes normal I/O
+
+  RESTORE FLOW
+  ─────────────────────────────────────────────────
+  Backup Repository
+         │
+         │  Restore point selected in console
+         ▼
+  Backup Proxy
+         │
+         │  Write restored blocks → vSAN Datastore
+         ▼
+  VM powered on + validated
+```
+
 vSAN is a storage platform, not a backup solution. All virtual machine data on vSAN must be protected by an external backup product. This page covers backup strategy, supported tools, operational procedures, and restore workflows for vSAN-backed workloads.
 
 ---

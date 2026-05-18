@@ -1,4 +1,27 @@
 # VxRail Post-Upgrade Validation
+
+```
+Post-Upgrade Validation Sequence
+┌────────────┐     ┌────────────┐     ┌────────────┐     ┌────────────┐
+│  Services  │     │   Health   │     │    VMs     │     │    Docs    │
+│            │     │            │     │            │     │            │
+│ VxRail Mgr │ →   │ vSAN Sky-  │ →   │ DRS / HA   │ →   │ Change     │
+│ shows      │     │ line green │     │ healthy    │     │ ticket     │
+│ target ver │     │ no resync  │     │ VMs all up │     │ updated    │
+│            │     │            │     │            │     │            │
+│ all hosts  │     │ FW matches │     │ backups    │     │ versions   │
+│ Connected  │     │ baseline   │     │ working    │     │ recorded   │
+└────────────┘     └────────────┘     └────────────┘     └────────────┘
+       │                 │                  │                   │
+       └─────────────────┴──────────────────┴───────────────────┘
+                                    │
+                         ┌──────────▼──────────┐
+                         │  All checks pass?   │
+                         │  YES → close change │
+                         │  NO  → investigate  │
+                         └─────────────────────┘
+```
+
 ## Overview
 
 Validation after upgrade, alert review, cluster health, and documentation.

@@ -1,4 +1,43 @@
 # Aria Operations — Install & Upgrade
+
+```
+Aria Operations — Upgrade Paths
+┌─────────────────────────────────────────────────────┐
+│  Option A: Aria Suite Lifecycle (Recommended)       │
+│                                                     │
+│  Aria LCM → Lifecycle Operations                   │
+│  → select environment → Upgrade                     │
+│  → select target version from marketplace           │
+│  → run pre-upgrade health checks                    │
+│  → LCM upgrades nodes in sequence:                  │
+│                                                     │
+│    Data nodes → Replica → Primary                   │
+│    (primary always last)                            │
+└──────────────────────────┬──────────────────────────┘
+                           │ or
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│  Option B: In-Product Upgrade (Standalone)          │
+│                                                     │
+│  Admin → Software Update → Upload PAK              │
+│  → Run pre-check → Proceed                          │
+│                                                     │
+│  Air-gap:                                           │
+│  vracli software-update install --file <pak>        │
+└──────────────────────────┬──────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│  Pre-Upgrade Gate (must pass before proceeding)     │
+│  ✔ All nodes Online (Admin → Cluster Management)   │
+│  ✔ All adapters Collecting                          │
+│  ✔ Disk < 70% on /storage/db                        │
+│  ✔ NTP delta < 1s on all nodes                      │
+│  ✔ VM snapshots taken (revert window)               │
+│  ✔ Backup completed within last 24h                 │
+└─────────────────────────────────────────────────────┘
+```
+
 ## Version History and Rebranding
 
 | Product Name | Version | Notes |

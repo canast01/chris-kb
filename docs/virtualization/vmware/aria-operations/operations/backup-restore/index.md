@@ -1,5 +1,43 @@
 # Aria Operations — Backup & Restore
 
+```
+Aria Operations — Backup Architecture
+┌─────────────────────────────────────────────────────┐
+│  Aria Operations Cluster                            │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────┐   │
+│  │ Primary  │  │ Replica  │  │ Data nodes     │   │
+│  └──────────┘  └──────────┘  └────────────────┘   │
+└──────────────────────┬──────────────────────────────┘
+                       │ file-based backup
+                       │ (config only — not metric data)
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  Backup Target                                      │
+│  NFS: nas-01.corp.local:/aria-ops-backups           │
+│  SFTP: backup-srv.corp.local (port 22)              │
+│                                                     │
+│  What IS backed up:                                 │
+│    alert definitions · dashboards · user accounts  │
+│    adapter configs (not credentials) · policies    │
+│                                                     │
+│  What is NOT backed up:                             │
+│    metric time-series data · alert history         │
+│    log data                                         │
+└──────────────────────┬──────────────────────────────┘
+                       │ restore
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  Restore Process                                    │
+│  Admin → Backup/Restore → select backup → Restore  │
+│  10–20 min unavailability during restore            │
+│  Re-enter all adapter credentials after restore     │
+│                                                     │
+│  Full DR (with metric history):                     │
+│  VM-level backup (Veeam/Commvault) of all nodes     │
+│  + Cassandra repair after restore                   │
+└─────────────────────────────────────────────────────┘
+```
+
 Aria Operations provides a built-in **file-based backup** mechanism that writes backups to an NFS or SFTP target. The backup includes the configuration database (policies, alert definitions, dashboards, user accounts, adapter configurations) but not the metric time-series data. Metric history is not restorable from backup — only configuration state is.
 
 ---

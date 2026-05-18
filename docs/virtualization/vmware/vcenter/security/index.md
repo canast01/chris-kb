@@ -4,6 +4,43 @@
 Security reference for VMware vCenter Server. Covers SSO authentication, identity sources, role-based access control, certificate management, and hardening aligned to VMware security guidance and DISA STIGs.
 </div>
 
+```
+vCenter Security Architecture
+════════════════════════════════════════════════════════
+
+  Network Perimeter
+  ┌────────────────────────────────────────────────────┐
+  │  Firewall: :443 (API/UI), :5480 (VAMI), :22 (SSH) │
+  │  Restrict to admin jump hosts and monitoring only  │
+  └───────────────────────┬────────────────────────────┘
+                          │
+  Authentication Layer    ▼
+  ┌────────────────────────────────────────────────────┐
+  │  SSO (vsphere.local)                               │
+  │  ┌──────────────┐   ┌─────────────────────────┐   │
+  │  │ Local accts  │   │ AD / LDAPS identity src  │   │
+  │  │ (break-glass)│   │ (named user accounts)    │   │
+  │  └──────────────┘   └─────────────────────────┘   │
+  │  ┌─────────────────────────────────────────────┐   │
+  │  │ SAML (ADFS/Okta) ← MFA enforcement at IdP  │   │
+  │  └─────────────────────────────────────────────┘   │
+  └───────────────────────┬────────────────────────────┘
+                          │
+  Authorisation Layer     ▼
+  ┌────────────────────────────────────────────────────┐
+  │  RBAC: principal + role + inventory scope          │
+  │  Administrator · VM Operator · Read-Only           │
+  │  Custom roles (Backup Operator, NSX Integration)   │
+  └───────────────────────┬────────────────────────────┘
+                          │
+  Encryption Layer        ▼
+  ┌────────────────────────────────────────────────────┐
+  │  Transit: TLS 1.2+ (all APIs, VAMI, LDAPS)         │
+  │  At rest: VM Encryption (NKP / external KMS)       │
+  │  Certs:   VMCA (internal CA) or enterprise CA      │
+  └────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

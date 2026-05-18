@@ -1,6 +1,41 @@
 # Capacity Review
 
 Run this check weekly or after any significant workload addition.
+
+```
+Capacity Check Flow
+═══════════════════════════════════════════════════════════
+
+  ┌─────────────────────────────────────────────────────┐
+  │                  CPU Headroom                       │
+  │  Cluster avg < 70% → OK   ≥ 70% → investigate      │
+  └──────────────────────────┬──────────────────────────┘
+                             │
+                             ▼
+  ┌─────────────────────────────────────────────────────┐
+  │                 RAM Headroom                        │
+  │  Balloon = 0    → OK   Balloon > 0 → action now    │
+  │  Swap = 0       → OK   Swap > 0   → immediate P1   │
+  └──────────────────────────┬──────────────────────────┘
+                             │
+                             ▼
+  ┌────────────────────────────────────────────────────┐
+  │              Datastore Capacity                    │
+  │  < 70% used → OK                                   │
+  │  70–80% used → plan expansion (2 weeks)            │
+  │  > 80% used  → alert: schedule immediate action    │
+  │  > 90% used  → critical: no new VMs until resolved │
+  └──────────────────────────┬─────────────────────────┘
+                             │
+                             ▼
+  ┌─────────────────────────────────────────────────────┐
+  │                  vSAN Capacity                      │
+  │  < 60% used → OK                                   │
+  │  60–70% used → plan capacity expansion             │
+  │  > 70% used  → critical: rebuild may fail if disk  │
+  │                fails — expand immediately           │
+  └─────────────────────────────────────────────────────┘
+```
 ## Cluster CPU and Memory
 
 ```powershell

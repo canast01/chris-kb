@@ -4,6 +4,37 @@
 Operational reference for Dell VxRail HCI. Covers architecture, lifecycle management, operations, CLI reference, troubleshooting, integration, and vendor support for VxRail clusters running vSphere and vSAN.
 </div>
 
+```
+Dell VxRail Cluster
+┌─────────────────────────────────────────────────────────────┐
+│  VxRail Manager (VM)                                        │
+│  lifecycle orchestration · health monitoring · REST API     │
+└───────────────────────────┬─────────────────────────────────┘
+                            │ manages
+          ┌─────────────────┼─────────────────┐
+          ▼                 ▼                 ▼
+     ┌─────────┐      ┌─────────┐      ┌─────────┐
+     │VxRail   │      │VxRail   │      │VxRail   │
+     │Node 1   │      │Node 2   │      │Node N   │
+     │─────────│      │─────────│      │─────────│
+     │ESXi     │      │ESXi     │      │ESXi     │
+     │vSAN     │      │vSAN     │      │vSAN     │
+     │iDRAC    │      │iDRAC    │      │iDRAC    │
+     └────┬────┘      └────┬────┘      └────┬────┘
+          │                │                │
+          └────────────────┴────────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │    vSAN Datastore       │
+              │  (distributed storage)  │
+              └─────────────────────────┘
+                           │
+              ┌────────────▼────────────┐
+              │       vCenter           │
+              │  cluster management     │
+              └─────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>

@@ -1,4 +1,39 @@
 # VxRail Cluster Expansion
+
+```
+Add Node Flow
+┌──────────────────────────────────────────────────────────────┐
+│  Planning                                                    │
+│  same SKU as cluster · compatible firmware · IP/DNS ready   │
+│  network cabling plan · iDRAC IP assigned                   │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+              ┌────────────────▼────────────────┐
+              │  Physical Installation           │
+              │  rack → cable (data + iDRAC)     │
+              │  power on → iDRAC reachable      │
+              └────────────────┬────────────────┘
+                               │
+              ┌────────────────▼────────────────┐
+              │  VxRail Manager Discovery        │
+              │  System → Cluster Expansion      │
+              │  new node appears → validate     │
+              └────────────────┬────────────────┘
+                               │
+              ┌────────────────▼────────────────┐
+              │  LCM Integration                 │
+              │  VxRail Manager upgrades node    │
+              │  firmware to cluster baseline    │
+              │  ESXi deployed + vSAN joins      │
+              └────────────────┬────────────────┘
+                               │
+              ┌────────────────▼────────────────┐
+              │  Post-Expansion Validation       │
+              │  node Connected · vSAN rebalance │
+              │  health green · capacity updated │
+              └─────────────────────────────────┘
+```
+
 ## Overview
 
 Node add planning, compatibility, network checks, and validation.

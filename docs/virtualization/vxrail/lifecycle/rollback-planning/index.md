@@ -1,5 +1,36 @@
 # VxRail Node Replacement Checklist
 
+```
+Rollback Decision Tree
+┌──────────────────────────────────────────────────────────────┐
+│  LCM upgrade started                                         │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                    ┌──────────▼──────────┐
+                    │  Upgrade completes  │
+                    │  successfully?      │
+                    └──────┬──────┬───────┘
+                        YES│      │NO
+                           │      │
+              ┌────────────▼┐    ┌▼─────────────────────────┐
+              │  Validate   │    │  Upgrade failed/stuck     │
+              │  health     │    │  ─────────────────────    │
+              │  close CHNGE│    │  capture error + bundle   │
+              └─────────────┘    │  open Dell support case   │
+                                 │  follow Dell guidance      │
+                                 └──────────────┬────────────┘
+                                                │
+                                   ┌────────────▼────────────┐
+                                   │  Rollback possible?     │
+                                   │  ─────────────────────  │
+                                   │  VxRail: no auto-rb     │
+                                   │  depends on node state  │
+                                   │  Dell must guide rollback│
+                                   │  vCenter snapshot (if   │
+                                   │  taken pre-upgrade)     │
+                                   └─────────────────────────┘
+```
+
 ## Confirm the Issue
 
 - Confirm the failed node or part with Dell support

@@ -1,6 +1,51 @@
 # Post-Change Validation
 
 Run these checks after any infrastructure change — maintenance, upgrade, patch, or configuration modification. Document evidence in the change record before closing.
+
+```
+Post-Change Validation Flow
+═══════════════════════════════════════════════════════════
+
+  CHANGE COMPLETE
+        │
+        ▼
+  ┌─────────────────────────────────┐  (within 5 min)
+  │  Immediate checks               │
+  │  ├─ Hosts connected to vCenter  │
+  │  ├─ Cluster HA/DRS active       │
+  │  └─ No VMs in unexpected state  │
+  └─────────────┬───────────────────┘
+                │
+                ▼
+  ┌─────────────────────────────────┐
+  │  Storage checks                 │
+  │  ├─ Datastores accessible       │
+  │  └─ vSAN health green           │
+  └─────────────┬───────────────────┘
+                │
+                ▼
+  ┌─────────────────────────────────┐
+  │  Services checks                │
+  │  ├─ NSX cluster stable          │
+  │  ├─ Backup jobs healthy         │
+  │  └─ Aria collecting data        │
+  └─────────────┬───────────────────┘
+                │
+                ▼
+  ┌─────────────────────────────────┐
+  │  Application validation         │
+  │  └─ App owner confirms OK       │
+  └─────────────┬───────────────────┘
+                │
+                ▼
+  ┌─────────────────────────────────┐
+  │  Evidence captured              │
+  │  └─ Screenshots in change record│
+  └─────────────┬───────────────────┘
+                │
+                ▼
+         CLOSE CHANGE RECORD
+```
 ## Immediate Checks (within 5 minutes of change completion)
 
 ```powershell

@@ -1,4 +1,30 @@
 # VxRail Firmware
+
+```
+VxRail Firmware Stack (bottom to top)
+┌──────────────────────────────────────────────────────────────┐
+│  Hardware Layer                                              │
+│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐ │
+│  │  BIOS/UEFI │  │  iDRAC FW  │  │  Storage Controller FW │ │
+│  │  (CPU/mem) │  │  (BMC/OOB) │  │  (RAID/HBA)            │ │
+│  └─────┬──────┘  └─────┬──────┘  └──────────┬─────────────┘ │
+└────────┼───────────────┼─────────────────────┼───────────────┘
+         │               │                     │
+┌────────▼───────────────▼─────────────────────▼───────────────┐
+│  NIC Firmware  ·  Disk Firmware  ·  Expansion card FW        │
+└──────────────────────────────────┬───────────────────────────┘
+                                   │  all bundled in
+┌──────────────────────────────────▼───────────────────────────┐
+│  VxRail Composite Bundle                                     │
+│  (certified combination of all firmware + vSphere versions)  │
+└──────────────────────────────────┬───────────────────────────┘
+                                   │  applied via
+┌──────────────────────────────────▼───────────────────────────┐
+│  VxRail Manager LCM                                          │
+│  validates compatibility → applies rolling across nodes      │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 Firmware lifecycle, hardware dependencies, version alignment, and post-update validation.

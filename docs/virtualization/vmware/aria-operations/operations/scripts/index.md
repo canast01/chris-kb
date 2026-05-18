@@ -1,4 +1,38 @@
 # Aria Operations — Scripts
+
+```
+Aria Operations API — Script Interaction Pattern
+┌─────────────────────────────────────────────────────┐
+│  Script / Automation Pipeline                       │
+└──────────────────────┬──────────────────────────────┘
+                       │ 1. Authenticate
+                       │    POST /suite-api/api/auth/token/acquire
+                       │    → token (valid 30 min)
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  Aria Operations REST API                           │
+│  Authorization: vRealizeOpsToken <token>            │
+│                                                     │
+│  GET  /api/alerts?activeOnly=true   active alerts   │
+│  GET  /api/resources?resourceKind=  object query    │
+│       ClusterComputeResource                        │
+│  POST /api/resources/query          filtered query  │
+│  POST /api/analytics/run            force recalc    │
+│  GET  /api/cluster/nodes            node status     │
+│  POST /api/backups/<id>/actions/    trigger backup  │
+│       backup                                        │
+└──────────────────────┬──────────────────────────────┘
+                       │ 2. Parse JSON response
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  Output / Integration                               │
+│  → CSV export (alerts, capacity, idle VMs)          │
+│  → monitoring dashboard (HTTP POST)                 │
+│  → ITSM integration                                │
+│  NOTE: re-authenticate every 25 min for long runs  │
+└─────────────────────────────────────────────────────┘
+```
+
 ## Authentication Helper (Python)
 
 ```python

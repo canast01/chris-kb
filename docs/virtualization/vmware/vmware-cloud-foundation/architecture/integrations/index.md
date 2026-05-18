@@ -1,5 +1,36 @@
 # VCF — Integrations
 
+```
+VCF Integration Topology
+┌─────────────────────────────────────────────────────┐
+│  SDDC Manager (integration hub)                     │
+└──┬──────┬──────┬──────┬──────┬──────────────────────┘
+   │      │      │      │      │
+   ▼      ▼      ▼      ▼      ▼
+┌──────┐ ┌────┐ ┌────┐ ┌────┐ ┌──────────────────────┐
+│ Aria │ │Aria│ │ AD │ │SIEM│ │  Backup              │
+│ Ops  │ │Auto│ │LDAP│ │Sys-│ │  (Veeam/NetBackup)   │
+│      │ │    │ │    │ │log │ │                      │
+│VCF MP│ │Cloud│ │SSO│ │TLS │ │  per-domain vCenter  │
+│ adds │ │Acct│ │IDp │ │6514│ │  as managed server   │
+│ SDDC │ │+NSX│ │    │ │    │ │                      │
+│ data │ │creds│ │    │ │    │ │  SFTP for SDDC Mgr  │
+└──────┘ └────┘ └────┘ └────┘ └──────────────────────┘
+
+NSX Federation (multi-site)
+┌──────────────────────────────────────────────────────┐
+│  Global NSX Manager (outside VCF LCM)                │
+│                        │ global policy               │
+│              ┌─────────┴──────────┐                  │
+│              ▼                    ▼                  │
+│   ┌──────────────────┐  ┌──────────────────┐        │
+│   │ VCF Site A       │  │ VCF Site B       │        │
+│   │ Local NSX Mgr    │  │ Local NSX Mgr    │        │
+│   │ (data plane)     │  │ (data plane)     │        │
+│   └──────────────────┘  └──────────────────┘        │
+└──────────────────────────────────────────────────────┘
+```
+
 ## Integration Summary
 
 | Integration | Method | Notes |

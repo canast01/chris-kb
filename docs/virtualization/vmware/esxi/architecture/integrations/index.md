@@ -1,4 +1,31 @@
 # ESXi — Integrations
+
+```
+ESXi Integration Map
+                    ┌─────────────────────┐
+                    │  vCenter Server      │
+                    │  ├── Cluster / HA    │
+                    │  ├── DRS / vMotion   │
+                    │  └── Host Profiles   │
+                    └──────────┬──────────┘
+                               │ vpxa / hostd (TCP 443/902)
+          ┌────────────────────▼──────────────────────┐
+          │            ESXi Host (VMkernel)            │
+          │                                            │
+   ┌──────┤  Storage           Network                 │
+   │ NSX  │  ├── FC / iSCSI    ├── vDS (vSphere port  │
+   │ VIBs │  ├── NFS 3 / 4.1  │   groups, LACP, LLDP)│
+   │ DFW  │  ├── NVMe/FC       ├── NIOC bandwidth ctrl │
+   │ TEPs │  └── vSAN (HCI)    └── CDP / LLDP discovery│
+   └──────┤                                            │
+          │  Backup (VADP)     Monitoring              │
+          │  ├── Veeam proxy   ├── Aria Ops (vROps)    │
+          │  ├── CBT tracking  ├── Log Insight syslog  │
+          │  └── Hot-add /     └── SNMP traps          │
+          │      NBD / SAN                             │
+          └────────────────────────────────────────────┘
+```
+
 ## vCenter Integration
 
 ESXi hosts are managed by vCenter Server and must be joined to a vCenter instance for full functionality. To add a host: vCenter > Hosts and Clusters > right-click datacenter or cluster > Add Host. Provide the ESXi hostname or IP, root credentials, and optionally assign a licence.

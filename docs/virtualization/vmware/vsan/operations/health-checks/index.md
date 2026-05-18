@@ -1,5 +1,39 @@
 # vSAN — Health Checks
 
+```
+vSAN HEALTH CHECK SCOPE
+
+  ┌───────────────────────────────────────────────────────┐
+  │                   vSAN Cluster                        │
+  │                                                       │
+  │  ┌─────────────────────────────────────────────────┐  │
+  │  │  Cluster-Level Checks                           │  │
+  │  │  ├── vSAN partition / membership (CMMDS)        │  │
+  │  │  ├── Software version alignment (all hosts)     │  │
+  │  │  ├── Time drift (< 500 ms required)             │  │
+  │  │  └── Capacity (< 70% alert, < 80% escalate)     │  │
+  │  └─────────────────────────────────────────────────┘  │
+  │                                                       │
+  │  ┌─────────────────────────────────────────────────┐  │
+  │  │  Host-Level Checks (per ESXi host)              │  │
+  │  │  ├── vSAN vmkernel tagged and reachable         │  │
+  │  │  ├── MTU 9000 end-to-end (vmkping -d -s 8972)  │  │
+  │  │  ├── Disk group state (healthy / degraded)      │  │
+  │  │  └── NIC errors / link speed                    │  │
+  │  └─────────────────────────────────────────────────┘  │
+  │                                                       │
+  │  ┌─────────────────────────────────────────────────┐  │
+  │  │  Object-Level Checks                            │  │
+  │  │  ├── All objects healthy (no absent components) │  │
+  │  │  ├── Storage policy compliance                  │  │
+  │  │  └── Resync queue: 0 bytes remaining (idle)     │  │
+  │  └─────────────────────────────────────────────────┘  │
+  └───────────────────────────────────────────────────────┘
+           │
+           ▼
+  Skyline Health (vCenter UI) + esxcli vsan health cluster list
+```
+
 ## Daily Checks
 
 | Check | Command / Location | Notes |

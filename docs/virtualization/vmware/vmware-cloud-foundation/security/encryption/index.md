@@ -1,5 +1,38 @@
 # VCF — Encryption
 
+```
+VCF Encryption — Certificate and Data Flow
+┌─────────────────────────────────────────────────────┐
+│  TLS Certificate Lifecycle (via SDDC Manager)       │
+│                                                     │
+│  Internal CA (VMCA) or Enterprise CA                │
+│       │                                             │
+│       ▼                                             │
+│  SDDC Manager → Security → Certificate Management  │
+│  1. Generate CSR for component                      │
+│  2. Submit to CA → receive signed cert + chain      │
+│  3. Import into SDDC Manager                        │
+│  4. SDDC Manager installs cert, restarts service    │
+│                                                     │
+│  Rotation order:                                    │
+│  SDDC Manager → vCenter → NSX Manager → ESXi       │
+│                                                     │
+│  Timeline:  60d → plan   30d → schedule   7d → P2  │
+└──────────────────────────┬──────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│  vSAN Data-at-Rest Encryption                       │
+│                                                     │
+│  KMS Server ──► vCenter vSAN configuration          │
+│  Cluster → Configure → vSAN → Services             │
+│  → Data-at-Rest Encryption → Enable                 │
+│                                                     │
+│  Key rotation: live operation (no downtime)         │
+│  KMS HA is critical — loss = datastore inaccessible │
+└─────────────────────────────────────────────────────┘
+```
+
 ## Certificate Management
 
 All VCF component certificates are managed through SDDC Manager. Do not replace certificates directly through component UIs — SDDC Manager will lose track of the state.

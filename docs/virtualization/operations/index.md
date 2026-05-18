@@ -2,6 +2,41 @@
 
 Operational procedures, health checks, troubleshooting guides, and runbooks for the virtualization platform.
 
+```
+Operations Scope
+═══════════════════════════════════════════════════════════
+
+  ┌─────────────────────────────────────────────────────┐
+  │                  Daily Operations                   │
+  │   Morning health check · Alert triage · Handoff    │
+  └──────────────┬──────────────────────┬───────────────┘
+                 │                      │
+         ┌───────▼──────┐      ┌────────▼───────┐
+         │ Health Checks │      │  Runbooks      │
+         │               │      │                │
+         │ Daily         │      │ Incident       │
+         │ Pre-change    │      │ Maintenance    │
+         │ Post-change   │      │ Host evac      │
+         │ Alert review  │      │ Snapshots      │
+         │ Capacity      │      │ VM lifecycle   │
+         │ Access check  │      │ Cert renewal   │
+         └───────┬───────┘      └────────┬───────┘
+                 │                       │
+                 └──────────┬────────────┘
+                            ▼
+                 ┌──────────────────────┐
+                 │   Troubleshooting    │
+                 │                      │
+                 │ Symptom → Category   │
+                 │ → Runbook → Resolve  │
+                 │                      │
+                 │ VM performance       │
+                 │ Host disconnected    │
+                 │ Datastore issues     │
+                 │ Network / cert       │
+                 └──────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="health-checks/">

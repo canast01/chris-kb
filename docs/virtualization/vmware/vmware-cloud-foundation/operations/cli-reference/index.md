@@ -1,5 +1,37 @@
 # VCF Operations — CLI Reference
 
+```
+VCF CLI Tool Map — Where to Run What
+┌─────────────────────────────────────────────────────┐
+│  SDDC Manager Appliance (SSH: vcf user → sudo)      │
+│                                                     │
+│  SoS utility                                        │
+│  sudo python3 /opt/vmware/sddc-support/sos          │
+│    --health-summary      full cross-domain check    │
+│    --health-check        per-domain check           │
+│    --password-health     credential status          │
+│    --certificate-health  cert expiry scan           │
+│                                                     │
+│  vcf-support-bundle                                 │
+│    --type sddc           full SDDC Manager bundle   │
+│    --type lcm            LCM-specific bundle        │
+│    --type nsx            NSX-related events         │
+│                                                     │
+│  SDDC Manager REST API  (https://<sddc-mgr>/v1)    │
+│    GET  /v1/domains      list all domains           │
+│    GET  /v1/clusters     list all clusters          │
+│    GET  /v1/hosts        list all hosts             │
+│    GET  /v1/credentials  list managed credentials   │
+│    PATCH /v1/credentials rotate a credential        │
+└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│  Key Log Paths (SDDC Manager appliance)             │
+│  /var/log/vmware/vcf/lcm/lcm-debug.log             │
+│  /var/log/vmware/vcf/sddc-manager/sddc-manager.log │
+│  /var/log/vmware/vcf/domainmanager/dm.log          │
+└─────────────────────────────────────────────────────┘
+```
+
 VCF CLI operations use the SoS (Support and Operations Suite) utility on SDDC Manager, the SDDC Manager REST API, the `vcf-support-bundle` tool, and direct SSH commands on individual components. SoS is the primary health-check and diagnostic tool, run from the SDDC Manager appliance as root.
 
 ---

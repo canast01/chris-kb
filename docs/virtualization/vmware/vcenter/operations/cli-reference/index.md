@@ -1,5 +1,32 @@
 # vCenter — CLI Reference (PowerCLI & DCLI)
 
+```
+vCenter CLI Interfaces
+════════════════════════════════════════════════════════
+
+  Management Workstation                    VCSA (SSH)
+  ┌─────────────────────────────┐           ┌──────────────────────────┐
+  │                             │           │                          │
+  │  PowerCLI (PowerShell)      │  :443     │  service-control         │
+  │  ┌──────────────────────┐   │──────────▶│   --status / --restart   │
+  │  │ Connect-VIServer      │   │           │                          │
+  │  │ Get-VM / Get-VMHost   │   │           │  vecs-cli                │
+  │  │ Get-Cluster           │   │           │   (certificate stores)   │
+  │  │ Get-Datastore         │   │           │                          │
+  │  │ Get-VIEvent           │   │           │  vmafd-cli               │
+  │  │ New-VIPermission      │   │           │   (SSO / domain info)    │
+  │  └──────────────────────┘   │           │                          │
+  │                             │           │  dcli                    │
+  │  REST API (curl/python)     │  :443     │   (vSphere Automation)   │
+  │  ┌──────────────────────┐   │──────────▶│                          │
+  │  │ POST /api/session     │   │           │  certificate-manager     │
+  │  │ GET  /api/vcenter/vm  │   │           │   (cert replace/renew)   │
+  │  │ GET  /api/vcenter/host│   │           │                          │
+  │  │ GET  /health/system   │   │           │  df -h / top / ss -tlnp  │
+  │  └──────────────────────┘   │           │                          │
+  └─────────────────────────────┘           └──────────────────────────┘
+```
+
 VMware PowerCLI is the official PowerShell module for managing vSphere from the command line. It connects to vCenter Server and gives you scripting access to VMs, hosts, clusters, datastores, networking, permissions, and events. Most PowerCLI commands require an active `Connect-VIServer` session.
 
 > Install with `Install-Module VMware.PowerCLI -Scope CurrentUser`. Run `Connect-VIServer -Server <vcenter>` before any other commands.

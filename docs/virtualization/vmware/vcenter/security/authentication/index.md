@@ -1,5 +1,50 @@
 # vCenter Security — Authentication
 
+```
+SSO Authentication Flow
+════════════════════════════════════════════════════════
+
+  User / Browser
+  ┌──────────────────┐
+  │  Login request   │
+  │  (user + pass)   │
+  └────────┬─────────┘
+           │ HTTPS :443
+           ▼
+  ┌──────────────────┐
+  │  vCenter Server  │──── delegates auth ────▶ ┌────────────────┐
+  │  (UI / API)      │                           │  vSphere SSO   │
+  └──────────────────┘                           │  (STS)         │
+                                                 └───────┬────────┘
+                                                         │ LDAPS :636
+                                                         ▼
+                                                 ┌────────────────┐
+                                                 │  Identity Source│
+                                                 │  (AD / LDAP)   │
+                                                 │                │
+                                                 │  user attrs +  │
+                                                 │  group members │
+                                                 └───────┬────────┘
+                                                         │
+                                                 ┌───────▼────────┐
+                                                 │  SAML token    │
+                                                 │  (signed, 30m) │
+                                                 └───────┬────────┘
+                                                         │
+           ┌─────────────────────────────────────────────┘
+           ▼
+  ┌──────────────────┐
+  │  Session         │  Token valid 30 min (inactivity)
+  │  established     │  TLS 1.2+ enforced end-to-end
+  └──────────────────┘
+
+  Certificate Chain (VMCA mode)
+  VMCA Root CA ──▶ Machine SSL ──▶ vCenter/VAMI certs
+               └──▶ Solution User certs (service-to-service)
+               └──▶ ESXi host certs (auto-signed by VMCA)
+  STS Signing Cert ──▶ signs all SAML tokens (10yr default)
+```
+
 ## SSO Authentication Flow
 
 ```mermaid

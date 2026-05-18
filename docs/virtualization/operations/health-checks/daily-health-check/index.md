@@ -1,6 +1,49 @@
 # Daily Health Check
 
 Morning checks covering all components that can silently degrade overnight. Target: complete in under 15 minutes.
+
+```
+Morning Check Sequence
+═══════════════════════════════════════════════════════════
+
+  START (07:00 – 07:15)
+        │
+        ▼
+  ┌─────────────────┐     FAIL → Investigate before
+  │ 1. vCenter      │            proceeding further
+  │    Alarms       ├─── OK ──►  continue
+  └─────────────────┘
+        │
+        ▼
+  ┌─────────────────┐     FAIL → Restart vpxa/hostd
+  │ 2. Host status  │            or escalate
+  │    Connected?   ├─── OK ──►  continue
+  └─────────────────┘
+        │
+        ▼
+  ┌─────────────────┐     FAIL → Check HA logs
+  │ 3. Cluster HA   │            and admission ctrl
+  │    DRS enabled? ├─── OK ──►  continue
+  └─────────────────┘
+        │
+        ▼
+  ┌─────────────────┐     WARN → Plan capacity action
+  │ 4. Datastore    │     FAIL → Immediate remediation
+  │    free space   ├─── OK ──►  continue
+  └─────────────────┘
+        │
+        ▼
+  ┌─────────────────┐     FAIL → Check disk groups
+  │ 5. vSAN health  │            and resync queue
+  │    Skyline grn? ├─── OK ──►  continue
+  └─────────────────┘
+        │
+        ▼
+  ┌─────────────────┐     FAIL → Investigate and
+  │ 6. Backup jobs  │            retry or escalate
+  │    All success? ├─── OK ──►  DONE — record results
+  └─────────────────┘
+```
 ## 1. vCenter Availability
 
 ```powershell

@@ -4,6 +4,33 @@
 HCI appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Managed as a system through VxRail Manager — all firmware, vSphere, and vSAN upgrades go through the LCM workflow via Composite Bundle, never independently.
 </div>
 
+```
+VxRail Node Anatomy + Cluster Connectivity
+┌──────────────────────────────────────────────────────────────┐
+│  VxRail Node (PowerEdge)                                     │
+│  ┌──────────┐ ┌──────────┐ ┌──────────────────────────────┐ │
+│  │  CPU(s)  │ │  RAM     │ │  NVMe Cache + Capacity Disks │ │
+│  │  Intel   │ │  up to   │ │  vSAN disk group             │ │
+│  │  Xeon    │ │  6 TB    │ │  cache tier + data tier      │ │
+│  └──────────┘ └──────────┘ └──────────────────────────────┘ │
+│  ┌──────────────────────┐   ┌───────────────────────────────┐│
+│  │  Dual-port 25/100GbE │   │  iDRAC (OOB management)       ││
+│  │  mgmt · vSAN · vMtn  │   │  hardware health · RACADM     ││
+│  └──────────┬───────────┘   └───────────────────────────────┘│
+└─────────────┼────────────────────────────────────────────────┘
+              │
+   ┌──────────▼──────────────────────────────────┐
+   │  vSphere Distributed Switch (VDS)            │
+   │  vmk0: mgmt · vmk1: vMotion                 │
+   │  vmk2: vSAN  · vmk3: VxRail mgmt            │
+   └──────────┬──────────────────────────────────┘
+              │
+   ┌──────────▼──────────────────────────────────┐
+   │  Top-of-Rack / Aggregation Switch            │
+   │  MTU 9000 on vSAN and vMotion VLANs          │
+   └─────────────────────────────────────────────┘
+```
+
 ![VxRail Architecture](../../../assets/vxrail-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

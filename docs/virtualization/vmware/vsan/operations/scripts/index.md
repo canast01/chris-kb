@@ -1,5 +1,39 @@
 # vSAN — Scripts
 
+```
+AUTOMATION FLOW
+
+  Operator / Scheduler
+         │
+         ▼
+  Script (PowerCLI / Python / Ansible)
+         │
+         ├── Connect-VIServer / SmartConnect
+         │           │
+         │           ▼
+         │   vCenter REST API / SOAP API (HTTPS/443)
+         │           │
+         │           ▼
+         │   ┌───────────────────────────────┐
+         │   │  vSAN API Methods             │
+         │   │  ├── VsanClusterHealthSystem  │
+         │   │  ├── VsanObjectSystem         │
+         │   │  ├── VsanPerformanceManager   │
+         │   │  └── VsanSpaceReportSystem    │
+         │   └───────────────────────────────┘
+         │
+         ├── SSH / plink → ESXi Shell
+         │           │
+         │           ▼
+         │   esxcli vsan <commands>
+         │   (disk groups, health, network)
+         │
+         └── Output
+                 ├── Console / log file
+                 ├── Exit code (0=PASS, 1=WARN, 2=CRIT)
+                 └── Alert / notification (email, webhook)
+```
+
 ## vSAN Cluster Health Check (PowerShell / PowerCLI)
 
 Run the full vSAN health test suite via PowerCLI and exit non-zero if any test is YELLOW or RED.

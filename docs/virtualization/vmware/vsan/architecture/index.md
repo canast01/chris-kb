@@ -4,6 +4,36 @@
 vSAN pools local NVMe and SSD disks across ESXi hosts into a shared distributed datastore. Storage policies (RAID-1/5/6, FTT) define per-VM resilience. vSAN ESA eliminates the separate cache tier on supported hardware.
 </div>
 
+```
+vSAN STORAGE ARCHITECTURE — OSA vs ESA
+
+  OSA (Original Storage Architecture — vSAN 6.x / 7.x)
+  ┌─────────────────────────────────────────┐
+  │  ESXi Host                              │
+  │  ├── Disk Group 1                       │
+  │  │   ├── Cache SSD (write buf + rd$)    │
+  │  │   ├── Capacity Disk 1               │
+  │  │   ├── Capacity Disk 2               │
+  │  │   └── Capacity Disk 3 (max 7)       │
+  │  └── Disk Group 2 (up to 5 per host)   │
+  │      └── ...                            │
+  └─────────────────────────────────────────┘
+
+  ESA (Express Storage Architecture — vSAN 8.0+)
+  ┌─────────────────────────────────────────┐
+  │  ESXi Host                              │
+  │  └── Storage Pool (NVMe only)           │
+  │      ├── NVMe 1 (capacity + perf)       │
+  │      ├── NVMe 2                         │
+  │      └── NVMe 3 (min 4 hosts req.)      │
+  │          (no cache tier — inline        │
+  │           compression always on)        │
+  └─────────────────────────────────────────┘
+
+  Both modes present a single shared datastore to vCenter.
+  Storage policy (FTT, RAID method) drives component placement.
+```
+
 | Architecture | Storage location | Shared across hosts | vMotion / HA / DRS |
 |---|---|---|---|
 | DAS | Local to host | No | No |

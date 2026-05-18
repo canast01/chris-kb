@@ -1,5 +1,31 @@
 # NSX — How It Works
 
+```
+NSX Data Path — VM-to-VM (East-West, Same Segment)
+┌──────────────────────────────────────────────────────────┐
+│  ESXi Host A                    ESXi Host B              │
+│  ┌──────────┐                   ┌──────────┐             │
+│  │   VM-1   │                   │   VM-2   │             │
+│  └────┬─────┘                   └────┬─────┘             │
+│       │ vNIC                         │ vNIC               │
+│  ┌────▼─────┐                   ┌────▼─────┐             │
+│  │  DFW     │ ← stateful FW     │  DFW     │             │
+│  │  filter  │   at every vNIC   │  filter  │             │
+│  └────┬─────┘                   └────┬─────┘             │
+│       │                              │                    │
+│  ┌────▼──────────────────────────────▼─────┐             │
+│  │  Geneve Encapsulation                    │             │
+│  │  [Outer IP: TEP-A → TEP-B][UDP 6081]    │             │
+│  │  [Geneve VNI=5001][Inner: VM1 → VM2]    │             │
+│  └─────────────────────────────────────────┘             │
+└──────────────────────────────────────────────────────────┘
+
+NSX Data Path — VM to External (North-South)
+  VM → vNIC → DFW → T1 (distributed, same ESXi host)
+     → T0 Service Router (Edge Node, BGP peer)
+     → Physical Router → Internet / WAN
+```
+
 ## Key Concepts
 
 - **NSX Manager cluster** (3 nodes) — management, control, and policy plane

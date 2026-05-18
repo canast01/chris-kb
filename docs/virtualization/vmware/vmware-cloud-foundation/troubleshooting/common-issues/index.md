@@ -1,5 +1,36 @@
 # VCF Troubleshooting — Common Issues
 
+```
+VCF Common Failure Points — Quick Reference
+┌─────────────────────────────────────────────────────┐
+│  Symptom                 → Primary Check            │
+├─────────────────────────────────────────────────────┤
+│  Domain Warning/Error    → SDDC Mgr Dashboard       │
+│                            expand domain view       │
+├─────────────────────────────────────────────────────┤
+│  LCM upgrade stuck       → SDDC Mgr → Tasks        │
+│                            /vcf/lcm/lcm-debug.log   │
+├─────────────────────────────────────────────────────┤
+│  Certificate expiry warn → SDDC Mgr → Security      │
+│                            → Certificate Mgmt       │
+├─────────────────────────────────────────────────────┤
+│  NSX transport degraded  → NSX Mgr → Fabric/Nodes  │
+│                            check NSX agent on ESXi  │
+├─────────────────────────────────────────────────────┤
+│  BGP peer down           → NSX Mgr → Networking    │
+│                            → Tier-0 → BGP           │
+├─────────────────────────────────────────────────────┤
+│  SDDC Manager disk full  → SSH: df -h               │
+│                            archive /nfs/.../bundles  │
+├─────────────────────────────────────────────────────┤
+│  Password rotation fail  → SDDC Mgr → Security     │
+│                            → Credentials → status   │
+├─────────────────────────────────────────────────────┤
+│  Bundle download fail    → depot.vmware.com reachable│
+│                            proxy/firewall check      │
+└─────────────────────────────────────────────────────┘
+```
+
 ## Health Check Triage
 
 VCF health checks across SDDC Manager, vCenter, NSX, ESXi, and workload domains.

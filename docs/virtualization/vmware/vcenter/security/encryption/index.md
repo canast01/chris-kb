@@ -1,5 +1,39 @@
 # vCenter Security — Encryption
 
+```
+vSphere Encryption Key Flow
+════════════════════════════════════════════════════════
+
+  External KMS               vCenter Server          ESXi Host
+  ┌──────────────┐           ┌────────────────┐      ┌──────────────────┐
+  │  KMIP KMS    │           │  KMIP client   │      │                  │
+  │  (Thales /   │──KEK────▶│  (vCenter)     │──KEK▶│  KEK stored      │
+  │   Entrust /  │           │                │      │  per-host        │
+  │   HyTrust)   │           │                │      │                  │
+  └──────────────┘           └────────────────┘      │  DEK generated   │
+                                                     │  per-VM,         │
+  — or —                                             │  encrypted by KEK│
+  ┌──────────────┐                                   │                  │
+  │  NKP (built- │──key material─────────────────────│  DEK decrypts    │
+  │  in vCenter) │           (vSphere 7.0 U2+)       │  VMDK at I/O     │
+  └──────────────┘                                   └──────────────────┘
+                                                              │
+                                                              ▼
+                                                     ┌────────────────┐
+                                                     │ Encrypted VMDK │
+                                                     │ on datastore   │
+                                                     │ (AES-256-XTS)  │
+                                                     └────────────────┘
+
+  Data in Transit (TLS)
+  ┌────────────────────────────────────────────────────┐
+  │  Client ──TLS 1.2+──▶ vCenter :443                 │
+  │  vCenter ──TLS 1.2+──▶ VAMI :5480                  │
+  │  vCenter ──LDAPS:636──▶ AD domain controller       │
+  │  vCenter ──TLS──▶ ESXi :443 (host management)      │
+  └────────────────────────────────────────────────────┘
+```
+
 ## Data in Transit
 
 vCenter enforces TLS 1.2 minimum by default (vSphere 7.0+). TLS 1.0 and 1.1 are disabled.

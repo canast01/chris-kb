@@ -1,5 +1,31 @@
 # VCF — Procedures
 
+```
+VCF Operational Procedures — Decision Map
+┌─────────────────────────────────────────────────────┐
+│  Routine Operations                                 │
+└──────┬───────────────┬────────────────┬─────────────┘
+       │               │                │
+       ▼               ▼                ▼
+┌──────────────┐ ┌──────────────┐ ┌────────────────┐
+│ Patching /   │ │ Password     │ │ Certificate    │
+│ Upgrading    │ │ Management   │ │ Management     │
+│              │ │              │ │                │
+│ SDDC Mgr     │ │ SDDC Mgr     │ │ SDDC Mgr       │
+│ → LCM        │ │ → Security   │ │ → Security     │
+│ → Upgrade    │ │ → Password   │ │ → Certificate  │
+│              │ │   Management │ │   Management   │
+│ Order:       │ │              │ │                │
+│ SDDC Mgr     │ │ Rotate via   │ │ Generate CSR   │
+│ → vCenter    │ │ SDDC Mgr     │ │ → sign → import│
+│ → ESXi       │ │ (not direct  │ │                │
+│ → NSX → vSAN │ │ in product)  │ │ Order:         │
+│              │ │              │ │ SDDC Mgr       │
+│ Pre-check    │ │ Update vault │ │ → vCenter      │
+│ first!       │ │ after rotate │ │ → NSX → ESXi  │
+└──────────────┘ └──────────────┘ └────────────────┘
+```
+
 ## Lifecycle Management (Patching)
 
 All VCF component upgrades must go through SDDC Manager LCM. Patching components independently breaks the BOM alignment and can block future LCM upgrades.

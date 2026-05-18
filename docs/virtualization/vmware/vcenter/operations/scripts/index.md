@@ -1,5 +1,36 @@
 # vCenter — Scripts
 
+```
+PowerCLI Automation Flow
+════════════════════════════════════════════════════════
+
+  Script                  PowerCLI Module           vCenter API
+  ┌──────────────┐        ┌─────────────────┐        ┌────────────┐
+  │ .ps1 script  │        │ VMware.PowerCLI  │        │  vpxd      │
+  │              │───────▶│                  │───────▶│  REST API  │
+  │ Env vars:    │        │ Connect-VIServer │  :443  │  :443      │
+  │ VCENTER_HOST │        │ Get-VM           │        └─────┬──────┘
+  │ VC_USER      │        │ Get-VMHost       │              │
+  │ VC_PASS      │        │ Get-Cluster      │              │ queries
+  └──────────────┘        │ Get-Datastore    │              ▼
+                          │ Get-Snapshot     │        ┌────────────┐
+  Script outputs:         │ Get-VIEvent      │        │  vCenter   │
+  ┌──────────────┐        └─────────────────┘        │  Inventory │
+  │ CSV report   │                                   │  (vPostgres│
+  │ Exit code    │  0 = PASS                         │   DB)      │
+  │ Console log  │  1 = issues found                 └────────────┘
+  └──────────────┘  2 = NO-GO (pre-check)
+
+  Scripts in this section
+  ┌────────────────────────────────────────────────────┐
+  │ vcenter_vm_inventory.ps1   → VM report + flags     │
+  │ vcenter_cluster_capacity.ps1 → CPU/RAM utilisation │
+  │ vc_daily_check.ps1         → daily health gate     │
+  │ vc_precheck.ps1            → pre-change GO/NO-GO   │
+  │ vc_incident_triage.ps1     → incident snapshot     │
+  └────────────────────────────────────────────────────┘
+```
+
 ## VM Health and Inventory Report (PowerShell / PowerCLI)
 
 Connect to vCenter, enumerate all VMs, flag hygiene issues (stale snapshots, outdated Tools, missing backup tag), and export to CSV.

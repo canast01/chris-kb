@@ -4,6 +4,39 @@
 Day-to-day operational reference for VMware vSAN. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and automation scripts.
 </div>
 
+```
+vSAN OPERATIONS OVERVIEW
+
+  Admin / Operator
+       │
+       ├── vSphere Client (GUI)
+       │       └── Cluster → Monitor → vSAN
+       │               ├── Health (Skyline Health)
+       │               ├── Capacity
+       │               ├── Resyncing Objects
+       │               └── Performance
+       │
+       └── CLI / Automation
+               │
+               ├── PowerCLI (Windows/Linux)
+               │       ├── Get-VsanClusterHealthSummary
+               │       ├── Get-VsanDiskGroup
+               │       ├── Get-VsanSpaceUsage
+               │       └── Set-VsanClusterConfiguration
+               │
+               └── ESXi Shell (SSH)
+                       ├── esxcli vsan cluster get
+                       ├── esxcli vsan health cluster list
+                       ├── esxcli vsan storage list
+                       ├── esxcli vsan debug object list
+                       ├── esxcli vsan debug resync summary get
+                       └── esxcli vsan debug network test
+                                │
+                                ▼
+                       vSAN Cluster Data Plane
+                       (DOM / CLOM / LSOM / CMMDS)
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

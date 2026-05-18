@@ -1,5 +1,40 @@
 # vCenter — Integrations
 
+```
+vCenter Integration Map
+════════════════════════════════════════════════════════
+
+                    ┌──────────────────┐
+                    │   vCenter Server │
+                    │   (VCSA)         │
+                    └────────┬─────────┘
+        ┌───────────┬────────┼─────────┬───────────┐
+        │           │        │         │           │
+  ┌─────▼──────┐ ┌──▼──────┐ │  ┌──────▼──────┐ ┌─▼──────────┐
+  │  Identity  │ │ Storage │ │  │  NSX         │ │  Monitoring │
+  │  (AD/LDAP) │ │ (VASA / │ │  │  Manager     │ │  (Aria Ops) │
+  │  SAML/ADFS │ │  VMFS / │ │  │  Compute Mgr │ │  vCenter    │
+  │  LDAPS:636 │ │  NFS /  │ │  │  ↔ DFW tags  │ │  Adapter    │
+  └────────────┘ │  vVols) │ │  └─────────────┘ └────────────┘
+                 └─────────┘ │
+                             │
+                   ┌─────────▼──────────────────────┐
+                   │  Backup (VADP)                  │
+                   │  Backup Server (Veeam/Commvault) │
+                   │    → vCenter API (snapshot/CBT) │
+                   │    → Backup Proxy (hot-add)      │
+                   │    → Repository (SFTP/S3/disk)  │
+                   └─────────────────────────────────┘
+
+  SSO / Certificate Trust
+  ┌──────────────────────────────────────────────────┐
+  │  vCenter SSO (vsphere.local)                     │
+  │    ├── AD Identity Source (LDAPS)  ← user authn  │
+  │    ├── VMCA (CA)                  ← cert signing │
+  │    └── Lookup Service             ← registry     │
+  └──────────────────────────────────────────────────┘
+```
+
 ## Storage Integration
 
 ### VASA Providers

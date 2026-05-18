@@ -1,5 +1,30 @@
 # VxRail Pre-Change Health Validation
 
+```
+Pre-Upgrade Checklist Flow
+┌──────────────────────────────────────────────────────────────┐
+│  VxRail Manager         vCenter               vSAN           │
+│  ─────────────          ───────────────        ─────          │
+│  UI reachable?    →     hosts Connected?  →   Skyline green? │
+│  services healthy?      no critical alarms    no resync?     │
+│  no pending jobs?       DRS/HA healthy        capacity OK?   │
+│  cert valid?            recent tasks clean    disk groups OK?│
+└──────────────────────────────────────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────┐
+│  Hardware (each node via iDRAC)                              │
+│  PSU · memory · CPU · fans · NICs · disks all green         │
+│  no predictive failures · firmware inventory available       │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────┐
+│  Infrastructure + Backup                                     │
+│  DNS forward/reverse working for all nodes and vCenter       │
+│  NTP synchronized · vCenter backup current                   │
+│  critical VM backups done · rollback plan documented         │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## VxRail Manager
 
 - VxRail Manager VM is powered on and reachable

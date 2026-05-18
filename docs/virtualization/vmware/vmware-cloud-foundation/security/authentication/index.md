@@ -1,5 +1,33 @@
 # VCF Security — Authentication
 
+```
+VCF Authentication Flow
+┌─────────────────────────────────────────────────────┐
+│  Operator / Admin                                   │
+└──────────────────────┬──────────────────────────────┘
+                       │ browser HTTPS / API token
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  SDDC Manager                                       │
+│  authenticates via: Local admin (break-glass)      │
+│                     AD/LDAP identity source         │
+│                                                     │
+│  SDDC Mgr → Administration → Single Sign-On        │
+│  → Add Identity Source → Active Directory (LDAPS)   │
+└──────────────────────┬──────────────────────────────┘
+                       │ passes auth context to
+          ┌────────────┼────────────┐
+          ▼            ▼            ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
+│ vCenter SSO  │ │ NSX Manager  │ │ SDDC Manager     │
+│              │ │              │ │ Password Manager  │
+│ Same AD      │ │ Same AD      │ │                  │
+│ identity     │ │ identity     │ │ Rotates all      │
+│ source       │ │ source       │ │ component creds  │
+│              │ │              │ │ on schedule      │
+└──────────────┘ └──────────────┘ └──────────────────┘
+```
+
 ## Password Management
 
 Credential rotation, password lifecycle, account ownership, and validation.

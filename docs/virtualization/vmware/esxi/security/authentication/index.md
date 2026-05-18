@@ -1,5 +1,36 @@
 # ESXi — Authentication
 
+```
+ESXi Authentication Paths
+┌──────────────────────────────────────────────────────────┐
+│  Recommended Path (day-to-day)                           │
+│                                                          │
+│  User → vCenter SSO → AD identity source                 │
+│                └── AD Kerberos / LDAP auth               │
+│                └── Role mapped in vCenter → ESXi         │
+└──────────────────────────┬───────────────────────────────┘
+                           │
+┌──────────────────────────▼───────────────────────────────┐
+│  Break-Glass Path (emergency only)                       │
+│                                                          │
+│  Admin → DCUI console / SSH                              │
+│          └── Local /etc/passwd auth                      │
+│              ├── root (unique strong password per host)  │
+│              └── infra-breakglass (exception user)       │
+└──────────────────────────────────────────────────────────┘
+
+Password Policy Controls (enforced via Host Profile)
+┌──────────────────────────────────────────────────────────┐
+│  /Security/PasswordQualityControl                        │
+│  ├── Minimum length: 12 chars                            │
+│  ├── Complexity: upper + lower + digit + special         │
+│  ├── History: last 5 passwords                           │
+│  /Security/AccountLockFailures = 5 attempts              │
+│  /Security/AccountUnlockTime   = 900 seconds             │
+│  /Config/Etc/issue             = login banner text        │
+└──────────────────────────────────────────────────────────┘
+```
+
 ## Authentication Architecture
 
 ESXi supports three authentication paths:

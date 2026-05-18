@@ -4,6 +4,38 @@
 Day-to-day operational reference for VMware vCenter Server. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and automation scripts.
 </div>
 
+```
+vCenter Operations Overview
+════════════════════════════════════════════════════════
+
+  Day-to-Day Operations Loop
+  ┌──────────────────────────────────────────────────┐
+  │                                                  │
+  │  Monitor          Maintain         Automate      │
+  │  ┌──────────┐    ┌──────────┐    ┌──────────┐   │
+  │  │ Health   │    │ Backup   │    │ PowerCLI │   │
+  │  │ Checks   │───▶│ Restore  │───▶│ Scripts  │   │
+  │  │ (daily)  │    │ (daily)  │    │          │   │
+  │  └──────────┘    └──────────┘    └──────────┘   │
+  │       │                │               │        │
+  │       ▼                ▼               ▼        │
+  │  ┌──────────┐    ┌──────────┐    ┌──────────┐   │
+  │  │ CLI /    │    │ Install  │    │ Incident │   │
+  │  │ DCLI     │    │ Upgrade  │    │ Procedures│  │
+  │  └──────────┘    └──────────┘    └──────────┘   │
+  │                                                  │
+  └──────────────────────────────────────────────────┘
+
+  Access Points
+  ┌────────────────────────────────────────────────────┐
+  │  vSphere Client  https://<vcenter>/ui       :443   │
+  │  VAMI            https://<vcenter>:5480     :5480  │
+  │  REST API        https://<vcenter>/api      :443   │
+  │  PowerCLI        Connect-VIServer ...       :443   │
+  │  SSH (VCSA)      ssh root@<vcenter>         :22    │
+  └────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

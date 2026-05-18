@@ -2,6 +2,42 @@
 
 VxRail upgrades include VMware software, Dell firmware, drivers, and VxRail-specific lifecycle validation. Use VxRail Manager and the approved upgrade bundle — do not treat a VxRail upgrade like a standard ESXi upgrade.
 
+```
+VxRail Upgrade Sequence
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 1: Plan          Phase 2: Pre-checks                 │
+│  ─────────────          ────────────────────                 │
+│  Current version    →   VxRail Mgr health                   │
+│  Target version     →   vCenter health                      │
+│  Release notes      →   vSAN Skyline Health                 │
+│  Bundle download    →   hardware (iDRAC)                    │
+│                         DNS · NTP · backups                  │
+└─────────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 3–4: Bundle + Pre-check                              │
+│  Upload Composite Bundle → VxRail Manager validates         │
+│  Run LCM Pre-Check → all green before proceeding           │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+          ┌────────────────▼──────────────────┐
+          │  Phase 5: Node-by-Node Upgrade     │
+          │                                   │
+          │  Node N:                          │
+          │  evacuate VMs → enter MM          │
+          │  firmware update → ESXi update    │
+          │  reboot → exit MM                 │
+          │  validate → next node             │
+          └────────────────┬──────────────────┘
+                           │
+          ┌────────────────▼──────────────────┐
+          │  Phase 7–8: Post-Upgrade           │
+          │  validate health · firmware        │
+          │  update change ticket · versions   │
+          └────────────────────────────────────┘
+```
+
 ---
 ## Phase 1: Planning
 

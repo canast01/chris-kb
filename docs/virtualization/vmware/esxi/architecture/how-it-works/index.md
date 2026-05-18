@@ -1,5 +1,29 @@
 # ESXi — How It Works
 
+```
+VMkernel Internals — Resource Stack
+┌────────────────────────────────────────────────────────────┐
+│  VMkernel (bare-metal, no general OS underneath)           │
+│                                                            │
+│  CPU Scheduler                    Memory Manager           │
+│  ├── NUMA-aware placement         ├── TPS (dedup pages)    │
+│  ├── vCPU → pCPU assignment       ├── Balloon driver       │
+│  ├── CPU Ready / Co-stop tracking ├── Compression          │
+│  └── Reservations & limits        └── Host swap (.vswp)    │
+│                                                            │
+│  Storage Stack                    Network Stack            │
+│  ├── PSA (Pluggable Storage Arch) ├── vSwitch / vDS        │
+│  │   ├── NMP (multipathing)       ├── Port groups          │
+│  │   │   ├── PSP (RR / MRU / FX) ├── vmkernel adapters    │
+│  │   │   └── SATP (array rules)  │   vmk0 mgmt            │
+│  │   └── VAAI (array offload)    │   vmk1 vMotion         │
+│  └── Datastores                   │   vmk2 vSAN            │
+│      VMFS6 / NFS / vSAN           │   vmk3 iSCSI/NFS       │
+│                                   └── pNICs (vmnic0..n)    │
+└────────────────────────────────────────────────────────────┘
+  ↑ Hardware: CPUs · RAM · HBAs (FC/NVMe) · NICs · Disk
+```
+
 ## Hypervisor Overview
 
 ESXi is a Type-1 (bare-metal) hypervisor built around the **VMkernel** — a purpose-built OS that directly manages CPU, memory, storage, and network resources on the physical host. ESXi has no general-purpose OS underneath it; the VMkernel communicates directly with hardware through drivers packaged as VIBs (vSphere Installation Bundles).

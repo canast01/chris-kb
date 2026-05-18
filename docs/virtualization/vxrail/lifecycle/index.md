@@ -2,6 +2,45 @@
 
 VxRail lifecycle notes for upgrade planning, pre-checks, bundles, firmware, rollback planning, and validation.
 
+```
+VxRail Version Lifecycle Flow
+┌──────────────────────────────────────────────────────────────┐
+│  Current Version                                             │
+│  VxRail x.y.z  ·  ESXi a.b  ·  vSAN a.b  ·  FW bundle A   │
+└───────────────────────┬──────────────────────────────────────┘
+                        │
+                        ▼
+           ┌────────────────────────┐
+           │  Target Version Check  │
+           │  Dell IMT / BOM        │
+           │  compatible path?      │
+           └────────────┬───────────┘
+                        │
+              ┌─────────▼─────────┐
+              │  Pre-Checks       │
+              │  health · certs   │
+              │  DNS · NTP · cap  │
+              └─────────┬─────────┘
+                        │
+              ┌─────────▼─────────┐
+              │  Bundle Upload    │
+              │  Composite Bundle │
+              │  → VxRail Manager │
+              └─────────┬─────────┘
+                        │
+              ┌─────────▼─────────┐
+              │  LCM Execution    │
+              │  node-by-node     │
+              │  rolling upgrade  │
+              └─────────┬─────────┘
+                        │
+              ┌─────────▼─────────┐
+              │  Post-Upgrade     │
+              │  Validation       │
+              │  health + docs    │
+              └───────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="upgrade-planning/">

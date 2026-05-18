@@ -1,5 +1,39 @@
 # vCenter — Health Checks
 
+```
+Health Check Coverage Map
+════════════════════════════════════════════════════════
+
+  VAMI (:5480)                   Shell (SSH)
+  ┌────────────────────────┐     ┌───────────────────────┐
+  │ Summary tab            │     │ service-control        │
+  │  ├── CPU / RAM / Disk  │     │  --status --all        │
+  │  └── Service overview  │     │                        │
+  │                        │     │ df -h                  │
+  │ Services tab           │     │  ├── /storage/log      │
+  │  └── started/stopped   │     │  ├── /storage/db       │
+  │                        │     │  └── /storage/core     │
+  │ Certificate Mgmt tab   │     │                        │
+  │  └── expiry dates      │     │ timedatectl (NTP)      │
+  └────────────────────────┘     │ nslookup (DNS)         │
+                                 └───────────────────────┘
+
+  PowerCLI Checks (daily)
+  ┌────────────────────────────────────────────────────┐
+  │  Get-VMHost      → ConnectionState = Connected?    │
+  │  Get-Cluster     → DrsEnabled + HAEnabled?         │
+  │  Get-Snapshot    → age > 3 days? (flag stale)      │
+  │  Get-Datastore   → FreeSpacePct > 20%?             │
+  │  Get-VIEvent     → errors in last 24h?             │
+  │  REST /health    → system health = GREEN?          │
+  └────────────────────────────────────────────────────┘
+
+  Check Cadence
+  Daily ──▶ services, hosts connected, snapshots, alarms
+  Weekly ──▶ datastore capacity, certificate expiry
+  Pre-change ──▶ backup current, HA capacity, no migrations
+```
+
 ## Appliance Management Interface
 
 - Log into the VCSA Appliance Management Interface (VAMI) at `https://<vcenter>:5480`

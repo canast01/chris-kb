@@ -1,5 +1,46 @@
 # VCF Operations — Install & Upgrade
 
+```
+VCF Upgrade Flow — SDDC Manager Orchestration
+┌─────────────────────────────────────────────────────┐
+│  Step 1: Bundle Acquisition                         │
+│  depot.vmware.com ──► SDDC Manager bundle store    │
+│  (or offline: .tar file ► local depot)             │
+└──────────────────────────┬──────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│  Step 2: Pre-Check (SDDC Manager validates)         │
+│  DNS ✔  NTP ✔  Certs ✔  vSAN health ✔             │
+│  Password rotation ✔  HCL ✔  Disk space ✔          │
+└──────────────────────────┬──────────────────────────┘
+                           │ all checks pass
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│  Step 3: Upgrade Sequence (BOM order, no skipping)  │
+│                                                     │
+│  ① SDDC Manager (always first)                     │
+│         │                                           │
+│         ▼                                           │
+│  ② vCenter (management domain, then workload)      │
+│         │                                           │
+│         ▼                                           │
+│  ③ ESXi hosts (rolling, cluster by cluster)        │
+│         │                                           │
+│         ▼                                           │
+│  ④ NSX-T Manager cluster → Edge clusters           │
+│         │                                           │
+│         ▼                                           │
+│  ⑤ vSAN firmware/driver (HCL-validated)            │
+└──────────────────────────┬──────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│  Step 4: Post-Upgrade Validation                    │
+│  All domains green · services healthy · no alarms   │
+└─────────────────────────────────────────────────────┘
+```
+
 ## Lifecycle Overview
 
 VCF upgrades are orchestrated entirely through SDDC Manager, which downloads lifecycle bundles from the VMware depot (or an offline bundle depot) and applies them in a strictly enforced sequence.

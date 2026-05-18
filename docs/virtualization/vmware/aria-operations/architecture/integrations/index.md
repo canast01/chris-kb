@@ -1,4 +1,42 @@
 # Aria Operations — Integration
+
+```
+Aria Operations — Adapter and Outbound Integration Map
+┌─────────────────────────────────────────────────────┐
+│  Data Sources (Inbound Adapters)                    │
+│                                                     │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────────┐│
+│  │ vCenter  │  │  NSX-T   │  │  Storage           ││
+│  │ Adapter  │  │ Adapter  │  │  (Pure, NetApp,    ││
+│  │          │  │          │  │   vSAN built-in)   ││
+│  │ read-only│  │ auditor  │  │                    ││
+│  │ min. role│  │ role min.│  │                    ││
+│  └────┬─────┘  └────┬─────┘  └─────────┬──────────┘│
+│       └─────────────┴──────────────────┘           │
+│                          │                          │
+└──────────────────────────┼──────────────────────────┘
+                           │ metrics + events
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│  Aria Operations Analytics Cluster                  │
+│  correlates · analyses · alerts                     │
+└──────────────────────────┬──────────────────────────┘
+                           │ outbound notifications
+          ┌────────────────┼──────────────────────┐
+          ▼                ▼                      ▼
+┌──────────────┐  ┌──────────────┐  ┌────────────────┐
+│  SMTP        │  │  ServiceNow  │  │  Webhook / REST│
+│  (email      │  │  (ITSM       │  │  (Slack, Teams,│
+│   alerts)    │  │   incidents) │  │   custom ITSM) │
+└──────────────┘  └──────────────┘  └────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  Aria Ops for Logs (Log Insight Adapter)            │
+│  forwards alerts for log correlation                │
+└─────────────────────────────────────────────────────┘
+```
+
 ## vCenter Adapter (Primary Integration)
 
 The vCenter / SDDC adapter is the core integration and is added during initial setup.

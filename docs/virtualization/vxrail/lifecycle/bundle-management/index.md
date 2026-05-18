@@ -1,4 +1,31 @@
 # VxRail Bundle Management
+
+```
+Bundle Lifecycle Flow
+┌─────────────────────────────────────────────────────────────┐
+│  Dell Support Portal / Offline Source                       │
+│  Download VxRail Composite Bundle (.zip)                    │
+└──────────────────────────┬──────────────────────────────────┘
+                           │  upload via UI or SCP
+┌──────────────────────────▼──────────────────────────────────┐
+│  VxRail Manager — Bundle Upload                             │
+│  System → Lifecycle → Upload Bundle                         │
+└──────────────────────────┬──────────────────────────────────┘
+                           │  automatic
+┌──────────────────────────▼──────────────────────────────────┐
+│  Validation                                                  │
+│  checksum · version matrix · node compatibility             │
+│  PASS → bundle staged                                        │
+│  FAIL → error detail, do not proceed                        │
+└──────────────────────────┬──────────────────────────────────┘
+                           │  on LCM start
+┌──────────────────────────▼──────────────────────────────────┐
+│  Stage → Apply                                              │
+│  VxRail Manager extracts components → applies node-by-node  │
+│  firmware + ESXi + vSAN updated in certified combination    │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 Bundle upload, validation, staging, version matching, and failure handling.

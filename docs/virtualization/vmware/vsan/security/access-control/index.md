@@ -2,6 +2,34 @@
 
 vSAN access control is implemented through vCenter's Role-Based Access Control (RBAC) system. There is no separate vSAN permission model — all vSAN management actions require vCenter permissions on the cluster or datacenter objects.
 
+```
+vSAN RBAC MODEL
+
+  WHO (identity)          ROLE (permissions)        WHERE (scope)
+  ──────────────────      ──────────────────────    ────────────────────
+  AD Group                Administrator             vCenter Root
+  vSAN-Operators  ──────► (full vSAN access)  ───► (KMS config only)
+                      │
+  AD Group          │   vSAN-StorageOperator        Cluster scope
+  vSAN-Operators  ──┼──► (disk groups, health, ───► VSAN-LON-01
+                      │   policies, maintenance)      │
+  Service Account   │                                 └─► propagates to
+  svc-aria-vcenter──┼──► vSAN-Monitor-RO     ─────► hosts + datastore
+                      │   (read-only health,
+  Service Account   │    capacity, objects)
+  svc-veeam     ────┴──► vSAN-PolicyAdmin    ─────► Cluster scope
+                          (storage policies           (policy CRUD)
+                           create/edit/delete)
+
+  Permission inheritance:
+  vCenter Root
+       └── Datacenter
+               └── Cluster  ◄── assign vSAN roles here
+                       ├── Host-01
+                       ├── Host-02
+                       └── vSAN Datastore  ◄── inherits (propagate=true)
+```
+
 ---
 
 ## vCenter RBAC Model

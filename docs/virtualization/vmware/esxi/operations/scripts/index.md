@@ -1,5 +1,35 @@
 # ESXi Scripts
 
+```
+ESXi Automation Scripts — Tool Selection
+┌───────────────────────────────────────────────────────┐
+│  Task                         Recommended Tool        │
+│  ─────────────────────────────────────────────────    │
+│  Multi-host cluster health    PowerCLI (.ps1)         │
+│  Storage path check           Bash / esxcli (.sh)     │
+│  Event and error collection   Python + pyVmomi (.py)  │
+│  NTP audit across hosts       Bash + SSH (.sh)        │
+│  Config compliance at scale   Ansible + community.    │
+│                               vmware collection        │
+│  REST API health (no module)  PowerShell Invoke-REST   │
+│  SSH-based ad-hoc checks      Plink / CMD batch (.bat) │
+└───────────────────────────────────────────────────────┘
+
+Script Execution Flow (PowerCLI example)
+┌─────────────────────────────────────────────────────┐
+│  Admin workstation (Windows / PowerShell)           │
+│  └── Connect-VIServer → vCenter                     │
+│           │                                         │
+│           ├── Get-VMHost → each ESXi host           │
+│           │   ├── Connection state check            │
+│           │   ├── Hardware sensor check             │
+│           │   ├── Datastore capacity check          │
+│           │   ├── Network adapter check             │
+│           │   └── Required services check           │
+│           └── Report: PASS / WARNING / CRITICAL     │
+└─────────────────────────────────────────────────────┘
+```
+
 ## ESXi Host Health Check (PowerShell / PowerCLI)
 
 Connect to vCenter or directly to an ESXi host and produce a per-host health report covering hardware sensors, datastore usage, network adapter state, and required service status.

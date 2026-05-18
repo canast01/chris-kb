@@ -1,5 +1,45 @@
 # vCenter Troubleshooting — Common Issues
 
+```
+Symptom Triage Map
+════════════════════════════════════════════════════════
+
+  Start: vCenter issue reported
+         │
+         ▼
+  ┌──────────────────┐   YES   ┌──────────────────────────────┐
+  │ Disk partition   │────────▶│ Free /storage/log or /db     │
+  │ full? (df -h)    │         │ Remove *.gz files >30 days   │
+  └──────┬───────────┘         └──────────────────────────────┘
+         │ NO
+         ▼
+  ┌──────────────────┐   STOP  ┌──────────────────────────────┐
+  │ vpxd running?    │────────▶│ Check vpostgres first        │
+  │ service-control  │         │ Start DB → then vpxd         │
+  │ --status vpxd    │         │ tail vpxd.log for root error  │
+  └──────┬───────────┘         └──────────────────────────────┘
+         │ RUNNING
+         ▼
+  ┌──────────────────┐   FAIL  ┌──────────────────────────────┐
+  │ SSO login OK?    │────────▶│ Restart vmware-stsd          │
+  │ administrator@   │         │ Check AD bind account/LDAPS  │
+  │ vsphere.local    │         │ Check NTP skew (>5 min fails) │
+  └──────┬───────────┘         └──────────────────────────────┘
+         │ OK
+         ▼
+  ┌──────────────────┐ EXPIRED ┌──────────────────────────────┐
+  │ Certificates     │────────▶│ certificate-manager          │
+  │ valid?           │         │ (Machine SSL or STS renewal) │
+  │ VAMI → Certs     │         │ Maintenance window required  │
+  └──────┬───────────┘         └──────────────────────────────┘
+         │ OK
+         ▼
+  ┌──────────────────┐
+  │ Check vpxd.log   │  → escalate if DB corrupt or
+  │ for root error   │    services unrecoverable
+  └──────────────────┘
+```
+
 ## Triage Decision Flow
 
 ```mermaid

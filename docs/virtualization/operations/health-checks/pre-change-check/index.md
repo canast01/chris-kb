@@ -1,6 +1,43 @@
 # Pre-Change Checks
 
 Pre-change checks confirm the platform is healthy before maintenance begins. Run these before any host maintenance, upgrade, or configuration change.
+
+```
+Pre-Change Baseline Sequence
+═══════════════════════════════════════════════════════════
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Input: Approved change record + maintenance window  │
+  └────────────────────────┬─────────────────────────────┘
+                           │
+         ┌─────────────────┼─────────────────────┐
+         ▼                 ▼                     ▼
+  ┌─────────────┐  ┌──────────────┐   ┌──────────────────┐
+  │  vCenter    │  │  vSAN status │   │  Snapshot count  │
+  │  health     │  │  No resync   │   │  Zero stale snaps│
+  │  All hosts  │  │  Green health│   │  < 24h or 10 GB  │
+  │  connected  │  └──────┬───────┘   └────────┬─────────┘
+  └──────┬──────┘         │                    │
+         └────────────────┼────────────────────┘
+                          ▼
+         ┌────────────────┴────────────────┐
+         ▼                                 ▼
+  ┌─────────────────┐             ┌─────────────────┐
+  │  Storage paths  │             │  Backup status  │
+  │  No dead paths  │             │  Last job OK    │
+  │  Count matches  │             │  Before change  │
+  └────────┬────────┘             └────────┬────────┘
+           └──────────────┬───────────────┘
+                          ▼
+                 ┌─────────────────┐
+                 │  Rollback plan  │
+                 │  documented     │
+                 │  All checks PASS│
+                 └────────┬────────┘
+                          │
+                          ▼
+                 PROCEED WITH CHANGE
+```
 ## 1. vCenter and Management Access
 
 ```powershell

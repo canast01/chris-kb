@@ -2,6 +2,31 @@
 
 Practical runbooks for incidents, maintenance, lifecycle work, validation, evidence collection, and RCA follow-up.
 
+```
+Runbook Selection Flow
+═══════════════════════════════════════════════════════════
+
+  Event or task triggered
+           │
+     ┌─────┴──────────────────────────────┐
+     ▼                                    ▼
+  Unplanned incident               Planned work
+     │                                    │
+     ├─ VMs/hosts impacted ──► Incident Response
+     ├─ vCenter unavailable ──► vCenter Outage
+     ├─ Backup failed       ──► Backup Failure
+     └─ Unknown cause       ──► Evidence Collection
+                                 + RCA Template
+                                    │
+                                    ├─ Host maintenance  ──► Host Evacuation
+                                    ├─ Cert expiring     ──► Cert Renewal
+                                    ├─ Snapshots stale   ──► Snapshot Cleanup
+                                    ├─ VM request        ──► VM Lifecycle
+                                    ├─ Storage change    ──► Storage Path Validation
+                                    ├─ Network change    ──► Network Validation
+                                    └─ Scheduled window  ──► Maintenance Window
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="incident-response/">

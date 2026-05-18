@@ -1,5 +1,34 @@
 # Alert Health Check
 
+```
+Alert Review Flow
+═══════════════════════════════════════════════════════════
+
+  Alert Sources
+  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+  │   vCenter   │   │    Aria     │   │  Pure1 /    │
+  │   Alarms    │   │  Operations │   │   iDRAC     │
+  └──────┬──────┘   └──────┬──────┘   └──────┬──────┘
+         └─────────────────┼─────────────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │ Priority Triage  │
+                  │                  │
+                  │  P1 Critical ──► Immediate action
+                  │  P2 Warning  ──► Assign owner
+                  │  P3 Info     ──► Log, review weekly
+                  └────────┬────────┘
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+       ┌──────────┐  ┌──────────┐  ┌──────────┐
+       │  Owner   │  │  False   │  │  Repeat  │
+       │ Assigned │  │ Positive │  │  Alert   │
+       │  + SLA   │  │ Suppress │  │  Tune or │
+       │ tracked  │  │ + reason │  │  fix perm│
+       └──────────┘  └──────────┘  └──────────┘
+```
+
 ## Active Alerts Review
 
 - Review all critical alerts in vCenter — confirm each has an owner or action

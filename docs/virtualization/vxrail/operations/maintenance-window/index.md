@@ -1,4 +1,27 @@
 # VxRail Maintenance Window
+
+```
+Maintenance Window Flow
+┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐
+│  Pre-Maintenance │   │    Execute       │   │  Post-Validate   │
+│                  │   │                  │   │                  │
+│ health checks    │ → │ scope of work    │ → │ services up?     │
+│ comms sent       │   │ iDRAC access     │   │ no new alerts?   │
+│ backups current  │   │ confirmed        │   │ vSAN healthy?    │
+│ rollback ready   │   │ follow runbook   │   │ VMs running?     │
+│ change ticket    │   │ do not extend    │   │ update ticket    │
+└──────────────────┘   └──────────────────┘   └──────────────────┘
+         │                      │                      │
+         └──────────────────────┴──────────────────────┘
+                                │
+                   ┌────────────▼────────────┐
+                   │  Issues during window?  │
+                   │  → do not guess         │
+                   │  → escalate with logs   │
+                   │  → contact Dell support │
+                   └─────────────────────────┘
+```
+
 ## Overview
 
 Preparation, execution, validation, and communication during VxRail maintenance.

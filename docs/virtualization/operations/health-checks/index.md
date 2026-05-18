@@ -2,6 +2,42 @@
 
 Reusable health checks for virtualization operations.
 
+```
+Health Check Flows
+═══════════════════════════════════════════════════════════
+
+  DAILY (every morning, ~15 min)
+  ┌──────────────────────────────────────────────────────┐
+  │ vCenter alarms → Host status → vSAN health →        │
+  │ Datastore space → VM state → Backup status           │
+  └──────────────────────────────────────────────────────┘
+
+  PRE-CHANGE (before any maintenance)
+  ┌──────────────────────────────────────────────────────┐
+  │ vCenter health → Active alarms → vSAN status →      │
+  │ Snapshot count → Storage paths → Backup confirmed   │
+  └──────────────────────────────────────────────────────┘
+
+  POST-CHANGE (within 5 min of completion)
+  ┌──────────────────────────────────────────────────────┐
+  │ Host connectivity → HA/DRS → VM state →             │
+  │ Datastore access → Monitoring → App owner sign-off  │
+  └──────────────────────────────────────────────────────┘
+
+  ALERT REVIEW (daily or on-demand)
+  ┌─────────────┐   ┌─────────────┐   ┌──────────────┐
+  │   vCenter   │   │    Aria     │   │   Pure1 /    │
+  │   Alarms    │   │  Operations │   │   iDRAC      │
+  └──────┬──────┘   └──────┬──────┘   └──────┬───────┘
+         └─────────────────┼─────────────────┘
+                           ▼
+                  ┌────────────────┐
+                  │ Priority Triage│
+                  │ Assign owners  │
+                  │ Escalate P1/P2 │
+                  └────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="daily-health-check/">

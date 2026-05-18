@@ -1,5 +1,42 @@
 # ESXi Access Control
 
+```
+ESXi Access Control Model
+┌──────────────────────────────────────────────────────┐
+│  vCenter (Primary path — day-to-day operations)      │
+│  ├── AD / SSO identity source                        │
+│  ├── Role-based permissions propagated to ESXi       │
+│  └── Lockdown Mode: blocks all direct host access    │
+└──────────────────────┬───────────────────────────────┘
+                       │ vpxa / hostd (HTTPS 443/902)
+┌──────────────────────▼───────────────────────────────┐
+│  ESXi Host                                           │
+│                                                      │
+│  Lockdown Mode — Normal (recommended)                │
+│  ├── SSH: BLOCKED for all except exception users     │
+│  ├── API: BLOCKED for direct connections             │
+│  ├── DCUI: ACCESSIBLE (local console only)           │
+│  └── Exception users: 1 named break-glass account   │
+│                                                      │
+│  Lockdown Mode — Strict                              │
+│  ├── SSH: BLOCKED                                    │
+│  ├── DCUI: BLOCKED (no local console)                │
+│  └── Only vCenter or IPMI for recovery               │
+│                                                      │
+│  Local Accounts (keep minimal)                       │
+│  ├── root            break-glass, unique password    │
+│  └── infra-breakglass  Admin role, in exception list │
+└──────────────────────────────────────────────────────┘
+         │
+    ┌────▼────────────────────────────────┐
+    │  Firewall (host-based ruleset)      │
+    │  ├── sshServer → admin subnet only  │
+    │  ├── vSphereClient → vCenter only   │
+    │  ├── ntpClient, syslog → allowed    │
+    │  └── All other rulesets → disabled  │
+    └─────────────────────────────────────┘
+```
+
 ## Access Model Overview
 
 ESXi host access is managed through two independent control planes:

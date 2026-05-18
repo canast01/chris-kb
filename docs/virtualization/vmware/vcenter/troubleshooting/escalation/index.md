@@ -1,5 +1,46 @@
 # vCenter — Escalation
 
+```
+Escalation Path — Broadcom / VMware Support
+════════════════════════════════════════════════════════
+
+  Internal Triage (you)
+  ┌─────────────────────────────────────────────────┐
+  │  Collect evidence before opening case:          │
+  │  ├── df -h output                               │
+  │  ├── service-control --status --all             │
+  │  ├── vpxd.log tail (last 500 lines)             │
+  │  ├── SSO log tail                               │
+  │  ├── vCenter build number (Help → About)        │
+  │  ├── ESXi build numbers for affected hosts      │
+  │  └── Recent change log from CMDB                │
+  └───────────────────┬─────────────────────────────┘
+                      │
+                      ▼
+  ┌─────────────────────────────────────────────────┐
+  │  Generate vm-support bundle                     │
+  │  VAMI :5480 → Support → Create Support Bundle  │
+  │  OR: /usr/bin/vm-support -n <vcenter>           │
+  └───────────────────┬─────────────────────────────┘
+                      │
+                      ▼
+  ┌─────────────────────────────────────────────────┐
+  │  Open case: support.broadcom.com                │
+  │  ├── S1 (production down)  → 30 min SLA         │
+  │  ├── S2 (significant impact) → 4 hr SLA         │
+  │  └── S3/S4 (minor / question) → 8-12 hr SLA    │
+  └───────────────────┬─────────────────────────────┘
+                      │
+                      ▼ if no progress within SLA
+  ┌─────────────────────────────────────────────────┐
+  │  Escalate within Broadcom case                  │
+  │  ├── Request Senior PSE assignment              │
+  │  ├── Loop in TAM (if you have one) for S1/S2   │
+  │  └── Executive escalation via account team     │
+  │       for prolonged P1 outages                 │
+  └─────────────────────────────────────────────────┘
+```
+
 ## Support Portal
 
 All VMware/vSphere support is now handled through **Broadcom Support** following the 2023 VMware acquisition:

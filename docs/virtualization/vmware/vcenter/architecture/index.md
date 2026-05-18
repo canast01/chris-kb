@@ -4,6 +4,37 @@
 vCenter Server is the management plane for VMware vSphere, deployed as the VCSA appliance. It supports standard single-node, vCenter HA (3-node active/passive/witness), and Enhanced Linked Mode topologies.
 </div>
 
+```
+vCenter Deployment Topologies
+════════════════════════════════════════════════════════
+
+  Standard (single node)          vCenter HA (VCHA)
+  ┌─────────────────────┐         ┌─────────────────────────────────┐
+  │  VCSA               │         │  Active VCSA  ← serves traffic  │
+  │  (embedded PSC+DB)  │         │       │                         │
+  │                     │         │       │ replication (HA net)     │
+  │  Manages all ESXi   │         │       ▼                         │
+  │  hosts + inventory  │         │  Passive VCSA ← hot standby     │
+  └─────────────────────┘         │       │                         │
+                                  │       │ heartbeat               │
+                                  │       ▼                         │
+                                  │  Witness Node ← quorum only     │
+                                  └─────────────────────────────────┘
+
+  Enhanced Linked Mode (ELM)
+  ┌────────────────────────────────────────────────────┐
+  │  Shared SSO Domain (vsphere.local)                 │
+  │                                                    │
+  │  ┌──────────────┐        ┌──────────────┐          │
+  │  │  vCenter-A   │        │  vCenter-B   │          │
+  │  │  (Site LON)  │        │  (Site AMS)  │          │
+  │  │  DC-LON      │        │  DC-AMS      │          │
+  │  │  Cluster(s)  │        │  Cluster(s)  │          │
+  │  └──────────────┘        └──────────────┘          │
+  │       Single login · shared roles · cross-vMotion  │
+  └────────────────────────────────────────────────────┘
+```
+
 | Deployment | Description | Use Case |
 |---|---|---|
 | Standard VCSA | Single appliance, embedded PSC and DB | Standard production |

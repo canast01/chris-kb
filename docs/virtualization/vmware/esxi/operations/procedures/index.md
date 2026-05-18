@@ -1,5 +1,43 @@
 # ESXi — Procedures
 
+```
+ESXi Maintenance Window — Procedure Flow
+┌───────────────────────────────────────────────────────┐
+│  PRE-CHECKS                                           │
+│  ├── vMotion working between affected hosts?          │
+│  ├── HA admission control — cluster has N+1 headroom? │
+│  ├── Dead storage paths? (grep dead → must be 0)      │
+│  ├── vCenter backup current?                          │
+│  └── DRS Fully Automated?                             │
+└──────────────────────┬────────────────────────────────┘
+                       │ All checks pass
+          ┌────────────▼──────────────┐
+          │  Enter Maintenance Mode   │
+          │  Set-VMHost -State Maint  │
+          │  VMs vMotion to peers     │
+          └────────────┬──────────────┘
+                       │
+          ┌────────────▼──────────────┐
+          │  Perform Approved Work    │
+          │  (patch / HW / config)    │
+          └────────────┬──────────────┘
+                       │
+          ┌────────────▼──────────────┐
+          │  Exit Maintenance Mode    │
+          │  Set-VMHost -State Conn   │
+          └────────────┬──────────────┘
+                       │
+┌──────────────────────▼────────────────────────────────┐
+│  POST-CHANGE VALIDATION                               │
+│  ├── Host Connected in vCenter?                       │
+│  ├── Hardware health: esxcli hardware health get      │
+│  ├── Storage paths active: grep dead → 0              │
+│  ├── vmnic uplinks up: esxcli network nic list        │
+│  ├── NTP synced: esxcli system ntp get                │
+│  └── No new vCenter alarms or vmkernel errors         │
+└───────────────────────────────────────────────────────┘
+```
+
 ## Change Readiness
 
 - [ ] vMotion tested and working between affected hosts before any maintenance

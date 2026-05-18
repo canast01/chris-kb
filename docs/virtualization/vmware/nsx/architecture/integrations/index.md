@@ -1,5 +1,34 @@
 # NSX — Integrations
 
+```
+NSX Integration Map
+┌──────────────────────────────────────────────────────────┐
+│  vCenter Server (Compute Manager)                        │
+│  ├── Discovers ESXi clusters → Transport Node Profiles   │
+│  ├── Auto Deploy: VIBs + TEP config applied per host     │
+│  └── vDS required: NSX overlays on vDS uplinks           │
+└─────────────────────┬────────────────────────────────────┘
+                      │
+┌─────────────────────▼────────────────────────────────────┐
+│  NSX Manager Cluster                                     │
+│                                                          │
+│  Identity / Auth     BGP Peers          Monitoring       │
+│  ├── AD / LDAP       ├── Physical ToR   ├── SIEM syslog  │
+│  │   (LDAPS 636)     │   (eBGP ASN)     │   (TLS 6514)   │
+│  └── Role bindings   └── BFD timers     └── Audit log    │
+│                                                          │
+│  Underlay Requirements                                   │
+│  ├── TEP VLAN: MTU >= 1600 (9000 preferred)              │
+│  ├── Mgmt VLAN: MTU 1500                                 │
+│  └── Edge uplinks VLAN: MTU 1500 minimum                 │
+│                                                          │
+│  VCF Integration (if applicable)                         │
+│  ├── SDDC Manager controls NSX lifecycle                 │
+│  ├── Upgrades via Bundle, not direct NSX LCM             │
+│  └── Version alignment enforced (NSX / ESXi / vCenter)   │
+└──────────────────────────────────────────────────────────┘
+```
+
 ## vCenter Integration
 
 NSX-T requires a registered vCenter Server compute manager. This enables automatic discovery of ESXi hosts as candidate transport nodes and allows vSphere clusters to be configured as host transport node profiles.

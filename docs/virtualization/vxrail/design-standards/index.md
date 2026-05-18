@@ -2,6 +2,32 @@
 
 > Part of the [VxRail](../) reference.
 
+```
+VxRail Design Requirements — Key Standards
+┌─────────────────────────────────────────────────────────────┐
+│  Network VLAN Separation (required)                         │
+│                                                             │
+│  VLAN: Management   MTU 1500   ESXi mgmt, vCenter          │
+│  VLAN: vMotion      MTU 9000   live VM migration (jumbo)   │
+│  VLAN: vSAN         MTU 9000   storage traffic (jumbo)     │
+│  VLAN: VxRail Mgmt  MTU 1500   VxRail Manager internal     │
+│  VLAN: VM Traffic   per-app    workload connectivity        │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────┐
+│  Cluster Sizing Rules                                        │
+│  min 3 nodes (FTT=1) · min 4 nodes (production safe)        │
+│  min 6 nodes for FTT=2 · same SKU required per cluster      │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────┐
+│  Firmware / Software Rule                                    │
+│  All updates MUST go through VxRail LCM Composite Bundle    │
+│  Never update vSphere, vSAN, or firmware independently      │
+│  Verify HCL alignment after every LCM bundle apply          │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ---
 ## Naming Conventions
 

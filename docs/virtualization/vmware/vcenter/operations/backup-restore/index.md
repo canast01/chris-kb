@@ -1,5 +1,47 @@
 # vCenter — Backup & Restore
 
+```
+VCSA Backup & Restore Architecture
+════════════════════════════════════════════════════════
+
+  Backup Flow (file-based, VAMI)
+  ┌─────────────────────────────────────────────────┐
+  │  VCSA                                           │
+  │  ┌───────────────────────────────────────────┐  │
+  │  │ vCenter DB (vPostgres)                    │  │
+  │  │ SSO config / identity sources / roles     │  │ ──── VAMI Backup
+  │  │ Certificates (VMCA, STS, Machine SSL)     │  │      Scheduler
+  │  │ Alarm definitions / scheduled tasks       │  │      (daily, 02:00)
+  │  └───────────────────────────────────────────┘  │
+  └────────────────────┬────────────────────────────┘
+                       │ SFTP / FTPS / HTTPS
+                       ▼
+              ┌────────────────────┐
+              │  Backup Target     │
+              │  (SFTP server /    │
+              │   NFS / S3)        │
+              │                    │
+              │  Retention: 7 days │
+              │  Encryption: AES   │
+              └────────────────────┘
+
+  Restore Flow (full appliance redeploy)
+  ┌───────────┐    ┌──────────────────┐    ┌────────────────┐
+  │  VCSA ISO │    │  Stage 1         │    │  Stage 2       │
+  │  (same or │───▶│  Deploy new VCSA │───▶│  Import backup │
+  │   newer   │    │  on target ESXi  │    │  Enter encrypt │
+  │   version)│    │  Set IP/FQDN     │    │  password      │
+  └───────────┘    └──────────────────┘    └───────┬────────┘
+                                                   │ 30-60 min
+                                                   ▼
+                                           ┌────────────────┐
+                                           │  Stage 3       │
+                                           │  Validate:     │
+                                           │  services, SSO │
+                                           │  hosts, API    │
+                                           └────────────────┘
+```
+
 ## Overview
 
 vCenter backup is critical — without a working restore path the entire management plane is at risk. The VCSA ships with a built-in file-based backup mechanism accessible from the VAMI. This is the only officially supported backup method for the VCSA itself; VM-level snapshots of the appliance are not a substitute and are not supported for production restore.

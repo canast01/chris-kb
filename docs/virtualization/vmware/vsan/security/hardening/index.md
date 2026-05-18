@@ -2,6 +2,39 @@
 
 vSAN hardening covers the security baseline configuration applied to the ESXi hosts that form the vSAN cluster, the vCenter managing the cluster, and the vSAN-specific settings. References: VMware vSphere Security Configuration Guide (Broadcom), DISA STIG for vSphere ESXi.
 
+```
+HARDENING LAYERS
+
+  ┌──────────────────────────────────────────────────────┐
+  │  NETWORK LAYER                                       │
+  │  ├── ESXi firewall: restrict SSH to mgmt CIDR only   │
+  │  ├── vSAN VLAN isolated from management/vMotion      │
+  │  ├── MTU 9000 locked; switch PortFast on vSAN ports  │
+  │  └── NIOC: vSAN ≥ 50%, NSX TEP ≥ 25%, vMotion ≥ 25% │
+  └───────────────────────┬──────────────────────────────┘
+                          │
+  ┌───────────────────────▼──────────────────────────────┐
+  │  HOST ACCESS LAYER                                   │
+  │  ├── Lockdown Mode (Normal or Strict)                │
+  │  ├── SSH disabled; enable only for maintenance       │
+  │  ├── Password: ≥15 chars, complexity, 5-attempt lock │
+  │  └── NTP: two servers, < 500 ms drift enforced       │
+  └───────────────────────┬──────────────────────────────┘
+                          │
+  ┌───────────────────────▼──────────────────────────────┐
+  │  ENCRYPTION LAYER                                    │
+  │  ├── Data-in-Transit: AES-256-GCM (no KMS needed)   │
+  │  └── Data-at-Rest: KMS → KEK → DEK (AES-256-XTS)    │
+  └───────────────────────┬──────────────────────────────┘
+                          │
+  ┌───────────────────────▼──────────────────────────────┐
+  │  AUDIT LAYER                                         │
+  │  ├── Syslog → SIEM (SSH logins, disk events)         │
+  │  ├── Host Profiles → detect config drift             │
+  │  └── Aria Operations → SCG compliance score          │
+  └──────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Hardening Control Layers

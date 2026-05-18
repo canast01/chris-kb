@@ -2,6 +2,46 @@
 
 Guidance on when to escalate vSAN incidents to VMware (Broadcom) support, what to collect before opening a case, and how to manage escalation effectively.
 
+```
+ESCALATION PATH
+
+  vSAN incident detected
+         │
+         ▼
+  L1 — On-call storage engineer
+  ├── esxcli vsan health / cluster / object checks
+  ├── Timeline: first 30 minutes
+  └── Resolved? ──► close
+         │
+         │ Not resolved within 1 hour
+         ▼
+  L2 — Storage team lead / senior engineer
+  ├── Deeper log analysis (clomd, cmmdsd, vmkernel)
+  ├── Collect state capture bundle
+  ├── Any inaccessible objects? → escalate immediately
+  └── Resolved? ──► RCA + preventive actions
+         │
+         │ P1: inaccessible objects / data risk
+         │ P2: degraded >24h / stalled resync
+         ▼
+  L3 — Platform / Infrastructure Manager
+  ├── Business impact confirmed
+  ├── Stakeholders notified
+  └── Approve vendor escalation
+         │
+         ▼
+  VMware GSS (Broadcom Support)
+  ├── P1: phone + portal — call +1 877 486 9273
+  ├── P2: portal case — same day
+  └── P3: portal case — within the week
+
+  Attach to every case:
+  ├── esxcli vsan cluster/health/object/resync output
+  ├── vm-support --vsan bundle (per affected host)
+  ├── vc-support bundle
+  └── Timeline + environment details
+```
+
 ---
 
 ## When to Escalate
