@@ -16,7 +16,7 @@
 │  Get-Service  │  │  Service │ Network  │  AD Auth  │
 │  Event ID     │  │  stopped │ no route │  failures │
 │  7034/7036    │  └────┬─────┴────┬─────┴─────┬─────┘
-└───────────────┘       ▼          ▼            ▼
+└───────────────┘       ▼          ▼           ▼ 
                ┌──────────────┐ ┌──────────┐ ┌──────────────┐
                │ Get-WinEvent │ │ Test-Net │ │ dcdiag /test │
                │ -LogName Sys │ │Connection│ │ :replications│

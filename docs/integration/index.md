@@ -9,7 +9,7 @@
 │  │   vSphere · NSX · Pure · PowerMax · Veeam · Aria Ops         │   │
 │  └──────┬─────────────┬────────────┬──────────────┬─────────────┘   │
 │         │             │            │              │                  │
-│  ┌──────▼──────┐ ┌────▼────┐ ┌────▼────┐  ┌──────▼──────┐         │
+│  ┌──────▼──────┐ ┌────▼────┐ ┌─────▼───┐  ┌───────▼─────┐         │
 │  │    Auth     │ │  Certs  │ │  Time   │  │    Email    │         │
 │  │ AD/LDAP/    │ │ Root CA │ │  NTP    │  │ SMTP relay  │         │
 │  │ Kerberos    │ │ Venafi  │ │hierarchy│  │ → smarthost │         │

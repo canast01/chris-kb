@@ -15,7 +15,7 @@ Network services knowledge base covering DNS, load balancers, and network servic
 │  │ BIND/named    │  │ Lease mgmt    │  │ hierarchy     │           │
 │  └───────┬───────┘  └───────┬───────┘  └───────┬───────┘           │
 │          │                  │                   │                   │
-│  ┌───────▼──────────────────▼───────────────────▼───────────────┐  │
+│  ┌───────▼──────────────────▼──────────────────▼────────────────┐  │
 │  │           All Infrastructure Components                      │  │
 │  │   ESXi · VMs · Appliances · Network devices                  │  │
 │  └──────────────────────────────────────────────────────────────┘  │

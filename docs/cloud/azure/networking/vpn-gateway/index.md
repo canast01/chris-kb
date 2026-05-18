@@ -14,7 +14,7 @@ Azure VPN Gateway provides encrypted connectivity between Azure VNets and on-pre
 │  │  └──────────────┘   └──────────────┬───────────────┘  │   │
 │  └───────────────────────────────────┼───────────────────┘   │
 │                                      │                       │
-│                                      ▼                       │
+│                                       ▼                      │
 │                          ┌───────────────────────┐           │
 │                          │  VPN Gateway          │           │
 │                          │  (public IP assigned) │           │

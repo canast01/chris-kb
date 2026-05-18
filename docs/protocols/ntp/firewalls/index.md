@@ -7,7 +7,7 @@
 │  ┌──────────────┐   UDP 123 outbound    ┌──────────────────┐ │
 │  │  Client host │ ─────────────────────►│  NTP Server      │ │
 │  │  (chrony/    │                       │  (stratum 2)     │ │
-│  │   w32tm)     │◄─────────────────────-│                  │ │
+│  │   w32tm)     │◄──────────────────────│                  │ │
 │  └──────────────┘   UDP 123 response    └──────────────────┘ │
 │                     (src port 123)                           │
 │  Stateful firewall: return traffic handled automatically     │
@@ -15,7 +15,7 @@
 │                                                              │
 │  NTP SERVER (serving clients):                               │
 │  ┌──────────────┐   UDP 123 inbound     ┌──────────────────┐ │
-│  │  NTP Server  │◄─────────────────────-│  Clients         │ │
+│  │  NTP Server  │◄──────────────────────│  Clients         │ │
 │  │  (chrony     │ ─────────────────────►│                  │ │
 │  │  allow 10/8) │   UDP 123 response    └──────────────────┘ │
 │  └──────────────┘                                           │

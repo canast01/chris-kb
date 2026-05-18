@@ -12,7 +12,7 @@ VxRail integrates natively with vCenter, NSX-T, Aria Operations, and Dell Suppor
 │  │  (vSphere RBAC,  │                   │  (REST API │ LCM │ Credentials)  │   │
 │  │   DRS, HA, vSAN) │                   └──────────────┬───────────────────┘   │
 │  └──────────┬───────┘                                   │ iDRAC polling         │
-│             │ adapter                                    ▼                       │
+│             │ adapter                                  ▼                         │
 │  ┌──────────▼────────┐       ┌──────────────────────────────────────────────┐  │
 │  │  Aria Operations  │       │        VxRail Nodes (iDRAC per node)         │  │
 │  │  (vCenter MP +    │       │  iDRAC ◄── HW health, firmware, SEL events  │  │

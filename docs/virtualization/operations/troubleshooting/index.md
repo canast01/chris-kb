@@ -14,7 +14,7 @@
    │  VM Slow /  │  │ Host Down / │     │ Storage /   │
    │  No Power   │  │ Disconnected│     │ Datastore   │
    └──────┬──────┘  └──────┬──────┘     └──────┬──────┘
-          ▼                ▼                    ▼
+          ▼                ▼                   ▼ 
    ┌─────────────┐  ┌─────────────┐     ┌─────────────┐
    │ CPU/Mem/Disk│  │ Ping ► SSH  │     │ Path state  │
    │ Perf triage │  │ vpxa/hostd  │     │ APD/PDL/full│

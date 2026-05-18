@@ -10,7 +10,7 @@
 │  │  AG (HA)     │  │  RAC / DG    │  │  Streaming   │              │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘              │
 │         │                 │                  │                      │
-│  ┌──────▼─────────────────▼──────────────────▼───────────────────┐  │
+│  ┌──────▼─────────────────▼─────────────────▼────────────────────┐  │
 │  │              Shared Infrastructure                            │  │
 │  │  Storage: FlashArray / PowerMax / PowerScale (NFS/SMB)        │  │
 │  │  Backup: Veeam / NetBackup with VSS / RMAN / pg_dump          │  │

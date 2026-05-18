@@ -21,7 +21,7 @@ Aria Operations for Networks knowledge base — architecture, operations, CLI re
 │  ├─────────────┤                                                    │          │
 │  │  Palo Alto  ├─ syslog/API ────►(collector or direct)            │          │
 │  └─────────────┘                                                    │          │
-│                                                                      ▼          │
+│                                                                    ▼            │
 │  Admin/User ──── HTTPS 443 ────────────────────────────────►  UI / REST API   │
 │                                       network map │ flow analysis │ microseg    │
 └────────────────────────────────────────────────────────────────────────────────┘

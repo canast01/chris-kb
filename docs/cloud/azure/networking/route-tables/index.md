@@ -12,7 +12,7 @@ Azure Route Tables (User Defined Routes / UDRs) override Azure's default system 
 │  │  Route entries:  │                             │         │
 │  │  0.0.0.0/0  ──── next hop ──────────┐          │ traffic │
 │  │  192.168.0.0/16  ─ VPN Gateway ──┐  │          │         │
-│  │  10.0.2.0/24  ── VnetLocal      │  │          ▼         │
+│  │  10.0.2.0/24  ── VnetLocal      │  │           ▼        │
 │  └──────────────────┘               │  │   ┌────────────┐   │
 │                                     │  │   │  NVA/FW    │   │
 │                                     │  └──►│ (10.0.0.4) │   │

@@ -13,7 +13,7 @@
   ┌──────────────────┐               └──────────┬───────────┘
   │ Storage → Arrays │◄──────────────────────────┤
   │ Analysis →       │  query / view             │
-  │  ├─ Capacity     │                           ▼
+  │  ├─ Capacity     │                          ▼ 
   │  ├─ Performance  │               ┌──────────────────────┐
   │  └─ Workload     │               │  Pure1 AIOps         │
   │ Alerts           │               │  ├─ Anomaly detect    │

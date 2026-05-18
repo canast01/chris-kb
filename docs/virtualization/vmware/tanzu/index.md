@@ -15,7 +15,7 @@ Tanzu knowledge base — architecture, operations, CLI references, security, and
 │  │  vSphere Namespaces │ resource quotas │ VM classes │ content library  │     │
 │  └────────────────────────────┬──────────────────────────────────────────┘     │
 │                                │ provision TanzuKubernetesCluster               │
-│  ┌─────────────────────────────▼──────────────────────────────────────────┐    │
+│  ┌────────────────────────────▼───────────────────────────────────────────┐    │
 │  │  TKG Workload Cluster (Kubernetes)                                     │    │
 │  │  ┌───────────────┐   ┌───────────────────────────────────────────────┐│    │
 │  │  │ Control Plane │   │  Worker Nodes                                 ││    │

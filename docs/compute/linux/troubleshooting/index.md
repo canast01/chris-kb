@@ -16,7 +16,7 @@
 │  journalctl  │  │  Service  │ Network  │  Disk/Perf │
 │  -b -1       │  │  failed   │ no route │  no space  │
 └──────────────┘  └─────┬─────┴────┬─────┴─────┬──────┘
-                        ▼          ▼            ▼
+                        ▼          ▼           ▼ 
                ┌──────────────┐ ┌──────────┐ ┌──────────────┐
                │ systemctl    │ │ ip/ss/   │ │ df/iostat/   │
                │ status <svc> │ │ tcpdump  │ │ top/vmstat   │

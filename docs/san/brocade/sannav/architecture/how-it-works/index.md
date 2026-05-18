@@ -20,7 +20,7 @@ Brocade SANnav is a SAN management platform delivered in two variants:
     │  (Fabric A – DC1)│  │  (Fabric B – DC2) │
     └────────┬─────────┘  └────────┬──────────┘
              │                     │
-    ┌────────▼──────────────────────▼───────┐
+    ┌────────▼─────────────────────▼────────┐
     │     Managed Brocade FC Switches        │
     │  (Gen 6 / Gen 7 directors and edge)    │
     └────────────────────────────────────────┘

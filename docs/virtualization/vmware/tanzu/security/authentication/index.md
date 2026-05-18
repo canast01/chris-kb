@@ -11,10 +11,10 @@
 │  │  LDAPIdentityProvider ──► AD/LDAP ──► sAMAccountName / group search     │  │
 │  └────────────────────────────────────┬─────────────────────────────────────┘  │
 │                                        │ OIDC token exchange                    │
-│  ┌─────────────────────────────────────▼─────────────────────────────────────┐ │
+│  ┌────────────────────────────────────▼──────────────────────────────────────┐ │
 │  │  Pinniped Concierge (per workload cluster)                                │ │
 │  │  JWT token ──► kubeconfig ──► kubectl context                            │ │
-│  └────────────────────────────────────────────────────────────────────────-──┘ │
+│  └───────────────────────────────────────────────────────────────────────────┘ │
 │                                                                                 │
 │  Token TTL: short-lived (re-login when expired)                                 │
 │  Admin kubeconfig (--admin flag): long-lived cert ── store in secrets manager  │

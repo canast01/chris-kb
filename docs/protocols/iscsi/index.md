@@ -16,7 +16,7 @@ iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands ove
 │         or         │TCP    │  │ dedicated) │  │TCP    │  │   3260     │  │
 │  ┌──────────────┐  │3260   │  └────────────┘  │3260   │  └─────┬──────┘  │
 │  │  HW iSCSI   │  │       │                  │       │        │         │
-│  │  HBA (offld)├──┼──────►│                  ├──────►│  ┌─────▼──────┐  │
+│  │  HBA (offld)├──┼──────►│                  ├──────►│  ┌──────▼─────┐  │
 │  └──────────────┘  │       │                  │       │  │    LUN     │  │
 │                    │       │                  │       │  │(block dev) │  │
 │  IQN: iqn.YYYY-MM. │       │                  │       │  └────────────┘  │

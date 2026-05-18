@@ -15,7 +15,7 @@ Infrastructure lifecycle management covering installation, upgrade, patching, de
 │  │ monitoring│  │ Backup   │   │ Health ✓ │   │  Post-upgrade ✓  │ │
 │  └──────────┘   └──────────┘   └──────────┘   └────────┬─────────┘ │
 │                                                         │           │
-│  ┌──────────────────────────────────────────────────────▼─────────┐ │
+│  ┌─────────────────────────────────────────────────────▼──────────┐ │
 │  │                   Decommission                                 │ │
 │  │   Data archive ──► access revoke ──► DNS cleanup ──► CMDB CI  │ │
 │  │   Hardware wipe / recycle  ·  License release                 │ │

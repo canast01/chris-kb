@@ -14,7 +14,7 @@
   │ -ity    │ │ Failure │ │  Anomaly     │ │  Degradation │
   └────┬────┘ └────┬────┘ └──────┬───────┘ └──────┬───────┘
        │           │             │                 │
-       ▼           ▼             ▼                 ▼
+       ▼           ▼             ▼                ▼ 
   NSG/UDR    Entra ID       Cost Mgmt        Monitor metrics
   Watcher    sign-in logs   budget alerts    + Activity Log
   flow logs  SP expiry      Advisor recs     + Diagnostics
