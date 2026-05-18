@@ -1351,6 +1351,21 @@
 
 
 <h1 id="flashblade-encryption">FlashBlade — Encryption<a class="headerlink" href="#flashblade-encryption" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>FlashBlade Encryption Architecture
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Data at Rest (always-on)                                  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Write ──► blade NVMe drive ──► XTS-AES-256 (hardware)    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Drive removed → crypto erase (DEK destroyed)              │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  Data in Transit                                           │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  ├── NFS v4.1: Kerberos GSSAPI privacy (optional)         │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  ├── SMB 3.0: end-to-end SMB encryption (AES-128-GCM)     │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ├── S3: HTTPS (TLS 1.2+)                                  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ├── Management GUI/API: HTTPS (443)                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └── Replication (ActiveDR): TLS between FlashBlades      │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <blockquote>
 <p>Part of the <a href="../">FlashBlade Security</a> reference.</p>
 </blockquote>
@@ -1367,20 +1382,20 @@
 <p>Configure Kerberos in the NFS export policy to enforce encrypted NFS sessions. Requires an Active Directory or MIT Kerberos KDC.</p>
 <h2 id="data-in-flight-smb">Data in Flight — SMB<a class="headerlink" href="#data-in-flight-smb" title="Permanent link">&para;</a></h2>
 <p>SMB encryption (AES-128-CCM or AES-256-GCM) is configurable per share. Enable SMB encryption to protect data in transit between Windows clients and FlashBlade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>update<span class="w"> </span>--smb-encryption-mode<span class="w"> </span>required<span class="w"> </span>&lt;sharename&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>update<span class="w"> </span>--smb-encryption-mode<span class="w"> </span>required<span class="w"> </span>&lt;sharename&gt;
 </code></pre></div>
 <h2 id="data-in-flight-management-and-s3">Data in Flight — Management and S3<a class="headerlink" href="#data-in-flight-management-and-s3" title="Permanent link">&para;</a></h2>
 <p>All management API and GUI traffic uses TLS 1.2 or higher. S3 data plane also uses TLS; configure clients to require HTTPS endpoints and reject HTTP.</p>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>Purity//FB records an audit log entry for every administrative action performed via GUI, CLI, or REST API, including the username, source IP, timestamp, and the specific action taken.</p>
 <p>Forward audit logs to a SIEM or syslog server:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--uri<span class="w"> </span>udp://siem:514
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--uri<span class="w"> </span>udp://siem:514
 </code></pre></div>
 <p>For TLS-encrypted syslog:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--uri<span class="w"> </span>tls://siem:6514
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>add<span class="w"> </span>--uri<span class="w"> </span>tls://siem:6514
 </code></pre></div>
 <p>Verify syslog configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purearray<span class="w"> </span>syslog<span class="w"> </span>list
 </code></pre></div>
 <p>Audit log entries are also available in the Purity//FB GUI under <strong>Settings &gt; Audit Log</strong>. Ensure logs are forwarded off-array so they cannot be tampered with by an attacker with array access.</p>
 <h2 id="compliance-notes">Compliance Notes<a class="headerlink" href="#compliance-notes" title="Permanent link">&para;</a></h2>

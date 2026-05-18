@@ -2395,38 +2395,58 @@
 
 
 <h1 id="nfs-permissions">NFS Permissions<a class="headerlink" href="#nfs-permissions" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        NFS PERMISSION LAYERS
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Layer 1 — EXPORT OPTIONS (server /etc/exports)              │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌────────────────────────────────────────────────────────┐  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  IP restriction: only 192.168.10.0/24 can mount        │  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  root_squash: root on client → UID 65534 (nfsnobody)   │  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  ro / rw: read-only or read-write at mount level        │  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └────────────────────────────────────────────────────────┘  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                         │ mount permitted                    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                         ▼                                    │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Layer 2 — POSIX UID/GID on files (server filesystem)        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ┌────────────────────────────────────────────────────────┐  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  File owner: UID 1001 (must match client UID 1001)      │  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  Permissions: rwxr-xr-x                                │  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  NFSv4: user@domain mapping via idmapd                 │  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └────────────────────────────────────────────────────────┘  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                         │                                    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Effective access = export options AND POSIX permissions     │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>NFS relies on UID/GID matching between client and server for access control. NFSv3 trusts client-reported UIDs; NFSv4 with Kerberos (<code>krb5</code>, <code>krb5i</code>, <code>krb5p</code>) adds cryptographic authentication. POSIX ACLs are supported over NFS but require the underlying filesystem to support them.</p>
 <h2 id="uidgid-mapping">UID/GID Mapping<a class="headerlink" href="#uidgid-mapping" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check UID/GID of a file on the NFS server</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ls<span class="w"> </span>-ln<span class="w"> </span>/data/shared
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Confirm the same UID exists on the client</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>id<span class="w"> </span>username
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>getent<span class="w"> </span>passwd<span class="w"> </span><span class="m">1001</span><span class="w">   </span><span class="c1"># look up by UID</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Create matching user on client (if UIDs differ)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>useradd<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-M<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>nfsuser
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Use nfsnobody for squashed access</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>id<span class="w"> </span>nfsnobody<span class="w">   </span><span class="c1"># typically UID 65534</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check UID/GID of a file on the NFS server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ls<span class="w"> </span>-ln<span class="w"> </span>/data/shared
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Confirm the same UID exists on the client</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>id<span class="w"> </span>username
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>getent<span class="w"> </span>passwd<span class="w"> </span><span class="m">1001</span><span class="w">   </span><span class="c1"># look up by UID</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Create matching user on client (if UIDs differ)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>useradd<span class="w"> </span>-u<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-g<span class="w"> </span><span class="m">1001</span><span class="w"> </span>-M<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>nfsuser
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Use nfsnobody for squashed access</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>id<span class="w"> </span>nfsnobody<span class="w">   </span><span class="c1"># typically UID 65534</span>
 </code></pre></div>
 <h2 id="nfsv4-id-mapping-idmapd">NFSv4 ID Mapping (idmapd)<a class="headerlink" href="#nfsv4-id-mapping-idmapd" title="Permanent link">&para;</a></h2>
 <p>NFSv4 uses <code>user@domain</code> strings for identity. The <code>idmapd</code> daemon translates between names and UID/GIDs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/idmapd.conf — set the same domain on client and server</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">[</span>General<span class="o">]</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">Domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>corp.local
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Restart idmapd after editing</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>nfs-idmapd<span class="w">   </span><span class="c1"># server</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rpc-idmapd<span class="w">   </span><span class="c1"># client (older distros)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Check idmapd is running</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>systemctl<span class="w"> </span>status<span class="w"> </span>nfs-idmapd
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Debug: files showing &quot;nobody&quot; owner on client indicates idmap mismatch</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Force flush of idmap cache</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>nfsidmap<span class="w"> </span>-c
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/idmapd.conf — set the same domain on client and server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">[</span>General<span class="o">]</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">Domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>corp.local
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Restart idmapd after editing</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>nfs-idmapd<span class="w">   </span><span class="c1"># server</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rpc-idmapd<span class="w">   </span><span class="c1"># client (older distros)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check idmapd is running</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>systemctl<span class="w"> </span>status<span class="w"> </span>nfs-idmapd
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Debug: files showing &quot;nobody&quot; owner on client indicates idmap mismatch</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Force flush of idmap cache</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>nfsidmap<span class="w"> </span>-c
 </code></pre></div>
 <h2 id="kerberos-security-modes">Kerberos Security Modes<a class="headerlink" href="#kerberos-security-modes" title="Permanent link">&para;</a></h2>
 <table>
@@ -2465,27 +2485,27 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export with Kerberos (server /etc/exports)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/data/secure<span class="w">  </span><span class="m">192</span>.168.10.0/24<span class="o">(</span>rw,sync,sec<span class="o">=</span>krb5i,no_subtree_check<span class="o">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Mount with Kerberos (client)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs4<span class="w"> </span>-o<span class="w"> </span><span class="nv">sec</span><span class="o">=</span>krb5i<span class="w"> </span><span class="m">192</span>.168.10.10:/data/secure<span class="w"> </span>/mnt/secure
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify Kerberos keytab includes nfs/ principal</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>klist<span class="w"> </span>-k<span class="w"> </span>/etc/krb5.keytab<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export with Kerberos (server /etc/exports)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/data/secure<span class="w">  </span><span class="m">192</span>.168.10.0/24<span class="o">(</span>rw,sync,sec<span class="o">=</span>krb5i,no_subtree_check<span class="o">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Mount with Kerberos (client)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs4<span class="w"> </span>-o<span class="w"> </span><span class="nv">sec</span><span class="o">=</span>krb5i<span class="w"> </span><span class="m">192</span>.168.10.10:/data/secure<span class="w"> </span>/mnt/secure
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify Kerberos keytab includes nfs/ principal</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>klist<span class="w"> </span>-k<span class="w"> </span>/etc/krb5.keytab<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>nfs
 </code></pre></div>
 <h2 id="acl-interaction">ACL Interaction<a class="headerlink" href="#acl-interaction" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check if ACLs are supported on the NFS mount</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>getfacl<span class="w"> </span>/mnt/shared/testfile
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set an ACL on the NFS server (must be done server-side for persistence)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>setfacl<span class="w"> </span>-m<span class="w"> </span>u:devuser:rwx<span class="w"> </span>/data/shared/project
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify ACL is visible from client</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>getfacl<span class="w"> </span>/mnt/shared/project
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Mount with ACL support explicitly</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs4<span class="w"> </span>-o<span class="w"> </span>acl<span class="w"> </span><span class="m">192</span>.168.10.10:/data/shared<span class="w"> </span>/mnt/shared
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check if ACLs are supported on the NFS mount</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>getfacl<span class="w"> </span>/mnt/shared/testfile
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set an ACL on the NFS server (must be done server-side for persistence)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>setfacl<span class="w"> </span>-m<span class="w"> </span>u:devuser:rwx<span class="w"> </span>/data/shared/project
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify ACL is visible from client</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>getfacl<span class="w"> </span>/mnt/shared/project
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Mount with ACL support explicitly</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs4<span class="w"> </span>-o<span class="w"> </span>acl<span class="w"> </span><span class="m">192</span>.168.10.10:/data/shared<span class="w"> </span>/mnt/shared
 </code></pre></div>
 <h2 id="known-issues">Known Issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h2>
 <ul>

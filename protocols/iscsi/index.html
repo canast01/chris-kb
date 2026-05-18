@@ -2253,6 +2253,24 @@
 iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands over TCP/IP, delivering block storage across standard Ethernet on port 3260. Coverage includes initiator IQN naming, target discovery, CHAP authentication, multipathing (dm-multipath/MPIO), and network tuning for storage VLANs.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        iSCSI END-TO-END ARCHITECTURE
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────────────┐       ┌──────────────────┐       ┌──────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│       HOST         │       │   IP NETWORK     │       │  iSCSI TARGET    │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                    │       │                  │       │  (Storage Array) │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌──────────────┐  │       │  ┌────────────┐  │       │                  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │SW Initiator  │  │       │  │  Ethernet  │  │       │  ┌────────────┐  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │(OS built-in) ├──┼──────►│  │  Switch    ├──┼──────►│  │Target IQN  │  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └──────────────┘  │       │  │ (VLAN      │  │       │  │Portal IP:  │  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│         or         │TCP    │  │ dedicated) │  │TCP    │  │   3260     │  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  ┌──────────────┐  │3260   │  └────────────┘  │3260   │  └─────┬──────┘  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  HW iSCSI   │  │       │                  │       │        │         │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │  HBA (offld)├──┼──────►│                  ├──────►│  ┌─────▼──────┐  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └──────────────┘  │       │                  │       │  │    LUN     │  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                    │       │                  │       │  │(block dev) │  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  IQN: iqn.YYYY-MM. │       │                  │       │  └────────────┘  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│    domain:name     │       │                  │       │  CHAP auth       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└────────────────────┘       └──────────────────┘       └──────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="initiators/">
@@ -2378,49 +2396,49 @@ iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands ove
 </tbody>
 </table>
 <h2 id="common-commands-config">Common Commands / Config<a class="headerlink" href="#common-commands-config" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Linux: Discover targets on a portal (SendTargets)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;:3260
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Linux: Log in to all discovered targets</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--loginall<span class="w"> </span>all
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Linux: Log in to a specific target</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;target-iqn&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;:3260<span class="w"> </span>--login
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Linux: List active sessions</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Linux: Show session details (performance counters)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Linux: Log out from all targets</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--logoutall<span class="w"> </span>all
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Linux: Show multipath status</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Linux: Check path state for a multipath device</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>multipathd<span class="w"> </span>show<span class="w"> </span>paths
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Windows: Discover and connect iSCSI target (PowerShell)</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>New-IscsiTargetPortal<span class="w"> </span>-TargetPortalAddress<span class="w"> </span>&lt;target-ip&gt;
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>Connect-IscsiTarget<span class="w"> </span>-NodeAddress<span class="w"> </span>&lt;target-iqn&gt;<span class="w"> </span>-IsPersistent<span class="w"> </span><span class="nv">$true</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Windows: Show iSCSI sessions</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>Get-IscsiSession
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># Check MTU on storage interface (Linux)</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>mtu
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="c1"># Set jumbo frames</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>eth1<span class="w"> </span>mtu<span class="w"> </span><span class="m">9000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Linux: Discover targets on a portal (SendTargets)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>discovery<span class="w"> </span>-t<span class="w"> </span>sendtargets<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;:3260
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Linux: Log in to all discovered targets</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--loginall<span class="w"> </span>all
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Linux: Log in to a specific target</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>-T<span class="w"> </span>&lt;target-iqn&gt;<span class="w"> </span>-p<span class="w"> </span>&lt;target-ip&gt;:3260<span class="w"> </span>--login
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Linux: List active sessions</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Linux: Show session details (performance counters)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Linux: Log out from all targets</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>node<span class="w"> </span>--logoutall<span class="w"> </span>all
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Linux: Show multipath status</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Linux: Check path state for a multipath device</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>multipathd<span class="w"> </span>show<span class="w"> </span>paths
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Windows: Discover and connect iSCSI target (PowerShell)</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>New-IscsiTargetPortal<span class="w"> </span>-TargetPortalAddress<span class="w"> </span>&lt;target-ip&gt;
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>Connect-IscsiTarget<span class="w"> </span>-NodeAddress<span class="w"> </span>&lt;target-iqn&gt;<span class="w"> </span>-IsPersistent<span class="w"> </span><span class="nv">$true</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># Windows: Show iSCSI sessions</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Get-IscsiSession
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># Check MTU on storage interface (Linux)</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>mtu
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="c1"># Set jumbo frames</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>eth1<span class="w"> </span>mtu<span class="w"> </span><span class="m">9000</span>
 </code></pre></div>
 <p><strong>iscsid.conf CHAP example:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/iscsi/iscsid.conf</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>node.session.auth.authmethod<span class="w"> </span><span class="o">=</span><span class="w"> </span>CHAP
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>node.session.auth.username<span class="w"> </span><span class="o">=</span><span class="w"> </span>initiator-user
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>node.session.auth.password<span class="w"> </span><span class="o">=</span><span class="w"> </span>initiator-secret
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>node.session.auth.username_in<span class="w"> </span><span class="o">=</span><span class="w"> </span>target-user
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>node.session.auth.password_in<span class="w"> </span><span class="o">=</span><span class="w"> </span>target-secret
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/iscsi/iscsid.conf</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>node.session.auth.authmethod<span class="w"> </span><span class="o">=</span><span class="w"> </span>CHAP
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>node.session.auth.username<span class="w"> </span><span class="o">=</span><span class="w"> </span>initiator-user
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>node.session.auth.password<span class="w"> </span><span class="o">=</span><span class="w"> </span>initiator-secret
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>node.session.auth.username_in<span class="w"> </span><span class="o">=</span><span class="w"> </span>target-user
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>node.session.auth.password_in<span class="w"> </span><span class="o">=</span><span class="w"> </span>target-secret
 </code></pre></div></p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>

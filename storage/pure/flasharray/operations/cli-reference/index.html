@@ -1540,335 +1540,350 @@
 
 
 <h1 id="flasharray-cli-reference">FlashArray — CLI Reference<a class="headerlink" href="#flasharray-cli-reference" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Purity CLI Hierarchy
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  purity
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ├── purearray   — array identity, NTP, DNS, upgrade, phonehome
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  ├── purevol     — volumes: create / resize / connect / snap
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  ├── purehost    — host entries: WWN/IQN registration
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ├── purehgroup  — host groups: cluster-level volume masking
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  ├── purepgroup  — protection groups: snapshot + replication
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  ├── purepod     — ActiveCluster pods: sync replication
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  ├── puredrive   — drive health and status
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ├── purehw      — hardware components (fans, PSU, NVRAM)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  ├── pureport    — FC and Ethernet port info + WWNs
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  ├── purealert   — alert management
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  ├── pureaudit   — audit log
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  └── pureadmin   — user accounts, roles, API tokens
+</code></pre></div>
 <p>Commonly used Purity CLI commands for managing Pure FlashArray all-flash storage systems. Connect via SSH to the array's management IP and log in as <code>pureuser</code> or another admin account.</p>
 <hr />
 <h2 id="admin-accounts">Admin Accounts<a class="headerlink" href="#admin-accounts" title="Permanent link">&para;</a></h2>
 <p>Admin accounts control who can log in and what they can do. Pure supports role-based access and API tokens for automation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create user with API token</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>testuser<span class="w"> </span>--api-token
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>testuser<span class="w"> </span>--api-token<span class="w"> </span>--timeout<span class="w"> </span>2h
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>testuser<span class="w"> </span>--role<span class="w"> </span>storage_admin
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Delete user / token</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>--api-token
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>testuser
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>testuser<span class="w"> </span>--api-token
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Global settings</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>list
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>list<span class="w"> </span>--lockout
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>disable<span class="w"> </span>--single-sign-on
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>pureadmin<span class="w"> </span>global<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--single-sign-on
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--lockout-duration<span class="w"> </span>1m
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--max-login-attempts<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--min-password-length<span class="w"> </span><span class="m">8</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># List accounts</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>pureadmin<span class="w"> </span>list
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>--expose
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--lockout
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># Manage lockouts and attributes</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>testuser
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>--clear
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>--clear<span class="w"> </span>testuser
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>pureadmin<span class="w"> </span>reset<span class="w"> </span>testuser<span class="w"> </span>--lockout
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>testuser<span class="w"> </span>--password
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>testuser<span class="w"> </span>--role<span class="w"> </span>array_admin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create user with API token</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>testuser<span class="w"> </span>--api-token
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>testuser<span class="w"> </span>--api-token<span class="w"> </span>--timeout<span class="w"> </span>2h
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>testuser<span class="w"> </span>--role<span class="w"> </span>storage_admin
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Delete user / token</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>--api-token
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>testuser
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>testuser<span class="w"> </span>--api-token
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Global settings</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>list
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>list<span class="w"> </span>--lockout
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>disable<span class="w"> </span>--single-sign-on
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>pureadmin<span class="w"> </span>global<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--single-sign-on
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--lockout-duration<span class="w"> </span>1m
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--max-login-attempts<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>pureadmin<span class="w"> </span>global<span class="w"> </span>setattr<span class="w"> </span>--min-password-length<span class="w"> </span><span class="m">8</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># List accounts</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>pureadmin<span class="w"> </span>list
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>--expose
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--lockout
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># Manage lockouts and attributes</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>testuser
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>--clear
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>--clear<span class="w"> </span>testuser
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>pureadmin<span class="w"> </span>reset<span class="w"> </span>testuser<span class="w"> </span>--lockout
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>testuser<span class="w"> </span>--password
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>testuser<span class="w"> </span>--role<span class="w"> </span>array_admin
 </code></pre></div>
 <hr />
 <h2 id="alerts-audit">Alerts &amp; Audit<a class="headerlink" href="#alerts-audit" title="Permanent link">&para;</a></h2>
 <p>Alerts notify you when something needs attention. The audit log records every command run by every user.</p>
 <h3 id="purealert-alerts">purealert — Alerts<a class="headerlink" href="#purealert-alerts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purealert<span class="w"> </span>list
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;state=&#39;open&#39;&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;state=&#39;closed&#39;&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;severity=&#39;critical&#39;&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;issue=&#39;failure&#39;&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>purealert<span class="w"> </span>flag<span class="w"> </span><span class="m">121212</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purealert<span class="w"> </span>unflag<span class="w"> </span><span class="m">121212</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>purealert<span class="w"> </span>acknowledge<span class="w"> </span>&lt;ID&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purealert<span class="w"> </span>list
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purealert<span class="w"> </span>list<span class="w"> </span>--flagged
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;state=&#39;open&#39;&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;state=&#39;closed&#39;&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;severity=&#39;critical&#39;&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;issue=&#39;failure&#39;&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>purealert<span class="w"> </span>flag<span class="w"> </span><span class="m">121212</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purealert<span class="w"> </span>unflag<span class="w"> </span><span class="m">121212</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>purealert<span class="w"> </span>acknowledge<span class="w"> </span>&lt;ID&gt;
 </code></pre></div>
 <h3 id="pureaudit-audit-logs">pureaudit — Audit Logs<a class="headerlink" href="#pureaudit-audit-logs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pureaudit<span class="w"> </span>list
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>user
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;user = &quot;root&quot;&#39;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepod&quot;&#39;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepod&quot; and subcommand=&quot;create&quot;&#39;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepod&quot; and user=&quot;pureuser&quot;&#39;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;action=&#39;create&#39;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pureaudit<span class="w"> </span>list
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--limit<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>user
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;user = &quot;root&quot;&#39;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepod&quot;&#39;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepod&quot; and subcommand=&quot;create&quot;&#39;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepod&quot; and user=&quot;pureuser&quot;&#39;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;action=&#39;create&#39;&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="array-system-management">Array &amp; System Management<a class="headerlink" href="#array-system-management" title="Permanent link">&para;</a></h2>
 <p>Shows the array's identity, monitors overall performance, and configures system-level settings.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Array identity and attributes</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purearray<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ntpserver
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>purearray<span class="w"> </span>list<span class="w"> </span>--syslogserver
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>purearray<span class="w"> </span>list<span class="w"> </span>--banner
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--console-lockout
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection-key
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Performance monitoring</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>purearray<span class="w"> </span>monitor
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--latency
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--bandwidth
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--iops
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--size
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--queue-depth
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Configure array settings</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--name<span class="w"> </span>&lt;new_name&gt;
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--banner<span class="w"> </span>&lt;text&gt;
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--idle-timeout<span class="w"> </span>&lt;mins&gt;
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--scsi-timeout<span class="w"> </span>&lt;secs&gt;
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--proxy<span class="w"> </span>&lt;url&gt;
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="c1"># Upgrades</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>list
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>download<span class="w"> </span>--version<span class="w"> </span>&lt;v&gt;
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="c1"># Phonehome / remote support</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>list
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>send
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--action<span class="w"> </span>open
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--action<span class="w"> </span>close
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Array identity and attributes</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ntpserver
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>purearray<span class="w"> </span>list<span class="w"> </span>--syslogserver
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>purearray<span class="w"> </span>list<span class="w"> </span>--banner
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>purearray<span class="w"> </span>list<span class="w"> </span>--console-lockout
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection-key
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Performance monitoring</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>purearray<span class="w"> </span>monitor
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--latency
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--bandwidth
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--iops
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--size
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--queue-depth
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Configure array settings</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--name<span class="w"> </span>&lt;new_name&gt;
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--banner<span class="w"> </span>&lt;text&gt;
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--idle-timeout<span class="w"> </span>&lt;mins&gt;
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--scsi-timeout<span class="w"> </span>&lt;secs&gt;
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>purearray<span class="w"> </span>setattr<span class="w"> </span>--proxy<span class="w"> </span>&lt;url&gt;
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="c1"># Upgrades</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>list
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>download<span class="w"> </span>--version<span class="w"> </span>&lt;v&gt;
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Phonehome / remote support</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>list
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>send
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--action<span class="w"> </span>open
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--action<span class="w"> </span>close
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--status
 </code></pre></div>
 <hr />
 <h2 id="configuration-directory-services">Configuration &amp; Directory Services<a class="headerlink" href="#configuration-directory-services" title="Permanent link">&para;</a></h2>
 <p><code>pureconfig</code> shows you the current array configuration. <code>pureds</code> integrates with Active Directory or LDAP. <code>puredns</code> sets the array's DNS resolver.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># pureconfig — current array configuration</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pureconfig<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>pureconfig<span class="w"> </span>list<span class="w"> </span>--all
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>pureconfig<span class="w"> </span>list<span class="w"> </span>--object
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pureconfig<span class="w"> </span>list<span class="w"> </span>--object<span class="w"> </span>&lt;type&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>pureconfig<span class="w"> </span>list<span class="w"> </span>--system
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># pureds — directory services (Active Directory / LDAP)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>pureds<span class="w"> </span>list
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>pureds<span class="w"> </span>check
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># puredns — DNS configuration</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>puredns<span class="w"> </span>list
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>puredns<span class="w"> </span>setattr<span class="w"> </span>--domain<span class="w"> </span>test.com<span class="w"> </span>--nameservers<span class="w"> </span><span class="m">192</span>.168.0.10,192.168.2.11
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>puredns<span class="w"> </span>setattr<span class="w"> </span>--domain<span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>puredns<span class="w"> </span>setattr<span class="w"> </span>--nameservers<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># pureconfig — current array configuration</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pureconfig<span class="w"> </span>list
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pureconfig<span class="w"> </span>list<span class="w"> </span>--all
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>pureconfig<span class="w"> </span>list<span class="w"> </span>--object
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>pureconfig<span class="w"> </span>list<span class="w"> </span>--object<span class="w"> </span>&lt;type&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>pureconfig<span class="w"> </span>list<span class="w"> </span>--system
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># pureds — directory services (Active Directory / LDAP)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>pureds<span class="w"> </span>list
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>pureds<span class="w"> </span>check
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># puredns — DNS configuration</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>puredns<span class="w"> </span>list
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>puredns<span class="w"> </span>setattr<span class="w"> </span>--domain<span class="w"> </span>test.com<span class="w"> </span>--nameservers<span class="w"> </span><span class="m">192</span>.168.0.10,192.168.2.11
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>puredns<span class="w"> </span>setattr<span class="w"> </span>--domain<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>puredns<span class="w"> </span>setattr<span class="w"> </span>--nameservers<span class="w"> </span><span class="s2">&quot;&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="csv-exports">CSV Exports<a class="headerlink" href="#csv-exports" title="Permanent link">&para;</a></h2>
 <p>Use <code>--csv</code> with any list command to export data. Use SSH redirection to save to a local file.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>pureuser@&lt;array_ip&gt;<span class="w"> </span><span class="s2">&quot;purevol list --csv&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>local_file.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>pureuser@&lt;array_ip&gt;<span class="w"> </span><span class="s2">&quot;purevol list --csv&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>local_file.csv
 </code></pre></div>
 <h3 id="array-system">Array &amp; System<a class="headerlink" href="#array-system" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>array_inventory.csv
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_inventory.csv
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_inventory.csv
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ntpserver<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_inventory.csv
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--syslogserver<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_inventory.csv
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--latency<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--bandwidth<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--iops<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--size<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--queue-depth<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection-key<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_config.csv
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>support_history.csv
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>system_updates.csv
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>purearray<span class="w"> </span>list<span class="w"> </span>--banner<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>security_audit.csv
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>purearray<span class="w"> </span>list<span class="w"> </span>--console-lockout<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>security_audit.csv
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--status<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>support_history.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>array_inventory.csv
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_inventory.csv
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>purearray<span class="w"> </span>list<span class="w"> </span>--controller<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_inventory.csv
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>purearray<span class="w"> </span>list<span class="w"> </span>--ntpserver<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_inventory.csv
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purearray<span class="w"> </span>list<span class="w"> </span>--syslogserver<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_inventory.csv
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--latency<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--bandwidth<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--iops<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--size<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>purearray<span class="w"> </span>monitor<span class="w"> </span>--queue-depth<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_performance.csv
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>purearray<span class="w"> </span>list<span class="w"> </span>--connection-key<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>array_config.csv
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>purearray<span class="w"> </span>phonehome<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>support_history.csv
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>purearray<span class="w"> </span>upgrade<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>system_updates.csv
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>purearray<span class="w"> </span>list<span class="w"> </span>--banner<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>security_audit.csv
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>purearray<span class="w"> </span>list<span class="w"> </span>--console-lockout<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>security_audit.csv
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>purearray<span class="w"> </span>remoteassist<span class="w"> </span>--status<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>support_history.csv
 </code></pre></div>
 <h3 id="volumes-data">Volumes &amp; Data<a class="headerlink" href="#volumes-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purevol<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>volume_report.csv
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>purevol<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>purevol<span class="w"> </span>list<span class="w"> </span>--pending-only<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>purevol<span class="w"> </span>list<span class="w"> </span>--shared<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>purevol<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>--space<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>snapshot_usage.csv
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>purevol<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;size &gt; 100G&quot;</span><span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>filtered_volumes.csv
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>volume_performance.csv
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--historical<span class="w"> </span>24h<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_performance.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>purevol<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>volume_report.csv
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>purevol<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>purevol<span class="w"> </span>list<span class="w"> </span>--pending-only<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>purevol<span class="w"> </span>list<span class="w"> </span>--shared<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_report.csv
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>purevol<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>--space<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>snapshot_usage.csv
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>purevol<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;size &gt; 100G&quot;</span><span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>filtered_volumes.csv
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>volume_performance.csv
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--historical<span class="w"> </span>24h<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>volume_performance.csv
 </code></pre></div>
 <h3 id="hosts-connectivity">Hosts &amp; Connectivity<a class="headerlink" href="#hosts-connectivity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>purehost<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>host_mapping.csv
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purehost<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>host_mapping.csv
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>active_connections.csv
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>purehost<span class="w"> </span>list<span class="w"> </span>--wwn<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>initiator_list.csv
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>purehost<span class="w"> </span>list<span class="w"> </span>--iqn<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>initiator_list.csv
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>purehost<span class="w"> </span>monitor<span class="w"> </span>--bandwidth<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>host_performance.csv
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>purehost<span class="w"> </span>monitor<span class="w"> </span>--iops<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>host_performance.csv
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>group_mapping.csv
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--host<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>group_mapping.csv
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>group_mapping.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>purehost<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>host_mapping.csv
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purehost<span class="w"> </span>list<span class="w"> </span>--all<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>host_mapping.csv
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>active_connections.csv
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>purehost<span class="w"> </span>list<span class="w"> </span>--wwn<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>initiator_list.csv
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>purehost<span class="w"> </span>list<span class="w"> </span>--iqn<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>initiator_list.csv
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>purehost<span class="w"> </span>monitor<span class="w"> </span>--bandwidth<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>host_performance.csv
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>purehost<span class="w"> </span>monitor<span class="w"> </span>--iops<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>host_performance.csv
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>group_mapping.csv
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--host<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>group_mapping.csv
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>group_mapping.csv
 </code></pre></div>
 <h3 id="hardware-health">Hardware &amp; Health<a class="headerlink" href="#hardware-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>purehw<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>hardware_health.csv
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>eth<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>bay<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>fan<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>psu<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>nvram<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>sas<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>drive_inventory.csv
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>pureport<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>port_config.csv
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>pureport<span class="w"> </span>list<span class="w"> </span>--initiator<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>port_config.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>purehw<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>hardware_health.csv
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>eth<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span><span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>bay<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>fan<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>psu<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>nvram<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>sas<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>hardware_health.csv
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>drive_inventory.csv
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>pureport<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>port_config.csv
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>pureport<span class="w"> </span>list<span class="w"> </span>--initiator<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>port_config.csv
 </code></pre></div>
 <h3 id="admin-security">Admin &amp; Security<a class="headerlink" href="#admin-security" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>admin_users.csv
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--lockout<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>security_report.csv
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>admin_users.csv
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>purealert<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>system_alerts.csv
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;state=&#39;open&#39;&quot;</span><span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>critical_alerts.csv
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>audit_trail.csv
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>pureds<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>directory_services.csv
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>puredns<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>network_config.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>admin_users.csv
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--lockout<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>security_report.csv
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>admin_users.csv
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>purealert<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>system_alerts.csv
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purealert<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;state=&#39;open&#39;&quot;</span><span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>critical_alerts.csv
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>audit_trail.csv
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>pureds<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;<span class="w"> </span>directory_services.csv
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>puredns<span class="w"> </span>list<span class="w"> </span>--csv<span class="w"> </span>&gt;&gt;<span class="w"> </span>network_config.csv
 </code></pre></div>
 <hr />
 <h2 id="drives-hardware">Drives &amp; Hardware<a class="headerlink" href="#drives-hardware" title="Permanent link">&para;</a></h2>
 <p>Shows the health of flash drives and hardware components. Drives are identified by bay (e.g., <code>CH0.BAY10</code>).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># puredrive — flash drives</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>puredrive<span class="w"> </span>list
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--spec
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--total
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>puredrive<span class="w"> </span>list<span class="w"> </span>CH0.BAY10
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>puredrive<span class="w"> </span>list<span class="w"> </span>CH0.BAY10<span class="w"> </span>--pack
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>puredrive<span class="w"> </span>admit
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># purehw — hardware components</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>purehw<span class="w"> </span>list
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>purehw<span class="w"> </span>list<span class="w"> </span>--spec
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>bay
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>bay<span class="w"> </span>--spec
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>ct
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>eth
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>fan
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>psu
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>nvram
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>sas
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>purehw<span class="w"> </span>list<span class="w"> </span>--spec<span class="w"> </span>--type<span class="w"> </span>drive
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0<span class="w"> </span>--spec
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0.FC0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># puredrive — flash drives</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>puredrive<span class="w"> </span>list
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--spec
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--total
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>puredrive<span class="w"> </span>list<span class="w"> </span>CH0.BAY10
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>puredrive<span class="w"> </span>list<span class="w"> </span>CH0.BAY10<span class="w"> </span>--pack
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>puredrive<span class="w"> </span>admit
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># purehw — hardware components</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>purehw<span class="w"> </span>list
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>purehw<span class="w"> </span>list<span class="w"> </span>--spec
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>bay
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>bay<span class="w"> </span>--spec
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>ct
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>eth
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>fan
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>psu
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>nvram
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>sas
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>purehw<span class="w"> </span>list<span class="w"> </span>--spec<span class="w"> </span>--type<span class="w"> </span>drive
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0<span class="w"> </span>--spec
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>purehw<span class="w"> </span>list<span class="w"> </span>CT0.FC0
 </code></pre></div>
 <hr />
 <h2 id="hosts-host-groups">Hosts &amp; Host Groups<a class="headerlink" href="#hosts-host-groups" title="Permanent link">&para;</a></h2>
 <p>A host represents a server connecting to the array. Host groups manage access for multiple servers at once.</p>
 <h3 id="purehgroup-host-groups">purehgroup — Host Groups<a class="headerlink" href="#purehgroup-host-groups" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create / delete / rename</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>MY-HOSTS
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>MY-HOSTS<span class="w"> </span>--hostlist<span class="w"> </span>MY-HOST-001,MY-HOST-002
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>purehgroup<span class="w"> </span>delete<span class="w"> </span>MY-HOSTS
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purehgroup<span class="w"> </span>delete<span class="w"> </span>MY-HOSTS_1<span class="w"> </span>MY-HOSTS-2
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>purehgroup<span class="w"> </span>rename<span class="w"> </span>MY-HOSTS<span class="w"> </span>YOUR-HOSTS
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># List</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>purehgroup<span class="w"> </span>list
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connect
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connect<span class="w"> </span>MY-HOSTS
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--host
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--space
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;host_list=&#39;MY-SERVER-001&#39;&quot;</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Connect / disconnect volumes</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>purehgroup<span class="w"> </span>connect<span class="w"> </span>MY-HOSTS<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>purehgroup<span class="w"> </span>connect<span class="w"> </span>MY-HOSTS<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001<span class="w"> </span>--lun<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>purehgroup<span class="w"> </span>disconnect<span class="w"> </span>MY-HOSTS<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c1"># Manage host membership</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>MY-HOSTS<span class="w"> </span>--hostlist<span class="w"> </span>MY-HOST-002,MY-HOST-003
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>MY-HOSTS<span class="w"> </span>--addhostlist<span class="w"> </span>MY-HOST-002,MY-HOST-003
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>MY-HOSTS<span class="w"> </span>--remhostlist<span class="w"> </span>MY-HOST-002,MY-HOST-003
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>MY-HOSTS<span class="w"> </span>--hostlist<span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>purehgroup<span class="w"> </span>addhost<span class="w"> </span>--hostlist<span class="w"> </span>&lt;h1,h2&gt;<span class="w"> </span>&lt;hg&gt;
-<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>purehgroup<span class="w"> </span>remhost<span class="w"> </span>--hostlist<span class="w"> </span>&lt;h1&gt;<span class="w"> </span>&lt;hg&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create / delete / rename</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>MY-HOSTS
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>MY-HOSTS<span class="w"> </span>--hostlist<span class="w"> </span>MY-HOST-001,MY-HOST-002
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>purehgroup<span class="w"> </span>delete<span class="w"> </span>MY-HOSTS
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>purehgroup<span class="w"> </span>delete<span class="w"> </span>MY-HOSTS_1<span class="w"> </span>MY-HOSTS-2
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>purehgroup<span class="w"> </span>rename<span class="w"> </span>MY-HOSTS<span class="w"> </span>YOUR-HOSTS
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># List</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>purehgroup<span class="w"> </span>list
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connect
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connect<span class="w"> </span>MY-HOSTS
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--host
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--space
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;host_list=&#39;MY-SERVER-001&#39;&quot;</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1"># Connect / disconnect volumes</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>purehgroup<span class="w"> </span>connect<span class="w"> </span>MY-HOSTS<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>purehgroup<span class="w"> </span>connect<span class="w"> </span>MY-HOSTS<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001<span class="w"> </span>--lun<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>purehgroup<span class="w"> </span>disconnect<span class="w"> </span>MY-HOSTS<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1"># Manage host membership</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>MY-HOSTS<span class="w"> </span>--hostlist<span class="w"> </span>MY-HOST-002,MY-HOST-003
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>MY-HOSTS<span class="w"> </span>--addhostlist<span class="w"> </span>MY-HOST-002,MY-HOST-003
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>MY-HOSTS<span class="w"> </span>--remhostlist<span class="w"> </span>MY-HOST-002,MY-HOST-003
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>MY-HOSTS<span class="w"> </span>--hostlist<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>purehgroup<span class="w"> </span>addhost<span class="w"> </span>--hostlist<span class="w"> </span>&lt;h1,h2&gt;<span class="w"> </span>&lt;hg&gt;
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>purehgroup<span class="w"> </span>remhost<span class="w"> </span>--hostlist<span class="w"> </span>&lt;h1&gt;<span class="w"> </span>&lt;hg&gt;
 </code></pre></div>
 <h3 id="purehost-hosts">purehost — Hosts<a class="headerlink" href="#purehost-hosts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Create / delete / rename</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purehost<span class="w"> </span>create<span class="w"> </span>MY-SERVER-001
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>purehost<span class="w"> </span>create<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwnlist<span class="w"> </span><span class="m">1000000000000001</span>,10:00:00:00:00:00:00:01
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>purehost<span class="w"> </span>create<span class="w"> </span>MY-SERVER-001<span class="w"> </span>MY-SERVER-002
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>purehost<span class="w"> </span>delete<span class="w"> </span>MY-SERVER-001
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>purehost<span class="w"> </span>delete<span class="w"> </span>MY-SERVER-001<span class="w"> </span>MY-SERVER-002
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>purehost<span class="w"> </span>rename<span class="w"> </span>MY-SERVER-001<span class="w"> </span>YOUR-SERVER-001
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># List</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>purehost<span class="w"> </span>list
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>purehost<span class="w"> </span>list<span class="w"> </span>--all
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w"> </span>--private
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w"> </span>--shared
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>purehost<span class="w"> </span>list<span class="w"> </span>--personality
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>purehost<span class="w"> </span>list<span class="w"> </span>--wwn
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>purehost<span class="w"> </span>list<span class="w"> </span>--iqn
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>purehost<span class="w"> </span>list<span class="w"> </span>MY-SERVER*
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>purehost<span class="w"> </span>list<span class="w"> </span>MY-SERVER-001
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>purehost<span class="w"> </span>list<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--connect
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>purehost<span class="w"> </span>list<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--personality
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>purehost<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;wwn=&#39;1000000000000003&#39;&quot;</span>
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="c1"># Connect / disconnect volumes</span>
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>purehost<span class="w"> </span>connect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>purehost<span class="w"> </span>connect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001<span class="w"> </span>--lun<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>purehost<span class="w"> </span>connect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>MY-SERVER-002<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>MY-SERVER-002<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a>
-<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="c1"># Manage WWNs, iQNs, and personality</span>
-<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwnlist<span class="w"> </span><span class="m">1000000000000003</span>
-<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--addwwnlist<span class="w"> </span><span class="m">1000000000000003</span>
-<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--remwwnlist<span class="w"> </span><span class="m">1000000000000003</span>
-<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwnlist<span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--personality<span class="w"> </span>esxi
-<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--personality<span class="w"> </span>solaris
-<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a>purehost<span class="w"> </span>addwwn<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwn<span class="w"> </span>&lt;wwn&gt;
-<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>purehost<span class="w"> </span>remwwn<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwn<span class="w"> </span>&lt;wwn&gt;
-<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a>purehost<span class="w"> </span>addiqn<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--iqn<span class="w"> </span>&lt;iqn&gt;
-<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>
-<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a><span class="c1"># Monitor</span>
-<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>purehost<span class="w"> </span>monitor<span class="w"> </span>--bandwidth
-<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>purehost<span class="w"> </span>monitor<span class="w"> </span>--iops
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Create / delete / rename</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purehost<span class="w"> </span>create<span class="w"> </span>MY-SERVER-001
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>purehost<span class="w"> </span>create<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwnlist<span class="w"> </span><span class="m">1000000000000001</span>,10:00:00:00:00:00:00:01
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>purehost<span class="w"> </span>create<span class="w"> </span>MY-SERVER-001<span class="w"> </span>MY-SERVER-002
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>purehost<span class="w"> </span>delete<span class="w"> </span>MY-SERVER-001
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>purehost<span class="w"> </span>delete<span class="w"> </span>MY-SERVER-001<span class="w"> </span>MY-SERVER-002
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>purehost<span class="w"> </span>rename<span class="w"> </span>MY-SERVER-001<span class="w"> </span>YOUR-SERVER-001
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># List</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>purehost<span class="w"> </span>list
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>purehost<span class="w"> </span>list<span class="w"> </span>--all
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w"> </span>--private
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w"> </span>--shared
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>purehost<span class="w"> </span>list<span class="w"> </span>--personality
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>purehost<span class="w"> </span>list<span class="w"> </span>--wwn
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>purehost<span class="w"> </span>list<span class="w"> </span>--iqn
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>purehost<span class="w"> </span>list<span class="w"> </span>MY-SERVER*
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>purehost<span class="w"> </span>list<span class="w"> </span>MY-SERVER-001
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>purehost<span class="w"> </span>list<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--connect
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>purehost<span class="w"> </span>list<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--personality
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>purehost<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;wwn=&#39;1000000000000003&#39;&quot;</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="c1"># Connect / disconnect volumes</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>purehost<span class="w"> </span>connect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>purehost<span class="w"> </span>connect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001<span class="w"> </span>--lun<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>purehost<span class="w"> </span>connect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>MY-SERVER-002<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>MY-SERVER-001<span class="w"> </span>MY-SERVER-002<span class="w"> </span>--vol<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="c1"># Manage WWNs, iQNs, and personality</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwnlist<span class="w"> </span><span class="m">1000000000000003</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--addwwnlist<span class="w"> </span><span class="m">1000000000000003</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--remwwnlist<span class="w"> </span><span class="m">1000000000000003</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwnlist<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--personality<span class="w"> </span>esxi
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--personality<span class="w"> </span>solaris
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a>purehost<span class="w"> </span>addwwn<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwn<span class="w"> </span>&lt;wwn&gt;
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a>purehost<span class="w"> </span>remwwn<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--wwn<span class="w"> </span>&lt;wwn&gt;
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a>purehost<span class="w"> </span>addiqn<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--iqn<span class="w"> </span>&lt;iqn&gt;
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a>
+<a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="c1"># Monitor</span>
+<a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a>purehost<span class="w"> </span>monitor<span class="w"> </span>--bandwidth
+<a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a>purehost<span class="w"> </span>monitor<span class="w"> </span>--iops
 </code></pre></div>
 <hr />
 <h2 id="network-ports">Network &amp; Ports<a class="headerlink" href="#network-ports" title="Permanent link">&para;</a></h2>
 <p><code>purenetwork</code> shows IP interfaces. <code>pureport</code> shows physical FC and Ethernet ports — needed for SAN zoning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List all network interfaces (management, replication, iSCSI)</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purenetwork<span class="w"> </span>list
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>purenetwork<span class="w"> </span>list<span class="w"> </span>--resolve-hostnames
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># List all array ports</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>pureport<span class="w"> </span>list
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># FC ports only</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>pureport<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># Ethernet ports only</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>pureport<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>eth
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># Filter to a specific controller</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>pureport<span class="w"> </span>list<span class="w"> </span>--raw<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;name=&#39;CT0.FC*&#39;&quot;</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>pureport<span class="w"> </span>list<span class="w"> </span>--raw<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;name=&#39;CT1.FC*&#39;&quot;</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Show connected host initiator ports</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>pureport<span class="w"> </span>list<span class="w"> </span>--initiator
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="c1"># Filter by WWN</span>
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>pureport<span class="w"> </span>list<span class="w"> </span>--initiator<span class="w"> </span>--raw<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;initiator.wwn=&#39;1000000000000001&#39;&quot;</span>
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="c1"># Bandwidth monitoring</span>
-<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>pureport<span class="w"> </span>monitor<span class="w"> </span>--bandwidth
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># List all network interfaces (management, replication, iSCSI)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>purenetwork<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>purenetwork<span class="w"> </span>list<span class="w"> </span>--resolve-hostnames
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># List all array ports</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>pureport<span class="w"> </span>list
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># FC ports only</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>pureport<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c1"># Ethernet ports only</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>pureport<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>eth
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># Filter to a specific controller</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>pureport<span class="w"> </span>list<span class="w"> </span>--raw<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;name=&#39;CT0.FC*&#39;&quot;</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>pureport<span class="w"> </span>list<span class="w"> </span>--raw<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;name=&#39;CT1.FC*&#39;&quot;</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="c1"># Show connected host initiator ports</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>pureport<span class="w"> </span>list<span class="w"> </span>--initiator
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="c1"># Filter by WWN</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>pureport<span class="w"> </span>list<span class="w"> </span>--initiator<span class="w"> </span>--raw<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;initiator.wwn=&#39;1000000000000001&#39;&quot;</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="c1"># Bandwidth monitoring</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>pureport<span class="w"> </span>monitor<span class="w"> </span>--bandwidth
 </code></pre></div>
 <h3 id="fc-port-wwns-for-san-zoning">FC Port WWNs (for SAN Zoning)<a class="headerlink" href="#fc-port-wwns-for-san-zoning" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pureport<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># The &#39;wwn&#39; column shows the array-side WWN for each FC port.</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Zone each host initiator port to the array target WWNs.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pureport<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span><span class="nb">fc</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># The &#39;wwn&#39; column shows the array-side WWN for each FC port.</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Zone each host initiator port to the array target WWNs.</span>
 </code></pre></div>
 <h3 id="common-port-issues">Common Port Issues<a class="headerlink" href="#common-port-issues" title="Permanent link">&para;</a></h3>
 <table>
@@ -1905,117 +1920,117 @@
 <hr />
 <h2 id="pods-activecluster">Pods (ActiveCluster)<a class="headerlink" href="#pods-activecluster" title="Permanent link">&para;</a></h2>
 <p>Pods enable synchronous replication between two FlashArray systems (RPO=0, active-active HA across sites).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Create / destroy / recover</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>purepod<span class="w"> </span>create<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>purepod<span class="w"> </span>create<span class="w"> </span>MYPOD001<span class="w"> </span>MYPOD002
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>purepod<span class="w"> </span>clone<span class="w"> </span>MYPOD001<span class="w"> </span>MYPOD002
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>purepod<span class="w"> </span>rename<span class="w"> </span>MYPOD001<span class="w"> </span>YOURPOD001
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>purepod<span class="w"> </span>destroy<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>purepod<span class="w"> </span>destroy<span class="w"> </span>MYPOD001<span class="w"> </span>MYPOD002
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>purepod<span class="w"> </span>eradicate<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>purepod<span class="w"> </span>eradicate<span class="w"> </span>MYPOD001<span class="w"> </span>MYPOD002
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>purepod<span class="w"> </span>recover<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1"># List</span>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>purepod<span class="w"> </span>list<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>purepod<span class="w"> </span>list<span class="w"> </span>--pending
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>purepod<span class="w"> </span>list<span class="w"> </span>--pending-only
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>purepod<span class="w"> </span>list<span class="w"> </span>--footprint
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>purepod<span class="w"> </span>list<span class="w"> </span>--mediator
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>purepod<span class="w"> </span>list<span class="w"> </span>--on<span class="w"> </span>ARRAY02
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>purepod<span class="w"> </span>listobj<span class="w"> </span>--type<span class="w"> </span>vol<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>purepod<span class="w"> </span>listobj<span class="w"> </span>--type<span class="w"> </span>array<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="c1"># Stretch / demote / failover</span>
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>purepod<span class="w"> </span>add<span class="w"> </span>--array<span class="w"> </span>PFAX70-REMOTE<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>purepod<span class="w"> </span>remove<span class="w"> </span>--array<span class="w"> </span>PFAX70-REMOTE<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>purepod<span class="w"> </span>demote<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>purepod<span class="w"> </span>setattr<span class="w"> </span>--failover-preference<span class="w"> </span>ARRAY002<span class="w"> </span>MYPOD001
-<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>
-<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="c1"># Replica links</span>
-<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>list
-<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>create<span class="w"> </span>PRDPOD001<span class="w"> </span>--remote<span class="w"> </span>ARRAY002<span class="w"> </span>--remote-pod<span class="w"> </span>DRPOD001
-<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>delete<span class="w"> </span>PRDPOD001<span class="w"> </span>--remote-pod<span class="w"> </span>DRPOD001
-<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>pause<span class="w"> </span>PRDPOD001<span class="w"> </span>--remote<span class="w"> </span>ARRAY002<span class="w"> </span>--remote-pod<span class="w"> </span>DRPOD001
-<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>resume<span class="w"> </span>PRDPOD001<span class="w"> </span>--remote<span class="w"> </span>ARRAY002<span class="w"> </span>--remote-pod<span class="w"> </span>DRPOD001
-<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>monitor<span class="w"> </span>--replication
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Create / destroy / recover</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>purepod<span class="w"> </span>create<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>purepod<span class="w"> </span>create<span class="w"> </span>MYPOD001<span class="w"> </span>MYPOD002
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>purepod<span class="w"> </span>clone<span class="w"> </span>MYPOD001<span class="w"> </span>MYPOD002
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>purepod<span class="w"> </span>rename<span class="w"> </span>MYPOD001<span class="w"> </span>YOURPOD001
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>purepod<span class="w"> </span>destroy<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>purepod<span class="w"> </span>destroy<span class="w"> </span>MYPOD001<span class="w"> </span>MYPOD002
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>purepod<span class="w"> </span>eradicate<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>purepod<span class="w"> </span>eradicate<span class="w"> </span>MYPOD001<span class="w"> </span>MYPOD002
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>purepod<span class="w"> </span>recover<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="c1"># List</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>purepod<span class="w"> </span>list<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>purepod<span class="w"> </span>list<span class="w"> </span>--pending
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>purepod<span class="w"> </span>list<span class="w"> </span>--pending-only
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>purepod<span class="w"> </span>list<span class="w"> </span>--footprint
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>purepod<span class="w"> </span>list<span class="w"> </span>--mediator
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>purepod<span class="w"> </span>list<span class="w"> </span>--on<span class="w"> </span>ARRAY02
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>purepod<span class="w"> </span>listobj<span class="w"> </span>--type<span class="w"> </span>vol<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>purepod<span class="w"> </span>listobj<span class="w"> </span>--type<span class="w"> </span>array<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="c1"># Stretch / demote / failover</span>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>purepod<span class="w"> </span>add<span class="w"> </span>--array<span class="w"> </span>PFAX70-REMOTE<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>purepod<span class="w"> </span>remove<span class="w"> </span>--array<span class="w"> </span>PFAX70-REMOTE<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>purepod<span class="w"> </span>demote<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>purepod<span class="w"> </span>setattr<span class="w"> </span>--failover-preference<span class="w"> </span>ARRAY002<span class="w"> </span>MYPOD001
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a><span class="c1"># Replica links</span>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>list
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>create<span class="w"> </span>PRDPOD001<span class="w"> </span>--remote<span class="w"> </span>ARRAY002<span class="w"> </span>--remote-pod<span class="w"> </span>DRPOD001
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>delete<span class="w"> </span>PRDPOD001<span class="w"> </span>--remote-pod<span class="w"> </span>DRPOD001
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>pause<span class="w"> </span>PRDPOD001<span class="w"> </span>--remote<span class="w"> </span>ARRAY002<span class="w"> </span>--remote-pod<span class="w"> </span>DRPOD001
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>resume<span class="w"> </span>PRDPOD001<span class="w"> </span>--remote<span class="w"> </span>ARRAY002<span class="w"> </span>--remote-pod<span class="w"> </span>DRPOD001
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>purepod<span class="w"> </span>replica-link<span class="w"> </span>monitor<span class="w"> </span>--replication
 </code></pre></div>
 <hr />
 <h2 id="volumes-snapshots">Volumes &amp; Snapshots<a class="headerlink" href="#volumes-snapshots" title="Permanent link">&para;</a></h2>
 <p>Volumes are thin-provisioned block devices. Snapshots are instant, space-efficient point-in-time copies.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Create / delete / recover</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10G<span class="w"> </span>MY_VOLUME_001
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10G<span class="w"> </span>MY_VOLUME_001<span class="w"> </span>--bw-limit<span class="w"> </span>10M
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10G<span class="w"> </span>MY_VOLUME_001<span class="w"> </span>MY_VOLUME_002
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>1G<span class="w"> </span>MYPOD001::MY_VOL_001
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>purevol<span class="w"> </span>create<span class="w"> </span>--source<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>&lt;new_vol&gt;
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>purevol<span class="w"> </span>destroy<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>purevol<span class="w"> </span>destroy<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>--all
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>purevol<span class="w"> </span>recover<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>purevol<span class="w"> </span>recover<span class="w"> </span>--all
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>purevol<span class="w"> </span>rename<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="c1"># List</span>
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>purevol<span class="w"> </span>list
-<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>purevol<span class="w"> </span>list<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>purevol<span class="w"> </span>list<span class="w"> </span>MY_VOL*
-<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>purevol<span class="w"> </span>list<span class="w"> </span>--all
-<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>purevol<span class="w"> </span>list<span class="w"> </span>--snap
-<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>purevol<span class="w"> </span>list<span class="w"> </span>--pending
-<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>purevol<span class="w"> </span>list<span class="w"> </span>--pending-only
-<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>purevol<span class="w"> </span>list<span class="w"> </span>--shared
-<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>purevol<span class="w"> </span>list<span class="w"> </span>--obj-name
-<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>purevol<span class="w"> </span>list<span class="w"> </span>--total
-<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--sort<span class="w"> </span>size,total
-<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>purevol<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>--space
-<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>purevol<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>size
-<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>purevol<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>size-
-<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>purevol<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>serial
-<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>purevol<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>created
-<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>purevol<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;size=&#39;20T&#39;&quot;</span>
-<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>purevol<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;size &gt; 100G&quot;</span>
-<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>
-<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a><span class="c1"># Connect / disconnect</span>
-<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>purevol<span class="w"> </span>connect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--host<span class="w"> </span>MY-SERVER-001
-<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>purevol<span class="w"> </span>connect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--host<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--lun<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a>purevol<span class="w"> </span>connect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--hgroup<span class="w"> </span>MY-HOSTS
-<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>purevol<span class="w"> </span>connect<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002<span class="w"> </span>--host<span class="w"> </span>MY-SERVER-001
-<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>purevol<span class="w"> </span>disconnect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--host<span class="w"> </span>MY-SERVER-001
-<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>purevol<span class="w"> </span>disconnect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--hgroup<span class="w"> </span>MY-HOSTS
-<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>
-<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a><span class="c1"># Modify</span>
-<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--size<span class="w"> </span>2G<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--size<span class="w"> </span>2G<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
-<a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--bw-limit<span class="w"> </span>1M<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--readonly<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a>purevol<span class="w"> </span>truncate<span class="w"> </span>--size<span class="w"> </span>1G<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>
-<a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a><span class="c1"># Copy / move</span>
-<a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a>purevol<span class="w"> </span>copy<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
-<a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a>purevol<span class="w"> </span>copy<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002<span class="w"> </span>--overwrite
-<a id="__codelineno-17-54" name="__codelineno-17-54" href="#__codelineno-17-54"></a>purevol<span class="w"> </span>copy<span class="w"> </span>--snapshot<span class="w"> </span>&lt;snap&gt;<span class="w"> </span>&lt;target&gt;
-<a id="__codelineno-17-55" name="__codelineno-17-55" href="#__codelineno-17-55"></a>purevol<span class="w"> </span>move<span class="w"> </span>vol001<span class="w"> </span>MYPOD001
-<a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a>purevol<span class="w"> </span>move<span class="w"> </span>MYPOD001::vol001<span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-17-57" name="__codelineno-17-57" href="#__codelineno-17-57"></a>
-<a id="__codelineno-17-58" name="__codelineno-17-58" href="#__codelineno-17-58"></a><span class="c1"># Snapshots</span>
-<a id="__codelineno-17-59" name="__codelineno-17-59" href="#__codelineno-17-59"></a>purevol<span class="w"> </span>snap<span class="w"> </span>MY_VOL_001
-<a id="__codelineno-17-60" name="__codelineno-17-60" href="#__codelineno-17-60"></a>purevol<span class="w"> </span>snap<span class="w"> </span>MY_VOL_001<span class="w"> </span>--suffix<span class="w"> </span>PRD
-<a id="__codelineno-17-61" name="__codelineno-17-61" href="#__codelineno-17-61"></a>purevol<span class="w"> </span>snap<span class="w"> </span>MY_VOL_001<span class="w"> </span>--suffix<span class="w"> </span>&lt;text&gt;
-<a id="__codelineno-17-62" name="__codelineno-17-62" href="#__codelineno-17-62"></a>purevol<span class="w"> </span>snap<span class="w"> </span>MY_VOL_001<span class="w"> </span>--expiration<span class="w"> </span>&lt;time&gt;
-<a id="__codelineno-17-63" name="__codelineno-17-63" href="#__codelineno-17-63"></a>
-<a id="__codelineno-17-64" name="__codelineno-17-64" href="#__codelineno-17-64"></a><span class="c1"># Monitor</span>
-<a id="__codelineno-17-65" name="__codelineno-17-65" href="#__codelineno-17-65"></a>purevol<span class="w"> </span>monitor
-<a id="__codelineno-17-66" name="__codelineno-17-66" href="#__codelineno-17-66"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--iops
-<a id="__codelineno-17-67" name="__codelineno-17-67" href="#__codelineno-17-67"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--latency
-<a id="__codelineno-17-68" name="__codelineno-17-68" href="#__codelineno-17-68"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--historical<span class="w"> </span>24h
-<a id="__codelineno-17-69" name="__codelineno-17-69" href="#__codelineno-17-69"></a>
-<a id="__codelineno-17-70" name="__codelineno-17-70" href="#__codelineno-17-70"></a><span class="c1"># Pod volume operations</span>
-<a id="__codelineno-17-71" name="__codelineno-17-71" href="#__codelineno-17-71"></a>purevol<span class="w"> </span>remove<span class="w"> </span>--array<span class="w"> </span>PFAX70-REMOTE<span class="w"> </span>--with-unknown<span class="w"> </span>MYPOD001
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Create / delete / recover</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10G<span class="w"> </span>MY_VOLUME_001
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10G<span class="w"> </span>MY_VOLUME_001<span class="w"> </span>--bw-limit<span class="w"> </span>10M
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10G<span class="w"> </span>MY_VOLUME_001<span class="w"> </span>MY_VOLUME_002
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>1G<span class="w"> </span>MYPOD001::MY_VOL_001
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>purevol<span class="w"> </span>create<span class="w"> </span>--source<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>&lt;new_vol&gt;
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>purevol<span class="w"> </span>destroy<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>purevol<span class="w"> </span>destroy<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>--all
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>purevol<span class="w"> </span>recover<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>purevol<span class="w"> </span>recover<span class="w"> </span>--all
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>purevol<span class="w"> </span>rename<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="c1"># List</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>purevol<span class="w"> </span>list
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>purevol<span class="w"> </span>list<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>purevol<span class="w"> </span>list<span class="w"> </span>MY_VOL*
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>purevol<span class="w"> </span>list<span class="w"> </span>--all
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>purevol<span class="w"> </span>list<span class="w"> </span>--snap
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>purevol<span class="w"> </span>list<span class="w"> </span>--pending
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>purevol<span class="w"> </span>list<span class="w"> </span>--pending-only
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>purevol<span class="w"> </span>list<span class="w"> </span>--shared
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>purevol<span class="w"> </span>list<span class="w"> </span>--obj-name
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a>purevol<span class="w"> </span>list<span class="w"> </span>--total
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w"> </span>--sort<span class="w"> </span>size,total
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a>purevol<span class="w"> </span>list<span class="w"> </span>--snap<span class="w"> </span>--space
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a>purevol<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>size
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a>purevol<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>size-
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a>purevol<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>serial
+<a id="__codelineno-18-32" name="__codelineno-18-32" href="#__codelineno-18-32"></a>purevol<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>created
+<a id="__codelineno-18-33" name="__codelineno-18-33" href="#__codelineno-18-33"></a>purevol<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;size=&#39;20T&#39;&quot;</span>
+<a id="__codelineno-18-34" name="__codelineno-18-34" href="#__codelineno-18-34"></a>purevol<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;size &gt; 100G&quot;</span>
+<a id="__codelineno-18-35" name="__codelineno-18-35" href="#__codelineno-18-35"></a>
+<a id="__codelineno-18-36" name="__codelineno-18-36" href="#__codelineno-18-36"></a><span class="c1"># Connect / disconnect</span>
+<a id="__codelineno-18-37" name="__codelineno-18-37" href="#__codelineno-18-37"></a>purevol<span class="w"> </span>connect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--host<span class="w"> </span>MY-SERVER-001
+<a id="__codelineno-18-38" name="__codelineno-18-38" href="#__codelineno-18-38"></a>purevol<span class="w"> </span>connect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--host<span class="w"> </span>MY-SERVER-001<span class="w"> </span>--lun<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-18-39" name="__codelineno-18-39" href="#__codelineno-18-39"></a>purevol<span class="w"> </span>connect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--hgroup<span class="w"> </span>MY-HOSTS
+<a id="__codelineno-18-40" name="__codelineno-18-40" href="#__codelineno-18-40"></a>purevol<span class="w"> </span>connect<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002<span class="w"> </span>--host<span class="w"> </span>MY-SERVER-001
+<a id="__codelineno-18-41" name="__codelineno-18-41" href="#__codelineno-18-41"></a>purevol<span class="w"> </span>disconnect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--host<span class="w"> </span>MY-SERVER-001
+<a id="__codelineno-18-42" name="__codelineno-18-42" href="#__codelineno-18-42"></a>purevol<span class="w"> </span>disconnect<span class="w"> </span>MY_VOL_001<span class="w"> </span>--hgroup<span class="w"> </span>MY-HOSTS
+<a id="__codelineno-18-43" name="__codelineno-18-43" href="#__codelineno-18-43"></a>
+<a id="__codelineno-18-44" name="__codelineno-18-44" href="#__codelineno-18-44"></a><span class="c1"># Modify</span>
+<a id="__codelineno-18-45" name="__codelineno-18-45" href="#__codelineno-18-45"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--size<span class="w"> </span>2G<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-46" name="__codelineno-18-46" href="#__codelineno-18-46"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--size<span class="w"> </span>2G<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
+<a id="__codelineno-18-47" name="__codelineno-18-47" href="#__codelineno-18-47"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--bw-limit<span class="w"> </span>1M<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-48" name="__codelineno-18-48" href="#__codelineno-18-48"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>--readonly<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-49" name="__codelineno-18-49" href="#__codelineno-18-49"></a>purevol<span class="w"> </span>truncate<span class="w"> </span>--size<span class="w"> </span>1G<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-50" name="__codelineno-18-50" href="#__codelineno-18-50"></a>
+<a id="__codelineno-18-51" name="__codelineno-18-51" href="#__codelineno-18-51"></a><span class="c1"># Copy / move</span>
+<a id="__codelineno-18-52" name="__codelineno-18-52" href="#__codelineno-18-52"></a>purevol<span class="w"> </span>copy<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002
+<a id="__codelineno-18-53" name="__codelineno-18-53" href="#__codelineno-18-53"></a>purevol<span class="w"> </span>copy<span class="w"> </span>MY_VOL_001<span class="w"> </span>MY_VOL_002<span class="w"> </span>--overwrite
+<a id="__codelineno-18-54" name="__codelineno-18-54" href="#__codelineno-18-54"></a>purevol<span class="w"> </span>copy<span class="w"> </span>--snapshot<span class="w"> </span>&lt;snap&gt;<span class="w"> </span>&lt;target&gt;
+<a id="__codelineno-18-55" name="__codelineno-18-55" href="#__codelineno-18-55"></a>purevol<span class="w"> </span>move<span class="w"> </span>vol001<span class="w"> </span>MYPOD001
+<a id="__codelineno-18-56" name="__codelineno-18-56" href="#__codelineno-18-56"></a>purevol<span class="w"> </span>move<span class="w"> </span>MYPOD001::vol001<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-18-57" name="__codelineno-18-57" href="#__codelineno-18-57"></a>
+<a id="__codelineno-18-58" name="__codelineno-18-58" href="#__codelineno-18-58"></a><span class="c1"># Snapshots</span>
+<a id="__codelineno-18-59" name="__codelineno-18-59" href="#__codelineno-18-59"></a>purevol<span class="w"> </span>snap<span class="w"> </span>MY_VOL_001
+<a id="__codelineno-18-60" name="__codelineno-18-60" href="#__codelineno-18-60"></a>purevol<span class="w"> </span>snap<span class="w"> </span>MY_VOL_001<span class="w"> </span>--suffix<span class="w"> </span>PRD
+<a id="__codelineno-18-61" name="__codelineno-18-61" href="#__codelineno-18-61"></a>purevol<span class="w"> </span>snap<span class="w"> </span>MY_VOL_001<span class="w"> </span>--suffix<span class="w"> </span>&lt;text&gt;
+<a id="__codelineno-18-62" name="__codelineno-18-62" href="#__codelineno-18-62"></a>purevol<span class="w"> </span>snap<span class="w"> </span>MY_VOL_001<span class="w"> </span>--expiration<span class="w"> </span>&lt;time&gt;
+<a id="__codelineno-18-63" name="__codelineno-18-63" href="#__codelineno-18-63"></a>
+<a id="__codelineno-18-64" name="__codelineno-18-64" href="#__codelineno-18-64"></a><span class="c1"># Monitor</span>
+<a id="__codelineno-18-65" name="__codelineno-18-65" href="#__codelineno-18-65"></a>purevol<span class="w"> </span>monitor
+<a id="__codelineno-18-66" name="__codelineno-18-66" href="#__codelineno-18-66"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--iops
+<a id="__codelineno-18-67" name="__codelineno-18-67" href="#__codelineno-18-67"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--latency
+<a id="__codelineno-18-68" name="__codelineno-18-68" href="#__codelineno-18-68"></a>purevol<span class="w"> </span>monitor<span class="w"> </span>--historical<span class="w"> </span>24h
+<a id="__codelineno-18-69" name="__codelineno-18-69" href="#__codelineno-18-69"></a>
+<a id="__codelineno-18-70" name="__codelineno-18-70" href="#__codelineno-18-70"></a><span class="c1"># Pod volume operations</span>
+<a id="__codelineno-18-71" name="__codelineno-18-71" href="#__codelineno-18-71"></a>purevol<span class="w"> </span>remove<span class="w"> </span>--array<span class="w"> </span>PFAX70-REMOTE<span class="w"> </span>--with-unknown<span class="w"> </span>MYPOD001
 </code></pre></div>
 
 

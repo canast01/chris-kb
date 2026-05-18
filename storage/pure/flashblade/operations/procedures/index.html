@@ -1423,6 +1423,24 @@
 
 
 <h1 id="flashblade-procedures">FlashBlade — Procedures<a class="headerlink" href="#flashblade-procedures" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>FlashBlade NFS Filesystem Provisioning Flow
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │  Create filesystem (purefb fs create --size)         │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  └──────────────────────────┬───────────────────────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                             ▼
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  Set NFS export policy (purefb fs setattr --nfs)     │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  │  (allowed client IPs / CIDR, access mode)            │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  └──────────────────────────┬───────────────────────────┘
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                             ▼
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  ┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  Mount on client: mount -t nfs &lt;fb_ip&gt;:/&lt;fs&gt; /mnt   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  └──────────────────────────┬───────────────────────────┘
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                             ▼
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  ┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  │  Add to snapshot policy (purefb policy ...)          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  └──────────────────────────────────────────────────────┘
+</code></pre></div>
 <blockquote>
 <p>Part of the <a href="../">FlashBlade Operations</a> reference.</p>
 </blockquote>
@@ -1498,46 +1516,46 @@
 <h2 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h2>
 <p>FlashBlade supports snapshots at the file system level. Snapshots are space-efficient and near-instantaneous.</p>
 <h3 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>list
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;source=&#39;&lt;fs_name&gt;&#39;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>list
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;source=&#39;&lt;fs_name&gt;&#39;&quot;</span>
 </code></pre></div>
 <h3 id="create-a-snapshot">Create a Snapshot<a class="headerlink" href="#create-a-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>create<span class="w"> </span>--source<span class="w"> </span>&lt;fs_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>create<span class="w"> </span>--source<span class="w"> </span>&lt;fs_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_name&gt;
 </code></pre></div>
 <p>Example:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>create<span class="w"> </span>--source<span class="w"> </span>prod-nfs<span class="w"> </span>--suffix<span class="w"> </span>daily-2026-05-06
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>create<span class="w"> </span>--source<span class="w"> </span>prod-nfs<span class="w"> </span>--suffix<span class="w"> </span>daily-2026-05-06
 </code></pre></div></p>
 <h3 id="accessing-snapshot-data">Accessing Snapshot Data<a class="headerlink" href="#accessing-snapshot-data" title="Permanent link">&para;</a></h3>
 <p>Snapshots are accessible via the NFS <code>.snapshot</code> directory (if enabled):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ls<span class="w"> </span>/mnt/&lt;fs_mount&gt;/.snapshot/
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Lists available snapshots by suffix</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ls<span class="w"> </span>/mnt/&lt;fs_mount&gt;/.snapshot/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Lists available snapshots by suffix</span>
 </code></pre></div>
 <p>Users can browse and copy files directly from the <code>.snapshot</code> path without administrator involvement.</p>
 <h3 id="restore-a-file-system-from-snapshot">Restore a File System from Snapshot<a class="headerlink" href="#restore-a-file-system-from-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Overwrite the live file system with snapshot content</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>restore<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;<span class="w"> </span>--overwrite-fs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Overwrite the live file system with snapshot content</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>restore<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;<span class="w"> </span>--overwrite-fs
 </code></pre></div>
 <blockquote>
 <p>This replaces all current data on the file system — ensure this is intentional.</p>
 </blockquote>
 <h3 id="copy-a-snapshot-to-a-new-file-system">Copy a Snapshot to a New File System<a class="headerlink" href="#copy-a-snapshot-to-a-new-file-system" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>copy<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;new_fs_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>copy<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;new_fs_name&gt;
 </code></pre></div>
 <p>Creates a new independent file system from the snapshot without affecting the original.</p>
 <h3 id="delete-a-snapshot">Delete a Snapshot<a class="headerlink" href="#delete-a-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Destroy (recoverable for 24 hours)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>destroy<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Eradicate permanently</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>eradicate<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Destroy (recoverable for 24 hours)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>destroy<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Eradicate permanently</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purefb<span class="w"> </span>fs-snapshot<span class="w"> </span>eradicate<span class="w"> </span>&lt;fs_name&gt;.&lt;snap_name&gt;
 </code></pre></div>
 <h3 id="snapshot-policy-automated-scheduling">Snapshot Policy (Automated Scheduling)<a class="headerlink" href="#snapshot-policy-automated-scheduling" title="Permanent link">&para;</a></h3>
 <p>FlashBlade supports policy-based snapshots via the GUI:
 1. Navigate to <strong>Protection → Snapshot Policies</strong>
 2. Create a policy with frequency and retention settings
 3. Assign the policy to file systems</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View policies via CLI</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purefb<span class="w"> </span>policies<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View policies via CLI</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purefb<span class="w"> </span>policies<span class="w"> </span>list
 </code></pre></div>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <table>

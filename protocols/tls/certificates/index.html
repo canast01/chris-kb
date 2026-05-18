@@ -1266,39 +1266,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#certificate-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reading-a-certificate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reading a Certificate
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#generating-a-csr" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2232,39 +2199,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#certificate-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reading-a-certificate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reading a Certificate
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#generating-a-csr" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2417,120 +2351,69 @@
 
 
 <h1 id="tls-certificates">TLS Certificates<a class="headerlink" href="#tls-certificates" title="Permanent link">&para;</a></h1>
-<p>A TLS certificate is a signed X.509 document that binds a public key to an identity (hostname, IP, or service). The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.</p>
-<h2 id="certificate-components">Certificate Components<a class="headerlink" href="#certificate-components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Description</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Subject</td>
-<td>Identity the cert belongs to</td>
-<td><code>CN=web.example.com</code></td>
-</tr>
-<tr>
-<td>Issuer</td>
-<td>CA that signed the certificate</td>
-<td><code>CN=Example Internal CA</code></td>
-</tr>
-<tr>
-<td>Subject Alternative Names (SANs)</td>
-<td>All hostnames / IPs the cert covers</td>
-<td><code>web.example.com, api.example.com, 10.0.0.10</code></td>
-</tr>
-<tr>
-<td>Not Before / Not After</td>
-<td>Validity window</td>
-<td><code>2026-01-01</code> to <code>2027-01-01</code></td>
-</tr>
-<tr>
-<td>Public Key</td>
-<td>Used for encryption</td>
-<td>RSA 2048/4096 or ECDSA P-256/P-384</td>
-</tr>
-<tr>
-<td>Signature</td>
-<td>CA's digital signature over the cert</td>
-<td>SHA-256 with RSA</td>
-</tr>
-<tr>
-<td>Key Usage</td>
-<td>Permitted operations</td>
-<td><code>Digital Signature, Key Encipherment</code></td>
-</tr>
-<tr>
-<td>Extended Key Usage</td>
-<td>Application-specific use</td>
-<td><code>TLS Web Server Authentication</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="certificate-types">Certificate Types<a class="headerlink" href="#certificate-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Issued to</th>
-<th>Typical use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>DV (Domain Validated)</strong></td>
-<td>Domain owner only</td>
-<td>Public websites (Let's Encrypt)</td>
-</tr>
-<tr>
-<td><strong>OV (Organization Validated)</strong></td>
-<td>Verified organization</td>
-<td>Internal services, public corporate sites</td>
-</tr>
-<tr>
-<td><strong>EV (Extended Validation)</strong></td>
-<td>Full business verification</td>
-<td>High-assurance external portals</td>
-</tr>
-<tr>
-<td><strong>Wildcard</strong></td>
-<td><code>*.example.com</code></td>
-<td>Covers all subdomains at one level</td>
-</tr>
-<tr>
-<td><strong>SAN / Multi-SAN</strong></td>
-<td>Multiple explicit names</td>
-<td>Services with many hostnames</td>
-</tr>
-<tr>
-<td><strong>Client cert</strong></td>
-<td>User or service identity</td>
-<td>Mutual TLS (mTLS)</td>
-</tr>
-<tr>
-<td><strong>Code signing</strong></td>
-<td>Software publisher</td>
-<td>Signing executables</td>
-</tr>
-</tbody>
-</table>
-<h2 id="reading-a-certificate">Reading a Certificate<a class="headerlink" href="#reading-a-certificate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># View cert details from a file</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>certificate.pem<span class="w"> </span>-noout<span class="w"> </span>-text
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Quick view — subject, issuer, dates, SANs</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>certificate.pem<span class="w"> </span>-noout<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates<span class="w"> </span>-ext<span class="w"> </span>subjectAltName
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># View cert served by a live server</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Check expiry only</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>certificate.pem<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<p>A TLS certificate is a signed X.509 document that binds a public key to an identity (hostname, IP, or service).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        CERTIFICATE FIELD STRUCTURE (X.509)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Certificate                                                 │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────────────────────────────────────┐    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  Subject:  CN=web.example.com, O=Example Corp        │    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  SANs:     DNS:web.example.com, DNS:api.example.com  │    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │            IP:10.0.0.10                              │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  Issuer:   CN=Example Intermediate CA                │    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  Valid:    2026-01-01  to  2027-01-01                │    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  Key:      RSA 4096  (or ECDSA P-256)                │    │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  Key Usage: Digital Signature, Key Encipherment      │    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │  EKU:      TLS Web Server Authentication             │    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ├──────────────────────────────────────────────────────┤    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  Signature: SHA-256 with RSA (by Intermediate CA)   │    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  └──────────────────────────────────────────────────────┘    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                              │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Client checks: SAN matches hostname + not expired +         │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                 chain traces to trusted root CA              │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└──────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>``` The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>## Certificate Components
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>| Field | Description | Example |
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>|---|---|---|
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| Subject | Identity the cert belongs to | `CN=web.example.com` |
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>| Issuer | CA that signed the certificate | `CN=Example Internal CA` |
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| Subject Alternative Names (SANs) | All hostnames / IPs the cert covers | `web.example.com, api.example.com, 10.0.0.10` |
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| Not Before / Not After | Validity window | `2026-01-01` to `2027-01-01` |
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>| Public Key | Used for encryption | RSA 2048/4096 or ECDSA P-256/P-384 |
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>| Signature | CA&#39;s digital signature over the cert | SHA-256 with RSA |
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>| Key Usage | Permitted operations | `Digital Signature, Key Encipherment` |
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>| Extended Key Usage | Application-specific use | `TLS Web Server Authentication` |
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>## Certificate Types
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>| Type | Issued to | Typical use |
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>|---|---|---|
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>| **DV (Domain Validated)** | Domain owner only | Public websites (Let&#39;s Encrypt) |
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>| **OV (Organization Validated)** | Verified organization | Internal services, public corporate sites |
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>| **EV (Extended Validation)** | Full business verification | High-assurance external portals |
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>| **Wildcard** | `*.example.com` | Covers all subdomains at one level |
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>| **SAN / Multi-SAN** | Multiple explicit names | Services with many hostnames |
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>| **Client cert** | User or service identity | Mutual TLS (mTLS) |
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>| **Code signing** | Software publisher | Signing executables |
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>## Reading a Certificate
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>```bash
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a># View cert details from a file
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>openssl x509 -in certificate.pem -noout -text
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a># Quick view — subject, issuer, dates, SANs
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>openssl x509 -in certificate.pem -noout \
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>  -subject -issuer -dates -ext subjectAltName
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a># View cert served by a live server
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>openssl s_client -connect &lt;hostname&gt;:443 -servername &lt;hostname&gt; &lt;/dev/null 2&gt;/dev/null \
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>  | openssl x509 -noout -text
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a># Check expiry only
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>openssl x509 -in certificate.pem -noout -enddate
 </code></pre></div>
 <h2 id="generating-a-csr">Generating a CSR<a class="headerlink" href="#generating-a-csr" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate private key and CSR together</span>

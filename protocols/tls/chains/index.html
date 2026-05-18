@@ -1294,39 +1294,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#chain-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Chain Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-chains-break" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why Chains Break
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#checking-the-chain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Checking the Chain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#building-a-chain-bundle" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2282,39 +2249,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#chain-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Chain Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-chains-break" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why Chains Break
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#checking-the-chain" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Checking the Chain
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#building-a-chain-bundle" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2517,38 +2451,69 @@
 
 
 <h1 id="tls-certificate-chains">TLS Certificate Chains<a class="headerlink" href="#tls-certificate-chains" title="Permanent link">&para;</a></h1>
-<p>A certificate chain (or chain of trust) links a server certificate back to a trusted root CA through one or more intermediate CAs. If the chain is broken or incomplete, clients will reject the certificate.</p>
-<h2 id="chain-structure">Chain Structure<a class="headerlink" href="#chain-structure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Root CA (self-signed, in OS/browser trust store)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └── Intermediate CA (signed by Root CA)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        └── Server Certificate (signed by Intermediate CA)
+<p>A certificate chain (or chain of trust) links a server certificate back to a trusted root CA through one or more intermediate CAs.</p>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        CHAIN OF TRUST
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  depth=2  Root CA (self-signed)                              │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│           ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│           │ CN=Example Root CA                          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│           │ In OS/browser trust store                   │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│           │ Signs the intermediate CA cert              │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│           └─────────────────────┬───────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                 │ signs                      │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  depth=1  Intermediate CA       ▼                            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│           ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│           │ CN=Example Intermediate CA                  │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│           │ Issued by Root CA                           │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│           │ Server sends this in TLS handshake          │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│           └─────────────────────┬───────────────────────┘   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                 │ signs                      │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  depth=0  Server Certificate    ▼                            │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│           ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│           │ CN=web.example.com                          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│           │ SAN: web.example.com, api.example.com       │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│           │ Issued by Intermediate CA                   │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│           └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                              │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Chain breaks if: intermediate missing, wrong order,        │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  or root not in client trust store                          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└──────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>``` If the chain is broken or incomplete, clients will reject the certificate.
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>## Chain Structure
 </code></pre></div>
-<p>The server presents its certificate plus all intermediate certificates. The client verifies each signature up to a trusted root.</p>
-<h2 id="why-chains-break">Why Chains Break<a class="headerlink" href="#why-chains-break" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Server configured with certificate only (no intermediate)</li>
-<li>Intermediate CA certificate not included in the bundle</li>
-<li>Wrong intermediate (from a different CA hierarchy)</li>
-<li>Intermediate and server certificate order reversed</li>
-<li>Root CA not in client's trust store (self-signed internal CA)</li>
-</ul>
-<h2 id="checking-the-chain">Checking the Chain<a class="headerlink" href="#checking-the-chain" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View full chain served by a live endpoint</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;hostname&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Output shows: Certificate chain</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 0 s:CN=web.example.com (server cert)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#   i:CN=Example Intermediate CA</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 1 s:CN=Example Intermediate CA</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   i:CN=Example Root CA</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify chain file locally</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>server.crt
+Root CA (self-signed, in OS/browser trust store)
+  └── Intermediate CA (signed by Root CA)
+        └── Server Certificate (signed by Intermediate CA)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>The server presents its certificate plus all intermediate certificates. The client verifies each signature up to a trusted root.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Why Chains Break
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Server configured with certificate only (no intermediate)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Intermediate CA certificate not included in the bundle
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Wrong intermediate (from a different CA hierarchy)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Intermediate and server certificate order reversed
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Root CA not in client&#39;s trust store (self-signed internal CA)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Checking the Chain
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check chain order in a bundle file</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>openssl<span class="w"> </span>crl2pkcs7<span class="w"> </span>-nocrl<span class="w"> </span>-certfile<span class="w"> </span>bundle.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>openssl<span class="w"> </span>pkcs7<span class="w"> </span>-print_certs<span class="w"> </span>-noout
-</code></pre></div>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```bash
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># View full chain served by a live endpoint
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>openssl s_client -connect &lt;hostname&gt;:443 -servername &lt;hostname&gt;
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Output shows: Certificate chain
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># 0 s:CN=web.example.com (server cert)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>#   i:CN=Example Intermediate CA
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># 1 s:CN=Example Intermediate CA
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>#   i:CN=Example Root CA
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Verify chain file locally
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>openssl verify -CAfile chain.pem server.crt
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># Check chain order in a bundle file
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>openssl crl2pkcs7 -nocrl -certfile bundle.pem | \
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  openssl pkcs7 -print_certs -noout
+</code></pre></div></p>
 <h2 id="building-a-chain-bundle">Building a Chain Bundle<a class="headerlink" href="#building-a-chain-bundle" title="Permanent link">&para;</a></h2>
 <p>The bundle should be ordered: server cert → intermediate(s) → (optionally root).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Concatenate into bundle</span>

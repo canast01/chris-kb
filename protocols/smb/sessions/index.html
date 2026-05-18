@@ -2395,6 +2395,27 @@
 
 
 <h1 id="smb-sessions">SMB Sessions<a class="headerlink" href="#smb-sessions" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        SMB SESSION ESTABLISHMENT
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────┐                              ┌─────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Client    │                              │   SMB Server    │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└─────┬──────┘                              └────────┬────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>      │  1. Negotiate (dialect selection)             │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>      │ ─────────────────────────────────────────────►│
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>      │     Server offers SMB 3.1.1                   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>      │ ◄─────────────────────────────────────────────│
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>      │  2. SessionSetup (Kerberos / NTLM auth)        │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>      │ ─────────────────────────────────────────────►│
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>      │     Auth OK, SessionID assigned               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>      │ ◄─────────────────────────────────────────────│
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>      │  3. TreeConnect (request share access)         │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>      │  \\server\Finance ────────────────────────────►│
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>      │     TreeID assigned, share connected           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>      │ ◄─────────────────────────────────────────────│
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>      │  4. File I/O (Create, Read, Write, Close)      │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>      │ ◄════════════════════════════════════════════►│
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>      │                                               │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>      │  SMB3: signing + optional encryption active   │
+</code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>An SMB session is established after a client authenticates to a server. Sessions can be inspected, disconnected, and constrained via PowerShell and legacy tools. Understanding active sessions is essential for access audits, capacity planning, and incident response.</p>
 <table>
@@ -2424,78 +2445,78 @@
 </tbody>
 </table>
 <h2 id="listing-and-managing-sessions">Listing and Managing Sessions<a class="headerlink" href="#listing-and-managing-sessions" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all active SMB sessions</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-SmbSession</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Show session details including client IP and username</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SessionId</span><span class="p">,</span> <span class="n">ClientComputerName</span><span class="p">,</span> <span class="n">ClientUserName</span><span class="p">,</span> <span class="n">NumOpens</span><span class="p">,</span> <span class="n">SecondsExists</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Close a specific session by ID</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Close-SmbSession</span> <span class="n">-SessionId</span> <span class="n">17179869218</span> <span class="n">-Force</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Close all sessions from a specific client</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ClientComputerName</span> <span class="o">-eq</span> <span class="s2">&quot;192.168.1.55&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="nb">Close-SmbSession</span> <span class="n">-Force</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all active sessions (legacy)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>net<span class="w"> </span>session
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List all active SMB sessions</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-SmbSession</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Disconnect a specific session</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>net<span class="w"> </span>session<span class="w"> </span><span class="se">\\</span><span class="m">192</span>.168.1.55<span class="w"> </span>/DELETE
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Show session details including client IP and username</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SessionId</span><span class="p">,</span> <span class="n">ClientComputerName</span><span class="p">,</span> <span class="n">ClientUserName</span><span class="p">,</span> <span class="n">NumOpens</span><span class="p">,</span> <span class="n">SecondsExists</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Disconnect all sessions</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>net<span class="w"> </span>session<span class="w"> </span>/DELETE
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Close a specific session by ID</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Close-SmbSession</span> <span class="n">-SessionId</span> <span class="n">17179869218</span> <span class="n">-Force</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Close all sessions from a specific client</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ClientComputerName</span> <span class="o">-eq</span> <span class="s2">&quot;192.168.1.55&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="nb">Close-SmbSession</span> <span class="n">-Force</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all active sessions (legacy)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>net<span class="w"> </span>session
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Disconnect a specific session</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>net<span class="w"> </span>session<span class="w"> </span><span class="se">\\</span><span class="m">192</span>.168.1.55<span class="w"> </span>/DELETE
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Disconnect all sessions</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>net<span class="w"> </span>session<span class="w"> </span>/DELETE
 </code></pre></div>
 <h2 id="smb-signing">SMB Signing<a class="headerlink" href="#smb-signing" title="Permanent link">&para;</a></h2>
 <p>SMB signing ensures message integrity by appending a cryptographic signature to each SMB packet. Without signing, man-in-the-middle relay attacks (e.g., NTLM relay) are possible.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check current server signing settings</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span><span class="p">,</span> <span class="n">EnableSecuritySignature</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Require signing on the server (clients without signing cannot connect)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-RequireSecuritySignature</span> <span class="nv">$true</span> <span class="n">-Force</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Check client signing settings</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-SmbClientConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span><span class="p">,</span> <span class="n">EnableSecuritySignature</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Require signing on the client side</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Set-SmbClientConfiguration</span> <span class="n">-RequireSecuritySignature</span> <span class="nv">$true</span> <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check current server signing settings</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span><span class="p">,</span> <span class="n">EnableSecuritySignature</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Require signing on the server (clients without signing cannot connect)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-RequireSecuritySignature</span> <span class="nv">$true</span> <span class="n">-Force</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Check client signing settings</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-SmbClientConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span><span class="p">,</span> <span class="n">EnableSecuritySignature</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Require signing on the client side</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">Set-SmbClientConfiguration</span> <span class="n">-RequireSecuritySignature</span> <span class="nv">$true</span> <span class="n">-Force</span>
 </code></pre></div>
 <h2 id="smb-version-negotiation">SMB Version Negotiation<a class="headerlink" href="#smb-version-negotiation" title="Permanent link">&para;</a></h2>
 <p>SMB clients and servers negotiate the highest mutually supported dialect. SMB1 is disabled by default on modern Windows but may be re-enabled on legacy systems.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check which SMB versions are enabled on the server</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">EnableSMB1Protocol</span><span class="p">,</span> <span class="n">EnableSMB2Protocol</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Disable SMB1 (do not re-enable unless required for legacy devices)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-EnableSMB1Protocol</span> <span class="nv">$false</span> <span class="n">-Force</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Enable SMB2/3</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-EnableSMB2Protocol</span> <span class="nv">$true</span> <span class="n">-Force</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Check active dialect of an established session</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ClientComputerName</span><span class="p">,</span> <span class="n">Dialect</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check which SMB versions are enabled on the server</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">EnableSMB1Protocol</span><span class="p">,</span> <span class="n">EnableSMB2Protocol</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Disable SMB1 (do not re-enable unless required for legacy devices)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-EnableSMB1Protocol</span> <span class="nv">$false</span> <span class="n">-Force</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Enable SMB2/3</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-EnableSMB2Protocol</span> <span class="nv">$true</span> <span class="n">-Force</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Check active dialect of an established session</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ClientComputerName</span><span class="p">,</span> <span class="n">Dialect</span>
 </code></pre></div>
 <h2 id="session-limits-and-timeouts">Session Limits and Timeouts<a class="headerlink" href="#session-limits-and-timeouts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># View current idle timeout settings (AutoDisconnectTimeout in minutes, 0 = never)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">AutoDisconnectTimeout</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Set idle session timeout to 15 minutes</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-AutoDisconnectTimeout</span> <span class="n">15</span> <span class="n">-Force</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># View maximum connections (0 = unlimited for domain editions)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ConcurrentUserLimit</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Set per-share connection limit</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-ConcurrentUserLimit</span> <span class="n">100</span> <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># View current idle timeout settings (AutoDisconnectTimeout in minutes, 0 = never)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">AutoDisconnectTimeout</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Set idle session timeout to 15 minutes</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-AutoDisconnectTimeout</span> <span class="n">15</span> <span class="n">-Force</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># View maximum connections (0 = unlimited for domain editions)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ConcurrentUserLimit</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Set per-share connection limit</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Finance&quot;</span> <span class="n">-ConcurrentUserLimit</span> <span class="n">100</span> <span class="n">-Force</span>
 </code></pre></div>
 <h2 id="open-files-and-locks">Open Files and Locks<a class="headerlink" href="#open-files-and-locks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># List all open files across all shares</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-SmbOpenFile</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">FileId</span><span class="p">,</span> <span class="n">SessionId</span><span class="p">,</span> <span class="n">ShareRelativePath</span><span class="p">,</span> <span class="n">ClientComputerName</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Close a specific open file (use when a locked file blocks access)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Close-SmbOpenFile</span> <span class="n">-FileId</span> <span class="n">4503599627432131</span> <span class="n">-Force</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Find open files by share path</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-SmbOpenFile</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ShareRelativePath</span> <span class="o">-like</span> <span class="s2">&quot;*Finance*&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># List all open files across all shares</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-SmbOpenFile</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">FileId</span><span class="p">,</span> <span class="n">SessionId</span><span class="p">,</span> <span class="n">ShareRelativePath</span><span class="p">,</span> <span class="n">ClientComputerName</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Close a specific open file (use when a locked file blocks access)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Close-SmbOpenFile</span> <span class="n">-FileId</span> <span class="n">4503599627432131</span> <span class="n">-Force</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Find open files by share path</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-SmbOpenFile</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ShareRelativePath</span> <span class="o">-like</span> <span class="s2">&quot;*Finance*&quot;</span> <span class="p">}</span>
 </code></pre></div>
 
 

@@ -1340,6 +1340,21 @@
 
 
 <h1 id="flasharray-design-standards">FlashArray — Design Standards<a class="headerlink" href="#flasharray-design-standards" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>FlashArray Design Checklist — Key Areas
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Naming         │  array / volume / host / pg conventions│
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├──────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Host Zones     │  1 initiator : 1 target per FC zone    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├──────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  Multipath      │  Round-robin IOPS=1 (VMware/Linux)     │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├──────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Protection     │  PGroup per app → snapshot + replicate │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>├──────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Capacity       │  &lt; 80% used; account for snapshots     │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>├──────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Security       │  RBAC, SafeMode, SAML/LDAP, TLS syslog│
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└──────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1485,8 +1500,8 @@
 </ol>
 <h2 id="multipath-configuration-vmware-psp">Multipath Configuration (VMware PSP)<a class="headerlink" href="#multipath-configuration-vmware-psp" title="Permanent link">&para;</a></h2>
 <p>For VMware hosts connected to FlashArray, set the Path Selection Policy to Round Robin with IOPS limit of 1:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;<span class="w"> </span>-P<span class="w"> </span>VMW_PSP_RR
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;<span class="w"> </span>--type<span class="w"> </span>iops<span class="w"> </span>--iops<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;<span class="w"> </span>-P<span class="w"> </span>VMW_PSP_RR
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;naa_id&gt;<span class="w"> </span>--type<span class="w"> </span>iops<span class="w"> </span>--iops<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <p>For Linux DM-Multipath, use the Pure Storage recommended <code>multipath.conf</code> settings (available from Pure Support): <code>path_grouping_policy multibus</code>, <code>path_checker tur</code>, <code>failback immediate</code>, <code>no_path_retry 18</code>.</p>
 

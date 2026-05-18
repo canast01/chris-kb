@@ -1699,6 +1699,35 @@
 
 
 <h1 id="flasharray-procedures">FlashArray — Procedures<a class="headerlink" href="#flasharray-procedures" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Host Volume Provisioning Flow
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  ┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  │  Zone FC fabric (single-initiator / single-target)  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  └───────────────────────┬─────────────────────────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                          ▼
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  ┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  │  Create Host entry (purehost create + WWN/IQN)      │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  └───────────────────────┬─────────────────────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                          ▼
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  Create Host Group (purehgroup + hosts)             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  └───────────────────────┬─────────────────────────────┘
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                          ▼
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  ┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  │  Create Volume (purevol create --size)              │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  └───────────────────────┬─────────────────────────────┘
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                          ▼
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  ┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  │  Connect Volume to Host Group (purehgroup connect)  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  └───────────────────────┬─────────────────────────────┘
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                          ▼
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  ┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  │  Rescan HBA on host → confirm multipath             │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  └───────────────────────┬─────────────────────────────┘
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                          ▼
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  ┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  │  Add Volume to Protection Group (purepgroup addvol) │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  └─────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] No active drive rebuilds — <code>puredrive list</code> shows all drives <code>healthy</code>, no <code>recovering</code> drives</li>
@@ -1785,53 +1814,53 @@
 <h2 id="host-management">Host Management<a class="headerlink" href="#host-management" title="Permanent link">&para;</a></h2>
 <p>Hosts in Pure Storage represent the servers (physical or virtual) that are granted access to volumes via iSCSI IQN or Fibre Channel WWN registration.</p>
 <h3 id="list-hosts">List Hosts<a class="headerlink" href="#list-hosts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purehost<span class="w"> </span>list
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w">   </span><span class="c1"># show volume connections</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purehost<span class="w"> </span>list
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purehost<span class="w"> </span>list<span class="w"> </span>--connect<span class="w">   </span><span class="c1"># show volume connections</span>
 </code></pre></div>
 <h3 id="create-a-host">Create a Host<a class="headerlink" href="#create-a-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create host with FC WWNs</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--wwnlist<span class="w"> </span>&lt;wwn1,wwn2&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create host with iSCSI IQNs</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--iqns<span class="w"> </span>&lt;iqn1&gt;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Create host with NVMe NQNs</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--nqns<span class="w"> </span>&lt;nqn1&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create host with FC WWNs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--wwnlist<span class="w"> </span>&lt;wwn1,wwn2&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create host with iSCSI IQNs</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--iqns<span class="w"> </span>&lt;iqn1&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Create host with NVMe NQNs</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>purehost<span class="w"> </span>create<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--nqns<span class="w"> </span>&lt;nqn1&gt;
 </code></pre></div>
 <h3 id="add-initiators-to-an-existing-host">Add Initiators to an Existing Host<a class="headerlink" href="#add-initiators-to-an-existing-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add WWN</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--addwwnlist<span class="w"> </span>&lt;new_wwn&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add IQN</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--addiqnlist<span class="w"> </span>&lt;new_iqn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add WWN</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--addwwnlist<span class="w"> </span>&lt;new_wwn&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add IQN</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>purehost<span class="w"> </span>setattr<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--addiqnlist<span class="w"> </span>&lt;new_iqn&gt;
 </code></pre></div>
 <h3 id="connect-a-volume-to-a-host">Connect a Volume to a Host<a class="headerlink" href="#connect-a-volume-to-a-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
 <p>This creates the host-to-volume connection (analogous to LUN masking on traditional arrays).</p>
 <h3 id="disconnect-a-volume-from-a-host">Disconnect a Volume from a Host<a class="headerlink" href="#disconnect-a-volume-from-a-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
 <h3 id="host-groups">Host Groups<a class="headerlink" href="#host-groups" title="Permanent link">&para;</a></h3>
 <p>For clustered hosts (e.g., ESXi cluster), use host groups so volumes can be connected to all members:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create host group</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>&lt;hostgroup_name&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Add hosts to group</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>&lt;hostgroup_name&gt;<span class="w"> </span>--addhostlist<span class="w"> </span>&lt;hostname1,hostname2&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Connect volume to host group</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>purehgroup<span class="w"> </span>connect<span class="w"> </span>&lt;hostgroup_name&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># List host group connections</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connect
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create host group</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purehgroup<span class="w"> </span>create<span class="w"> </span>&lt;hostgroup_name&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Add hosts to group</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purehgroup<span class="w"> </span>setattr<span class="w"> </span>&lt;hostgroup_name&gt;<span class="w"> </span>--addhostlist<span class="w"> </span>&lt;hostname1,hostname2&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Connect volume to host group</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>purehgroup<span class="w"> </span>connect<span class="w"> </span>&lt;hostgroup_name&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># List host group connections</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>purehgroup<span class="w"> </span>list<span class="w"> </span>--connect
 </code></pre></div>
 <h3 id="delete-a-host">Delete a Host<a class="headerlink" href="#delete-a-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disconnect all volumes first</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Delete host</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>purehost<span class="w"> </span>delete<span class="w"> </span>&lt;hostname&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Disconnect all volumes first</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Delete host</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>purehost<span class="w"> </span>delete<span class="w"> </span>&lt;hostname&gt;
 </code></pre></div>
 <h3 id="host-common-issues">Host Common Issues<a class="headerlink" href="#host-common-issues" title="Permanent link">&para;</a></h3>
 <table>
@@ -1868,55 +1897,55 @@
 <hr />
 <h2 id="volume-management">Volume Management<a class="headerlink" href="#volume-management" title="Permanent link">&para;</a></h2>
 <h3 id="list-volumes">List Volumes<a class="headerlink" href="#list-volumes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>purevol<span class="w"> </span>list
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w">      </span><span class="c1"># includes capacity and data reduction stats</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>purevol<span class="w"> </span>list<span class="w"> </span>--details<span class="w">    </span><span class="c1"># includes host connections and QoS settings</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>purevol<span class="w"> </span>list
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>purevol<span class="w"> </span>list<span class="w"> </span>--space<span class="w">      </span><span class="c1"># includes capacity and data reduction stats</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>purevol<span class="w"> </span>list<span class="w"> </span>--details<span class="w">    </span><span class="c1"># includes host connections and QoS settings</span>
 </code></pre></div>
 <h3 id="create-a-volume">Create a Volume<a class="headerlink" href="#create-a-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>purevol<span class="w"> </span>create<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>1T
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>purevol<span class="w"> </span>create<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>1T
 </code></pre></div>
 <p>Size suffixes: <code>K</code>, <code>M</code>, <code>G</code>, <code>T</code>, <code>P</code>.</p>
 <h3 id="resize-a-volume">Resize a Volume<a class="headerlink" href="#resize-a-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>2T
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>purevol<span class="w"> </span>setattr<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--size<span class="w"> </span>2T
 </code></pre></div>
 <p>Volumes can only be grown, not shrunk.</p>
 <h3 id="connect-and-disconnect-a-volume">Connect and Disconnect a Volume<a class="headerlink" href="#connect-and-disconnect-a-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Connect to host</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Disconnect from host</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Connect to host</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purehost<span class="w"> </span>connect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Disconnect from host</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purehost<span class="w"> </span>disconnect<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>--vol<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
 <h3 id="snapshot-a-volume">Snapshot a Volume<a class="headerlink" href="#snapshot-a-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create a snapshot</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>purevol<span class="w"> </span>snap<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_suffix&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List snapshots for a volume</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>&lt;volume_name&gt;.*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create a snapshot</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purevol<span class="w"> </span>snap<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_suffix&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># List snapshots for a volume</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>purevol<span class="w"> </span>list<span class="w"> </span>&lt;volume_name&gt;.*
 </code></pre></div>
 <h3 id="restore-from-snapshot">Restore from Snapshot<a class="headerlink" href="#restore-from-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Overwrite volume with snapshot content</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;volume_name&gt;.&lt;snap_suffix&gt;<span class="w"> </span>--overwrite<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Overwrite volume with snapshot content</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;volume_name&gt;.&lt;snap_suffix&gt;<span class="w"> </span>--overwrite<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
 <h3 id="create-a-clone">Create a Clone<a class="headerlink" href="#create-a-clone" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;source_vol&gt;<span class="w"> </span>&lt;clone_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>purevol<span class="w"> </span>copy<span class="w"> </span>&lt;source_vol&gt;<span class="w"> </span>&lt;clone_name&gt;
 </code></pre></div>
 <h3 id="delete-a-volume">Delete a Volume<a class="headerlink" href="#delete-a-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Volumes go to the destroyed state first (recoverable for 24 hours)</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>purevol<span class="w"> </span>destroy<span class="w"> </span>&lt;volume_name&gt;
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Permanently delete (eradicate)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Volumes go to the destroyed state first (recoverable for 24 hours)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>purevol<span class="w"> </span>destroy<span class="w"> </span>&lt;volume_name&gt;
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Permanently delete (eradicate)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>purevol<span class="w"> </span>eradicate<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
 <h3 id="recover-a-destroyed-volume">Recover a Destroyed Volume<a class="headerlink" href="#recover-a-destroyed-volume" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>purevol<span class="w"> </span>recover<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>purevol<span class="w"> </span>recover<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
 <h3 id="volume-tags">Volume Tags<a class="headerlink" href="#volume-tags" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Set a tag on a volume</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>purevol<span class="w"> </span>settag<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--tag-name<span class="w"> </span>&lt;key&gt;<span class="w"> </span>--tag-value<span class="w"> </span>&lt;value&gt;
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># List tags</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>purevol<span class="w"> </span>listtags<span class="w"> </span>&lt;volume_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Set a tag on a volume</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>purevol<span class="w"> </span>settag<span class="w"> </span>&lt;volume_name&gt;<span class="w"> </span>--tag-name<span class="w"> </span>&lt;key&gt;<span class="w"> </span>--tag-value<span class="w"> </span>&lt;value&gt;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># List tags</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>purevol<span class="w"> </span>listtags<span class="w"> </span>&lt;volume_name&gt;
 </code></pre></div>
 <h3 id="volume-common-issues">Volume Common Issues<a class="headerlink" href="#volume-common-issues" title="Permanent link">&para;</a></h3>
 <table>
@@ -1954,45 +1983,45 @@
 <h2 id="protection-groups">Protection Groups<a class="headerlink" href="#protection-groups" title="Permanent link">&para;</a></h2>
 <p>Protection groups (pgroups) define sets of volumes for consistent snapshot and replication operations.</p>
 <h3 id="list-protection-groups">List Protection Groups<a class="headerlink" href="#list-protection-groups" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>purepgroup<span class="w"> </span>list
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>purepgroup<span class="w"> </span>list
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--space
 </code></pre></div>
 <h3 id="view-protection-group-members">View Protection Group Members<a class="headerlink" href="#view-protection-group-members" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>purepgroup<span class="w"> </span>listobj<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--member-type<span class="w"> </span>volume
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>purepgroup<span class="w"> </span>listobj<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--member-type<span class="w"> </span>volume
 </code></pre></div>
 <h3 id="create-a-protection-group">Create a Protection Group<a class="headerlink" href="#create-a-protection-group" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>&lt;pg_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>&lt;pg_name&gt;
 </code></pre></div>
 <h3 id="add-volumes-to-a-protection-group">Add Volumes to a Protection Group<a class="headerlink" href="#add-volumes-to-a-protection-group" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>purepgroup<span class="w"> </span>addvollist<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--vollist<span class="w"> </span>&lt;vol1&gt;,&lt;vol2&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>purepgroup<span class="w"> </span>addvollist<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--vollist<span class="w"> </span>&lt;vol1&gt;,&lt;vol2&gt;
 </code></pre></div>
 <h3 id="configure-snapshot-schedule">Configure Snapshot Schedule<a class="headerlink" href="#configure-snapshot-schedule" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Set snapshot schedule (every 1 hour, retain 24 per day, 7 days)</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span>--snap-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span>--snap-frequency<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span>--snap-per-day<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span>--snap-for-days<span class="w"> </span><span class="m">7</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Set snapshot schedule (every 1 hour, retain 24 per day, 7 days)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span>--snap-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span>--snap-frequency<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span>--snap-per-day<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span>--snap-for-days<span class="w"> </span><span class="m">7</span>
 </code></pre></div>
 <h3 id="configure-replication-schedule-async-to-remote">Configure Replication Schedule (Async to Remote)<a class="headerlink" href="#configure-replication-schedule-async-to-remote" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Enable replication target</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--target<span class="w"> </span>&lt;remote_array_name&gt;
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Set replication schedule</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span>--replicate-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span>--replicate-frequency<span class="w"> </span><span class="m">3600</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Enable replication target</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--target<span class="w"> </span>&lt;remote_array_name&gt;
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Set replication schedule</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span>--replicate-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">    </span>--replicate-frequency<span class="w"> </span><span class="m">3600</span>
 </code></pre></div>
 <h3 id="take-a-manual-snapshot">Take a Manual Snapshot<a class="headerlink" href="#take-a-manual-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>purepgroup<span class="w"> </span>snap<span class="w"> </span>--pgroup<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>purepgroup<span class="w"> </span>snap<span class="w"> </span>--pgroup<span class="w"> </span>&lt;pg_name&gt;<span class="w"> </span>--suffix<span class="w"> </span>&lt;snap_name&gt;
 </code></pre></div>
 <h3 id="list-snapshots">List Snapshots<a class="headerlink" href="#list-snapshots" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>&lt;pg_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>purepgroup<span class="w"> </span>listsnaps<span class="w"> </span>&lt;pg_name&gt;
 </code></pre></div>
 <h3 id="delete-a-protection-group">Delete a Protection Group<a class="headerlink" href="#delete-a-protection-group" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>purepgroup<span class="w"> </span>destroy<span class="w"> </span>&lt;pg_name&gt;
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>purepgroup<span class="w"> </span>eradicate<span class="w"> </span>&lt;pg_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>purepgroup<span class="w"> </span>destroy<span class="w"> </span>&lt;pg_name&gt;
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>purepgroup<span class="w"> </span>eradicate<span class="w"> </span>&lt;pg_name&gt;
 </code></pre></div>
 <h3 id="protection-group-common-issues">Protection Group Common Issues<a class="headerlink" href="#protection-group-common-issues" title="Permanent link">&para;</a></h3>
 <table>

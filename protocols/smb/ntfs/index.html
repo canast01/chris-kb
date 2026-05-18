@@ -2395,6 +2395,29 @@
 
 
 <h1 id="ntfs-permissions">NTFS Permissions<a class="headerlink" href="#ntfs-permissions" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        NTFS ACL STRUCTURE
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  C:\Shares\Finance  (folder object)                          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────────────────────────────────────┐    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  Security Descriptor                                 │    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  ┌────────────────┐  Owner: DOMAIN\admin             │    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  │ DACL           │                                  │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  │ (access control│  ACEs (Access Control Entries):  │    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  │  list)         │  ├─ Allow: DOMAIN\Finance_Users  │    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  │                │  │         Modify (OI)(CI)       │    │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  │                │  ├─ Allow: DOMAIN\Domain Admins  │    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │  │                │  │         Full Control (OI)(CI) │    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  │                │  └─ Deny:  DOMAIN\Interns        │    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  │                │            Write (OI)(CI)        │    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  └────────────────┘                                  │    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  ┌────────────────┐                                  │    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │  │ SACL           │  Audit: Everyone FullControl     │    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │  │ (audit list)   │  → Event ID 4663 in Security log │    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  │  └────────────────┘                                  │    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  └──────────────────────────────────────────────────────┘    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  (I) = inherited from parent   explicit = set directly here  │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>NTFS permissions control access to files and folders at the filesystem level on Windows volumes. They are distinct from share permissions and apply whether access comes over the network or locally. Effective access is determined by combining both layers: the most restrictive result of NTFS and share permissions wins.</p>
 <table>
@@ -2433,70 +2456,70 @@
 <li><strong>Read</strong> — view file content and attributes</li>
 <li><strong>Write</strong> — create files and folders, write data, modify attributes</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># View NTFS permissions on a folder</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="p">|</span> <span class="nb">Format-List</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># View ACL entries individually</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="p">).</span><span class="n">Access</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">IdentityReference</span><span class="p">,</span> <span class="n">FileSystemRights</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">IsInherited</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># View NTFS permissions on a folder</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># View ACL entries individually</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="p">).</span><span class="n">Access</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">IdentityReference</span><span class="p">,</span> <span class="n">FileSystemRights</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">IsInherited</span>
 </code></pre></div>
 <h2 id="icacls-reference">icacls Reference<a class="headerlink" href="#icacls-reference" title="Permanent link">&para;</a></h2>
 <p><code>icacls</code> is the primary command-line tool for viewing and modifying NTFS ACLs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Display permissions for a folder and its contents</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Grant a user Modify rights (not inherited)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="w"> </span>/grant<span class="w"> </span><span class="s2">&quot;DOMAIN\jsmith:(OI)(CI)M&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Remove all explicit permissions for a user</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="w"> </span>/remove<span class="w"> </span><span class="s2">&quot;DOMAIN\jsmith&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Reset permissions to inherited only (removes all explicit entries)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="w"> </span>/reset<span class="w"> </span>/T<span class="w"> </span>/C
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Copy permissions from one path to another</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="w"> </span>/save<span class="w"> </span>ntfs_acl.txt
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\NewFinance&quot;</span><span class="w"> </span>/restore<span class="w"> </span>ntfs_acl.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Display permissions for a folder and its contents</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Grant a user Modify rights (not inherited)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="w"> </span>/grant<span class="w"> </span><span class="s2">&quot;DOMAIN\jsmith:(OI)(CI)M&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove all explicit permissions for a user</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="w"> </span>/remove<span class="w"> </span><span class="s2">&quot;DOMAIN\jsmith&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Reset permissions to inherited only (removes all explicit entries)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="w"> </span>/reset<span class="w"> </span>/T<span class="w"> </span>/C
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Copy permissions from one path to another</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="w"> </span>/save<span class="w"> </span>ntfs_acl.txt
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>icacls<span class="w"> </span><span class="s2">&quot;C:\Shares\NewFinance&quot;</span><span class="w"> </span>/restore<span class="w"> </span>ntfs_acl.txt
 </code></pre></div>
 <p>Inheritance flags: <code>(OI)</code> = object inherit, <code>(CI)</code> = container inherit, <code>(NP)</code> = no propagate, <code>(IO)</code> = inherit only.</p>
 <h2 id="inheritance">Inheritance<a class="headerlink" href="#inheritance" title="Permanent link">&para;</a></h2>
 <p>By default, child objects inherit permissions from their parent. Inheritance can be blocked at any level.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Disable inheritance and copy existing inherited entries as explicit</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Shares\Finance\Confidential&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRuleProtection</span><span class="p">(</span><span class="nv">$true</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>   <span class="c"># block inheritance, copy existing</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance\Confidential&quot;</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Re-enable inheritance (removes explicit entries that duplicated inherited ones)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRuleProtection</span><span class="p">(</span><span class="nv">$false</span><span class="p">,</span> <span class="nv">$false</span><span class="p">)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance\Confidential&quot;</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Disable inheritance and copy existing inherited entries as explicit</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Shares\Finance\Confidential&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRuleProtection</span><span class="p">(</span><span class="nv">$true</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>   <span class="c"># block inheritance, copy existing</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance\Confidential&quot;</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Re-enable inheritance (removes explicit entries that duplicated inherited ones)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">SetAccessRuleProtection</span><span class="p">(</span><span class="nv">$false</span><span class="p">,</span> <span class="nv">$false</span><span class="p">)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance\Confidential&quot;</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
 </code></pre></div>
 <p>Check inheritance state in the output of <code>icacls</code>: entries marked <code>(I)</code> are inherited; entries without <code>(I)</code> are explicit.</p>
 <h2 id="effective-permissions">Effective Permissions<a class="headerlink" href="#effective-permissions" title="Permanent link">&para;</a></h2>
 <p>Effective permissions are the union of all allow rules minus any deny rules across all group memberships. Use the Security tab or PowerShell to evaluate.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Get effective access for a specific user (Windows Server 2012+)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$path</span> <span class="p">=</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$user</span> <span class="p">=</span> <span class="s2">&quot;DOMAIN\jsmith&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">$acl</span>  <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="n">-Path</span> <span class="nv">$path</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">Access</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">IdentityReference</span> <span class="o">-like</span> <span class="s2">&quot;*jsmith*&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">Select-Object</span> <span class="n">FileSystemRights</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">IsInherited</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Use .NET to compute effective rights (requires group membership resolution)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="no">[System.Security.AccessControl.FileSecurity]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Get effective access for a specific user (Windows Server 2012+)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$path</span> <span class="p">=</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$user</span> <span class="p">=</span> <span class="s2">&quot;DOMAIN\jsmith&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">$acl</span>  <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="n">-Path</span> <span class="nv">$path</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">Access</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">IdentityReference</span> <span class="o">-like</span> <span class="s2">&quot;*jsmith*&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nb">Select-Object</span> <span class="n">FileSystemRights</span><span class="p">,</span> <span class="n">AccessControlType</span><span class="p">,</span> <span class="n">IsInherited</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Use .NET to compute effective rights (requires group membership resolution)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="no">[System.Security.AccessControl.FileSecurity]</span>
 </code></pre></div>
 <p>In Server Manager or File Explorer: Properties → Security → Advanced → Effective Access → select user.</p>
 <h2 id="ownership-and-auditing">Ownership and Auditing<a class="headerlink" href="#ownership-and-auditing" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check current owner</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="p">).</span><span class="n">Owner</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Take ownership (requires SeRestorePrivilege or local admin)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">icacls</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="p">/</span><span class="n">setowner</span> <span class="s2">&quot;DOMAIN\admin&quot;</span> <span class="p">/</span><span class="n">T</span> <span class="p">/</span><span class="n">C</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Enable auditing on a folder (Success + Failure for all users)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">$audit</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAuditRule</span><span class="p">(</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="s2">&quot;Everyone&quot;</span><span class="p">,</span> <span class="s2">&quot;FullControl&quot;</span><span class="p">,</span> <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Success,Failure&quot;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">AddAuditRule</span><span class="p">(</span><span class="nv">$audit</span><span class="p">)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check current owner</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">(</span><span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span><span class="p">).</span><span class="n">Owner</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Take ownership (requires SeRestorePrivilege or local admin)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">icacls</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="p">/</span><span class="n">setowner</span> <span class="s2">&quot;DOMAIN\admin&quot;</span> <span class="p">/</span><span class="n">T</span> <span class="p">/</span><span class="n">C</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Enable auditing on a folder (Success + Failure for all users)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">$audit</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAuditRule</span><span class="p">(</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="s2">&quot;Everyone&quot;</span><span class="p">,</span> <span class="s2">&quot;FullControl&quot;</span><span class="p">,</span> <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Success,Failure&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">AddAuditRule</span><span class="p">(</span><span class="nv">$audit</span><span class="p">)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">Set-Acl</span> <span class="n">-Path</span> <span class="s2">&quot;C:\Shares\Finance&quot;</span> <span class="n">-AclObject</span> <span class="nv">$acl</span>
 </code></pre></div>
 <p>Audit events appear in the Security event log under Event ID 4663 (object access).</p>
 
