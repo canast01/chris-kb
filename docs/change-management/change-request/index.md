@@ -1,6 +1,26 @@
 # Change Request Procedure
 
 A Request for Change (RFC) documents a planned modification to infrastructure, applications, or configuration. Every non-standard change requires an RFC before implementation.
+
+```
+┌──────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
+│  Raise RFC   │   │    Classify      │   │  Impact /        │   │    Assign /     │
+│              │   │                  │   │  Risk Assess     │   │    Submit       │
+│ Title / desc │   │ Standard →       │   │                  │   │                 │
+│ Justification│──►│ pre-approved     │──►│ Impact × Likeli  │──►│ Service owner   │
+│ Rollback plan│   │ Normal →         │   │ = Low/Med/High   │   │ → CAB queue     │
+│ Impl steps   │   │ CAB required     │   │ Rollback tested? │   │ (5 biz days)    │
+│ Validation   │   │ Emergency →      │   │                  │   │                 │
+└──────────────┘   │ eCAB/on-call     │   └──────────────────┘   └─────────────────┘
+                   └──────────────────┘
+                                                   ┌─────────────────────────────────┐
+                                                   │         RFC Lifecycle           │
+                                                   │ Draft → Submitted → Reviewing → │
+                                                   │ Approved → Scheduled →          │
+                                                   │ In Progress → Completed         │
+                                                   └─────────────────────────────────┘
+```
+
 ## RFC Required Fields
 
 | Field | Description | Required? |

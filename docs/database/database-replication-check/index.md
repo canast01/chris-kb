@@ -1,6 +1,33 @@
 # Database Replication Check
 
 Verify replication health, lag, and data consistency across primary and replica nodes.
+
+```
+┌──────────────────────┐        WAL / binlog stream        ┌──────────────────────┐
+│       Primary        │──────────────────────────────────►│       Replica        │
+│                      │                                   │                      │
+│ pg_stat_replication  │                                   │ pg_is_in_recovery()  │
+│ SHOW MASTER STATUS   │                                   │ SHOW SLAVE STATUS    │
+│ AG: role = PRIMARY   │                                   │ AG: SYNCHRONIZED?    │
+└──────────┬───────────┘                                   └──────────┬───────────┘
+           │                                                          │
+           │                  ┌───────────────┐                      │
+           └─────────────────►│  Lag Check    │◄─────────────────────┘
+                              │               │
+                              │ 0-10s: OK     │
+                              │ 10-60s: Warn  │
+                              │ >5min: Alert  │
+                              │ Stopped: Crit │
+                              └───────┬───────┘
+                                      │
+                              ┌───────┴───────┐
+                              ▼               ▼
+                    ┌──────────────┐  ┌──────────────────┐
+                    │  Alert DBA   │  │ Rebuild replica  │
+                    │  lead / OC   │  │ from base backup │
+                    └──────────────┘  └──────────────────┘
+```
+
 ## PostgreSQL Streaming Replication
 
 ```sql

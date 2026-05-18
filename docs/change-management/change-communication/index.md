@@ -1,6 +1,27 @@
 # Change Communication
 
 Structured approach to notifying stakeholders before, during, and after changes to maintain trust and minimize surprise.
+
+```
+┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
+│  Pre-change      │   │  Window Start    │   │ During Change    │   │  Post-change    │
+│  Notice          │   │  Announcement    │   │ Updates          │   │  Report         │
+│                  │   │                  │   │                  │   │                 │
+│ 5+ days (Normal) │   │ [CHANGE-IN-PROG] │   │ Every 30 min     │   │ SUCCESS /       │
+│ 24h reminder     │──►│ Slack/Teams ch.  │──►│ for P1-risk      │──►│ FAILED /        │
+│ Email + ITSM     │   │ Status page →    │   │ changes          │   │ ROLLED BACK     │
+│ All affected     │   │ "In progress"    │   │                  │   │ Lessons learned │
+└──────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
+         │                                                                     │
+         │                  ┌──────────────────────────────────────────────────┘
+         ▼                  ▼
+┌──────────────────────────────────┐
+│       Audience Matrix            │
+│ End users / Owners / On-call /   │
+│ Mgmt (P1) / Security (sec chg)   │
+└──────────────────────────────────┘
+```
+
 ## Communication Timeline
 
 | Phase | When | Audience | Channel |

@@ -1,6 +1,28 @@
 # Database Maintenance Procedure
 
 Routine maintenance tasks to keep databases healthy: index optimisation, statistics refresh, log cleanup, and integrity checks.
+
+```
+┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  ┌─────────────────┐
+│  Index Rebuild   │  │  Stats Update    │  │   Log Shrink     │  │ Vacuum/Analyze  │
+│                  │  │                  │  │                  │  │                 │
+│ >30% fragment    │  │ ANALYZE /        │  │ Purge WAL/binlog │  │ Dead tuples     │
+│ ALTER INDEX      │  │ UPDATE STATS /   │  │ DBCC SHRINKFILE  │  │ VACUUM ANALYZE  │
+│ REBUILD/REORGAN  │  │ ANALYZE TABLE    │  │ (off-peak only)  │  │ autovacuum tune │
+│ REINDEX CONCURR  │  │                  │  │                  │  │                 │
+└────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘  └────────┬────────┘
+         └────────────────────┬┴────────────────────┬─┘                     │
+                              │                     │                       │
+                              └─────────────────────┴───────────────────────┘
+                                                    │
+                                                    ▼
+                                          ┌──────────────────┐
+                                          │ Integrity Check  │
+                                          │ DBCC CHECKDB /   │
+                                          │ VACUUM FULL      │
+                                          └──────────────────┘
+```
+
 ## PostgreSQL Maintenance
 
 ```sql

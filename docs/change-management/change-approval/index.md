@@ -1,6 +1,28 @@
 # Change Approval Process
 
 Ensures all changes are assessed for risk and approved by the appropriate authority before implementation.
+
+```
+┌──────────────┐   ┌──────────────────┐   ┌──────────────┐   ┌──────────────────┐
+│ Change       │   │  Risk Assessment │   │  CAB Review  │   │ Approve/Reject/  │
+│ Request      │   │                  │   │              │   │ Schedule         │
+│              │   │ Impact ×         │   │ Weekly mtg   │   │                  │
+│ Requester    │──►│ Likelihood =     │──►│ (High/Crit)  │──►│ Notify requester │
+│ submits RFC  │   │ Low/Med/High/Crit│   │ Team lead    │   │ → book window    │
+│              │   │                  │   │ (Low/Med)    │   │ → communicate    │
+└──────────────┘   └──────────────────┘   └──────────────┘   └──────────────────┘
+                                                  │                    │
+                                         ┌────────┘                   ▼
+                                         │               ┌────────────────────┐
+                                         │               │  Post-impl Review  │
+                                         ▼               │  scheduled         │
+                                ┌──────────────────┐     └────────────────────┘
+                                │  Rejected →      │
+                                │  Return to req.  │
+                                │  with reasons    │
+                                └──────────────────┘
+```
+
 ## Change Types and Approval Requirements
 
 | Change Type | Risk | Approval Required | Lead Time |

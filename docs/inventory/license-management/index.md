@@ -1,6 +1,33 @@
 # License Management
 
 Track software entitlements, monitor utilisation against purchased seats, and prevent compliance violations.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      License Pool                           │
+│  Entitlements purchased: 500 seats                          │
+└───────────────────────────┬─────────────────────────────────┘
+                            │
+         ┌──────────────────┼──────────────────┐
+         ▼                  ▼                  ▼
+┌─────────────────┐  ┌─────────────┐  ┌──────────────────┐
+│   Assigned      │  │  Consumed   │  │ Compliance Gap   │
+│                 │  │             │  │                  │
+│ Deployed count  │  │ Active use  │  │ Assigned >       │
+│ from discovery  │  │ last 90d    │  │ Purchased        │
+│ = 480           │  │ = 410       │  │ → BUY MORE       │
+└────────┬────────┘  └──────┬──────┘  │ Deployed <       │
+         │                  │         │ Purchased         │
+         │                  │         │ → RECLAIM         │
+         └──────────────────┘         └────────┬─────────┘
+                    │                          │
+                    ▼                          ▼
+          ┌──────────────────┐     ┌──────────────────┐
+          │  Expiry Monitor  │     │  Renew / Remove  │
+          │  <90d warning    │────►│  within 30 days  │
+          └──────────────────┘     └──────────────────┘
+```
+
 ## License Inventory — Key Attributes
 
 | Field | Description |

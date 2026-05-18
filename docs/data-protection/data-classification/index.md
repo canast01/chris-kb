@@ -1,6 +1,33 @@
 # Data Classification
 
 Data classification defines how sensitive information must be labelled, handled, stored, and shared.
+
+```
+                         ┌──────────────────────────┐
+                         │     Data Tagging Flow     │
+                         └────────────┬─────────────┘
+                                      │
+              ┌───────────────────────┼───────────────────────┐
+              ▼                       ▼                       ▼
+   ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+   │    Sensitive /   │    │   Confidential   │    │    Internal /    │
+   │   Restricted     │    │                  │    │     Public       │
+   │                  │    │ AES-256 at rest  │    │                  │
+   │ PII / PCI / PHI  │    │ TLS in transit   │    │ Std access ctrl  │
+   │ HSM key mgmt     │    │ Need-to-know     │    │ No encryption    │
+   │ Strict audit log │    │ access           │    │ reqd for Public  │
+   └────────┬─────────┘    └────────┬─────────┘    └──────────────────┘
+            │                       │
+            └───────────┬───────────┘
+                        ▼
+             ┌──────────────────────┐
+             │  Apply Controls      │
+             │  MIP/Purview label   │
+             │  DLP policy          │
+             │  Encryption rule     │
+             └──────────────────────┘
+```
+
 ## Classification Levels
 
 | Level | Description | Examples | Controls |

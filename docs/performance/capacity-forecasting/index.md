@@ -1,6 +1,24 @@
 # Capacity Forecasting
 
 Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs.
+
+```
+┌─────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
+│  Collect Trend  │   │  Forecast Model  │   │ Threshold Alert  │   │   Plan Action   │
+│                 │   │                  │   │                  │   │                 │
+│ CPU / Mem /     │──►│ Growth rate ×    │──►│ >75% used OR     │──►│ Raise hardware  │
+│ Disk snapshots  │   │ days to exhaust  │   │ <60d to full     │   │ request / order │
+│ (weekly/daily)  │   │                  │   │                  │   │ extra capacity  │
+└─────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
+         │                     │                      │
+         │            ┌────────┴────────┐             │
+         │            │  Trend Store    │             ▼
+         └───────────►│  (metrics DB /  │   ┌─────────────────┐
+                      │   log files)    │   │ Capacity Report │
+                      └─────────────────┘   │ + Review Cycle  │
+                                            └─────────────────┘
+```
+
 ## Forecasting Model
 
 ```

@@ -3,6 +3,25 @@
 A documented performance baseline defines normal system behaviour, enabling accurate anomaly detection and meaningful alert thresholds.
 
 > See also: [Metrics Baseline](../../monitoring/metrics-baseline/) — similar coverage from the monitoring perspective.
+
+```
+┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
+│ Collect Metrics  │   │ Establish Normal │   │  Store Baseline  │   │ Compare Current │
+│                  │   │                  │   │                  │   │  vs Baseline    │
+│ CPU / Mem / Disk │   │ avg + peak + σ   │   │ Time-series DB   │   │                 │
+│ Net / App / DB   │──►│ per time window  │──►│ or documented    │──►│ Deviation > 2σ  │
+│ (30-day minimum) │   │ (biz hrs vs off) │   │ baseline record  │   │ → alert / review│
+└──────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
+                                                        │                      │
+                                               ┌────────┘          ┌───────────┘
+                                               ▼                   ▼
+                                     ┌──────────────────┐  ┌──────────────────┐
+                                     │  Review Triggers │  │  Set Thresholds  │
+                                     │  (HW refresh /   │  │  Warning / Crit  │
+                                     │   app upgrade)   │  │  from baseline   │
+                                     └──────────────────┘  └──────────────────┘
+```
+
 ## What to Baseline
 
 | Resource | Metrics to Capture |

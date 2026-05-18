@@ -3,6 +3,32 @@
 This KB is built for practical infrastructure work.
 
 Use it when you need quick notes, runbooks, checks, standards, commands, or troubleshooting paths.
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                      KB Navigation                                  │
+└────────────────────────────────┬────────────────────────────────────┘
+                                 │
+         ┌───────────────────────┼───────────────────────┐
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────────┐
+│  Pick Section   │    │  Pick Section    │    │   Pick Section      │
+│                 │    │                  │    │                     │
+│ Virtualization  │    │ Storage / SAN    │    │ Cloud / Automation  │
+│ VMware / VCF    │    │ Dell / Pure /    │    │ AWS / Azure /       │
+│ VxRail / NSX    │    │ NetApp / Backup  │    │ Ansible / Terraform │
+└────────┬────────┘    └────────┬─────────┘    └──────────┬──────────┘
+         └─────────────────────┬┴──────────────────────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │  Use runbook /       │
+                    │  health check /      │
+                    │  reference page /    │
+                    │  troubleshooting     │
+                    └──────────────────────┘
+```
+
 ## Main workflow
 
 1. Start with the major area.

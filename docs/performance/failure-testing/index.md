@@ -1,6 +1,25 @@
 # Failure Testing
 
 Failure testing (chaos engineering) validates that systems fail gracefully, recover within expected RTO, and trigger correct alerting under controlled fault conditions.
+
+```
+┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
+│ Failure          │   │ Observe Impact   │   │ Measure Recovery │   │ Document        │
+│ Injection        │   │                  │   │                  │   │ Baseline        │
+│                  │   │ • Alerts fired?  │   │ • RTO actual     │   │                 │
+│ CPU / Disk /     │──►│ • Dashboard      │──►│ • Data loss?     │──►│ Pass / Fail     │
+│ Net / Process /  │   │   shows fault    │   │ • Alert lag?     │   │ RTO observed    │
+│ Dependency kill  │   │ • Logs clear?    │   │ • Auto-recovery? │   │ Action items    │
+└──────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
+         ▲                                              │
+         │              ┌───────────────────────────────┘
+         │              ▼
+         │    ┌──────────────────┐
+         └────│  Rollback /      │
+              │  Restore env     │
+              └──────────────────┘
+```
+
 ## Test Categories
 
 | Category | Examples |

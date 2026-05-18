@@ -1,4 +1,24 @@
 # Service Availability Monitoring
+
+```
+┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌─────────────────┐
+│   Probe / Check  │   │ Availability %   │   │   SLA Report     │   │  Incident Log   │
+│                  │   │                  │   │                  │   │                 │
+│ HTTP 200?        │   │ (Total - Down)   │   │ Monthly vs SLO   │   │ Start/end time  │
+│ TCP port open?   │──►│ ─────────────── │──►│ target           │──►│ Duration        │
+│ DNS resolves?    │   │   Total × 100    │   │ Green/Amber/Red  │   │ Budget consumed │
+│ ICMP reachable?  │   │                  │   │                  │   │ Root cause      │
+└──────────────────┘   └──────────────────┘   └──────────────────┘   └─────────────────┘
+         ▲                       │
+         │              ┌────────┘
+         │              ▼
+         │    ┌──────────────────┐
+         └────│  Alert on        │
+              │  downtime event  │
+              │  → on-call page  │
+              └──────────────────┘
+```
+
 ## Availability Calculation
 
 ```

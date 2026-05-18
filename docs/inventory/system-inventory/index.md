@@ -1,5 +1,25 @@
 # System Inventory Management
 
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                        System Inventory Record                         │
+├──────────────┬────────────┬───────────┬────────────┬───────────────────┤
+│  Hostname    │  IP Addr   │  Role/OS  │  Owner     │  Support Tier     │
+├──────────────┼────────────┼───────────┼────────────┼───────────────────┤
+│ web-prod-01  │ 10.0.1.10  │ RHEL 9 /  │ Platform   │ 24x7 / P1 target  │
+│              │            │ Nginx     │ Team       │                   │
+└──────────────┴────────────┴───────────┴────────────┴───────────────────┘
+         │                                   │
+         ▼                                   ▼
+┌─────────────────┐                 ┌─────────────────────┐
+│ Discover new    │                 │ Decommission check  │
+│ system → record │                 │ remove from monitor │
+│ details →       │                 │ firewall rules, DNS │
+│ assign owner →  │                 │ CMDB → retired      │
+│ update inventory│                 └─────────────────────┘
+└─────────────────┘
+```
+
 ## Overview
 
 System inventory management tracks servers, storage, network devices, and infrastructure components across environments.

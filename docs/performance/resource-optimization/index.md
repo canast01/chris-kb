@@ -1,6 +1,27 @@
 # Resource Optimization
 
 Identifying and right-sizing underutilised compute, storage, and cloud resources to reduce cost and improve efficiency.
+
+```
+┌─────────────────────────────────┐   ┌──────────────┐   ┌─────────────┐   ┌──────────────┐
+│     Utilisation Metrics         │   │ Rightsizing  │   │   Reclaim   │   │ Cost Saving  │
+│                                 │   │              │   │             │   │              │
+│ CPU avg / Mem avg / Disk free   │──►│ Downsize VM  │──►│ Delete      │──►│ RI purchase  │
+│ Unattached EBS/disks            │   │ Reduce alloc │   │ orphans     │   │ Schedule     │
+│ Idle cloud instances            │   │ Archive data │   │ Reclaim vol │   │ auto-stop    │
+└─────────────────────────────────┘   └──────────────┘   └─────────────┘   └──────────────┘
+         │                                   │
+         │   ┌───────────────────────────────┘
+         ▼   ▼
+┌──────────────────┐
+│  Finding Sources │
+│ AWS Compute Opt  │
+│ Azure Advisor    │
+│ ONTAP vol report │
+│ VMware vROps     │
+└──────────────────┘
+```
+
 ## Identify Underutilised Resources
 
 **Linux — CPU and memory:**

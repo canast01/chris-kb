@@ -1,6 +1,24 @@
 # Asset Tracking
 
 Track hardware and cloud resources from procurement through decommission to maintain accurate inventory and prevent orphaned costs.
+
+```
+┌──────────┐  ┌──────────┐  ┌──────────────┐  ┌──────────────────┐  ┌──────────────┐
+│ Discover │  │   Tag    │  │   Classify   │  │ Track Lifecycle  │  │ Decommission │
+│          │  │          │  │              │  │                  │  │              │
+│ Physical │  │ Name /   │  │ Prod/Dev/DR  │  │ In service →     │  │ Wipe → cert  │
+│ scan or  │─►│ Owner /  │─►│ Tier / Role  │─►│ Maintenance →    │─►│ disposal /   │
+│ cloud API│  │ Env / CC │  │ Criticality  │  │ Decom pending    │  │ return       │
+└──────────┘  └──────────┘  └──────────────┘  └──────────────────┘  └──────────────┘
+      │                                                 │
+      │                                        ┌────────┘
+      ▼                                        ▼
+┌──────────────────┐                  ┌──────────────────┐
+│  Asset Register  │                  │  CMDB CI Record  │
+│  (CMDB / ITSM)   │◄─────────────────│  linked to asset │
+└──────────────────┘                  └──────────────────┘
+```
+
 ## Asset Register — Key Attributes
 
 | Attribute | Physical | Virtual / Cloud |

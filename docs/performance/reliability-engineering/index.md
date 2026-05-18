@@ -1,6 +1,24 @@
 # Reliability Engineering
 
 Reliability engineering systematically improves system resilience through redundancy, failure testing, and learning from incidents.
+
+```
+┌──────────┐   ┌──────────┐   ┌──────────────┐   ┌──────────────────┐   ┌─────────────┐
+│   SLI    │   │   SLO    │   │ Error Budget │   │ Burn Rate Alert  │   │ Reliability │
+│          │   │          │   │              │   │                  │   │   Action    │
+│ Measured │──►│ Target   │──►│ (1-SLO)×time │──►│ >14× → page now  │──►│ Freeze feat │
+│ metric   │   │ e.g.     │   │ e.g. 43 min  │   │  >6× → alert OC  │   │ Postmortem  │
+│ (actual) │   │ 99.9%    │   │ per month    │   │  >3× → investigate│   │ Fix root    │
+└──────────┘   └──────────┘   └──────────────┘   └──────────────────┘   │ cause       │
+                                      │                    ▲             └─────────────┘
+                                      │          ┌─────────┘
+                                      ▼          │
+                             ┌──────────────────────────────┐
+                             │   Incident → Postmortem →    │
+                             │   Action Items → Improvement │
+                             └──────────────────────────────┘
+```
+
 ## Core Principles
 
 | Principle | Meaning |

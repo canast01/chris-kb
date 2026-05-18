@@ -1,6 +1,30 @@
 # Support Contract Tracking
 
 Maintain visibility of vendor support agreements to ensure infrastructure components remain covered and renewals are actioned before expiry.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                     Contract Register                        │
+│  Vendor │ Product │ SLA Tier │ Expiry │ Renewal Owner        │
+└─────────────────────────────┬────────────────────────────────┘
+                              │
+         ┌────────────────────┼───────────────────┐
+         ▼                    ▼                   ▼
+┌─────────────────┐  ┌─────────────────┐  ┌──────────────────┐
+│  >120 days out  │  │  90 days out    │  │  <30 days out    │
+│                 │  │                 │  │                  │
+│ Review scope    │  │ Request quote   │  │ Submit PO        │
+│ add/remove CIs  │  │ route to proc.  │  │ confirm coverage │
+└─────────────────┘  └────────┬────────┘  └──────────────────┘
+                              │                   │
+                              ▼                   ▼
+                    ┌──────────────────┐  ┌──────────────────┐
+                    │  Approve quote   │  │  New contract    │
+                    │  (management)    │  │  active → update │
+                    └──────────────────┘  │  register        │
+                                          └──────────────────┘
+```
+
 ## Contract Register — Key Fields
 
 | Field | Description |
