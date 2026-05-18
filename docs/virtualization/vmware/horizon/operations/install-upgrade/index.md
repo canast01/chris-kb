@@ -1,5 +1,22 @@
 # Horizon — Install and Upgrade
 
+```
+  Upgrade Sequence (strictly ordered)
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│  1. vCenter   │──►│  2. Connection│──►│  3. UAG       │──►│  4. Horizon   │
+│  (if          │   │  Servers      │   │  (redeploy    │   │  Agent in     │
+│   upgrading   │   │  (rolling —   │   │   from new    │   │  golden image │
+│   vSphere)    │   │   one at a    │   │   OVA)        │   │  + push pools)│
+└───────────────┘   │   time)       │   └───────────────┘   └───────────────┘
+                    └───────────────┘
+                            │
+                   ┌────────▼────────┐   ┌───────────────┐
+                   │  5. App Volumes │──►│  6. App Vol   │
+                   │  Manager        │   │  Agent (in    │
+                   └─────────────────┘   │  AppStacks)   │
+                                         └───────────────┘
+```
+
 ---
 
 ## Prerequisites

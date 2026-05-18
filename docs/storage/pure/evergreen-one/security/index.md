@@ -1,4 +1,33 @@
 # Pure Storage Evergreen//One Security
+
+```
+  Pure Security Architecture
+
+  ┌─────────────────────────────────────────────────┐
+  │  FlashArray / FlashBlade                        │
+  │                                                 │
+  │  Encryption                                     │
+  │  ├─ Data at rest: XTS-AES-256 (always on)       │
+  │  ├─ Data in flight: TLS 1.2+ (management)       │
+  │  └─ Drive erasure: cryptographic key destroy    │
+  │                                                 │
+  │  RBAC                                           │
+  │  ├─ array_admin ──► full system access          │
+  │  ├─ storage_admin ──► volumes / snapshots       │
+  │  ├─ ops_admin ──► read + alert ack              │
+  │  └─ readonly ──► auditors / CMDB                │
+  │                                                 │
+  │  Audit Logging                                  │
+  │  └─ Every admin action ──► syslog ──► SIEM      │
+  │     (customer AND Pure Support actions logged)  │
+  │                                                 │
+  │  SafeMode                                       │
+  │  └─ Snapshot destroy requires Pure Support ─►   │
+  │     Protection against ransomware               │
+  └─────────────────────────────────────────────────┘
+  SSO/SAML ──► IdP MFA enforced for all interactive login
+```
+
 ## Hardening Checklist
 
 - Enforce TLS 1.2 or higher for all management access; confirm HTTP redirect is disabled on all array management interfaces

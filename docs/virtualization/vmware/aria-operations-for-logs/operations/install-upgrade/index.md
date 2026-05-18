@@ -1,5 +1,30 @@
 # Aria Ops for Logs — Install & Upgrade
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Ops for Logs Upgrade Sequence                  │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  LCM-managed:                                              │
+│  Environments → Aria Ops for Logs → Upgrade                │
+│  ► LCM pre-checks  ► VM snapshots  ► master upgrade        │
+│  ► worker-01 upgrade  ► worker-02 upgrade (rolling)        │
+│  ► all nodes same version  ► ingest rate non-zero          │
+│                                                             │
+│  Standalone (PAK file):                                    │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  VM snapshot → Administration → Cluster → Upgrade    │  │
+│  │  Upload PAK file → pre-check → Upgrade               │  │
+│  │  Master upgrades first, then workers sequentially    │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                             │
+│  Post-upgrade validation:                                  │
+│  curl /api/v2/version  ·  /api/v2/cluster/nodes  (ACTIVE) │
+│  /api/v2/cluster/stats  (eventsIngested > 0)               │
+│  Alert definitions enabled  ·  Content packs intact        │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Initial Deployment
 
 Aria Operations for Logs is deployed as a Linux-based virtual appliance (OVA). For LCM-managed environments, use LCM to deploy and upgrade. For standalone deployments, use the manual OVA process below.

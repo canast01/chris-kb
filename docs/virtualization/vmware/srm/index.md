@@ -4,6 +4,24 @@
 Site Recovery Manager knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
+```
+  Protected Site                                Recovery Site
+┌──────────────────────────┐                ┌──────────────────────────┐
+│  vCenter (Protected)     │◄──── SRM ────►│  vCenter (Recovery)      │
+│  ┌──────────────────┐    │   site pair    │  ┌──────────────────┐    │
+│  │  Production VMs  │    │                │  │  Placeholder VMs │    │
+│  │  ┌────────────┐  │    │                │  │  (shadow)        │    │
+│  │  │  Replicated│──┼────┼────────────────┼─►│  ┌────────────┐  │   │
+│  │  │  via VR or │  │    │                │  │  │ Recover on │  │   │
+│  │  │  SAN array │  │    │                │  │  │ failover   │  │   │
+│  │  └────────────┘  │    │                │  │  └────────────┘  │   │
+│  └──────────────────┘    │                │  └──────────────────┘   │
+│                          │                │                          │
+│  Test ──► Failover ──► Failback           │  Recovery Plan runs:     │
+│           (Planned Migration / DR)         │  Priority 1 → 2 → 3 → 4 │
+└──────────────────────────┘                └──────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

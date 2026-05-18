@@ -1,4 +1,36 @@
 # Pure Storage Operations — Alerts
+
+```
+  Pure Alert Flow
+
+  FlashArray / FlashBlade
+  ┌─────────────────────────┐
+  │  Array event generated  │
+  │  (drive, temp, capacity,│
+  │   replication, network) │
+  └────────────┬────────────┘
+               │
+  ┌────────────▼────────────┐
+  │  Pure1 (phone-home)     │
+  │  Consolidated alert     │
+  │  dashboard              │
+  └────┬──────┬──────┬──────┘
+       │      │      │
+       ▼      ▼      ▼
+  ┌────────┐ ┌─────┐ ┌────────────┐
+  │ Email  │ │SNMP │ │  Syslog    │
+  │ alert  │ │trap │ │  ──► SIEM  │
+  └────────┘ └─────┘ └────────────┘
+       │
+       ▼
+  ┌────────────────────────────────┐
+  │  Response                      │
+  │  Critical ──► page on-call now │
+  │  Warning  ──► investigate today│
+  │  Info     ──► review when able │
+  └────────────────────────────────┘
+```
+
 ## Viewing Alerts
 
 ```bash

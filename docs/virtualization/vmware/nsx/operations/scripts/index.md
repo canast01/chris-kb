@@ -1,5 +1,33 @@
 # NSX — Scripts
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│              NSX Automation: Script → REST API → Result     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Script (Python / PowerShell / Ansible / Bash)       │   │
+│  │  - Reads env vars: NSX_HOST, NSX_USER, NSX_PASS      │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│                           │ HTTPS / Basic Auth              │
+│                           ▼                                 │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  NSX Manager REST API  (port 443)                    │   │
+│  │  GET  /api/v1/cluster/status                         │   │
+│  │  GET  /api/v1/transport-nodes/status                 │   │
+│  │  GET  /api/v1/alarms?status=OPEN&severity=CRITICAL   │   │
+│  │  GET  /api/v1/edge-clusters                          │   │
+│  └────────────────────────┬─────────────────────────────┘   │
+│                           │ JSON response                   │
+│                           ▼                                 │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Result: PASS / WARNING / CRITICAL                   │   │
+│  │  exit 0 (clean) | exit 1 (warn) | exit 2 (critical) │   │
+│  │  Output to stdout, monitoring system, or SIEM        │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## NSX-T System Health Check (Python)

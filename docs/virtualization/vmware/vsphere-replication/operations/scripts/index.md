@@ -1,5 +1,25 @@
 # vSphere Replication — Scripts
 
+```
+  VR Automation via PowerCLI + REST API + Python
+┌──────────────────────────────────────────────────────────────┐
+│  Reporting                       Alerting                    │
+│  ┌──────────────────────────┐    ┌──────────────────────┐    │
+│  │ RPO compliance report    │    │ Alert: ReplicationState│   │
+│  │  (CSV per protection grp)│    │  != OK               │    │
+│  │ VMs without replication  │    │ Alert: lag > threshold│    │
+│  │  (compare cluster vs PG) │    │  (exit 1 for cron)   │    │
+│  └──────────────────────────┘    └──────────────────────┘    │
+│                                                              │
+│  REST API (Python)               Health Monitoring           │
+│  ┌──────────────────────────┐    ┌──────────────────────┐    │
+│  │ GET /api/rest/vr/health  │    │ VRA disk usage check │    │
+│  │ GET /api/rest/vr/        │    │ (REST API + df -h)   │    │
+│  │  replications → status   │    └──────────────────────┘    │
+│  └──────────────────────────┘                                │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Get All Replicated VMs and RPO Compliance

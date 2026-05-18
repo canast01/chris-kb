@@ -1,5 +1,26 @@
 # Aria Suite Lifecycle — Access Control
 
+```
+  LCM RBAC — AD Groups → LCM Roles
+┌─────────────────────────────────────────────────────────────────┐
+│  AD (via VIDM sync)          LCM Roles                          │
+│  ┌─────────────────────┐     ┌─────────────────────────────┐    │
+│  │ GG-LCM-Admins       │────►│ LCM Admin                   │    │
+│  │                     │     │  deploy/upgrade/Locker/users │    │
+│  ├─────────────────────┤     ├─────────────────────────────┤    │
+│  │ GG-LCM-Operators    │────►│ LCM Content Developer       │    │
+│  │                     │     │  extract/deploy content packs│    │
+│  │                     │     │  read env health             │    │
+│  ├─────────────────────┤     ├─────────────────────────────┤    │
+│  │ GG-LCM-ReadOnly     │────►│ Viewer                      │    │
+│  │                     │     │  read-only; no write ops    │    │
+│  └─────────────────────┘     └─────────────────────────────┘    │
+│                                                                 │
+│  API service account: svc-lcm-api@local → min required role    │
+│  Never assign roles to individual user accounts                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## RBAC Model
 
 LCM uses a role-based access control model backed by Workspace ONE Access (VIDM) for group resolution. Roles should be assigned to AD groups synced via VIDM — never assign roles to individual user accounts.

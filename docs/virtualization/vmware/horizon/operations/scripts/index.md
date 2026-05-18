@@ -1,5 +1,27 @@
 # Horizon — Scripts
 
+```
+  Automation via PowerCLI / REST API
+┌──────────────────────────────────────────────────────────┐
+│  Connect-HVServer ──► token/session                      │
+│                                                          │
+│  Session Management        Pool Management               │
+│  ┌──────────────────┐      ┌──────────────────────────┐  │
+│  │ Get-HVLocalSession│     │ Get-HVPool               │  │
+│  │ Invoke-HVSession  │     │ Get-HVMachine -ErrorState│  │
+│  │ Logoff            │     │ Remove-HVDesktop         │  │
+│  └──────────────────┘      └──────────────────────────┘  │
+│                                                          │
+│  Reporting                 REST API (Bearer token)        │
+│  ┌──────────────────┐      ┌──────────────────────────┐  │
+│  │ Entitlement      │      │ POST /rest/login          │  │
+│  │ report CSV       │      │ GET  /inventory/v1/pools  │  │
+│  │ Pool availability│      │ POST /action/refresh      │  │
+│  │ alert script     │      └──────────────────────────┘  │
+│  └──────────────────┘                                    │
+└──────────────────────────────────────────────────────────┘
+```
+
 Requires: VMware.Hv.Helper PowerShell module (`Install-Module VMware.Hv.Helper`)
 
 ---

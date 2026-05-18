@@ -1,5 +1,25 @@
 # SRM — Access Control
 
+```
+  SRM RBAC: Recovery Plan Roles → vCenter Permissions
+┌──────────────────────────────────────────────────────────────┐
+│  AD Groups                SRM Roles (via vCenter Global Perms)│
+│  ┌────────────────┐       ┌───────────────────────────────┐   │
+│  │ CORP\SRM-Admins│──────►│ Site Recovery Administrator   │   │
+│  │                │       │ (configure + execute)         │   │
+│  ├────────────────┤       ├───────────────────────────────┤   │
+│  │ CORP\SRM-DR-   │──────►│ Site Recovery Recovery Admin  │   │
+│  │ RunTeam        │       │ (execute only — no config)    │   │
+│  ├────────────────┤       ├───────────────────────────────┤   │
+│  │ CORP\Infra-    │──────►│ Site Recovery User            │   │
+│  │ ReadOnly       │       │ (view only)                   │   │
+│  └────────────────┘       └───────────────────────────────┘   │
+│                                                               │
+│  SRA credentials: stored encrypted in SRM                    │
+│  Rotate: array API token ──► update in SRM ──► delete old    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## SRM Uses vCenter RBAC

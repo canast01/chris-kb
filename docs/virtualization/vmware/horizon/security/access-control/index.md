@@ -1,5 +1,21 @@
 # Horizon — Access Control
 
+```
+  RBAC: AD Groups → Entitlements → Pools
+┌──────────────┐    ┌───────────────────┐    ┌─────────────────────┐
+│ AD Groups    │    │ Horizon Roles      │    │ Desktop Pools /     │
+│              │    │                   │    │ Access Groups        │
+│ CORP\Horizon─┼───►│ Administrators    │    │                     │
+│ -Admins      │    │ (full config)     │    │ ┌─────────────────┐  │
+│              │    ├───────────────────┤    │ │ Pool-Win10-Float│  │
+│ CORP\Horizon─┼───►│ Help Desk Admin   │    │ │   entitlements  │  │
+│ -HelpDesk    │    │ (session mgmt)    │    │ │                 │  │
+│              │    ├───────────────────┤    │ │ VDI-LON-KW-     │  │
+│ CORP\Horizon─┼───►│ Inventory Admin   │───►│ │ W11-IC-Users    │  │
+│ -Pool-Admins │    │ (scoped to group) │    │ └─────────────────┘  │
+└──────────────┘    └───────────────────┘    └─────────────────────┘
+```
+
 ---
 
 ## Horizon Admin Roles

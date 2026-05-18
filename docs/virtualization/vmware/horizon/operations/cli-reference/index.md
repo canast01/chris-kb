@@ -1,5 +1,27 @@
 # Horizon — CLI Reference
 
+```
+  Horizon CLI Tools
+┌──────────────────────────────────────────────────────────────────┐
+│  vdmadmin.exe          │  vdmexport / vdmimport                  │
+│  ┌────────────────┐    │  ┌──────────────────────────────────┐   │
+│  │ -L -sessions   │    │  │ vdmexport -f backup.ldif         │   │
+│  │ -L -pools      │    │  │ vdmimport -f backup.ldif         │   │
+│  │ -L -servers    │    │  └──────────────────────────────────┘   │
+│  │ -D -m <vm>     │    │                                         │
+│  └────────────────┘    │  hzedge (UAG shell)                     │
+│                        │  ┌──────────────────────────────────┐   │
+│  VMware.Hv.Helper      │  │ hzedge gethealth                 │   │
+│  ┌────────────────┐    │  │ hzedge getblast / getpcoip       │   │
+│  │ Connect-HVServer│   │  └──────────────────────────────────┘   │
+│  │ Get-HVPool      │   │                                         │
+│  │ Get-HVSession   │   │  Horizon REST API                       │
+│  │ Get-HVMachine   │   │  ┌──────────────────────────────────┐   │
+│  └────────────────┘    │  │ POST /rest/login → Bearer token  │   │
+│                        │  │ GET  /rest/inventory/v1/sessions  │   │
+└───────────────────────────┴──────────────────────────────────────┘
+```
+
 ## vdmadmin.exe
 
 `vdmadmin.exe` is the primary command-line admin tool for Connection Server. Located at:

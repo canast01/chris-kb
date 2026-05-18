@@ -1,4 +1,39 @@
 # Pure Storage Support Cases
+
+```
+  Pure Support Case Flow
+
+  ┌───────────────────────────┐
+  │  Collect diagnostic info  │
+  │  ├─ purecli support info  │
+  │  ├─ purealert list        │
+  │  ├─ purearray list        │
+  │  └─ log bundle (purediag) │
+  └─────────────┬─────────────┘
+                │
+                ▼
+  ┌───────────────────────────┐
+  │  Open case via Pure1      │
+  │  pure1.purestorage.com    │
+  │  Support → Cases          │
+  │  ├─ Select array          │
+  │  ├─ Set severity P1–P4    │
+  │  └─ Attach logs           │
+  └─────────────┬─────────────┘
+                │ P1/P2
+                ▼
+  ┌───────────────────────────┐
+  │  Phone Pure Support 24/7  │
+  │  TAC responds per SLA     │
+  └─────────────┬─────────────┘
+                │ not progressing
+                ▼
+  ┌───────────────────────────┐
+  │  Escalate via CSM / TAM   │
+  │  Billing/SLA → CSM direct │
+  └───────────────────────────┘
+```
+
 ## Opening a Support Case
 
 **Via Pure1:**

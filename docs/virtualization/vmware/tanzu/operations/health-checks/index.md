@@ -1,5 +1,34 @@
 # Tanzu — Health Checks
 
+```
+┌─────────────── Tanzu Health Check Hierarchy ───────────────────────────────────┐
+│                                                                                 │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  1. Supervisor Cluster                                                   │  │
+│  │     vCenter ► Workload Management ► Status: Running                     │  │
+│  │     kubectl vsphere login ► kubectl get namespaces                      │  │
+│  └───────────────────────────────┬──────────────────────────────────────────┘  │
+│                                  │ OK                                           │
+│  ┌───────────────────────────────▼──────────────────────────────────────────┐  │
+│  │  2. TKG Cluster Nodes                                                    │  │
+│  │     tanzu cluster list │ kubectl get nodes (STATUS=Ready)                │  │
+│  │     kubectl get pods -n kube-system (all Running/Completed)              │  │
+│  └───────────────────────────────┬──────────────────────────────────────────┘  │
+│                                  │ OK                                           │
+│  ┌───────────────────────────────▼──────────────────────────────────────────┐  │
+│  │  3. Storage (PVCs)                                                       │  │
+│  │     kubectl get pvc -A (all Bound) │ StorageClass present                │  │
+│  │     kubectl get pods -n vmware-system-csi (CSI driver Running)           │  │
+│  └───────────────────────────────┬──────────────────────────────────────────┘  │
+│                                  │ OK                                           │
+│  ┌───────────────────────────────▼──────────────────────────────────────────┐  │
+│  │  4. Workloads / Services                                                 │  │
+│  │     kubectl get pods -A | grep -v Running/Completed                     │  │
+│  │     kubectl get svc -A | grep LoadBalancer (EXTERNAL-IP assigned)       │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Supervisor Cluster Health

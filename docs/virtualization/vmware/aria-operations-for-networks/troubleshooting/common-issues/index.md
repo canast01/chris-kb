@@ -1,5 +1,34 @@
 # Aria Operations for Networks — Common Issues
 
+```
+┌──────────── Aria Networks Triage by Symptom ───────────────────────────────────┐
+│                                                                                 │
+│  Collector Disconnected                                                         │
+│  ├── nc -vz <platform> 443 ── TCP reachability                                 │
+│  ├── systemctl status hms on Collector                                          │
+│  ├── df -h on Collector (stops if disk >85%)                                   │
+│  └── pairing key expired ── regenerate in UI ► re-pair                         │
+│                                                                                 │
+│  vCenter Sync Failing                                                           │
+│  ├── password changed ── edit data source in UI                                 │
+│  ├── cert renewed ── accept new thumbprint in UI                                │
+│  └── permissions lost ── verify Read Only role on root (propagating)            │
+│                                                                                 │
+│  NSX Topology Not Visible                                                       │
+│  ├── NSX data source not added in AON                                           │
+│  ├── svc-vrni-nsx missing Auditor role                                          │
+│  └── NSX version not supported by this AON release                              │
+│                                                                                 │
+│  No Flows Visible                                                               │
+│  ├── NetFlow not configured on switches (show flow exporter)                    │
+│  ├── UDP 2055 blocked ── tcpdump -i eth0 udp port 2055 on Collector            │
+│  └── ESXi vDS IPFIX not enabled ── vCenter ► vDS ► Configure ► NetFlow        │
+│                                                                                 │
+│  Flow Data Stale / UI Slow                                                      │
+│  └── disk full on Collector or Platform ── df -h ► clear space ► restart svc   │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Collector Shows Disconnected

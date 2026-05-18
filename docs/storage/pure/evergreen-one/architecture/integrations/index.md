@@ -1,5 +1,31 @@
 # Evergreen//One — Integrations
 
+```
+  FlashArray / FlashBlade
+  ┌────────────────────────────────────────────────┐
+  │  Management plane                              │
+  │  ├── Pure1 (phonehome) ──HTTPS 443──► Cloud   │
+  │  │     capacity / SLA / firmware               │
+  │  └── Syslog ──UDP/TLS──► SIEM                 │
+  │                                                │
+  │  Host data plane                               │
+  │  ├── iSCSI / NVMe-TCP ──25GbE──► ESXi/Linux   │
+  │  ├── FC / NVMe-FC ──16/32Gb──► HBAs           │
+  │  └── NFS (FlashBlade) ──GbE──► Clients        │
+  │                                                │
+  │  VMware integrations                           │
+  │  ├── VASA provider ──► vCenter (vVols/SPBM)   │
+  │  └── VAAI ──► Hardware offload                │
+  │                                                │
+  │  Backup integrations                           │
+  │  ├── Veeam VDAP ──► Snapshot transport        │
+  │  └── Commvault / Rubrik ──► REST API           │
+  │                                                │
+  │  Replication                                   │
+  │  └── ActiveCluster ──TCP 8081──► Peer array   │
+  └────────────────────────────────────────────────┘
+```
+
 Evergreen//One uses the same FlashArray and FlashBlade hardware as standard Evergreen, so all host-side and management integrations are identical. The key difference is that Pure manages the hardware lifecycle — the management plane integration with Pure1 is mandatory and always active.
 
 ---

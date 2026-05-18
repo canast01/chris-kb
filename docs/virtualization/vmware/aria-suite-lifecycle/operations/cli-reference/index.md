@@ -1,5 +1,29 @@
 # Aria Suite Lifecycle — CLI Reference
 
+```
+  LCM CLI Coverage (SSH to LCM as root)
+┌─────────────────────────────────────────────────────────────────┐
+│  vracli sub-commands                                            │
+│  ┌───────────────────────────────────────────────────────┐      │
+│  │ status             → appliance + service health       │      │
+│  │ cluster status     → node quorum state                │      │
+│  │ services list/restart/stop/start                      │      │
+│  │ certificate list/show/import/delete                   │      │
+│  │ proxy show/set/clear                                  │      │
+│  │ network show / dns set                                │      │
+│  │ ntp show/set                                          │      │
+│  │ support-bundle     → generate log bundle              │      │
+│  └───────────────────────────────────────────────────────┘      │
+│                                                                 │
+│  Log Files                      System Checks                   │
+│  ┌─────────────────────────┐    ┌────────────────────────────┐  │
+│  │ /var/log/lcm/lcm-app.log│    │ timedatectl status (NTP)   │  │
+│  │ /var/log/lcm/lcm-debug  │    │ chronyc makestep           │  │
+│  │ journalctl -u <svc>     │    │ df -h (disk)               │  │
+│  └─────────────────────────┘    └────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 The primary CLI tool on the LCM appliance is `vracli`, which provides sub-commands for certificate management, cluster status, service control, and configuration. SSH to the LCM appliance as root. All `vracli` commands must be run as root on the LCM appliance.
 
 ---

@@ -1,5 +1,26 @@
 # SRM — Integrations
 
+```
+  SRM Integration Points
+┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+│   vCenter    │   │  vSphere     │   │  Storage     │   │    NSX-T     │
+│  (both sites)│   │  Replication │   │  Array + SRA │   │  (segments)  │
+│  ┌─────────┐ │   │  ┌─────────┐ │   │  ┌─────────┐ │   │  ┌─────────┐ │
+│  │Site     │ │   │  │VRA pair │ │   │  │Pure /   │ │   │  │ segment │ │
+│  │Recovery │ │   │  │(TCP     │ │   │  │Dell /   │ │   │  │ mapping │ │
+│  │plugin   │ │   │  │ 44046)  │ │   │  │NetApp   │ │   │  │protected│ │
+│  │+ SSO    │ │   │  └─────────┘ │   │  │SRA      │ │   │  │ ──► rec.│ │
+│  └─────────┘ │   └──────────────┘   │  └─────────┘ │   │  └─────────┘ │
+└──────────────┘                      └──────────────┘   └──────────────┘
+        │                                    │
+        └─────────────────┬──────────────────┘
+                          ▼
+                 ┌─────────────────┐
+                 │  SRM Server     │
+                 │  (site pair)    │
+                 └─────────────────┘
+```
+
 ## vCenter Integration
 
 SRM Server registers with vCenter as a vCenter extension. This registration:

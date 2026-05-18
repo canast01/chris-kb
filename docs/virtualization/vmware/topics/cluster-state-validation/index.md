@@ -1,5 +1,37 @@
 # Cluster State Validation
 
+```
+┌────────────── Cluster State Validation: Check Sequence ────────────────────────┐
+│                                                                                 │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  1. Host Connectivity                                                    │  │
+│  │     Get-VMHost: ConnectionState=Connected, PowerState=PoweredOn          │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  2. HA and DRS                                                           │  │
+│  │     HAEnabled=True │ DrsAutomationLevel=FullyAutomated                   │  │
+│  │     AdmissionControlEnabled=True │ no "Insufficient failover" warning    │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  3. Active Alarms                                                        │  │
+│  │     No triggered critical/warning alarms on cluster or hosts             │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  4. vSAN Health                                                          │  │
+│  │     esxcli vsan health cluster list: all green                           │  │
+│  │     No Degraded/Absent objects (esxcli vsan debug object list)           │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  5. Resource Utilisation                                                 │  │
+│  │     CPU < 70% │ Memory < 80% │ DRS imbalance recommendations = 0        │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 Quick checks to confirm a vSphere cluster is healthy before and after changes.
 ## Host Connectivity
 

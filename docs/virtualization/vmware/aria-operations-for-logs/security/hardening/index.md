@@ -1,5 +1,29 @@
 # Aria Ops for Logs — Hardening
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Ops for Logs Hardening Layers                  │
+├──────────────────────┬──────────────────────────────────────┤
+│  Account             │  Certificate                         │
+│  ──────────────────  │  ────────────────────────────────    │
+│  admin pw: 16+ chars │  Replace self-signed → CA-signed     │
+│  store in vault      │  verify: openssl s_client check      │
+│  named AD accounts   │  issuer = internal CA                │
+├──────────────────────┼──────────────────────────────────────┤
+│  Auth / LDAPS        │  Network                             │
+│  ──────────────────  │  ────────────────────────────────    │
+│  LDAPS port 636 only │  SSH: mgmt CIDR via hosts.allow      │
+│  import domain CA    │  Only open: 443, 514, 1514, 9543     │
+│  block outbound 389  │  162 (SNMP) only if configured       │
+├──────────────────────┼──────────────────────────────────────┤
+│  TLS Hardening       │  Audit Output                        │
+│  ──────────────────  │  ────────────────────────────────    │
+│  TLS 1.0/1.1 off     │  rsyslog → SIEM (not self-logging)   │
+│  LI Agent: port 9543 │  NTP delta < 1s: chronyc tracking    │
+│  not port 9000 (plain│  VM disk encryption at storage layer │
+└──────────────────────┴──────────────────────────────────────┘
+```
+
 ## Default Account Hardening
 
 Change the `admin` password immediately after completing the setup wizard:

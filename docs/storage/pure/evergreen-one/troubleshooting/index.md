@@ -1,4 +1,38 @@
 # Pure Storage Evergreen//One Troubleshooting
+
+```
+  Pure Triage Decision Tree
+
+  Symptom
+  ┌──────────────────────────────────────┐
+  │  Check Pure1 first in all cases      │
+  └──────────────┬───────────────────────┘
+                 │
+     ┌───────────┼──────────────┐
+     ▼           ▼              ▼
+  Capacity    Availability    Billing
+  spike       event          discrepancy
+     │           │              │
+     ▼           ▼              ▼
+  Pure1 top   Pure1 SLA      Pure1 monthly
+  consumers   event log      consumption
+  report                     report
+     │           │              │
+     ▼           ▼              ▼
+  Reduce      Hardware ──►   Raise with
+  snapshots/  Pure Support   account team
+  volumes     case (P1/P2)   before invoice
+     │
+     ▼
+  Phonehome   Host path      Replication
+  offline     offline        lag
+     │           │              │
+     ▼           ▼              ▼
+  TCP 443     rescan HBAs    purereplication
+  proxy check purehostconn   link list
+              list
+```
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

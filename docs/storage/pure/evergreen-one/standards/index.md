@@ -1,4 +1,31 @@
 # Pure Storage Evergreen//One Standards
+
+```
+  Naming & Configuration Standards
+
+  Object       Pattern                   Example
+  ┌────────────┬─────────────────────────┬──────────────────────┐
+  │ Volume     │ <env>-<app>-<vol##>      │ prod-oracle-vol01    │
+  │ Host       │ <hostname> (exact)       │ esxi-prod-01         │
+  │ Host Group │ <env>-<cluster>          │ prod-esxi-cluster    │
+  │ Snapshot   │ <volname>.<date>         │ prod-oracle.2026-05  │
+  │ Prot. Group│ <env>-<app>-pg          │ prod-oracle-pg       │
+  │ Pod        │ <env>-<app>-pod         │ prod-oracle-pod      │
+  └────────────┴─────────────────────────┴──────────────────────┘
+
+  Host Configuration Baseline
+  ┌──────────────────────────────────────────┐
+  │  Multipath: ≥2 active paths per host     │
+  │  FC zoning: single-initiator/target      │
+  │  iSCSI: MTU 9000, dual-homed             │
+  │  Phonehome: TCP 443 confirmed open       │
+  └──────────────────────────────────────────┘
+
+  Protection Policies
+  ├─ Tier-1 vols ──► snapshot schedule + SafeMode
+  └─ RPO vols    ──► replication (async or ActiveCluster)
+```
+
 ## Naming Conventions
 
 Naming standards for Evergreen//One follow the same conventions as standard FlashArray and FlashBlade deployments. Consistent naming is important for capacity reporting, billing validation, and audit.

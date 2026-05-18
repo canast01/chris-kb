@@ -1,5 +1,21 @@
 # SRM — Health Checks
 
+```
+  Health Check Chain
+┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│  Site Pairing    │    │  Protection      │    │  Recovery Plan   │
+│  (Connected?)    │───►│  Groups (OK?)    │───►│  Pre-check       │
+│                  │    │  ┌────────────┐  │    │  (no errors)     │
+└──────────────────┘    │  │ RPO within │  │    └──────────────────┘
+                        │  │ target?    │  │
+                        │  │ Placeholder│  │    ┌──────────────────┐
+                        │  │ VMs exist? │  │    │  SRA / Array     │
+                        │  └────────────┘  │    │  Pair healthy?   │
+                        └──────────────────┘    │  Last discovery  │
+                                                │  recent?         │
+                                                └──────────────────┘
+```
+
 ---
 
 ## Site Pairing Status

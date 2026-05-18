@@ -1,5 +1,28 @@
 # Aria Suite Lifecycle — Authentication
 
+```
+  LCM Authentication Architecture
+┌─────────────────────────────────────────────────────────────────┐
+│  Interactive Users                                              │
+│  Browser → LCM UI → VIDM (SAML redirect) → AD/LDAP             │
+│               └──────────────────────────────► LCM session      │
+│                                                                 │
+│  API / Scripts                                                  │
+│  POST /lcm/authz/api/v2/login (admin@local or svc acct)         │
+│    → Bearer token (30 min TTL) → use in x-xenon-auth-token hdr  │
+│                                                                 │
+│  VIDM Integration                                               │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │ VIDM ── LDAPS 636 ──► AD (group sync every 60 min)      │    │
+│  │ LCM → Settings → Identity Manager → register VIDM FQDN  │    │
+│  │ AD groups mapped to LCM roles via Settings → Access Ctrl │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│  Local accounts (break-glass only):                             │
+│  admin@local (UI/API) │ root (SSH) │ admin (limited shell)      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## Authentication Architecture
 
 LCM uses **Workspace ONE Access (VIDM)** as the primary identity provider for web UI and API access. A local `admin` account exists as a break-glass fallback and for initial setup before VIDM is registered.

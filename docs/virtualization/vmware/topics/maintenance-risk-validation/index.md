@@ -1,5 +1,31 @@
 # Maintenance Risk Validation
 
+```
+┌──────────── Pre-Maintenance Risk Validation: Gate Checks ──────────────────────┐
+│                                                                                 │
+│  Gate 1: vSAN health                                                            │
+│  ├── esxcli vsan health cluster get ── all green?                              │
+│  ├── esxcli vsan debug resync list  ── empty (0 bytes resyncing)?              │
+│  └── Get-VsanSpaceUsage            ── free capacity > 30%?                     │
+│       │ PASS                                                                    │
+│       ▼                                                                         │
+│  Gate 2: Cluster and host state                                                 │
+│  ├── All hosts Connected + PoweredOn?                                           │
+│  ├── No critical active alarms on cluster/hosts?                                │
+│  └── All disk groups healthy (no degraded vSAN disks)?                          │
+│       │ PASS                                                                    │
+│       ▼                                                                         │
+│  Gate 3: Operations readiness                                                   │
+│  ├── DRS mode = FullyAutomated (VMs must migrate during MM)?                    │
+│  ├── HA admission control enabled?                                              │
+│  ├── All network uplinks Up (esxcli network nic list)?                          │
+│  └── VMs backed up within RPO window?                                           │
+│       │ ALL PASS                                                                │
+│       ▼                                                                         │
+│  Set-VMHost -VMHost <hostname> -State Maintenance   ──► proceed safely          │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 Validate cluster health before any maintenance window. All checks must pass before placing a host into maintenance mode or performing upgrades. Use the tables below as a structured pre-flight checklist.
 
 ---

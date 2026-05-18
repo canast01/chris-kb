@@ -1,5 +1,28 @@
 # Aria Ops for Logs — Integrations
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Ops for Logs Integration Map                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌───────────┐  syslog UDP 514   ┌────────────────────┐   │
+│  │  ESXi     │ ────────────────► │                    │   │
+│  │  vCenter  │ ────────────────► │  Aria Ops for Logs │   │
+│  │  NSX-T    │ ────────────────► │  (Master + Workers)│   │
+│  │  Linux VMs│ ─cfapi TLS 9543─► │                    │   │
+│  │  Win VMs  │ ─cfapi TLS 9543─► │                    │   │
+│  │  Net devs │ ─SNMP trap 162──► │                    │   │
+│  └───────────┘                   └──────────┬─────────┘   │
+│                                             │              │
+│            ┌────────────────────────────────┤              │
+│            │                               │              │
+│            ▼  bi-directional               ▼              │
+│      Aria Operations              ServiceNow / Slack       │
+│      (correlated alerts,          (webhook notifications)  │
+│       "View Logs" deep link)                               │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Integration with Aria Operations (vROps)
 
 Aria Operations for Logs integrates bi-directionally with Aria Operations:

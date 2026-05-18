@@ -1,5 +1,20 @@
 # Horizon — Encryption
 
+```
+  TLS Encryption Path: Client to Desktop
+┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐
+│  Horizon     │─────────────►│  UAG      │────────────►│  Connection      │
+│  Client      │  443 (HTTPS)│  (DMZ)    │  443/proxy  │  Server          │
+│  (external)  │             └───────────┘             └──────────────────┘
+└──────────────┘                                                 │
+                                                        TLS / Blast AES-256
+┌──────────────┐  Blast AES  ┌───────────┐                      ▼
+│  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐
+│  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM      │
+│  (Blast)     │             └───────────┘              │  (Blast agent)   │
+└──────────────┘                                        └──────────────────┘
+```
+
 ---
 
 ## Display Protocol Encryption

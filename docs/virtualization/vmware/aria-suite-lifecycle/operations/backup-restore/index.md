@@ -1,5 +1,28 @@
 # Aria Suite Lifecycle — Backup & Restore
 
+```
+  LCM Backup Strategy
+┌─────────────────────────────────────────────────────────────────┐
+│  What to Back Up              Method                            │
+│  ┌───────────────────────┐    ┌─────────────────────────────┐   │
+│  │ LCM appliance VM      │───►│ VADP backup (Veeam etc.)    │   │
+│  │  /var/lib/vrlcm/      │    │  nightly + quiesce          │   │
+│  │  /opt/vmware/vrlcm/   │    │ OR VM snapshot pre-change   │   │
+│  │  (DB + Locker)        │    │  (delete within 48h)        │   │
+│  └───────────────────────┘    └─────────────────────────────┘   │
+│  ┌───────────────────────┐    ┌─────────────────────────────┐   │
+│  │ NFS Binary Repo       │───►│ NFS snapshot (NetApp/Pure)  │   │
+│  │  /data (.pak files)   │    │ OR rsync to secondary       │   │
+│  └───────────────────────┘    └─────────────────────────────┘   │
+│  ┌───────────────────────┐    ┌─────────────────────────────┐   │
+│  │ Environment config    │───►│ LCM API export to JSON      │   │
+│  │  (deploy manifests)   │    │  stored version-controlled  │   │
+│  └───────────────────────┘    └─────────────────────────────┘   │
+│                                                                 │
+│  Locker Master Password → offline vault (required for restore)  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 LCM itself does not have a built-in scheduled backup agent. The recommended approach is to combine a **file-system-level NFS backup** of the binary repository with a **VM-level snapshot or backup** of the LCM appliance. The Locker (certificates, passwords, licences) state is stored on the appliance disk, so the appliance backup is the recovery point for all Locker data.
 
 ---

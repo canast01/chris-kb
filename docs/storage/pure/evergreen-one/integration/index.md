@@ -1,4 +1,30 @@
 # Pure Storage Evergreen//One Integration
+
+```
+  Evergreen//One Integration Landscape
+
+  ┌───────────────┐   phonehome    ┌────────────────────┐
+  │  FlashArray / │──HTTPS 443────►│  Pure1 Portal      │
+  │  FlashBlade   │◄───────────────│  SLA / Capacity /  │
+  │  (Pure-owned) │  telemetry     │  Health / Alerts   │
+  └───────┬───────┘                └────────┬───────────┘
+          │                                 │ REST API
+          │ FC/iSCSI/NVMe/NFS               ▼
+          ▼                        ┌────────────────────┐
+  ┌───────────────┐                │  FinOps / CMDB /   │
+  │  vSphere /    │◄── VASA/VAAI   │  Billing systems   │
+  │  ESXi hosts   │                └────────────────────┘
+  └───────┬───────┘
+          │ SRM / vVols
+          ▼
+  ┌───────────────┐                ┌────────────────────┐
+  │  VMware SRM   │                │  Backup tools      │
+  │  (DR orchestr)│                │  Veeam / Commvault │
+  └───────────────┘                │  Rubrik / NetBackup│
+                                   └────────────────────┘
+  Snapshot capacity counts toward monthly consumption total
+```
+
 ## Pure1 Integration
 
 Pure1 (https://pure1.purestorage.com) is the central management and reporting platform for all Evergreen//One deployments. Unlike standard Evergreen where Pure1 is a monitoring complement to local array management, for Evergreen//One Pure1 is the primary operational interface for the customer. All capacity reporting, SLA compliance tracking, billing data, and lifecycle management flow through Pure1.

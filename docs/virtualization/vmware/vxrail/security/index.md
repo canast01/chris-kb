@@ -1,5 +1,35 @@
 # VxRail — Security
 
+```
+┌───────────────────── VxRail Security Layers ───────────────────────────────────┐
+│                                                                                 │
+│  ┌─────────────────────────────────────────────────────────────────────────┐   │
+│  │  iDRAC (Hardware OOB)                                                   │   │
+│  │  root/Calvin changed │ LDAP/AD │ OOB VLAN only │ Secure Boot │ FW via LCM│  │
+│  └──────────────────────────────────────────────────────────────────────-──┘   │
+│                                    │                                            │
+│  ┌─────────────────────────────────▼───────────────────────────────────────┐   │
+│  │  ESXi Host                                                              │   │
+│  │  Lockdown Mode (Normal) │ SSH/Shell disabled │ Host Profiles compliant  │   │
+│  └──────────────────────────────────────────────────────────────────────-──┘   │
+│                                    │                                            │
+│  ┌─────────────────────────────────▼───────────────────────────────────────┐   │
+│  │  vSAN                                                                   │   │
+│  │  Data-at-rest encryption (KMS/NKP) │ In-transit encryption (AES-NI)    │   │
+│  └─────────────────────────────────────────────────────────────────────────┘   │
+│                                    │                                            │
+│  ┌─────────────────────────────────▼───────────────────────────────────────┐   │
+│  │  VxRail Manager                                                         │   │
+│  │  mystic password rotated │ LDAP ► AD groups ► roles │ API on jump hosts │   │
+│  └─────────────────────────────────────────────────────────────────────────┘   │
+│                                    │                                            │
+│  ┌─────────────────────────────────▼───────────────────────────────────────┐   │
+│  │  Network                                                                │   │
+│  │  Mgmt / vSAN / vMotion / iDRAC on separate VLANs │ NSX DFW (optional)  │   │
+│  └─────────────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Security Model Overview
 
 VxRail security combines vSphere/vSAN security (managed through vCenter) with VxRail-specific controls (managed through VxRail Manager). The Dell hardware layer adds iDRAC security as a third dimension.

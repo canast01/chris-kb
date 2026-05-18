@@ -1,5 +1,18 @@
 # SRM — Install and Upgrade
 
+```
+  SRM Upgrade Sequence (strictly ordered)
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│  1. vCenter   │──►│  2. SRM Server│──►│  3. SRA       │──►│  4. VR        │
+│  (both sites) │   │  protected    │   │  (both SRM    │   │  Appliance    │
+│               │   │  site first,  │   │   Servers)    │   │  (both sites) │
+│               │   │  then recov.  │   │               │   │               │
+└───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
+         │
+         ▼
+  After each step: verify site pairing still Connected before proceeding
+```
+
 ---
 
 ## Prerequisites

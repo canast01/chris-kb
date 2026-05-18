@@ -1,5 +1,27 @@
 # vSphere Replication — Procedures
 
+```
+  Key Operational Procedures
+┌──────────────────────────────────────────────────────────────┐
+│  Configure Replication           Monitor + Manage            │
+│  ┌──────────────────────┐        ┌──────────────────────┐    │
+│  │ vCenter → [VM] →     │        │ Pause / Resume       │    │
+│  │  Configure Replication│       │ Sync Now (immediate) │    │
+│  │  RPO: 5min–24hrs      │       │ Change RPO           │    │
+│  │  Target DS + VRS      │       │ Change target DS     │    │
+│  │  Quiesce / encrypt    │       └──────────────────────┘    │
+│  └──────────────────────┘                                    │
+│                                                              │
+│  Recover VM (standalone)         Add to SRM Protection Group │
+│  ┌──────────────────────┐        ┌──────────────────────┐    │
+│  │ Target Site vCenter  │        │ 1. Configure VR on VM│    │
+│  │ → Replications →     │        │ 2. Wait for initial  │    │
+│  │   Recover            │        │    sync (status: OK) │    │
+│  │   (Test or actual)   │        │ 3. SRM → PG → Add VMs│    │
+│  └──────────────────────┘        └──────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Configure Replication on a VM

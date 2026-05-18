@@ -1,5 +1,22 @@
 # vSphere Replication — Security
 
+```
+  VR Security Layers Overview
+┌──────────────────────────────────────────────────────────────┐
+│  Identity           Access Control      Encryption           │
+│  ┌──────────────┐   ┌──────────────┐    ┌──────────────┐     │
+│  │ vCenter SSO  │   │ Custom roles:│    │ In-transit:  │     │
+│  │ (no VR user  │   │  VR-Operator │    │  TLS 1.2+    │     │
+│  │   store)     │   │  VR-Recovery │    │  opt. AES-256│     │
+│  │ VRA local:   │   │              │    │  per-VM      │     │
+│  │  admin/root  │   │ Least priv.: │    │              │     │
+│  │  (change     │   │  Recover    │    │ At rest:     │     │
+│  │   on deploy) │   │  privilege   │    │  vSAN / VM   │     │
+│  └──────────────┘   │  DR team only│    │  encryption  │     │
+│                     └──────────────┘    └──────────────┘     │
+└──────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

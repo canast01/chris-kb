@@ -1,5 +1,22 @@
 # Horizon — Backup and Restore
 
+```
+  Backup Sources                        Backup Methods
+┌─────────────────────┐               ┌────────────────────────────┐
+│  Connection Server  │──vdmexport───►│  LDIF file (pod config)    │
+│  (ADAM/LDAP)        │               └────────────────────────────┘
+├─────────────────────┤               ┌────────────────────────────┐
+│  App Volumes SQL DB │──SQL backup──►│  cloudvolumes.bak          │
+│  (cloudvolumes)     │               └────────────────────────────┘
+├─────────────────────┤               ┌────────────────────────────┐
+│  DEM Config Share   │──robocopy────►│  \\fileserver\DEMConfig\   │
+│  (\\server\share)   │               └────────────────────────────┘
+├─────────────────────┤               ┌────────────────────────────┐
+│  Golden Image VM    │──snapshot────►│  PUBLISHED snapshot        │
+│  + AppStack VMDKs   │               │  on datastore              │
+└─────────────────────┘               └────────────────────────────┘
+```
+
 ## What to Back Up
 
 | Component | Backup Method | RPO Target | Critical? |

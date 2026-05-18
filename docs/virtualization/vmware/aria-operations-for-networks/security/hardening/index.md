@@ -1,5 +1,30 @@
 # Aria Operations for Networks — Hardening
 
+```
+┌──────────── Aria Networks Hardening Checklist ─────────────────────────────────┐
+│                                                                                 │
+│  Post-deployment (critical actions)                                             │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  ► Change default admin@local password                                  │  │
+│  │  ► Replace self-signed TLS cert with CA-signed                          │  │
+│  │  ► Enable LDAP/AD authentication and role mappings                      │  │
+│  │  ► Create read-only service accounts (vCenter Read Only / NSX Auditor)  │  │
+│  │  ► Restrict SSH to jump hosts (iptables / firewall ACL)                 │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                 │
+│  Ongoing controls                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  TLS: TLSv1.2/1.3 only │ ECDHE ciphers │ nginx.conf ssl_* directives   │  │
+│  │  SSH: PermitRootLogin no │ PasswordAuthentication no │ AllowUsers ubuntu│  │
+│  │  Network: port 443 ── management VLAN only (iptables if no ext FW)      │  │
+│  │  API tokens: min role │ explicit expiry │ store in Vault │ revoke old   │  │
+│  │  SIEM: Settings ► Notifications ► Syslog ── forward audit events        │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                 │
+│  Audit schedule: weekly reviews │ monthly source health │ quarterly token rotate│
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Post-Deployment Checklist

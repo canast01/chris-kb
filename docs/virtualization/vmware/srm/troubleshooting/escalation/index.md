@@ -1,5 +1,26 @@
 # SRM — Escalation
 
+```
+  Escalation Path
+┌──────────────────────────────────────────────────────────────┐
+│  Collect (both sites):                                       │
+│  SRM bundle + VR bundle + SRA logs + Recovery Plan history   │
+│  + vCenter events + SRM/vSphere versions                     │
+│                    │                                         │
+│                    ▼                                         │
+│  ┌─────────────────────────────────────────────────────┐     │
+│  │ Severity Assessment                                  │     │
+│  │  Sev 1 — DR failover failing ──► SR + call now      │     │
+│  │  Sev 2 — DR capability degraded ──► SR 24x7         │     │
+│  │  Sev 3 — One VM / test issue ──► SR biz hours       │     │
+│  └─────────────────────────────────────────────────────┘     │
+│                    │                                         │
+│                    ▼                                         │
+│  If SRA involved: open SR with VMware AND storage vendor     │
+│  TAM / Critical Escalation if Sev 1 unresolved > 2 hours    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Before Opening a Support Case

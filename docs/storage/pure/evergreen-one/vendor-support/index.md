@@ -1,4 +1,34 @@
 # Pure Storage Evergreen//One Vendor Support
+
+```
+  Pure Support Case Flow
+
+  ┌─────────────────────┐     ┌─────────────────────────┐
+  │  Collect info       │     │  My Pure Storage Portal  │
+  │  ├─ purearray list  │     │  support.purestorage.com │
+  │  ├─ purealert list  │────►│  Create Case             │
+  │  ├─ purediag bundle │     │  ├─ P1: prod down  ─ 1h  │
+  │  └─ phonehome status│     │  ├─ P2: degraded   ─ 4h  │
+  └─────────────────────┘     │  ├─ P3: non-crit  ─ NBD  │
+                               │  └─ P4: query    ─ best │
+                               └────────────┬────────────┘
+                                            │ P1/P2
+                                            ▼
+                               ┌────────────────────────┐
+                               │  Phone Pure Support    │
+                               │  (do not wait on email)│
+                               └────────────┬───────────┘
+                                            │ not progressing
+                                            ▼
+                               ┌────────────────────────┐
+                               │  CSM escalation        │
+                               │  Billing / SLA credits │
+                               │  Capacity increase     │
+                               │  Contract renewal      │
+                               └────────────────────────┘
+  Phonehome active ──► Pure auto-detects hw faults proactively
+```
+
 ## Support Portal
 
 Pure Storage support is accessed through the support portal at **https://support.purestorage.com**.

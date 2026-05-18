@@ -1,5 +1,35 @@
 # Aria Operations — Access Control
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│             Aria Operations RBAC Model                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────────┐      ┌─────────────────────────────┐  │
+│  │  AD Groups       │      │  Roles                      │  │
+│  │  ┌─────────────┐ │      │  ┌─────────────────────┐    │  │
+│  │  │GG-VROPS-    │─┼─────►│  │ Administrator        │    │  │
+│  │  │  Admins     │ │      │  │ (full access)        │    │  │
+│  │  ├─────────────┤ │      │  ├─────────────────────┤    │  │
+│  │  │GG-VROPS-    │─┼─────►│  │ Content Admin        │    │  │
+│  │  │  Content    │ │      │  │ (dashboards/alerts)  │    │  │
+│  │  ├─────────────┤ │      │  ├─────────────────────┤    │  │
+│  │  │GG-VROPS-    │─┼─────►│  │ Operator             │    │  │
+│  │  │  Operators  │ │      │  │ (ack alerts / run    │    │  │
+│  │  ├─────────────┤ │      │  │  actions)            │    │  │
+│  │  │GG-VROPS-    │─┼─────►│  ├─────────────────────┤    │  │
+│  │  │  ReadOnly   │ │      │  │ Read Only            │    │  │
+│  │  └─────────────┘ │      │  └─────────────────────┘    │  │
+│  └──────────────────┘      └──────────────┬──────────────┘  │
+│                                           │                 │
+│                                           ▼                 │
+│                         ┌───────────────────────────────┐   │
+│                         │  Object Scope (optional)      │   │
+│                         │  DC-LON / DC-NYC / All        │   │
+│                         └───────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## RBAC Roles
 
 Aria Operations uses a hierarchical role model. Roles are assigned to local users or to groups imported from Active Directory / LDAP.

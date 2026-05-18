@@ -1,5 +1,24 @@
 # vSphere Replication — Access Control
 
+```
+  vSphere Replication RBAC (via vCenter)
+┌──────────────────────────────────────────────────────────────┐
+│  AD Groups              vCenter Custom Roles                  │
+│  ┌────────────────┐     ┌───────────────────────────────┐    │
+│  │ CORP\VR-       │────►│ VR-Operator                   │    │
+│  │  Operators     │     │  vSphere Replication → Monitor│    │
+│  │                │     │  vSphere Replication → Manage │    │
+│  ├────────────────┤     ├───────────────────────────────┤    │
+│  │ CORP\DR-       │────►│ VR-Recovery                   │    │
+│  │  Recovery-Team │     │  + vSphere Replication → Recover│  │
+│  │                │     │  (highest privilege — DR team)│    │
+│  └────────────────┘     └───────────────────────────────┘    │
+│                                                              │
+│  VRA local accounts: admin (VAMI) / root (SSH)               │
+│  Change default passwords immediately after deployment       │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## vSphere Replication Uses vCenter RBAC

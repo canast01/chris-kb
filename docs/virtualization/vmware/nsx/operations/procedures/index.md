@@ -1,5 +1,37 @@
 # NSX — Procedures
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│              NSX Operational Procedure Flow                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Change Request                                            │
+│       │                                                     │
+│       ▼                                                     │
+│  ┌─────────────────┐   ┌──────────────────────────────────┐ │
+│  │  Pre-flight     │   │ • Cluster STABLE                 │ │
+│  │  Checks         │──►│ • Backup < 24h old               │ │
+│  └────────┬────────┘   │ • No CRITICAL alarms             │ │
+│           │            │ • Transport nodes UP             │ │
+│           ▼            └──────────────────────────────────┘ │
+│  ┌─────────────────┐                                        │
+│  │  Apply Change   │  DFW rule / segment / gateway /        │
+│  │  via API or UI  │  BGP neighbor / IPAM                   │
+│  └────────┬────────┘                                        │
+│           │                                                 │
+│           ▼                                                 │
+│  ┌─────────────────┐   ┌──────────────────────────────────┐ │
+│  │  Verify         │──►│ • Realisation state confirmed    │ │
+│  │  Realisation    │   │ • Traceflow / connectivity test  │ │
+│  └────────┬────────┘   │ • No new alarms                  │ │
+│           │            └──────────────────────────────────┘ │
+│           ▼                                                 │
+│  ┌─────────────────┐                                        │
+│  │  Close Ticket   │  Document change in audit log         │
+│  └─────────────────┘                                        │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Distributed Firewall Procedures
 
 ### Add a DFW Rule — Procedure

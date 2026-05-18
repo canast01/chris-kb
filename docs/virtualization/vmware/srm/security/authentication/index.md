@@ -1,5 +1,26 @@
 # SRM — Authentication
 
+```
+  SRM Authentication Chain
+┌──────────────────────────────────────────────────────────────┐
+│  User / Script           vCenter SSO          SRM Server     │
+│  ┌───────────┐           ┌───────────┐        ┌───────────┐  │
+│  │ Browser / │──────────►│ SSO token │───────►│ Session   │  │
+│  │ PowerCLI  │           │ (AD/SAML/ │        │ derived   │  │
+│  │           │           │  LDAP)    │        │ from VC   │  │
+│  └───────────┘           └───────────┘        └───────────┘  │
+│                                                              │
+│  Site Pairing (certificate-based)                            │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │ SRM Site A cert ──► thumbprint accepted at Site B    │    │
+│  │ SRM Site B cert ──► thumbprint accepted at Site A    │    │
+│  │ Re-pair required if either cert is replaced          │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  SRA Auth: array API token ──► stored encrypted in SRM       │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## SRM Authentication via vCenter SSO

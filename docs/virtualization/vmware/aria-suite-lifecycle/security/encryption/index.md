@@ -1,5 +1,30 @@
 # Aria Suite Lifecycle — Encryption
 
+```
+  LCM Encryption Coverage
+┌─────────────────────────────────────────────────────────────────┐
+│  Locker (certificate + secret vault)                            │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │ All certs/passwords encrypted with Locker Master        │    │
+│  │  Password (set at initial setup)                        │    │
+│  │ Passwords NEVER returned via API (alias + username only)│    │
+│  │ Locker Master Password → offline vault only             │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│  Certificate Lifecycle                    TLS                   │
+│  ┌────────────────────────────┐    ┌────────────────────┐       │
+│  │ Valid: >60 days  no action │    │ LCM 8.x: TLS 1.2+  │       │
+│  │ Expiring: 30-60  schedule  │    │ TLS 1.0/1.1 off    │       │
+│  │ Critical: 7-30   renew now │    │ Verify with        │       │
+│  │ Emergency: <7    immediate │    │  openssl s_client  │       │
+│  │ Expired         prod fails │    └────────────────────┘       │
+│  └────────────────────────────┘                                 │
+│                                                                 │
+│  Replace cert: Locker → Import → Environments → Replace Cert    │
+│  (Never replace certificates directly on product appliances)    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## Locker: Certificate and Secret Vault
 
 The LCM **Locker** is the central vault for all certificates, passwords, and licence keys managed by LCM. Every Aria product certificate must be imported into the Locker before it can be applied to a product. Direct file-level certificate replacement on product appliances bypasses LCM tracking, breaks the upgrade workflow, and will be overwritten at the next LCM-managed operation.

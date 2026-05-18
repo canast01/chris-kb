@@ -1,5 +1,30 @@
 # Aria Automation — Escalation
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Automation Escalation Path                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Internal (< 2 hours for P1/P2)                            │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Collect: vracli version · vracli status             │  │
+│  │  kubectl pod status · disk space · VIDM health       │  │
+│  │  Deployment event logs · Kubernetes events           │  │
+│  └────────────────────────┬─────────────────────────────┘  │
+│                           │  unresolved after 2h           │
+│                           ▼                                │
+│  Broadcom Support Portal  (support.broadcom.com)           │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Attach: vracli support-bundle + pod status          │  │
+│  │  P1: 30 min response · call support line immediately │  │
+│  │  P2: 2h business hours · portal sufficient           │  │
+│  └────────────────────────┬─────────────────────────────┘  │
+│                           │  SLA breached                  │
+│                           ▼                                │
+│  Portal Escalate button  ·  Broadcom TAM (if available)    │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Support Portal
 
 **Broadcom Support Portal:** [https://support.broadcom.com](https://support.broadcom.com)

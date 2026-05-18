@@ -1,5 +1,35 @@
 # NSX — Install & Upgrade
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│              NSX Upgrade Sequence (Critical Order)          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Step 1: NSX Manager Cluster (3 nodes, rolling)            │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │  Manager-01  │  │  Manager-02  │  │  Manager-03  │      │
+│  │  upgrade ►   │  │  upgrade ►   │  │  upgrade ►   │      │
+│  │  reboot      │  │  reboot      │  │  reboot      │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│         VIP migrates between available nodes ▼             │
+│                                                             │
+│  Step 2: Edge Nodes (BGP reconvergence expected)           │
+│  ┌──────────────────────┐   ┌──────────────────────┐       │
+│  │  Edge-Standby first  │──►│  Edge-Active upgrades │       │
+│  │  upgrades + reboots  │   │  T0 fails over        │       │
+│  └──────────────────────┘   └──────────────────────┘       │
+│         BGP reconverges < 30 sec (with BFD) ▼             │
+│                                                             │
+│  Step 3: ESXi Transport Nodes (host-by-host, rolling)     │
+│  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐           │
+│  │ Host-1 │  │ Host-2 │  │ Host-3 │  │  ...   │           │
+│  │ VIBs   │  │ VIBs   │  │ VIBs   │  │        │           │
+│  │upgrade │  │upgrade │  │upgrade │  │        │           │
+│  └────────┘  └────────┘  └────────┘  └────────┘           │
+│  DRS migrates VMs; no manual maintenance mode needed       │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Version Support Matrix
 
 | NSX-T Version | ESXi Minimum | vCenter Minimum | General Support End |

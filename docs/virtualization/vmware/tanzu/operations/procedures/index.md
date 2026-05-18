@@ -1,5 +1,33 @@
 # Tanzu — Procedures
 
+```
+┌──────────────── Tanzu Operational Procedure Flow ──────────────────────────────┐
+│                                                                                 │
+│  Create vSphere Namespace                                                       │
+│  vCenter ► Workload Mgmt ► Namespaces ► Create                                 │
+│  Set: storage policy │ VM class │ resource limits (CPU/mem/storage)             │
+│      │                                                                          │
+│      ▼                                                                          │
+│  Deploy TKG Workload Cluster in Namespace                                       │
+│  kubectl apply TanzuKubernetesCluster manifest                                  │
+│  Monitor: kubectl get tanzukubernetescluster -n <ns> -w                         │
+│      │                                                                          │
+│      ▼                                                                          │
+│  Grant Team Access                                                              │
+│  kubectl vsphere login ► switch context ► apply RoleBinding                    │
+│  (Pinniped OIDC group ► ClusterRole edit/view)                                  │
+│      │                                                                          │
+│      ▼                                                                          │
+│  Deploy Workloads                                                               │
+│  helm install ► kubectl apply │ HTTPProxy (Contour) for ingress                │
+│  Harbor project ► vuln scanning ► imagePullSecret ► pods                        │
+│      │                                                                          │
+│      ▼                                                                          │
+│  Scale / Rotate                                                                 │
+│  kubectl edit TKC spec.replicas  │  tanzu cluster kubeconfig get               │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Create a vSphere Namespace

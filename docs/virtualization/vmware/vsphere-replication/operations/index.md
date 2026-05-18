@@ -1,5 +1,22 @@
 # vSphere Replication — Operations
 
+```
+  vSphere Replication Operations Overview
+┌─────────────────────────────────────────────────────────────┐
+│  Lifecycle                                                  │
+│  Install (OVA deploy) ──► Register ──► Pair sites          │
+│       │                                   │                 │
+│       ▼                                   ▼                 │
+│  ┌─────────┐                    ┌──────────────────┐        │
+│  │Configure│                    │ Health Checks:   │        │
+│  │replicat.│                    │  RPO compliance  │        │
+│  │per VM   │                    │  VRA disk / svc  │        │
+│  └─────────┘                    └──────────────────┘        │
+│                                                             │
+│  Procedures ◄──── Scripts (RPO report) ◄──── CLI/REST API  │
+└─────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

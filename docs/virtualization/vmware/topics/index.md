@@ -2,6 +2,32 @@
 
 Deep-dive reference articles on specific VMware behaviors, edge cases, and troubleshooting scenarios.
 
+```
+┌──────────────────── VMware Deep-Dive Topics: Navigation ───────────────────────┐
+│                                                                                 │
+│  What type of issue?                                                            │
+│      │                                                                          │
+│      ├── Cluster health / state    ──► Cluster State Validation                │
+│      │                                 Cluster Failure Domains                  │
+│      │                                                                          │
+│      ├── VM placement / migration  ──► DRS and vMotion Behavior                │
+│      │                                 HA Admission Control                     │
+│      │                                                                          │
+│      ├── Host failure / isolation  ──► Host Isolation Response                 │
+│      │                                 Recovery Behavior                        │
+│      │                                                                          │
+│      ├── Pre-maintenance safety    ──► Maintenance Risk Validation             │
+│      │                                 Upgrade Sequence Reference               │
+│      │                                                                          │
+│      ├── Performance / contention  ──► Resource Contention                     │
+│      │                                 Storage Latency Troubleshooting          │
+│      │                                                                          │
+│      ├── Network issues            ──► Network Packet Loss                     │
+│      │                                                                          │
+│      └── Infrastructure basics    ──► Time and DNS Validation                  │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="cluster-failure-domains/">

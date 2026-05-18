@@ -1,4 +1,32 @@
 # Network Packet Loss Validation
+
+```
+┌──────────── Network Packet Loss Triage Path ───────────────────────────────────┐
+│                                                                                 │
+│  Symptom: packet drops / slow vMotion / vSAN network errors                     │
+│       │                                                                         │
+│       ▼                                                                         │
+│  NIC level (physical)                                                           │
+│  ├── esxcli network nic stats get -n vmnicX ── RX/TX dropped/errors/CRC?       │
+│  └── CRC errors ──► replace cable or SFP                                        │
+│       │ no NIC errors                                                            │
+│       ▼                                                                         │
+│  vSwitch / portgroup                                                            │
+│  ├── VMkernel tagging correct (mgmt/vSAN/vMotion on right VLAN)?                │
+│  ├── VLAN ID mismatch? ── Get-VirtualPortGroup ── check VLanId                  │
+│  └── Uplink saturation? ── esxtop 'n' view ── TX/RX util > 80%?                │
+│       │ no switch issues                                                         │
+│       ▼                                                                         │
+│  MTU                                                                            │
+│  ├── vmkping -I vmk2 -d -s 8972 <peer>  ── jumbo frames work end-to-end?      │
+│  └── Failure ──► align MTU on vSwitch + physical switch ports                  │
+│       │ MTU OK                                                                   │
+│       ▼                                                                         │
+│  CDP/LLDP & spanning tree                                                       │
+│  └── PortFast on host-facing switch ports? ── STP topology change = loss        │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Symptoms
 
 | Symptom | Likely Cause |

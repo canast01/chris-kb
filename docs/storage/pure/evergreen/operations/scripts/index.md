@@ -1,5 +1,28 @@
 # Evergreen — Scripts
 
+```
+  Pure Script Execution Paths
+
+  Purity CLI (SSH)               Pure1 REST API
+  ┌──────────────────┐           ┌──────────────────────┐
+  │  puritysh        │           │  Bearer token auth   │
+  │  purearray list  │           │  GET /arrays         │
+  │  purevol list    │           │  GET /metrics/history│
+  │  purealert list  │           │  GET /subscriptions  │
+  │  purepgroup list │           └──────────┬───────────┘
+  └──────────────────┘                      │
+                                            ▼
+  Pure PowerShell SDK              ┌────────────────────┐
+  ┌──────────────────┐             │  Python / Bash     │
+  │  New-PfaArray    │             │  eo1_usage.py      │
+  │  Get-PfaVolumes  │             │  burst_alert.sh    │
+  │  Set-PfaVolume   │             │  sla_check.py      │
+  └──────────────────┘             └────────────────────┘
+
+  Alert audit: curl ──► /api/2.x/alert-watchers
+  Replication:  curl ──► /api/2.x/protection-groups
+```
+
 ## Subscription Capacity Report
 
 Queries Pure1 API to report consumed vs committed TiB across all arrays in the Evergreen subscription.

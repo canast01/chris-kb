@@ -1,4 +1,30 @@
 # Aria Operations — Escalation
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│            Aria Operations Escalation Path                  │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  L1 / Internal Ops                                         │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Run triage checklist → generate support bundle      │  │
+│  │  Collect: version, cluster nodes, affected adapter   │  │
+│  └────────────────────────┬─────────────────────────────┘  │
+│           not resolved    │                                │
+│                           ▼                                │
+│  Broadcom TAC                                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  support.broadcom.com                                │  │
+│  │  Product: VMware Cloud Foundation → Aria Operations  │  │
+│  │  P1: 30 min  P2: 4h  P3/P4: next business day        │  │
+│  │  Attach: support bundle, logs, screenshots           │  │
+│  └────────────────────────┬─────────────────────────────┘  │
+│           no progress     │                                │
+│                           ▼                                │
+│  Portal escalation → duty manager → TAM (if available)    │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Support Portal
 
 **Broadcom Support Portal:** [https://support.broadcom.com](https://support.broadcom.com)

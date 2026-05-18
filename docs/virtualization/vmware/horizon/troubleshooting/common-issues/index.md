@@ -1,5 +1,31 @@
 # Horizon — Common Issues
 
+```
+  Triage Decision Tree
+┌─────────────────────────────────────────────────────────────┐
+│  Login issue?          Blank screen?       Slow login?       │
+│  ┌──────────┐          ┌──────────┐        ┌──────────┐      │
+│  │ No deskt.│          │ Agent    │        │ DEM migr.│      │
+│  │ sources  │          │ running? │        │ AppStack │      │
+│  │   │      │          │   │      │        │ AV scan  │      │
+│  │   ▼      │          │   ▼      │        └──────────┘      │
+│  │Entitlemnt│          │ Blast/   │                          │
+│  │ missing? │          │ PCoIP    │        UAG disconnected? │
+│  │Pool full?│          │ port ok? │        ┌──────────┐      │
+│  │Desktops  │          │ vGPU     │        │ CS cert  │      │
+│  │in ERROR? │          │ driver?  │        │ thumbprt │      │
+│  └──────────┘          └──────────┘        │ mismatch │      │
+│                                            │ TCP 443  │      │
+│  AppStack fails?                           │ UAG→CS?  │      │
+│  ┌──────────┐                             └──────────┘      │
+│  │ AVM reach│                                                │
+│  │ able?    │                                                │
+│  │ VMDK     │                                                │
+│  │ attached?│                                                │
+│  └──────────┘                                                │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Desktop Stuck in "Provisioning"

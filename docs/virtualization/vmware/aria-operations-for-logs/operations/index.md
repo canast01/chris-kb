@@ -1,5 +1,26 @@
 # Aria Ops for Logs — Operations
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Ops for Logs Operations Overview               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Day-to-Day                                                │
+│  ┌────────────────┐ ┌──────────────┐ ┌───────────────────┐ │
+│  │ Health Checks  │ │ Procedures   │ │ CLI Reference     │ │
+│  │ nodes · disk   │ │ search · alerts│ │ li-admin · vracli │ │
+│  │ ingestion rate │ │ notifications│ │ REST API          │ │
+│  └────────────────┘ └──────────────┘ └───────────────────┘ │
+│                                                             │
+│  Lifecycle                                                 │
+│  ┌────────────────┐ ┌──────────────┐ ┌───────────────────┐ │
+│  │ Install/Upgrade│ │ Backup/Restore│ │ Scripts          │ │
+│  │ OVA · PAK file │ │ VM backup    │ │ health · coverage │ │
+│  │ LCM or manual  │ │ config export│ │ disk monitor      │ │
+│  └────────────────┘ └──────────────┘ └───────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

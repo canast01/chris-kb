@@ -1,5 +1,18 @@
 # Tanzu — Security
 
+```
+┌──────────────── Tanzu Security Overview ───────────────────────────────────────┐
+│                                                                                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │
+│  │ Authentication│  │Access Control│  │  Encryption  │  │   Hardening     │  │
+│  │  Pinniped    │  │  vSphere NS  │  │  etcd secrets│  │  Pod Security   │  │
+│  │  OIDC/LDAP   │  │  RBAC roles  │  │  mTLS in     │  │  Net Policy     │  │
+│  │  kubeconfig  │  │  Harbor proj │  │  transit     │  │  OPA/Kyverno    │  │
+│  └──────────────┘  └──────────────┘  │  vSAN at rest│  │  Harbor scan    │  │
+│                                       └──────────────┘  └──────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

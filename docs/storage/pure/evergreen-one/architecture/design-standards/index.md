@@ -1,5 +1,28 @@
 # Evergreen//One — Design Standards
 
+```
+  Capacity Planning                  Refresh Triggers
+  ┌──────────────────────┐           ┌──────────────────────┐
+  │ Current TiB          │           │ >90% committed ──►   │
+  │ × Growth Factor      │           │   Reserve increase   │
+  │ × 1.15 safety buffer │           │                      │
+  │ = Committed Reserve  │           │ Controller EOG ───►  │
+  └──────────┬───────────┘           │   Ever Modern swap   │
+             │                       │                      │
+             ▼                       │ Contract renewal ─►  │
+  ┌──────────────────────┐           │   Tier review        │
+  │ SLA Tiers            │           └──────────────────────┘
+  │  Tier 1 — Latency    │
+  │  ├─ sub-1ms R/W      │           Network Requirements
+  │  └─ NVMe/FC          │           ┌──────────────────────┐
+  │  Tier 2 — Capacity   │           │ Data: 25GbE+ / FC    │
+  │  ├─ iSCSI / NFS      │           │ MTU 9000 end-to-end  │
+  │  └─ 4-6:1 reduction  │           │ Dual fabric (A / B)  │
+  └──────────────────────┘           │ Phonehome: TCP 443   │
+                                     │ Proxy supported      │
+  Availability SLA: 99.9999%         └──────────────────────┘
+```
+
 ---
 
 ## Committed Reserve Sizing

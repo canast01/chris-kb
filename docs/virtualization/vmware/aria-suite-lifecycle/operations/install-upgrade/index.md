@@ -1,5 +1,30 @@
 # Aria Suite Lifecycle — Install & Upgrade
 
+```
+  LCM Upgrade Sequence (strict order)
+┌─────────────────────────────────────────────────────────────────┐
+│  Step 1: LCM itself                                             │
+│   Lifecycle Operations → System Upgrade → select bundle         │
+│   LCM restarts (~5-10 min); unavailable during upgrade          │
+│                    │                                            │
+│                    ▼                                            │
+│  Step 2: Workspace ONE Access (VIDM)                            │
+│   Must precede ALL other product upgrades                       │
+│                    │                                            │
+│                    ▼                                            │
+│  Step 3+: Aria products (one at a time)                         │
+│   Aria Operations → Aria Automation → Aria Log Insight          │
+│   Aria Ops for Networks (after VIDM, any order)                 │
+│                                                                 │
+│  Each product upgrade:                                          │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │ Snapshot VMs → Download bundle → Run pre-check          │    │
+│  │ → Start Upgrade → Monitor Requests → Post-validate      │    │
+│  │ → Delete snapshots (after confirm success)              │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## Upgrade Sequence
 
 **Critical: LCM must always be upgraded first, then VIDM, then all other products.**

@@ -1,5 +1,28 @@
 # Aria Automation — Operations
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Automation Operations Overview                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Day-to-Day Tasks                                          │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐│
+│  │ Health       │ │ Procedures   │ │ CLI Reference        ││
+│  │ Checks       │ │ service acct │ │ vracli / kubectl     ││
+│  │ pods / cloud │ │ rotation     │ │ REST API             ││
+│  │ accounts     │ │ stale deploy │ │                      ││
+│  └──────────────┘ └──────────────┘ └──────────────────────┘│
+│                                                             │
+│  Lifecycle                                                 │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐│
+│  │ Install /    │ │ Backup /     │ │ Scripts              ││
+│  │ Upgrade      │ │ Restore      │ │ PowerShell / REST    ││
+│  │ LCM / VAMI / │ │ NFS/SFTP     │ │ deployment audit     ││
+│  │ PAK file     │ │ passphrase   │ │ cloud acct check     ││
+│  └──────────────┘ └──────────────┘ └──────────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

@@ -1,5 +1,24 @@
 # Site Recovery Manager — Operations
 
+```
+  SRM Operations Coverage
+┌─────────────────────────────────────────────────────────────┐
+│  Day-to-Day Operations                                      │
+│                                                             │
+│  Health Checks ──► RPO compliance ──► Protection Group OK? │
+│       │                                        │            │
+│       ▼                                        ▼            │
+│  ┌─────────┐                         ┌─────────────────┐   │
+│  │ Monthly │                         │ Procedures:     │   │
+│  │ test    │                         │ Add VM to PG    │   │
+│  │ failover│                         │ Create plan     │   │
+│  │ + clean │                         │ Planned migrate │   │
+│  └─────────┘                         └─────────────────┘   │
+│                                                             │
+│  Install/Upgrade ◄──── Scripts ◄──── CLI Reference         │
+└─────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

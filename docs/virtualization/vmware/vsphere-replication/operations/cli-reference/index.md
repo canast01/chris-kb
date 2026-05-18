@@ -1,5 +1,30 @@
 # vSphere Replication — CLI Reference
 
+```
+  VR CLI and API Access
+┌──────────────────────────────────────────────────────────────┐
+│  VRA Appliance SSH                                           │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │ systemctl status hms vrms nginx                      │    │
+│  │ systemctl restart hms                                │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  VRA REST API                                                │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │ POST /api/rest/vr/authentication/token → Bearer tok  │    │
+│  │ GET  /api/rest/vr/replications                       │    │
+│  │ GET  /api/rest/vr/health                             │    │
+│  │ POST /api/rest/vr/replications/<id>/sync             │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ESXi host (source) — connectivity test                      │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │ nc -vz <target-VRA> 31031   (replication data port)  │    │
+│  │ vmkping -I vmk0 <target-VRA-IP>                      │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## VRA Appliance SSH Access

@@ -1,4 +1,33 @@
 # Storage Latency Troubleshooting
+
+```
+┌──────────── Storage Latency: VM to Array Triage Path ──────────────────────────┐
+│                                                                                 │
+│  VM shows slow I/O                                                              │
+│       │                                                                         │
+│       ▼                                                                         │
+│  VMkernel (esxtop 'u')                                                          │
+│  ├── DAVG > 10ms ──► device/storage backend issue (step down the path)         │
+│  ├── KAVG > 2ms  ──► host-side queue issue                                     │
+│  └── QAVG > 0    ──► queue depth saturation (check vmkernel.log queue full)    │
+│       │ DAVG elevated                                                            │
+│       ▼                                                                         │
+│  Datastore layer                                                                │
+│  ├── vSAN resync active? ── esxcli vsan debug resync list ── wait or defer      │
+│  ├── Snapshot chain? ── Get-VM | Get-Snapshot ── delta VMDK large?             │
+│  └── Datastore >90% full? ── thin provisioning overcommit ── add capacity      │
+│       │                                                                          │
+│       ▼                                                                         │
+│  HBA / fabric (traditional SAN)                                                 │
+│  ├── Dead paths? ── esxcli storage core path list ── State: dead?              │
+│  └── APD in vmkernel.log? ── check SAN zoning and HBA connectivity             │
+│       │                                                                          │
+│       ▼                                                                         │
+│  Storage array                                                                  │
+│  └── DAVG high on ALL VMs ──► array-side CPU/cache saturation ── rebalance     │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Latency Thresholds
 
 | Latency | State | Action |

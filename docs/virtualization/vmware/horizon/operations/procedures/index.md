@@ -1,5 +1,28 @@
 # Horizon — Procedures
 
+```
+  Common Operational Procedures
+┌──────────────────────────────────────────────────────────────┐
+│  Create Pool     │  Push Image      │  Manage Sessions       │
+│  ┌────────────┐  │  ┌────────────┐  │  ┌──────────────────┐  │
+│  │Golden image│  │  │Update      │  │  │Force logoff      │  │
+│  │ + snapshot │  │  │snapshot in │  │  │Disconnect stale  │  │
+│  │      │     │  │  │pool config │  │  │Send message      │  │
+│  │      ▼     │  │  │      │     │  │  └──────────────────┘  │
+│  │ Instant    │  │  │      ▼     │  │                        │
+│  │ Clone pool │  │  │ Rolling    │  │  Entitlements          │
+│  │ provision  │  │  │ refresh    │  │  ┌──────────────────┐  │
+│  └────────────┘  │  └────────────┘  │  │AD group → pool   │  │
+│                  │                  │  │mapping           │  │
+│  Add CS Replica  │  Handle Error VM │  └──────────────────┘  │
+│  ┌────────────┐  │  ┌────────────┐  │                        │
+│  │Install +   │  │  │Reset or    │  │                        │
+│  │Join to pod │  │  │delete + re-│  │                        │
+│  └────────────┘  │  │provision   │  │                        │
+│                  │  └────────────┘  │                        │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Create an Instant Clone Desktop Pool

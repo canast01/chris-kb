@@ -1,5 +1,29 @@
 # SRM — Procedures
 
+```
+  Test Failover vs Actual Failover
+┌──────────────────────────────────────────────────────────────┐
+│  Test Failover (non-disruptive)                              │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │ VMs powered on at recovery site in isolated network   │   │
+│  │ Production VMs still running at protected site        │   │
+│  │ ──► verify, then Cleanup (removes test VMs)           │   │
+│  └───────────────────────────────────────────────────────┘   │
+│                                                              │
+│  Planned Migration (both sites up)                           │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │ Protected VMs gracefully shut down ──► replicate      │   │
+│  │ ──► power on at recovery site ──► update DNS          │   │
+│  └───────────────────────────────────────────────────────┘   │
+│                                                              │
+│  Disaster Recovery (protected site down)                     │
+│  ┌───────────────────────────────────────────────────────┐   │
+│  │ Use last replicated point ──► power on at recovery    │   │
+│  │ ──► Reprotect (reverse replication) ──► Failback      │   │
+│  └───────────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Create a Protection Group (Array-Based Replication)

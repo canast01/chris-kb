@@ -1,5 +1,28 @@
 # Aria Ops for Logs — Encryption
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Ops for Logs Encryption Layers                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  In-flight (transport)                                     │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Browser / API   ──TLS 1.2/1.3──►  :443 (UI/API)    │  │
+│  │  LI Agent        ──TLS (cfapi)──►  :9543             │  │
+│  │  TCP syslog      ─────plain────►  :1514  (no TLS)    │  │
+│  │  ESXi syslog     ─────UDP──────►  :514   (no TLS)    │  │
+│  │  LDAPS auth      ──TLS──────────► DC :636             │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                             │
+│  At rest (storage)                                         │
+│  /var/log/loginsight  — no native app encryption           │
+│  vSAN / SAN / vSphere VM Encryption at storage layer       │
+│                                                             │
+│  Certificate:  replace self-signed → CA-signed before use  │
+│  TLS 1.0/1.1 disabled by default in Aria Ops for Logs 8.x │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## TLS Certificate Replacement
 
 Aria Operations for Logs ships with a self-signed certificate. Replace it with a CA-signed certificate for production before connecting any syslog sources or users.

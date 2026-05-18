@@ -1,5 +1,34 @@
 # Aria Operations for Networks — Health Checks
 
+```
+┌──────────── Aria Networks Health Check Hierarchy ──────────────────────────────┐
+│                                                                                 │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  1. Platform VM                                                          │  │
+│  │     UI Settings ► Health: green │ CPU/mem/disk < 80%                    │  │
+│  │     ssh: systemctl status vrni-platform nginx cassandra                  │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │ OK                                   │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  2. Collectors                                                           │  │
+│  │     Settings ► Collectors: Status=Connected, last heartbeat < 2 min     │  │
+│  │     API: GET /api/ni/collectors ── check status field                   │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │ OK                                   │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  3. Data Sources                                                         │  │
+│  │     Settings ► Data Sources: Last Sync < 20 min, no errors              │  │
+│  │     API: GET /api/ni/datasources ── check last_successful_collection    │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │ OK                                   │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  4. Flow Ingestion                                                       │  │
+│  │     UI search: flows where time_range = "last 15 minutes" ► count > 0   │  │
+│  │     Collector: tcpdump -i eth0 udp port 2055 ── packets arriving        │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## UI Health Dashboard
 
 **UI path:** Settings → Infrastructure → Health

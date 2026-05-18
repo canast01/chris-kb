@@ -4,6 +4,32 @@
 Tanzu knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
+```
+┌──────────────────── VMware Tanzu: Developer to Pod ────────────────────────────┐
+│                                                                                 │
+│  Developer                                                                      │
+│      │  tanzu CLI / kubectl vsphere login                                       │
+│      ▼                                                                          │
+│  ┌───────────────────────────────────────────────────────────────────────┐     │
+│  │  Tanzu Hub / vCenter Workload Management (Supervisor)                 │     │
+│  │  vSphere Namespaces │ resource quotas │ VM classes │ content library  │     │
+│  └────────────────────────────┬──────────────────────────────────────────┘     │
+│                                │ provision TanzuKubernetesCluster               │
+│  ┌─────────────────────────────▼──────────────────────────────────────────┐    │
+│  │  TKG Workload Cluster (Kubernetes)                                     │    │
+│  │  ┌───────────────┐   ┌───────────────────────────────────────────────┐│    │
+│  │  │ Control Plane │   │  Worker Nodes                                 ││    │
+│  │  │ (3 VMs)       │   │  ┌──────────┐ ┌──────────┐ ┌──────────┐     ││    │
+│  │  │ etcd/API Srv  │   │  │  Node-01 │ │  Node-02 │ │  Node-03 │     ││    │
+│  │  └───────────────┘   │  │  Pods►   │ │  Pods►   │ │  Pods►   │     ││    │
+│  │                       │  └──────────┘ └──────────┘ └──────────┘     ││    │
+│  │                       └───────────────────────────────────────────────┘│    │
+│  │  vSphere CSI ► vSAN PVCs │ NSX/AVI ► LoadBalancer │ Harbor ► images   │    │
+│  └────────────────────────────────────────────────────────────────────────┘    │
+│                                Pinniped ► OIDC ► kubeconfig                     │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

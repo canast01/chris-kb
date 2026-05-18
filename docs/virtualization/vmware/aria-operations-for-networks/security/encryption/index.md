@@ -1,5 +1,33 @@
 # Aria Operations for Networks — Encryption
 
+```
+┌──────────── Aria Networks TLS & Encryption Layers ────────────────────────────┐
+│                                                                                │
+│  Data in Transit                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────┐  │
+│  │  Browser ──── TLS 1.2/1.3 HTTPS ──────────────────► Platform VM :443  │  │
+│  │  REST API ─── TLS 1.2/1.3 HTTPS ──────────────────► Platform VM :443  │  │
+│  │  Collector ── TLS 1.2/1.3 HTTPS (pinned cert) ─────► Platform VM :443 │  │
+│  │  Collector ── TLS HTTPS ────────────────────────────► vCenter/NSX :443 │  │
+│  │  Switches  ── UDP 2055 NetFlow (UNENCRYPTED) ───────► Collector VM    │  │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                │
+│  TLS Hardening (Nginx on Platform VM)                                          │
+│  ssl_protocols TLSv1.2 TLSv1.3;   ssl_prefer_server_ciphers on;               │
+│  ECDHE-RSA-AES256-GCM-SHA384 (and -AES128-GCM-SHA256) only                    │
+│                                                                                │
+│  Data at Rest                                                                  │
+│  ┌─────────────────────────────────────────────────────────────────────────┐  │
+│  │  Stored credentials ── AES-256 in Platform VM keystore                 │  │
+│  │  Platform VM disks  ── vSphere VM Encryption / encrypted datastore     │  │
+│  │  Collector VM disks ── optional vSphere VM Encryption                  │  │
+│  └─────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                │
+│  Certificate: self-signed (default) ── replace with CA-signed before prod     │
+│  Settings ► SSL Certificate ► Upload PEM cert + key ── UI restarts ~60s       │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Data at Rest

@@ -4,6 +4,33 @@
 
 ---
 
+```
+  FlashBlade Triage Flow
+
+  Symptom
+  ├─ NFS/SMB issue ─────────────────────────────────────────┐
+  │    ├─ Stale file handle ──► unmount/remount clients     │
+  │    ├─ Mount hang ──► check VIP: purefb network iface    │
+  │    │                            list; ping VIP          │
+  │    └─ SMB access fail ──► rejoin AD; update bind creds  │
+  │                                                         │
+  ├─ Performance issue ─────────────────────────────────────┤
+  │    └─ NFS high latency ──► enable pNFS (NFSv4.1)        │
+  │         clients: nfsvers=4.1 proto=tcp                  │
+  │                                                         │
+  ├─ Capacity issue ────────────────────────────────────────┤
+  │    └─ Filesystem near limit ──► purefb filesystem       │
+  │         update --provisioned <new_size>                 │
+  │                                                         │
+  └─ Hardware alert ────────────────────────────────────────┘
+       ├─ Blade failed/missing ──► purefb blade list        │
+       │    Open Pure Support case immediately              │
+       └─ Blade rebalancing ──► normal after blade add      │
+            monitor; alert if stuck >24h                   ▼
+  S3 403 Forbidden ──► purefb objectstoreuser list
+                       regenerate access key
+```
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

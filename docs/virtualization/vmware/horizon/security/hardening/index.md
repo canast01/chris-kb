@@ -1,5 +1,26 @@
 # Horizon — Hardening
 
+```
+  Hardening Checklist Coverage
+┌──────────────────────────────────────────────────────────────┐
+│  Connection Server          UAG                              │
+│  ┌──────────────────────┐   ┌──────────────────────────┐    │
+│  │ locked.properties:   │   │ TLS: 1.2/1.3 only        │    │
+│  │  TLS 1.2/1.3 only    │   │ Ciphers: ECDHE-AES256    │    │
+│  │  allowedHosts= mgmt  │   │ DoS mitigation enabled   │    │
+│  │  checkOrigin=true    │   │ Admin UI → mgmt IP only  │    │
+│  └──────────────────────┘   └──────────────────────────┘    │
+│                                                              │
+│  GPO Controls               Access Controls                  │
+│  ┌──────────────────────┐   ┌──────────────────────────┐    │
+│  │ Clipboard: client→   │   │ CS Admin restricted to   │    │
+│  │   agent only         │   │  management VLAN         │    │
+│  │ USB storage: blocked │   │ 2FA for external access  │    │
+│  │ Drive map: disabled  │   │ CA-signed certs          │    │
+│  └──────────────────────┘   └──────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Connection Server Hardening

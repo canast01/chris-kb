@@ -1,5 +1,25 @@
 # Horizon — Design Standards
 
+```
+  Pod Design (up to 7 Connection Servers, 10,000 IC desktops)
+┌─────────────────────────────────────────────────────────────┐
+│  Load Balancer / DNS Round-Robin                            │
+│         ┌────────────┬────────────┬────────────┐            │
+│         ▼            ▼            ▼            ▼            │
+│  ┌────────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐     │
+│  │ CS Primary │ │ CS Rep 2 │ │ CS Rep 3 │ │  UAG(s)  │     │
+│  │(ADAM/LDAP) │ │(replica) │ │(replica) │ │  (DMZ)   │     │
+│  └─────┬──────┘ └────┬─────┘ └────┬─────┘ └──────────┘     │
+│        └─────────────┴────────────┘                         │
+│                       │                                      │
+│            ┌──────────▼──────────┐                          │
+│            │  vCenter + vSAN     │                          │
+│            │  ESXi Cluster       │                          │
+│            │  (desktop pools)    │                          │
+│            └─────────────────────┘                          │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Connection Server Sizing
 
 ### Per-Server Limits

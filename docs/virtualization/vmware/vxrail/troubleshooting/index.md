@@ -1,5 +1,35 @@
 # VxRail — Troubleshooting
 
+```
+┌──────────────────── VxRail Triage Decision Tree ────────────────────────────────┐
+│                                                                                  │
+│  Symptom reported                                                                │
+│       │                                                                          │
+│       ▼                                                                          │
+│  ┌─────────────────────────┐   No    ┌──────────────────────────────────────┐  │
+│  │ VxRail Plugin loading?  ├────────►│ SSH to VxRail Manager VM             │  │
+│  └────────────┬────────────┘         │ systemctl status mystic-server       │  │
+│               │ Yes                  └──────────────────────────────────────┘  │
+│               ▼                                                                  │
+│  ┌─────────────────────────┐   Red   ┌──────────────────────────────────────┐  │
+│  │ vSAN Health green?      ├────────►│ vCenter ► Monitor ► vSAN ► Health    │  │
+│  └────────────┬────────────┘         │ Identify failing check → resolve     │  │
+│               │ Yes                  └──────────────────────────────────────┘  │
+│               ▼                                                                  │
+│  ┌─────────────────────────┐  Issue  ┌──────────────────────────────────────┐  │
+│  │ All nodes Online?       ├────────►│ iDRAC ping ► ESXi mgmt ping          │  │
+│  └────────────┬────────────┘         │ racadm getsel | VxRail API /hosts    │  │
+│               │ Yes                  └──────────────────────────────────────┘  │
+│               ▼                                                                  │
+│  ┌─────────────────────────┐  Stuck  ┌──────────────────────────────────────┐  │
+│  │ LCM upgrade status OK?  ├────────►│ tail /var/log/mystic/lcm.log         │  │
+│  └────────────┬────────────┘         │ Resume or open Dell support case     │  │
+│               │ Yes                  └──────────────────────────────────────┘  │
+│               ▼                                                                  │
+│        Generate VxRail support bundle ► Dell support case                       │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Quick Reference
 
 | Symptom | First Check | Action |

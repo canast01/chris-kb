@@ -1,5 +1,40 @@
 # NSX — Common Issues
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│              NSX Triage Decision Flow                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Incident reported                                          │
+│        │                                                    │
+│        ▼                                                    │
+│  ┌─────────────────┐  no  ┌──────────────────────────────┐ │
+│  │ Overlay conn?   │─────►│ Check DFW on source ESXi     │ │
+│  │ VM→VM / VM→GW   │      │ vsipioctl getstats / getrules│ │
+│  └────────┬────────┘      └──────────────────────────────┘ │
+│           │ yes                                             │
+│           ▼                                                 │
+│  ┌─────────────────┐  no  ┌──────────────────────────────┐ │
+│  │ Tunnels UP?     │─────►│ get tunnel status            │ │
+│  │ get tunnel      │      │ vmkping TEP -d -s 1572       │ │
+│  │ status          │      │ Check MTU ≥ 1600 on underlay │ │
+│  └────────┬────────┘      └──────────────────────────────┘ │
+│           │ yes                                             │
+│           ▼                                                 │
+│  ┌─────────────────┐  no  ┌──────────────────────────────┐ │
+│  │ BGP/OSPF UP?    │─────►│ vrf <id> → get bgp neighbor  │ │
+│  │ Edge CLI check  │      │ Check MD5 auth, ASN, uplink  │ │
+│  └────────┬────────┘      └──────────────────────────────┘ │
+│           │ yes                                             │
+│           ▼                                                 │
+│  ┌─────────────────┐  no  ┌──────────────────────────────┐ │
+│  │ Manager stable? │─────►│ get cluster status           │ │
+│  │                 │      │ get corfu-cluster status     │ │
+│  └────────┬────────┘      └──────────────────────────────┘ │
+│           │ yes → check fabric / alarms / open support case │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Incident Triage
 
 Work through this checklist for any NSX-related incident before diving into specific areas:

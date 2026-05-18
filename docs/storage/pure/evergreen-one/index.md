@@ -4,6 +4,30 @@
 Evergreen//One Storage-as-a-Service — Pure-owned and managed hardware on-premises or in colocation, with consumption-based billing, 99.9999% availability SLA, and performance guarantees. Covers architecture, operations, security, and troubleshooting.
 </div>
 
+```
+  Customer Site                    Pure Cloud
+  ┌──────────────────────┐         ┌───────────────────────┐
+  │  FlashArray / Blade  │──HTTPS──►  Pure1 (phone-home)   │
+  │  (Pure-owned HW)     │◄────────│  SLA monitoring       │
+  └──────────┬───────────┘  443    │  Capacity analytics   │
+             │                     │  Proactive support    │
+     FC/iSCSI│/NVMe                └──────────┬────────────┘
+             ▼                                │
+  ┌──────────────────────┐                    │ Subscription
+  │  Hosts / VMs         │         ┌──────────▼────────────┐
+  │  (customer-managed)  │         │  Entitlement          │
+  └──────────────────────┘         │  Reserved TiB  ────►  │
+                                   │  Burst TiB     ─────► │
+  Pure manages:                    │  Performance SLA       │
+  ├─ Hardware refresh               └──────────┬────────────┘
+  ├─ Purity upgrades                           │
+  ├─ Drive replacement              ┌──────────▼────────────┐
+  └─ SLA compliance                 │  Hardware Refresh     │
+                                    │  New controller gen   │
+                                    │  Non-disruptive swap  │
+                                    └───────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

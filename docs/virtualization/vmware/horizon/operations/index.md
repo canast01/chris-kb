@@ -1,5 +1,23 @@
 # Horizon (VDI) — Operations
 
+```
+  Operations Coverage
+┌─────────────────────────────────────────────────────────────┐
+│           Horizon Operations Workflow                        │
+│                                                             │
+│  Install/Upgrade ──► Health Checks ──► Procedures          │
+│       │                    │                │               │
+│       ▼                    ▼                ▼               │
+│  ┌─────────┐        ┌──────────┐     ┌──────────────┐      │
+│  │ CS + UAG│        │ Sessions │     │ Pool create  │      │
+│  │ Agent   │        │ Pools    │     │ Image push   │      │
+│  │ install │        │ UAG/AV   │     │ Entitlement  │      │
+│  └─────────┘        └──────────┘     └──────────────┘      │
+│                                                             │
+│  Backup/Restore ◄──── Scripts ◄──── CLI Reference          │
+└─────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

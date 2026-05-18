@@ -1,5 +1,24 @@
 # Aria Suite Lifecycle — Operations
 
+```
+  LCM Operations Lifecycle
+┌─────────────────────────────────────────────────────────────────┐
+│  Lifecycle          Day-to-Day              Automation           │
+│  ┌──────────────┐   ┌──────────────────┐    ┌──────────────┐    │
+│  │ Install LCM  │   │ Health Checks    │    │ Scripts:     │    │
+│  │ Register VIDM│   │  (daily/pre-chg) │    │  cert expiry │    │
+│  │ Add vCenters │   │ Procedures:      │    │  disk check  │    │
+│  │ Upgrade LCM  │   │  deploy product  │    │  env summary │    │
+│  │ Upgrade prods│   │  upgrade product │    │  NTP audit   │    │
+│  │  (ordered)   │   │  replace cert    │    │  API upgrade │    │
+│  └──────────────┘   │  rotate password │    └──────────────┘    │
+│                     └──────────────────┘                        │
+│                                                                 │
+│  Backup:  VADP (nightly) + NFS snap + API JSON export          │
+│  CLI:     vracli status/services/certificate/proxy/ntp         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

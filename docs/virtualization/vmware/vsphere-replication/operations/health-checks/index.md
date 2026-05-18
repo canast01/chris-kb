@@ -1,5 +1,20 @@
 # vSphere Replication — Health Checks
 
+```
+  Health Check Chain
+┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│  VRA Status      │    │  VR Agents       │    │  Replication     │
+│  (both sites)    │───►│  on ESXi hosts   │───►│  Status per VM   │
+│  ┌────────────┐  │    │  ┌────────────┐  │    │  ┌────────────┐  │
+│  │ hms/vrms   │  │    │  │ hbrsvc     │  │    │  │ Green: OK  │  │
+│  │ running?   │  │    │  │ running on │  │    │  │ Amber: near│  │
+│  │ Site pair  │  │    │  │ source host│  │    │  │  RPO limit │  │
+│  │ Connected? │  │    │  └────────────┘  │    │  │ Red: RPO   │  │
+│  └────────────┘  │    └──────────────────┘    │  │  VIOLATION │  │
+└──────────────────┘                            │  └────────────┘  │
+                                                └──────────────────┘
+```
+
 ---
 
 ## VRA and Site Pairing Status

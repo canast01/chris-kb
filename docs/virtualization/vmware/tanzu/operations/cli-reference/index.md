@@ -1,5 +1,31 @@
 # Tanzu — CLI Reference
 
+```
+┌───────────────── Tanzu CLI Toolchain ──────────────────────────────────────────┐
+│                                                                                 │
+│  tanzu CLI                          kubectl                                     │
+│  ├── tanzu management-cluster get   ├── kubectl vsphere login                  │
+│  ├── tanzu cluster list             ├── kubectl get tanzukubernetescluster      │
+│  ├── tanzu cluster create           ├── kubectl get nodes                       │
+│  ├── tanzu cluster upgrade          ├── kubectl get pods -A                     │
+│  ├── tanzu cluster scale            ├── kubectl top nodes/pods                  │
+│  └── tanzu cluster kubeconfig get   └── kubectl drain / uncordon               │
+│                                                                                 │
+│  Carvel tools (Tanzu packaging)                                                 │
+│  ├── kapp   ── deploy and track K8s app resources                              │
+│  ├── ytt    ── YAML templating / value injection                               │
+│  ├── imgpkg ── package and relocate container image bundles                    │
+│  └── vendir ── sync external content / dependencies                            │
+│                                                                                 │
+│  velero CLI (backup)                                                            │
+│  ├── velero backup create / get                                                 │
+│  └── velero restore create --from-backup                                        │
+│                                                                                 │
+│  Harbor (registry)                                                              │
+│  └── docker login/push/pull  │  Harbor REST API /api/v2.0/                     │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## tanzu CLI

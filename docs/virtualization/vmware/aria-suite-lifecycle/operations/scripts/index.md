@@ -1,5 +1,27 @@
 # Aria Suite Lifecycle — Scripts
 
+```
+  LCM Automation Scripts
+┌─────────────────────────────────────────────────────────────────┐
+│  Script                    Purpose                              │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ cert-expiry-check.sh   Query Locker → list certs         │   │
+│  │                         expiring within N days           │   │
+│  │ pre-upgrade-disk.sh    Check all mounts < threshold      │   │
+│  │                         pass/fail gate before upgrade    │   │
+│  │ lcm-health-summary.sh  Env health + running requests     │   │
+│  │                         + disk usage summary             │   │
+│  │ locker-password-export  Alias + username list (no values)│   │
+│  │ ntp-check.sh           SSH to all nodes; check time sync │   │
+│  │ trigger-upgrade.sh     API-driven upgrade with polling   │   │
+│  │                         until COMPLETED/FAILED           │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  All scripts: POST /lcm/authz/api/v2/login → bearer token      │
+│  API base: https://<lcm>/lcm/lcmservice/api/v2                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 Automation scripts for LCM target three primary use cases: pre-upgrade validation (confirming disk space, certificate validity, and product health before initiating an upgrade), certificate expiry monitoring (scanning all Locker entries and alerting when within a configurable threshold), and scheduled health checks via the LCM REST API. Scripts use the LCM API base URL `https://<lcm-fqdn>/lcm/lcmservice/api/v2` with Basic or token authentication.
 
 ---

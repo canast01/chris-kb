@@ -1,5 +1,30 @@
 # Aria Suite Lifecycle — Integrations
 
+```
+  LCM Integration Map
+┌─────────────────────────────────────────────────────────────────┐
+│  Identity              Compute                  Storage          │
+│  ┌─────────────────┐   ┌──────────────────┐    ┌─────────────┐  │
+│  │ Workspace ONE   │   │ vCenter Server   │    │ NFS Repo    │  │
+│  │ Access (VIDM)   │   │  deploy OVAs     │    │  /data      │  │
+│  │  SSO for all    │   │  power mgmt      │    │  .pak files │  │
+│  │  Aria products  │   │  VM snapshots    │    └─────────────┘  │
+│  └────────┬────────┘   └────────┬─────────┘                    │
+│           │                    │                                │
+│           └────────────┬───────┘                               │
+│                        ▼                                        │
+│               LCM Appliance                                     │
+│                        │                                        │
+│           ┌────────────┼────────────────┐                       │
+│           ▼            ▼                ▼                       │
+│     ┌──────────┐ ┌──────────┐   ┌─────────────┐                │
+│     │ NSX-T    │ │  SMTP    │   │ Proxy /     │                │
+│     │(optional │ │  email   │   │ Offline     │                │
+│     │ segments)│ │  alerts  │   │ Depot       │                │
+│     └──────────┘ └──────────┘   └─────────────┘                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## Workspace ONE Access (VIDM)
 
 Workspace ONE Access is the SSO identity provider for all Aria products — it is registered with LCM during initial setup.

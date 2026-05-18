@@ -1,5 +1,27 @@
 # vSphere Replication — Backup and Restore
 
+```
+  VR Backup Strategy
+┌──────────────────────────────────────────────────────────────┐
+│  VRA Appliance                                               │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │ Config lives in vCenter DB ──► covered by VCSA backup│    │
+│  │ Snapshot before changes (govc snapshot.create)       │    │
+│  │ OVF export for cold backup / migration               │    │
+│  │ VAMI config download (network, certs, registration)  │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  Replication data on target datastore                        │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │ .vrepl files = replica point-in-time images          │    │
+│  │ NOT a traditional backup — use for VM recovery       │    │
+│  │ Protected by target-site datastore redundancy (vSAN) │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  Recovery: vCenter → Site Recovery → Replications → Recover  │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## What to Back Up

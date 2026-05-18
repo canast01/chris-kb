@@ -1,5 +1,28 @@
 # Aria Automation — Hardening
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Automation Hardening Layers                    │
+├──────────────────────┬──────────────────────────────────────┤
+│  Account             │  Certificate                         │
+│  ──────────────────  │  ────────────────────────────────    │
+│  admin pw changed    │  Replace self-signed → CA-signed     │
+│  named AD accounts   │  RSA 4096 · SHA-256 · SAN entries    │
+│  no shared accounts  │  Track expiry (60-day alert)         │
+├──────────────────────┼──────────────────────────────────────┤
+│  Network Access      │  Least Privilege                     │
+│  ──────────────────  │  ────────────────────────────────    │
+│  SSH: mgmt CIDR only │  svc-vra: no Admin role in vCenter  │
+│  VAMI :5480 firewalled│  Encrypted Prop Groups for secrets  │
+│  K8s API local only  │  Git content source: read-only PAT   │
+├──────────────────────┼──────────────────────────────────────┤
+│  Audit               │  Patch                               │
+│  ──────────────────  │  ────────────────────────────────    │
+│  Syslog → vRLI/SIEM  │  Critical patches: out-of-cycle      │
+│  Audit API events    │  Non-critical: quarterly window      │
+└──────────────────────┴──────────────────────────────────────┘
+```
+
 ## Default Account Hardening
 
 The `admin` account is a local system account in the VIDM System Domain. Change its password immediately after deployment:

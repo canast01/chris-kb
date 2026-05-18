@@ -1,5 +1,28 @@
 # Pure1 Cloud Management
 
+```
+  Pure1 — Phone-Home to Cloud Analytics
+
+  FlashArray / FlashBlade               Pure1 Cloud
+  ┌──────────────────┐   HTTPS 443   ┌──────────────────────┐
+  │  Phone-home agent│──────────────►│  Telemetry ingest    │
+  │  (continuous)    │               │  ├─ Health score      │
+  └──────────────────┘               │  ├─ Capacity trends   │
+                                     │  ├─ Performance data  │
+  Customer Portal                    │  └─ Alert state       │
+  ┌──────────────────┐               └──────────┬───────────┘
+  │ Storage → Arrays │◄──────────────────────────┤
+  │ Analysis →       │  query / view             │
+  │  ├─ Capacity     │                           ▼
+  │  ├─ Performance  │               ┌──────────────────────┐
+  │  └─ Workload     │               │  Pure1 AIOps         │
+  │ Alerts           │               │  ├─ Anomaly detect    │
+  │ Support → Cases  │               │  ├─ Predictive failure│
+  │ Billing          │               │  └─ Capacity forecast │
+  └──────────────────┘               └──────────────────────┘
+  REST API: GET /arrays, /metrics, /subscriptions
+```
+
 Pure1 is Pure Storage's cloud-based management and monitoring platform. It provides a unified view of all FlashArray and FlashBlade systems.
 ## Accessing Pure1
 

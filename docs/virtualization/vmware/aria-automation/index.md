@@ -4,6 +4,36 @@
 Technical and operational reference for VMware Aria Automation. Covers infrastructure automation, service catalogue, blueprint design, deployment management, and IaC pipeline integration across the vSphere and cloud platforms.
 </div>
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│              Aria Automation — Platform Flow                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  User / CI-CD Pipeline                                     │
+│       │                                                     │
+│       ▼                                                     │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Service Catalog / Portal  (VIDM SSO)                │  │
+│  │  Request item → approval policy → approved           │  │
+│  └────────────────────────┬─────────────────────────────┘  │
+│                           │                                │
+│                           ▼                                │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Blueprint / Cloud Template                          │  │
+│  │  YAML → resources: VM + network + storage            │  │
+│  │  Constraints: project scope, cloud zone tags         │  │
+│  └───────────────┬──────────────────┬───────────────────┘  │
+│                  │                  │                       │
+│                  ▼                  ▼                       │
+│  ┌───────────────────┐  ┌────────────────────────────────┐ │
+│  │  vCenter / vSphere│  │  NSX: segment / security group │ │
+│  │  VM provisioned   │  │  provisioned alongside VM      │ │
+│  └───────────────────┘  └────────────────────────────────┘ │
+│                                                             │
+│  ABX actions / vRO workflows fire on provisioning events   │
+└─────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

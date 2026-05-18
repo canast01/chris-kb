@@ -1,5 +1,24 @@
 # Horizon — Authentication
 
+```
+  Authentication Flow
+┌────────────┐    ┌──────────────┐    ┌─────────────────────────────┐
+│  User      │    │  Workspace   │    │  Connection Server          │
+│            │───►│  ONE / vIDM  │───►│  ┌─────────────────────┐   │
+│  1. Login  │    │  (SAML IdP)  │    │  │ AD Kerberos / NTLM  │   │
+│            │    │  ┌─────────┐ │    │  │ RADIUS (2FA)        │   │
+│            │    │  │ MFA /   │ │    │  │ Smart Card (PIV/CAC) │   │
+│            │    │  │ FIDO2 / │ │    │  └─────────────────────┘   │
+│            │    │  │ LDAP    │ │    │                             │
+│            │    │  └─────────┘ │    │  True SSO (cert issued)    │
+└────────────┘    └──────────────┘    │  ┌─────────────────────┐   │
+                                      │  │ Enrollment Server   │   │
+                                      │  │ → short-lived cert  │   │
+                                      │  │ → Windows login     │   │
+                                      │  └─────────────────────┘   │
+                                      └─────────────────────────────┘
+```
+
 ---
 
 ## Primary Authentication: Active Directory

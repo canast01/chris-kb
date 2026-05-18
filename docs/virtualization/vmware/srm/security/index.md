@@ -1,5 +1,22 @@
 # Site Recovery Manager — Security
 
+```
+  SRM Security Layers
+┌──────────────────────────────────────────────────────────────┐
+│  Identity          Access Control      Encryption            │
+│  ┌──────────────┐  ┌──────────────┐    ┌──────────────┐      │
+│  │ vCenter SSO  │  │ SRM roles:   │    │ TLS 1.2+ all │      │
+│  │ (no local    │  │  Admin       │    │  site-to-site│      │
+│  │  user store) │  │  RecovAdmin  │    │  traffic     │      │
+│  │ AD groups    │  │  User        │    │              │      │
+│  │ → vCenter    │  │              │    │ VR data opt. │      │
+│  │   perms      │  │ SRA creds:   │    │  AES-256     │      │
+│  └──────────────┘  │  encrypted   │    │  (per VM)    │      │
+│                    │  in SRM      │    └──────────────┘      │
+│                    └──────────────┘                          │
+└──────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

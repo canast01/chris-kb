@@ -4,6 +4,34 @@
 VMware platform knowledge base covering the full VMware stack — vCenter, ESXi, vSAN, NSX, VCF, VxRail, Horizon, SRM, vSphere Replication, and the Aria Suite. Includes architecture references, operational procedures, CLI commands, health checks, lifecycle management, and troubleshooting guides.
 </div>
 
+```
+┌─────────────────────────── VMware Platform Landscape ──────────────────────────────┐
+│                                                                                     │
+│  ┌─────────────┐  ┌─────────────┐  ┌──────────────────────────────────────────┐   │
+│  │   vCenter   │  │    VxRail   │  │              Aria Suite                  │   │
+│  │  (Manage)   │  │ (HCI Appl.) │  │  Operations │ Automation │ Suite LCM    │   │
+│  └──────┬──────┘  └──────┬──────┘  │  Ops/Logs   │            │              │   │
+│         │                │         └──────────────────────────────────────────┘   │
+│  ┌──────▼──────────────▼──────────────────────────────────────────────────────┐   │
+│  │                        vSphere Cluster (ESXi Hosts)                        │   │
+│  │  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐           │   │
+│  │  │  ESXi-01   │  │  ESXi-02   │  │  ESXi-03   │  │  ESXi-04   │  ...      │   │
+│  │  │  ┌──────┐  │  │  ┌──────┐  │  │  ┌──────┐  │  │  ┌──────┐  │           │   │
+│  │  │  │ VMs  │  │  │  │ VMs  │  │  │  │ VMs  │  │  │  │ VMs  │  │           │   │
+│  │  └──┴──────┘  │  └──┴──────┘  │  └──┴──────┘  │  └──┴──────┘  │           │   │
+│  └──────────────────────────────────────────────────────────────────────────-─┘   │
+│         │                │                 │                │                      │
+│  ┌──────▼──────┐  ┌──────▼──────┐  ┌──────▼──────┐  ┌──────▼──────┐             │
+│  │    vSAN     │  │     NSX     │  │   Horizon   │  │  SRM / vR   │             │
+│  │  (Storage)  │  │ (Networking)│  │    (VDI)    │  │    (DR)     │             │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘             │
+│                                                                                     │
+│  ┌──────────────────────────────┐   ┌────────────────────────────────────────┐    │
+│  │  Tanzu (Kubernetes Platform) │   │  VMware Cloud Foundation (VCF/SDDC)   │    │
+│  └──────────────────────────────┘   └────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="vmware-cloud-foundation/"><strong>VMware Cloud Foundation</strong><span>Full-stack SDDC — SDDC Manager, workload domains, lifecycle, and operations.</span></a>
 <a class="kb-card" href="vcenter/"><strong>vCenter</strong><span>Inventory, permissions, alarms, certificates, backup, and lifecycle.</span></a>

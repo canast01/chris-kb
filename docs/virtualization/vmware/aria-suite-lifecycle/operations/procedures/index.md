@@ -1,5 +1,28 @@
 # Aria Suite Lifecycle — Procedures
 
+```
+  LCM Common Procedures
+┌─────────────────────────────────────────────────────────────────┐
+│  Deploy Product           Replace Certificate                   │
+│  ┌──────────────────┐     ┌──────────────────────────────────┐  │
+│  │ Add Product →    │     │ Generate CSR (Locker or external)│  │
+│  │  select version  │     │ Submit to CA → import signed     │  │
+│  │  set size / IPs  │     │  cert into Locker (alias)        │  │
+│  │  pre-checks pass │     │ Environments → Replace Cert      │  │
+│  │  Deploy → monitor│     │  select alias → monitor          │  │
+│  └──────────────────┘     └──────────────────────────────────┘  │
+│                                                                 │
+│  Rotate Password          Content Migration (Dev → Prod)        │
+│  ┌──────────────────┐     ┌──────────────────────────────────┐  │
+│  │ Locker → Passwords│    │ Content Lifecycle Mgr            │  │
+│  │  Edit alias →    │     │  Extract from source env         │  │
+│  │  update value    │     │  Deploy to target env            │  │
+│  │ Re-validate prods│     │  map env-specific variables      │  │
+│  │  using credential│     └──────────────────────────────────┘  │
+│  └──────────────────┘                                           │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## Deploy a New Aria Product
 
 1. LCM → Lifecycle Operations → Environments → select or create environment

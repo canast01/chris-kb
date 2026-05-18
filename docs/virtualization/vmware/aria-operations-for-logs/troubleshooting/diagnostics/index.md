@@ -1,5 +1,29 @@
 # Aria Ops for Logs — Diagnostics
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Ops for Logs Diagnostic Sources                │
+├──────────────────────────────┬──────────────────────────────┤
+│  Log Files (on appliance)    │  API Diagnostics             │
+│  ─────────────────────────   │  ──────────────────────────  │
+│  runtime.log  (main app)     │  GET /api/v2/cluster/nodes   │
+│  ingestion.log (drops/parse) │  GET /api/v2/cluster/stats   │
+│  query.log  (query perf)     │  POST /api/v2/support/bundle │
+│  cassandra/system.log        │  GET /api/v2/agents          │
+│  agent/agentd.log            │                              │
+│  nginx/access.log            │  Cassandra (on-box)          │
+│  /var/log/messages (OS)      │  nodetool compactionstats    │
+│                              │  nodetool info (heap usage)  │
+├──────────────────────────────┼──────────────────────────────┤
+│  Cluster SSH Check           │  Support Bundle              │
+│  ─────────────────────────   │  ──────────────────────────  │
+│  systemctl status loginsight │  Via UI or API               │
+│  systemctl status nginx      │  app logs · Cassandra logs   │
+│  df -h /var/log/loginsight   │  system metrics · topology   │
+│  ss -tulnp | grep 514/9543   │  (no passwords included)     │
+└──────────────────────────────┴──────────────────────────────┘
+```
+
 ## Log File Locations
 
 | Log | Path | Purpose |

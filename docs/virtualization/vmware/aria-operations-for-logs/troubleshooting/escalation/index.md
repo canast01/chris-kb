@@ -1,5 +1,31 @@
 # Aria Ops for Logs — Escalation
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Ops for Logs Escalation Path                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Internal Troubleshooting                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Collect: cluster node status · disk usage           │  │
+│  │  ingestion.log · runtime.log · Cassandra logs        │  │
+│  │  Support bundle: POST /api/v2/support/bundle         │  │
+│  └────────────────────────┬─────────────────────────────┘  │
+│                           │  unresolved                    │
+│                           ▼                                │
+│  Broadcom Support  (support.broadcom.com)                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  S1: all nodes down → 30 min response (24x7)         │  │
+│  │  S2: cluster degraded / data loss risk → 4h (24x7)   │  │
+│  │  S3: partial issues → next business day              │  │
+│  │  Attach: support bundle + node status + version      │  │
+│  └────────────────────────┬─────────────────────────────┘  │
+│                           │  SLA breached                  │
+│                           ▼                                │
+│  Portal Escalate  ·  Broadcom TAM  ·  VMware Communities   │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## When to Escalate
 
 Escalate to Broadcom support when:

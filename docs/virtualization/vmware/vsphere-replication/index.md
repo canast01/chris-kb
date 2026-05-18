@@ -4,6 +4,24 @@
 vSphere Replication knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
+```
+  Source Site                                      Target Site
+┌────────────────────────────┐                ┌───────────────────────────┐
+│  Source VM                 │                │  VR Appliance (target)    │
+│  ┌──────────────────────┐  │                │  ┌─────────────────────┐  │
+│  │  hbrsvc (ESXi agent) │──┼── TCP 31031 ──►│  │  Replica VMDKs      │  │
+│  │  tracks changed      │  │  (delta sync)  │  │  (.vrepl files)     │  │
+│  │  blocks (CBT)        │  │                │  │  N recovery points  │  │
+│  └──────────────────────┘  │                │  └─────────────────────┘  │
+│                            │                │                           │
+│  VR Appliance (VRMS)       │                │  Recover VM               │
+│  ┌──────────────────────┐  │  TCP 44046     │  ┌─────────────────────┐  │
+│  │  Manages replication │◄─┼──────────────►│  │  (standalone or via │  │
+│  │  schedules + RPO     │  │  (mgmt plane)  │  │   SRM orchestration)│  │
+│  └──────────────────────┘  │                │  └─────────────────────┘  │
+└────────────────────────────┘                └───────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

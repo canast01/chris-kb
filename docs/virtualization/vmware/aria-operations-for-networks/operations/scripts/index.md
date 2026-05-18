@@ -1,5 +1,28 @@
 # Aria Operations for Networks — Scripts
 
+```
+┌─────────────── Aria Networks REST API Scripts ─────────────────────────────────┐
+│                                                                                 │
+│  All scripts follow this pattern:                                               │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  1. get_token()  ── POST /api/ni/auth/token ──► bearer token             │  │
+│  │  2. HEADERS = {"Authorization": f"NetworkInsight {TOKEN}"}               │  │
+│  │  3. call API endpoint ── parse results                                   │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                 │
+│  Available scripts:                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  list_data_sources()        ── vcenters / nsxt / physical devices        │  │
+│  │  get_flows_for_vm(name)     ── POST /api/ni/search ── flow query         │  │
+│  │  get_open_problems()        ── GET /api/ni/problems ── paginated         │  │
+│  │  export_security_recs()     ── GET microseg recommendations ► CSV       │  │
+│  │  check_data_source_health() ── all sources Connected? ► exit 0/1        │  │
+│  │  add_ips_to_application()   ── POST /api/ni/groups/applications/{id}    │  │
+│  │  daily_health_report()      ── problems count + critical list ── cron   │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Authenticate and Get API Token

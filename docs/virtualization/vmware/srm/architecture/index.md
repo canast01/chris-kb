@@ -4,6 +4,21 @@
 VMware Site Recovery Manager automates DR failover and failback by orchestrating protection groups, recovery plans, and vSphere Replication or SAN-based replication.
 </div>
 
+```
+  Protected Site           Replication Channel         Recovery Site
+┌────────────────────┐     ┌──────────────────┐     ┌────────────────────┐
+│  SRM Server        │────►│ vSphere Repl OR  │────►│  SRM Server        │
+│  ┌──────────────┐  │     │ SAN Array SRA    │     │  ┌──────────────┐  │
+│  │ Protection   │  │     └──────────────────┘     │  │ Recovery     │  │
+│  │ Groups       │  │                              │  │ Plans        │  │
+│  │ (VMs + RPO)  │  │     ┌──────────────────┐     │  │ (priority    │  │
+│  └──────────────┘  │     │  Site Pairing    │     │  │  groups)     │  │
+│                    │◄───►│  TCP 443 / 9086  │◄───►│  └──────────────┘  │
+│  vCenter           │     └──────────────────┘     │  vCenter           │
+│  (protected)       │                              │  (recovery)        │
+└────────────────────┘                              └────────────────────┘
+```
+
 ![Site Recovery Manager Architecture](../../../../assets/srm-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

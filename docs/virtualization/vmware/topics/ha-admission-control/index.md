@@ -1,4 +1,33 @@
 # HA Admission Control
+
+```
+┌──────────── HA Admission Control: Slot Size & Reserved Capacity ───────────────┐
+│                                                                                 │
+│  Step 1: Slot size calculation                                                  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  Slot CPU = max(VM CPU reservation) or 32 MHz if no reservation          │  │
+│  │  Slot MEM = max(VM MEM reservation + overhead) or host default           │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │                                      │
+│  Step 2: Calculate available slots per host                                     │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  Host CPU slots = floor(host CPU / slot CPU)                             │  │
+│  │  Host MEM slots = floor(host MEM / slot MEM)                             │  │
+│  │  Host slots    = min(CPU slots, MEM slots)                               │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │                                      │
+│  Step 3: Reserve failover capacity                                              │
+│  ┌───────────────────────────────────────▼──────────────────────────────────┐  │
+│  │  Policy: "1 host failure tolerated"                                      │  │
+│  │  Reserve slots from N largest hosts (N = failover level)                 │  │
+│  │  Remaining slots = total slots − reserved slots                          │  │
+│  └───────────────────────────────────────┬──────────────────────────────────┘  │
+│                                          │                                      │
+│  VM admission:  powered-on VMs ≤ remaining slots ──► power-on ALLOWED          │
+│                 powered-on VMs > remaining slots ──► power-on BLOCKED          │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Purpose
 
 Admission control reserves cluster capacity so that in the event of a host failure, vSphere HA can restart all VMs from the failed host on remaining hosts. Without it, a cluster at 100% utilisation cannot restart failed VMs.

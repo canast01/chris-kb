@@ -3,6 +3,34 @@
 > Part of the [Pure Storage Evergreen//One](../) reference.
 
 ---
+
+```
+  Pure REST API Automation Flow
+
+  Script / Cron job
+  ┌────────────────────────────────────┐
+  │  1. Generate RS256 JWT             │
+  │     (PURE1_APP_ID + private key)   │
+  └──────────────────┬─────────────────┘
+                     │ POST /oauth2/token
+                     ▼
+  ┌────────────────────────────────────┐
+  │  Pure1 API — Bearer token          │
+  │  GET /subscriptions                │
+  │  GET /subscription-assets          │
+  │  GET /metrics/history              │
+  └──────────────────┬─────────────────┘
+                     │
+          ┌──────────▼──────────┐
+          │  Parse & Alert      │
+          │  consumed > reserve │──► BURST alert / email
+          │  pct > 90%          │──► WARN in report
+          │  days_to_end < 90   │──► EXPIRY warn
+          └─────────────────────┘
+  Per-array: SSH ──► purearray list --space
+                      purevol list --space
+```
+
 ## Consumption Usage Report (Python)
 
 Authenticate to the Pure1 REST API using a JWT signed with your private key, fetch subscription asset usage metrics, and print a table showing committed vs. consumed vs. burst per array. Warns if any array is consuming more than 90% of committed capacity.

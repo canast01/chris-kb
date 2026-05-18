@@ -1,5 +1,26 @@
 # Horizon (VDI) — Security
 
+```
+  Horizon Security Layers
+┌──────────────────────────────────────────────────────────┐
+│  Perimeter          Broker           Desktop             │
+│  ┌──────────┐       ┌──────────┐     ┌──────────────┐    │
+│  │ UAG      │       │Connection│     │ GPO policies │    │
+│  │ TLS term │──────►│ Server   │────►│ Clipboard /  │    │
+│  │ DoS mitg │       │ RBAC     │     │ USB / Drive  │    │
+│  │ Src IP   │       │ 2FA/SAML │     │ controls     │    │
+│  │ rules    │       │ Smart    │     └──────────────┘    │
+│  └──────────┘       │ card     │                         │
+│                     └──────────┘     ┌──────────────┐    │
+│  Identity                            │ vSAN / VM    │    │
+│  ┌──────────┐                        │ Encryption   │    │
+│  │ Workspace│                        │ (at rest)    │    │
+│  │ ONE vIDM │                        └──────────────┘    │
+│  │ (SSO/MFA)│                                            │
+│  └──────────┘                                            │
+└──────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

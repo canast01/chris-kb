@@ -1,5 +1,30 @@
 # NSX — Diagnostics
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│            NSX Diagnostics Tools Overview                   │
+├──────────────────┬──────────────────┬───────────────────────┤
+│  NSX Manager CLI │   Edge Node CLI  │  ESXi Host            │
+├──────────────────┼──────────────────┼───────────────────────┤
+│ nsxcli           │ get logical-     │ summarize-dvfilter    │
+│ get cluster      │   routers        │ vsipioctl getrules    │
+│   status         │ vrf <id>         │ vsipioctl getstats    │
+│ get managers     │ get bgp neighbor │ vmkping -I vmk<n>     │
+│ get tunnel       │   summary        │   -d -s 1572 <tep>    │
+│   status         │ get route        │ esxcli software vib   │
+│ get transport-   │ get forwarding   │   list | grep nsx     │
+│   node-status    │ get interfaces   │ net-vdl2 -M all -s 0  │
+│ get logical-     │ debug packet     │                       │
+│   switches       │   capture        │ pktcap-uw --capture   │
+│ get alarms       │   interface      │   VmVnic              │
+│                  │   fp-eth0        │                       │
+├──────────────────┴──────────────────┴───────────────────────┤
+│  Traceflow: UI → Plan & Troubleshoot → Traceflow            │
+│  POST /api/v1/traceflows  →  probe packet traces L2/L3/DFW  │
+│  Observation types: FORWARDED │ DROPPED │ RECEIVED          │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Ports and Protocols Reference
 
 | Traffic | Protocol | Port | Direction |

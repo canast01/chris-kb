@@ -1,5 +1,39 @@
 # Aria Automation — Health Checks
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│         Aria Automation Health Check Stack                  │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Services layer                                      │  │
+│  │  vracli status  ·  kubectl get pods --all-namespaces │  │
+│  │  Expected: all pods Running or Completed             │  │
+│  └──────────────────────┬───────────────────────────────┘  │
+│                         │                                  │
+│                         ▼                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Cloud Accounts                                      │  │
+│  │  Infrastructure → Connections → Cloud Accounts       │  │
+│  │  All green  ·  API: GET /iaas/api/cloud-accounts     │  │
+│  └──────────────────────┬───────────────────────────────┘  │
+│                         │                                  │
+│                         ▼                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Database + Queue                                    │  │
+│  │  kubectl logs -l app=postgres -n prelude             │  │
+│  │  kubectl logs -l app=rabbitmq -n prelude             │  │
+│  └──────────────────────┬───────────────────────────────┘  │
+│                         │                                  │
+│                         ▼                                  │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Deployments                                         │  │
+│  │  Deployments → All → filter by FAILED status        │  │
+│  │  No stuck CREATE_INPROGRESS > 30 min                 │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Daily Checks
 
 ### Cloud Account Status

@@ -1,5 +1,28 @@
 # SRM — Backup and Restore
 
+```
+  SRM Backup Sources
+┌──────────────────────────────────────────────────────────────┐
+│  vCenter VCSA Backup (covers most SRM config)                │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Recovery Plans + Protection Groups + IP rules       │    │
+│  │  → stored in vCenter Postgres DB (seat + common)     │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  SRM Appliance Snapshot (covers SRA credentials + certs)     │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Site pairing cert trust + SRA array credentials     │    │
+│  │  → govc snapshot.create / VM snapshot                │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  VR Appliance Snapshot + VAMI config backup                  │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  VRA registration + certificates                     │    │
+│  │  → VRA VAMI → Administration → Backup               │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## What SRM Stores and Where
 
 SRM does not have its own independent database for most critical configuration. Understanding where data lives is essential for backup planning.

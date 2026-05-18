@@ -1,5 +1,34 @@
 # Aria Suite Lifecycle — Escalation
 
+```
+  LCM Escalation Path
+┌─────────────────────────────────────────────────────────────────┐
+│  Step 1: Collect upfront (avoids data-request delay)            │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │ vracli support-bundle   │ LCM + product versions        │    │
+│  │ Request ID (if upgrade) │ Upgrade log (/vrlcm/upgrade/) │    │
+│  │ openssl x509 output     │ Timeline: last good → failure  │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                  │                                              │
+│                  ▼                                              │
+│  Step 2: Severity Assessment                                    │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ S1: prod env down, no workaround → open SR + call NOW    │   │
+│  │ S2: major feature unavailable → open SR (urgent)         │   │
+│  │ S3: partial degradation, workaround → normal SR          │   │
+│  │ S4: question / how-to → normal SR / KB search            │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                  │                                              │
+│                  ▼                                              │
+│  Step 3: Escalation Triggers                                    │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ S1 unresolved > 2h → Critical Escalation Team            │   │
+│  │ Recurring / SLA breach → TAM engagement                  │   │
+│  │ Do NOT power cycle partial-upgrade VMs without SR OK     │   │
+│  └──────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## When to Escalate to Broadcom Support
 
 Escalate when the following conditions are met and internal troubleshooting has not resolved the issue:

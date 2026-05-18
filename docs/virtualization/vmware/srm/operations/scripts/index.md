@@ -1,5 +1,22 @@
 # SRM — Scripts
 
+```
+  SRM Automation via PowerCLI + REST API
+┌──────────────────────────────────────────────────────────────┐
+│  Connect-SrmServer ──► $srm.ExtensionData.*                  │
+│                                                              │
+│  Reporting Scripts             Operational Scripts           │
+│  ┌──────────────────────┐      ┌──────────────────────────┐  │
+│  │ Protected VMs +      │      │ Run test recovery         │  │
+│  │  RPO compliance CSV  │      │ Monitor request state    │  │
+│  │ Last test date +     │      │ Alert: plans not tested  │  │
+│  │  result per plan     │      │  in 30 days              │  │
+│  │ Recovery plan        │      │ Check placeholder VMs    │  │
+│  │  summary export      │      │  missing at recov. site  │  │
+│  └──────────────────────┘      └──────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
+
 Requires: VMware.VimAutomation.Srm PowerShell module (installed with PowerCLI)
 
 ---

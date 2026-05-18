@@ -1,5 +1,32 @@
 # Aria Automation — Integrations
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│          Aria Automation Integration Topology               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│              ┌──────────────────────────────┐              │
+│              │   Aria Automation            │              │
+│              │   (VIDM SSO)                 │              │
+│              └──┬──────┬───────┬────────┬───┘              │
+│                 │      │       │        │                  │
+│          vCenter│    NSX│  Git  │ Ansible│                  │
+│                 │      │  SCM  │ Tower  │                  │
+│                 ▼      ▼       ▼        ▼                  │
+│  ┌──────────┐ ┌─────┐ ┌─────┐ ┌──────────────────────┐    │
+│  │ vCenter  │ │ NSX │ │Git  │ │ Ansible Tower / AWX  │    │
+│  │ :443     │ │:443 │ │:443 │ │  job templates       │    │
+│  │ Cloud    │ │Cloud│ │Blue-│ │  post-provision       │    │
+│  │ Account  │ │Acct │ │print│ │  config              │    │
+│  └──────────┘ └─────┘ └─────┘ └──────────────────────┘    │
+│                                                             │
+│  Optional integrations:                                    │
+│  ServiceNow ── approval workflows ── ITSM change requests  │
+│  HashiCorp Vault ── secrets at deploy time                 │
+│  ABX (Python/Node.js/PS) ── custom event-driven actions    │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 Aria Automation integrates with external systems via Cloud Accounts, Integrations, and ABX (Action-Based eXtensibility). Integrations extend blueprints with ITSM workflows, configuration management, and source control.

@@ -1,5 +1,28 @@
 # Tanzu — Authentication
 
+```
+┌──────────────── Tanzu Authentication Flow ─────────────────────────────────────┐
+│                                                                                 │
+│  User / CI/CD pipeline                                                          │
+│      │  kubectl vsphere login --server https://supervisor.corp.local            │
+│      ▼                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  Pinniped Supervisor (management cluster)                                │  │
+│  │  LDAPIdentityProvider ──► AD/LDAP ──► sAMAccountName / group search     │  │
+│  └────────────────────────────────────┬─────────────────────────────────────┘  │
+│                                        │ OIDC token exchange                    │
+│  ┌─────────────────────────────────────▼─────────────────────────────────────┐ │
+│  │  Pinniped Concierge (per workload cluster)                                │ │
+│  │  JWT token ──► kubeconfig ──► kubectl context                            │ │
+│  └────────────────────────────────────────────────────────────────────────-──┘ │
+│                                                                                 │
+│  Token TTL: short-lived (re-login when expired)                                 │
+│  Admin kubeconfig (--admin flag): long-lived cert ── store in secrets manager  │
+│                                                                                 │
+│  Harbor: LDAP / OIDC (vIDM) │ robot accounts for CI pull secrets               │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Supervisor Authentication (vSphere with Tanzu)

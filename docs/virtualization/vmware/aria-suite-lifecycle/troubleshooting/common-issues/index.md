@@ -1,5 +1,30 @@
 # Aria Suite Lifecycle — Common Issues
 
+```
+  LCM Triage Decision Tree
+┌─────────────────────────────────────────────────────────────────┐
+│  Symptom                  Check                  Fix            │
+│  ┌─────────────────┐      ┌──────────────────┐                  │
+│  │ Deploy fails    │─────►│ DNS A + PTR?      │─► fix records   │
+│  │                 │      │ NTP drift < 5s?   │─► chronyc step  │
+│  │                 │      │ /data space?      │─► expand NFS    │
+│  └─────────────────┘      └──────────────────┘                  │
+│  ┌─────────────────┐      ┌──────────────────┐                  │
+│  │ Upgrade stuck   │─────►│ log: timeout/err  │─► open SR with  │
+│  │ RUNNING > 2h    │      │ prod VMs up?      │   request ID;   │
+│  │                 │      │ DO NOT power off  │   use Retry only │
+│  └─────────────────┘      └──────────────────┘   if advised     │
+│  ┌─────────────────┐      ┌──────────────────┐                  │
+│  │ Cert import     │─────►│ openssl verify?   │─► fix chain /   │
+│  │ fails           │      │ key modulus match?│   passphrase    │
+│  └─────────────────┘      └──────────────────┘                  │
+│  ┌─────────────────┐      ┌──────────────────┐                  │
+│  │ VIDM auth fails │─────►│ VIDM health UP?   │─► LCM → re-reg │
+│  │ after PW change │      │ re-register VIDM  │   VIDM creds    │
+│  └─────────────────┘      └──────────────────┘                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## Installation and Deployment Failures
 
 ```bash

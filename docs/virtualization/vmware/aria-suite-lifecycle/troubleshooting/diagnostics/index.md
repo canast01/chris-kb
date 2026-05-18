@@ -1,5 +1,28 @@
 # Aria Suite Lifecycle — Diagnostics
 
+```
+  LCM Diagnostic Data Sources
+┌─────────────────────────────────────────────────────────────────┐
+│  LCM Appliance (SSH as root)       LCM API                      │
+│  ┌───────────────────────────┐     ┌──────────────────────────┐  │
+│  │ vracli support-bundle     │     │ GET /lcm/api/v1/health   │  │
+│  │ /var/log/vmware/vrlcm/    │     │ GET /api/v2/environments │  │
+│  │  lcm-app.log (main)       │     │  → health per product    │  │
+│  │  lcm-install.log (deploy) │     │ GET /api/v2/requests     │  │
+│  │  locker.log (cert/pw ops) │     │  ?state=RUNNING          │  │
+│  │  upgrade/ (per upgrade)   │     └──────────────────────────┘  │
+│  └───────────────────────────┘                                   │
+│                                                                  │
+│  System Checks                     Certificate Checks            │
+│  ┌───────────────────────────┐     ┌──────────────────────────┐  │
+│  │ systemctl list-units      │     │ openssl s_client :443    │  │
+│  │  --type=service | grep lcm│     │ GET /api/v1/certificates │  │
+│  │ df -h (disk thresholds)   │     │  days-to-expiry          │  │
+│  │ chronyc tracking (NTP)    │     └──────────────────────────┘  │
+│  └───────────────────────────┘                                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 Run LCM health checks before any upgrade, after any certificate rotation, and as part of routine quarterly verification. Health checks surface service status, certificate expiry, disk pressure, and NTP drift.

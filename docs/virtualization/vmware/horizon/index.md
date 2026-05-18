@@ -4,6 +4,22 @@
 Horizon knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
+```
+┌──────────────┐     ┌─────────────┐     ┌──────────────────┐     ┌─────────────────────┐
+│ Horizon      │     │   Unified   │     │   Connection     │     │  ESXi / Desktop     │
+│ Client       │────►│   Access    │────►│   Server (CS)    │────►│  Pool               │
+│ (internal /  │     │   Gateway   │     │  ┌─────────────┐ │     │ ┌─────────────────┐ │
+│  external)   │     │   (DMZ)     │     │  │ ADAM / LDAP │ │     │ │ Instant Clone   │ │
+└──────────────┘     └─────────────┘     │  │ Entitlements│ │     │ │ VMs (vGPU pool) │ │
+                                         │  └─────────────┘ │     │ └─────────────────┘ │
+                                         └──────────────────┘     └─────────────────────┘
+                                                  │                          │
+                                         ┌────────┴────────┐       ┌────────┴────────┐
+                                         │    vCenter      │       │   App Volumes   │
+                                         │  (provisioning) │       │  Manager + DEM  │
+                                         └─────────────────┘       └─────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

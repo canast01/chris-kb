@@ -1,5 +1,27 @@
 # SRM — Hardening
 
+```
+  SRM Hardening Controls
+┌──────────────────────────────────────────────────────────────┐
+│  Network Restrictions        Access Controls                 │
+│  ┌──────────────────────┐    ┌──────────────────────────┐    │
+│  │ SRM ← only from:     │    │ Separate config role from │    │
+│  │  vCenter TCP 443     │    │  run role:                │    │
+│  │  Remote SRM TCP 9086 │    │  SRM Admin: config+run   │    │
+│  │  Mgmt WS TCP 443     │    │  DR RunTeam: run only    │    │
+│  └──────────────────────┘    └──────────────────────────┘    │
+│                                                              │
+│  Test Network Isolation      Credential Rotation             │
+│  ┌──────────────────────┐    ┌──────────────────────────┐    │
+│  │ Isolated portgroup:  │    │ SRA API token: rotate    │    │
+│  │  no uplinks assigned │    │  quarterly               │    │
+│  │ Test VMs must NOT    │    │ 1. New token on array    │    │
+│  │  reach production    │    │ 2. Update in SRM         │    │
+│  └──────────────────────┘    │ 3. Delete old token      │    │
+│                              └──────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Restrict SRM Server Network Access

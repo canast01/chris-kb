@@ -1,5 +1,22 @@
 # Aria Suite Lifecycle — Security
 
+```
+  LCM Security Layers
+┌──────────────────────────────────────────────────────────────┐
+│  Identity               Access Control     Encryption         │
+│  ┌──────────────────┐   ┌──────────────┐   ┌──────────────┐  │
+│  │ VIDM (primary)   │   │ LCM Admin    │   │ Locker:      │  │
+│  │  SAML/OAuth2     │   │  deploy/     │   │  certs +     │  │
+│  │  AD via LDAPS    │   │  upgrade/    │   │  passwords   │  │
+│  │                  │   │  Locker      │   │  encrypted   │  │
+│  │ admin@local      │   │ Content Dev  │   │  w/ Master PW│  │
+│  │  break-glass     │   │  read + CLM  │   │ TLS 1.2+ on  │  │
+│  │  only            │   │ Viewer       │   │  all APIs    │  │
+│  │                  │   │  read-only   │   │              │  │
+│  └──────────────────┘   └──────────────┘   └──────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="authentication/">

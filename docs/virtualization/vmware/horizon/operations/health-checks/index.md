@@ -1,5 +1,28 @@
 # Horizon — Health Checks
 
+```
+  Health Check Chain
+┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│  Connection      │    │  Composer /      │    │  vCenter         │
+│  Servers         │───►│  App Volumes Mgr │───►│  (pool/datastore │
+│  (all green?)    │    │  (healthy?)      │    │   capacity?)      │
+└──────────────────┘    └──────────────────┘    └──────────────────┘
+         │                                                │
+         ▼                                                ▼
+┌──────────────────┐                         ┌──────────────────┐
+│  UAG             │                         │  Active Directory │
+│  (port 443/8443  │                         │  (LDAP/Kerberos  │
+│   reachable?)    │                         │   connectivity?) │
+└──────────────────┘                         └──────────────────┘
+         │
+         ▼
+┌──────────────────┐
+│  Desktop Pools   │
+│  (Available > 0, │
+│   Error = 0?)    │
+└──────────────────┘
+```
+
 ---
 
 ## Connection Server Dashboard

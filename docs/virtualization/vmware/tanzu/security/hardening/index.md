@@ -1,5 +1,32 @@
 # Tanzu — Hardening
 
+```
+┌────────────────── Tanzu Hardening Controls ────────────────────────────────────┐
+│                                                                                 │
+│  Namespace Level                                                                │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  Pod Security Admission: enforce=restricted (no privileged, no hostPath) │  │
+│  │  NetworkPolicy: default-deny-all ► explicit allow (DNS, ingress ctrl)    │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                 │
+│  Admission Control (OPA Gatekeeper / Kyverno)                                  │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  No privileged containers       (NoPrivilegedContainers constraint)      │  │
+│  │  Resource limits required        (LimitRange / RequiredResourceLimits)   │  │
+│  │  Images from harbor.corp.local only (AllowedRegistries constraint)       │  │
+│  │  Signed images only (Cosign verify via Kyverno verifyImages)             │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                 │
+│  Registry / Supply Chain                                                        │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  Harbor: auto-scan on push │ prevent pull if Critical/High CVEs          │  │
+│  │  Audit logging: kube-apiserver audit-policy.yaml ► Secrets/deletes      │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                 │
+│  Node Access: no direct SSH (kubectl debug node instead)                        │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Pod Security Admission

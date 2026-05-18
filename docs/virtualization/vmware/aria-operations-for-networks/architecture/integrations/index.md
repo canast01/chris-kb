@@ -1,5 +1,30 @@
 # Aria Operations for Networks — Integrations
 
+```
+┌──────────── Aria Networks Integration Map ─────────────────────────────────────┐
+│                                                                                 │
+│  ┌─────────────┐  API (TCP 443)   ┌─────────────────────────────────────────┐ │
+│  │  vCenter    ├─────────────────►│                                         │ │
+│  └─────────────┘                  │           Collector VM                  │ │
+│  ┌─────────────┐  API (TCP 443)   │                                         │ │
+│  │  NSX-T Mgr  ├─────────────────►│  • API polling (10 min interval)        │ │
+│  └─────────────┘                  │  • NetFlow/IPFIX listener (UDP 2055)    │ │
+│  ┌─────────────┐  NetFlow UDP 2055 │  • Syslog ingest (UDP 514)              │ │
+│  │  Phys Switch├─────────────────►│                                         │ │
+│  └─────────────┘                  └──────────────────┬──────────────────────┘ │
+│  ┌─────────────┐  IPFIX UDP 2055                      │ TCP 443 upload         │
+│  │  ESXi vDS   ├─────────────────►(same collector)    ▼                       │
+│  └─────────────┘                  ┌────────────────────────────────────────┐  │
+│  ┌─────────────┐  syslog UDP 514  │       Platform VM                      │  │
+│  │  Palo Alto  ├─────────────────►│  topology │ flows │ microseg │ alerts  │  │
+│  └─────────────┘                  └─────────────────────────────────────────┘  │
+│                                                                                 │
+│  ┌─────────────┐  REST API        ┌──────────────────────────────────────────┐ │
+│  │  ServiceNow ├─────────────────►│  CI correlation (IP/hostname matching)   │ │
+│  └─────────────┘  CMDB sync       └──────────────────────────────────────────┘ │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## NSX-T Integration
 
 AON connects to NSX-T Manager with a **read-only** service account. The Collector polls the NSX-T API on a 10-minute interval (default).

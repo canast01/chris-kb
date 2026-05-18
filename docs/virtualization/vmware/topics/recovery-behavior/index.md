@@ -1,5 +1,32 @@
 # Recovery Behavior Expectations
 
+```
+┌──────────── Host Failure: Recovery Sequence & Timing ──────────────────────────┐
+│                                                                                 │
+│  Host fails (power/hardware/network)                                            │
+│       │                                                                         │
+│       ▼  0–30 seconds                                                           │
+│  vCenter marks host unreachable │ FDM peers detect no heartbeat                │
+│       │                                                                         │
+│       ▼  1–5 minutes                                                            │
+│  HA FDM elects master ──► restarts VMs on remaining hosts                      │
+│  (respects restart priority: High ► Medium ► Low)                              │
+│       │                                                                         │
+│       ▼  1–3 minutes                                                            │
+│  Guest OS boots ──► application recovers                                        │
+│       │                                                                         │
+│       ▼  minutes to hours (data-dependent)                                      │
+│  vSAN resync: new component copies created on remaining capacity                │
+│  (esxcli vsan debug resync list ── monitor until empty)                         │
+│       │                                                                         │
+│       ▼  5–15 minutes                                                           │
+│  DRS rebalances ── vMotions VMs to equalise host utilisation                    │
+│                                                                                 │
+│  Escalate if:  HA restarts still running > 15 min │ APD not clearing           │
+│                vSAN resync not starting 10 min post-failure                     │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
 Understanding what normal recovery looks like prevents unnecessary intervention during incidents.
 ## After Host Failure
 

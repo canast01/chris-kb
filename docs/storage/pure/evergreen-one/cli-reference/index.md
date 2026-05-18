@@ -3,6 +3,31 @@
 > Part of the [Evergreen//One](../) reference.
 ---
 
+```
+  Subscription & Capacity Management — Command Flow
+
+  Pure1 REST API                    Per-Array CLI (SSH)
+  ┌─────────────────────┐           ┌──────────────────────┐
+  │ /subscriptions      │           │ purearray list       │
+  │  ├─ list all subs   │           │   --space  (usage)   │
+  │  └─ get capacity    │           │   --controller       │
+  │                     │           │                      │
+  │ /subscription-assets│           │ purevol list --space │
+  │  └─ per-array usage │           │ purealert list       │
+  │                     │           │ purehw list          │
+  │ /metrics/history    │           │   --type drive/fan   │
+  │  └─ trend data      │           └──────────────────────┘
+  └──────────┬──────────┘
+             │ Bearer token (OAuth2 RS256 JWT)
+             ▼
+  ┌─────────────────────┐
+  │  Capacity States    │
+  │  Reserved ◄── OK    │
+  │  >Reserved ◄─ BURST │  ← higher per-TiB billing
+  │  >Burst cap ◄─ OVER │  ← order required
+  └─────────────────────┘
+```
+
 ## Overview
 
 Pure Evergreen//One is Pure Storage's as-a-service (STaaS) subscription. Capacity is consumed against a reserved tier and may enter burst above that level. There is no standalone CLI — management is via the **Pure1 REST API**, the **Pure1 portal**, and the **per-array FlashArray CLI** for physical checks.

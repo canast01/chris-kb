@@ -1,5 +1,25 @@
 # SRM — Encryption
 
+```
+  TLS Encryption Coverage
+┌───────────────────────────────────────────────────────────────┐
+│  Traffic Path                        Encryption               │
+│  ┌──────────────────────────────────────────────────────┐     │
+│  │ SRM ↔ SRM (site pairing, TCP 9086)    TLS 1.2+       │     │
+│  │ SRM ↔ vCenter (TCP 443)               TLS 1.2+       │     │
+│  │ SRM ↔ Storage Array SRA (TCP 443)     TLS 1.2+       │     │
+│  │ VRA ↔ VRA mgmt (TCP 44046)            TLS 1.2+       │     │
+│  │ ESXi ──► VRA replication (TCP 31031)  Optional AES   │     │
+│  └──────────────────────────────────────────────────────┘     │
+│                                                               │
+│  Enable per-VM replication encryption:                        │
+│  ┌──────────────────────────────────────────────────────┐     │
+│  │ vCenter → [VM] → Configure Replication → Edit        │     │
+│  │   Enable Replication Data Encryption: Yes (AES-256)  │     │
+│  └──────────────────────────────────────────────────────┘     │
+└───────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Data in Transit

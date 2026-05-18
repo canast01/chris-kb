@@ -1,4 +1,31 @@
 # Pure Storage Evergreen//One Lifecycle
+
+```
+  Contract Lifecycle
+  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
+  │ Contract │──►│Provision │──►│ Operate  │──►│  Renew / │
+  │ Signed   │   │ (30 day  │   │  3–5 yr  │   │  Retire  │
+  └──────────┘   │ lead)    │   │  term    │   └──────────┘
+                 └──────────┘   └────┬─────┘
+                                     │
+                         ┌───────────▼──────────┐
+                         │  Annual Review       │
+                         │  ├─ Capacity true-up │
+                         │  ├─ SLA review       │
+                         │  └─ Tier alignment   │
+                         └───────────┬──────────┘
+                                     │
+                         ┌───────────▼──────────┐
+                         │  Monthly Billing     │
+                         │  Below reserve ──►   │
+                         │    reserved rate     │
+                         │  Above reserve ──►   │
+                         │    burst rate (daily)│
+                         └──────────────────────┘
+  Pure manages: controller refresh, Purity upgrades,
+  drive replacement, security patches — all transparent
+```
+
 ## Overview
 
 Because Pure owns and manages the hardware in an Evergreen//One deployment, the customer has no hardware procurement, refresh, or disposal lifecycle to manage. Pure handles all hardware upgrades, Purity software upgrades, firmware patches, and failed component replacement. The customer lifecycle responsibilities centre on the **service agreement** itself: renewal, capacity true-up, and performance tier review.
