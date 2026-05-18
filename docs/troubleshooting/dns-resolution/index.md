@@ -1,5 +1,36 @@
 # DNS Resolution Failures
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                     DNS Triage Flowchart                             │
+│                                                                      │
+│  Name not resolving                                                  │
+│        │                                                             │
+│  ┌─────▼──────────────────────────────────────────────────────────┐ │
+│  │  nslookup <name>  /  dig <name>                                │ │
+│  │  NXDOMAIN ──► record missing in zone                          │ │
+│  │  SERVFAIL ──► DNS server error / forwarding loop              │ │
+│  │  Timeout  ──► DNS server unreachable (UDP 53 blocked?)        │ │
+│  └─────┬──────────────────────────────────────────────────────────┘ │
+│        │ resolves but wrong IP                                      │
+│  ┌─────▼──────────────────────────────────────────────────────────┐ │
+│  │  dig <name> @<specific-dns-server>                             │ │
+│  │  Check each DNS server in hierarchy                            │ │
+│  │  Stale cached record ──► ipconfig /flushdns · rndc flush      │ │
+│  └─────┬──────────────────────────────────────────────────────────┘ │
+│        │                                                             │
+│  ┌─────▼──────────────────────────────────────────────────────────┐ │
+│  │  Check conditional forwarder (cross-domain / external names)   │ │
+│  │  Forwarder IP wrong or unreachable ──► update DNS config      │ │
+│  └─────┬──────────────────────────────────────────────────────────┘ │
+│        │                                                             │
+│  ┌─────▼──────────────────────────────────────────────────────────┐ │
+│  │  Check zone file / dynamic DNS update health                  │ │
+│  │  Create/fix A record ──► verify PTR (reverse DNS)             │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 DNS failures cascade rapidly across infrastructure: Kerberos authentication breaks without PTR records, NFS mounts fail, application service discovery stops, and vMotion can fail. This guide provides structured diagnosis from failure type through to resolution across Windows DNS and BIND/named environments.

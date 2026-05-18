@@ -1,5 +1,27 @@
 # Integration
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                    Integration Overview                              │
+│                                                                      │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │                  Infrastructure Components                   │   │
+│  │   vSphere · NSX · Pure · PowerMax · Veeam · Aria Ops         │   │
+│  └──────┬─────────────┬────────────┬──────────────┬─────────────┘   │
+│         │             │            │              │                  │
+│  ┌──────▼──────┐ ┌────▼────┐ ┌────▼────┐  ┌──────▼──────┐         │
+│  │    Auth     │ │  Certs  │ │  Time   │  │    Email    │         │
+│  │ AD/LDAP/    │ │ Root CA │ │  NTP    │  │ SMTP relay  │         │
+│  │ Kerberos    │ │ Venafi  │ │hierarchy│  │ → smarthost │         │
+│  └─────────────┘ └─────────┘ └─────────┘  └─────────────┘         │
+│                                                                      │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │                   External / API                            │    │
+│  │   REST API clients · ServiceNow · Monitoring · SIEM         │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 References for infrastructure service integrations and connectivity patterns.
 
 <div class="kb-grid kb-grid-3">

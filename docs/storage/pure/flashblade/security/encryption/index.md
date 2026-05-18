@@ -1,5 +1,22 @@
 # FlashBlade — Encryption
 
+```
+FlashBlade Encryption Architecture
+┌────────────────────────────────────────────────────────────┐
+│  Data at Rest (always-on)                                  │
+│  Write ──► blade NVMe drive ──► XTS-AES-256 (hardware)    │
+│  Drive removed → crypto erase (DEK destroyed)              │
+└────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│  Data in Transit                                           │
+│  ├── NFS v4.1: Kerberos GSSAPI privacy (optional)         │
+│  ├── SMB 3.0: end-to-end SMB encryption (AES-128-GCM)     │
+│  ├── S3: HTTPS (TLS 1.2+)                                  │
+│  ├── Management GUI/API: HTTPS (443)                       │
+│  └── Replication (ActiveDR): TLS between FlashBlades      │
+└────────────────────────────────────────────────────────────┘
+```
+
 > Part of the [FlashBlade Security](../) reference.
 
 ---

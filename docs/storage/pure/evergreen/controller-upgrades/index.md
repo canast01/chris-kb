@@ -1,5 +1,32 @@
 # Pure Storage Controller Upgrades
 
+```
+Ever Modern Controller Upgrade — Step by Step
+  ┌────────────────────────────────────────────────────┐
+  │  Pre-upgrade (customer):                           │
+  │  ├── Confirm hosts have ≥ 2 active paths           │
+  │  ├── No active drive rebuilds                      │
+  │  └── ActiveCluster pods healthy + replicating      │
+  └──────────────────────┬─────────────────────────────┘
+                         ▼  Pure engineer on-site
+  ┌────────────────────────────────────────────────────┐
+  │  CT0 replacement:                                  │
+  │  CT1 serves all I/O ──► old CT0 removed            │
+  │  New CT0' installed ──► joins HA pair              │
+  └──────────────────────┬─────────────────────────────┘
+                         ▼
+  ┌────────────────────────────────────────────────────┐
+  │  CT1 replacement:                                  │
+  │  CT0' serves all I/O ──► old CT1 removed           │
+  │  New CT1' installed ──► joins HA pair              │
+  └──────────────────────┬─────────────────────────────┘
+                         ▼
+  ┌────────────────────────────────────────────────────┐
+  │  Post-upgrade (customer validates):                │
+  │  purearray list --controller → both controllers ok │
+  └────────────────────────────────────────────────────┘
+```
+
 Under the Evergreen program, Pure Storage performs non-disruptive controller upgrades as part of the subscription — there is no hardware refresh cycle or capital expenditure.
 ## How Controller Upgrades Work
 

@@ -1,4 +1,31 @@
 # Syslog and Centralized Logging
+
+```
+Syslog Flow
+┌─────────────────────────────────────────────────┐
+│  Device (facility.severity)                     │
+│  e.g. local7.error — FlashArray alert           │
+└───────────────────────┬─────────────────────────┘
+                        ▼ UDP/TCP port 514
+┌─────────────────────────────────────────────────┐
+│  Syslog message                                 │
+│  <priority> timestamp hostname tag: message     │
+└───────────────────────┬─────────────────────────┘
+                        ▼
+┌─────────────────────────────────────────────────┐
+│  Syslog Collector                               │
+│  (rsyslog / syslog-ng / Graylog input)          │
+└───────────────────────┬─────────────────────────┘
+                        │
+            ┌───────────┴───────────┐
+            ▼                       ▼
+┌─────────────────────┐   ┌─────────────────────┐
+│  SIEM               │   │  Log store          │
+│  (Splunk / Graylog) │   │  (ELK / object      │
+│  correlation rules  │   │   storage archive)  │
+└─────────────────────┘   └─────────────────────┘
+```
+
 ## Architecture Overview
 
 ```

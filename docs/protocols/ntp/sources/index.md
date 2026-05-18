@@ -1,5 +1,26 @@
 # NTP Sources
 
+```
+        SOURCE SELECTION AND PREFERENCE
+┌─────────────────────────────────────────────────────────────┐
+│  /etc/chrony.conf                                           │
+│  server ntp1.example.com iburst prefer  ◄── primary        │
+│  server ntp2.example.com iburst         ◄── acceptable alt  │
+│  server ntp3.example.com iburst         ◄── third source    │
+│                                                             │
+│  chronyc sources -v                                         │
+│  ┌────┬─────────────────────┬───────┬──────┬───────────┐   │
+│  │ MS │ Name/IP             │Stratum│Reach │ Offset    │   │
+│  ├────┼─────────────────────┼───────┼──────┼───────────┤   │
+│  │ ^* │ ntp1.example.com    │  2    │ 377  │ -1.2ms    │   │ ◄ selected
+│  │ ^+ │ ntp2.example.com    │  2    │ 377  │ +0.3ms    │   │ ◄ acceptable
+│  │ ^- │ ntp3.example.com    │  3    │ 377  │ +2.1ms    │   │ ◄ excluded
+│  │ ^? │ ntp4.example.com    │  -    │  17  │   -       │   │ ◄ unreachable
+│  └────┴─────────────────────┴───────┴──────┴───────────┘   │
+│  Minimum 3 sources required for reliable clock selection    │
+└─────────────────────────────────────────────────────────────┘
+```
+
 An NTP source is a time server that the local daemon polls to correct the system clock. Source quality determines how accurate the local clock can be.
 
 ## Stratum Hierarchy

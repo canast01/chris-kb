@@ -6,20 +6,35 @@
 
 ## Architecture
 
-A typical deployment routes application-generated mail through a local Postfix relay, which forwards to a smarthost or cloud email service (AWS SES, SendGrid). This decouples application SMTP configuration from the upstream provider and centralises authentication and delivery policy.
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                        Email Relay Flow                              │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────┐     │
+│  │       Application / Monitoring / Cron / System             │     │
+│  │   (Aria Ops · Veeam · Linux cron · Windows Task Sched)     │     │
+│  └──────────────────────────┬─────────────────────────────────┘     │
+│                             │ SMTP :25 (localhost)                  │
+│                             ▼                                        │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │          Postfix Relay Server                                │   │
+│  │   mynetworks: 127.0.0.0/8  ·  relayhost = smarthost:587     │   │
+│  │   TLS: encrypt  ·  SASL auth  ·  queue + retry              │   │
+│  └──────────────────────────┬─────────────────────────────────────┘  │
+│                             │ SMTP :587 (STARTTLS + auth)            │
+│                             ▼                                        │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │    Smarthost: AWS SES / SendGrid / Internal Exchange Hub     │   │
+│  └──────────────────────────┬─────────────────────────────────────┘  │
+│                             │ SMTP :25 (MX lookup)                  │
+│                             ▼                                        │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │                  Recipient Mail Server                       │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────────────┘
+```
 
-```
-Application / cron / alerting tool
-        |
-        v
-  Postfix relay (localhost:25 or relay host)
-        |
-        v
-  Smarthost: AWS SES / SendGrid / internal mail hub (port 587, STARTTLS)
-        |
-        v
-  Recipient MX
-```
+A typical deployment routes application-generated mail through a local Postfix relay, which forwards to a smarthost or cloud email service (AWS SES, SendGrid). This decouples application SMTP configuration from the upstream provider and centralises authentication and delivery policy.
 
 Key properties of this pattern:
 - Applications configure a single static SMTP target (the relay) — no per-app credential management

@@ -1,5 +1,27 @@
 # NFS Permissions
 
+```
+        NFS PERMISSION LAYERS
+┌──────────────────────────────────────────────────────────────┐
+│  Layer 1 — EXPORT OPTIONS (server /etc/exports)              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  IP restriction: only 192.168.10.0/24 can mount        │  │
+│  │  root_squash: root on client → UID 65534 (nfsnobody)   │  │
+│  │  ro / rw: read-only or read-write at mount level        │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                         │ mount permitted                    │
+│                         ▼                                    │
+│  Layer 2 — POSIX UID/GID on files (server filesystem)        │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  File owner: UID 1001 (must match client UID 1001)      │  │
+│  │  Permissions: rwxr-xr-x                                │  │
+│  │  NFSv4: user@domain mapping via idmapd                 │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                         │                                    │
+│  Effective access = export options AND POSIX permissions     │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 NFS relies on UID/GID matching between client and server for access control. NFSv3 trusts client-reported UIDs; NFSv4 with Kerberos (`krb5`, `krb5i`, `krb5p`) adds cryptographic authentication. POSIX ACLs are supported over NFS but require the underlying filesystem to support them.

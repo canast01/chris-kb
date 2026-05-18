@@ -4,6 +4,38 @@
 Network troubleshooting knowledge base covering connectivity testing, packet loss diagnosis, path tracing, and reachability validation.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                     Network Triage Flowchart                         │
+│                                                                      │
+│  Can't reach host?                                                   │
+│        │                                                             │
+│  ┌─────▼─────────────────────────────────────────────────────────┐  │
+│  │  Step 1: ping <host>                                          │  │
+│  │  Fail ──► check local interface  ·  Success ──► step 2       │  │
+│  └─────┬─────────────────────────────────────────────────────────┘  │
+│        │                                                             │
+│  ┌─────▼─────────────────────────────────────────────────────────┐  │
+│  │  Step 2: traceroute / tracert                                 │  │
+│  │  Find where hops stop  ──►  routing gap or firewall           │  │
+│  └─────┬─────────────────────────────────────────────────────────┘  │
+│        │                                                             │
+│  ┌─────▼─────────────────────────────────────────────────────────┐  │
+│  │  Step 3: MTU test (ping -M do -s 8972)                        │  │
+│  │  Fails ──► jumbo frame mismatch on storage/vMotion VLANs      │  │
+│  └─────┬─────────────────────────────────────────────────────────┘  │
+│        │                                                             │
+│  ┌─────▼─────────────────────────────────────────────────────────┐  │
+│  │  Step 4: interface errors (show interfaces / ethtool)         │  │
+│  │  CRC / input errors ──► cable / SFP / duplex issue            │  │
+│  └─────┬─────────────────────────────────────────────────────────┘  │
+│        │                                                             │
+│  ┌─────▼──────────────────────┐   ┌─────────────────────────────┐  │
+│  │  Packet capture (tcpdump)  │──►│  Escalate to network team   │  │
+│  └────────────────────────────┘   └─────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 ## DNS Troubleshooting
 
 ### Symptoms

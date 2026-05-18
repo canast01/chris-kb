@@ -4,6 +4,25 @@
 Reference coverage for the networking and storage protocols used in enterprise infrastructure — Fibre Channel, iSCSI, NFS, SMB, NTP, SNMP, TLS, DNS, DHCP, and LDAP.
 </div>
 
+```
+                        PROTOCOL LANDSCAPE
+┌───────────────────────────────────────────────────────────────┐
+│  STORAGE PROTOCOLS          MANAGEMENT PROTOCOLS              │
+│  ┌──────────┐  ┌───────┐   ┌──────┐ ┌─────┐ ┌─────┐ ┌─────┐ │
+│  │    FC    │  │ iSCSI │   │ SNMP │ │ NTP │ │ DNS │ │DHCP │ │
+│  │ 8/16/32G │  │TCP3260│   │161/  │ │UDP  │ │UDP/ │ │UDP  │ │
+│  │ (block)  │  │(block)│   │162udp│ │ 123 │ │TCP53│ │67/68│ │
+│  └──────────┘  └───────┘   └──────┘ └─────┘ └─────┘ └─────┘ │
+│  ┌──────────┐  ┌───────┐   ┌──────────────────────────────┐  │
+│  │   NFS    │  │  SMB  │   │ SECURITY / DIRECTORY         │  │
+│  │ TCP 2049 │  │TCP 445│   │ ┌─────┐        ┌──────┐      │  │
+│  │  (file)  │  │ (file)│   │ │ TLS │        │ LDAP │      │  │
+│  └──────────┘  └───────┘   │ │443+ │        │389/  │      │  │
+│                             │ └─────┘        │ 636  │      │  │
+│                             └────────────────┴──────┘──────┘  │
+└───────────────────────────────────────────────────────────────┘
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

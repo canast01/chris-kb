@@ -1,5 +1,32 @@
 # High Availability Design
 
+```
+┌────────────────────────────────────────────────────────────────────┐
+│                    HA Layers — Defence in Depth                    │
+│                                                                    │
+│  Layer 1: Compute HA                                               │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐               │
+│  │  ESXi Host  │  │  ESXi Host  │  │  ESXi Host  │  vSphere HA   │
+│  │   (active)  │  │   (active)  │  │  (+1 spare) │  Admission    │
+│  └──────┬──────┘  └──────┬──────┘  └─────────────┘  Control     │
+│         │                │                                        │
+│  Layer 2: Storage HA                                               │
+│  ┌──────▼──────────────────────────────────────┐                 │
+│  │  vSAN / RAID (FTT=1/2)  ·  Dual Fabric HBA  │  Array MPIO    │
+│  └──────────────────────────────────────────────┘                 │
+│                                                                    │
+│  Layer 3: Network HA                                               │
+│  ┌──────────────────────────────────────────────┐                 │
+│  │  NIC Teaming (LACP)  ·  Dual ToR  ·  vPC     │  No STP block │
+│  └──────────────────────────────────────────────┘                 │
+│                                                                    │
+│  Layer 4: Site HA (DR)                                             │
+│  ┌──────────────┐        ┌──────────────┐                         │
+│  │  Primary DC  │◄──────►│   DR Site    │  SRM / SRDF / RP       │
+│  └──────────────┘  repl  └──────────────┘                         │
+└────────────────────────────────────────────────────────────────────┘
+```
+
 ![High Availability Design Overview](../../assets/high-availability-design-overview.svg)
 
 ## Overview

@@ -1,5 +1,31 @@
 # FlashArray — Backup & Restore
 
+```
+FlashArray Data Protection Tiers
+  ┌────────────────────────────────────────────────────────────┐
+  │  Tier 1: Local Snapshots (Protection Groups)               │
+  │  Volumes → PGroup schedule → hourly/daily snaps on array   │
+  └────────────────────────────────────────────────────────────┘
+                          │  async replication
+  ┌────────────────────────▼───────────────────────────────────┐
+  │  Tier 2: Async Replication (ActiveDR)                      │
+  │  PGroup snaps ──► remote FlashArray DR site  (RPO: mins)   │
+  └────────────────────────────────────────────────────────────┘
+                          │  sync replication
+  ┌────────────────────────▼───────────────────────────────────┐
+  │  Tier 3: Synchronous (ActiveCluster)                       │
+  │  Pod stretched ──► site A + site B  (RPO = 0)              │
+  └────────────────────────────────────────────────────────────┘
+                          │  backup integration
+  ┌────────────────────────▼───────────────────────────────────┐
+  │  Tier 4: Application-Consistent Backup                     │
+  │  Veeam / Commvault ──► FlashArray snap API ──► backup repo │
+  └────────────────────────────────────────────────────────────┘
+
+Restore path:
+  Snapshot → clone (validate) → overwrite production → remount
+```
+
 FlashArray provides multiple data protection tiers. Choose the tier that matches your RPO and RTO requirements for each workload.
 
 | Tier | Technology | RPO | RTO | Use Case |

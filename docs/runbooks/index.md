@@ -1,5 +1,37 @@
 # Runbooks
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                     Runbook Execution Pattern                        │
+│                                                                      │
+│  Ticket / alert raised                                               │
+│        │                                                             │
+│  ┌─────▼──────────────────────────────────────────────────────────┐ │
+│  │  Identify runbook                                              │ │
+│  │  Account unlock · Cert renewal · Disk cleanup · Reboot        │ │
+│  │  Service restart · Volume expand · VM snapshot                │ │
+│  └─────┬──────────────────────────────────────────────────────────┘ │
+│        │                                                             │
+│  ┌─────▼──────────────────────────────────────────────────────────┐ │
+│  │  Pre-checks                                                    │ │
+│  │  Backup current state · Notify stakeholders · Verify access   │ │
+│  └─────┬──────────────────────────────────────────────────────────┘ │
+│        │                                                             │
+│  ┌─────▼──────────────────────────────────────────────────────────┐ │
+│  │  Execute steps (ordered, with checkpoints)                     │ │
+│  └─────┬──────────────────────────────────────────────────────────┘ │
+│        │                                                             │
+│  ┌─────▼────────────────────┐    ┌──────────────────────────────┐  │
+│  │  Validate outcome        │    │  Rollback if failed          │  │
+│  │  Service health checks   │    │  Restore from snapshot/bkp   │  │
+│  └─────┬────────────────────┘    └──────────────────────────────┘  │
+│        │                                                             │
+│  ┌─────▼──────────────────────────────────────────────────────────┐ │
+│  │  Document outcome in ticket · Close change record             │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 Common operational procedures for infrastructure tasks.
 
 <div class="kb-grid kb-grid-3">

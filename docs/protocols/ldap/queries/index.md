@@ -1,5 +1,30 @@
 # LDAP Queries
 
+```
+        LDAP QUERY STRUCTURE
+┌──────────────────────────────────────────────────────────────┐
+│  ldapsearch -H ldap://dc01 -D "svc@corp.local" -w "pass"    │
+│             -b "DC=corp,DC=local"                           │
+│             -s sub                                          │
+│             "(sAMAccountName=jsmith)"                       │
+│             cn mail memberOf                                │
+│                                                              │
+│  Components:                                                 │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │ -b  Base DN:  DC=corp,DC=local   (search root)       │    │
+│  │ -s  Scope:    base/one/sub       (depth)             │    │
+│  │     filter:  (sAMAccountName=jsmith)   (RFC 4515)    │    │
+│  │     attrs:   cn mail memberOf          (return these) │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  Filter examples:                                            │
+│  (objectClass=user)           all users                      │
+│  (&(objectClass=user)(mail=*)) users with email              │
+│  (|(cn=Finance)(cn=IT))       Finance OR IT groups           │
+│  (!(userAccountControl:...=2)) not disabled                  │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 LDAP queries use a filter syntax based on RFC 4515. Filters are composed of attribute-value assertions enclosed in parentheses. Boolean operators (`&`, `|`, `!`) combine multiple assertions. Knowing the common AD attributes and search bases is essential for effective directory lookups.

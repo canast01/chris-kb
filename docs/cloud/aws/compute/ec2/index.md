@@ -3,6 +3,23 @@
 
 AWS EC2 notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  EC2 Instance Lifecycle                 │
+│                                                         │
+│  pending ──► running ──► stopping ──► stopped           │
+│     │          │                        │               │
+│     │          ├──► rebooting ──────────►(back running) │
+│     │          │                                        │
+│     │          └──► shutting-down ──► terminated        │
+│                                                         │
+│  Instance families:                                     │
+│  t-series  general (burstable)   m-series general       │
+│  c-series  compute-optimised     r-series memory        │
+│  i-series  storage-optimised     g-series GPU           │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

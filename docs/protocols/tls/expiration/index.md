@@ -1,6 +1,30 @@
 # TLS Certificate Expiration
 
-Expired certificates cause immediate outages — services reject connections without warning. Expiration monitoring and automated renewal must be in place for every certificate in production.
+Expired certificates cause immediate outages — services reject connections without warning.
+
+```
+        EXPIRY ALERT THRESHOLDS AND ACTIONS
+┌──────────────────────────────────────────────────────────────┐
+│  Days remaining    Alert level     Action                    │
+│  ─────────────     ───────────     ──────                    │
+│  90 days           Info            Begin renewal planning    │
+│  │                                                           │
+│  30 days           Warning ───────► Initiate renewal now    │
+│  │                                                           │
+│  14 days           Warning ───────► Renewal must be active  │
+│  │                                                           │
+│  7 days            Critical ──────► Immediate action req'd  │
+│  │                                                           │
+│  0 days            EXPIRED ───────► Service outage          │
+│                                                              │
+│  Monitoring:                                                 │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Prometheus blackbox_exporter                         │   │
+│  │ probe_ssl_earliest_cert_expiry - time() < 30*86400   │   │
+│  │ → fires CertExpiryWarning alert                      │   │
+│  └──────────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────┘
+``` Expiration monitoring and automated renewal must be in place for every certificate in production.
 
 ## Checking Expiry
 

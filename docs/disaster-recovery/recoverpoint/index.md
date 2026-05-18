@@ -4,6 +4,31 @@
 Dell EMC RecoverPoint journal-based continuous data protection — RPA clusters intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery across CDP, CRR, and CLR modes.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                   RecoverPoint Architecture                          │
+│                                                                      │
+│  Primary Site                         DR Site                       │
+│  ┌────────────────────────┐           ┌────────────────────────┐    │
+│  │  Host / ESXi           │           │  Host / ESXi           │    │
+│  │  (writes I/O)          │           │  (standby / copy)      │    │
+│  └──────────┬─────────────┘           └─────────────┬──────────┘    │
+│             │ via splitter (kernel/                 │               │
+│             │  array-based)                         │               │
+│  ┌──────────▼─────────────┐           ┌─────────────▼──────────┐    │
+│  │  RPA Cluster (source)  │──────────►│  RPA Cluster (target)  │    │
+│  │  Journal: rolling CDP  │  WAN repl │  Journal: remote copy  │    │
+│  └──────────┬─────────────┘           └─────────────┬──────────┘    │
+│             │                                       │               │
+│  ┌──────────▼─────────────┐           ┌─────────────▼──────────┐    │
+│  │  Source Array           │           │  Target Array          │    │
+│  │  (production LUNs)      │           │  (replica LUNs)        │    │
+│  └─────────────────────────┘           └────────────────────────┘    │
+│                                                                      │
+│  RPO = journal depth   ·   RTO = activate copy (minutes)            │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

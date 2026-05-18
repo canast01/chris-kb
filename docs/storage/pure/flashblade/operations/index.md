@@ -1,5 +1,18 @@
 # FlashBlade — Operations
 
+```
+FlashBlade Day-to-Day Operations
+  Pure1 Cloud ──► fleet health + AI alerts + capacity forecast
+          │
+          ▼  phone-home telemetry
+  FlashBlade (Purity//FB GUI / CLI / REST)
+  ├── purefb alert list   ─── active alerts
+  ├── purefb blade list   ─── blade health
+  ├── purefb hardware list─── chassis / PSU / fans
+  ├── purefb array list   ─── capacity + data reduction
+  └── purefb replication  ─── ActiveDR relationship status
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>
 <a class="kb-card" href="procedures/"><strong>Procedures</strong><span>Day-to-day operational tasks and how-to guides.</span></a>

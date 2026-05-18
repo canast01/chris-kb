@@ -1,4 +1,23 @@
 # Pure Storage Evergreen Troubleshooting
+
+```
+Evergreen Troubleshooting Flow
+  Symptom / alert
+          │
+          ▼
+  Check Pure1 portal ──► fleet health + subscription status
+          │
+   ┌──────┴──────────────────────────────────────┐
+   ▼                                             ▼
+Capacity / subscription issue           Hardware / performance issue
+Pure1 → subscription dashboard          purealert list
+Contact account team                    puredrive list
+Request True Forward amendment          purearray monitor
+                                        Open support case if needed
+
+Controller refresh issue:
+  Contact Pure account team (90+ days lead time for scheduling)
+```
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

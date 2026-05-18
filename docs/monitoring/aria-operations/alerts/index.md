@@ -1,5 +1,36 @@
 # Aria Operations: Alert Definitions and Policies
 
+```
+Alert Lifecycle — Aria Operations
+┌──────────────────┐
+│ Metric threshold │  (symptom fires for N cycles)
+│   violation      │
+└────────┬─────────┘
+         ▼
+┌──────────────────┐
+│ Alert Definition │  (symptom AND/OR logic evaluated)
+│  matched         │
+└────────┬─────────┘
+         ▼
+┌──────────────────┐
+│  Alert created   │  criticality: Critical / Immediate / Warning
+│  (Active state)  │
+└────────┬─────────┘
+         ▼
+┌──────────────────┐
+│ Notification     │  policy routes alert
+│  Policy match    │
+└────────┬─────────┘
+         │
+    ┌────┴──────────┬──────────────┐
+    ▼               ▼              ▼
+┌────────┐   ┌──────────┐  ┌────────────┐
+│ Email  │   │  Ticket  │  │   SNMP     │
+│ (SMTP) │   │  (REST   │  │   Trap     │
+│        │   │ webhook) │  │            │
+└────────┘   └──────────┘  └────────────┘
+```
+
 VMware Aria Operations (formerly vRealize Operations) generates alerts based on symptom definitions, recommendations, and policies. This page covers creating alert definitions, configuring thresholds, managing suppression, and applying alert policies.
 
 ## Alert Anatomy: Symptoms and Definitions

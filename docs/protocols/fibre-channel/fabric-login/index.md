@@ -1,6 +1,33 @@
 # Fabric Login
 
-Fabric login is the process by which FC ports register with the fabric and establish communication paths. Login failures prevent hosts from seeing storage.
+Fabric login is the process by which FC ports register with the fabric and establish communication paths.
+
+```
+        FC LOGIN SEQUENCE
+┌──────────┐        ┌───────────┐        ┌───────────┐
+│ Host HBA │        │ FC Switch │        │  Storage  │
+│          │        │(Name Svr) │        │  Target   │
+└────┬─────┘        └─────┬─────┘        └─────┬─────┘
+     │  1. FLOGI           │                    │
+     │ ──────────────────► │                    │
+     │  ACC (FC_ID assigned)│                   │
+     │ ◄────────────────── │                    │
+     │  2. PLOGI (to NS)   │                    │
+     │ ──────────────────► │                    │
+     │  ACC                │                    │
+     │ ◄────────────────── │                    │
+     │  3. RFT_ID / RPN_ID │                    │
+     │ ──────────────────► │                    │
+     │                     │  4. PLOGI (port-to-port)
+     │ ───────────────────────────────────────► │
+     │                     │  ACC               │
+     │ ◄─────────────────────────────────────── │
+     │                     │  5. PRLI (SCSI session)
+     │ ───────────────────────────────────────► │
+     │                     │  ACC (target ready) │
+     │ ◄─────────────────────────────────────── │
+     │                     │  I/O can begin     │
+``` Login failures prevent hosts from seeing storage.
 
 ## Login Sequence
 

@@ -1,5 +1,29 @@
 # DNS Lookups
 
+```
+        FORWARD vs REVERSE LOOKUPS
+┌──────────────────────────────────────────────────────────────┐
+│  FORWARD LOOKUP (name → IP)                                  │
+│  dig A web01.corp.local @10.0.0.53                           │
+│  → ANSWER: web01.corp.local. 3600 IN A 192.168.10.100        │
+│                                                              │
+│  REVERSE LOOKUP (IP → name)                                  │
+│  dig -x 192.168.10.100 @10.0.0.53                            │
+│  → ANSWER: 100.10.168.192.in-addr.arpa. PTR web01.corp.local.│
+│                                                              │
+│  ITERATIVE (resolver asks each level):                       │
+│  client ─► root (.) ─► TLD (.com) ─► authoritative ─► answer│
+│                                                              │
+│  RECURSIVE (resolver does all work):                         │
+│  client ─► recursive resolver ─────────────────────► answer │
+│            (resolver iterates internally, returns final IP)  │
+│                                                              │
+│  TTL: time-to-live in seconds; cached until expired          │
+│  dig output: web01.corp.local.  3600  IN  A  192.168.10.100  │
+│              name               TTL  class type  value       │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 DNS lookups translate hostnames to IPs (forward) and IPs to hostnames (reverse). Tools vary by OS: `nslookup` is universal, `dig` is preferred on Linux/macOS for detailed output, and `Resolve-DnsName` is the PowerShell equivalent on Windows. TTL inspection is essential when debugging stale cache issues.

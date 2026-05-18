@@ -3,6 +3,25 @@
 
 AWS IAM Roles notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  IAM Role Structure                     │
+│                                                         │
+│  IAM Role                                               │
+│  ├── Trust Policy  (who can assume this role)           │
+│  │    └── Principal: EC2 / Lambda / account / OIDC      │
+│  └── Permissions Policy  (what the role can do)         │
+│       └── Effect: Allow · Action: s3:GetObject …        │
+│                                                         │
+│  Assume role flow:                                      │
+│  Principal ──► STS:AssumeRole ──► temp credentials      │
+│               (AccessKeyId + SecretKey + SessionToken)  │
+│               valid 1 hour (default) up to 12 hours     │
+│                                                         │
+│  No credentials to rotate · no leakage risk             │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

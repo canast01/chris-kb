@@ -1,4 +1,21 @@
 # Pure Storage Evergreen Security
+
+```
+Evergreen Security Controls
+┌──────────────────────────────────────────────────────────┐
+│  Same FlashArray/FlashBlade security model applies       │
+│  ├── AES-256 encryption at rest (always-on SEDs)         │
+│  ├── TLS for all management + replication traffic        │
+│  ├── RBAC: array_admin / storage_admin / ops / readonly  │
+│  ├── SafeMode snapshots (Pure Support required to delete)│
+│  └── AD/LDAP/SAML SSO for human admin auth               │
+├──────────────────────────────────────────────────────────┤
+│  Evergreen-specific controls                             │
+│  ├── Rotate API tokens every 90 days                     │
+│  ├── Phone-home always active (contractual)              │
+│  └── Controller refresh: drives sanitised before return  │
+└──────────────────────────────────────────────────────────┘
+```
 ## Hardening Checklist
 
 - Enforce TLS 1.2 or higher for all management access (GUI, REST API); confirm HTTP redirect is disabled

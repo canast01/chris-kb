@@ -4,6 +4,29 @@
 Server Message Block (SMB) is a network file sharing protocol running over TCP port 445, used for file shares, printer sharing, and inter-process communication in Windows environments and increasingly in mixed Linux/macOS fleets via Samba. The critical operational concerns are version enforcement (SMB1 must be disabled; SMB3 is required for encryption and signing), the interaction between share permissions and NTFS permissions (most restrictive wins), and diagnosing authentication and session failures in domain environments.
 </div>
 
+```
+        SMB ARCHITECTURE
+┌──────────────────┐     TCP 445      ┌──────────────────────────┐
+│  Windows/Linux   │                  │   SMB SERVER (Windows)   │
+│  Client          │                  │                          │
+│                  │  1. Negotiate    │  \\server\Finance        │
+│  net use Z:      ├─────────────────►│    (UNC path / share)    │
+│  \\server\share  │  2. SessionSetup │                          │
+│                  ├─────────────────►│  Auth: Kerberos / NTLM   │
+│  Kerberos ticket │◄─────────────────┤                          │
+│  or NTLM creds   │  3. TreeConnect  │  ┌──────────────────┐    │
+│                  ├─────────────────►│  │  Share Perms     │    │
+│                  │◄─────────────────┤  │  (Everyone:Read) │    │
+│                  │  Share connected │  └────────┬─────────┘    │
+│  ┌─────────────┐ │  4. File I/O     │           │ AND          │
+│  │  Z:\files   │◄╪═════════════════►│  ┌────────▼─────────┐    │
+│  └─────────────┘ │                  │  │  NTFS ACL        │    │
+│                  │                  │  │  (user:Modify)   │    │
+│                  │                  │  └──────────────────┘    │
+│                  │                  │  Effective = most restrict│
+└──────────────────┘                  └──────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="shares/">

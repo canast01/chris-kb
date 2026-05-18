@@ -4,6 +4,29 @@
 Network services knowledge base covering DNS, load balancers, and network service management.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                     Network Services Overview                        │
+│                                                                      │
+│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐           │
+│  │     DNS       │  │     DHCP      │  │     NTP       │           │
+│  │ Forward/Rev   │  │ Address pools │  │ Stratum 2     │           │
+│  │ Windows DNS   │  │ Reservations  │  │ chrony/w32tm  │           │
+│  │ BIND/named    │  │ Lease mgmt    │  │ hierarchy     │           │
+│  └───────┬───────┘  └───────┬───────┘  └───────┬───────┘           │
+│          │                  │                   │                   │
+│  ┌───────▼──────────────────▼───────────────────▼───────────────┐  │
+│  │           All Infrastructure Components                      │  │
+│  │   ESXi · VMs · Appliances · Network devices                  │  │
+│  └──────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│  ┌────────────────────────────────────────────┐                     │
+│  │               IPAM                         │                     │
+│  │   Netbox · Infoblox · IP address tracking  │                     │
+│  └────────────────────────────────────────────┘                     │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 ## DNS Troubleshooting
 
 ### Symptoms

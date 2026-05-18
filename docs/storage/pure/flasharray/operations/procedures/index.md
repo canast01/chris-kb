@@ -1,5 +1,36 @@
 # FlashArray — Procedures
 
+```
+Host Volume Provisioning Flow
+  ┌─────────────────────────────────────────────────────┐
+  │  Zone FC fabric (single-initiator / single-target)  │
+  └───────────────────────┬─────────────────────────────┘
+                          ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Create Host entry (purehost create + WWN/IQN)      │
+  └───────────────────────┬─────────────────────────────┘
+                          ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Create Host Group (purehgroup + hosts)             │
+  └───────────────────────┬─────────────────────────────┘
+                          ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Create Volume (purevol create --size)              │
+  └───────────────────────┬─────────────────────────────┘
+                          ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Connect Volume to Host Group (purehgroup connect)  │
+  └───────────────────────┬─────────────────────────────┘
+                          ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Rescan HBA on host → confirm multipath             │
+  └───────────────────────┬─────────────────────────────┘
+                          ▼
+  ┌─────────────────────────────────────────────────────┐
+  │  Add Volume to Protection Group (purepgroup addvol) │
+  └─────────────────────────────────────────────────────┘
+```
+
 ## Change Readiness
 
 - [ ] No active drive rebuilds — `puredrive list` shows all drives `healthy`, no `recovering` drives

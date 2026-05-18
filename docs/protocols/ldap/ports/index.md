@@ -1,5 +1,33 @@
 # LDAP Ports
 
+```
+        LDAP PORT MAP
+┌──────────────────────────────────────────────────────────────┐
+│  Port 389 (LDAP)                                             │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ App ──────────────────────── cleartext (or StartTLS)──►│  │
+│  │     plain query or -ZZ upgrade to TLS (STARTTLS)       │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Port 636 (LDAPS)                                            │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ App ──── TLS from first byte ────────────────────────►│  │
+│  │     Always encrypted; cert check on connect            │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Port 3268 (Global Catalog)                                  │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ App ──── forest-wide query (partial replica) ────────►│  │
+│  │     Use when querying across multiple AD domains       │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Port 3269 (Global Catalog over TLS)                         │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ App ──── 3268 + TLS ─────────────────────────────────►│  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 LDAP uses a small set of well-known TCP ports. All are required in different scenarios — plain LDAP for legacy compatibility, LDAPS for encrypted binds, and Global Catalog ports for forest-wide searches in Active Directory.

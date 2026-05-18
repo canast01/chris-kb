@@ -1,5 +1,25 @@
 # InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring
 
+```
+Capacity — InsightIQ
+Used ▲
+     │                              ╭──── projected full
+     │                    ╭─────────╯
+     │           ╭────────╯
+     │  ╭────────╯
+     │  │  volume usage vs quota
+     └──┼──────────────────────────────────────► time
+       now       +30d       +60d          +90d
+
+┌──────────────────────────────────────────────┐
+│  Quota Monitoring                            │
+│  /ifs/dept/finance  ████████████░  82%  ⚠   │
+│  /ifs/dept/ops      ████████░░░░░  55%       │
+│  /ifs/dept/archive  █████░░░░░░░░  38%       │
+│  Cluster total      ████████████░  83%  ⚠   │
+└──────────────────────────────────────────────┘
+```
+
 Dell InsightIQ (now part of the OneFS Analytics suite) provides capacity analytics for PowerScale (Isilon) clusters. This page covers how to monitor capacity trends, break down usage by protocol, and manage quota monitoring.
 
 ## Capacity Overview

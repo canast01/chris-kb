@@ -1,4 +1,22 @@
 # Pure Storage Evergreen Integration
+
+```
+Pure1 Integration Flow (Evergreen)
+  FlashArray / FlashBlade
+  └── phone-home (HTTPS 443 outbound, always-on)
+          │
+          ▼
+  Pure1 Cloud
+  ├── Subscription entitlement + capacity tracking
+  ├── Controller generation + Ever Modern eligibility
+  ├── Health score + hardware fault detection
+  ├── Upgrade readiness reports
+  └── Proactive case creation on hardware faults
+          │
+          ▼
+  Customer views:
+  └── pure1.purestorage.com → fleet dashboard
+```
 ## Pure1 Integration
 
 All Evergreen subscriptions are managed through the Pure1 cloud management platform (https://pure1.purestorage.com). Pure1 provides:

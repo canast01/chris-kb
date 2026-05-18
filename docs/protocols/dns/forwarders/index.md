@@ -1,5 +1,28 @@
 # DNS Forwarders
 
+```
+        FORWARDER RESOLUTION FLOW
+┌──────────────────────────────────────────────────────────────┐
+│  Internal DNS (DC)            External / Upstream            │
+│  ┌──────────────────┐         ┌──────────────────────────┐   │
+│  │ corp.local zone  │         │  Forwarder: 8.8.8.8      │   │
+│  │ (authoritative)  │         │  (for unknown names)     │   │
+│  └────────┬─────────┘         └──────────────────────────┘   │
+│           │                                                  │
+│  Query: web01.corp.local  ──► answered from local zone       │
+│  Query: google.com        ──► forwarded to 8.8.8.8 ─► answer │
+│                                                              │
+│  CONDITIONAL FORWARDER:                                      │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ partner.example.com ──► forward to 172.16.1.10         │  │
+│  │ (specific domain sent to designated server)            │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  Forwarder unreachable? ──► fallback to root hints           │
+│  (if UseRootHint = $true — recommended for resilience)       │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 DNS forwarders direct queries for names a server cannot resolve locally to another DNS server. Conditional forwarders send queries for a specific domain to a designated server — essential for split-brain DNS and cross-forest resolution. Root hints are the fallback when no forwarder is configured.

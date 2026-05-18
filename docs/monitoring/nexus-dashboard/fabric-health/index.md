@@ -1,5 +1,24 @@
 # Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry
 
+```
+Fabric Health — Nexus Dashboard
+┌──────────────────────────────────────────────┐
+│  Spine/Leaf Status   BGP Sessions   VTEPs    │
+│  ┌────────┐          ┌───────────┐           │
+│  │Spine 1 │ healthy  │ BGP: 8/8  │ VTEP: 12 │
+│  │Spine 2 │ healthy  │ OSPF: 4/4 │ active   │
+│  │Leaf 1  │ healthy  └───────────┘           │
+│  │Leaf 2  │ warning ◄── port errors          │
+│  │Leaf 3  │ healthy                          │
+│  └────────┘                                  │
+├──────────────────────────────────────────────┤
+│  Inter-Fabric Links      Endpoint Reach.     │
+│  ISL-1  ████  45% util   10.0.0.1  reachable │
+│  ISL-2  █     8% util    10.0.0.2  reachable │
+│                          10.0.0.50 stale  !  │
+└──────────────────────────────────────────────┘
+```
+
 Cisco Nexus Dashboard Insights provides a fabric health score for ACI and NX-OS fabrics, along with endpoint reachability tracking and flow telemetry visualisation. This page covers how to interpret the health score, verify endpoint reachability, and use flow data for troubleshooting.
 
 ## Fabric Health Score

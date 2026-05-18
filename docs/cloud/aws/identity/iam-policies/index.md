@@ -3,6 +3,27 @@
 
 AWS IAM Policies notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│               IAM Policy Structure                      │
+│                                                         │
+│  {                                                      │
+│    "Version": "2012-10-17",                             │
+│    "Statement": [                                       │
+│      {                                                  │
+│        "Effect":    "Allow" | "Deny"                    │
+│        "Action":   ["s3:GetObject", "s3:PutObject"]     │
+│        "Resource": "arn:aws:s3:::my-bucket/*"           │
+│        "Condition": { "StringEquals": {...} }  (opt)    │
+│      }                                                  │
+│    ]                                                    │
+│  }                                                      │
+│                                                         │
+│  Explicit Deny always wins — regardless of Allow        │
+│  Default = Deny (nothing allowed unless stated)         │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

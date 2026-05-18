@@ -1,5 +1,25 @@
 # Aria Operations: Capacity Analytics and Rightsizing
 
+```
+Capacity Model — Aria Operations
+┌──────────────────────────────────────────┐
+│         Capacity Analytics Engine        │
+│                                          │
+│  Observed usage (demand model)           │
+│  ┌──────────────────────────────────┐    │
+│  │ Cluster A  ████████░░░░░  68%   │    │
+│  │ Cluster B  ██████████████ 92% ! │    │
+│  │ Datastore  ████████████░░ 83%   │    │
+│  └──────────────────────────────────┘    │
+│                   │                      │
+│       ┌───────────┼──────────────┐       │
+│       ▼           ▼              ▼       │
+│  Rightsize    Demand         Reclaim     │
+│  recommend.   forecast       idle VMs   │
+│  (vCPU/vRAM)  (days left)  (snapshots)  │
+└──────────────────────────────────────────┘
+```
+
 Aria Operations provides capacity analytics across vSphere clusters, datastores, and virtual machines. This page covers capacity models, time-remaining projections, rightsizing recommendations, and reclaim workflows.
 
 ## Capacity Overview and Models

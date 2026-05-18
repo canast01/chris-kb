@@ -1,5 +1,25 @@
 # Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View
 
+```
+Fabric Visibility — Nexus Dashboard
+┌──────────────────────────────────────────────┐
+│  Endpoint Tracking                           │
+│  IP 10.0.10.50  ──► MAC aa:bb:cc:dd:ee:ff   │
+│                 ──► Leaf-3 port Eth1/12      │
+│                 ──► EPG: web-tier            │
+│                 ──► last seen: 2m ago        │
+├──────────────────────────────────────────────┤
+│  Flow Tracking (src → dst)                   │
+│  10.0.10.50:443 → 10.0.20.100:8080          │
+│  protocol: TCP  bytes: 14MB  drops: 0        │
+│  latency: 42µs  path: Leaf3→Spine1→Leaf7    │
+├──────────────────────────────────────────────┤
+│  Configuration Drift Detection               │
+│  Node: Leaf-2  deviation: MTU mismatch       │
+│  Expected: 9216  Actual: 1500   ← alert      │
+└──────────────────────────────────────────────┘
+```
+
 Cisco Nexus Dashboard Insights provides comprehensive visibility into fabric endpoints, traffic flows, and the physical and logical topology of ACI and NX-OS fabrics. This page covers how to use these visibility features for day-to-day operations and troubleshooting.
 
 ## Endpoint Tracking

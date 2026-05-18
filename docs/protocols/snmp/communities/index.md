@@ -1,6 +1,27 @@
 # SNMP Communities
 
-An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base (MIB). Community strings provide no encryption.
+An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base (MIB).
+
+```
+        COMMUNITY STRING FLOW (SNMPv1/v2c)
+┌─────────────────────────────────────────────────────────────┐
+│  NMS (monitoring server)        Device (switch/router)      │
+│  ┌─────────────────────┐        ┌────────────────────────┐  │
+│  │ GET request         │        │ community ACL check    │  │
+│  │ community: "mon-ro" ├──────►│ "mon-ro" matches RO    │  │
+│  │ OID: sysDescr.0     │        │ NMS IP in access-list  │  │
+│  └─────────────────────┘        └──────────┬─────────────┘  │
+│                                            │ OK             │
+│  ┌─────────────────────┐        ┌──────────▼─────────────┐  │
+│  │ OID value returned  │◄───────│ MIB lookup             │  │
+│  │ "Cisco IOS 17.3"    │        │ returns OID value      │  │
+│  └─────────────────────┘        └────────────────────────┘  │
+│                                                             │
+│  RO community: GET/GETNEXT/GETBULK only                     │
+│  RW community: all ops + SET (device config change) — risk! │
+│  All traffic is PLAINTEXT — use SNMPv3 for production       │
+└─────────────────────────────────────────────────────────────┘
+``` Community strings provide no encryption.
 
 !!! warning "SNMPv2c security"
     Community strings are transmitted in plaintext and are visible in packet captures. Treat them as secrets and use SNMPv3 for any environment with compliance requirements or sensitive data. SNMPv2c is acceptable only on isolated management VLANs with strict ACLs.

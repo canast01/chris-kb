@@ -1,5 +1,27 @@
 # CloudIQ: Capacity Forecasting and Pool Utilisation
 
+```
+Capacity Analytics — CloudIQ
+                                         ← 90-day warning
+                   consumed              │
+Used ▲  ╭─────────────────────╮         │ ← 30-day critical
+     │  │ current: 68%        │──────────────────────►
+     │  │                     │ forecast (linear trend)
+     │  │  reclaimable: 12%   │
+     │  │                     ▼
+     │  │  net projected full:  ~75 days
+     │  │
+     └──┼─────────────────────────────────────► time
+       now        +30d      +60d         +90d
+
+┌──────────────────────────────────────────┐
+│  Threshold Alerts                        │
+│  Days Until Full < 90  → Minor   alert  │
+│  Days Until Full < 30  → Major   alert  │
+│  Days Until Full <  7  → Critical alert │
+└──────────────────────────────────────────┘
+```
+
 Dell CloudIQ provides capacity forecasting across all registered storage systems. It uses telemetry data to project when pools, volumes, and file systems will reach defined thresholds. This page covers capacity views, forecasting methodology, and threshold alert configuration.
 
 ## Capacity Dashboard Overview

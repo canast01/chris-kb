@@ -1,4 +1,38 @@
 # Alert Management
+
+```
+Alert Lifecycle
+┌─────────────┐
+│   Trigger   │  (threshold breach / anomaly / hardware fault)
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│  Severity   │  Critical / High / Medium / Low
+│  Assignment │
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│    Triage   │  claim → assess impact → identify cause
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│ Acknowledge │  linked ticket, owner assigned
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│   Resolve   │  fix applied, verified
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│    Close    │  root cause documented in ticket
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│  Post-      │  threshold review, noise reduction
+│  Incident   │
+└─────────────┘
+```
+
 ## Alert Severity Levels
 
 | Severity | Meaning | Response Time |

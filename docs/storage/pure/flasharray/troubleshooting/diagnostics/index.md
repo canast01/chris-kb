@@ -1,5 +1,21 @@
 # FlashArray — Diagnostics
 
+```
+FlashArray Diagnostic Sequence
+  ┌──────────────────────────────────────────────────┐
+  │  1. purearray list           ─ version + status  │
+  │  2. purearray list --controller ─ CT0/CT1 health │
+  │  3. purealert list           ─ failure domain    │
+  │  4. puredrive list           ─ drive state       │
+  │  5. purehost list            ─ host paths        │
+  │  6. purepod list             ─ replication state │
+  │  7. purearray monitor        ─ live performance  │
+  └──────────────────────┬───────────────────────────┘
+                         │  if escalating
+                         ▼
+  Pure1 telemetry ──► Support case ──► purediag --send
+```
+
 Structured diagnostic approach for identifying and isolating FlashArray issues. Start with alert triage, then drill into the specific failure domain.
 
 ---

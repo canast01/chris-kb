@@ -1,5 +1,33 @@
 # CloudIQ: Alert Types, Severity, and Notification Configuration
 
+```
+Proactive Alert Flow — CloudIQ
+┌─────────────────────────────┐
+│  System telemetry (SRS)     │  (PowerStore / PowerMax / PowerScale)
+└──────────────┬──────────────┘
+               ▼
+┌─────────────────────────────┐
+│  CloudIQ AI/ML engine       │  detects anomaly or threshold breach
+└──────────────┬──────────────┘
+               ▼
+┌─────────────────────────────┐
+│  Alert created              │
+│  ┌────────────────────────┐ │
+│  │ Severity: Critical     │ │
+│  │ Root cause identified  │ │
+│  │ Recommended action     │ │
+│  └────────────────────────┘ │
+└──────────────┬──────────────┘
+               │
+       ┌───────┴────────┐
+       ▼                ▼
+┌────────────┐   ┌─────────────┐
+│  Email     │   │   Portal    │
+│ notification│  │  (CloudIQ   │
+│  (distro)  │   │   UI)       │
+└────────────┘   └─────────────┘
+```
+
 Dell CloudIQ surfaces alerts from connected storage, data protection, networking, and hyperconverged infrastructure systems. This page covers alert types, severity levels, notification setup, and dismissal workflows.
 
 ## Alert Types and Sources

@@ -4,6 +4,26 @@
 iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands over TCP/IP, delivering block storage across standard Ethernet on port 3260. Coverage includes initiator IQN naming, target discovery, CHAP authentication, multipathing (dm-multipath/MPIO), and network tuning for storage VLANs.
 </div>
 
+```
+        iSCSI END-TO-END ARCHITECTURE
+┌────────────────────┐       ┌──────────────────┐       ┌──────────────────┐
+│       HOST         │       │   IP NETWORK     │       │  iSCSI TARGET    │
+│                    │       │                  │       │  (Storage Array) │
+│  ┌──────────────┐  │       │  ┌────────────┐  │       │                  │
+│  │SW Initiator  │  │       │  │  Ethernet  │  │       │  ┌────────────┐  │
+│  │(OS built-in) ├──┼──────►│  │  Switch    ├──┼──────►│  │Target IQN  │  │
+│  └──────────────┘  │       │  │ (VLAN      │  │       │  │Portal IP:  │  │
+│         or         │TCP    │  │ dedicated) │  │TCP    │  │   3260     │  │
+│  ┌──────────────┐  │3260   │  └────────────┘  │3260   │  └─────┬──────┘  │
+│  │  HW iSCSI   │  │       │                  │       │        │         │
+│  │  HBA (offld)├──┼──────►│                  ├──────►│  ┌─────▼──────┐  │
+│  └──────────────┘  │       │                  │       │  │    LUN     │  │
+│                    │       │                  │       │  │(block dev) │  │
+│  IQN: iqn.YYYY-MM. │       │                  │       │  └────────────┘  │
+│    domain:name     │       │                  │       │  CHAP auth       │
+└────────────────────┘       └──────────────────┘       └──────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="initiators/">

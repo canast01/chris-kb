@@ -2,6 +2,27 @@
 
 TLS (Transport Layer Security) provides encryption, integrity, and authentication for network communications.
 
+```
+        TLS HANDSHAKE (TLS 1.3 simplified)
+┌─────────────┐                              ┌──────────────────┐
+│   Client    │                              │     Server       │
+└──────┬──────┘                              └────────┬─────────┘
+       │  1. ClientHello                              │
+       │  (supported ciphers, TLS version)            │
+       │ ────────────────────────────────────────────►│
+       │  2. ServerHello + Certificate                │
+       │  (chosen cipher, server cert + chain)        │
+       │ ◄────────────────────────────────────────────│
+       │  3. Key Exchange                             │
+       │  (client verifies cert, derives shared key) │
+       │ ────────────────────────────────────────────►│
+       │  4. Finished (encrypted with shared key)    │
+       │ ◄════════════════════════════════════════════│
+       │                                             │
+       │  All application data encrypted             │
+       │ ◄════════════════════════════════════════════│
+```
+
 
 <div class="kb-grid kb-grid-1">
 

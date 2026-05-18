@@ -1,5 +1,31 @@
 # Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies
 
+```
+Alert Flow — Nexus Dashboard
+┌──────────────────────────────┐
+│  Fabric event or threshold   │  (BGP flap, TCAM high, port error)
+└────────────────┬─────────────┘
+                 ▼
+┌──────────────────────────────┐
+│  Nexus Dashboard Insights    │
+│  (NDI anomaly detection)     │
+└────────────────┬─────────────┘
+                 ▼
+┌──────────────────────────────┐
+│  Alert created               │
+│  severity: Critical/Major/   │
+│            Minor/Warning/Info│
+└────────────────┬─────────────┘
+                 │
+      ┌──────────┼──────────┐
+      ▼          ▼          ▼
+┌──────────┐ ┌───────┐ ┌──────────┐
+│  Email   │ │Syslog │ │  SNMP    │
+│  (on-    │ │(SIEM  │ │  Trap    │
+│  call)   │ │ingest)│ │  (NMS)   │
+└──────────┘ └───────┘ └──────────┘
+```
+
 Cisco Nexus Dashboard Insights generates alerts for ACI and NDFC (NX-OS) fabrics based on anomaly detection, configuration analysis, and event correlation. This page covers alert types, severity classification, acknowledgement workflows, and notification policies.
 
 ## Alert Sources and Types

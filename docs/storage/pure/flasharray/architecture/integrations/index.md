@@ -1,5 +1,26 @@
 # FlashArray — Integrations
 
+```
+FlashArray Integration Map
+┌──────────────────────────────────────────────────────────────┐
+│                        FlashArray                            │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │ FC/iSCSI │  │  Mgmt    │  │  Repl    │  │  NVMe-oF │   │
+│  │ data     │  │  HTTPS   │  │  port    │  │  data    │   │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────────┘   │
+└───────┼─────────────┼─────────────┼──────────────────────────┘
+        │             │             │
+        ▼             ├──► Pure1 (phone-home HTTPS)
+  ESXi / Linux        ├──► vCenter VASA / Plugin
+  DB Hosts            ├──► Veeam / Commvault (REST API)
+                      ├──► Ansible / Terraform (REST API)
+                      ├──► SNMP NMS (SNMPv3)
+                      └──► SIEM (TLS syslog)
+                      │
+                      └──────────────► Remote FlashArray
+                                       (ActiveDR / ActiveCluster)
+```
+
 ## Integration Architecture Overview
 
 ```mermaid

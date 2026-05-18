@@ -1,5 +1,30 @@
 # iSCSI Troubleshooting
 
+```
+        TRIAGE: HOST CANNOT SEE iSCSI LUN
+┌──────────────────────────────────────────────────────────────┐
+│  1. Ping target IP ───── fail ──► check VLAN, routing, NIC  │
+│          │ ok                                                │
+│          ▼                                                   │
+│  2. nc -zv <ip> 3260 ─── fail ──► check firewall, target svc│
+│          │ ok                                                │
+│          ▼                                                   │
+│  3. Run SendTargets ──── no targets ► check target IP / IQN │
+│          │ targets found                                     │
+│          ▼                                                   │
+│  4. Login (session) ──── fail ──► check CHAP credentials    │
+│          │ ok                                                │
+│          ▼                                                   │
+│  5. LUN visible? ──────── no ───► add IQN to host group     │
+│          │ yes                                               │
+│          ▼                                                   │
+│  6. Multipath healthy? ─── no ──► check second path / NIC   │
+│          │ yes                                               │
+│          ▼                                                   │
+│  7. Check filesystem / volume manager layer                  │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -1,5 +1,27 @@
 # Pure1 — Capacity
 
+```
+Capacity Trending — Pure1
+                                   threshold (80%)
+                                   │
+Used ▲                             │
+     │                    ╭────────╯ ← projected full
+     │               ╭────╯
+     │          ╭────╯
+     │     ╭────╯   trend line
+     │╭────╯
+     └──────────────────────────────────► time
+       now        +30d      +60d    +90d
+
+Alert Thresholds:
+┌──────────────────┬───────────┬──────────┐
+│ Array space warn │    70%    │ Warning  │
+│ Array space crit │    80%    │  Error   │
+│ Volume near full │    90%    │ Warning  │
+│ Snapshot excess  │  >50% use │ Warning  │
+└──────────────────┴───────────┴──────────┘
+```
+
 Pure1 tracks capacity across all registered arrays, showing raw, usable, used, and effective (after data reduction) capacity with historical trends and forecasting.
 
 ## Capacity Concepts

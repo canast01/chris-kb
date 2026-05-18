@@ -1,5 +1,23 @@
 # Pure1 — Array Health
 
+```
+Health Check Dashboard
+┌─────────────────────────────────────────┐
+│              Pure1 Health View          │
+├───────────┬──────────┬──────────────────┤
+│ Controller│  Fabric  │     Volumes      │
+│  Status   │  Ports   │  (active alerts) │
+│ ┌───┐┌───┐│ ┌──┐┌──┐ │  ┌────────────┐ │
+│ │CT0││CT1││ │FC││iSC│ │  │ vol01  OK  │ │
+│ │ ▲ ││ ▲ ││ │▲ ││ ▲ │ │  │ vol02  OK  │ │
+│ └───┘└───┘│ └──┘└──┘ │  └────────────┘ │
+├───────────┴──────────┴──────────────────┤
+│   Capacity Used ████████░░░░  72%        │
+│   Performance   IOPS / Latency / BW      │
+│   Phone Home    Last contact: < 1h ago   │
+└─────────────────────────────────────────┘
+```
+
 Pure1 provides a cloud-hosted dashboard showing real-time and historical health status across all registered FlashArray and FlashBlade systems.
 
 ## Health Dashboard — What to Check

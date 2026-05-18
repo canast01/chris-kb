@@ -1,4 +1,33 @@
 # Log Retention Policy
+
+```
+Log Retention Tiers
+┌─────────────────────────────────────────────────────┐
+│  Collect                                            │
+│  (rsyslog / syslog-ng / agent)                      │
+└───────────────────────────┬─────────────────────────┘
+                            ▼
+          ┌─────────────────────────────────┐
+          │  Hot storage  (0–30 days)        │
+          │  SIEM index / fast query         │
+          └─────────────────┬───────────────┘
+                            ▼
+          ┌─────────────────────────────────┐
+          │  Warm storage  (30–90 days)      │
+          │  Compressed, searchable          │
+          └─────────────────┬───────────────┘
+                            ▼
+          ┌─────────────────────────────────┐
+          │  Cold archive  (90 days–1 yr)   │
+          │  Object storage (S3 / NFS)       │
+          └─────────────────┬───────────────┘
+                            ▼
+          ┌─────────────────────────────────┐
+          │  Delete / purge                  │
+          │  (per retention policy)          │
+          └─────────────────────────────────┘
+```
+
 ## Standard Retention Periods
 
 | Log Type | Minimum Retention | Notes |

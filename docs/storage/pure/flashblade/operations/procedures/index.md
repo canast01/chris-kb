@@ -1,5 +1,25 @@
 # FlashBlade — Procedures
 
+```
+FlashBlade NFS Filesystem Provisioning Flow
+  ┌──────────────────────────────────────────────────────┐
+  │  Create filesystem (purefb fs create --size)         │
+  └──────────────────────────┬───────────────────────────┘
+                             ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  Set NFS export policy (purefb fs setattr --nfs)     │
+  │  (allowed client IPs / CIDR, access mode)            │
+  └──────────────────────────┬───────────────────────────┘
+                             ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  Mount on client: mount -t nfs <fb_ip>:/<fs> /mnt   │
+  └──────────────────────────┬───────────────────────────┘
+                             ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  Add to snapshot policy (purefb policy ...)          │
+  └──────────────────────────────────────────────────────┘
+```
+
 > Part of the [FlashBlade Operations](../) reference.
 
 ---

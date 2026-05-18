@@ -4,6 +4,34 @@
 Dell AIOps monitoring platform — architecture, anomaly detection, recommendations, alerting, and operational runbooks.
 </div>
 
+```
+Dell AIOps (CloudIQ AI) Architecture
+┌──────────────────────────────────────────────┐
+│   Dell Infrastructure Telemetry              │
+│   PowerStore │ PowerMax │ PowerScale          │
+│   PowerEdge  │ PowerSwitch │ PowerProtect     │
+└────────────────────┬─────────────────────────┘
+                     │ via SRS/ESRS (HTTPS)
+                     ▼
+┌──────────────────────────────────────────────┐
+│   CloudIQ AI / ML Engine                    │
+│   ┌──────────────────────────────────────┐  │
+│   │  Anomaly Detection  (confidence band)│  │
+│   │  Predicted Failure  (SMART + history)│  │
+│   │  Event Correlation  (grouping)       │  │
+│   └──────────────────────────────────────┘  │
+└────────────────────┬─────────────────────────┘
+                     │
+        ┌────────────┼────────────┐
+        ▼            ▼            ▼
+┌──────────┐  ┌───────────┐  ┌──────────────┐
+│ Proactive│  │ Insights  │  │Recommendations│
+│  Alerts  │  │ Workload  │  │ (with steps)  │
+│ (email/  │  │ analysis  │  │               │
+│  portal) │  │           │  │               │
+└──────────┘  └───────────┘  └──────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Deployment topology, SCG integration, and data ingestion pipeline from Dell arrays.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>

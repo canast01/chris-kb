@@ -1,5 +1,30 @@
 # InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting
 
+```
+Scheduled Reports — InsightIQ
+┌─────────────────────────────────────────┐
+│  Report template configured             │
+│  (capacity / performance / quota)       │
+└─────────────────┬───────────────────────┘
+                  ▼
+┌─────────────────────────────────────────┐
+│  Schedule: weekly  │  format: PDF/CSV   │
+│  cluster: ps-cluster1  │  granularity: 1h│
+└─────────────────┬───────────────────────┘
+                  ▼
+┌─────────────────────────────────────────┐
+│  Report generated (InsightIQ appliance) │
+└──────────┬──────────────────────────────┘
+           │
+    ┌──────┴──────────┐
+    ▼                 ▼
+┌────────┐      ┌──────────┐
+│ Email  │      │ Download │
+│ distro │      │  (CSV    │
+│  list  │      │  / PDF)  │
+└────────┘      └──────────┘
+```
+
 Dell InsightIQ provides a built-in reporting engine for PowerScale performance and capacity data. Reports can be scheduled for recurring delivery, exported as CSV for further analysis, or used to measure SLA compliance.
 
 ## Report Types in InsightIQ

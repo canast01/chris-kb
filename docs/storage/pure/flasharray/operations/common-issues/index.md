@@ -1,5 +1,27 @@
 # FlashArray — Common Issues
 
+```
+FlashArray Triage Flow
+  Alert / Symptom reported
+          │
+          ▼
+  purealert list ──► Identify failure domain
+          │
+   ┌──────┴──────────────────────────────┐
+   ▼                                     ▼
+Drive fault                       Host connectivity loss
+puredrive list                    purehost list + pureport list
+  │                                       │
+  ▼                                       ▼
+Open Pure support case             Check FC zoning / iSCSI path
+  │                                       │
+  ▼                                       ▼
+Monitor rebuild                    Verify multipath on host side
+
+ActiveCluster issue:
+  purepod list ──► pod state ──► check mediator + repl network
+```
+
 ## Quick Reference
 
 | Symptom | Likely Cause | Action |

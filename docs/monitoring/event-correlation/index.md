@@ -1,5 +1,33 @@
 # Event Correlation
 
+```
+Event Correlation Flow
+┌─────────────────────────────────────────────┐
+│  Multiple alerts arrive simultaneously      │
+│  App timeout (T+0:00)                       │
+│  Host I/O error (T+0:01)                   │
+│  Storage latency spike (T+0:01)             │
+│  Array controller alert (T+0:02)            │
+└─────────────────────────┬───────────────────┘
+                          ▼
+┌─────────────────────────────────────────────┐
+│  Suppression + Correlation                  │
+│  (deduplicate child events,                 │
+│   group by common start time)               │
+└─────────────────────────┬───────────────────┘
+                          ▼
+┌─────────────────────────────────────────────┐
+│  Root cause event identified                │
+│  "Array controller fault — SYS-A CT1"      │
+│  ┌─────────────────────────────────────┐   │
+│  │  Child alerts (suppressed):         │   │
+│  │  ► host01 I/O errors                │   │
+│  │  ► host02 app timeouts              │   │
+│  │  ► monitoring latency alerts (×8)   │   │
+│  └─────────────────────────────────────┘   │
+└─────────────────────────────────────────────┘
+```
+
 Event correlation links related alerts and log entries across systems to identify root causes rather than treating each symptom individually.
 ## Core Principle
 

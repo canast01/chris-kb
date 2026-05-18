@@ -1,5 +1,28 @@
 # CloudIQ: Health Score, Component Status, and Connectivity
 
+```
+Health Score Composition
+┌───────────────────────────────────────────┐
+│  Component Scores → Weighted System Score │
+│                                           │
+│  Controllers  ████████████░░  89/100     │
+│  Drives/SSDs  ████████████████ 100/100   │
+│  Fabric/Net   ████████░░░░░░░  60/100  ! │
+│  Enclosures   ████████████░░░  85/100    │
+│               ─────────────────────────  │
+│  System Score ██████████░░░░░  79/100    │
+│                (weighted average)        │
+└───────────────────────────────────────────┘
+         │                                  
+         ▼                                  
+┌──────────────────────────────────┐        
+│        Fleet View                │        
+│  SYS-A  ████  92 ✓               │        
+│  SYS-B  ████  79 ⚠               │        
+│  SYS-C  ██    45 ✗ (critical)    │        
+└──────────────────────────────────┘        
+```
+
 Dell CloudIQ assigns a health score to each registered system based on active alerts, hardware status, and connectivity. This page covers how the health score is calculated, how to interpret component status, and how to verify and restore system connectivity.
 
 ## Health Score Overview

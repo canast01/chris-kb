@@ -3,6 +3,28 @@
 
 AWS Permission Review notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│               Permission Review Process                 │
+│                                                         │
+│  IAM Access Analyzer                                    │
+│  └── Scans resource policies for external access        │
+│        (S3 · IAM roles · KMS · Lambda · SQS)            │
+│                                                         │
+│  IAM Access Advisor                                     │
+│  └── Last accessed date per service per user/role       │
+│       (find and remove unused permissions)              │
+│                                                         │
+│  Credential Report                                      │
+│  └── All users: password age · MFA · access key age     │
+│                                                         │
+│  Review cycle:                                          │
+│  ├── Quarterly: review all human role assignments       │
+│  ├── Monthly:   check unused roles / policies           │
+│  └── On offboard: immediately revoke all access         │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

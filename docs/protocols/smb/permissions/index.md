@@ -1,5 +1,31 @@
 # SMB Share Permissions
 
+```
+        TWO-LAYER PERMISSION MODEL
+┌──────────────────────────────────────────────────────────────┐
+│  Network client accesses \\server\Finance                    │
+│                    │                                         │
+│                    ▼ Layer 1                                 │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  SHARE PERMISSIONS (network access gate)               │  │
+│  │  Everyone: Full Control  ◄── best practice setting     │  │
+│  │  or specific group: Read / Change / Full               │  │
+│  └────────────────────────┬───────────────────────────────┘  │
+│                           │ permitted                        │
+│                           ▼ Layer 2                          │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  NTFS ACL (filesystem-level, local + network)          │  │
+│  │  DOMAIN\Finance_Users: Modify (Allow)                  │  │
+│  │  DOMAIN\Auditors: Read (Allow)                         │  │
+│  │  Everyone: (no entry)                                  │  │
+│  └────────────────────────┬───────────────────────────────┘  │
+│                           │                                  │
+│   Effective = most restrictive of share AND NTFS perms       │
+│   Share:Full + NTFS:Read = Read                              │
+│   Share:Read + NTFS:Full = Read                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 Share permissions are the first access gate for network clients connecting to an SMB share. They apply only to network access — local access bypasses them entirely. In practice, share permissions are often set to **Everyone: Full Control** and NTFS permissions handle actual access control. Effective permission for a network user is the most restrictive result of both layers combined.

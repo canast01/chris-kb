@@ -1,5 +1,21 @@
 # FlashBlade — Diagnostics
 
+```
+FlashBlade Diagnostic Sequence
+  ┌──────────────────────────────────────────────────┐
+  │  1. purefb array list       ─ version + capacity │
+  │  2. purefb alert list       ─ active alerts      │
+  │  3. purefb blade list       ─ blade health       │
+  │  4. purefb hardware list    ─ chassis components │
+  │  5. purefb fs list          ─ filesystem state   │
+  │  6. purefb replication list ─ ActiveDR status    │
+  │  7. purefb support info     ─ support bundle     │
+  └──────────────────────┬───────────────────────────┘
+                         │  if escalating
+                         ▼
+  Pure1 telemetry ──► Support case ──► upload diagnostic bundle
+```
+
 > Part of the [FlashBlade Troubleshooting](../) reference.
 
 ---

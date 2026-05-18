@@ -1,5 +1,28 @@
 # Pure1 — Alerts
 
+```
+Alert Pipeline — Pure1
+┌──────────────┐
+│  Array event │  (hardware fault / capacity / replication lag)
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ Pure1 ML     │  (anomaly scoring, severity assignment)
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ Alert created│  state: Open
+└──────┬───────┘
+       │
+       ├──────────────┬──────────────┐
+       ▼              ▼              ▼
+┌────────────┐  ┌──────────┐  ┌──────────────┐
+│   Email    │  │  Portal  │  │  REST API /  │
+│  (distro   │  │  (UI     │  │  Webhook     │
+│   list)    │  │   view)  │  │  (ticketing) │
+└────────────┘  └──────────┘  └──────────────┘
+```
+
 Pure1 aggregates alerts from all registered arrays in a single pane. Arrays generate alerts automatically for hardware faults, capacity thresholds, replication lag, and performance anomalies.
 
 ## Alert Lifecycle

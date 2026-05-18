@@ -1,5 +1,34 @@
 # Pure1 — Support
 
+```
+Support Flow — Pure1
+┌─────────────────────────────┐
+│  Pure1 (cloud monitoring)   │
+│  detects issue / you observe│
+└──────────────┬──────────────┘
+               ▼
+┌─────────────────────────────┐
+│  MyPure tab / Support Cases │
+│  → Create Case              │
+│  → Select array & severity  │
+└──────────────┬──────────────┘
+               ▼
+┌─────────────────────────────┐
+│  Attach diagnostic bundle   │
+│  puresupport create <name>  │
+│  (logs, config, perf data)  │
+└──────────────┬──────────────┘
+               ▼
+┌─────────────────────────────┐
+│  Pure TAC assigned          │
+│  ┌──────────────────────┐   │
+│  │ Sev 1: 15 min (24x7) │   │
+│  │ Sev 2:  1 hr  (24x7) │   │
+│  │ Sev 3:  4 hr  (biz)  │   │
+│  └──────────────────────┘   │
+└─────────────────────────────┘
+```
+
 Pure Storage's support model is built around proactive monitoring via Pure1 and the Evergreen subscription. Most hardware replacements and upgrades are non-disruptive and covered under the subscription.
 
 ## Support Portal

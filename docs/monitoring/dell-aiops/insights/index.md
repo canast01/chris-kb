@@ -1,5 +1,29 @@
 # Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection
 
+```
+Proactive Insights — Dell AIOps
+┌──────────────────────────────────────────────┐
+│  Correlate events across systems             │
+│  SYS-A: write latency +60%  (T+0)           │
+│  SYS-A: cache write-pending high  (T+0)      │
+│  SYS-A: disk SMART warn (slot 4)  (T-2h)    │
+└────────────────────┬─────────────────────────┘
+                     ▼ pattern match
+┌──────────────────────────────────────────────┐
+│  Identify pattern: degrading backend drive   │
+│  leading to cache pressure → latency spike   │
+└────────────────────┬─────────────────────────┘
+                     ▼
+┌──────────────────────────────────────────────┐
+│  Proactive insight raised                    │
+│  before outage occurs                        │
+│  ┌────────────────────────────────────────┐  │
+│  │ Insight: "Impending performance event  │  │
+│  │ on SYS-A — replace disk in slot 4"     │  │
+│  └────────────────────────────────────────┘  │
+└──────────────────────────────────────────────┘
+```
+
 Dell AIOps Insights analyses workload behaviour patterns to surface performance predictions and identify bottlenecks before they cause service degradation. This page covers workload insight types, how to interpret prediction data, and how to act on bottleneck detections.
 
 ## Insight Types Overview

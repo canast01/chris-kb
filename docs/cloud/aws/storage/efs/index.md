@@ -3,6 +3,24 @@
 
 AWS EFS notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  EFS Architecture                       │
+│                                                         │
+│  EFS File System (regional — spans all AZs)             │
+│  ├── Mount Target AZ-a  (ENI in subnet-a)               │
+│  ├── Mount Target AZ-b  (ENI in subnet-b)               │
+│  └── Mount Target AZ-c  (ENI in subnet-c)               │
+│                                                         │
+│  EC2 (AZ-a) ──NFS4.1──► Mount Target AZ-a ──► EFS       │
+│  EC2 (AZ-b) ──NFS4.1──► Mount Target AZ-b ──► EFS       │
+│  (multiple EC2s read/write same filesystem concurrently) │
+│                                                         │
+│  Performance modes: General Purpose (default) · Max I/O │
+│  Throughput modes:  Bursting · Provisioned · Elastic    │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

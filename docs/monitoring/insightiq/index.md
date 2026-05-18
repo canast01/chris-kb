@@ -4,6 +4,32 @@
 Dell EMC InsightIQ performance analytics for PowerScale clusters — architecture, data collection, capacity trending, and operational runbooks.
 </div>
 
+```
+InsightIQ Architecture
+┌──────────────────────────────────────────┐
+│    PowerScale Cluster (OneFS)            │
+│  ┌────────┐  ┌────────┐  ┌────────┐     │
+│  │ Node 1 │  │ Node 2 │  │ Node 3 │     │
+│  └────────┘  └────────┘  └────────┘     │
+│        │  stats API (every 30s)          │
+└────────┼─────────────────────────────────┘
+         ▼
+┌──────────────────────────────────────────┐
+│   InsightIQ (virtual appliance)          │
+│   ┌──────────────────────────────────┐   │
+│   │  Data Collector → Analytics DB   │   │
+│   └──────────────────────────────────┘   │
+└──────────────────────────────────────────┘
+         │
+    ┌────┴──────────────┐
+    ▼                   ▼
+Dashboards          Scheduled
+(throughput,        Reports
+ latency,           (PDF/CSV
+ capacity,          via email)
+ workloads)
+```
+
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Deployment on vApp, PowerScale data collection intervals, and reporting database architecture.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>

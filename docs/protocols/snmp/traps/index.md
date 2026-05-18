@@ -1,6 +1,28 @@
 # SNMP Traps
 
-SNMP traps are unsolicited notifications sent from a device to a trap receiver (NMS) when an event occurs — a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.
+SNMP traps are unsolicited notifications sent from a device to a trap receiver (NMS) when an event occurs
+
+```
+        TRAP FLOW (device-initiated, async)
+┌─────────────────────────────────────────────────────────────┐
+│  Device (switch/router/server)         NMS / trap receiver  │
+│  ┌─────────────────────────────┐       ┌──────────────────┐ │
+│  │ Event: link down on eth0/1  │       │ snmptrapd        │ │
+│  │           │                 │       │ (port 162 UDP)   │ │
+│  │           ▼                 │       │                  │ │
+│  │  SNMP Agent builds PDU      │       │                  │ │
+│  │  ┌─────────────────────┐    │       │                  │ │
+│  │  │ TRAP v2c            │    │       │                  │ │
+│  │  │ OID: linkDown       ├────┼──────►│ log / alert      │ │
+│  │  │ community: traps    │    │UDP 162│ trigger action   │ │
+│  │  │ ifIndex: 1          │    │       │                  │ │
+│  │  └─────────────────────┘    │       │                  │ │
+│  │  (fire-and-forget, no ACK)  │       │                  │ │
+│  └─────────────────────────────┘       └──────────────────┘ │
+│                                                             │
+│  INFORM = trap with ACK; device retries until NMS replies   │
+└─────────────────────────────────────────────────────────────┘
+``` — a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.
 
 ## Trap vs Inform
 

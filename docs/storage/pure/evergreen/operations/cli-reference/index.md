@@ -1,5 +1,23 @@
 # Evergreen — CLI Reference
 
+```
+Evergreen Management — CLI/API Access Points
+  ┌────────────────────────────────────────────────────┐
+  │  Pure1 REST API (jwt auth, api.pure1.purestorage)  │
+  │  ├── /metrics/history  — fleet performance data    │
+  │  ├── /arrays           — array inventory + health  │
+  │  ├── /subscriptions    — entitlement + capacity    │
+  │  └── /alerts           — fleet alerts              │
+  └────────────────────────────────────────────────────┘
+  ┌────────────────────────────────────────────────────┐
+  │  Purity CLI (SSH to array management IP)           │
+  │  ├── purearray list               — array status   │
+  │  ├── purearray list --controller  — controller gen │
+  │  ├── purearray phonehome list     — phone-home ok  │
+  │  └── purearray list --space       — capacity used  │
+  └────────────────────────────────────────────────────┘
+```
+
 > Part of the [Evergreen Operations](../) reference.
 
 ---

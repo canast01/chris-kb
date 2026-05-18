@@ -1,5 +1,29 @@
 # DHCP Options
 
+```
+        DHCP OPTION HIERARCHY (most specific wins)
+┌──────────────────────────────────────────────────────────────┐
+│  Server-level options (apply to ALL scopes)                  │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  006 DNS: 10.0.0.53, 10.0.0.54  (server-wide)        │    │
+│  └──────────────────────────┬─────────────────────────┘    │
+│                             │ inherited unless overridden    │
+│  Scope-level options        ▼                               │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  003 Router: 192.168.10.1  (per subnet)              │    │
+│  │  015 Domain: corp.local                              │    │
+│  └──────────────────────────┬─────────────────────────┘    │
+│                             │ inherited unless overridden    │
+│  Reservation-level options  ▼                               │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  006 DNS: 10.0.0.60  (overrides for this MAC/IP)     │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  Common codes:  003=gateway  006=DNS  042=NTP                │
+│                 066=TFTP server  067=PXE boot file           │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 DHCP options deliver network configuration alongside an IP address. Options can be set at the server level (apply to all scopes), scope level (apply to one subnet), reservation level (apply to one client), or class level (apply to clients presenting a matching vendor or user class).

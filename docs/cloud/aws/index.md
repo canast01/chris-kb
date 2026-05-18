@@ -4,6 +4,24 @@
 Amazon Web Services knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management. Includes architecture references, operational procedures, CLI commands, and troubleshooting guides.
 </div>
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  AWS Service Hierarchy                  │
+│                                                         │
+│  Management Account (Organizations / SCPs)              │
+│        │                                                │
+│        ▼                                                │
+│  Member Account (workload)                              │
+│  ├── IAM (users · roles · policies)                     │
+│  └── VPC (10.x.0.0/16)                                  │
+│       ├── Public Subnet  → EC2 · ALB · NAT GW           │
+│       ├── Private Subnet → EC2 · ECS · Lambda           │
+│       └── Isolated Subnet→ RDS · ElastiCache            │
+│                                                         │
+│  Storage: EBS (block) · S3 (object) · EFS (file)        │
+└─────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

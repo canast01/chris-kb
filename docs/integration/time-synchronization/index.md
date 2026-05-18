@@ -1,5 +1,30 @@
 # Time Synchronization
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                      NTP Hierarchy                                   │
+│                                                                      │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  Stratum 1: Internet / GPS NTP Sources                      │   │
+│  │  pool.ntp.org · time.cloudflare.com · time.google.com       │   │
+│  └──────────────────────────┬───────────────────────────────────┘   │
+│                             │  sync (UDP :123)                      │
+│  ┌──────────────────────────▼───────────────────────────────────┐   │
+│  │  Stratum 2: Internal NTP Servers (2× for redundancy)         │   │
+│  │  ntp1.corp.example.com · ntp2.corp.example.com               │   │
+│  │  Domain Controllers (Windows AD authoritative time source)   │   │
+│  └─────┬──────────────────────┬────────────────────────────────┘   │
+│        │  sync                │                                     │
+│  ┌─────▼────────┐   ┌─────────▼──────────────────────────────────┐ │
+│  │ Linux hosts  │   │  All Infrastructure Clients                │ │
+│  │ ESXi hosts   │   │  Switches · Firewalls · Appliances         │ │
+│  │ (chrony)     │   │  Windows Servers (w32tm) · VMs             │ │
+│  └──────────────┘   └────────────────────────────────────────────┘ │
+│                                                                      │
+│  Target drift: < 1ms (infra)  ·  Kerberos tolerance: < 5 min       │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 Ensure consistent, accurate time across all infrastructure systems. Time drift causes Kerberos authentication failures, TLS errors, log correlation issues, and replication problems.
 ## chrony (Recommended — RHEL 7+, Ubuntu 18.04+)
 

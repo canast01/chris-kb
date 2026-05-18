@@ -4,6 +4,28 @@
 Superna Eyeglass DR orchestration for NetApp PowerScale — automates SyncIQ failover, SMB/NFS share reconfiguration, quota migration, and DNS cutover in 5–15 minutes.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                   Superna Eyeglass Architecture                      │
+│                                                                      │
+│  Primary Site                          DR Site                      │
+│  ┌──────────────────────┐              ┌──────────────────────────┐  │
+│  │  PowerScale (source) │              │  PowerScale (target)     │  │
+│  │  NFS/SMB shares      │──SyncIQ ────►│  replica data            │  │
+│  │  Access zones        │  replication │  (synced, read-only)     │  │
+│  └──────────┬───────────┘              └────────────┬─────────────┘  │
+│             │                                       │               │
+│  ┌──────────▼───────────────────────────────────────▼─────────────┐  │
+│  │                  Superna Eyeglass VM                           │  │
+│  │  Monitors SyncIQ · Detects failover trigger                   │  │
+│  │  Automates: allow writes ──► reconfigure shares               │  │
+│  │             migrate quotas ──► DNS cutover (5-15 min RTO)     │  │
+│  └────────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│  Failback: re-sync to primary ──► revert DNS ──► validate          │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

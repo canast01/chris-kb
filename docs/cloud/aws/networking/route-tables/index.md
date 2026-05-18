@@ -3,6 +3,27 @@
 
 AWS Route Tables notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  Route Table Entries                    │
+│                                                         │
+│  Public Subnet Route Table                              │
+│  ┌────────────────┬──────────────────────────────────┐  │
+│  │ Destination    │ Target                           │  │
+│  ├────────────────┼──────────────────────────────────┤  │
+│  │ 10.0.0.0/16    │ local  (within VPC)              │  │
+│  │ 0.0.0.0/0      │ igw-xxxx  (internet gateway)     │  │
+│  └────────────────┴──────────────────────────────────┘  │
+│                                                         │
+│  Private Subnet Route Table                             │
+│  ┌────────────────┬──────────────────────────────────┐  │
+│  │ 10.0.0.0/16    │ local                            │  │
+│  │ 0.0.0.0/0      │ nat-xxxx  (NAT gateway)          │  │
+│  │ 10.100.0.0/16  │ vgw-xxxx  (VPN to on-prem)       │  │
+│  └────────────────┴──────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

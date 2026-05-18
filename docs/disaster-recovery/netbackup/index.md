@@ -4,6 +4,31 @@
 Veritas NetBackup enterprise backup — three-tier architecture with Primary Server catalog, Media Servers for data movement, and MSDP deduplication with AIR image replication.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                    NetBackup Architecture                            │
+│                                                                      │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │              Master / Primary Server                         │   │
+│  │   Policy catalog · job scheduling · device management        │   │
+│  └──────────────────────────────┬───────────────────────────────┘   │
+│                                 │ job dispatch                      │
+│  ┌──────────────────────────────▼───────────────────────────────┐   │
+│  │              Media Server(s)                                 │   │
+│  │   Data mover · MSDP deduplication · multiplexing             │   │
+│  └─────────┬─────────────────────────────────┬──────────────────┘   │
+│            │ agent backup                    │ data write           │
+│  ┌─────────▼──────────────────┐   ┌──────────▼───────────────────┐  │
+│  │  Client Agents             │   │  Storage Units               │  │
+│  │  Linux · Windows · Oracle  │   │  Disk (MSDP pool)            │  │
+│  │  SQL · VMware proxy        │   │  Tape (robot library)        │  │
+│  └────────────────────────────┘   │  Cloud (S3 / Blob)           │  │
+│                                   └──────────────────────────────┘  │
+│                                                                      │
+│  AIR (Auto Image Replication): MSDP ──► remote MSDP (DR site)      │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

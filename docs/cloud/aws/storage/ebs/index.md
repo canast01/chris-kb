@@ -3,6 +3,23 @@
 
 AWS EBS notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                EBS Volume Architecture                  │
+│                                                         │
+│  EC2 Instance ──── EBS Volume (same AZ required)        │
+│                     ├── Type: gp3 (default, cost-eff.)  │
+│                     ├── Type: io2 (high IOPS, 64k+)     │
+│                     ├── Type: st1 (throughput HDD)       │
+│                     └── Type: sc1 (cold HDD, cheap)     │
+│                                                         │
+│  EBS Volume ──► Snapshot ──► S3 (incremental)           │
+│                               │                         │
+│                    copy cross-region for DR              │
+│                    restore as new volume                 │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

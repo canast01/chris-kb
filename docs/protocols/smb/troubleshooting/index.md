@@ -1,5 +1,28 @@
 # SMB Troubleshooting
 
+```
+        TRIAGE: CANNOT ACCESS SMB SHARE
+┌──────────────────────────────────────────────────────────────┐
+│  1. ping / Test-NetConnection -Port 445 ── fail ─► firewall  │
+│          │ ok                                                │
+│          ▼                                                   │
+│  2. Share exists? (Get-SmbShare) ───── no ──► create share  │
+│          │ yes                                               │
+│          ▼                                                   │
+│  3. Share permission (Get-SmbShareAccess) ─ deny ► fix perms│
+│          │ permit                                            │
+│          ▼                                                   │
+│  4. NTFS ACL (icacls path) ─── deny / no entry ──► fix ACL  │
+│          │ permit                                            │
+│          ▼                                                   │
+│  5. Auth issue? (klist / Event ID 4625) ─ yes ──► Kerberos  │
+│          │                                        SPN / creds│
+│          ▼                                                   │
+│  6. SMB dialect (Get-SmbSession | Select Dialect)           │
+│     SMB1 negotiated ──────────────────────────► disable SMB1│
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 SMB access problems fall into a small set of categories: permission denials, authentication failures (Kerberos vs NTLM), performance issues, version mismatches, and signing conflicts. Start by narrowing which layer is failing before diving into logs.

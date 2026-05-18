@@ -1,5 +1,32 @@
 # Monitoring
 
+```
+Monitoring Ecosystem
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│   Pure1     │  │ Aria Ops    │  │   CloudIQ   │
+│ (FlashArray │  │ (vSphere /  │  │  (Dell arr. │
+│  FlashBlade)│  │  NSX / Pure)│  │  PowerStore)│
+└──────┬──────┘  └──────┬──────┘  └──────┬──────┘
+       │                │                │
+┌──────┴──────┐  ┌──────┴──────┐  ┌──────┴──────┐
+│  InsightIQ  │  │   Nexus     │  │ Dell AIOps  │
+│ (PowerScale │  │  Dashboard  │  │  (ML anomaly│
+│  analytics) │  │  (Cisco     │  │  detection) │
+│             │  │   fabric)   │  │             │
+└──────┬──────┘  └──────┬──────┘  └──────┬──────┘
+       │                │                │
+       └────────────────┼────────────────┘
+                        ▼
+              ┌─────────────────┐
+              │   Ops Team      │
+              │  ┌───────────┐  │
+              │  │ Dashboards│  │
+              │  │  Alerts   │  │
+              │  │  Reports  │  │
+              │  └───────────┘  │
+              └─────────────────┘
+```
+
 ## Platforms
 
 <div class="kb-grid kb-grid-3">

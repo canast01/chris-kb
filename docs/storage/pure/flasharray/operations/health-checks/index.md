@@ -1,5 +1,28 @@
 # FlashArray — Health Checks
 
+```
+FlashArray Health Check Sequence
+  purealert list ──► Any error/warning alerts?
+         │
+         ▼
+  puredrive list ──► All drives healthy?
+         │
+         ▼
+  purearray list --controller ──► Both CT0 + CT1 ok?
+         │
+         ▼
+  purepod list ──► ActiveCluster pods stretched + replicating?
+         │
+         ▼
+  purearray list --space ──► Capacity < 80% used?
+         │
+         ▼
+  purehost list ──► All hosts connected (no zero-path hosts)?
+         │
+         ▼
+         OK — check Pure1 for fleet-level anomalies
+```
+
 ## Daily Checks
 
 | Check | Command | Notes |

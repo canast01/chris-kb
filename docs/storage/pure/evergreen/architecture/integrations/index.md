@@ -1,5 +1,24 @@
 # Evergreen — Integrations
 
+```
+Evergreen Integration Touchpoints
+  FlashArray / FlashBlade
+          │  phone-home (HTTPS 443, always-on)
+          ▼
+  Pure1 Cloud
+  ├── Subscription entitlement + True Forward tracking
+  ├── Ever Modern eligibility + upgrade scheduling
+  ├── Fleet health score + anomaly detection
+  ├── Capacity forecasting + growth projections
+  └── Support case creation + diagnostic integration
+          │
+          ▼
+  Customer interfaces:
+  ├── Pure1 portal (pure1.purestorage.com)
+  ├── Pure1 REST API (automation, reporting)
+  └── Pure Account Team (renewal, refresh planning)
+```
+
 > Part of the [Evergreen Architecture](../) reference.
 
 ---

@@ -1,5 +1,30 @@
 # NTP Firewall Rules
 
+```
+        NTP FIREWALL REQUIREMENTS
+┌──────────────────────────────────────────────────────────────┐
+│  NTP CLIENT (server/device)                                  │
+│  ┌──────────────┐   UDP 123 outbound    ┌──────────────────┐ │
+│  │  Client host │ ─────────────────────►│  NTP Server      │ │
+│  │  (chrony/    │                       │  (stratum 2)     │ │
+│  │   w32tm)     │◄─────────────────────-│                  │ │
+│  └──────────────┘   UDP 123 response    └──────────────────┘ │
+│                     (src port 123)                           │
+│  Stateful firewall: return traffic handled automatically     │
+│  Stateless ACL: must permit both directions explicitly       │
+│                                                              │
+│  NTP SERVER (serving clients):                               │
+│  ┌──────────────┐   UDP 123 inbound     ┌──────────────────┐ │
+│  │  NTP Server  │◄─────────────────────-│  Clients         │ │
+│  │  (chrony     │ ─────────────────────►│                  │ │
+│  │  allow 10/8) │   UDP 123 response    └──────────────────┘ │
+│  └──────────────┘                                           │
+│                                                              │
+│  Rule summary:  permit udp any → ntpserver port 123         │
+│                 permit udp ntpserver port 123 → any          │
+└──────────────────────────────────────────────────────────────┘
+```
+
 NTP uses **UDP port 123** for all client-server and peer communication. If this port is blocked between a host and its NTP server, the clock will not synchronise.
 
 ## Required Firewall Rules

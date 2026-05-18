@@ -4,6 +4,29 @@
 Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using a four-step DORA handshake (Discover, Offer, Request, Ack) over UDP — client broadcasts on port 68, server listens on port 67. The primary operational concerns are scope design, lease time tuning, option correctness (gateway, DNS, domain), and failover configuration for high availability, as DHCP failure renders an entire subnet unreachable without static fallback.
 </div>
 
+```
+        DORA HANDSHAKE
+┌────────────────────────────────────────────────────────────────┐
+│  Client (new device)              DHCP Server                  │
+│  ┌───────────────────┐            ┌────────────────────────┐   │
+│  │  No IP yet        │            │  Scope: 192.168.1.0/24 │   │
+│  │                   │            │  Pool: .100 – .200     │   │
+│  │  1. DISCOVER ─────┼────────────┼►  (broadcast)          │   │
+│  │    src: 0.0.0.0   │            │  server receives       │   │
+│  │    dst: broadcast │            │                        │   │
+│  │                   │◄───────────┼── 2. OFFER             │   │
+│  │                   │            │   "here's 192.168.1.105"│  │
+│  │  3. REQUEST ──────┼────────────┼►  (broadcast)          │   │
+│  │    "I want .105"  │            │   server confirms lease │   │
+│  │                   │◄───────────┼── 4. ACK               │   │
+│  │  IP: 192.168.1.105│            │   lease begins         │   │
+│  │  GW: 192.168.1.1  │            │   options delivered    │   │
+│  │  DNS: 10.0.0.53   │            └────────────────────────┘   │
+│  └───────────────────┘                                         │
+│  Renewal at 50% of lease time (T1); rebind at 87.5% (T2)      │
+└────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="scopes/">

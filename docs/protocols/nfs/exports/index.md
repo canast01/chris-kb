@@ -1,5 +1,26 @@
 # NFS Exports
 
+```
+        SERVER-SIDE EXPORT CONFIGURATION
+┌──────────────────────────────────────────────────────────────┐
+│  /etc/exports                                                │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ /data/shared  192.168.10.0/24(rw,sync,no_subtree_check)│  │
+│  │ /data/readonly  *(ro,sync,root_squash)                 │  │
+│  └──────────────────────┬─────────────────────────────────┘  │
+│                         │ exportfs -ra (reload without restart)│
+│                         ▼                                    │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Active exports (exportfs -v)                          │  │
+│  │  /data/shared  192.168.10.0/24(rw,sync,...)           │  │
+│  │  /data/readonly  <world>(ro,sync,root_squash,...)      │  │
+│  └──────────────────────┬─────────────────────────────────┘  │
+│                         │ TCP 2049                            │
+│                         ▼                                    │
+│                    NFS clients mount                         │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 NFS exports are defined in `/etc/exports` on Linux servers. Each line specifies a directory, the clients allowed to mount it, and a set of options controlling access, security, and behavior. Changes take effect with `exportfs -ra` — no service restart required.

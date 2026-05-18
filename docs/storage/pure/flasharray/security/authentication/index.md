@@ -1,5 +1,22 @@
 # FlashArray — Authentication
 
+```
+FlashArray Authentication Flow
+  Human admin login:
+    Browser/SSH ──► SAML SSO configured?
+                         │ Yes ──► IdP (Okta/Azure AD) ──► MFA
+                         │         └──► SAML assertion ──► Purity RBAC
+                         │ No  ──► AD/LDAP bind ──► group membership
+                         │                └──► Purity RBAC
+                         │         (fallback) local account (pureuser)
+
+  Automation login:
+    Script ──► x-auth-token: <api_token> ──► Purity RBAC
+
+  Purity RBAC ──► role assigned ──► all actions logged (pureaudit)
+                                    └──► SIEM via TLS syslog
+```
+
 FlashArray supports multiple identity sources for admin authentication: local accounts, Active Directory (AD), LDAP, and SAML SSO. All authentication is role-based — every admin account is bound to one of the four built-in Purity roles. API tokens are the recommended credential type for automation and monitoring integrations.
 
 ---

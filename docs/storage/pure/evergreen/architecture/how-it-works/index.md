@@ -1,5 +1,22 @@
 # Evergreen — How It Works
 
+```
+Evergreen — What's Included vs. Customer-Managed
+┌────────────────────────────────────────────────────────────┐
+│  Included in Evergreen subscription                        │
+│  ├── Purity software upgrades (non-disruptive NDU)         │
+│  ├── Ever Modern controller refresh every ~3 years         │
+│  ├── Hardware support + parts replacement                  │
+│  └── Pure1 cloud monitoring + phonehome telemetry         │
+├────────────────────────────────────────────────────────────┤
+│  Customer manages                                          │
+│  ├── Host connectivity (FC zoning, iSCSI, NVMe-oF)        │
+│  ├── Volume / protection group configuration               │
+│  ├── Replication targets (ActiveDR / ActiveCluster)        │
+│  └── Capacity growth (True Forward annual reconciliation)  │
+└────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 Evergreen is Pure Storage's hardware subscription model for the FlashArray platform (//X, //C, and //E series). Rather than purchasing hardware outright, customers subscribe to a capacity and performance tier — with controller hardware refreshes, Purity software upgrades, and support included in the subscription cost. The defining principle is no forklift upgrades: when controllers reach end of generation, Pure replaces them non-disruptively while data remains on the existing NVMe drive shelf — hosts stay connected and I/O continues during the swap.

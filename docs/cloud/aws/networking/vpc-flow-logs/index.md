@@ -3,6 +3,26 @@
 
 AWS VPC Flow Logs notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  VPC Flow Logs                          │
+│                                                         │
+│  VPC / Subnet / ENI                                     │
+│  └── Flow Log (capture: ALL · ACCEPT · REJECT)          │
+│        │                                                │
+│        ├──► CloudWatch Logs group                       │
+│        │     └── Metric filter ──► alarm                │
+│        └──► S3 bucket (Athena / SIEM query)             │
+│                                                         │
+│  Log record fields (default format):                    │
+│  srcaddr · dstaddr · srcport · dstport · protocol       │
+│  packets · bytes · start · end · action · log-status    │
+│                                                         │
+│  Use: security analysis · troubleshoot connectivity     │
+│       bandwidth tracking · compliance evidence          │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

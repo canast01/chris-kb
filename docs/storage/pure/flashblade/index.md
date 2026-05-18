@@ -4,6 +4,28 @@
 Unified fast file and object storage running Purity//FB — NFS, SMB, S3, and HDFS from a single scale-out platform. Architecture, operations, security, and troubleshooting for AI/ML, analytics, backup, and unstructured data workloads.
 </div>
 
+```
+Pure FlashBlade — Scale-Out Architecture
+┌─────────────────────────────────────────────────────────────┐
+│  Chassis                                                    │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │
+│  │ Blade 1  │ │ Blade 2  │ │ Blade 3  │ │ Blade N  │      │
+│  │ flash +  │ │ flash +  │ │ flash +  │ │ flash +  │      │
+│  │ compute  │ │ compute  │ │ compute  │ │ compute  │      │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘      │
+│       └────────────┴────────────┴────────────┘             │
+│                       │ NVMe-oF internal fabric             │
+│              ┌────────▼────────┐                           │
+│              │ Fabric Module   │ (high-speed interconnect)  │
+│              └────────┬────────┘                           │
+└───────────────────────┼─────────────────────────────────────┘
+                        │ 10/25/100 GbE data ports
+                        ▼
+        ┌───────────────┬───────────────┬──────────────┐
+        ▼               ▼               ▼              ▼
+    NFS clients    SMB clients     S3 clients    HDFS clients
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

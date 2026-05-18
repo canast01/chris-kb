@@ -1,5 +1,27 @@
 # DHCP Leases
 
+```
+        LEASE LIFECYCLE AND RENEWAL TIMERS
+┌──────────────────────────────────────────────────────────────┐
+│  Lease duration: 8 days (example)                            │
+│                                                              │
+│  │◄──────────────── 8 days ─────────────────────────────►│  │
+│  │                                                        │  │
+│  ▼ T0         T1 (50%)       T2 (87.5%)       T3 (100%)  │  │
+│  ├────────────┼──────────────┼────────────────┼───────────┤  │
+│  │   Using    │  Renew (unicast               │           │  │
+│  │   lease    │  to server)  │  Rebind (broad.│ Expired   │  │
+│  │            │              │  to any server)│           │  │
+│  └────────────┴──────────────┴────────────────┴───────────┘  │
+│                                                              │
+│  T1 = lease * 0.5  → client unicasts renewal request        │
+│  T2 = lease * 0.875 → client broadcasts to any DHCP server  │
+│  T3 = lease expires → client must start DORA again          │
+│                                                              │
+│  Lease states: Active | Expired | Declined | ActiveReservation│
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 DHCP leases track which IP address is assigned to which client. On Windows Server, lease management is done with the `DhcpServer` PowerShell module. Stale leases can cause address exhaustion and ghost entries in DNS.

@@ -3,6 +3,24 @@
 
 AWS S3 notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                    S3 Structure                         │
+│                                                         │
+│  Account                                                │
+│  └── Bucket (globally unique name · region-bound)       │
+│       └── Prefix/  (folder-like, not real directory)    │
+│            └── Object                                   │
+│                 ├── Key   (full path name)               │
+│                 ├── Data  (up to 5 TB)                   │
+│                 └── Metadata (Content-Type · custom)    │
+│                                                         │
+│  Storage Classes:                                       │
+│  Standard → Standard-IA → Glacier Instant →             │
+│  Glacier Flexible → Glacier Deep Archive                 │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

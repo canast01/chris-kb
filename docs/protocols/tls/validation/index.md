@@ -2,6 +2,27 @@
 
 Use these commands to verify TLS configuration on servers, check certificate validity, diagnose handshake failures, and confirm correct chain presentation.
 
+```
+        OPENSSL VALIDATION CHECKLIST
+┌──────────────────────────────────────────────────────────────┐
+│  openssl s_client -connect <host>:443 -servername <host>     │
+│                                                              │
+│  Check output fields:                                        │
+│  ├── Verify return code: 0 (ok)       ✓  chain valid        │
+│  ├── Protocol: TLSv1.3                ✓  (TLSv1.1 = fail)   │
+│  ├── Cipher: TLS_AES_256_GCM_SHA384   ✓  strong cipher      │
+│  ├── depth=0  CN=web.example.com      ✓  server cert        │
+│  ├── depth=1  CN=Intermediate CA      ✓  intermediate sent  │
+│  └── depth=2  CN=Root CA              ✓  chain complete      │
+│                                                              │
+│  Additional checks:                                          │
+│  openssl x509 -noout -dates ─────────► check notAfter       │
+│  openssl x509 -noout -ext subjectAltName ► hostname in SAN  │
+│  openssl x509 -modulus | md5sum       ┐                     │
+│  openssl rsa  -modulus | md5sum       ┘ ► must match        │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Quick Validation — Live Endpoint
 
 ```bash

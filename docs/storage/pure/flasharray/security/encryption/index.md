@@ -1,5 +1,25 @@
 # FlashArray — Encryption
 
+```
+FlashArray Encryption Architecture
+┌────────────────────────────────────────────────────────────┐
+│  Data at Rest (always-on, no config required)              │
+│                                                            │
+│  Write I/O ──► NVRAM ──► NVMe SED                         │
+│                            ├── DEK (per-drive, internal)   │
+│                            └── KEK (Purity, stored NVRAM)  │
+│                                                            │
+│  AES-256-XTS hardware encryption in drive                  │
+│  Removed drive: cryptographic erase (NIST SP 800-88)      │
+└────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│  Data in Transit (TLS, always-on)                          │
+│  ├── Management: HTTPS (443) + SSH (22)                    │
+│  ├── Replication: TLS between arrays                       │
+│  └── Pure1 phone-home: HTTPS (443) outbound               │
+└────────────────────────────────────────────────────────────┘
+```
+
 FlashArray provides encryption at rest (hardware-based, always-on) and encryption in transit (TLS for all management and replication traffic). Both are enabled by default and require no configuration to activate — the operational task is to manage certificates, verify status, and integrate with external key managers when required.
 
 ---

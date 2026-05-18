@@ -1,6 +1,27 @@
 # iSCSI Sessions
 
-An iSCSI session is a logical connection between an initiator and a target, established after discovery. Each session can carry multiple connections (TCP streams) for performance.
+An iSCSI session is a logical connection between an initiator and a target, established after discovery.
+
+```
+        SESSION SETUP SEQUENCE
+┌──────────────┐                         ┌──────────────────┐
+│  Initiator   │                         │     Target       │
+└──────┬───────┘                         └─────────┬────────┘
+       │  1. SendTargets discovery                  │
+       │ ──────────────────────────────────────────►│
+       │     target IQN + portal list               │
+       │ ◄──────────────────────────────────────────│
+       │  2. TCP connect to portal IP:3260          │
+       │ ──────────────────────────────────────────►│
+       │  3. Login Request (CHAP challenge)          │
+       │ ──────────────────────────────────────────►│
+       │     CHAP response / auth OK                │
+       │ ◄──────────────────────────────────────────│
+       │  4. Session Established                    │
+       │ ◄═══════════════════════════════════════════│
+       │  5. I/O (SCSI commands over TCP)           │
+       │ ◄══════════════════════════════════════════►│
+``` Each session can carry multiple connections (TCP streams) for performance.
 
 ## Session Lifecycle
 

@@ -1,5 +1,32 @@
 # LDAP Troubleshooting
 
+```
+        TRIAGE: LDAP BIND FAILS
+┌──────────────────────────────────────────────────────────────┐
+│  1. Resolve DC name                                          │
+│     nslookup dc01.corp.local ─── fail ──► fix DNS           │
+│          │ ok                                                │
+│          ▼                                                   │
+│  2. Port reachable?                                          │
+│     nc -zv dc01 389 ─────────── fail ──► firewall / DC down │
+│     nc -zv dc01 636            (636 = LDAPS)                 │
+│          │ ok                                                │
+│          ▼                                                   │
+│  3. Simple bind (test creds)                                 │
+│     ldapsearch -x -D svc@corp -w pass ─ fail ──► check DN,  │
+│          │ ok                                   password, lock│
+│          ▼                                                   │
+│  4. Check network: nc -zv dc01 636 (port reachable)          │
+│          ▼                                                   │
+│  5. TLS error? openssl s_client -connect dc01:636            │
+│     cert untrusted ──────────────────────► install root CA   │
+│     cert expired ────────────────────────► renew DC cert     │
+│          │ ok                                                │
+│          ▼                                                   │
+│  6. Query returns no results? ──► check base DN, filter      │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 LDAP failures usually manifest as bind errors, query timeouts, certificate problems, or referrals to other directories. Identify the failure layer first: DNS, TCP connectivity, TLS, bind credentials, or query filter.

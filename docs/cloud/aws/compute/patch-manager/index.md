@@ -3,6 +3,27 @@
 
 AWS Patch Manager notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  Patch Manager Flow                     │
+│                                                         │
+│  Patch Baseline                                         │
+│  ├── OS (Amazon Linux · RHEL · Windows …)               │
+│  ├── Auto-approve critical patches after N days         │
+│  └── Rejected patches list                             │
+│        │                                                │
+│        ▼                                                │
+│  Maintenance Window (schedule: cron expression)         │
+│  └── Task: AWS-RunPatchBaseline                         │
+│        │                                                │
+│        ▼                                                │
+│  EC2 Fleet (SSM Agent) ──► scan ──► apply patches       │
+│        │                                                │
+│        ▼                                                │
+│  Compliance Report (compliant / non-compliant count)    │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

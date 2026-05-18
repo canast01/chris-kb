@@ -4,6 +4,24 @@
 AWS compute spans EC2 virtual machines, Auto Scaling groups, Lambda serverless functions, and ECS/EKS containers. Fleet management runs through Systems Manager — no bastion hosts required. AMI standardisation and Patch Manager enforce OS hygiene across the fleet.
 </div>
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  AWS Compute Overview                   │
+│                                                         │
+│  AMI (snapshot + launch config)                         │
+│   │                                                     │
+│   ▼                                                     │
+│  Instance Type (family: t/m/c/r/x) + size              │
+│   │                                                     │
+│   ▼                                                     │
+│  EC2 Instance ── EBS root disk ── Security Group        │
+│   │                                                     │
+│   ├── Auto Scaling Group (min / desired / max)          │
+│   ├── Systems Manager Agent (patch · session · run)     │
+│   └── Lambda (event-driven · no server · scale to 0)   │
+└─────────────────────────────────────────────────────────┘
+```
+
 ![AWS Compute Architecture](../../../assets/aws-compute-overview.svg)
 
 <div class="kb-grid kb-grid-3">

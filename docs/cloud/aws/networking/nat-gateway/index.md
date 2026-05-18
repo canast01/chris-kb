@@ -3,6 +3,25 @@
 
 AWS NAT Gateway notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  NAT Gateway Flow                       │
+│                                                         │
+│  Private Subnet                                         │
+│  └── EC2 (private IP 10.0.1.10)                         │
+│        │  outbound request (e.g. yum update)            │
+│        ▼                                                │
+│  NAT Gateway (in public subnet · Elastic IP)            │
+│  ├── Source NATs request to its Elastic IP              │
+│  └── Returns response to originating EC2               │
+│        │                                                │
+│        ▼                                                │
+│  IGW ──► Internet (outbound only — inbound blocked)     │
+│                                                         │
+│  Deploy one NAT GW per AZ (for HA / AZ redundancy)      │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

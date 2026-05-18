@@ -1,5 +1,29 @@
 # NTP Sync State
 
+```
+        SYNC STATE METRICS
+┌──────────────────────────────────────────────────────────────┐
+│  chronyc tracking output                                     │
+│                                                              │
+│  Reference ID : C0A80001 (ntp1.example.com)                  │
+│  Stratum      : 3          ◄── hops from reference clock     │
+│  System time  : 0.000123s fast  ◄── offset from NTP source  │
+│  Last offset  : +0.000001s      ◄── most recent correction   │
+│  Frequency    : 12.345 ppm fast ◄── clock drift rate        │
+│  Skew         : 0.123 ppm       ◄── uncertainty in freq est  │
+│  Leap status  : Normal          ◄── synchronised (healthy)   │
+│                                                              │
+│  HEALTHY:  offset < 100ms, stratum ≤ 4, Leap=Normal         │
+│  WARNING:  offset > 500ms, stratum > 10                      │
+│  CRITICAL: Leap=Not synchronised, stratum=16                 │
+│                                                              │
+│  chronyc sources -v                                          │
+│  ^* ntp1.example.com  2  6  377  ◄── reach=377 = all polls OK│
+│  ^+ ntp2.example.com  2  6  377                              │
+│  ^? ntp3.example.com  3  6   17  ◄── reach<377 = packet loss │
+└──────────────────────────────────────────────────────────────┘
+```
+
 The sync state tells you whether a system's clock is actively tracking an NTP source and how closely. A drifting or unsynchronised clock causes authentication failures, log correlation errors, and Kerberos breakage.
 
 ## Reading `chronyc tracking` (Linux)

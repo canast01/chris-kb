@@ -1,5 +1,24 @@
 # FlashArray — Escalation
 
+```
+Pure Support Escalation Path
+  Array alert / incident
+          │
+          ▼
+  Pure1 portal ──► Array auto-detected fault?
+          │ Yes ──► Pure may auto-open case + dispatch parts
+          │ No  ──► Open case manually at support.purestorage.com
+          │
+          ▼
+  Case opened ──► Support engineer reviews Pure1 telemetry
+          │
+          ▼
+  If needed: purediag --send ──► diagnostic bundle to case
+          │
+          ▼
+  Pure TAC ──► Remote session / field engineer dispatch
+```
+
 ## Support Portal
 
 Pure Storage support is accessed at **[https://support.purestorage.com](https://support.purestorage.com)**.

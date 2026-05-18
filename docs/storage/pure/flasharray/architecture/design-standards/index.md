@@ -1,5 +1,22 @@
 # FlashArray — Design Standards
 
+```
+FlashArray Design Checklist — Key Areas
+┌──────────────────────────────────────────────────────────┐
+│  Naming         │  array / volume / host / pg conventions│
+├──────────────────────────────────────────────────────────┤
+│  Host Zones     │  1 initiator : 1 target per FC zone    │
+├──────────────────────────────────────────────────────────┤
+│  Multipath      │  Round-robin IOPS=1 (VMware/Linux)     │
+├──────────────────────────────────────────────────────────┤
+│  Protection     │  PGroup per app → snapshot + replicate │
+├──────────────────────────────────────────────────────────┤
+│  Capacity       │  < 80% used; account for snapshots     │
+├──────────────────────────────────────────────────────────┤
+│  Security       │  RBAC, SafeMode, SAML/LDAP, TLS syslog│
+└──────────────────────────────────────────────────────────┘
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

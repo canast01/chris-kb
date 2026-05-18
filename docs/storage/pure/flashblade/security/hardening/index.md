@@ -1,5 +1,20 @@
 # FlashBlade — Hardening
 
+```
+FlashBlade Hardening Sequence
+  1. Default credentials ──► rename/vault admin account
+  2. Configure AD ──► SMB auth + admin group-to-role mapping
+  3. Enable SAML SSO ──► MFA for GUI access
+  4. Restrict mgmt network ──► dedicated VLAN + ACL
+  5. Install CA-signed TLS cert ──► replace self-signed
+  6. NFS export policy ──► restrict to specific client CIDRs
+  7. SMB share ACLs ──► AD group-based permissions
+  8. S3 access keys ──► one key per workload, rotate 90 days
+  9. Disable unused protocols ──► only NFS/SMB/S3 as required
+ 10. Configure TLS syslog ──► forward audit to SIEM
+ 11. Enable Pure1 phone-home ──► required for proactive support
+```
+
 > Part of the [FlashBlade Security](../) reference.
 
 ---

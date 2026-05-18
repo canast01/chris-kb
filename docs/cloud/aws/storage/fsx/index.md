@@ -3,6 +3,27 @@
 
 AWS FSx notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  FSx Variants                           │
+│                                                         │
+│  FSx for Windows File Server                            │
+│  ├── Protocol: SMB (2.1 / 3.0 / 3.1.1)                 │
+│  ├── AD-integrated (user auth via AD groups)            │
+│  └── Use: Windows apps · DFS shares · home dirs         │
+│                                                         │
+│  FSx for Lustre                                         │
+│  ├── Protocol: POSIX (Lustre client)                    │
+│  ├── Throughput: hundreds of GB/s · millions IOPS       │
+│  └── Use: HPC · ML training · video processing          │
+│                                                         │
+│  FSx for NetApp ONTAP                                   │
+│  ├── Protocol: NFS · SMB · iSCSI                        │
+│  ├── Features: SnapMirror · dedup · thin provision      │
+│  └── Use: enterprise storage migration · multi-protocol │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

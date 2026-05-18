@@ -1,5 +1,25 @@
 # FlashBlade — Backup & Restore
 
+```
+FlashBlade Data Protection Tiers
+  ┌────────────────────────────────────────────────────────────┐
+  │  Local Snapshots (filesystem / bucket)                     │
+  │  Snapshot policy schedule ──► point-in-time copies         │
+  └────────────────────────────────────────────────────────────┘
+                          │  async replication
+  ┌────────────────────────▼───────────────────────────────────┐
+  │  ActiveDR Replication                                      │
+  │  Filesystem/bucket ──► remote FlashBlade (RPO: minutes)    │
+  └────────────────────────────────────────────────────────────┘
+                          │  backup integration
+  ┌────────────────────────▼───────────────────────────────────┐
+  │  Application Backup to FlashBlade (target)                 │
+  │  Veeam / Commvault ──► NFS or S3 backup target on FB      │
+  └────────────────────────────────────────────────────────────┘
+
+Restore: snapshot → create clone → mount → validate → promote
+```
+
 > Part of the [FlashBlade Operations](../) reference.
 
 ---

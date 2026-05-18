@@ -3,6 +3,26 @@
 
 AWS EBS Snapshots notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  EBS Snapshot Flow                      │
+│                                                         │
+│  EBS Volume ──► Snapshot #1 (full copy → S3)            │
+│                     │                                   │
+│               Snapshot #2 (incremental — changed blocks)│
+│                     │                                   │
+│               Snapshot #3 (incremental)                 │
+│                                                         │
+│  Operations on snapshots:                               │
+│  ├── Copy to another region (DR)                        │
+│  ├── Share with another account                         │
+│  ├── Restore → new EBS volume (any AZ in region)        │
+│  └── Create AMI from root volume snapshot               │
+│                                                         │
+│  Data Lifecycle Manager automates snapshot schedules     │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

@@ -1,5 +1,33 @@
 # Dell AIOps: Actionable Recommendations and Implementation Tracking
 
+```
+Recommendations — Dell AIOps
+┌──────────────────────────────────────────┐
+│  Analysis engine outputs                 │
+│  ┌──────────────────────────────────┐    │
+│  │ Type: Hardware                   │    │
+│  │ Action: Replace drive slot 12    │    │
+│  │ Priority: HIGH  │ Effort: LOW    │    │
+│  └──────────────────────────────────┘    │
+│  ┌──────────────────────────────────┐    │
+│  │ Type: Config                     │    │
+│  │ Action: Tune I/O queue depth     │    │
+│  │ Priority: MEDIUM │ Effort: LOW   │    │
+│  └──────────────────────────────────┘    │
+│  ┌──────────────────────────────────┐    │
+│  │ Type: Capacity                   │    │
+│  │ Action: Expand pool (< 30 days)  │    │
+│  │ Priority: HIGH   │ Effort: HIGH  │    │
+│  └──────────────────────────────────┘    │
+└─────────────────────┬────────────────────┘
+                      ▼
+          ┌─────────────────────┐
+          │  Implement / Dismiss│
+          │  Mark as done       │
+          │  CloudIQ validates  │
+          └─────────────────────┘
+```
+
 Dell AIOps generates AI-driven recommendations that go beyond static best-practice checks. Recommendations are prioritised by business impact, include step-by-step guidance, and track implementation status. This page covers how to find, evaluate, implement, and close AIOps recommendations.
 
 ## Recommendation Sources

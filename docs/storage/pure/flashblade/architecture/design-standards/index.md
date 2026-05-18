@@ -1,5 +1,22 @@
 # FlashBlade — Design Standards
 
+```
+FlashBlade Design Checklist
+┌───────────────────────────────────────────────────────────┐
+│  Naming          │  filesystem / bucket / account pattern │
+├───────────────────────────────────────────────────────────┤
+│  Protocol        │  NFS export policy, SMB share, S3 ACL  │
+├───────────────────────────────────────────────────────────┤
+│  Capacity        │  quota per filesystem / bucket         │
+├───────────────────────────────────────────────────────────┤
+│  Data Protection │  snapshot policy per filesystem/bucket │
+├───────────────────────────────────────────────────────────┤
+│  Replication     │  ActiveDR replication group + RPO      │
+├───────────────────────────────────────────────────────────┤
+│  Security        │  NFS export IPs, SMB AD join, S3 keys  │
+└───────────────────────────────────────────────────────────┘
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

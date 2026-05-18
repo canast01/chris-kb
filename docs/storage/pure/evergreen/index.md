@@ -4,6 +4,28 @@
 Pure Storage Evergreen hardware subscription model — non-disruptive controller refreshes, Purity upgrades, and Ever Modern lifecycle for FlashArray and FlashBlade. Covers architecture, operations, security, and troubleshooting.
 </div>
 
+```
+Evergreen Lifecycle Model
+  Customer subscribes ──► capacity + performance tier
+          │
+          ▼
+  FlashArray installed (customer-owned via subscription)
+  ├── Purity NDU upgrades ──► non-disruptive, included
+  └── Ever Modern (3 yr cycle):
+          │
+          ▼
+  Controller refresh (Pure engineer on-site)
+  ├── New controller chassis installed alongside old
+  ├── NVMe shelves remain in place (data stays on drives)
+  ├── I/O continues during swap (no host disruption)
+  └── Old controller removed ──► cycle repeats in ~3 yrs
+
+  Evergreen tiers:
+  ├── Evergreen//Forever ─ CapEx purchase + subscription
+  ├── Evergreen//Flex    ─ OpEx lease
+  └── Evergreen//One    ─ STaaS (Pure owns HW)
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

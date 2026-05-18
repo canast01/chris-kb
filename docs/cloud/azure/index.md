@@ -4,6 +4,22 @@
 Microsoft Azure knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management. Includes architecture references, operational procedures, CLI commands, and troubleshooting guides.
 </div>
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                Azure Service Hierarchy                  │
+│                                                         │
+│  Tenant (Entra ID)                                      │
+│  └── Management Groups (policy + RBAC inheritance)      │
+│       └── Subscription (billing + quota boundary)       │
+│            └── Resource Group (lifecycle boundary)      │
+│                 └── Resources                           │
+│                      ├── VMs · VMSS · AKS               │
+│                      ├── VNet · Subnets · NSG            │
+│                      ├── Storage Accounts · Disks        │
+│                      └── Key Vault · Entra ID roles      │
+└─────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

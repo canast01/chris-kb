@@ -1,5 +1,26 @@
 # SMB Shares
 
+```
+        SHARE TYPES AND UNC PATH STRUCTURE
+┌──────────────────────────────────────────────────────────────┐
+│  \\server\Finance          ◄── standard share (visible)      │
+│  \\server\Finance$         ◄── hidden share ($ suffix)       │
+│  \\domain\Finance          ◄── DFS namespace share           │
+│  \\server\C$               ◄── administrative share (built-in)│
+│                                                              │
+│  DFS NAMESPACE RESOLUTION:                                   │
+│  \\corp.example.com\Files\Finance                            │
+│            │                                                 │
+│            ▼  DFS referral                                   │
+│  \\fileserver01\Finance  (actual share, transparent to user) │
+│            or                                                │
+│  \\fileserver02\Finance  (redundant target, failover)        │
+│                                                              │
+│  Share permissions apply to NETWORK access only;            │
+│  NTFS ACLs apply to both local and network access.          │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 SMB shares expose local filesystem paths to network clients. Shares can be created via Server Manager, PowerShell, or `net share`. DFS namespaces abstract share locations so clients do not need to know which server hosts a share. Hidden shares (trailing `$`) are not visible in browse lists but are fully accessible.

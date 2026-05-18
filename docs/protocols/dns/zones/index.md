@@ -1,5 +1,29 @@
 # DNS Zones
 
+```
+        ZONE STRUCTURE
+┌──────────────────────────────────────────────────────────────┐
+│  Forward zone: corp.local  (primary / AD-integrated)         │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  SOA   dc01.corp.local (serial 2026051801)           │    │
+│  │  NS    dc01.corp.local                               │    │
+│  │  NS    dc02.corp.local                               │    │
+│  │  A     dc01  →  10.0.0.53                            │    │
+│  │  A     web01 →  192.168.10.100                       │    │
+│  │  ...   (all forward records)                         │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                         │ zone transfer (AXFR/IXFR)          │
+│                         ▼                                    │
+│  Secondary zone: dc02.corp.local  (read-only replica)        │
+│                                                              │
+│  Reverse zone: 10.168.192.in-addr.arpa  (primary)            │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  PTR   100  →  web01.corp.local                      │    │
+│  │  PTR   101  →  web02.corp.local                      │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 DNS zones are authoritative containers for a portion of the DNS namespace. Windows DNS supports primary, secondary, stub, and forward zones. AD-integrated zones store data in Active Directory, enabling multi-master replication and secure dynamic updates. Zone delegation carves out sub-domains to separate DNS servers.

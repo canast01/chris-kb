@@ -1,5 +1,31 @@
 # DNS Troubleshooting
 
+```
+        TRIAGE: NSLOOKUP FAILS
+┌──────────────────────────────────────────────────────────────┐
+│  1. nslookup host.corp.local ── no answer ──► continue       │
+│          │                                                   │
+│          ▼                                                   │
+│  2. Check resolver (which server answered?)                  │
+│     nslookup host.corp.local 10.0.0.53 ── ok ──► client conf│
+│          │ still fails                                       │
+│          ▼                                                   │
+│  3. Record exists? dig @10.0.0.53 host.corp.local            │
+│          │ NXDOMAIN ──────────────────────────► add record   │
+│          │ answer returned                                   │
+│          ▼                                                   │
+│  4. Zone delegation correct?                                 │
+│     dig NS corp.local ──── wrong NS ────► fix delegation     │
+│          │ ok                                                │
+│          ▼                                                   │
+│  5. AD replication? repadmin /showrepl ─► sync if needed     │
+│          │ ok                                                │
+│          ▼                                                   │
+│  6. Flush client cache: ipconfig /flushdns (Windows)         │
+│                         resolvectl flush-caches (Linux)      │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 DNS failures manifest as name resolution errors, application connectivity issues, or authentication failures. Systematic diagnosis starts with isolating whether the problem is client-side cache, server-side zone data, replication, or network connectivity to the resolver.

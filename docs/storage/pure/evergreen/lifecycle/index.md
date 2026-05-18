@@ -1,5 +1,23 @@
 # Pure Storage Evergreen Lifecycle
 
+```
+Evergreen Lifecycle Timeline
+  Year 0 ──► Array installed, subscription starts
+       │
+  Year 1 ──► True Forward capacity reconciliation
+       │      (any additional capacity purchased at original unit rate)
+       │
+  Year 2 ──► Purity upgrades ongoing (NDU, no disruption)
+       │
+  Year 3 ──► Ever Modern controller refresh (Pure-executed)
+       │      NVMe shelves stay in place, controllers swapped
+       │
+  Year 4-5 ──► Continued operation on new controller gen
+       │
+  End   ──► Renew subscription or decommission
+              (drives cryptographically erased before return)
+```
+
 The Evergreen program guarantees that Pure FlashArray and FlashBlade platforms never become obsolete — hardware and software are refreshed non-disruptively as technology evolves.
 ## Evergreen Program Tiers
 

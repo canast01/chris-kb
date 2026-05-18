@@ -1,5 +1,37 @@
 # Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation
 
+```
+AI Alert Flow — Dell AIOps
+┌──────────────────────────────────────┐
+│  Telemetry anomaly detected          │
+│  metric deviates from learned band   │
+└────────────────┬─────────────────────┘
+                 ▼
+┌──────────────────────────────────────┐
+│  ML root cause analysis              │
+│  ┌──────────────────────────────┐   │
+│  │ deviation_percent: +42%      │   │
+│  │ confidence: 0.91             │   │
+│  │ contributing: disk SMART,    │   │
+│  │   queue depth, write latency │   │
+│  └──────────────────────────────┘   │
+└────────────────┬─────────────────────┘
+                 ▼
+┌──────────────────────────────────────┐
+│  Alert with recommended action       │
+│  "Predictive drive failure on SYS-A  │
+│   within 7 days — replace slot 12"   │
+└────────────────┬─────────────────────┘
+                 │
+        ┌────────┴────────┐
+        ▼                 ▼
+┌──────────────┐   ┌────────────────┐
+│  Email notif │   │  Portal alert  │
+│  (on-call)   │   │  + correlated  │
+│              │   │  event group   │
+└──────────────┘   └────────────────┘
+```
+
 Dell AIOps (part of the CloudIQ AI platform) uses machine learning to detect anomalies, correlate related events across infrastructure domains, and surface alerts that static threshold tools would miss. This page covers how AI-generated alerts work, how to interpret them, and how to manage alert correlation.
 
 ## AI Alert Types

@@ -4,6 +4,33 @@
 Networking knowledge base covering switching, routing, security, and network services. Includes design references, configuration procedures, connectivity troubleshooting, and validation guides for enterprise network environments.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                      Network Layers Overview                         │
+│                                                                      │
+│  Layer 1 — Physical                                                  │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  Cables · SFP+ · DAC · Patch panels · Switch ports           │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│  Layer 2 — Logical (VLANs / Switching)                               │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  VLANs · Trunks · LACP · vPC/MLAG · STP · MAC tables         │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│  Layer 3 — Routing                                                   │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  OSPF (intra-DC) · BGP (WAN/cloud) · ECMP · ACLs             │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│  Layer 4 — Overlay (NSX-T / VXLAN)                                   │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  NSX-T segments · DFW micro-segmentation · VXLAN tunnels     │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│  Cloud                                                               │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  AWS Direct Connect · Azure ExpressRoute · IPSec VPN         │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="switching-routing/">

@@ -1,5 +1,22 @@
 # Evergreen — Design Standards
 
+```
+Evergreen Subscription Design Checklist
+┌──────────────────────────────────────────────────────────┐
+│  Tier selection   │  //X / //C / //E — match workload    │
+├──────────────────────────────────────────────────────────┤
+│  Capacity sizing  │  committed TiB + True Forward headroom│
+├──────────────────────────────────────────────────────────┤
+│  Naming           │  site-fa-01 / env-app-vol01 etc.      │
+├──────────────────────────────────────────────────────────┤
+│  Protection       │  PGroup per app, SafeMode enabled     │
+├──────────────────────────────────────────────────────────┤
+│  Refresh schedule │  ~3 yr Ever Modern, plan 90 days ahead│
+├──────────────────────────────────────────────────────────┤
+│  Pure1 phone-home │  always active — required for support │
+└──────────────────────────────────────────────────────────┘
+```
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

@@ -4,6 +4,29 @@
 Domain Name System (DNS) is the foundational naming protocol of IP networks, resolving hostnames to addresses (and vice versa) over UDP and TCP port 53. It is a critical dependency for authentication (Kerberos, LDAP), certificate validation, cloud services, monitoring, and automation — meaning DNS failures cascade across the entire environment. Key operational concerns are zone hygiene, forwarder reliability, recursive vs authoritative role separation, and TTL management.
 </div>
 
+```
+        DNS RESOLUTION PATH
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  ┌────────┐  ┌──────────────┐  ┌────────────────────────────┐  │
+│  │ Client │  │ Recursive    │  │   Authoritative DNS        │  │
+│  │        ├─►│ Resolver     │  │                            │  │
+│  │ app    │  │ (local DC /  │  │  ┌──────┐ ┌─────┐ ┌─────┐ │  │
+│  │ stub   │  │ forwarder /  │  │  │ Root │ │ TLD │ │zone │ │  │
+│  └────────┘  │ 8.8.8.8)     │  │  │  .   │ │.com │ │auth │ │  │
+│              │              ├─►│  └──┬───┘ └──┬──┘ └──┬──┘ │  │
+│              │  cache check ◄──┤     │ root    │ TLD   │auth│  │
+│              │  → cache miss   │     │ referral│ ref.  │resp│  │
+│              └──────┬─────────┘  └──────────────────────────┘  │
+│                     │                                           │
+│                     ▼ answer (IP)                               │
+│              ┌──────────────┐                                   │
+│              │ client gets  │  TTL controls how long it's cached│
+│              │ A record     │                                   │
+│              └──────────────┘                                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="records/">

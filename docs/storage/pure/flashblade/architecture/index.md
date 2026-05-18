@@ -4,6 +4,28 @@
 Architecture reference for Pure Storage FlashBlade. Covers the scale-out blade model, Purity//FB data services, NFS/SMB/S3/HDFS protocol support, HA through blade redundancy, ActiveDR and ActiveCluster replication, and design standards.
 </div>
 
+```
+FlashBlade Architecture — Component Relationships
+  Storage Blades ──────────────────────────────────────
+  (each blade: NVMe flash + CPU + RAM — independent node)
+          │
+          ▼  NVMe-oF internal fabric
+  Fabric Module (FM)
+  ├── Aggregates blade capacity and compute
+  ├── Routes client requests to owning blade
+  └── Provides unified namespace (NFS / SMB / S3)
+          │
+          ▼  10/25/100 GbE
+  Client Network
+  ├── NFS v3/v4.1 (pNFS for parallel AI/ML reads)
+  ├── SMB 2/3 (Windows file shares)
+  ├── S3 (object — analytics pipelines, backup targets)
+  └── HDFS (Hadoop/Spark without separate cluster)
+
+  HA: blade failure → remaining blades absorb capacity
+  Replication: ActiveDR (async) to remote FlashBlade
+```
+
 ![FlashBlade Architecture](../../../../assets/flashblade-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

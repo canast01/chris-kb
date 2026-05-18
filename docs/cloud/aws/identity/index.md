@@ -4,6 +4,25 @@
 AWS IAM governs every API call in the platform. The principle of least privilege is enforced through roles (not users), customer-managed policies with Permission Boundaries, and SCPs at the org level. Access Analyzer, Access Advisor, and Credential Reports feed the quarterly permission review cycle.
 </div>
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  IAM Overview                           │
+│                                                         │
+│  Principals                                             │
+│  ├── User    (long-term creds — avoid for services)     │
+│  ├── Group   (collection of users — policy attachment)  │
+│  └── Role    (assumed — short-term STS creds)           │
+│                                                         │
+│  Policies                                               │
+│  ├── Identity-based  (attached to user / role)          │
+│  ├── Resource-based  (attached to S3 / KMS etc.)        │
+│  └── SCP             (org-level guardrail)              │
+│                                                         │
+│  Policy evaluation: explicit deny > SCP allow >         │
+│                     IAM allow > resource policy > deny  │
+└─────────────────────────────────────────────────────────┘
+```
+
 ![AWS Identity Architecture](../../../assets/aws-identity-overview.svg)
 
 <div class="kb-grid kb-grid-3">

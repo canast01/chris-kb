@@ -1,5 +1,29 @@
 # DHCP Failover
 
+```
+        DHCP FAILOVER MODES
+┌──────────────────────────────────────────────────────────────┐
+│  LOAD BALANCE (50/50 split):                                 │
+│  ┌─────────────────────┐    ┌─────────────────────────────┐  │
+│  │   DHCP Primary      │    │   DHCP Secondary            │  │
+│  │   Serves .100–.175  │◄──►│   Serves .176–.254          │  │
+│  │   (50% of pool)     │TCP │   (50% of pool)             │  │
+│  │                     │647 │                             │  │
+│  └─────────────────────┘    └─────────────────────────────┘  │
+│  Both active; pool split; MCLT timer for lease sync          │
+│                                                              │
+│  HOT STANDBY:                                                │
+│  ┌─────────────────────┐    ┌─────────────────────────────┐  │
+│  │   DHCP Active       │    │   DHCP Standby              │  │
+│  │   Serves all leases │◄──►│   Holds 5% reserve pool     │  │
+│  │   (primary)         │TCP │   Takes over if primary down │  │
+│  │                     │647 │                             │  │
+│  └─────────────────────┘    └─────────────────────────────┘  │
+│                                                              │
+│  Both modes: TCP 647 must be open between DHCP servers       │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 DHCP failover on Windows Server allows two DHCP servers to share responsibility for a scope, providing redundancy. The two modes are **Hot Standby** (one active, one passive) and **Load Balance** (both serve leases simultaneously, split by percentage).

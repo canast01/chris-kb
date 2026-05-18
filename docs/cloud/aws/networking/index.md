@@ -4,6 +4,24 @@
 AWS networking is built around VPCs with public and private subnets across availability zones, with Transit Gateway providing hub-and-spoke connectivity between accounts and on-premises. Coverage includes Security Groups, NACLs, route tables, VPC endpoints, load balancers, Route 53, and VPC Flow Logs.
 </div>
 
+```
+┌─────────────────────────────────────────────────────────┐
+│              VPC Networking Overview                    │
+│                                                         │
+│  Internet ──► IGW ──► Public Subnet (ALB · NAT GW)      │
+│                            │                            │
+│                     NAT GW (outbound only)              │
+│                            │                            │
+│                       Private Subnet (EC2 · ECS)        │
+│                            │                            │
+│                       Isolated Subnet (RDS)             │
+│                                                         │
+│  On-Premises ──VPN/DX──► VGW ──► Private Subnet         │
+│                                                         │
+│  Security: Security Group (instance) · NACL (subnet)    │
+└─────────────────────────────────────────────────────────┘
+```
+
 ![AWS Networking Architecture](../../../assets/aws-networking-overview.svg)
 
 <div class="kb-grid kb-grid-3">

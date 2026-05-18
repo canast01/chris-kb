@@ -1,5 +1,33 @@
 # Network Design
 
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    Enterprise Network Design                        │
+│                                                                     │
+│   Internet / WAN                                                    │
+│        │                                                            │
+│   ┌────▼────────────────────────────────────────────────────┐      │
+│   │              Core (Cisco Nexus 9504 vPC pair)           │      │
+│   └────┬────────────────────────┬────────────────────────────┘      │
+│        │  OSPF/BGP              │                                   │
+│   ┌────▼────────┐        ┌──────▼──────┐                           │
+│   │Distribution │        │Distribution │  ◄── VLAN aggregation     │
+│   │   Sw A      │◄──────►│   Sw B      │                           │
+│   └────┬────────┘  vPC   └──────┬──────┘                           │
+│        │                        │                                   │
+│   ┌────▼────────┐        ┌──────▼──────┐                           │
+│   │  ToR A      │◄──────►│  ToR B      │  ◄── Access / LACP       │
+│   └─────┬───────┘  vPC   └──────┬──────┘                           │
+│         │   LACP (802.3ad)      │                                   │
+│   ┌─────▼───────────────────────▼──────┐                           │
+│   │  ESXi Hosts  (NIC A ──── NIC B)    │                           │
+│   │  VLANs: VM·vMotion·vSAN·Mgmt·Bkp  │                           │
+│   └────────────────────────────────────┘                           │
+│                                                                     │
+│  Overlay: NSX-T (VXLAN micro-segmentation + DFW)                   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
 ![Network Design Overview](../../assets/network-design-overview.svg)
 
 ## Overview

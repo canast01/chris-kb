@@ -4,6 +4,23 @@
 AWS storage covers three models: EBS block volumes for EC2 boot and data disks, S3 object storage for backups and static assets, and EFS/FSx file storage for shared Linux and Windows workloads. Lifecycle policies automate tiering; snapshots and cross-region replication underpin DR.
 </div>
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                  AWS Storage Types                      │
+│                                                         │
+│  Block Storage (EBS)                                    │
+│  └── volume attached to one EC2 · gp3 / io2 / st1       │
+│                                                         │
+│  Object Storage (S3)                                    │
+│  └── bucket → prefix → object (key + data + metadata)   │
+│      tiers: Standard → IA → Glacier → Deep Archive      │
+│                                                         │
+│  File Storage                                           │
+│  ├── EFS  — NFS4.1 · shared across EC2s · multi-AZ     │
+│  └── FSx  — Windows (SMB) · Lustre (HPC) · ONTAP       │
+└─────────────────────────────────────────────────────────┘
+```
+
 ![AWS Storage Architecture](../../../assets/aws-storage-overview.svg)
 
 <div class="kb-grid kb-grid-3">

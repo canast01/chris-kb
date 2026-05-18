@@ -1,4 +1,22 @@
 # Pure Storage Evergreen Vendor Support
+
+```
+Evergreen Support Touchpoints
+  Pure1 phone-home ──► proactive monitoring + auto case creation
+          │
+          ▼
+  support.purestorage.com ──► manual case creation
+  ├── P1 (array down / data loss risk) ── 24/7, 30 min response
+  ├── P2 (degraded, no data loss risk)── 24/7, 2 hr response
+  ├── P3 (non-critical impact) ───────── business hours
+  └── P4 (info / feature request) ────── best effort
+          │
+          ▼
+  Pure Account Team (separate from support):
+  ├── Subscription renewals
+  ├── Ever Modern scheduling
+  └── True Forward capacity amendments
+```
 ## Support Portal
 
 Pure Storage support is accessed through the support portal at **https://support.purestorage.com**.

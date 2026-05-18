@@ -1,5 +1,27 @@
 # NFS Mounts
 
+```
+        CLIENT-SIDE MOUNT PROCESS
+┌──────────────────────────────────────────────────────────────┐
+│  mount -t nfs -o vers=4.1,hard,rsize=1048576 \              │
+│         server:/export /mnt/data                            │
+│                    │                                        │
+│                    ▼                                        │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  NFS client negotiates version & options with server │   │
+│  │  server:/export  ──────────────────►  /mnt/data      │   │
+│  │  (remote path)     TCP 2049 mount    (local mountpoint)│  │
+│  └──────────────────────────────────────────────────────┘   │
+│                    │                                        │
+│  Option effects:   │                                        │
+│  hard    ──► retry indefinitely if server unreachable       │
+│  soft    ──► return error after timeout (risk of corruption)│
+│  rsize=  ──► read buffer size (tune for throughput)        │
+│  _netdev ──► wait for network at boot (required in fstab)  │
+│  vers=   ──► force NFS version (4.1 preferred)             │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 NFS mounts attach remote exports to the local filesystem. Mounts can be done manually with `mount`, made persistent via `/etc/fstab`, or managed automatically with autofs. Mount options control reliability, timeout behavior, and NFS version negotiation.

@@ -1,5 +1,24 @@
 # FlashBlade — Integrations
 
+```
+FlashBlade Integration Map
+┌──────────────────────────────────────────────────────────┐
+│                       FlashBlade                         │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+│  │  NFS/SMB │  │    S3    │  │   Mgmt   │              │
+│  │  data    │  │  object  │  │  HTTPS   │              │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘              │
+└───────┼─────────────┼─────────────┼──────────────────────┘
+        │             │             │
+        ▼             ▼             ├──► Pure1 (phone-home)
+  ESXi NFS DS    Veeam repo         ├──► Pure1 REST API
+  Linux AI/ML    Analytics          ├──► SNMP NMS
+  Windows SMB    Backup target      └──► SIEM (TLS syslog)
+                                    │
+                                    └──► Remote FlashBlade
+                                         (ActiveDR async repl)
+```
+
 > Part of the [FlashBlade Architecture](../) reference.
 
 ---

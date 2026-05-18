@@ -1,5 +1,20 @@
 # FlashBlade — CLI Reference
 
+```
+purefb CLI Hierarchy
+  purefb
+  ├── array       — system info, capacity, performance
+  ├── blade       — blade health and status
+  ├── hardware    — chassis, PSU, fans, network cards
+  ├── fs          — filesystems: create / resize / export
+  ├── bucket      — S3 buckets: create / ACL / quota
+  ├── policy      — snapshot and replication policies
+  ├── replication — ActiveDR relationships
+  ├── alert       — alert management
+  ├── user        — local admin accounts
+  └── support     — phone-home and diagnostics
+```
+
 > Part of the [FlashBlade Operations](../) reference.
 
 Commonly used `purefb` commands for managing Pure Storage FlashBlade arrays. FlashBlade is a scale-out NAS and object storage platform — it serves NFS and SMB file shares as well as S3-compatible object storage.

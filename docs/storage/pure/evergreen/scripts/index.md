@@ -2,6 +2,20 @@
 
 > Part of the [Pure Storage Evergreen](../) reference.
 
+```
+Evergreen Automation Flow
+  Python script
+  └── Pure1 REST API (JWT auth)
+          │
+          ▼
+  ├── /subscriptions  ──► committed vs consumed TiB
+  ├── /arrays         ──► per-array capacity + health
+  └── /alerts         ──► fleet alerts
+          │
+          ▼
+  Output: CSV capacity report / Slack alert / email
+```
+
 ---
 ## Pre-Upgrade Path Validation (Bash)
 

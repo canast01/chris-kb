@@ -2,6 +2,18 @@
 
 High-speed serial protocol for Storage Area Network (SAN) connectivity between hosts and storage arrays.
 
+```
+        FC END-TO-END PATH
+┌────────┐    ┌─────┐    ┌──────────────┐    ┌─────┐    ┌─────────┐    ┌─────┐
+│  Host  │    │ HBA │    │  FC Switch A │    │ ISL │    │FC Switch│    │Array│
+│        ├───►│(SFP)├───►│  port  ──────┼───►│─────┼───►│port     ├───►│ LUN │
+│        │    │WWPN │    │   (F_port)   │    │     │    │(F_port) │    │     │
+└────────┘    └─────┘    └──────────────┘    └─────┘    └─────────┘    └─────┘
+   FLOGI ──────────────────────►  FC_ID assigned
+   PLOGI ──────────────────────────────────────────────────────────►
+   PRLI  ──────────────────────────────────────────────────────────►  SCSI session
+```
+
 
 <div class="kb-grid kb-grid-1">
 

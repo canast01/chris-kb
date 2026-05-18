@@ -1,5 +1,30 @@
 # DHCP Reservations
 
+```
+        RESERVATION: MAC → FIXED IP
+┌──────────────────────────────────────────────────────────────┐
+│  DHCP Scope: 192.168.10.0/24                                 │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Dynamic pool:  .100 – .254                          │    │
+│  │  Reservations:  .51  – .99 (outside dynamic range)   │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  Printer-floor2 sends DISCOVER:                              │
+│  ┌──────────────────────────┐                               │
+│  │ Client MAC: 00-1A-2B-... │                               │
+│  └─────────────┬────────────┘                               │
+│                │ DHCP server checks reservation table        │
+│                ▼                                             │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Reservation: 00-1A-2B-3C-4D-5E → 192.168.10.200     │    │
+│  │  (always gets the same IP, regardless of lease timer) │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                │ OFFER + ACK 192.168.10.200                  │
+│                ▼                                             │
+│  Printer gets same IP on every boot                         │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 A DHCP reservation pins a specific IP address to a client's MAC address. The IP must fall within the scope range but is excluded from the dynamic pool. Reservations inherit scope options unless overridden at the reservation level.

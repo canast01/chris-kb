@@ -1,5 +1,28 @@
 # Evergreen — Health Checks
 
+```
+Evergreen Health Check — Daily Sequence
+  Pure1 portal ──► All arrays green?
+          │
+          ▼
+  purealert list ──► No error/warning alerts?
+          │
+          ▼
+  puredrive list ──► All drives healthy?
+          │
+          ▼
+  purearray list --controller ──► Both controllers ok?
+          │
+          ▼
+  purearray phonehome list ──► Phone-home active?
+          │
+          ▼
+  Pure1 → Subscription dashboard ──► Capacity within entitlement?
+          │
+          ▼
+          PASS
+```
+
 > Part of the [Evergreen Operations](../) reference.
 
 ---

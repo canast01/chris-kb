@@ -1,6 +1,29 @@
 # FC Zoning
 
-Zoning restricts which initiators (HBAs) can communicate with which targets (storage ports) in a Fibre Channel fabric. Every production fabric must have active zoning; unzoned fabrics allow all nodes to see each other.
+Zoning restricts which initiators (HBAs) can communicate with which targets (storage ports) in a Fibre Channel fabric.
+
+```
+        ZONING: INITIATOR + TARGET → ZONE → ZONE SET → FABRIC
+┌─────────────────────────────────────────────────────────────────┐
+│  Zone: esxi01_pure01_ctA1                                       │
+│  ┌───────────────────────┐    ┌───────────────────────────────┐ │
+│  │ Initiator             │    │ Target                        │ │
+│  │ WWPN: 21:00:00:xx:... │    │ WWPN: 50:00:99:xx:...        │ │
+│  │ (Host HBA port)       │    │ (Storage ctrl port)           │ │
+│  └───────────┬───────────┘    └────────────┬──────────────────┘ │
+│              └──────────────┬──────────────┘                    │
+│                             │ zone member                       │
+│                      ┌──────▼──────┐                           │
+│                      │  ZONE SET   │  ◄── cfgenable / activate  │
+│                      │  PROD_CFG   │                            │
+│                      └──────┬──────┘                           │
+│                             │                                   │
+│                      ┌──────▼──────┐                           │
+│                      │   FABRIC    │  enforces zone membership  │
+│                      │  (switches) │  blocks unlisted WWPNs     │
+│                      └─────────────┘                           │
+└─────────────────────────────────────────────────────────────────┘
+``` Every production fabric must have active zoning; unzoned fabrics allow all nodes to see each other.
 
 ## Zone Types
 

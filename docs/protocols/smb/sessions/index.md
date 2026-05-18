@@ -1,5 +1,28 @@
 # SMB Sessions
 
+```
+        SMB SESSION ESTABLISHMENT
+┌────────────┐                              ┌─────────────────┐
+│  Client    │                              │   SMB Server    │
+└─────┬──────┘                              └────────┬────────┘
+      │  1. Negotiate (dialect selection)             │
+      │ ─────────────────────────────────────────────►│
+      │     Server offers SMB 3.1.1                   │
+      │ ◄─────────────────────────────────────────────│
+      │  2. SessionSetup (Kerberos / NTLM auth)        │
+      │ ─────────────────────────────────────────────►│
+      │     Auth OK, SessionID assigned               │
+      │ ◄─────────────────────────────────────────────│
+      │  3. TreeConnect (request share access)         │
+      │  \\server\Finance ────────────────────────────►│
+      │     TreeID assigned, share connected           │
+      │ ◄─────────────────────────────────────────────│
+      │  4. File I/O (Create, Read, Write, Close)      │
+      │ ◄════════════════════════════════════════════►│
+      │                                               │
+      │  SMB3: signing + optional encryption active   │
+```
+
 ## Overview
 
 An SMB session is established after a client authenticates to a server. Sessions can be inspected, disconnected, and constrained via PowerShell and legacy tools. Understanding active sessions is essential for access audits, capacity planning, and incident response.

@@ -4,6 +4,25 @@
 Infrastructure lifecycle management covering installation, upgrade, patching, decommission, and EOL tracking across platforms.
 </div>
 
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                    System Lifecycle Stages                           │
+│                                                                      │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────────────┐ │
+│  │ Onboard  │──►│ Baseline │──►│ Operate  │──►│    Upgrade       │ │
+│  │ CMDB reg │   │ Config   │   │ Monitor  │   │  Readiness       │ │
+│  │ DNS/IP   │   │ Harden   │   │ Patch    │   │  validation      │ │
+│  │ monitoring│  │ Backup   │   │ Health ✓ │   │  Post-upgrade ✓  │ │
+│  └──────────┘   └──────────┘   └──────────┘   └────────┬─────────┘ │
+│                                                         │           │
+│  ┌──────────────────────────────────────────────────────▼─────────┐ │
+│  │                   Decommission                                 │ │
+│  │   Data archive ──► access revoke ──► DNS cleanup ──► CMDB CI  │ │
+│  │   Hardware wipe / recycle  ·  License release                 │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
 ## Articles
 
 <div class="kb-grid kb-grid-3">

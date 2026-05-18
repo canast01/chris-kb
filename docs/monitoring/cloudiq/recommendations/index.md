@@ -1,5 +1,32 @@
 # CloudIQ: Proactive Recommendations and Implementation Tracking
 
+```
+AI Recommendations — CloudIQ
+┌──────────────────────────────────────┐
+│  Telemetry analysis identifies waste │
+│  or risk pattern                     │
+└────────────────┬─────────────────────┘
+                 ▼
+┌──────────────────────────────────────┐
+│  Recommendation generated            │
+│  ┌──────────────────────────────┐    │
+│  │ Category: Capacity           │    │
+│  │ Priority: HIGH               │    │
+│  │ Effort:   LOW                │    │
+│  │ Action: thin reclaim on      │    │
+│  │         vol03 (saves 2.1TB)  │    │
+│  └──────────────────────────────┘    │
+└────────────────┬─────────────────────┘
+                 ▼
+       ┌─────────────────┐
+       │  Apply button   │  (guided steps in portal)
+       └────────┬────────┘
+                ▼
+       ┌─────────────────┐
+       │ Mark Implemented│ → CloudIQ validates next cycle
+       └─────────────────┘
+```
+
 Dell CloudIQ generates proactive recommendations based on telemetry analysis, configuration assessment, and best practices. Categories include performance optimisation, energy savings, and configuration improvements. This page covers reviewing, implementing, and tracking recommendations.
 
 ## Recommendation Categories

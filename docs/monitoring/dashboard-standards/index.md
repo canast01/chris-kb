@@ -1,4 +1,29 @@
 # Monitoring Dashboard Standards
+
+```
+Dashboard Design — Layout Standards
+┌─────────────────────────────────────────────────┐
+│  Executive View          refresh: 1 hour        │
+│  ┌──────────┐  ┌──────────┐  ┌───────────────┐ │
+│  │ Alert    │  │ Capacity │  │ Availability  │ │
+│  │ summary  │  │ trends   │  │    SLA %      │ │
+│  └──────────┘  └──────────┘  └───────────────┘ │
+├─────────────────────────────────────────────────┤
+│  Operational View        refresh: 5 min         │
+│  ┌──────────────────┐  ┌────────────────────┐  │
+│  │  Active Alerts   │  │  Storage Array     │  │
+│  │  by severity     │  │  Health Tiles      │  │
+│  │  ● Crit: 2       │  │  SYS-A ● green    │  │
+│  │  ● High: 5       │  │  SYS-B ◐ amber    │  │
+│  └──────────────────┘  └────────────────────┘  │
+├─────────────────────────────────────────────────┤
+│  Drill-down (Troubleshooting) refresh: 1 min    │
+│  ┌────────────────────────────────────────────┐ │
+│  │  Metric charts │  object context │ alerts  │ │
+│  └────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+```
+
 ## Required Dashboards
 
 | Dashboard | Audience | Refresh |

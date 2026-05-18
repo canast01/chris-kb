@@ -1,5 +1,30 @@
 # NTFS Permissions
 
+```
+        NTFS ACL STRUCTURE
+┌──────────────────────────────────────────────────────────────┐
+│  C:\Shares\Finance  (folder object)                          │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Security Descriptor                                 │    │
+│  │  ┌────────────────┐  Owner: DOMAIN\admin             │    │
+│  │  │ DACL           │                                  │    │
+│  │  │ (access control│  ACEs (Access Control Entries):  │    │
+│  │  │  list)         │  ├─ Allow: DOMAIN\Finance_Users  │    │
+│  │  │                │  │         Modify (OI)(CI)       │    │
+│  │  │                │  ├─ Allow: DOMAIN\Domain Admins  │    │
+│  │  │                │  │         Full Control (OI)(CI) │    │
+│  │  │                │  └─ Deny:  DOMAIN\Interns        │    │
+│  │  │                │            Write (OI)(CI)        │    │
+│  │  └────────────────┘                                  │    │
+│  │  ┌────────────────┐                                  │    │
+│  │  │ SACL           │  Audit: Everyone FullControl     │    │
+│  │  │ (audit list)   │  → Event ID 4663 in Security log │    │
+│  │  └────────────────┘                                  │    │
+│  └──────────────────────────────────────────────────────┘    │
+│  (I) = inherited from parent   explicit = set directly here  │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 NTFS permissions control access to files and folders at the filesystem level on Windows volumes. They are distinct from share permissions and apply whether access comes over the network or locally. Effective access is determined by combining both layers: the most restrictive result of NTFS and share permissions wins.

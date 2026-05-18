@@ -3,6 +3,26 @@
 
 AWS Access Keys notes for day-to-day infrastructure operations.
 
+```
+┌─────────────────────────────────────────────────────────┐
+│               Access Keys — When to Use                 │
+│                                                         │
+│  Access Key = AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY  │
+│  (long-lived static credentials — rotation required)    │
+│                                                         │
+│  Preferred alternatives:                                │
+│  ├── EC2 / ECS / Lambda  → IAM Role (instance profile)  │
+│  ├── Human access        → IAM Identity Center (SSO)    │
+│  └── CI/CD pipelines     → OIDC federation (no keys)    │
+│                                                         │
+│  If access keys must exist:                             │
+│  ├── Rotate every 90 days maximum                       │
+│  ├── Disable before delete (safer)                      │
+│  ├── Never store in code or S3                          │
+│  └── Enable CloudTrail to audit usage                   │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## Where It Fits
 
 Use this page for build work, support checks, troubleshooting, standards, and operational review.

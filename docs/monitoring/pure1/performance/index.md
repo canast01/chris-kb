@@ -1,5 +1,30 @@
 # Pure1 — Performance
 
+```
+Performance Data Flow — Pure1
+┌──────────────────────────┐
+│  Array (FlashArray/FB)   │
+│  metrics collected every │
+│  30s via phone-home      │
+└────────────┬─────────────┘
+             ▼
+┌──────────────────────────┐
+│   Pure1 Time-Series DB   │
+│   (up to 1 year history) │
+└────────────┬─────────────┘
+             ▼
+┌─────────────────────────────────────────┐
+│         Dashboard Charts                │
+├─────────────┬──────────────┬────────────┤
+│    IOPS     │   Latency    │ Throughput │
+│  ▲          │  ▲           │  ▲         │
+│  │ ╭╮  ╭╮  │  │   ╭──╮   │  │  ╭──╮  │
+│  │╭╯╰╮╭╯╰╮ │  │───╯  ╰── │  │──╯  ╰─ │
+│  └──────────│  └──────────│  └─────────│
+│  read/write │  µs avg     │  MB/s      │
+└─────────────┴──────────────┴────────────┘
+```
+
 Pure1 retains performance data for all registered arrays — IOPS, bandwidth, latency, and queue depth — with up to 1 year of history and anomaly detection via AI-powered analytics.
 
 ## Key Metrics

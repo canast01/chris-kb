@@ -1,5 +1,21 @@
 # Evergreen — Backup & Restore
 
+```
+Evergreen Configuration Backup + Restore
+  Configuration export (before controller refresh / migration):
+  ├── pureconfig list --all  ──► export array config to file
+  ├── purepgroup list --schedule ──► document PGroup schedules
+  └── purehost list + purehgroup list ──► host/group inventory
+          │
+          ▼
+  Store offline: CMDB / Git / secure file share
+
+  Post-refresh validation:
+  ├── purearray list --controller ──► new gen controllers
+  ├── purealert list ──► no residual alerts
+  └── purehost list --connection ──► all host paths restored
+```
+
 ## Evergreen//Forever — No Traditional Backup Required
 
 Evergreen//Forever is a subscription model, not a product you reinstall. "Backup" here covers:

@@ -1,5 +1,24 @@
 # FlashBlade — Escalation
 
+```
+Pure Support Escalation Path — FlashBlade
+  Blade failure / incident
+          │
+          ▼
+  Pure1 portal ──► fault auto-detected by phone-home?
+          │ Yes ──► Pure may auto-open case + dispatch blade
+          │ No  ──► Open case at support.purestorage.com
+          │
+          ▼
+  Case opened ──► Support engineer reviews Pure1 telemetry
+          │
+          ▼
+  Provide: purefb array list, purefb blade list, alert list
+          │
+          ▼
+  Pure TAC ──► Remote session / field engineer / blade dispatch
+```
+
 > Part of the [FlashBlade Troubleshooting](../) reference.
 
 ---

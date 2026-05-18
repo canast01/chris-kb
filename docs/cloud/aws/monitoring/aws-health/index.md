@@ -1,7 +1,27 @@
-# AWS AWS Health
+# AWS Health
 ## Overview
 
-AWS AWS Health notes for day-to-day infrastructure operations.
+AWS Health notes for day-to-day infrastructure operations.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                  AWS Health Overview                    │
+│                                                         │
+│  AWS Service Health Dashboard                           │
+│  └── Global service status (public · all regions)       │
+│                                                         │
+│  Personal Health Dashboard (your account)               │
+│  ├── Service issues affecting your resources            │
+│  ├── Scheduled maintenance (EC2 retirement · patching)  │
+│  └── Account-specific advisories                        │
+│        │                                                │
+│        ▼                                                │
+│  EventBridge (aws.health event source)                  │
+│  └── Rule: health event → SNS → PagerDuty / email       │
+│                                                         │
+│  AWS Health API: programmatic access to all events      │
+└─────────────────────────────────────────────────────────┘
+```
 
 ## Where It Fits
 

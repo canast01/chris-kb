@@ -1,5 +1,24 @@
 # Evergreen — Common Issues
 
+```
+Evergreen Common Issues — Triage
+  Issue type
+       │
+   ┌───┴───────────────────────────────────────┐
+   ▼                                           ▼
+Capacity / subscription                 Hardware / performance
+Pure1 subscription dashboard            purealert + puredrive
+  │                                       │
+  ▼                                       ▼
+Contact account team                   Open support case
+True Forward amendment                 Pure1 auto-monitors
+   │
+   ▼
+Controller refresh missed:
+  Contact Pure account team immediately
+  Operating past support window voids Ever Modern guarantee
+```
+
 > Part of the [Evergreen Operations](../) reference.
 
 ---

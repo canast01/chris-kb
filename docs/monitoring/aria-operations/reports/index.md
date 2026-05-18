@@ -1,5 +1,31 @@
 # Aria Operations: Scheduled Reports and PDF Export
 
+```
+Reports Pipeline — Aria Operations
+┌──────────────────┐
+│ Report Template  │  (capacity / health / compliance / VM)
+│  created in UI   │
+└────────┬─────────┘
+         ▼
+┌──────────────────┐     ┌───────────────────┐
+│ Schedule defined │────►│  Trigger: weekly  │
+│  (day/time/freq) │     │  Monday 07:00 UTC │
+└────────┬─────────┘     └───────────────────┘
+         ▼
+┌──────────────────┐
+│ Report generated │  PDF or CSV
+│ (server-side)    │
+└────────┬─────────┘
+         │
+    ┌────┴───────────┐
+    ▼                ▼
+┌────────┐    ┌────────────┐
+│ Email  │    │ Download   │
+│ distro │    │ (Generated │
+│  list  │    │  Reports)  │
+└────────┘    └────────────┘
+```
+
 Aria Operations reports provide point-in-time and scheduled summaries of health, capacity, and compliance data. This page covers creating report templates, scheduling delivery, configuring PDF export, and managing distribution lists.
 
 ## Report Templates and Types

@@ -1,5 +1,27 @@
 # DHCP Scopes
 
+```
+        SCOPE STRUCTURE
+┌──────────────────────────────────────────────────────────────┐
+│  Scope: Corp LAN – Floor 1 (192.168.10.0/24)                 │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Range:  192.168.10.1 – 192.168.10.254               │    │
+│  │  ┌─────────────────────────────────────────────┐     │    │
+│  │  │ Exclusions: .1–.20  (network devices, GW)  │     │    │
+│  │  │             .21–.50 (servers, static)       │     │    │
+│  │  │             .51–.99 (printers, AP, resvd)   │     │    │
+│  │  └─────────────────────────────────────────────┘     │    │
+│  │  Dynamic pool: .100 – .254 (workstations)             │    │
+│  │  Lease time:  8 days (servers) / 24h (workstations)   │    │
+│  │                                                       │    │
+│  │  Options delivered with lease:                        │    │
+│  │  003 Router:  192.168.10.1                            │    │
+│  │  006 DNS:     10.0.0.53, 10.0.0.54                    │    │
+│  │  015 Domain:  corp.local                              │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 A DHCP scope defines the pool of IP addresses available for a subnet. Scopes include a range, exclusions, lease duration, and options. Superscopes group multiple scopes for multinet subnets. DHCP relay (IP helper) is required when the DHCP server is on a different subnet from clients.

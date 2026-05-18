@@ -1,5 +1,28 @@
 # FlashArray — Install & Upgrade
 
+```
+Purity NDU Upgrade Sequence (non-disruptive)
+  ┌──────────────────────────────────────────────────────┐
+  │  1. Pre-check: purearray upgrade --check             │
+  │     (clears all blockers — drives, pods, alerts)     │
+  └──────────────────────────┬───────────────────────────┘
+                             ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  2. Stage image: purearray upgrade --stage <img>     │
+  └──────────────────────────┬───────────────────────────┘
+                             ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  3. Execute: purearray upgrade --exec                │
+  │     CT1 restarts first → CT0 takes all I/O          │
+  │     CT1 comes back → CT0 restarts → I/O shifts back │
+  └──────────────────────────┬───────────────────────────┘
+                             ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  4. Validate: purearray list --controller            │
+  │     Both controllers on new version → done          │
+  └──────────────────────────────────────────────────────┘
+```
+
 ## Purity Version Matrix
 
 | Version | Release Date | End of Support | Notes |

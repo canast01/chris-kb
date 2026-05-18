@@ -1,5 +1,30 @@
 # LDAP TLS (LDAPS)
 
+```
+        STARTTLS vs LDAPS
+┌──────────────────────────────────────────────────────────────┐
+│  STARTTLS (port 389 → upgrade to TLS)                        │
+│  ┌────────────┐         ┌──────────────────────────────┐     │
+│  │ App        │         │ DC port 389                  │     │
+│  │            ├────────►│ 1. plain TCP connect         │     │
+│  │ -H ldap:   │         │ 2. STARTTLS extended op      │     │
+│  │ :389 -ZZ   ├────────►│ 3. TLS negotiated (same conn)│     │
+│  │            │◄────────┤ 4. cert check + query        │     │
+│  └────────────┘         └──────────────────────────────┘     │
+│  Risk: downgrade attack if STARTTLS not enforced              │
+│                                                              │
+│  LDAPS (port 636 — TLS from first byte)                      │
+│  ┌────────────┐         ┌──────────────────────────────┐     │
+│  │ App        │         │ DC port 636                  │     │
+│  │            ├────────►│ 1. TLS handshake immediately │     │
+│  │ -H ldaps:  │         │ 2. cert verified             │     │
+│  │ :636       ├────────►│ 3. LDAP bind + query         │     │
+│  │            │◄────────┤                              │     │
+│  └────────────┘         └──────────────────────────────┘     │
+│  Preferred; no downgrade risk                                │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## Overview
 
 LDAPS (LDAP over TLS on port 636) and StartTLS (TLS upgrade on port 389) protect LDAP traffic from eavesdropping and tampering. Active Directory enforces LDAP channel binding and signing requirements via KB4520412 and related updates. Misconfigured TLS is a common cause of bind failures after patch cycles.
