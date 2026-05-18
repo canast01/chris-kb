@@ -1234,6 +1234,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-requirements-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Requirements Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1281,13 +1311,122 @@
 <p>Part of the <a href="../../">APEX Storage as a Service</a> reference.</p>
 </blockquote>
 <hr />
-<ul>
-<li>Keep SCG appliances at the current recommended version — outdated SCG versions may break telemetry and SupportAssist connectivity</li>
-<li>Deploy two SCG appliances for redundancy; register each APEX system to both</li>
-<li>Rotate APEX API credentials every 90 days; store in a secrets vault</li>
-<li>Enable MFA for all Dell account users with APEX Console access</li>
-<li>Review APEX Console audit log monthly for unexpected access or configuration changes</li>
-</ul>
+<h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Standard</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SCG software version</strong></td>
+<td>Current GA release</td>
+<td>Update the SCG appliance whenever Dell releases a new version. Outdated SCG versions may break telemetry delivery and SupportAssist connectivity, causing metering gaps that require manual correction. Check the SCG admin console for available updates at least monthly.</td>
+</tr>
+<tr>
+<td><strong>SCG redundancy</strong></td>
+<td>Two SCG appliances per site</td>
+<td>Deploy two SCG appliances and register each monitored array to both. A single SCG is a metering and support single point of failure. Both appliances should be on separate physical hosts to survive a host-level failure.</td>
+</tr>
+<tr>
+<td><strong>SCG network isolation</strong></td>
+<td>Management VLAN only</td>
+<td>Place SCG appliances on the storage management VLAN. Block access from general server VLANs. The SCG requires outbound HTTPS (443) to Dell cloud endpoints only — no inbound connections are required from external networks.</td>
+</tr>
+<tr>
+<td><strong>SCG outbound allowlist</strong></td>
+<td>Dell cloud endpoints only</td>
+<td>Permit SCG outbound TCP 443 to <code>esrs.dell.com</code>, <code>cloudiq.dell.com</code>, and <code>api.dell.com</code> (or the regional equivalents listed in the SCG deployment guide). Deny all other outbound destinations at the perimeter firewall.</td>
+</tr>
+<tr>
+<td><strong>API credential rotation</strong></td>
+<td>Every 90 days</td>
+<td>Rotate all APEX API client secrets on a 90-day cycle. Automate rotation where possible. Store credentials in a secrets vault — never in config files or version control.</td>
+</tr>
+<tr>
+<td><strong>MFA enforcement</strong></td>
+<td>Enforced for all human users</td>
+<td>Enable MFA on all Dell account users with APEX Console access. This is configured under account identity settings and applies to all users in the tenancy. Emergency break-glass accounts are exempt but must be logged and reviewed monthly.</td>
+</tr>
+<tr>
+<td><strong>IP allowlisting</strong></td>
+<td>Corporate egress IPs only</td>
+<td>Restrict APEX Console access to known corporate egress IP ranges or VPN exit nodes under account security settings. Review and prune stale CIDRs quarterly.</td>
+</tr>
+<tr>
+<td><strong>Audit log review</strong></td>
+<td>Monthly</td>
+<td>Review the APEX Console audit log monthly for unexpected access, failed authentication attempts, unscheduled configuration changes, and unexpected SCG registration or deregistration events.</td>
+</tr>
+<tr>
+<td><strong>SCG TLS validation</strong></td>
+<td>Certificate pinning enabled</td>
+<td>Do not deploy a TLS-inspecting proxy between the SCG and Dell cloud endpoints. Certificate pinning on the SCG will reject inspected connections, silently breaking telemetry delivery. Use a split-tunnel or allowlist exemption for SCG traffic.</td>
+</tr>
+<tr>
+<td><strong>Named service accounts per integration</strong></td>
+<td>One account per consuming system</td>
+<td>Create a dedicated APEX API service account for each consuming system (monitoring tool, CMDB, automation pipeline). Assign the Viewer role unless write access is explicitly required. Never share credentials between integrations.</td>
+</tr>
+<tr>
+<td><strong>Access review cadence</strong></td>
+<td>Quarterly</td>
+<td>Review all APEX Console user roles and service accounts on a quarterly basis. Revoke access for departed staff and contractors immediately; recertify remaining accounts annually at minimum. Document the review outcome in the CMDB.</td>
+</tr>
+<tr>
+<td><strong>Platform-level encryption</strong></td>
+<td>Enabled at deployment</td>
+<td>Verify that Dell-managed encryption is enabled on all APEX storage pools. Confirm encryption status is visible in the APEX Console under the storage pool details view. Do not disable encryption for performance testing without a formal change record.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="network-requirements-summary">Network Requirements Summary<a class="headerlink" href="#network-requirements-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Destination</th>
+<th>Port</th>
+<th>Direction</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>esrs.dell.com</code></td>
+<td>TCP 443</td>
+<td>Outbound from SCG</td>
+<td>Secure Connect Gateway telemetry upload</td>
+</tr>
+<tr>
+<td><code>cloudiq.dell.com</code></td>
+<td>TCP 443</td>
+<td>Outbound from SCG</td>
+<td>CloudIQ metric ingestion</td>
+</tr>
+<tr>
+<td><code>api.dell.com</code></td>
+<td>TCP 443</td>
+<td>Outbound from management hosts</td>
+<td>APEX API access</td>
+</tr>
+<tr>
+<td>Array management interface</td>
+<td>TCP 443 / 8443</td>
+<td>SCG to array</td>
+<td>Array registration and metric collection</td>
+</tr>
+<tr>
+<td>SCG admin console</td>
+<td>TCP 443</td>
+<td>Management hosts to SCG</td>
+<td>SCG configuration and update management</td>
+</tr>
+</tbody>
+</table>
+<p>All other inbound connections to the SCG should be denied by default. SCG appliances do not require inbound access from the internet.</p>
 
 
 

@@ -1251,6 +1251,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nsx-manager-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Manager Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vcenter-server-roles-in-vcf-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Server Roles in VCF Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-service-account-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Service Account Guidance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credential-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credential Rotation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quarterly-access-review-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quarterly Access Review Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1296,6 +1351,39 @@
 
 
 <h1 id="vcf-access-control">VCF — Access Control<a class="headerlink" href="#vcf-access-control" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF RBAC Model — Role Assignment Flow
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Active Directory                                   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────────────────────────────┐  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  GG-VCF-Admins · GG-VCF-Operators · ...     │  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  └──────────────────────────────────────────────┘  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└───────────────────────┬─────────────────────────────┘
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                        │ AD groups mapped to roles
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>          ┌─────────────┼──────────────┐
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>          ▼             ▼              ▼
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ SDDC Manager │ │ NSX Manager  │ │ vCenter Server   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│              │ │              │ │ (per domain)     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│ ADMIN        │ │ Enterprise   │ │ Administrator    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│ OPERATOR     │ │   Admin      │ │ ReadOnly         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│ VIEWER       │ │ Network Eng  │ │ CloudAdmin (VVF) │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│              │ │ Security Eng │ │                  │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│              │ │ Auditor      │ │ Apply at lowest  │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│              │ │              │ │ inventory level  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└──────────────┘ └──────────────┘ └──────────────────┘
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>Credential Rotation (all via SDDC Manager — never manually):
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  SDDC Manager → Security → Credentials → Rotate    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  ESXi root · vCenter SSO admin · NSX admin         │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  SDDC Manager admin · vSAN iSCSI accounts          │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Schedule: every 90 days (or per policy)            │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└─────────────────────────────────────────────────────┘
+</code></pre></div>
+<blockquote>
+<p>Part of the <a href="../../">VMware Cloud Foundation</a> reference.</p>
+</blockquote>
+<hr />
 <h2 id="sddc-manager-roles">SDDC Manager Roles<a class="headerlink" href="#sddc-manager-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1325,6 +1413,172 @@
 <li>Administration → Users and Groups → assign roles to AD groups</li>
 <li>Remove direct user-level assignments — group-based assignment is auditable and survives staff changes</li>
 </ol>
+<hr />
+<h2 id="nsx-manager-roles">NSX Manager Roles<a class="headerlink" href="#nsx-manager-roles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+<th>Typical Assignees</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Enterprise Admin</strong></td>
+<td>Full NSX configuration — logical switching, routing, micro-segmentation, load balancing, gateway firewall, certificate management, user management</td>
+<td>Network architects, NSX platform owners</td>
+</tr>
+<tr>
+<td><strong>Network Engineer</strong></td>
+<td>Configure and manage logical switches, routers, and load balancers; cannot modify security policy or manage users</td>
+<td>Network operations team</td>
+</tr>
+<tr>
+<td><strong>Security Engineer</strong></td>
+<td>Create and modify distributed firewall rules, security groups, and gateway firewall policies; cannot modify network topology</td>
+<td>Security team, firewall engineers</td>
+</tr>
+<tr>
+<td><strong>Auditor</strong></td>
+<td>Read-only access to all NSX configuration and logs; cannot make any changes</td>
+<td>Compliance, audit staff, monitoring service accounts</td>
+</tr>
+</tbody>
+</table>
+<p>NSX roles are assigned in NSX Manager under <strong>System → User Management → Roles</strong>. In a VCF environment, NSX Manager user management should be configured to use the same AD identity source as SDDC Manager to ensure consistent group-based access.</p>
+<hr />
+<h2 id="vcenter-server-roles-in-vcf-context">vCenter Server Roles in VCF Context<a class="headerlink" href="#vcenter-server-roles-in-vcf-context" title="Permanent link">&para;</a></h2>
+<p>In a VCF-managed deployment, vCenter permissions are managed through SDDC Manager rather than directly in the vCenter UI. This ensures that VCF lifecycle operations retain the permissions they require.</p>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VCF service account</strong></td>
+<td>SDDC Manager creates and manages a service account in each vCenter. Do not modify or disable this account — VCF lifecycle tasks (upgrades, expansions) depend on it.</td>
+</tr>
+<tr>
+<td><strong>Human user access</strong></td>
+<td>Grant human users access to vCenter via AD group membership in vCenter → Administration → Global Permissions. Use built-in roles (Administrator, Read-Only, Virtual Machine User) or custom roles with least privilege.</td>
+</tr>
+<tr>
+<td><strong>Role scope</strong></td>
+<td>Apply roles at the lowest inventory level possible (VM folder, cluster, or datacenter object) rather than at the global level. Global permissions propagate to all vCenter objects and should be reserved for platform admins.</td>
+</tr>
+<tr>
+<td><strong>No local vCenter accounts</strong></td>
+<td>In a VCF environment, disable local vCenter accounts (other than the built-in <code>administrator@vsphere.local</code> break-glass account). All access should flow through the AD identity source.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="api-service-account-guidance">API Service Account Guidance<a class="headerlink" href="#api-service-account-guidance" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager exposes a REST API used by automation pipelines, CMDB integrations, and monitoring tools.</p>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Recommended Role</th>
+<th>Authentication Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read-only monitoring (health, inventory queries)</td>
+<td>VIEWER</td>
+<td>API token (Bearer) — generate under My Account in SDDC Manager</td>
+</tr>
+<tr>
+<td>Automation pipelines (deploy workload domains, expand clusters)</td>
+<td>OPERATOR or ADMIN depending on operations required</td>
+<td>API token with short expiry; rotate on each pipeline run via CI/CD secrets manager</td>
+</tr>
+<tr>
+<td>CMDB or asset discovery</td>
+<td>VIEWER</td>
+<td>Long-lived API token stored in secrets vault; rotate every 90 days</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Obtaining an API token:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate and retrieve a session token</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;sddc-manager-fqdn&gt;/v1/tokens<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-automation@vsphere.local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.accessToken&#39;</span>
+</code></pre></div>
+<p>Use the returned <code>accessToken</code> as a Bearer token in subsequent API calls:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;sddc-manager-fqdn&gt;/v1/hosts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;accessToken&gt;&quot;</span>
+</code></pre></div>
+<p>API tokens expire after 24 hours by default. For automation pipelines, authenticate at the start of each run rather than caching tokens across runs.</p>
+<hr />
+<h2 id="credential-rotation">Credential Rotation<a class="headerlink" href="#credential-rotation" title="Permanent link">&para;</a></h2>
+<p>VCF manages credentials for all components in the SDDC stack (vCenter, NSX, ESXi, SDDC Manager itself). Use the built-in rotation workflow rather than changing passwords manually in individual products.</p>
+<p><strong>Rotate credentials via SDDC Manager:</strong></p>
+<ol>
+<li>SDDC Manager → Security → Credentials</li>
+<li>Select the component and credential type (SSH, API, or SSO)</li>
+<li>Click <strong>Rotate</strong> and confirm — SDDC Manager orchestrates the change across all dependent components</li>
+<li>Verify the rotation task completes without errors in the Tasks view</li>
+</ol>
+<p><strong>Rotate all passwords on a schedule:</strong></p>
+<ul>
+<li>ESXi root passwords: every 90 days</li>
+<li>vCenter SSO <code>administrator@vsphere.local</code>: every 90 days</li>
+<li>NSX admin password: every 90 days</li>
+<li>SDDC Manager admin password: every 90 days</li>
+</ul>
+<p>Do not rotate credentials manually in vCenter or NSX for components managed by VCF — out-of-band changes break the credential store and cause lifecycle task failures.</p>
+<hr />
+<h2 id="quarterly-access-review-checklist">Quarterly Access Review Checklist<a class="headerlink" href="#quarterly-access-review-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Export SDDC Manager user list</td>
+<td>Administration → Users and Groups → note all accounts and assigned roles</td>
+</tr>
+<tr>
+<td>2. Export NSX Manager user list</td>
+<td>System → User Management → Principal Identity and Roles</td>
+</tr>
+<tr>
+<td>3. Export vCenter Global Permissions</td>
+<td>Administration → Global Permissions → export or screenshot</td>
+</tr>
+<tr>
+<td>4. Cross-reference with HR leavers</td>
+<td>Revoke access for any account belonging to a departed employee or contractor</td>
+</tr>
+<tr>
+<td>5. Validate AD group membership</td>
+<td>Confirm each AD group used for VCF access has correct, current members</td>
+</tr>
+<tr>
+<td>6. Review service accounts</td>
+<td>Confirm each service account is still associated with a running integration; disable unused accounts</td>
+</tr>
+<tr>
+<td>7. Confirm break-glass account status</td>
+<td>Verify <code>administrator@vsphere.local</code> password is current, stored in the vault, and access was not used outside a declared incident</td>
+</tr>
+<tr>
+<td>8. Document and sign off</td>
+<td>Record review completion in the CMDB change record; obtain sign-off from the platform owner</td>
+</tr>
+</tbody>
+</table>
 
 
 

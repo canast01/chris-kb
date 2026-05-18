@@ -1262,6 +1262,145 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#vbr-windows-authentication-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VBR Windows Authentication Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-account-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Account Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Account Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimum-permissions-for-vbr-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Permissions for VBR Service Account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="REST API Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obtain-a-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obtain a Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-expiry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Expiry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-infrastructure-credentials-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Infrastructure Credentials Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Infrastructure Credentials Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#managing-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encryption-key-warning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption Key Warning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controls-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controls Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1318,6 +1457,189 @@
 <li>Configure CCP (Central Credential Provider) URL, application ID, and safe name</li>
 <li>Credentials retrieved at job runtime — never stored in VBR config DB</li>
 </ol>
+<hr />
+<h2 id="vbr-windows-authentication-modes">VBR Windows Authentication Modes<a class="headerlink" href="#vbr-windows-authentication-modes" title="Permanent link">&para;</a></h2>
+<p>VBR supports three authentication modes for console and remote access:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local Windows</td>
+<td>Accounts local to the VBR server OS</td>
+<td>Standalone/lab deployments; avoid in production</td>
+</tr>
+<tr>
+<td>Active Directory</td>
+<td>Domain accounts authenticated via Kerberos/NTLM</td>
+<td>Standard enterprise deployments</td>
+</tr>
+<tr>
+<td>LDAP</td>
+<td>Direct LDAP bind to a directory service (non-AD)</td>
+<td>Cross-domain or non-Windows directory environments</td>
+</tr>
+</tbody>
+</table>
+<p>Configure the authentication mode in VBR console under <strong>Users and Roles</strong> → select the account type when granting access. AD group membership is supported — assign roles to AD security groups rather than individual accounts.</p>
+<hr />
+<h2 id="service-account-requirements">Service Account Requirements<a class="headerlink" href="#service-account-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="minimum-permissions-for-vbr-service-account">Minimum Permissions for VBR Service Account<a class="headerlink" href="#minimum-permissions-for-vbr-service-account" title="Permanent link">&para;</a></h3>
+<p>The VBR service account (<code>svc-veeam</code> or equivalent) requires the following:</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Permission</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VBR server OS</td>
+<td>Local Administrator</td>
+<td>Required for VBR installation and service operation</td>
+</tr>
+<tr>
+<td>vCenter</td>
+<td>Veeam-defined privilege set</td>
+<td>Use the Veeam vCenter role (assigned during setup wizard)</td>
+</tr>
+<tr>
+<td>Proxy servers</td>
+<td>Local Administrator</td>
+<td>VBR deploys and manages proxy components</td>
+</tr>
+<tr>
+<td>Repository servers</td>
+<td>Local Administrator or share write</td>
+<td>Needed to write backup files and manage extents</td>
+</tr>
+<tr>
+<td>SQL Server (VBR config DB)</td>
+<td><code>db_owner</code> on VBR config DB</td>
+<td><code>sysadmin</code> only required during initial DB setup</td>
+</tr>
+<tr>
+<td>Guest OS (application-aware)</td>
+<td>Local Administrator on guest</td>
+<td>For VSS quiescing and log truncation</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Do not use a Domain Admin account as the VBR service account. Scope permissions to the minimum above.</p>
+</blockquote>
+<hr />
+<h2 id="rest-api-authentication">REST API Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
+<p>VBR exposes a REST API on port 9419 (HTTPS). Authentication uses OAuth 2.0 bearer tokens.</p>
+<h3 id="obtain-a-token">Obtain a Token<a class="headerlink" href="#obtain-a-token" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Request a bearer token (username/password exchange)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vbr-server&gt;:9419/api/oauth2/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=password&amp;username=&lt;user&gt;&amp;password=&lt;pass&gt;&amp;use_short_term_refresh=false&quot;</span>
+</code></pre></div>
+<p>Response includes <code>access_token</code> and <code>refresh_token</code>.</p>
+<h3 id="use-the-token">Use the Token<a class="headerlink" href="#use-the-token" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Example: list all jobs</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;vbr-server&gt;:9419/api/v1/jobs&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;access_token&gt;&quot;</span>
+</code></pre></div>
+<h3 id="token-expiry">Token Expiry<a class="headerlink" href="#token-expiry" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Token Type</th>
+<th>Default Lifetime</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Access token</td>
+<td>15 minutes</td>
+<td>Passed in every API request header</td>
+</tr>
+<tr>
+<td>Refresh token</td>
+<td>24 hours</td>
+<td>Exchange for a new access token without re-authenticating</td>
+</tr>
+</tbody>
+</table>
+<p>Use <code>grant_type=refresh_token</code> with the refresh token to get a new access token before expiry. Automate token refresh in scripts to avoid mid-run failures.</p>
+<hr />
+<h2 id="backup-infrastructure-credentials-management">Backup Infrastructure Credentials Management<a class="headerlink" href="#backup-infrastructure-credentials-management" title="Permanent link">&para;</a></h2>
+<p>VBR stores credentials for managed infrastructure components (proxies, repositories, tape servers, etc.) in its configuration database.</p>
+<h3 id="managing-credentials">Managing Credentials<a class="headerlink" href="#managing-credentials" title="Permanent link">&para;</a></h3>
+<ul>
+<li>VBR console → <strong>Credentials</strong> — central store for all managed account credentials</li>
+<li>Credentials are encrypted using the VBR configuration database encryption key</li>
+<li>Rotate passwords in <strong>Credentials</strong> first, then push changes to affected components</li>
+</ul>
+<h3 id="encryption-key-warning">Encryption Key Warning<a class="headerlink" href="#encryption-key-warning" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Critical:</strong> If the VBR configuration backup encryption key is lost, encrypted backups created with that key become permanently unrecoverable. There is no key escrow or recovery mechanism.</p>
+</blockquote>
+<p>Best practices:</p>
+<ul>
+<li>Store the encryption password in a secrets manager (CyberArk, HashiCorp Vault) or a sealed, access-controlled document</li>
+<li>Enable <strong>Encrypt configuration backup</strong> under General Options and document the passphrase at the time of setup</li>
+<li>Test configuration restore annually — include the passphrase in your DR documentation</li>
+</ul>
+<hr />
+<h2 id="controls-summary">Controls Summary<a class="headerlink" href="#controls-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Configuration</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MFA for Enterprise Manager</td>
+<td>Settings → Users → TOTP or SAML</td>
+<td>Required for all admin accounts</td>
+</tr>
+<tr>
+<td>CyberArk credential retrieval</td>
+<td>Credentials → Add → CyberArk; CCP URL + safe</td>
+<td>Credentials never persisted in VBR DB</td>
+</tr>
+<tr>
+<td>AD authentication</td>
+<td>Users and Roles → assign AD groups</td>
+<td>Prefer group assignment over individual accounts</td>
+</tr>
+<tr>
+<td>VBR service account</td>
+<td>Scoped local admin + vCenter role</td>
+<td>No Domain Admin; use dedicated <code>svc-veeam</code> account</td>
+</tr>
+<tr>
+<td>REST API token expiry</td>
+<td>Access: 15 min / Refresh: 24 hr</td>
+<td>Automate refresh in any scripted API consumers</td>
+</tr>
+<tr>
+<td>Configuration backup encryption</td>
+<td>General Options → Encrypt config backup</td>
+<td>Store passphrase in secrets manager; test restore annually</td>
+</tr>
+<tr>
+<td>Guest credential scope</td>
+<td>Per-job credentials, local admin on guest</td>
+<td>Limit to jobs requiring application-aware processing</td>
+</tr>
+</tbody>
+</table>
 
 
 

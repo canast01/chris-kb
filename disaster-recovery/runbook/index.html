@@ -1263,13 +1263,85 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-steps" class="md-nav__link">
+  <a href="#communication-tree" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recovery Steps
+        Communication Tree
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phased-recovery-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phased Recovery Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phased Recovery Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-0-declare-and-mobilise-t0-to-t30-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0 — Declare and Mobilise (T+0 to T+30 min)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-network-and-management-plane-t30-to-t90-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Network and Management Plane (T+30 to T+90 min)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-storage-and-data-recovery-t90-to-t180-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Storage and Data Recovery (T+90 to T+180 min)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-compute-and-application-recovery-t180-to-t300-min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Compute and Application Recovery (T+180 to T+300 min)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-stabilise-and-operate-from-dr-t300-min-onward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Stabilise and Operate from DR (T+300 min onward)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1330,29 +1402,380 @@
 
 <h1 id="disaster-recovery-runbook">Disaster Recovery Runbook<a class="headerlink" href="#disaster-recovery-runbook" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This runbook defines the standard steps to recover infrastructure and applications following a disaster or major outage.</p>
+<p>This runbook defines the activation criteria, phased recovery procedures, communication obligations, and validation requirements for declaring and executing a disaster recovery event. It applies to all infrastructure tiers managed under this platform.</p>
+<hr />
 <h2 id="activation-criteria">Activation Criteria<a class="headerlink" href="#activation-criteria" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Data center outage</li>
-<li>Storage failure</li>
-<li>Site-level network outage</li>
-<li>Cybersecurity incident</li>
-</ul>
-<h2 id="recovery-steps">Recovery Steps<a class="headerlink" href="#recovery-steps" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Declare disaster</li>
-<li>Notify stakeholders</li>
-<li>Initiate failover procedures</li>
-<li>Validate system recovery</li>
-<li>Restore business services</li>
-</ol>
+<p>A DR event may be declared when one or more of the following conditions are met. The declaring authority varies by severity.</p>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Condition</th>
+<th>Declaring Authority</th>
+<th>RPO/RTO Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>P1 — Critical</strong></td>
+<td>Full data centre loss, unrecoverable storage failure, ransomware with confirmed data corruption</td>
+<td>CTO or VP Infrastructure</td>
+<td>RPO ≤ 1 hr / RTO ≤ 4 hr</td>
+</tr>
+<tr>
+<td><strong>P2 — Major</strong></td>
+<td>Site-level network outage &gt; 2 hrs with no restoration ETA, primary vCenter/management plane loss</td>
+<td>Infrastructure Director</td>
+<td>RPO ≤ 4 hr / RTO ≤ 8 hr</td>
+</tr>
+<tr>
+<td><strong>P3 — Significant</strong></td>
+<td>Single application tier failure unrecoverable in-place, loss of backup target for &gt; 24 hrs</td>
+<td>Lead Platform Engineer</td>
+<td>RPO ≤ 24 hr / RTO ≤ 24 hr</td>
+</tr>
+<tr>
+<td><strong>Cybersecurity</strong></td>
+<td>Active compromise of production environment confirmed by Security team</td>
+<td>CISO + CTO jointly</td>
+<td>Isolate first; RTO determined post-containment</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Before declaring a DR event, confirm: (1) the fault is not resolvable within normal incident process, (2) the DR site / backup infrastructure is healthy, and (3) relevant stakeholders have been engaged.</p>
+</blockquote>
+<hr />
+<h2 id="communication-tree">Communication Tree<a class="headerlink" href="#communication-tree" title="Permanent link">&para;</a></h2>
+<p>Notify in the order below at each phase. Do not skip tiers — escalate if a contact is unreachable after two attempts.</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Who to Notify</th>
+<th>Method</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Declaration</strong></td>
+<td>CTO, CISO, VP Infrastructure</td>
+<td>Phone call</td>
+<td>Incident Commander</td>
+</tr>
+<tr>
+<td><strong>Declaration</strong></td>
+<td>Platform Engineering team</td>
+<td>Incident bridge / Slack #dr-active</td>
+<td>Infrastructure Director</td>
+</tr>
+<tr>
+<td><strong>Declaration</strong></td>
+<td>Application owners (P1/P2 only)</td>
+<td>Email + phone</td>
+<td>Incident Commander</td>
+</tr>
+<tr>
+<td><strong>Execution start</strong></td>
+<td>All staff (P1 only)</td>
+<td>Company-wide email from CEO/CTO</td>
+<td>Communications lead</td>
+</tr>
+<tr>
+<td><strong>Execution start</strong></td>
+<td>Key customers / SLA holders</td>
+<td>Account Manager outreach</td>
+<td>Customer Success lead</td>
+</tr>
+<tr>
+<td><strong>Progress (every 30 min)</strong></td>
+<td>Stakeholder group</td>
+<td>Incident bridge status update</td>
+<td>Incident Commander</td>
+</tr>
+<tr>
+<td><strong>Recovery complete</strong></td>
+<td>All notified parties</td>
+<td>Written update via email</td>
+<td>Incident Commander</td>
+</tr>
+<tr>
+<td><strong>Post-DR review</strong></td>
+<td>Platform Engineering + Management</td>
+<td>Scheduled meeting (48 hrs post-recovery)</td>
+<td>Infrastructure Director</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="phased-recovery-procedure">Phased Recovery Procedure<a class="headerlink" href="#phased-recovery-procedure" title="Permanent link">&para;</a></h2>
+<h3 id="phase-0-declare-and-mobilise-t0-to-t30-min">Phase 0 — Declare and Mobilise (T+0 to T+30 min)<a class="headerlink" href="#phase-0-declare-and-mobilise-t0-to-t30-min" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Owner</th>
+<th>Est. Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1</td>
+<td>Confirm activation criteria met; declare DR event formally</td>
+<td>Incident Commander</td>
+<td>5 min</td>
+</tr>
+<tr>
+<td>0.2</td>
+<td>Open incident bridge (Zoom/Teams war room) and Slack #dr-active channel</td>
+<td>Incident Commander</td>
+<td>5 min</td>
+</tr>
+<tr>
+<td>0.3</td>
+<td>Notify communication tree (Declaration phase — see above)</td>
+<td>Incident Commander</td>
+<td>10 min</td>
+</tr>
+<tr>
+<td>0.4</td>
+<td>Confirm DR site / recovery infrastructure is available and healthy</td>
+<td>Lead Platform Engineer</td>
+<td>10 min</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>Assign roles: Network lead, Storage lead, Compute lead, App lead</td>
+<td>Infrastructure Director</td>
+<td>5 min</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-1-network-and-management-plane-t30-to-t90-min">Phase 1 — Network and Management Plane (T+30 to T+90 min)<a class="headerlink" href="#phase-1-network-and-management-plane-t30-to-t90-min" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Owner</th>
+<th>Est. Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>Confirm DR site network segments are active; verify firewall rules</td>
+<td>Network lead</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Validate DNS resolution at DR site (internal + external)</td>
+<td>Network lead</td>
+<td>10 min</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>Power on / verify management infrastructure: vCenter, NSX Manager, vRO</td>
+<td>Compute lead</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>1.4</td>
+<td>Confirm backup/DR management plane reachable (SRM, Veeam, NetBackup)</td>
+<td>Storage lead</td>
+<td>15 min</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-2-storage-and-data-recovery-t90-to-t180-min">Phase 2 — Storage and Data Recovery (T+90 to T+180 min)<a class="headerlink" href="#phase-2-storage-and-data-recovery-t90-to-t180-min" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Owner</th>
+<th>Est. Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1</td>
+<td>Assess RPO: check replication lag on RecoverPoint / SRM protection groups</td>
+<td>Storage lead</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>2.2</td>
+<td>Initiate SRM recovery plan or RecoverPoint failover for affected CGs</td>
+<td>Storage lead</td>
+<td>30 min</td>
+</tr>
+<tr>
+<td>2.3</td>
+<td>Verify datastore mounts at DR site; confirm no VMFS resignaturing required</td>
+<td>Storage lead</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>2.4</td>
+<td>Run Veeam / NetBackup restore for any systems not covered by replication</td>
+<td>Storage lead</td>
+<td>Variable</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-3-compute-and-application-recovery-t180-to-t300-min">Phase 3 — Compute and Application Recovery (T+180 to T+300 min)<a class="headerlink" href="#phase-3-compute-and-application-recovery-t180-to-t300-min" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Owner</th>
+<th>Est. Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1</td>
+<td>Power on VMs in dependency order: domain controllers → middleware → app tier</td>
+<td>Compute lead</td>
+<td>30 min</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>Confirm AD replication and DNS are functioning at DR site</td>
+<td>Network lead</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>3.3</td>
+<td>Application owners validate each application tier (see Validation Checklist)</td>
+<td>App leads</td>
+<td>60 min</td>
+</tr>
+<tr>
+<td>3.4</td>
+<td>Redirect external traffic (DNS failover, load balancer cutover)</td>
+<td>Network lead</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>3.5</td>
+<td>Confirm monitoring agents reporting to DR-site monitoring stack</td>
+<td>Platform Eng</td>
+<td>15 min</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-4-stabilise-and-operate-from-dr-t300-min-onward">Phase 4 — Stabilise and Operate from DR (T+300 min onward)<a class="headerlink" href="#phase-4-stabilise-and-operate-from-dr-t300-min-onward" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Owner</th>
+<th>Est. Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1</td>
+<td>Brief all application teams: DR site is now production</td>
+<td>Incident Commander</td>
+<td>30 min</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Confirm backup jobs are running against DR-site workloads</td>
+<td>Storage lead</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td>Disable replication from (failed) primary site to avoid data conflicts</td>
+<td>Storage lead</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>4.4</td>
+<td>Begin 30-minute status update cadence until primary site recovery is scoped</td>
+<td>Incident Commander</td>
+<td>Ongoing</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Systems operational</li>
-<li>Data integrity confirmed</li>
-<li>Monitoring restored</li>
-<li>Users able to access services</li>
-</ul>
+<p>Run all checks after Phase 3 is complete. Record pass/fail and the name of the engineer who validated each item.</p>
+<table>
+<thead>
+<tr>
+<th>System / Service</th>
+<th>Validation Command / Test</th>
+<th>Pass Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active Directory</td>
+<td><code>nltest /dsgetdc:&lt;domain&gt; /force</code> on a domain member</td>
+<td>Returns a DC at the DR site; no LDAP errors</td>
+</tr>
+<tr>
+<td>DNS resolution</td>
+<td><code>nslookup &lt;internal-fqdn&gt; &lt;dr-dc-ip&gt;</code></td>
+<td>Resolves correctly in &lt; 500 ms</td>
+</tr>
+<tr>
+<td>vCenter availability</td>
+<td>Browse <code>https://&lt;dr-vcenter&gt;/ui</code></td>
+<td>Login succeeds; all hosts visible and green</td>
+</tr>
+<tr>
+<td>NSX Manager</td>
+<td>Browse <code>https://&lt;dr-nsx-manager&gt;</code></td>
+<td>All transport nodes connected</td>
+</tr>
+<tr>
+<td>Storage paths</td>
+<td><code>esxcli storage nmp device list</code> on DR ESXi host</td>
+<td>All expected LUNs present with Active (I/O) paths</td>
+</tr>
+<tr>
+<td>Veeam VBR</td>
+<td>VBR console → Home → Jobs</td>
+<td>No jobs in error; proxy/repo infrastructure green</td>
+</tr>
+<tr>
+<td>NetBackup</td>
+<td><code>bpps -a</code> on master server</td>
+<td>All core daemons running: bprd, bpdbm, nbsl, nbwmc</td>
+</tr>
+<tr>
+<td>Primary application</td>
+<td>HTTP GET <code>https://&lt;app-url&gt;/health</code></td>
+<td>HTTP 200; response body confirms healthy</td>
+</tr>
+<tr>
+<td>Database tier</td>
+<td>Application-specific query or <code>SELECT 1</code> via DBA</td>
+<td>Returns result in &lt; 2 s; no replication lag errors</td>
+</tr>
+<tr>
+<td>External DNS</td>
+<td><code>dig @8.8.8.8 &lt;public-fqdn&gt;</code></td>
+<td>Resolves to DR-site public IP</td>
+</tr>
+<tr>
+<td>TLS certificates</td>
+<td>`openssl s_client -connect <app-fqdn>:443</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -1262,6 +1262,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#boxmgmt-command-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        boxmgmt Command Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="boxmgmt Command Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-and-hardware-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System and Hardware Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replication-link-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Link Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consistency-group-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consistency Group State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-diagnostic-commands-via-ssh-rpacli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Diagnostic Commands via SSH (RPACLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-log-analysis-what-to-look-for-in-a-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Log Analysis: What to Look For in a Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splitter-health-check-on-esxi-rp4vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splitter Health Check on ESXi (RP4VM)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1340,6 +1423,209 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>boxmgmt<span class="w"> </span>support<span class="w"> </span>collect_bundle
 </code></pre></div>
 <p>Upload bundle to Dell Support case via https://www.dell.com/support.</p>
+<hr />
+<h2 id="boxmgmt-command-reference"><code>boxmgmt</code> Command Reference<a class="headerlink" href="#boxmgmt-command-reference" title="Permanent link">&para;</a></h2>
+<p>SSH to the RPA as <code>admin</code> (default port 22) and use <code>boxmgmt</code> for all diagnostic and management operations.</p>
+<h3 id="system-and-hardware-health">System and Hardware Health<a class="headerlink" href="#system-and-hardware-health" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>boxmgmt system show_system_info</code></td>
+<td>RPA model, firmware version, serial number</td>
+</tr>
+<tr>
+<td><code>boxmgmt system show_hw_status</code></td>
+<td>Hardware component health (PSU, fans, NICs)</td>
+</tr>
+<tr>
+<td><code>boxmgmt system show_load</code></td>
+<td>CPU and memory utilisation on the RPA</td>
+</tr>
+<tr>
+<td><code>boxmgmt network show_interfaces</code></td>
+<td>NIC status, IP addresses, link state</td>
+</tr>
+<tr>
+<td><code>boxmgmt network ping &lt;ip&gt;</code></td>
+<td>ICMP connectivity test from RPA to target IP</td>
+</tr>
+<tr>
+<td><code>boxmgmt network traceroute &lt;ip&gt;</code></td>
+<td>Trace route from RPA for path diagnostics</td>
+</tr>
+<tr>
+<td><code>boxmgmt storage show_volumes</code></td>
+<td>Storage volumes visible to the RPA</td>
+</tr>
+<tr>
+<td><code>boxmgmt storage show_journal_state</code></td>
+<td>Journal volume status per consistency group</td>
+</tr>
+</tbody>
+</table>
+<h3 id="replication-link-health">Replication Link Health<a class="headerlink" href="#replication-link-health" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>boxmgmt links show_link_status</code></td>
+<td>WAN link state and latency between RPAs</td>
+</tr>
+<tr>
+<td><code>boxmgmt links show_link_stats</code></td>
+<td>Throughput, packet loss on inter-RPA links</td>
+</tr>
+<tr>
+<td><code>boxmgmt links show_compression_stats</code></td>
+<td>WAN compression ratio and savings</td>
+</tr>
+</tbody>
+</table>
+<h3 id="consistency-group-state">Consistency Group State<a class="headerlink" href="#consistency-group-state" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>boxmgmt cgs show_all_cgs</code></td>
+<td>List all consistency groups and their states</td>
+</tr>
+<tr>
+<td><code>boxmgmt cgs show_cg_state &lt;cg_name&gt;</code></td>
+<td>Detailed state for a specific CG (Active, Paused, Initialising)</td>
+</tr>
+<tr>
+<td><code>boxmgmt cgs show_lag &lt;cg_name&gt;</code></td>
+<td>Replication lag (RPO delta) for a specific CG</td>
+</tr>
+<tr>
+<td><code>boxmgmt cgs show_journal_usage &lt;cg_name&gt;</code></td>
+<td>Journal capacity consumption and headroom</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cli-diagnostic-commands-via-ssh-rpacli">CLI Diagnostic Commands via SSH (RPACLI)<a class="headerlink" href="#cli-diagnostic-commands-via-ssh-rpacli" title="Permanent link">&para;</a></h2>
+<p>When logged into the RPA via SSH, the RPACLI shell is available as an alternative to <code>boxmgmt</code> for consistency-group-level diagnostics.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Connect to RPA</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Enter RPACLI (if not default shell)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>rpacli
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List all clusters in the RecoverPoint deployment</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>get_all_clusters
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show system-wide replication status</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>get_system_status
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Show all consistency groups with state and lag</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>get_all_groups_state
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Show detailed info for a specific consistency group</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>get_group_state<span class="w"> </span>--group<span class="w"> </span><span class="s2">&quot;CG-VM-Prod&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Show copy set details (source and replica volumes) for a CG</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>get_copy_sets<span class="w"> </span>--group<span class="w"> </span><span class="s2">&quot;CG-VM-Prod&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Show link health between this cluster and a remote cluster</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>get_link_health<span class="w"> </span>--local-cluster<span class="w"> </span><span class="s2">&quot;Site-A&quot;</span><span class="w"> </span>--remote-cluster<span class="w"> </span><span class="s2">&quot;Site-B&quot;</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Test WAN link connectivity to remote RPA</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>test_link<span class="w"> </span>--remote-rpa<span class="w"> </span>&lt;remote-rpa-ip&gt;
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Show journal state for a specific copy</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>get_journal_state<span class="w"> </span>--group<span class="w"> </span><span class="s2">&quot;CG-VM-Prod&quot;</span><span class="w"> </span>--copy<span class="w"> </span><span class="s2">&quot;DR-Copy&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="common-log-analysis-what-to-look-for-in-a-support-bundle">Common Log Analysis: What to Look For in a Support Bundle<a class="headerlink" href="#common-log-analysis-what-to-look-for-in-a-support-bundle" title="Permanent link">&para;</a></h2>
+<p>After collecting a support bundle (<code>boxmgmt support collect_bundle</code>), extract and review the following:</p>
+<table>
+<thead>
+<tr>
+<th>Log File (inside bundle)</th>
+<th>What to Look For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system/messages</code></td>
+<td>Kernel errors, OOM events, hardware faults</td>
+</tr>
+<tr>
+<td><code>rp/rpa_log</code></td>
+<td>RPA process crashes, journal overflow events, CG state transitions</td>
+</tr>
+<tr>
+<td><code>rp/wcc_log</code></td>
+<td>WAN connectivity controller errors; look for <code>LINK_DOWN</code> or <code>TIMEOUT</code> entries</td>
+</tr>
+<tr>
+<td><code>rp/splitter_log</code></td>
+<td>Splitter-to-RPA communication failures; <code>SPLIT_ERROR</code> indicates data not being captured</td>
+</tr>
+<tr>
+<td><code>rp/journal_log</code></td>
+<td>Journal allocation failures, journal full events — indicates RPO at risk</td>
+</tr>
+<tr>
+<td><code>network/ifconfig</code></td>
+<td>Verify NIC configuration matches expected topology</td>
+</tr>
+<tr>
+<td><code>storage/disk_info</code></td>
+<td>Storage path failures, multipath issues</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key patterns to grep for:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># After extracting the bundle tarball</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;LINK_DOWN\|TIMEOUT\|JOURNAL_FULL\|SPLIT_ERROR\|CG_PAUSED&quot;</span><span class="w"> </span>rp/rpa_log
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|critical\|fatal&quot;</span><span class="w"> </span>system/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;audit&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;INIT\|PAUSE\|FAILOVER&quot;</span><span class="w"> </span>rp/rpa_log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
+<hr />
+<h2 id="splitter-health-check-on-esxi-rp4vm">Splitter Health Check on ESXi (RP4VM)<a class="headerlink" href="#splitter-health-check-on-esxi-rp4vm" title="Permanent link">&para;</a></h2>
+<p>The RP4VM vSphere splitter is installed as a VIB on ESXi hosts. Use these commands directly on the ESXi host (SSH or ESXi shell).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check RP4VM splitter VIB is installed</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>recoverpoint
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify the splitter driver is loaded</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vmkload_mod<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>splitter
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check vmkernel log for splitter-related events</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;recoverpoint\|rp4vm\|splitter&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># List all VMs with RP4VM splitter protection active</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>esxcli<span class="w"> </span>recoverpoint<span class="w"> </span>vm<span class="w"> </span>list
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Show splitter statistics for a specific VM (replace &lt;vmid&gt; with VM world ID)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>esxcli<span class="w"> </span>recoverpoint<span class="w"> </span>vm<span class="w"> </span>stats<span class="w"> </span>--vm-id<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Verify RPA connectivity from the ESXi splitter perspective</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>esxcli<span class="w"> </span>recoverpoint<span class="w"> </span>rpa<span class="w"> </span>list
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Check splitter-to-RPA link state</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>esxcli<span class="w"> </span>recoverpoint<span class="w"> </span>rpa<span class="w"> </span>stats
+</code></pre></div>
+<blockquote>
+<p>If <code>esxcli recoverpoint</code> commands are not available, the RP4VM VIB is not installed or has been corrupted. Re-deploy from the RecoverPoint Deployment Manager.</p>
+</blockquote>
 
 
 

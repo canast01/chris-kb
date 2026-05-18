@@ -1524,6 +1524,40 @@
 
 <h1 id="vxrail-upgrade-procedure">VxRail Upgrade Procedure<a class="headerlink" href="#vxrail-upgrade-procedure" title="Permanent link">&para;</a></h1>
 <p>VxRail upgrades include VMware software, Dell firmware, drivers, and VxRail-specific lifecycle validation. Use VxRail Manager and the approved upgrade bundle — do not treat a VxRail upgrade like a standard ESXi upgrade.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VxRail Upgrade Sequence
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Phase 1: Plan          Phase 2: Pre-checks                 │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ─────────────          ────────────────────                 │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Current version    →   VxRail Mgr health                   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  Target version     →   vCenter health                      │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  Release notes      →   vSAN Skyline Health                 │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  Bundle download    →   hardware (iDRAC)                    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                         DNS · NTP · backups                  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>└─────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                    ▼
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Phase 3–4: Bundle + Pre-check                              │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Upload Composite Bundle → VxRail Manager validates         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Run LCM Pre-Check → all green before proceeding           │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└──────────────────────────┬──────────────────────────────────┘
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                           │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>          ┌────────────────▼──────────────────┐
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>          │  Phase 5: Node-by-Node Upgrade     │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>          │                                   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>          │  Node N:                          │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>          │  evacuate VMs → enter MM          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>          │  firmware update → ESXi update    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>          │  reboot → exit MM                 │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>          │  validate → next node             │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>          └────────────────┬──────────────────┘
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>          ┌────────────────▼──────────────────┐
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>          │  Phase 7–8: Post-Upgrade           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>          │  validate health · firmware        │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>          │  update change ticket · versions   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>          └────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="phase-1-planning">Phase 1: Planning<a class="headerlink" href="#phase-1-planning" title="Permanent link">&para;</a></h2>
 <h3 id="capture-current-state">Capture Current State<a class="headerlink" href="#capture-current-state" title="Permanent link">&para;</a></h3>
@@ -1597,7 +1631,7 @@
 <li>vCenter, ESXi, vSAN, and iDRAC logs if issues exist</li>
 </ul>
 <p>Save with standard name:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vxrail-support-bundle-CLUSTERNAME-YYYY-MM-DD.zip
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vxrail-support-bundle-CLUSTERNAME-YYYY-MM-DD.zip
 </code></pre></div>
 <hr />
 <h2 id="phase-4-upgrade-pre-check">Phase 4: Upgrade Pre-Check<a class="headerlink" href="#phase-4-upgrade-pre-check" title="Permanent link">&para;</a></h2>

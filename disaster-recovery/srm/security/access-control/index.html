@@ -1251,6 +1251,156 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#srm-rbac-roles-by-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM RBAC Roles by Function
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-group-and-recovery-plan-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Group and Recovery Plan Permissions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Protection Group and Recovery Plan Permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protection-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recovery-plans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plans
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#srm-rest-api-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRM REST API Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SRM REST API Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obtain-an-api-session-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obtain an API Session Token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-srm-account-break-glass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local SRM Account (Break-Glass)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-where-srm-logs-dr-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit: Where SRM Logs DR Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audit: Where SRM Logs DR Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#audit-log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-commands-for-log-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Commands for Log Review
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exporting-recovery-history-for-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exporting Recovery History for Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1311,6 +1461,245 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    - Virtual Machine.Provisioning.* (for recovery)
 </code></pre></div>
 <p>Assign the role at the SRM inventory root — do not grant broad vCenter Admin privileges to DR operators.</p>
+<hr />
+<h2 id="srm-rbac-roles-by-function">SRM RBAC Roles by Function<a class="headerlink" href="#srm-rbac-roles-by-function" title="Permanent link">&para;</a></h2>
+<p>SRM operations require different privilege combinations depending on the DR workflow. Apply least-privilege per team function.</p>
+<table>
+<thead>
+<tr>
+<th>SRM Function</th>
+<th>Required vCenter Privileges</th>
+<th>Required SRM Privileges</th>
+<th>Assign To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View protection groups / plans</td>
+<td>Read-only on vCenter objects</td>
+<td>Site Recovery.View</td>
+<td>DR-Read role</td>
+</tr>
+<tr>
+<td>Run DR <strong>test</strong> (non-disruptive)</td>
+<td>VM power on/off, datastore read</td>
+<td>Site Recovery.Test</td>
+<td>DR-Operator role</td>
+</tr>
+<tr>
+<td>Execute <strong>recovery</strong> (planned / unplanned)</td>
+<td>VM provision, datastore alloc, network assign</td>
+<td>Site Recovery.Recovery</td>
+<td>DR-Recovery role</td>
+</tr>
+<tr>
+<td><strong>Re-protect</strong> (reverse replication post-failover)</td>
+<td>Storage policy, replication config</td>
+<td>Site Recovery.Manage</td>
+<td>DR-Admin role</td>
+</tr>
+<tr>
+<td><strong>Failback</strong> (return to primary site)</td>
+<td>All of the above + primary site vCenter perms</td>
+<td>Site Recovery.Manage</td>
+<td>DR-Admin role</td>
+</tr>
+<tr>
+<td>Manage protection groups (create/edit)</td>
+<td>Datastore, replication group config</td>
+<td>Site Recovery.Manage</td>
+<td>DR-Admin role</td>
+</tr>
+<tr>
+<td>Modify recovery plans</td>
+<td>Recovery plan edit</td>
+<td>Site Recovery.Manage</td>
+<td>DR-Admin role</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Create separate AD security groups for each role tier. Avoid assigning the DR-Admin role to operational staff — require approval workflow for recovery plan modifications.</p>
+</blockquote>
+<hr />
+<h2 id="protection-group-and-recovery-plan-permissions">Protection Group and Recovery Plan Permissions<a class="headerlink" href="#protection-group-and-recovery-plan-permissions" title="Permanent link">&para;</a></h2>
+<p>Access to create versus execute SRM objects is deliberately separated.</p>
+<h3 id="protection-groups">Protection Groups<a class="headerlink" href="#protection-groups" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Who Can Perform</th>
+<th>Permission Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create / modify protection group</td>
+<td>DR-Admin only</td>
+<td>Site Recovery.Manage on protected site inventory</td>
+</tr>
+<tr>
+<td>View protection group status</td>
+<td>DR-Operator, DR-Read</td>
+<td>Site Recovery.View</td>
+</tr>
+<tr>
+<td>Add/remove VMs from group</td>
+<td>DR-Admin only</td>
+<td>Site Recovery.Manage + VM inventory rights</td>
+</tr>
+<tr>
+<td>Delete protection group</td>
+<td>DR-Admin only</td>
+<td>Site Recovery.Manage</td>
+</tr>
+</tbody>
+</table>
+<h3 id="recovery-plans">Recovery Plans<a class="headerlink" href="#recovery-plans" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Who Can Perform</th>
+<th>Permission Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create / modify recovery plan</td>
+<td>DR-Admin only</td>
+<td>Site Recovery.Manage on recovery site SRM</td>
+</tr>
+<tr>
+<td>Execute Test (cleanup included)</td>
+<td>DR-Operator</td>
+<td>Site Recovery.Test</td>
+</tr>
+<tr>
+<td>Execute Planned Migration</td>
+<td>DR-Recovery</td>
+<td>Site Recovery.Recovery</td>
+</tr>
+<tr>
+<td>Execute Emergency Recovery</td>
+<td>DR-Recovery</td>
+<td>Site Recovery.Recovery</td>
+</tr>
+<tr>
+<td>Re-protect after recovery</td>
+<td>DR-Admin</td>
+<td>Site Recovery.Manage</td>
+</tr>
+<tr>
+<td>Cancel in-progress recovery</td>
+<td>DR-Admin</td>
+<td>Site Recovery.Manage</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Recovery plan execution is logged and non-reversible mid-stream. Require a change ticket and secondary approval before granting DR-Recovery role access outside of declared DR events.</p>
+</blockquote>
+<hr />
+<h2 id="srm-rest-api-authentication">SRM REST API Authentication<a class="headerlink" href="#srm-rest-api-authentication" title="Permanent link">&para;</a></h2>
+<p>SRM 8.x exposes a REST API for automation (port 443, path <code>/api</code>).</p>
+<h3 id="authentication-methods">Authentication Methods<a class="headerlink" href="#authentication-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter SSO (session token)</td>
+<td>Authenticate to vCenter SSO; use session cookie with SRM API</td>
+<td>Interactive tooling, ad-hoc scripts</td>
+</tr>
+<tr>
+<td>Local SRM account</td>
+<td>SRM-local user in the SRM appliance management UI</td>
+<td>Break-glass access when SSO is unavailable</td>
+</tr>
+<tr>
+<td>Service account (SSO)</td>
+<td>Dedicated AD/SSO service account with DR-Operator or DR-Admin role</td>
+<td>CI/CD pipelines, orchestration tools</td>
+</tr>
+</tbody>
+</table>
+<h3 id="obtain-an-api-session-token">Obtain an API Session Token<a class="headerlink" href="#obtain-an-api-session-token" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate to vCenter SSO and get a session token</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter&gt;/rest/com/vmware/cis/session&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;administrator@vsphere.local:&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.value&#39;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Use the session token with the SRM API</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;srm-server&gt;/api/protection-groups&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session_token&gt;&quot;</span>
+</code></pre></div>
+<h3 id="local-srm-account-break-glass">Local SRM Account (Break-Glass)<a class="headerlink" href="#local-srm-account-break-glass" title="Permanent link">&para;</a></h3>
+<p>Access local SRM accounts at <code>https://&lt;srm-appliance&gt;:5480</code> (VAMI). Use only when vCenter SSO is unavailable. Rotate the local admin password after each use and store in a sealed break-glass envelope or PAM vault.</p>
+<hr />
+<h2 id="audit-where-srm-logs-dr-operations">Audit: Where SRM Logs DR Operations<a class="headerlink" href="#audit-where-srm-logs-dr-operations" title="Permanent link">&para;</a></h2>
+<p>SRM records all operations in multiple locations. Use these for compliance, change auditing, and post-DR review.</p>
+<h3 id="audit-log-locations">Audit Log Locations<a class="headerlink" href="#audit-log-locations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Log Source</th>
+<th>Location / Access Method</th>
+<th>What It Records</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM Events</td>
+<td>vCenter UI → Site Recovery → Events tab</td>
+<td>All SRM operations: plan runs, test start/end, errors</td>
+</tr>
+<tr>
+<td>vCenter Tasks</td>
+<td>vCenter UI → Tasks — filter by SRM task type</td>
+<td>Task completion, duration, initiating user</td>
+</tr>
+<tr>
+<td>Recovery History</td>
+<td>SRM UI → Recovery Plans → select plan → History</td>
+<td>Per-plan execution records with timestamps and outcomes</td>
+</tr>
+<tr>
+<td>SRM appliance syslog</td>
+<td><code>/var/log/vmware/dr/</code> on SRM appliance (SSH)</td>
+<td>Detailed server-side logs for troubleshooting</td>
+</tr>
+<tr>
+<td>vCenter Audit Log</td>
+<td>vCenter UI → Administration → Events → export</td>
+<td>Includes RBAC changes affecting SRM roles</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-commands-for-log-review">Key Commands for Log Review<a class="headerlink" href="#key-commands-for-log-review" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to SRM appliance (admin or root)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@&lt;srm-appliance&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># View live SRM server log</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/dr/dr.log
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Search for recovery plan execution events</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;recovery plan\|RECOVERY_STARTED\|RECOVERY_COMPLETE\|RECOVERY_FAILED&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>/var/log/vmware/dr/dr.log
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Search for authentication events (login/logout, permission denied)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;authentication\|login\|permission denied\|unauthorized&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>/var/log/vmware/dr/dr.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+</code></pre></div>
+<h3 id="exporting-recovery-history-for-compliance">Exporting Recovery History for Compliance<a class="headerlink" href="#exporting-recovery-history-for-compliance" title="Permanent link">&para;</a></h3>
+<p>In the SRM UI: <strong>Recovery Plans</strong> → select plan → <strong>History</strong> → <strong>Export</strong> — produces a CSV with plan name, start time, end time, result, and initiating user. Retain exports for audit evidence per your retention policy (typically 1–3 years for DR events).</p>
 
 
 

@@ -1496,6 +1496,39 @@
 
 
 <h1 id="vcenter-integrations">vCenter — Integrations<a class="headerlink" href="#vcenter-integrations" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter Integration Map
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>════════════════════════════════════════════════════════
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                    ┌──────────────────┐
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                    │   vCenter Server │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                    │   (VCSA)         │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                    └────────┬─────────┘
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ┌───────────┬────────┼─────────┬───────────┐
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        │           │        │         │           │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  ┌─────▼──────┐ ┌──▼──────┐ │  ┌──────▼──────┐ ┌─▼──────────┐
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  │  Identity  │ │ Storage │ │  │  NSX         │ │  Monitoring │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  │  (AD/LDAP) │ │ (VASA / │ │  │  Manager     │ │  (Aria Ops) │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  │  SAML/ADFS │ │  VMFS / │ │  │  Compute Mgr │ │  vCenter    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  │  LDAPS:636 │ │  NFS /  │ │  │  ↔ DFW tags  │ │  Adapter    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  └────────────┘ │  vVols) │ │  └─────────────┘ └────────────┘
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                 └─────────┘ │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                             │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                   ┌─────────▼──────────────────────┐
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                   │  Backup (VADP)                  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                   │  Backup Server (Veeam/Commvault) │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                   │    → vCenter API (snapshot/CBT) │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                   │    → Backup Proxy (hot-add)      │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                   │    → Repository (SFTP/S3/disk)  │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                   └─────────────────────────────────┘
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  SSO / Certificate Trust
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  ┌──────────────────────────────────────────────────┐
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  │  vCenter SSO (vsphere.local)                     │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  │    ├── AD Identity Source (LDAPS)  ← user authn  │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  │    ├── VMCA (CA)                  ← cert signing │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  │    └── Lookup Service             ← registry     │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>  └──────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="storage-integration">Storage Integration<a class="headerlink" href="#storage-integration" title="Permanent link">&para;</a></h2>
 <h3 id="vasa-providers">VASA Providers<a class="headerlink" href="#vasa-providers" title="Permanent link">&para;</a></h3>
 <p>Storage vendors register as VASA (vSphere APIs for Storage Awareness) providers to expose storage capabilities to vCenter for SPBM (Storage Policy-Based Management).</p>
@@ -1622,8 +1655,8 @@
 <h2 id="identity-and-authentication-integration">Identity and Authentication Integration<a class="headerlink" href="#identity-and-authentication-integration" title="Permanent link">&para;</a></h2>
 <h3 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h3>
 <p>Connect vCenter SSO to AD so AD users/groups can be granted vSphere permissions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter → Administration → Single Sign On → Configuration → Identity Sources → Add
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Type: Active Directory (Integrated Windows Authentication) or LDAP/LDAPS
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → Administration → Single Sign On → Configuration → Identity Sources → Add
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Type: Active Directory (Integrated Windows Authentication) or LDAP/LDAPS
 </code></pre></div>
 <ul>
 <li><strong>IWA</strong>: Uses the machine account of the VCSA; requires VCSA joined to AD domain</li>
@@ -1649,17 +1682,17 @@
 </ul>
 <h3 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h3>
 <p>vCenter exposes a modern REST API at <code>https://&lt;vcenter&gt;/api</code> (vSphere 7.0+). The legacy vSphere Automation SDK endpoint is at <code>https://&lt;vcenter&gt;/rest</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate and get session token</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;administrator@vsphere.local:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;vcenter&gt;/api/session
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># List VMs</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>https://&lt;vcenter&gt;/api/vcenter/vm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate and get session token</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;administrator@vsphere.local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;vcenter&gt;/api/session
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># List VMs</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>https://&lt;vcenter&gt;/api/vcenter/vm
 </code></pre></div>
 <h3 id="syslog-siem">Syslog / SIEM<a class="headerlink" href="#syslog-siem" title="Permanent link">&para;</a></h3>
 <p>vCenter forwards events as syslog (RFC 5424). Configure in VAMI or via PowerCLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Set-VMHostSysLogServer</span> <span class="n">-SysLogServer</span> <span class="s1">&#39;udp://&lt;syslog-host&gt;:514&#39;</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Set-VMHostSysLogServer</span> <span class="n">-SysLogServer</span> <span class="s1">&#39;udp://&lt;syslog-host&gt;:514&#39;</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
 </code></pre></div>
 <p>For vCenter appliance-level syslog, configure at <strong>VAMI → Syslog</strong>.</p>
 <h2 id="nsx-integration">NSX Integration<a class="headerlink" href="#nsx-integration" title="Permanent link">&para;</a></h2>

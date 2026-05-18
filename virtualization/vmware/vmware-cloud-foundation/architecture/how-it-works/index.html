@@ -1462,6 +1462,41 @@
 
 
 <h1 id="vcf-how-it-works">VCF — How It Works<a class="headerlink" href="#vcf-how-it-works" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Bring-Up and Lifecycle Flow
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Cloud Builder (bring-up tool)                       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  reads deployment parameter workbook                 │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└──────────────────────┬───────────────────────────────┘
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                       │ deploys
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                       ▼
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  SDDC Manager (management domain)                    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ┌──────────┐  ┌────────────┐  ┌──────────────────┐ │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │ vCenter  │  │ NSX Mgr    │  │  vSAN datastore  │ │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │ (mgmt)   │  │ 3-node     │  │  (mgmt VMs)      │ │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  └──────────┘  └────────────┘  └──────────────────┘ │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>└─────────┬────────────────────────────────────────────┘
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>          │ LCM orchestrates upgrades in BOM order
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>          ▼
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Upgrade Sequence                                    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  SDDC Manager → vCenter → ESXi → NSX → vSAN FW     │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                      │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  1. Download bundle from depot                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  2. Run Precheck (DNS, NTP, certs, vSAN, passwords) │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  3. Resolve WARN/ERROR items                         │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  4. Schedule window → SDDC Manager applies BOM      │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  5. Post-upgrade validation                          │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└─────────────────────────────────────────────────────┘
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>          │ manages new workload domains
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>          ▼
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Workload Domain Provisioning                        │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Commission hosts → Create domain → SDDC Manager   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  deploys dedicated vCenter, NSX, vSAN as a unit     │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>└─────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="sddc-manager">SDDC Manager<a class="headerlink" href="#sddc-manager" title="Permanent link">&para;</a></h2>
 <p>SDDC Manager is the central orchestrator for VCF. It manages the entire lifecycle of all components — deployment, upgrades, password rotation, certificate management, and inventory — across every workload domain.</p>
 <table>
@@ -1581,23 +1616,23 @@
 <h2 id="lifecycle-management-lcm">Lifecycle Management (LCM)<a class="headerlink" href="#lifecycle-management-lcm" title="Permanent link">&para;</a></h2>
 <p>LCM is the upgrade engine. SDDC Manager downloads bundles from the depot (online or offline), validates compatibility, runs prechecks, and orchestrates rolling upgrades across the stack.</p>
 <h3 id="upgrade-flow">Upgrade Flow<a class="headerlink" href="#upgrade-flow" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Download bundle from depot (or upload from offline file)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. Run Precheck — validates DNS, NTP, certs, vSAN health, password status
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. Review precheck results — resolve any WARN or ERROR items
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. Schedule upgrade window
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>5. SDDC Manager upgrades components in BOM order:
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   ESXi → vCenter → NSX → vSAN (firmware optional)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>6. Post-upgrade validation — SDDC Manager verifies all services healthy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Download bundle from depot (or upload from offline file)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Run Precheck — validates DNS, NTP, certs, vSAN health, password status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. Review precheck results — resolve any WARN or ERROR items
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. Schedule upgrade window
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>5. SDDC Manager upgrades components in BOM order:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   ESXi → vCenter → NSX → vSAN (firmware optional)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>6. Post-upgrade validation — SDDC Manager verifies all services healthy
 </code></pre></div>
 <h3 id="bundle-management">Bundle Management<a class="headerlink" href="#bundle-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SDDC Manager UI — Lifecycle Management → Bundle Management</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Download latest bundles (requires internet or offline depot)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check depot connectivity from SDDC Manager appliance</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://depot.vmware.com/PROD2/evo/vmw/index.xml<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Offline depot: copy bundle .tar files to SDDC Manager</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Administration → Depot Settings → Local Depot</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SDDC Manager UI — Lifecycle Management → Bundle Management</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Download latest bundles (requires internet or offline depot)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check depot connectivity from SDDC Manager appliance</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://depot.vmware.com/PROD2/evo/vmw/index.xml<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Offline depot: copy bundle .tar files to SDDC Manager</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Administration → Depot Settings → Local Depot</span>
 </code></pre></div>
 <h3 id="precheck-validation-points">Precheck Validation Points<a class="headerlink" href="#precheck-validation-points" title="Permanent link">&para;</a></h3>
 <table>
@@ -1641,36 +1676,36 @@
 <hr />
 <h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
 <p>SDDC Manager centrally manages credentials for all components. Passwords rotate on a configurable schedule.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SDDC Manager → Security → Password Management
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>→ Select component → Rotate Password
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SDDC Manager → Security → Password Management
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>→ Select component → Rotate Password
 </code></pre></div>
 <p>Managed accounts include: vCenter SSO admin, NSX admin, ESXi root, SDDC Manager admin, vSAN iSCSI accounts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># API — rotate a single credential</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentialType&quot;: &quot;SSH&quot;, &quot;resourceType&quot;: &quot;ESXI&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/credentials/rotate&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check credential rotation status</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/credentials&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># API — rotate a single credential</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentialType&quot;: &quot;SSH&quot;, &quot;resourceType&quot;: &quot;ESXI&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/credentials/rotate&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check credential rotation status</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/credentials&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <hr />
 <h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
 <p>SDDC Manager manages TLS certificates for all components using VMCA (embedded) or a third-party CA.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>SDDC Manager → Security → Certificate Management
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>→ View expiry per component → Renew or Replace
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>SDDC Manager → Security → Certificate Management
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>→ View expiry per component → Renew or Replace
 </code></pre></div>
 <p><strong>Certificate rotation order</strong> (to avoid service disruption):
 1. SDDC Manager itself
 2. vCenter (Machine SSL + solution certificates)
 3. NSX Manager nodes
 4. ESXi hosts (via vCenter)</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check certificate expiry across all components (API)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;expirationDate|resourceFqdn&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check certificate expiry across all components (API)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.corp.local/v1/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;expirationDate|resourceFqdn&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="network-pools">Network Pools<a class="headerlink" href="#network-pools" title="Permanent link">&para;</a></h2>
@@ -1706,20 +1741,20 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>SDDC Manager → Network Settings → Network Pools
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>→ Create pool → specify VLAN, subnet, gateway, IP range
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>SDDC Manager → Network Settings → Network Pools
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>→ Create pool → specify VLAN, subnet, gateway, IP range
 </code></pre></div>
 <p>Each workload domain references a network pool at provisioning time. Pool exhaustion blocks new host commissioning — monitor available IPs.</p>
 <hr />
 <h2 id="host-commissioning">Host Commissioning<a class="headerlink" href="#host-commissioning" title="Permanent link">&para;</a></h2>
 <p>New hosts are onboarded into SDDC Manager before being assigned to a workload domain.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>1. Rack and cable host; configure BIOS baseline
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2. Install ESXi (or use Auto Deploy)
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>3. Set management IP, FQDN, DNS — must resolve forward and reverse
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>4. SDDC Manager → Inventory → Hosts → Commission
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>   → Provide ESXi IP and root credentials
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>   → SDDC Manager validates: HCL, SSH, DNS, NTP
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>5. Host enters &quot;Unassigned&quot; state — available for domain expansion
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>1. Rack and cable host; configure BIOS baseline
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>2. Install ESXi (or use Auto Deploy)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>3. Set management IP, FQDN, DNS — must resolve forward and reverse
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>4. SDDC Manager → Inventory → Hosts → Commission
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>   → Provide ESXi IP and root credentials
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>   → SDDC Manager validates: HCL, SSH, DNS, NTP
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>5. Host enters &quot;Unassigned&quot; state — available for domain expansion
 </code></pre></div>
 <hr />
 <h2 id="ports-and-logs">Ports and Logs<a class="headerlink" href="#ports-and-logs" title="Permanent link">&para;</a></h2>
@@ -1765,12 +1800,12 @@
 </tbody>
 </table>
 <p><strong>Key SDDC Manager log paths:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to SDDC Manager appliance (vcf user → sudo)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/var/log/vmware/vcf/sddc-manager/vcfops.log<span class="w">     </span><span class="c1"># LCM and orchestration</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/var/log/vmware/vcf/sddc-manager/sddc-svc.log<span class="w">   </span><span class="c1"># core SDDC Manager service</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>/var/log/vmware/vcf/lcm/lcm-debug.log<span class="w">           </span><span class="c1"># Lifecycle Management detail</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/var/log/vmware/vcf/domainmanager/dm.log<span class="w">        </span><span class="c1"># Workload domain operations</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w">        </span><span class="c1"># Admin actions and API calls</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># SSH to SDDC Manager appliance (vcf user → sudo)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/var/log/vmware/vcf/sddc-manager/vcfops.log<span class="w">     </span><span class="c1"># LCM and orchestration</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>/var/log/vmware/vcf/sddc-manager/sddc-svc.log<span class="w">   </span><span class="c1"># core SDDC Manager service</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>/var/log/vmware/vcf/lcm/lcm-debug.log<span class="w">           </span><span class="c1"># Lifecycle Management detail</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/var/log/vmware/vcf/domainmanager/dm.log<span class="w">        </span><span class="c1"># Workload domain operations</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w">        </span><span class="c1"># Admin actions and API calls</span>
 </code></pre></div>
 
 

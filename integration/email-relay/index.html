@@ -1143,10 +1143,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Architecture
       
     </span>
   </a>
@@ -1154,10 +1154,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#configuration-etcpostfixmaincf" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Configuration — /etc/postfix/main.cf
       
     </span>
   </a>
@@ -1165,10 +1165,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#daily-operational-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Daily Operational Commands
       
     </span>
   </a>
@@ -1176,10 +1176,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        Troubleshooting
       
     </span>
   </a>
@@ -1556,10 +1556,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Architecture
       
     </span>
   </a>
@@ -1567,10 +1567,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
+  <a href="#configuration-etcpostfixmaincf" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Daily Checks
+        Configuration — /etc/postfix/main.cf
       
     </span>
   </a>
@@ -1578,10 +1578,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
+  <a href="#daily-operational-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Health Commands
+        Daily Operational Commands
       
     </span>
   </a>
@@ -1589,10 +1589,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting-workflow" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting Workflow
+        Troubleshooting
       
     </span>
   </a>
@@ -1690,9 +1690,98 @@
 
 
 <h1 id="email-relay">Email Relay<a class="headerlink" href="#email-relay" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Email relay services deliver system alerts, notifications, and automated messages.</p>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>Covers Postfix SMTP relay configuration for outbound application and system mail.</p>
+</blockquote>
+<hr />
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<p>A typical deployment routes application-generated mail through a local Postfix relay, which forwards to a smarthost or cloud email service (AWS SES, SendGrid). This decouples application SMTP configuration from the upstream provider and centralises authentication and delivery policy.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Application / cron / alerting tool
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        |
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        v
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  Postfix relay (localhost:25 or relay host)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        v
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  Smarthost: AWS SES / SendGrid / internal mail hub (port 587, STARTTLS)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        v
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  Recipient MX
+</code></pre></div>
+<p>Key properties of this pattern:
+- Applications configure a single static SMTP target (the relay) — no per-app credential management
+- The relay handles authentication, TLS negotiation, and retry queuing toward the smarthost
+- All outbound mail is visible in a single log and queue on the relay host</p>
+<hr />
+<h2 id="configuration-etcpostfixmaincf">Configuration — <code>/etc/postfix/main.cf</code><a class="headerlink" href="#configuration-etcpostfixmaincf" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Example Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>relayhost</code></td>
+<td><code>[email-smtp.us-east-1.amazonaws.com]:587</code></td>
+<td>Upstream smarthost and port. Brackets suppress MX lookup.</td>
+</tr>
+<tr>
+<td><code>mynetworks</code></td>
+<td><code>127.0.0.0/8 10.0.0.0/8</code></td>
+<td>IP ranges permitted to relay through this Postfix instance. Restrict to loopback and internal app subnets.</td>
+</tr>
+<tr>
+<td><code>smtp_sasl_auth_enable</code></td>
+<td><code>yes</code></td>
+<td>Enable SASL authentication toward the smarthost.</td>
+</tr>
+<tr>
+<td><code>smtp_sasl_password_maps</code></td>
+<td><code>hash:/etc/postfix/sasl_passwd</code></td>
+<td>Path to the credential map file for smarthost authentication.</td>
+</tr>
+<tr>
+<td><code>smtp_sasl_security_options</code></td>
+<td><code>noanonymous</code></td>
+<td>Reject anonymous SASL mechanisms.</td>
+</tr>
+<tr>
+<td><code>smtp_tls_security_level</code></td>
+<td><code>encrypt</code></td>
+<td>Require TLS for all outbound SMTP connections. Use <code>encrypt</code> (mandatory) rather than <code>may</code> (opportunistic).</td>
+</tr>
+<tr>
+<td><code>smtp_tls_note_starttls_offer</code></td>
+<td><code>yes</code></td>
+<td>Log when the smarthost offers STARTTLS, useful for debugging TLS negotiation.</td>
+</tr>
+<tr>
+<td><code>inet_interfaces</code></td>
+<td><code>loopback-only</code></td>
+<td>Accept connections on loopback only when the relay is local. Set to a specific IP if relay serves multiple hosts.</td>
+</tr>
+<tr>
+<td><code>myhostname</code></td>
+<td><code>relay.internal.example.com</code></td>
+<td>FQDN used in EHLO/HELO. Must resolve from the smarthost to avoid rejection.</td>
+</tr>
+<tr>
+<td><code>message_size_limit</code></td>
+<td><code>10240000</code></td>
+<td>Maximum message size in bytes (10 MB shown). Adjust to match smarthost limits.</td>
+</tr>
+</tbody>
+</table>
+<p>After editing <code>main.cf</code>, reload without dropping the queue:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>postfix<span class="w"> </span>reload
+</code></pre></div>
+<p>To apply changes that require a full restart (e.g., <code>inet_interfaces</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>postfix
+</code></pre></div>
+<hr />
+<h2 id="daily-operational-commands">Daily Operational Commands<a class="headerlink" href="#daily-operational-commands" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1704,38 +1793,89 @@
 <tbody>
 <tr>
 <td>Verify SMTP service running</td>
-<td></td>
-<td></td>
+<td><code>systemctl status postfix</code></td>
+<td>Expect <code>active (running)</code>. If stopped, check <code>journalctl -u postfix -n 50</code>.</td>
 </tr>
 <tr>
 <td>Check mail queue status</td>
-<td></td>
-<td></td>
+<td><code>mailq</code></td>
+<td>Empty queue is normal. A growing deferred queue indicates a delivery problem to the smarthost.</td>
 </tr>
 <tr>
-<td>Confirm relay permissions</td>
-<td></td>
-<td></td>
+<td>Count queued messages</td>
+<td><code>postqueue -p \| grep -c '^[0-9A-F]'</code></td>
+<td>Quick count of queued message IDs.</td>
 </tr>
 <tr>
-<td>Review failed message logs</td>
-<td></td>
-<td></td>
+<td>Review recent delivery log</td>
+<td><code>grep postfix /var/log/mail.log \| tail -n 100</code></td>
+<td>Look for <code>status=sent</code>, <code>status=deferred</code>, or <code>status=bounced</code> entries.</td>
+</tr>
+<tr>
+<td>Flush deferred queue</td>
+<td><code>postqueue -f</code></td>
+<td>Force retry of all deferred messages. Use after fixing a delivery issue.</td>
+</tr>
+<tr>
+<td>Test SMTP connectivity to smarthost</td>
+<td><code>openssl s_client -starttls smtp -connect email-smtp.us-east-1.amazonaws.com:587</code></td>
+<td>Validates TLS handshake and certificate.</td>
+</tr>
+<tr>
+<td>Send a test message</td>
+<td><code>echo "Test" \| mail -s "relay test" ops@example.com</code></td>
+<td>End-to-end test from the relay host.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>postfix
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mailq
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>/var/log/mail.log
-</code></pre></div>
-<h2 id="troubleshooting-workflow">Troubleshooting Workflow<a class="headerlink" href="#troubleshooting-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm SMTP connectivity</li>
-<li>Check authentication settings</li>
-<li>Review firewall rules</li>
-<li>Validate DNS configuration</li>
-</ol>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Messages stuck in deferred queue</td>
+<td><code>mailq</code> shows <code>Connection refused</code> or <code>Timeout</code> toward smarthost</td>
+<td>Verify smarthost hostname and port in <code>relayhost</code>. Check firewall rules allow outbound TCP 587 from the relay host.</td>
+</tr>
+<tr>
+<td>Authentication failure to smarthost</td>
+<td>Log shows <code>SASL authentication failed</code></td>
+<td>Confirm credentials in <code>/etc/postfix/sasl_passwd</code> are current. Re-hash with <code>postmap /etc/postfix/sasl_passwd</code> after any edit.</td>
+</tr>
+<tr>
+<td>TLS negotiation error</td>
+<td>Log shows <code>TLS handshake failed</code> or <code>certificate verify failed</code></td>
+<td>Check <code>smtp_tls_security_level</code>. If the smarthost cert has changed, update the CA bundle at <code>/etc/ssl/certs/ca-certificates.crt</code>.</td>
+</tr>
+<tr>
+<td>Relay access denied (550)</td>
+<td>Log shows <code>Relay access denied</code> for a source IP</td>
+<td>The sending host IP is not in <code>mynetworks</code>. Add it and reload Postfix.</td>
+</tr>
+<tr>
+<td>Bounce: unknown user</td>
+<td>Log shows <code>550 5.1.1 user unknown</code> from the upstream MX</td>
+<td>The destination address does not exist. Confirm the recipient address with the requester.</td>
+</tr>
+<tr>
+<td>Messages sent but not received</td>
+<td>No bounce, queue empty, but mail not delivered</td>
+<td>Check smarthost dashboard (SES/SendGrid) for delivery status and suppression list. The message may have been accepted but marked as spam by the destination.</td>
+</tr>
+<tr>
+<td>High queue volume</td>
+<td><code>mailq</code> shows hundreds of messages</td>
+<td>Check for a looping alert or application generating excessive mail. Review sender address in the queue with <code>postqueue -p</code>.</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -1234,6 +1234,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-folder-permission-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Policy Folder Permission Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-account-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Account Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-key-permission-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Key Permission Scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quarterly-access-review-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quarterly Access Review Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1277,29 +1340,169 @@
 
 
 <h1 id="venafi-access-control">Venafi — Access Control<a class="headerlink" href="#venafi-access-control" title="Permanent link">&para;</a></h1>
-<p>Least-privilege role assignment should be enforced, with service account permissions scoped to specific policy folders only. Separation of duties separates CA trust anchor management from day-to-day certificate operations.</p>
+<blockquote>
+<p>Part of the <a href="../../">Venafi</a> reference.</p>
+</blockquote>
+<p>Least-privilege role assignment must be enforced, with service account permissions scoped to specific policy folders only. Separation of duties separates CA trust anchor management from day-to-day certificate operations.</p>
+<hr />
+<h2 id="rbac-roles">RBAC Roles<a class="headerlink" href="#rbac-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Control</th>
+<th>Role</th>
+<th>Capabilities</th>
+<th>Typical Assignees</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Policy Master</strong></td>
+<td>Create and modify CA configurations, define certificate policies, manage policy folder hierarchy, assign permissions to other roles, import and trust CA certificates</td>
+<td>PKI team leads, security architects</td>
+</tr>
+<tr>
+<td><strong>Certificate Manager</strong></td>
+<td>Request, renew, revoke, and retire certificates within assigned policy folders; manage CSRs; trigger manual validation; push certificates to target systems</td>
+<td>PKI operations, platform engineers managing certificate lifecycle</td>
+</tr>
+<tr>
+<td><strong>Certificate Approver</strong></td>
+<td>Review and approve or reject pending certificate requests; cannot request or revoke directly</td>
+<td>Security team, compliance officers</td>
+</tr>
+<tr>
+<td><strong>Viewer</strong></td>
+<td>Read-only access to certificate inventory, expiry status, and policy configuration; cannot request, approve, or modify anything</td>
+<td>Audit staff, monitoring tool service accounts, helpdesk</td>
+</tr>
+</tbody>
+</table>
+<h2 id="policy-folder-permission-model">Policy Folder Permission Model<a class="headerlink" href="#policy-folder-permission-model" title="Permanent link">&para;</a></h2>
+<p>Venafi TPP permissions are scoped to <strong>policy folders</strong> — the organizational unit that defines certificate issuance rules for a given domain or team.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
 <th>Detail</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>RBAC roles</td>
-<td>Policy Master, Certificate Manager, Approver — scoped to policy folders</td>
+<td><strong>Inheritance</strong></td>
+<td>Permissions granted at a parent folder automatically propagate to all sub-folders unless explicitly overridden at the child level.</td>
 </tr>
 <tr>
-<td>Separation of duties</td>
-<td>CA trust anchor management separated from day-to-day certificate operations</td>
+<td><strong>Scoping</strong></td>
+<td>Assign Certificate Manager or Approver roles at the lowest folder that covers the team's scope — never grant permissions at the root policy folder unless required.</td>
 </tr>
 <tr>
-<td>Admin account review</td>
-<td>Quarterly review of Venafi admin and service accounts</td>
+<td><strong>Isolation</strong></td>
+<td>Separate policy folders per environment (production, non-production) and per business unit. Cross-folder access requires explicit justification and Policy Master approval.</td>
+</tr>
+<tr>
+<td><strong>CA binding</strong></td>
+<td>Each policy folder binds to one or more CA templates. A Certificate Manager cannot request from a CA template outside their assigned folder's binding.</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Recommended folder structure:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Policy/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Production/
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── Internal-PKI/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   └── Public-CA/
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└── Non-Production/
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ├── Dev/
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    └── Test/
+</code></pre></div>
+<h2 id="service-account-configuration">Service Account Configuration<a class="headerlink" href="#service-account-configuration" title="Permanent link">&para;</a></h2>
+<p>Minimum TPP permissions required for each integration type:</p>
+<table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>Required Role</th>
+<th>Folder Scope</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CertBot</strong></td>
+<td>Certificate Manager</td>
+<td>Target policy folders only</td>
+<td>Needs request, renew, revoke. Grant no access to CA configuration folders.</td>
+</tr>
+<tr>
+<td><strong>Venafi PKI Secrets Engine (Vault)</strong></td>
+<td>Certificate Manager</td>
+<td>Folders bound to Vault-issued certificates</td>
+<td>The Vault plugin authenticates via a dedicated service account token. Rotate the token every 90 days.</td>
+</tr>
+<tr>
+<td><strong>REST API apps (custom integrations)</strong></td>
+<td>Viewer or Certificate Manager</td>
+<td>Narrowest folder covering the app's certificates</td>
+<td>Grant Viewer if the app only reads certificate metadata. Grant Certificate Manager only if the app must trigger renewals.</td>
+</tr>
+<tr>
+<td><strong>Monitoring / SIEM</strong></td>
+<td>Viewer</td>
+<td>Root (read-only audit use)</td>
+<td>Monitoring tools need read access to expiry data only. Restrict to Viewer to prevent accidental changes.</td>
+</tr>
+</tbody>
+</table>
+<p>Service accounts must:</p>
+<ul>
+<li>Be named to identify the owning system (e.g., <code>svc-vault-pki</code>, <code>svc-certbot-prod</code>)</li>
+<li>Never share credentials with human user accounts</li>
+<li>Use API key authentication rather than password-based authentication where supported</li>
+</ul>
+<h2 id="api-key-permission-scopes">API Key Permission Scopes<a class="headerlink" href="#api-key-permission-scopes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>API Key Can Do</th>
+<th>API Key Cannot Do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Certificate lifecycle</td>
+<td>Request, renew, revoke within authorized policy folders</td>
+<td>Modify policy folder permissions or CA trust configuration</td>
+</tr>
+<tr>
+<td>Certificate retrieval</td>
+<td>Download issued certificate and private key (if key generation is server-side)</td>
+<td>Access certificates outside the key's authorized folder scope</td>
+</tr>
+<tr>
+<td>Reporting</td>
+<td>Query certificate inventory and expiry data</td>
+<td>Export CA private keys or trust anchor material</td>
+</tr>
+<tr>
+<td>Approvals</td>
+<td>Submit requests for approval</td>
+<td>Self-approve requests (Approver role required separately)</td>
+</tr>
+</tbody>
+</table>
+<p>API keys are scoped to the permissions of the TPP user account that generated them — a Viewer account's API key cannot perform Certificate Manager actions regardless of how the key is configured.</p>
+<h2 id="quarterly-access-review-procedure">Quarterly Access Review Procedure<a class="headerlink" href="#quarterly-access-review-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Export the full user and service account list from TPP: <strong>Configuration</strong> → <strong>Users and Groups</strong> → export to CSV.</li>
+<li>Compare against the HR leavers report and contractor roster for the quarter.</li>
+<li>For each account, confirm:</li>
+<li>The account is still associated with an active staff member or running system.</li>
+<li>The assigned role matches the current job function or integration requirement.</li>
+<li>Policy folder scope is no broader than needed.</li>
+<li>Revoke or disable accounts with no activity in the past 90 days.</li>
+<li>Escalate any account with Policy Master access that is not documented in the PKI RACI.</li>
+<li>Record findings and sign-off in the quarterly PKI access review document in the CMDB.</li>
+</ol>
 
 
 
