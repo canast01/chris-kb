@@ -2,7 +2,7 @@
 
 Build and operating standards for virtualization platforms.
 
-<div class="kb-grid kb-grid-10">
+<div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="naming-standard/">
   <strong>Naming Standard</strong>

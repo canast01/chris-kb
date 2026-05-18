@@ -2,7 +2,7 @@
 
 Inventory references for clusters, hosts, datastores, networks, management tools, and versions.
 
-<div class="kb-grid kb-grid-9">
+<div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="cluster-inventory/">
   <strong>Cluster Inventory</strong>

@@ -4,8 +4,6 @@
 vCenter Server is the management plane for VMware vSphere, deployed as the VCSA appliance. It supports standard single-node, vCenter HA (3-node active/passive/witness), and Enhanced Linked Mode topologies.
 </div>
 
-vCenter Server is the management plane for VMware vSphere. It is deployed as the VCSA appliance and supports several topology options depending on scale and resilience requirements.
-
 | Deployment | Description | Use Case |
 |---|---|---|
 | Standard VCSA | Single appliance, embedded PSC and DB | Standard production |

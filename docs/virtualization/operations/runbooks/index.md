@@ -2,7 +2,7 @@
 
 Practical runbooks for incidents, maintenance, lifecycle work, validation, evidence collection, and RCA follow-up.
 
-<div class="kb-grid kb-grid-12">
+<div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="incident-response/">
   <strong>Incident Response</strong>
@@ -57,11 +57,11 @@ Practical runbooks for incidents, maintenance, lifecycle work, validation, evide
 
 <a class="kb-card" href="backup-failure/">
   <strong>Backup Failure</strong>
-  <span>Backup Failure notes, checks, commands, and references.</span>
+  <span>Triage failed or missed VM backups — Veeam job errors, repository issues, and snapshot cleanup.</span>
 </a>
 
 <a class="kb-card" href="vCenter-outage/">
   <strong>vCenter Outage</strong>
-  <span>vCenter Outage notes, checks, commands, and references.</span>
+  <span>Triage vCenter unavailability — VCSA services, VCHA failover, and host connectivity in standalone mode.</span>
 </a>
 </div>

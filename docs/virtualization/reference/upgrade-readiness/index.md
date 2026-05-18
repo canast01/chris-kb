@@ -2,7 +2,7 @@
 
 Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
 
-<div class="kb-grid kb-grid-9">
+<div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="upgrade-planning/">
   <strong>Upgrade Planning</strong>

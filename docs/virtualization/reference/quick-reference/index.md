@@ -2,7 +2,7 @@
 
 Fast operational tools for troubleshooting and validation.
 
-<div class="kb-grid kb-grid-17">
+<div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="glossary/">
   <strong>Glossary</strong>
