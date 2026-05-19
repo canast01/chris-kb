@@ -464,29 +464,61 @@
 All-flash block storage running Purity//FA — ActiveDR, ActiveCluster, NVMe/FC, NVMe/RoCE, snapshots, protection groups, and Pure1 cloud management for tier-1 and mission-critical block workloads.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Pure FlashArray — HA Controller Pair
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Controller CT0 — Active                                    │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── Front-End Ports: FC / iSCSI / NVMe-oF                  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ├── NVRAM (write acknowledged here — &lt; 1 ms)               │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  ├── Inline Dedup + Compression engine                      │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  └── Back-End: NVMe Flash Shelves                           │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└───────────────────────┬─────────────────────────────────────┘
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                        │  active/active HA link (NVRAM mirror)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>┌───────────────────────▼─────────────────────────────────────┐
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Controller CT1 — Active                                    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  (symmetric — both serve I/O simultaneously)                │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>└─────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                        │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>              ┌─────────▼──────────┐
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>              │  NVMe Flash Shelf  │  (shared between CT0 + CT1)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>              ├────────────────────┤
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>              │  NVMe Flash Shelf  │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>              └────────────────────┘
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>Host connectivity (multipath):
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>ESXi ──► 2× FC HBA ──► FC Fabric A + Fabric B ──► CT0 + CT1 ports
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>         (both paths active for I/O load balancing — ALUA AA)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Pure FlashArray Stack ────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                     Pure FlashArray — All-Flash Block Storage (Purity//FA)                    │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │   Dual-controller HA pair: CT0 + CT1 active/active with NVRAM mirroring for &lt; 1 ms write ACK  │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │     Protocols: Fibre Channel (16/32G) · iSCSI (10/25 GbE) · NVMe/FC · NVMe/RoCE · NVMe/TCP    │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │Pure1: cloud management portal — telemetry, AI support alerts, capacity forecasting, proactive │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │  Replication: ActiveDR (async, RPO minutes) · ActiveCluster (sync, zero RPO, stretch cluster) │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    FlashArray management layer feeds architecture, operations, security, and troubleshooting          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         Architecture        │  │          Operations         │  │           Security          │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │    CT0/CT1 HA pair design   │  │   purearray CLI + REST API  │  │  SafeMode: immutable snaps  │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │  NVRAM: write buffer+mirror │  │ Volume: create, expand, map │  │   RBAC: roles + API tokens  │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │   Flash shelves: NVMe SSD   │  │   Snapshots + clones + PGs  │  │    Data-at-rest: AES-256    │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │   Inline dedup+compression  │  │ Health: drives, ports, cache│  │  Audit log + syslog export  │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │ ActiveCluster: stretch vols │  │ ActiveDR: async replication │  │ Directory services: AD/LDAP │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    Architecture defines HA and data path · Operations manage volumes · Security hardens access and dat│
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │  Common Issues   │   Diagnostics    │   Health Checks   │    Escalation    │  CLI Quick Ref   │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │  Volume offline  │  purearray list  │  Drive health OK  │  Case: array ID  │  purearray get   │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │Repl lag/BW check │ purelog download │  Port: link state │  Log bundle req  │ purevolume list  │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │ HA failover path │puresupport bundle│  Capacity: &gt;80%?  │  Remote assist   │ purehgroup list  │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   │Snap space growth │ netconfig verify │ Repl state: Active│  P1/P2 severity  │  pureport list   │   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Dual controllers (CT0/CT1) · NVMe flash shelves · FC/iSCSI/NVMe HBAs · SAN switches · Power &amp; Cooling│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│                                                                                                       │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Purity//FA    = FlashArray operating system; manages data services, dedup, compression, and protocols│
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  NVRAM         = Non-volatile RAM; write buffer mirrored CT0↔CT1 before ACK — guarantees &lt; 1 ms writes│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  ActiveCluster = Synchronous stretch cluster; zero RPO across two sites or arrays on same fabric      │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│  ActiveDR      = Asynchronous replication; RPO in minutes; automated failover and failback workflow   │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│  SafeMode      = Pure immutable snapshot protection; delete requires PIN from Pure Storage support    │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│  Protection Group= PG; set of volumes replicated together on a schedule to a target array or cloud    │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│  Inline dedup  = Deduplication applied before data hits flash; no post-process latency penalty        │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│  CT0 / CT1     = Controller 0 and Controller 1; both actively serve I/O simultaneously                │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│  NVMe/RoCE     = NVMe over RDMA over Converged Ethernet; ultra-low latency block access over IP fabric│
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│  NVMe/FC       = NVMe over Fibre Channel; block protocol for NVMe SSDs transported over FC fabric     │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│  Pure1         = Cloud management portal; remote telemetry, AI-driven alerts, capacity forecasting    │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  RBAC          = Role-Based Access Control; Storage Admin, Array Admin, Read-Only built-in roles      │
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│  purearray     = CLI entry point on FlashArray; purearray get/list/set for array-level config         │
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="kb-grid kb-grid-3">
 
