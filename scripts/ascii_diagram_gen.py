@@ -297,14 +297,9 @@ def vmware_platform_landscape():
     )))
 
     # ── Arrow row ────────────────────────────────────────────────────────────
+    lines.append(txt_row('  vCenter/VxRail: control plane for vSphere  ·  Aria Suite: monitors all layers'))
     lines.append(txt_row())
-    d = {VC_MID: '▼', VX_MID: '▼', AR_MID: '▼'}
-    note = '← Aria monitors all layers'
-    for i, c in enumerate(note):
-        pos = AR_MID + 2 + i
-        if pos < W2: d[pos] = c
-    lines.append(R(d))
-    lines.append(txt_row('vCenter/VxRail: control plane for vSphere', indent=13))
+    lines.append(R(arrow([VC_MID, VX_MID, AR_MID])))
     lines.append(txt_row())
 
     # ── vSphere cluster ───────────────────────────────────────────────────────
