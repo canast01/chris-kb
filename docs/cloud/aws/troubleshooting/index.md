@@ -1,35 +1,60 @@
 # AWS — Troubleshooting
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│          AWS Troubleshooting Decision Tree               │
-└──────────────────────────────────────────────────────────┘
-
-  Issue reported
-        │
-        ▼
-  ┌───────────────────────────────────────────┐
-  │  What is the symptom?                     │
-  └─────┬──────────┬───────────┬─────────────┘
-        │          │           │              │
-        ▼          ▼           ▼              ▼
-  Connectivity  IAM Access  Cost spike   Performance
-  failure       Denied                   degradation
-        │          │           │              │
-        ▼          ▼           ▼              ▼
-  Check SG /   Simulate    Cost Explorer  CW Metrics
-  NACL /       principal   daily diff     CPU/Mem/IO
-  routes       policy      top services   X-Ray trace
-        │          │           │              │
-        └──────────┴───────────┴──────────────┘
-                        │
-                        ▼
-                  Resolved? ──No──► Escalate to AWS Support
-                      │
-                     Yes
-                      │
-                      ▼
-                  RCA + Change Record
+┌──────────────────────────────────── AWS Troubleshooting Overview ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                AWS Troubleshooting — Common Issues, Diagnostics, and Escalation               │   │
+│   │   Common issues: IAM permission denied · SG/NACL blocking traffic · EC2 instance unreachable  │   │
+│   │  Diagnostics: CloudWatch Logs · CloudTrail event history · VPC Flow Logs · EC2 serial console │   │
+│   │    Tools: AWS CLI describe commands · Policy Simulator · Reachability Analyzer · CloudShell   │   │
+│   │ Escalation: AWS Support cases; collect account ID, region, resource ARN, error message + time │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues guide investigation · Diagnostics locate root cause · Escalation engages AWS support │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+│   │     EC2: 2/2 status fail    │  │     CW Logs: app errors     │  │     Account ID + region     │   │
+│   │      SG: port not open      │  │   CloudTrail: API history   │  │    Resource ARN: include    │   │
+│   │      IAM: Access Denied     │  │    VPC Flow Logs: traffic   │  │     Error message + time    │   │
+│   │      RDS: conn refused      │  │    Policy Simulator: test   │  │       Severity: P1-P4       │   │
+│   │      S3: 403 on object      │  │    Reachability Analyzer    │  │    TAM: strategic issues    │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Identify issue category → gather diagnostics (logs + trail + flow) → resolve or escalate with data │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Common Issues   │   Diagnostics    │     Escalation    │    CLI Tools     │  Console Tools   │   │
+│   │ EC2 unreachable  │ CW Logs: filter  │   P1: 24/7 phone  │   describe-sgs   │ Policy Simulator │   │
+│   │ SG: missing rule │ CloudTrail: who? │   Case: open now  │  flow-logs: get  │  Reach Analyzer  │   │
+│   │   IAM: denied    │  VPC Flow Logs   │  ARN + error msg  │  sts get-caller  │  EC2 serial con  │   │
+│   │  S3: bucket ACL  │  Serial console  │  Trusted Advisor  │   ec2 describe   │  AWS Health evt  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  EC2 Nitro hosts · VPC network fabric · AWS Support infrastructure · CloudTrail S3 log delivery       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EC2 status check = System check (infra) + instance check (OS); failure triggers alarm or auto-recover│
+│  Policy Simulator = IAM console tool; tests IAM policies to check if an action would be allowed/denied│
+│  Reachability Analyzer= VPC tool; traces packet path between source and destination; finds blocking ru│
+│  VPC Flow Logs   = Captures accepted/rejected traffic metadata for subnets, VPCs, or ENIs             │
+│  CloudTrail      = Records every AWS API call; start with event history for the last 90 days in consol│
+│  EC2 Serial Console= Out-of-band console access; useful when SSH/SSM unreachable; OS-level triage     │
+│  Trusted Advisor  = AWS checks across cost, security, performance, fault tolerance, and service limits│
+│  P1 case          = Production down; 24/7 response; call +1-800-xxx alongside opening console case    │
+│  TAM              = Technical Account Manager; named AWS contact for strategic and critical escalation│
+│  sts get-caller-identity= CLI command returning current identity; first step when debugging IAM issues│
+│  Session Manager  = SSM feature; connect to EC2 without SSH when networking is broken but SSM agent wo│
+│  Access Denied    = IAM error; check CloudTrail for the denied call; use Policy Simulator to trace    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">
