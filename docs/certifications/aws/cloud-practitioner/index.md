@@ -81,7 +81,7 @@ Christos Anastasiadis  |  May 2026
 
 **3 Cloud deployment models:**
 - Public cloud   — All resources on AWS
-- Private cloud  — Resources on your own data center (T. Rowe today)
+- Private cloud  — Resources on your own data center
 - Hybrid cloud   — Mix of public and private
 
 
@@ -112,7 +112,7 @@ Christos Anastasiadis  |  May 2026
 
 **AWS Outposts:**
 - AWS hardware installed in YOUR data center
-- Run AWS services on-premises (relevant to T. Rowe environment)
+- Run AWS services on-premises
 
 
 ### Questions & Answers — Day 1
@@ -230,7 +230,7 @@ Christos Anastasiadis  |  May 2026
 
     NEW ACRONYM: SaaS = Software as a Service
     Like a streaming service for software. Just log in and use it.
-    Examples: Gmail, Salesforce, ServiceNow (T. Rowe uses this!), Jira
+    Examples: Gmail, Salesforce, ServiceNow, Jira
 
     ```
     ┌──────────────────────────────────────┐
@@ -252,7 +252,7 @@ Christos Anastasiadis  |  May 2026
     │  records     │  Direct  │  Analytics   │
     │  (on-prem)   │  Connect │  Backups     │
     └──────────────┘          └──────────────┘
-    THIS IS EXACTLY T. Rowe Price today.
+    Classic hybrid cloud pattern.
     ```
 
 ??? question "Q9. Which deployment model uses only AWS with no on-premises?"
@@ -402,7 +402,7 @@ Christos Anastasiadis  |  May 2026
     │  AWS hardware in YOUR building   │
     │  Connects to AWS via Direct Connect│
     └──────────────────────────────────┘
-    Relevant to T. Rowe — extend on-prem to AWS.
+    Extend on-prem to AWS.
     ```
 
 ??? question "Q19. Which AWS service runs AWS infrastructure in your own DC?"
@@ -440,7 +440,7 @@ Christos Anastasiadis  |  May 2026
 ??? question "Q23. Which deployment model is most like traditional IT?"
 
     Private cloud — your own hardware, your own DC.
-    Like T. Rowe's VMware/VxRail environment today.
+    Your own hardware, fully under your control.
 
 ??? question "Q24. How are AZs connected within a region?"
 
@@ -492,7 +492,7 @@ Christos Anastasiadis  |  May 2026
     CapEx (Capital Expenditure) — large upfront investment.
     Goes on balance sheet, depreciated over years.
 
-??? question "Q34. T. Rowe Price has on-premises + AWS pilot. Which model?"
+??? question "Q34. A company runs on-premises infrastructure alongside an AWS pilot. Which model?"
 
     Hybrid cloud.
 
@@ -1969,7 +1969,7 @@ API Gateway: create/manage APIs, works with Lambda for serverless APIs
 
     Virtual Private Cloud — your logically isolated private network in AWS.
     You define IP range (CIDR), subnets, routes, gateways, security rules.
-    Like your T. Rowe network today but in the cloud.
+    Your own isolated network in the cloud.
     CIDR: 10.0.0.0/16 = first 16 bits fixed = 65,536 possible IPs.
 
 ??? question "Q2. Difference between public and private subnet?"
