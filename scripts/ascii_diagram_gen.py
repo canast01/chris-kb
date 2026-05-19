@@ -618,6 +618,174 @@ def virtualization_platform_stack():
     return lines
 
 
+def pure_storage_stack():
+    """Pure Storage Stack — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+
+    # Management — full width
+    MGMT_L, MGMT_R = 3, 99   # inner=95
+
+    # Product tier — three equal boxes (inner=29)
+    FA_L, FA_R =  3, 33   # FlashArray, MID=18
+    FB_L, FB_R = 36, 66   # FlashBlade, MID=51
+    EG_L, EG_R = 69, 99   # Evergreen/One, MID=84
+
+    FA_MID = (FA_L + FA_R) // 2   # 18
+    FB_MID = (FB_L + FB_R) // 2   # 51
+    EG_MID = (EG_L + EG_R) // 2   # 84
+
+    # Services tier — three equal boxes (inner=29)
+    AC_L, AC_R =  3, 33   # ActiveCluster
+    AD_L, AD_R = 36, 66   # ActiveDR
+    PO_L, PO_R = 69, 99   # Purity OS + SafeMode
+
+    # Protocol layer — full width with 5 sections
+    PROT_L, PROT_R = 3, 99
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+
+    lines = []
+
+    # ── Title ────────────────────────────────────────────────────────────────
+    lines.append(title_border(W2, 'Pure Storage Stack'))
+    lines.append(txt_row())
+
+    # ── Management tier ──────────────────────────────────────────────────────
+    lines.append(R(bTop(MGMT_L, MGMT_R)))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'Pure1')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'SaaS cloud management portal — no on-prem management appliance required')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'Fleet health monitoring · capacity analytics · AI-driven anomaly detection')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'Upgrade orchestration: non-disruptive controller and software refreshes')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'Auto-opens support cases; integrates with Pure Technical Services team')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'REST API · Purity CLI · Pure Service Orchestrator (PSO) for Kubernetes')))
+    lines.append(R(bBot(MGMT_L, MGMT_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Pure1 manages all arrays via HTTPS — no on-prem management server required'))
+    lines.append(txt_row())
+    lines.append(R(arrow([FA_MID, FB_MID, EG_MID])))
+    lines.append(txt_row())
+
+    # ── Product tier ─────────────────────────────────────────────────────────
+    lines.append(R(merge(bTop(FA_L, FA_R), bTop(FB_L, FB_R), bTop(EG_L, EG_R))))
+    lines.append(R(merge(
+        bMid(FA_L, FA_R, 'Pure FlashArray'),
+        bMid(FB_L, FB_R, 'Pure FlashBlade'),
+        bMid(EG_L, EG_R, 'Evergreen / Evergreen//One'),
+    )))
+    lines.append(R(merge(
+        bMid(FA_L, FA_R, '//X · //C · //E models'),
+        bMid(FB_L, FB_R, '//S: perf · //E: capacity'),
+        bMid(EG_L, EG_R, 'Non-disruptive refreshes'),
+    )))
+    lines.append(R(merge(
+        bMid(FA_L, FA_R, 'All-flash block storage'),
+        bMid(FB_L, FB_R, 'Scale-out file + object'),
+        bMid(EG_L, EG_R, 'Controller swap, no downtime'),
+    )))
+    lines.append(R(merge(
+        bMid(FA_L, FA_R, 'FC · iSCSI · NVMe-oF'),
+        bMid(FB_L, FB_R, 'NFS · SMB · S3 · HDFS'),
+        bMid(EG_L, EG_R, 'Evergreen//One: STaaS'),
+    )))
+    lines.append(R(merge(
+        bMid(FA_L, FA_R, 'Always-on dedup + compress'),
+        bMid(FB_L, FB_R, 'DirectFlash blade modules'),
+        bMid(EG_L, EG_R, 'Pure-owned HW on-premises'),
+    )))
+    lines.append(R(merge(
+        bMid(FA_L, FA_R, 'SafeMode: immutable snaps'),
+        bMid(FB_L, FB_R, 'Rapid Restore: backup target'),
+        bMid(EG_L, EG_R, 'SLA-guaranteed performance'),
+    )))
+    lines.append(R(merge(bBot(FA_L, FA_R), bBot(FB_L, FB_R), bBot(EG_L, EG_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  FlashArray serves block workloads · FlashBlade serves file and object workloads'))
+    lines.append(txt_row())
+    lines.append(R(arrow([FA_MID, FB_MID, EG_MID])))
+    lines.append(txt_row())
+
+    # ── Services tier ────────────────────────────────────────────────────────
+    lines.append(R(merge(bTop(AC_L, AC_R), bTop(AD_L, AD_R), bTop(PO_L, PO_R))))
+    lines.append(R(merge(
+        bMid(AC_L, AC_R, 'ActiveCluster (Sync)'),
+        bMid(AD_L, AD_R, 'ActiveDR (Async)'),
+        bMid(PO_L, PO_R, 'Purity OS · SafeMode'),
+    )))
+    lines.append(R(merge(
+        bMid(AC_L, AC_R, 'Active-active stretch cluster'),
+        bMid(AD_L, AD_R, 'Asynchronous replication'),
+        bMid(PO_L, PO_R, 'Purity//FA: FlashArray OS'),
+    )))
+    lines.append(R(merge(
+        bMid(AC_L, AC_R, 'Sync replication, RPO=0'),
+        bMid(AD_L, AD_R, 'RPO configurable (seconds)'),
+        bMid(PO_L, PO_R, 'Purity//FB: FlashBlade OS'),
+    )))
+    lines.append(R(merge(
+        bMid(AC_L, AC_R, 'Mediator: tie-breaker node'),
+        bMid(AD_L, AD_R, 'Cross-array and cross-site DR'),
+        bMid(PO_L, PO_R, 'SafeMode: retention-locked'),
+    )))
+    lines.append(R(merge(
+        bMid(AC_L, AC_R, 'Transparent host failover'),
+        bMid(AD_L, AD_R, 'Non-disruptive failover test'),
+        bMid(PO_L, PO_R, 'Policy-based snap scheduling'),
+    )))
+    lines.append(R(merge(bBot(AC_L, AC_R), bBot(AD_L, AD_R), bBot(PO_L, PO_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Replication and data services protect workloads across sites and against ransomware'))
+    lines.append(txt_row())
+    lines.append(R(arrow([FA_MID, FB_MID, EG_MID])))
+    lines.append(txt_row())
+
+    # ── Protocol layer ───────────────────────────────────────────────────────
+    lines.append(R(bTop(PROT_L, PROT_R)))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['Fibre Channel', 'iSCSI', 'NVMe-oF', 'NFS / SMB', 'S3 / HDFS'])))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['SAN block access', 'IP block access', 'NVMe over Fabrics', 'File protocols', 'Object / analytics'])))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['16G · 32G · 64G', 'TCP/IP network', 'Ethernet / RoCE', 'NFS v3/v4.1 · SMB', 'REST · SDK · POSIX'])))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['HBA → SAN switch', 'iSCSI initiator', 'NVMe host adapter', 'Exports + shares', 'Buckets + keys'])))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['Zoning + masking', 'CHAP auth · iSNS', 'RDMA low latency', 'Perms + quotas', 'IAM + policies'])))
+    lines.append(R(bBot(PROT_L, PROT_R)))
+
+    # ── Physical Infrastructure ──────────────────────────────────────────────
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('DirectFlash NVMe modules · Dual controllers · 10/25/100 GbE · FC 16G/32G · Power & Cooling'))
+    lines.append(txt_row())
+
+    # ── Glossary ─────────────────────────────────────────────────────────────
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('FlashArray    = Pure all-flash block array; //X (performance), //C (capacity), //E (entry)'))
+    lines.append(txt_row('FlashBlade    = Pure scale-out file + object platform built on DirectFlash blade modules'))
+    lines.append(txt_row('Pure1         = Pure SaaS cloud management; health, analytics, and upgrade orchestration'))
+    lines.append(txt_row('Purity//FA    = FlashArray operating system; manages volumes, snapshots, and replication'))
+    lines.append(txt_row('Purity//FB    = FlashBlade operating system; manages NFS, SMB, S3 buckets, and expansion'))
+    lines.append(txt_row('ActiveCluster = Sync active-active stretch cluster; RPO=0, transparent host failover'))
+    lines.append(txt_row('ActiveDR      = Async replication with configurable RPO (seconds); used for cross-site DR'))
+    lines.append(txt_row('SafeMode      = Immutable retention-locked snapshots; immune to admin or ransomware deletion'))
+    lines.append(txt_row('Evergreen     = Pure upgrade programme; controller refresh without downtime or data migration'))
+    lines.append(txt_row('Evergreen//One= STaaS model; Pure owns and maintains hardware on-premises, billed by use'))
+    lines.append(txt_row('DirectFlash   = Pure proprietary NVMe modules; bypasses SSD firmware for lower latency'))
+    lines.append(txt_row('PSO           = Pure Service Orchestrator; Kubernetes operator for dynamic volume provisioning'))
+    lines.append(txt_row('Mediator      = Lightweight VM that arbitrates ActiveCluster split-brain scenarios'))
+    lines.append(txt_row('RPO           = Recovery Point Objective; max acceptable data loss (ActiveCluster=0, ActiveDR=secs)'))
+    lines.append(txt_row('STaaS         = Storage-as-a-Service; hardware owned by Pure, customer pays by consumption'))
+    lines.append(txt_row('NVMe-oF       = NVMe over Fabrics; extends NVMe protocol across Ethernet (RoCE) or FC'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
 def enterprise_storage_landscape():
     """Enterprise Storage Landscape — W=103."""
     W2 = 103
@@ -816,6 +984,11 @@ DIAGRAMS = {
         'fn': enterprise_storage_landscape,
         'file': 'docs/storage/index.md',
         'description': 'Enterprise Storage Landscape — Pure, Dell, NetApp arrays + protocol layer',
+    },
+    'pure': {
+        'fn': pure_storage_stack,
+        'file': 'docs/storage/pure/index.md',
+        'description': 'Pure Storage Stack — Pure1, FlashArray, FlashBlade, Evergreen, replication',
     },
 }
 
