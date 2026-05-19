@@ -11,8 +11,8 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 │   │   (Manage)  │  │ (Appliance) │  │   Ops/Logs  │ Automation │Suite Lifecycle│    │
 │   │             │  │             │  │  Operations │            │               │    │
 │   └─────────────┘  └─────────────┘  └─────────────┴────────────┴───────────────┘    │
-│          │                │                                                         │
-│   ┌──────┬────────────────┬────────────────────────────────────────────────────┐    │
+│          ▼                ▼                                                         │
+│   ┌────────────────────────────────────────────────────────────────────────────┐    │
 │   │                        vSphere Cluster (ESXi Hosts)                        │    │
 │   │  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐            │    │
 │   │  │  ESXi-01   │  │  ESXi-02   │  │  ESXi-03   │  │  ESXi-04   │            │    │
@@ -20,7 +20,7 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 │   │  │  │ VMs │   │  │  │ VMs │   │  │  │ VMs │   │  │  │ VMs │   │            │    │
 │   │  └──┴─────┴───┘  └──┴─────┴───┘  └──┴─────┴───┘  └──┴─────┴───┘            │    │
 │   └────────────────────────────────────────────────────────────────────────────┘    │
-│          │                │                │                      │                 │
+│          ▼                ▼                ▼                      ▼                 │
 │   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐    │
 │   │     vSAN    │  │     NSX     │  │   Horizon   │  │      Site Recovery      │    │
 │   │  (Storage)  │  │ (Networking)│  │  (Desktops) │  │      (DR Platform)      │    │

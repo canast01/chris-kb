@@ -249,11 +249,11 @@ def vmware_platform_landscape():
         bBot(AR_L, AR_R, tees=[AR_D1, AR_D2]),
     )))
 
-    # Connector stems → vSphere
-    lines.append(row(connector([VC_MID, VX_MID])))
+    # ▼ arrows from vCenter/VxRail down to vSphere
+    lines.append(row(arrow([VC_MID, VX_MID])))
 
-    # vSphere cluster box
-    lines.append(row(bTop(VS_L, VS_R, tees=[VC_MID, VX_MID])))
+    # vSphere cluster box (plain top — arrows are on row above, no ┬ tees needed)
+    lines.append(row(bTop(VS_L, VS_R)))
     lines.append(row(bMid(VS_L, VS_R, 'vSphere Cluster (ESXi Hosts)')))
 
     # ESXi top borders (vSphere side walls must be present on every inner row)
@@ -294,11 +294,11 @@ def vmware_platform_landscape():
     # vSphere cluster bottom border
     lines.append(row(bBot(VS_L, VS_R)))
 
-    # Connector stems → component boxes
+    # ▼ arrows from vSphere down to component boxes
     COMP_MIDS = [(cL + cR) // 2 for (cL, cR) in COMP]
-    lines.append(row(connector(COMP_MIDS)))
+    lines.append(row(arrow(COMP_MIDS)))
 
-    # Component boxes
+    # Component boxes (plain tops — arrows are on row above)
     lines.append(row(merge(*[bTop(cL, cR) for cL, cR in COMP])))
     lines.append(row(merge(*[bMid(cL, cR, lbl) for (cL, cR), lbl in zip(COMP, [
         'vSAN', 'NSX', 'Horizon', 'Site Recovery',
