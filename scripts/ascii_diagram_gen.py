@@ -30,11 +30,13 @@ HOW TO ADD A NEW DIAGRAM
 
 USAGE
 ─────
-  python3 scripts/ascii_diagram_gen.py                    # list all diagrams
-  python3 scripts/ascii_diagram_gen.py vmware             # print to stdout
-  python3 scripts/ascii_diagram_gen.py vmware --write     # update markdown file
-  python3 scripts/ascii_diagram_gen.py --write-all        # update all files
-  python3 scripts/ascii_diagram_gen.py --check            # verify files are in sync
+  python3 scripts/ascii_diagram_gen.py                         # list all diagrams
+  python3 scripts/ascii_diagram_gen.py vmware                  # print to stdout
+  python3 scripts/ascii_diagram_gen.py vmware --write          # update markdown file
+  python3 scripts/ascii_diagram_gen.py --write-all             # update all files
+  python3 scripts/ascii_diagram_gen.py --check                 # verify files are in sync
+  python3 scripts/ascii_diagram_gen.py --layout 20 20 47       # calculate box positions
+  python3 scripts/ascii_diagram_gen.py --layout 20 20 47 --margin 3 --gap 2
 
 POSITION CALCULATION
 ─────────────────────
@@ -213,8 +215,8 @@ def layout(inner_widths, margin=3, gap=2):
         r = l + iw + 1
         positions.append((l, r))
         l = r + gap + 1
-    for i, (l, r) in enumerate(positions):
-        print(f'  Box {i + 1}: L={l:3d}, R={r:3d}   inner={r - l - 1}   total={r - l + 1}')
+    for i, (bl, br) in enumerate(positions):
+        print(f'  Box {i + 1}: L={bl:3d}, R={br:3d}   inner={br - bl - 1}   total={br - bl + 1}')
     return positions
 
 
@@ -302,7 +304,7 @@ def vmware_platform_landscape():
         pos = AR_MID + 2 + i
         if pos < W2: d[pos] = c
     lines.append(R(d))
-    lines.append(txt_row('             vCenter/VxRail: control plane for vSphere', indent=0))
+    lines.append(txt_row('vCenter/VxRail: control plane for vSphere', indent=13))
     lines.append(txt_row())
 
     # ── vSphere cluster ───────────────────────────────────────────────────────
@@ -501,6 +503,9 @@ def _write(name):
     if n == 0:
         print(f'  ERROR: no bare ``` block found in {entry["file"]}', file=sys.stderr)
         return False
+    if new_content == content:
+        print(f'  OK (unchanged)  {entry["file"]}')
+        return True
     with open(target, 'w', encoding='utf-8') as f:
         f.write(new_content)
     print(f'  Updated  {entry["file"]}  [{len(lines)} lines, w={_width_str(lines)}]')
@@ -545,11 +550,12 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             'Examples:\n'
-            '  python3 scripts/ascii_diagram_gen.py               # list all diagrams\n'
-            '  python3 scripts/ascii_diagram_gen.py vmware        # print to stdout\n'
-            '  python3 scripts/ascii_diagram_gen.py vmware --write  # update file\n'
-            '  python3 scripts/ascii_diagram_gen.py --write-all   # update all files\n'
-            '  python3 scripts/ascii_diagram_gen.py --check       # verify sync\n'
+            '  python3 scripts/ascii_diagram_gen.py                      # list diagrams\n'
+            '  python3 scripts/ascii_diagram_gen.py vmware               # print to stdout\n'
+            '  python3 scripts/ascii_diagram_gen.py vmware --write       # update file\n'
+            '  python3 scripts/ascii_diagram_gen.py --write-all          # update all\n'
+            '  python3 scripts/ascii_diagram_gen.py --check              # verify sync\n'
+            '  python3 scripts/ascii_diagram_gen.py --layout 20 20 47    # box positions\n'
         ),
     )
     parser.add_argument('name', nargs='?', help='diagram name (omit to list all)')
@@ -559,10 +565,19 @@ if __name__ == '__main__':
                         help='update all registered markdown files')
     parser.add_argument('--check', action='store_true',
                         help='verify all files match current diagram output')
+    parser.add_argument('--layout', nargs='+', type=int, metavar='W',
+                        help='calculate box (L, R) positions for given inner widths')
+    parser.add_argument('--margin', type=int, default=3,
+                        help='left margin for --layout (default 3)')
+    parser.add_argument('--gap', type=int, default=2,
+                        help='gap between boxes for --layout (default 2)')
 
     args = parser.parse_args()
 
-    if args.write_all:
+    if args.layout:
+        layout(args.layout, margin=args.margin, gap=args.gap)
+
+    elif args.write_all:
         for name in sorted(DIAGRAMS):
             _write(name)
 
