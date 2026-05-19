@@ -9,12 +9,29 @@ exact same column on every line — guaranteed straight verticals.
 HOW TO DEFINE A NEW DIAGRAM
 ────────────────────────────
 1. Choose W (inner width, between outer walls).  Outer string width = W + 2.
-2. Decide the column spans for each box: (L, R) in 0-indexed inner space.
-   Rule of thumb for a 3-box row with equal widths and 2-space gaps:
-     gap=2, box_w=(W - 2*gap) // 3
-     B1: (0, box_w-1), B2: (box_w+gap, 2*box_w+gap-1), B3: (2*(box_w+gap), W-1)
+2. Use layout() to calculate (L, R) column spans for each box.
 3. Build each line by merging position dicts from the helpers below.
 4. Wrap the list in a ``` code block in the markdown file.
+
+POSITION CALCULATION
+─────────────────────
+Key formula:  L  R  inner_width  total_width
+              L  R  R - L - 1    R - L + 1
+
+Given margin m, gap g between boxes, and a list of desired inner widths:
+  L[0]   = m
+  R[0]   = L[0] + inner[0] + 1
+  L[n+1] = R[n] + g + 1          ← gap chars, then next left wall
+  R[n+1] = L[n+1] + inner[n+1] + 1
+
+Worked example (VMware, W=85, m=3, g=2):
+  VC  inner=13 → L=3,  R=17   (17-3-1=13 ✓)
+  VX  inner=13 → L=20, R=34   (34-20-1=13 ✓, 20=17+2+1 ✓)
+  AR  inner=42 → L=37, R=80   (80-37-1=42 ✓, 37=34+2+1 ✓)
+  Divider inside AR at col 51: sec1_w=51-37-1=13, sec2 starts at 52
+  Divider at col 64:           sec2_w=64-51-1=12, sec3_w=80-64-1=15
+
+Use layout() below to print positions for a new diagram without manual arithmetic.
 
 POSITION DICT CONVENTIONS
 ──────────────────────────
@@ -25,14 +42,17 @@ right next to the outer wall.
 
 HELPER REFERENCE
 ────────────────
+  layout(inner_widths, margin, gap)
+                      — print (L, R) positions for a row of boxes; use this first
   row(d)              — render one line; outer │ walls added automatically
   bTop(l, r, tees)    — ┌────┐ with optional ┬ at tees
   bMid(l, r, text)    — │ text │ (text centred, truncated to fit)
   bBot(l, r, tees)    — └────┘ with optional ┴ at tees
   sections(l,r,divs,texts)
                       — │ sec1 │ sec2 │ sec3 │ across one box with dividers
-  connector(cols)     — a row of │ stems at given column positions
-  title_border(W, title, corner='┌')
+  connector(cols)     — a row of │ stems (use with ┬ tees on the next bTop)
+  arrow(cols)         — a row of ▼ arrows (use with plain bTop, no tees)
+  title_border(w, title, top)
                       — ┌──── Title ────┐ outer border line
   merge(*dicts)       — combine position dicts (last write wins)
 """
@@ -109,6 +129,10 @@ def connector(cols):
     """A row of vertical │ stems, e.g. between a box bottom and the next box top."""
     return {c: '│' for c in cols}
 
+def arrow(cols):
+    """A row of ▼ arrows pointing down, alternative to connector() + ┬ tees."""
+    return {c: '▼' for c in cols}
+
 def title_border(w, title, top=True):
     """
     Outer border line with an embedded title, e.g.:
@@ -134,6 +158,32 @@ def merge(*dicts):
     for d in dicts:
         out.update(d)
     return out
+
+def layout(inner_widths, margin=3, gap=2):
+    """
+    Calculate and print (L, R) positions for a row of boxes.
+
+    inner_widths — list of desired inner widths per box (chars between the │ walls)
+    margin       — left offset before the first box (default 3)
+    gap          — spaces between adjacent box right wall and next box left wall (default 2)
+
+    Returns list of (L, R) tuples.
+
+    Example:
+      layout([13, 13, 42], margin=3, gap=2)
+      →  Box 1: L=3,  R=17   inner=13
+         Box 2: L=20, R=34   inner=13
+         Box 3: L=37, R=80   inner=42
+    """
+    positions = []
+    l = margin
+    for iw in inner_widths:
+        r = l + iw + 1
+        positions.append((l, r))
+        l = r + gap + 1
+    for i, (l, r) in enumerate(positions):
+        print(f'  Box {i + 1}: L={l:3d}, R={r:3d}   inner={r - l - 1}   total={r - l + 1}')
+    return positions
 
 
 # ── Worked example: VMware Platform Landscape ────────────────────────────────
