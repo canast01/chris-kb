@@ -107,6 +107,8 @@ def bTop(l, r, tees=()):
 def bMid(l, r, text=''):
     """One content row of a box. text is centred and truncated to inner width."""
     iw = r - l - 1
+    if len(text) > iw:
+        print(f'  WARN bMid: truncated ({len(text)} → {iw}): {text!r}', file=sys.stderr)
     txt = text.center(iw)[:iw]
     d = {l: '│', r: '│'}
     for i, c in enumerate(txt):
@@ -138,6 +140,8 @@ def sections(l, r, divs, texts):
         sl = boundaries[i]
         sr = boundaries[i + 1]
         iw = sr - sl - 1
+        if len(text) > iw:
+            print(f'  WARN sections[{i}]: truncated ({len(text)} → {iw}): {text!r}', file=sys.stderr)
         txt = text.center(iw)[:iw]
         for j, c in enumerate(txt):
             d[sl + 1 + j] = c
@@ -196,6 +200,9 @@ def make_helpers(w):
         r = [' '] * w
         for i, c in enumerate(text):
             pos = indent + i
+            if pos >= w:
+                print(f'  WARN txt_row: truncated at col {w} (indent={indent}): {text!r}', file=sys.stderr)
+                break
             if 0 <= pos < w:
                 r[pos] = c
         return '│' + ''.join(r) + '│'
