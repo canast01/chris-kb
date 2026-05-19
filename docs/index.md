@@ -14,7 +14,7 @@
 
 ## Platforms
 
-<div class="kb-grid kb-grid-6">
+<div class="kb-grid">
 
 <a class="kb-card" href="virtualization/">
   <strong>Virtualization</strong>
