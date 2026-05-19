@@ -739,7 +739,8 @@ def dell_storage_portfolio():
     lines.append(R(merge(bBot(SC_L, SC_R), bBot(DD_L, DD_R), bBot(EC_L, EC_R))))
 
     lines.append(txt_row())
-    lines.append(txt_row('  VPLEX: storage federation and active-active data mobility · PowerPath: host multipathing and failover'))
+    lines.append(txt_row('  VPLEX: storage federation and active-active data mobility across arrays and sites'))
+    lines.append(txt_row('  PowerPath: host multipathing software; automatic path failover and load balancing'))
     lines.append(txt_row())
     lines.append(R(arrow([PM_MID, PS_MID, UT_MID])))
     lines.append(txt_row())
@@ -1136,6 +1137,187 @@ def enterprise_storage_landscape():
     return lines
 
 
+def cloud_infrastructure_overview():
+    """Cloud Infrastructure Overview — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+
+    MGMT_L, MGMT_R = 3, 99   # full-width, inner=95
+
+    # Two-cloud layout
+    AWS_L, AWS_R = 3, 50    # inner=46, MID=26
+    AZ_L,  AZ_R  = 53, 99  # inner=45, MID=76
+
+    AWS_MID = (AWS_L + AWS_R) // 2   # 26
+    AZ_MID  = (AZ_L  + AZ_R)  // 2   # 76
+
+    CONN_L, CONN_R = 3, 99
+
+    lines = []
+
+    # ── Title ────────────────────────────────────────────────────────────────
+    lines.append(title_border(W2, 'Cloud Infrastructure'))
+    lines.append(txt_row())
+
+    # ── Management tier ──────────────────────────────────────────────────────
+    lines.append(R(bTop(MGMT_L, MGMT_R)))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'Cloud Management')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'AWS: Console · CloudWatch · CloudTrail · Organizations · Control Tower · Cost Explorer')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'Azure: Portal · Monitor · Log Analytics · Entra ID · Management Groups · Cost Management')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'AWS Config + Service Control Policies enforce governance across accounts')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'Azure Policy + Blueprints enforce governance across subscriptions')))
+    lines.append(R(bMid(MGMT_L, MGMT_R, 'Both platforms expose REST APIs and CLIs (aws-cli / az-cli) for automation')))
+    lines.append(R(bBot(MGMT_L, MGMT_R)))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Governance, monitoring, and automation span all resources across both platforms'))
+    lines.append(txt_row())
+    lines.append(R(arrow([AWS_MID, AZ_MID])))
+    lines.append(txt_row())
+
+    # ── Identity & Access tier ────────────────────────────────────────────────
+    lines.append(R(merge(bTop(AWS_L, AWS_R), bTop(AZ_L, AZ_R))))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'AWS IAM'),
+        bMid(AZ_L,  AZ_R,  'Azure Entra ID (AAD)'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'Users · groups · roles · policies'),
+        bMid(AZ_L,  AZ_R,  'Users · groups · service principals'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'Policy: allow/deny on AWS resources'),
+        bMid(AZ_L,  AZ_R,  'RBAC: role assignments on resources'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'STS: temporary credentials + AssumeRole'),
+        bMid(AZ_L,  AZ_R,  'PIM: just-in-time privileged access'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'Federation: SAML 2.0 · OIDC · SSO'),
+        bMid(AZ_L,  AZ_R,  'Conditional Access: MFA + location'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'Managed policies · SCPs · permissions'),
+        bMid(AZ_L,  AZ_R,  'Service principals · managed identities'),
+    )))
+    lines.append(R(merge(bBot(AWS_L, AWS_R), bBot(AZ_L, AZ_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Identity controls who can access what — least-privilege IAM is the security foundation'))
+    lines.append(txt_row())
+    lines.append(R(arrow([AWS_MID, AZ_MID])))
+    lines.append(txt_row())
+
+    # ── Compute tier ──────────────────────────────────────────────────────────
+    lines.append(R(merge(bTop(AWS_L, AWS_R), bTop(AZ_L, AZ_R))))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'AWS Compute'),
+        bMid(AZ_L,  AZ_R,  'Azure Compute'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'EC2: VMs — on-demand/reserved/spot'),
+        bMid(AZ_L,  AZ_R,  'VMs: sizes — pay-as-you-go/reserved'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'Auto Scaling + ALB/NLB load balancers'),
+        bMid(AZ_L,  AZ_R,  'VMSS + Azure Load Balancer / App GW'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'ECS/EKS: container and Kubernetes'),
+        bMid(AZ_L,  AZ_R,  'AKS: managed Kubernetes clusters'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'Lambda: serverless function execution'),
+        bMid(AZ_L,  AZ_R,  'Azure Functions: serverless execution'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'AMI: VM image; instance store/EBS root'),
+        bMid(AZ_L,  AZ_R,  'Compute Gallery: VM image versioning'),
+    )))
+    lines.append(R(merge(bBot(AWS_L, AWS_R), bBot(AZ_L, AZ_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Compute resources run inside VPCs (AWS) or VNets (Azure) for network isolation'))
+    lines.append(txt_row())
+    lines.append(R(arrow([AWS_MID, AZ_MID])))
+    lines.append(txt_row())
+
+    # ── Storage & Networking tier ─────────────────────────────────────────────
+    lines.append(R(merge(bTop(AWS_L, AWS_R), bTop(AZ_L, AZ_R))))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'AWS Storage & Networking'),
+        bMid(AZ_L,  AZ_R,  'Azure Storage & Networking'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'S3: object storage, lifecycle, versioning'),
+        bMid(AZ_L,  AZ_R,  'Blob Storage: hot/cool/archive tiers'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'EBS: block volumes attached to EC2'),
+        bMid(AZ_L,  AZ_R,  'Managed Disks: block volumes for VMs'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'EFS/FSx: managed NFS and SMB services'),
+        bMid(AZ_L,  AZ_R,  'Azure Files + NetApp Files (NFS/SMB)'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'VPC: subnets · SGs · NACLs · routes'),
+        bMid(AZ_L,  AZ_R,  'VNet: subnets · NSGs · UDRs · peering'),
+    )))
+    lines.append(R(merge(
+        bMid(AWS_L, AWS_R, 'Route53 · CloudFront · WAF · Shield'),
+        bMid(AZ_L,  AZ_R,  'Azure DNS · Front Door · WAF · DDoS'),
+    )))
+    lines.append(R(merge(bBot(AWS_L, AWS_R), bBot(AZ_L, AZ_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Hybrid connectivity links on-premises data centres to cloud resources'))
+    lines.append(txt_row())
+    lines.append(R(arrow([AWS_MID, AZ_MID])))
+    lines.append(txt_row())
+
+    # ── Connectivity tier ─────────────────────────────────────────────────────
+    lines.append(R(bTop(CONN_L, CONN_R)))
+    lines.append(R(bMid(CONN_L, CONN_R, 'Hybrid Connectivity')))
+    lines.append(R(bMid(CONN_L, CONN_R, 'AWS Direct Connect · Azure ExpressRoute: dedicated private circuits to cloud (1/10 Gbps)')))
+    lines.append(R(bMid(CONN_L, CONN_R, 'AWS Site-to-Site VPN · Azure VPN Gateway: IPsec tunnels over the public internet')))
+    lines.append(R(bMid(CONN_L, CONN_R, 'VPC Peering · VNet Peering: private routing between cloud network segments')))
+    lines.append(R(bMid(CONN_L, CONN_R, 'AWS Transit Gateway · Azure Virtual WAN: hub-and-spoke WAN topology at scale')))
+    lines.append(R(bBot(CONN_L, CONN_R)))
+
+    # ── Physical Infrastructure ──────────────────────────────────────────────
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Cloud regions and availability zones; data centres owned and operated by AWS and Microsoft'))
+    lines.append(txt_row())
+
+    # ── Glossary ─────────────────────────────────────────────────────────────
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Region       = geographic area containing multiple isolated data centre clusters (AZs)'))
+    lines.append(txt_row('AZ           = Availability Zone; isolated data centre within a region for fault tolerance'))
+    lines.append(txt_row('IAM          = Identity and Access Management; controls who can call which AWS API actions'))
+    lines.append(txt_row('Entra ID     = Azure Active Directory; cloud identity for users and service principals'))
+    lines.append(txt_row('RBAC         = Role-Based Access Control; Azure permission model built on role assignments'))
+    lines.append(txt_row('STS          = AWS Security Token Service; issues temporary credentials for AssumeRole calls'))
+    lines.append(txt_row('EC2          = Elastic Compute Cloud; AWS virtual machines with many instance type families'))
+    lines.append(txt_row('VMSS         = Azure Virtual Machine Scale Set; auto-scaling pool of identical VMs'))
+    lines.append(txt_row('VPC          = Virtual Private Cloud; isolated AWS network with subnets and route tables'))
+    lines.append(txt_row('VNet         = Azure Virtual Network; isolated Azure network with subnets and NSG rules'))
+    lines.append(txt_row('S3           = Simple Storage Service; AWS object store with 11 nines durability guarantee'))
+    lines.append(txt_row('NSG          = Network Security Group; Azure stateful firewall applied to subnets or NICs'))
+    lines.append(txt_row('SG           = Security Group; AWS stateful firewall applied to EC2 instances and ENIs'))
+    lines.append(txt_row('EKS          = Elastic Kubernetes Service; AWS managed Kubernetes control plane'))
+    lines.append(txt_row('AKS          = Azure Kubernetes Service; Azure managed Kubernetes control plane'))
+    lines.append(txt_row('Direct Connect= Dedicated private circuit from on-prem to AWS — bypasses public internet'))
+    lines.append(txt_row('ExpressRoute = Dedicated private circuit from on-prem to Azure — bypasses public internet'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
 def netapp_storage_stack():
     """NetApp Storage Stack — W=103."""
     W2 = 103
@@ -1338,6 +1520,11 @@ DIAGRAMS = {
         'fn': netapp_storage_stack,
         'file': 'docs/storage/netapp/index.md',
         'description': 'NetApp Storage Stack — ONTAP, StorageGRID, Keystone, SnapMirror, SnapCenter, FabricPool',
+    },
+    'cloud': {
+        'fn': cloud_infrastructure_overview,
+        'file': 'docs/cloud/index.md',
+        'description': 'Cloud Infrastructure — AWS and Azure: IAM, compute, storage, networking, connectivity',
     },
 }
 
