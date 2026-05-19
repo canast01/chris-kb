@@ -463,23 +463,30 @@ def vmware_platform_landscape():
 
 
 def virtualization_platform_stack():
-    """VMware Platform Stack — W=75. VCF → vCenter/NSX-T/VxRail → ESXi → vSAN."""
-    W2 = 75
+    """VMware Platform Stack — W=103. Full learning diagram: VCF → vCenter/NSX-T/VxRail → ESXi → vSAN.
+
+    Layout: inner=29 boxes with margin=3, gap=2 forces VCF_MID = NSX_MID = ESXI_MID = 51
+    so the connector, branch ┼, and arrows all share the same column perfectly.
+    """
+    W2 = 103
     R, txt_row = make_helpers(W2)
 
     # ── Layout ───────────────────────────────────────────────────────────────
-    VCF_L, VCF_R   =  3, 72   # inner=68, MID=37
-    VC_L,  VC_R    =  3, 24   # inner=20, MID=13
-    NSX_L, NSX_R   = 27, 48   # inner=20, MID=37
-    VX_L,  VX_R    = 51, 72   # inner=20, MID=61
-    ESXI_L, ESXI_R =  3, 72   # inner=68, MID=37
-    VSAN_L, VSAN_R =  3, 72   # inner=68, MID=37
+    # With inner=29, margin=3, gap=2: layout([29, 29, 29]) produces MIDs at 18, 51, 84.
+    # VCF spans L=3 to R=99 (= VX_R), so VCF_MID = (3+99)//2 = 51 = NSX_MID. ✓
+    # Branch: ┌ at 18, ┼ at 51, ┐ at 84 → left span = right span = 33. Symmetric.
+    VCF_L, VCF_R   =  3, 99   # inner=95, MID=51
+    VC_L,  VC_R    =  3, 33   # inner=29, MID=18
+    NSX_L, NSX_R   = 36, 66   # inner=29, MID=51  (= VCF_MID)
+    VX_L,  VX_R    = 69, 99   # inner=29, MID=84  (VX_R = VCF_R — shared wall)
+    ESXI_L, ESXI_R =  3, 99   # inner=95, MID=51
+    VSAN_L, VSAN_R =  3, 99   # inner=95, MID=51
 
-    VCF_MID  = (VCF_L  + VCF_R)  // 2   # 37
-    VC_MID   = (VC_L   + VC_R)   // 2   # 13
-    NSX_MID  = (NSX_L  + NSX_R)  // 2   # 37  (= VCF_MID)
-    VX_MID   = (VX_L   + VX_R)   // 2   # 61
-    ESXI_MID = (ESXI_L + ESXI_R) // 2   # 37
+    VCF_MID  = (VCF_L  + VCF_R)  // 2   # 51
+    VC_MID   = (VC_L   + VC_R)   // 2   # 18
+    NSX_MID  = (NSX_L  + NSX_R)  // 2   # 51  (= VCF_MID)
+    VX_MID   = (VX_L   + VX_R)   // 2   # 84
+    ESXI_MID = (ESXI_L + ESXI_R) // 2   # 51
 
     lines = []
 
@@ -487,13 +494,15 @@ def virtualization_platform_stack():
     lines.append(title_border(W2, 'VMware Platform Stack'))
     lines.append(txt_row())
 
-    # ── VCF box ──────────────────────────────────────────────────────────────
+    # ── VCF box ───────────────────────────────────────────────────────────────
     lines.append(R(bTop(VCF_L, VCF_R)))
-    lines.append(R(bMid(VCF_L, VCF_R, 'VCF (VMware Cloud Foundation)')))
-    lines.append(R(bMid(VCF_L, VCF_R, 'Lifecycle Management · SDDC Manager')))
+    lines.append(R(bMid(VCF_L, VCF_R, 'VMware Cloud Foundation (VCF / SDDC)')))
+    lines.append(R(bMid(VCF_L, VCF_R, 'Packages and delivers the full SDDC: vSphere + vSAN + NSX + Lifecycle')))
+    lines.append(R(bMid(VCF_L, VCF_R, 'SDDC Manager: bringup · upgrades · compliance · certificate rotation')))
+    lines.append(R(bMid(VCF_L, VCF_R, 'Tanzu: Kubernetes workload domains hosted within VCF')))
     lines.append(R(bBot(VCF_L, VCF_R, tees=[VCF_MID])))
 
-    # ── VCF → branching connector ─────────────────────────────────────────────
+    # ── VCF → three-box branch ───────────────────────────────────────────────
     lines.append(R(connector([VCF_MID])))
     lines.append(txt_row('orchestrates', indent=VCF_MID - 6))
     lines.append(txt_row())
@@ -510,54 +519,87 @@ def virtualization_platform_stack():
         bMid(VX_L,  VX_R,  'VxRail'),
     )))
     lines.append(R(merge(
-        bMid(VC_L,  VC_R,  'Inventory · HA · DRS'),
-        bMid(NSX_L, NSX_R, 'Virtual Networking'),
-        bMid(VX_L,  VX_R,  'HCI Node · Manager'),
+        bMid(VC_L,  VC_R,  'Management & Control Plane'),
+        bMid(NSX_L, NSX_R, 'Software-Defined Networking'),
+        bMid(VX_L,  VX_R,  'Hyper-Converged Appliance'),
     )))
     lines.append(R(merge(
-        bMid(VC_L,  VC_R,  'Roles · vLCM · SSO'),
-        bMid(NSX_L, NSX_R, 'Segments · Firewall'),
-        bMid(VX_L,  VX_R,  'Dell + VMware HCI'),
+        bMid(VC_L,  VC_R,  'Inventory · Roles · Alarms'),
+        bMid(NSX_L, NSX_R, 'Segments · T0/T1 Gateways'),
+        bMid(VX_L,  VX_R,  'Dell hardware + VMware stack'),
+    )))
+    lines.append(R(merge(
+        bMid(VC_L,  VC_R,  'HA · DRS · vMotion · vLCM'),
+        bMid(NSX_L, NSX_R, 'Distributed Firewall · LB'),
+        bMid(VX_L,  VX_R,  'VxRail Manager · Lifecycle'),
+    )))
+    lines.append(R(merge(
+        bMid(VC_L,  VC_R,  'SSO · LDAP · Permissions'),
+        bMid(NSX_L, NSX_R, 'Micro-segmentation · VPN'),
+        bMid(VX_L,  VX_R,  'Automated node expansion'),
     )))
     lines.append(R(merge(
         bBot(VC_L,  VC_R,  tees=[VC_MID]),
         bBot(NSX_L, NSX_R, tees=[NSX_MID]),
-        bBot(VX_L,  VX_R),
+        bBot(VX_L,  VX_R),                         # VxRail stops here — no stem
     )))
 
     # ── vCenter + NSX-T → ESXi ────────────────────────────────────────────────
     lines.append(txt_row())
-    lines.append(txt_row('  vCenter + NSX-T control the ESXi hypervisor layer'))
+    lines.append(txt_row('  vCenter manages ESXi hosts and cluster resources; NSX-T runs inside the hypervisor'))
     lines.append(txt_row())
     lines.append(R(arrow([VC_MID, NSX_MID])))
     lines.append(txt_row())
 
     # ── ESXi box ──────────────────────────────────────────────────────────────
     lines.append(R(bTop(ESXI_L, ESXI_R)))
-    lines.append(R(bMid(ESXI_L, ESXI_R, 'ESXi Hosts')))
-    lines.append(R(bMid(ESXI_L, ESXI_R, 'Compute · Hypervisor · HA · DRS · vMotion · Fault Tolerance')))
-    lines.append(R(bMid(ESXI_L, ESXI_R, 'vmk0(mgmt) · vmk1(vMotion) · vmk2(vSAN) · vmk3')))
+    lines.append(R(bMid(ESXI_L, ESXI_R, 'ESXi Hosts (vSphere Cluster)')))
+    lines.append(R(bMid(ESXI_L, ESXI_R, 'Type-1 hypervisor: installed directly on bare metal — no host OS required')))
+    lines.append(R(bMid(ESXI_L, ESXI_R, 'Cluster features: HA · DRS · vMotion · Fault Tolerance · EVC')))
+    lines.append(R(bMid(ESXI_L, ESXI_R, 'VMkernel adapters: vmk0(mgmt) · vmk1(vMotion) · vmk2(vSAN) · vmk3(other)')))
+    lines.append(R(bMid(ESXI_L, ESXI_R, 'Each host runs 50-200+ VMs; types: web · DB · app · AD · infra')))
     lines.append(R(bBot(ESXI_L, ESXI_R, tees=[ESXI_MID])))
 
     # ── ESXi → vSAN ───────────────────────────────────────────────────────────
     lines.append(txt_row())
-    lines.append(txt_row('  ESXi local disks pooled into vSAN distributed storage'))
+    lines.append(txt_row('  ESXi local disks contribute capacity to vSAN — no external storage array required'))
     lines.append(txt_row())
     lines.append(R(arrow([ESXI_MID])))
     lines.append(txt_row())
 
     # ── vSAN box ──────────────────────────────────────────────────────────────
     lines.append(R(bTop(VSAN_L, VSAN_R)))
-    lines.append(R(bMid(VSAN_L, VSAN_R, 'vSAN')))
-    lines.append(R(bMid(VSAN_L, VSAN_R, 'Distributed Storage · Policy-Driven')))
-    lines.append(R(bMid(VSAN_L, VSAN_R, 'RAID-1/5/6 · Dedup · Compression · Encryption')))
+    lines.append(R(bMid(VSAN_L, VSAN_R, 'vSAN (Software-Defined Storage)')))
+    lines.append(R(bMid(VSAN_L, VSAN_R, 'Pools local NVMe/SSD/HDD disks from all ESXi hosts into a shared datastore')))
+    lines.append(R(bMid(VSAN_L, VSAN_R, 'Storage policy assigned per VM: RAID-1 (mirror) · RAID-5/6 (erasure coding)')))
+    lines.append(R(bMid(VSAN_L, VSAN_R, 'Features: Deduplication · Compression · Encryption · Stretched Cluster')))
     lines.append(R(bBot(VSAN_L, VSAN_R)))
     lines.append(txt_row())
 
-    # ── Planes legend ─────────────────────────────────────────────────────────
-    lines.append(txt_row('Management Plane:  vCenter → NSX → Aria Ops → Aria Logs'))
-    lines.append(txt_row('Data Plane:        ESXi hypervisor → vSAN storage fabric'))
-    lines.append(txt_row('Control Plane:     SDDC Manager (VCF) lifecycle control'))
+    # ── Physical infrastructure ───────────────────────────────────────────────
+    lines.append(txt_row('Physical Infrastructure (the hardware all layers above run on):'))
+    lines.append(txt_row('CPU cores · RAM (GBs to TBs per host) · NIC (10/25/100 GbE) · NVMe/SSD/HDD · Power & Cooling'))
+    lines.append(txt_row())
+
+    # ── Key terms ─────────────────────────────────────────────────────────────
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VCF      = VMware Cloud Foundation; packages vSphere + vSAN + NSX with lifecycle mgmt'))
+    lines.append(txt_row('SDDC Mgr = VCF lifecycle orchestrator; automates bringup, upgrades, and compliance'))
+    lines.append(txt_row('Tanzu    = VMware Kubernetes platform; runs container workloads inside VCF domains'))
+    lines.append(txt_row('vCenter  = central management UI/API; manages hosts, VMs, roles, alarms, and lifecycle'))
+    lines.append(txt_row('NSX-T    = software-defined networking; segments, gateways, DFW, LB, VPN, and routing'))
+    lines.append(txt_row('VxRail   = Dell HCI appliance; compute + storage + networking in one rack unit'))
+    lines.append(txt_row('ESXi     = Type-1 hypervisor; installed directly on bare metal — no host OS needed'))
+    lines.append(txt_row('vSAN     = software-defined storage; pools local ESXi disks — no external array needed'))
+    lines.append(txt_row('HA       = High Availability; vSphere auto-restarts VMs on another host if one fails'))
+    lines.append(txt_row('DRS      = Distributed Resource Scheduler; auto-balances VM workload across ESXi hosts'))
+    lines.append(txt_row('vMotion  = live migration of a running VM between ESXi hosts with zero downtime'))
+    lines.append(txt_row('SSO      = Single Sign-On; central identity used by all vCenter/vSphere authentication'))
+    lines.append(txt_row('vLCM     = vSphere Lifecycle Manager; patches ESXi hosts and manages firmware baselines'))
+    lines.append(txt_row('DFW      = Distributed Firewall (NSX-T); stateful firewall enforced on every vNIC'))
+    lines.append(txt_row('HCI      = Hyper-Converged Infrastructure; compute + storage + networking in one box'))
+    lines.append(txt_row('SDDC     = Software-Defined Data Centre; compute, storage, and network all virtualised'))
     lines.append(txt_row())
 
     lines.append('└' + '─' * W2 + '┘')
