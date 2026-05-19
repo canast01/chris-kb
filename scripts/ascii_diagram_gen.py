@@ -325,9 +325,249 @@ def vmware_platform_landscape():
     return lines
 
 
+def vmware_platform_landscape_v2():
+    """
+    Expanded VMware diagram (W=103):
+    - VC/VX inner=20 (wider boxes, better spacing)
+    - Aria three equal 15-char sections (cols 51–99, divs at 67/83)
+    - vSphere: fact box (cols 70–97) alongside ESXi hosts instead of inline clips
+    - Components widened: (3,24)(27,48)(51,72)(75,99); Tanzu 3–48, VCF 51–99
+    - Physical infra footer + glossary
+    """
+    W2 = 103
+
+    def R(positions):
+        r = [' '] * W2
+        for col, ch in positions.items():
+            if 0 <= col < W2:
+                r[col] = ch
+        return '│' + ''.join(r) + '│'
+
+    def txt_row(text='', indent=2):
+        r = [' '] * W2
+        for i, c in enumerate(text):
+            pos = indent + i
+            if 0 <= pos < W2:
+                r[pos] = c
+        return '│' + ''.join(r) + '│'
+
+    def T(l, r, tees=()):
+        d = {}
+        for i in range(l, r + 1): d[i] = '─'
+        d[l] = '┌'; d[r] = '┐'
+        for t in tees: d[t] = '┬'
+        return d
+
+    def M(l, r, text=''):
+        iw = r - l - 1
+        txt = text.center(iw)[:iw]
+        d = {l: '│', r: '│'}
+        for i, c in enumerate(txt): d[l + 1 + i] = c
+        return d
+
+    def B(l, r, tees=()):
+        d = {}
+        for i in range(l, r + 1): d[i] = '─'
+        d[l] = '└'; d[r] = '┘'
+        for t in tees: d[t] = '┴'
+        return d
+
+    def S(l, r, divs, texts):
+        bounds = [l] + list(divs) + [r]
+        d = {}
+        for p in bounds: d[p] = '│'
+        for i, text in enumerate(texts):
+            sl = bounds[i]; sr = bounds[i + 1]
+            iw = sr - sl - 1
+            txt = text.center(iw)[:iw]
+            for j, c in enumerate(txt): d[sl + 1 + j] = c
+        return d
+
+    def G(*dicts):
+        out = {}
+        for d in dicts: out.update(d)
+        return out
+
+    # ── Layout ───────────────────────────────────────────────────────────────────
+    VC_L, VC_R   =  3, 24   # inner=20  (expanded from 13)
+    VX_L, VX_R   = 27, 48   # inner=20  (expanded from 13)
+    AR_L, AR_R   = 51, 99   # inner=47; 3 equal sections of 15
+    AR_D1, AR_D2 = 67, 83   # 51+16=67, 67+16=83, 83+16=99
+
+    VS_L, VS_R   =  3, 99
+
+    ESXI     = [(6, 19), (22, 35), (38, 51), (54, 67)]
+    VM_BOXES = [(eL + 3, eL + 9) for (eL, eR) in ESXI]
+
+    FB_L, FB_R   = 70, 97   # fact box inside vSphere, inner=26; gap of 2 from ESXi[3]
+
+    COMP = [(3, 24), (27, 48), (51, 72), (75, 99)]  # align with VC/VX/AR edges
+    TZ_L, TZ_R  =  3, 48   # inner=44; spans VC+gap+VX
+    VF_L, VF_R  = 51, 99   # inner=47; same as AR, fills to edge
+
+    VC_MID = (VC_L + VC_R) // 2   # 13
+    VX_MID = (VX_L + VX_R) // 2   # 37
+    COMP_MIDS = [(cL + cR) // 2 for (cL, cR) in COMP]
+
+    lines = []
+
+    # Title
+    lines.append(title_border(W2, 'VMware Platform Landscape'))
+    lines.append(txt_row())
+
+    # Management tier
+    lines.append(R(G(T(VC_L, VC_R), T(VX_L, VX_R), T(AR_L, AR_R))))
+    lines.append(R(G(
+        M(VC_L, VC_R, 'vCenter'),
+        M(VX_L, VX_R, 'VxRail'),
+        M(AR_L, AR_R, 'Aria Suite'),
+    )))
+    lines.append(R(G(
+        M(VC_L, VC_R, '(Manage)'),
+        M(VX_L, VX_R, '(Appliance)'),
+        S(AR_L, AR_R, [AR_D1, AR_D2], ['Ops/Logs', 'Automation', 'Suite Lifecycle']),
+    )))
+    lines.append(R(G(
+        M(VC_L, VC_R, 'Web UI & API'),
+        M(VX_L, VX_R, 'Turnkey HCI'),
+        S(AR_L, AR_R, [AR_D1, AR_D2], ['Monitor/Alert', 'IaC / Deploy', 'Patch/Upgrade']),
+    )))
+    lines.append(R(G(
+        M(VC_L, VC_R, 'Hosts/VMs/Net'),
+        M(VX_L, VX_R, 'Dell + VMware'),
+        S(AR_L, AR_R, [AR_D1, AR_D2], ['Operations', 'Blueprints', 'Certificates']),
+    )))
+    lines.append(R(G(
+        B(VC_L, VC_R),
+        B(VX_L, VX_R),
+        B(AR_L, AR_R, tees=[AR_D1, AR_D2]),
+    )))
+
+    # Arrow + control-plane annotation
+    lines.append(txt_row())
+    d = {VC_MID: '▼', VX_MID: '▼'}
+    note = '← control plane: manages all hosts, VMs, networks & policies'
+    for i, c in enumerate(note):
+        pos = VX_MID + 2 + i
+        if pos < W2: d[pos] = c
+    lines.append(R(d))
+    lines.append(txt_row())
+
+    # vSphere cluster
+    lines.append(R(T(VS_L, VS_R)))
+    lines.append(R(M(VS_L, VS_R, 'vSphere Cluster (ESXi Hosts)')))
+    lines.append(R(M(VS_L, VS_R, 'Type-1 hypervisor: runs directly on hardware — no host OS required')))
+    lines.append(R({VS_L: '│', VS_R: '│'}))
+
+    # ESXi tops + fact box top
+    d = {VS_L: '│', VS_R: '│'}
+    for (eL, eR) in ESXI: d.update(T(eL, eR))
+    d.update(T(FB_L, FB_R))
+    lines.append(R(d))
+
+    # ESXi labels + fact row 1
+    d = {VS_L: '│', VS_R: '│'}
+    for (eL, eR), lbl in zip(ESXI, ['ESXi-01', 'ESXi-02', 'ESXi-03', 'ESXi-04']):
+        d.update(M(eL, eR, lbl))
+    d.update(M(FB_L, FB_R, 'Each host: 50-200+ VMs'))
+    lines.append(R(d))
+
+    # (Hypervisor) + fact row 2
+    d = {VS_L: '│', VS_R: '│'}
+    for (eL, eR) in ESXI:
+        d[eL] = '│'; d[eR] = '│'
+        d.update(M(eL, eR, '(Hypervisor)'))
+    d.update(M(FB_L, FB_R, 'Types: web, DB, app, AD'))
+    lines.append(R(d))
+
+    # VM tops + fact row 3
+    d = {VS_L: '│', VS_R: '│'}
+    for (eL, eR), (vmL, vmR) in zip(ESXI, VM_BOXES):
+        d[eL] = '│'; d[eR] = '│'
+        d.update(T(vmL, vmR))
+    d.update(M(FB_L, FB_R, 'vMotion: move VMs live'))
+    lines.append(R(d))
+
+    # VM labels + fact row 4
+    d = {VS_L: '│', VS_R: '│'}
+    for (eL, eR), (vmL, vmR) in zip(ESXI, VM_BOXES):
+        d[eL] = '│'; d[eR] = '│'
+        d.update(M(vmL, vmR, 'VMs'))
+    d.update(M(FB_L, FB_R, 'HA: auto-restart on fail'))
+    lines.append(R(d))
+
+    # ESXi bottoms (VM → ┴ tees) + fact box bottom
+    d = {VS_L: '│', VS_R: '│'}
+    for (eL, eR), (vmL, vmR) in zip(ESXI, VM_BOXES):
+        dd = B(eL, eR)
+        dd[vmL] = '┴'; dd[vmR] = '┴'
+        d.update(dd)
+    d.update(B(FB_L, FB_R))
+    lines.append(R(d))
+
+    lines.append(R({VS_L: '│', VS_R: '│'}))
+    lines.append(R(B(VS_L, VS_R)))
+    lines.append(txt_row())
+
+    # Component arrows
+    d = {}
+    for m in COMP_MIDS: d[m] = '▼'
+    lines.append(R(d))
+    lines.append(txt_row())
+
+    # Component boxes
+    lines.append(R(G(*[T(cL, cR) for cL, cR in COMP])))
+    lines.append(R(G(*[M(cL, cR, lbl) for (cL, cR), lbl in zip(COMP, [
+        'vSAN', 'NSX', 'Horizon', 'Site Recovery',
+    ])])))
+    lines.append(R(G(*[M(cL, cR, lbl) for (cL, cR), lbl in zip(COMP, [
+        '(Storage)', '(Networking)', '(Desktops)', '(DR Platform)',
+    ])])))
+    lines.append(R(G(*[M(cL, cR, lbl) for (cL, cR), lbl in zip(COMP, [
+        'Shared Disks', 'Virt. Network', 'VDI Platform', 'Failover + Replication',
+    ])])))
+    lines.append(R(G(*[B(cL, cR) for cL, cR in COMP])))
+    lines.append(txt_row())
+
+    # Tanzu + VCF
+    lines.append(R(G(T(TZ_L, TZ_R), T(VF_L, VF_R))))
+    lines.append(R(G(
+        M(TZ_L, TZ_R, 'Tanzu (Kubernetes Platform)'),
+        M(VF_L, VF_R, 'VMware Cloud Foundation (VCF/SDDC)'),
+    )))
+    lines.append(R(G(
+        M(TZ_L, TZ_R, 'Container Orchestration'),
+        M(VF_L, VF_R, 'vSphere + vSAN + NSX + Lifecycle Mgmt'),
+    )))
+    lines.append(R(G(B(TZ_L, TZ_R), B(VF_L, VF_R))))
+    lines.append(txt_row())
+
+    # Physical infrastructure footer
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('CPU cores · RAM (GBs to TBs per host) · NIC (10/25/100 GbE) · NVMe/SSD/HDD · Power & Cooling'))
+    lines.append(txt_row())
+
+    # Glossary
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('VM   = a software-emulated computer; runs a full OS + apps inside a physical host'))
+    lines.append(txt_row('ESXi = Type-1 hypervisor; installed directly on bare metal — no host OS needed'))
+    lines.append(txt_row('vSAN = pools local server disks into shared storage — no separate SAN appliance needed'))
+    lines.append(txt_row('NSX  = software-defined networking; creates virtual switches, routers & firewalls'))
+    lines.append(txt_row('VDI  = your desktop OS runs in the data centre; you stream it to any device remotely'))
+    lines.append(txt_row('DR   = Disaster Recovery; automated failover keeps the business running after a failure'))
+    lines.append(txt_row('HCI  = Hyper-Converged Infrastructure; compute + storage + networking in one appliance'))
+    lines.append(txt_row())
+
+    # Bottom border
+    lines.append('└' + '─' * W2 + '┘')
+
+    return lines
+
+
 if __name__ == '__main__':
     import sys
-    diagram = vmware_platform_landscape()
+    diagram = vmware_platform_landscape_v2()
     for line in diagram:
         print(line)
     widths = set(len(l) for l in diagram)

@@ -5,31 +5,57 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 </div>
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│   ┌─────────────┐  ┌─────────────┐  ┌──────────────────────────────────────────┐    │
-│   │   vCenter   │  │    VxRail   │  │                Aria Suite                │    │
-│   │   (Manage)  │  │ (Appliance) │  │   Ops/Logs  │ Automation │Suite Lifecycle│    │
-│   │             │  │             │  │  Operations │            │               │    │
-│   └─────────────┘  └─────────────┘  └─────────────┴────────────┴───────────────┘    │
-│          ▼                ▼                                                         │
-│   ┌────────────────────────────────────────────────────────────────────────────┐    │
-│   │                        vSphere Cluster (ESXi Hosts)                        │    │
-│   │  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐            │    │
-│   │  │  ESXi-01   │  │  ESXi-02   │  │  ESXi-03   │  │  ESXi-04   │            │    │
-│   │  │  ┌─────┐   │  │  ┌─────┐   │  │  ┌─────┐   │  │  ┌─────┐   │            │    │
-│   │  │  │ VMs │   │  │  │ VMs │   │  │  │ VMs │   │  │  │ VMs │   │            │    │
-│   │  └──┴─────┴───┘  └──┴─────┴───┘  └──┴─────┴───┘  └──┴─────┴───┘            │    │
-│   └────────────────────────────────────────────────────────────────────────────┘    │
-│          ▼                ▼                ▼                      ▼                 │
-│   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐    │
-│   │     vSAN    │  │     NSX     │  │   Horizon   │  │      Site Recovery      │    │
-│   │  (Storage)  │  │ (Networking)│  │  (Desktops) │  │      (DR Platform)      │    │
-│   └─────────────┘  └─────────────┘  └─────────────┘  └─────────────────────────┘    │
-│                                                                                     │
-│   ┌──────────────────────────────┐   ┌─────────────────────────────────────────┐    │
-│   │ Tanzu (Kubernetes Platform)  │   │    VMware Cloud Foundation (VCF/SDDC)   │    │
-│   └──────────────────────────────┘   └─────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────── VMware Platform Landscape ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌────────────────────┐  ┌────────────────────┐  ┌───────────────────────────────────────────────┐   │
+│   │      vCenter       │  │       VxRail       │  │                   Aria Suite                  │   │
+│   │      (Manage)      │  │    (Appliance)     │  │    Ops/Logs   │   Automation  │Suite Lifecycle│   │
+│   │    Web UI & API    │  │    Turnkey HCI     │  │ Monitor/Alert │  IaC / Deploy │ Patch/Upgrade │   │
+│   │   Hosts/VMs/Net    │  │   Dell + VMware    │  │   Operations  │   Blueprints  │  Certificates │   │
+│   └────────────────────┘  └────────────────────┘  └───────────────┴───────────────┴───────────────┘   │
+│                                                                                                       │
+│             ▼                       ▼ ← control plane: manages all hosts, VMs, networks & policies    │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  vSphere Cluster (ESXi Hosts)                                 │   │
+│   │               Type-1 hypervisor: runs directly on hardware — no host OS required              │   │
+│   │                                                                                               │   │
+│   │  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌──────────────────────────┐ │   │
+│   │  │  ESXi-01   │  │  ESXi-02   │  │  ESXi-03   │  │  ESXi-04   │  │  Each host: 50-200+ VMs  │ │   │
+│   │  │(Hypervisor)│  │(Hypervisor)│  │(Hypervisor)│  │(Hypervisor)│  │ Types: web, DB, app, AD  │ │   │
+│   │  │  ┌─────┐   │  │  ┌─────┐   │  │  ┌─────┐   │  │  ┌─────┐   │  │  vMotion: move VMs live  │ │   │
+│   │  │  │ VMs │   │  │  │ VMs │   │  │  │ VMs │   │  │  │ VMs │   │  │ HA: auto-restart on fail │ │   │
+│   │  └──┴─────┴───┘  └──┴─────┴───┘  └──┴─────┴───┘  └──┴─────┴───┘  └──────────────────────────┘ │   │
+│   │                                                                                               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│             ▼                       ▼                       ▼                         ▼               │
+│                                                                                                       │
+│   ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐  ┌───────────────────────┐   │
+│   │        vSAN        │  │        NSX         │  │      Horizon       │  │     Site Recovery     │   │
+│   │     (Storage)      │  │    (Networking)    │  │     (Desktops)     │  │     (DR Platform)     │   │
+│   │    Shared Disks    │  │   Virt. Network    │  │    VDI Platform    │  │ Failover + Replication│   │
+│   └────────────────────┘  └────────────────────┘  └────────────────────┘  └───────────────────────┘   │
+│                                                                                                       │
+│   ┌────────────────────────────────────────────┐  ┌───────────────────────────────────────────────┐   │
+│   │        Tanzu (Kubernetes Platform)         │  │       VMware Cloud Foundation (VCF/SDDC)      │   │
+│   │          Container Orchestration           │  │     vSphere + vSAN + NSX + Lifecycle Mgmt     │   │
+│   └────────────────────────────────────────────┘  └───────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  CPU cores · RAM (GBs to TBs per host) · NIC (10/25/100 GbE) · NVMe/SSD/HDD · Power & Cooling         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VM   = a software-emulated computer; runs a full OS + apps inside a physical host                    │
+│  ESXi = Type-1 hypervisor; installed directly on bare metal — no host OS needed                       │
+│  vSAN = pools local server disks into shared storage — no separate SAN appliance needed               │
+│  NSX  = software-defined networking; creates virtual switches, routers & firewalls                    │
+│  VDI  = your desktop OS runs in the data centre; you stream it to any device remotely                 │
+│  DR   = Disaster Recovery; automated failover keeps the business running after a failure              │
+│  HCI  = Hyper-Converged Infrastructure; compute + storage + networking in one appliance               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">
