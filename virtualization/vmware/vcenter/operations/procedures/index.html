@@ -818,7 +818,7 @@
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;CL-LON-PROD&quot;</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>   <span class="c"># ESXi root credentials</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Add-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-05.corp.local&quot;</span> <span class="n">-Location</span> <span class="nv">$cluster</span> <span class="n">-User</span> <span class="n">root</span> <span class="n">-Password</span> <span class="nv">$cred</span><span class="p">.</span><span class="n">GetNetworkCredential</span><span class="p">().</span><span class="n">Password</span> <span class="n">-Force</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Add-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-05.example.local&quot;</span> <span class="n">-Location</span> <span class="nv">$cluster</span> <span class="n">-User</span> <span class="n">root</span> <span class="n">-Password</span> <span class="nv">$cred</span><span class="p">.</span><span class="n">GetNetworkCredential</span><span class="p">().</span><span class="n">Password</span> <span class="n">-Force</span>
 </code></pre></div>
 <p>Via UI: <strong>vCenter → Datacenter or Cluster → Actions → Add Host</strong>. Enter FQDN, root credentials, and accept the host thumbprint.</p>
 <p>Post-add checks:
@@ -829,13 +829,13 @@
 <hr />
 <h2 id="placing-a-host-in-maintenance-mode">Placing a Host in Maintenance Mode<a class="headerlink" href="#placing-a-host-in-maintenance-mode" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># PowerCLI — maintenance mode with vMotion evacuation</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$vmhost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-01.corp.local&quot;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">$vmhost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-01.example.local&quot;</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="nv">$vmhost</span> <span class="n">-State</span> <span class="n">Maintenance</span> <span class="n">-Evacuate</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Wait for maintenance mode to be accepted</span>
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">do</span> <span class="p">{</span>
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">10</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="nv">$vmhost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-01.corp.local&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="nv">$vmhost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-01.example.local&quot;</span>
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;State: </span><span class="p">$(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="s2">&quot;</span>
 <a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">}</span> <span class="k">until</span> <span class="p">(</span><span class="nv">$vmhost</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s2">&quot;Maintenance&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -844,24 +844,24 @@
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span>get
 </code></pre></div>
 <p>Exit maintenance mode:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.corp.local&quot;</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="n">-State</span> <span class="n">Connected</span>
 </code></pre></div></p>
 <hr />
 <h2 id="vmotion-migrating-a-vm">vMotion — Migrating a VM<a class="headerlink" href="#vmotion-migrating-a-vm" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Live vMotion (compute only — same storage)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.corp.local&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span><span class="p">)</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Storage vMotion (same host, different datastore)</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-02&quot;</span><span class="p">)</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c"># Full migration (compute + storage)</span>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;app-server-01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.corp.local&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-02&quot;</span><span class="p">)</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c"># Bulk evacuate all VMs from a host</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nv">$sourceHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.corp.local&quot;</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="nv">$targetHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.corp.local&quot;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nv">$sourceHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="nv">$targetHost</span> <span class="p">=</span> <span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-02.example.local&quot;</span>
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="nb">Get-VM</span> <span class="n">-Location</span> <span class="nv">$sourceHost</span> <span class="p">|</span> <span class="nb">Move-VM</span> <span class="n">-Destination</span> <span class="nv">$targetHost</span>
 </code></pre></div>
 <p>vMotion requirements:
@@ -922,7 +922,7 @@
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>grep<span class="w"> </span><span class="s2">&quot;&lt;esxi-hostname&gt;&quot;</span><span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># PowerCLI — attempt reconnect</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.corp.local&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconnectHost_Task</span><span class="p">(</span><span class="nv">$null</span><span class="p">)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconnectHost_Task</span><span class="p">(</span><span class="nv">$null</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># From ESXi host SSH — restart the vCenter agent (vpxa)</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>/etc/init.d/vpxa<span class="w"> </span>restart
@@ -986,7 +986,7 @@
 <a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c"># Deploy a VM from a template in the content library</span>
 <a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="nv">$template</span> <span class="p">=</span> <span class="nb">Get-ContentLibraryItem</span> <span class="n">-Name</span> <span class="s2">&quot;RHEL9-Gold&quot;</span> <span class="n">-ContentLibrary</span> <span class="s2">&quot;Templates-LON&quot;</span>
 <a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="nb">New-VM</span> <span class="n">-Name</span> <span class="s2">&quot;new-vm-01&quot;</span> <span class="n">-ContentLibraryItem</span> <span class="nv">$template</span> <span class="p">`</span>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.corp.local&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;DS-VMFS-PURE01-01&quot;</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="n">-ResourcePool</span> <span class="p">(</span><span class="nb">Get-ResourcePool</span> <span class="s2">&quot;RP-PROD-STANDARD&quot;</span><span class="p">)</span>
 </code></pre></div>

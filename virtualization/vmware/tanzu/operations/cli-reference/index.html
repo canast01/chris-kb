@@ -613,7 +613,7 @@
 <h2 id="kubectl-for-supervisor-vsphere-with-tanzu">kubectl for Supervisor (vSphere with Tanzu)<a class="headerlink" href="#kubectl-for-supervisor-vsphere-with-tanzu" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Login to Supervisor cluster</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl<span class="w"> </span>vsphere<span class="w"> </span>login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--server<span class="w"> </span>https://supervisor.corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--server<span class="w"> </span>https://supervisor.example.local<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--vsphere-username<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--insecure-skip-tls-verify
@@ -665,8 +665,8 @@
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ytt<span class="w"> </span>-f<span class="w"> </span>values.yaml<span class="w"> </span>-f<span class="w"> </span>config/<span class="w"> </span>&gt;<span class="w"> </span>rendered.yaml
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># imgpkg — package and relocate container images</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>imgpkg<span class="w"> </span>push<span class="w"> </span>-b<span class="w"> </span>harbor.corp.local/tanzu/my-bundle:v1.0<span class="w"> </span>-f<span class="w"> </span>./bundle/
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>imgpkg<span class="w"> </span>pull<span class="w"> </span>-b<span class="w"> </span>harbor.corp.local/tanzu/my-bundle:v1.0<span class="w"> </span>-o<span class="w"> </span>./output/
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>imgpkg<span class="w"> </span>push<span class="w"> </span>-b<span class="w"> </span>harbor.example.local/tanzu/my-bundle:v1.0<span class="w"> </span>-f<span class="w"> </span>./bundle/
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>imgpkg<span class="w"> </span>pull<span class="w"> </span>-b<span class="w"> </span>harbor.example.local/tanzu/my-bundle:v1.0<span class="w"> </span>-o<span class="w"> </span>./output/
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># vendir — sync external content</span>
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>vendir<span class="w"> </span>sync
@@ -674,20 +674,20 @@
 <hr />
 <h2 id="harbor-cli">Harbor CLI<a class="headerlink" href="#harbor-cli" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Push an image to Harbor</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span>login<span class="w"> </span>harbor.corp.local<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>docker<span class="w"> </span>tag<span class="w"> </span>myapp:v1.0<span class="w"> </span>harbor.corp.local/myproject/myapp:v1.0
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>docker<span class="w"> </span>push<span class="w"> </span>harbor.corp.local/myproject/myapp:v1.0
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span>login<span class="w"> </span>harbor.example.local<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>docker<span class="w"> </span>tag<span class="w"> </span>myapp:v1.0<span class="w"> </span>harbor.example.local/myproject/myapp:v1.0
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>docker<span class="w"> </span>push<span class="w"> </span>harbor.example.local/myproject/myapp:v1.0
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Pull an image</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>docker<span class="w"> </span>pull<span class="w"> </span>harbor.corp.local/myproject/myapp:v1.0
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>docker<span class="w"> </span>pull<span class="w"> </span>harbor.example.local/myproject/myapp:v1.0
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Harbor API — list projects</span>
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="s2">&quot;https://harbor.corp.local/api/v2.0/projects&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="s2">&quot;https://harbor.example.local/api/v2.0/projects&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Harbor API — list repositories in a project</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="s2">&quot;https://harbor.corp.local/api/v2.0/projects/myproject/repositories&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="s2">&quot;https://harbor.example.local/api/v2.0/projects/myproject/repositories&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <hr />
 <h2 id="velero-cli-backup">Velero CLI (Backup)<a class="headerlink" href="#velero-cli-backup" title="Permanent link">&para;</a></h2>

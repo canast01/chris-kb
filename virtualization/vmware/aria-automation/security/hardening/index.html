@@ -579,7 +579,7 @@
 </code></pre></div>
 <h2 id="default-account-hardening">Default Account Hardening<a class="headerlink" href="#default-account-hardening" title="Permanent link">&para;</a></h2>
 <p>The <code>admin</code> account is a local system account in the VIDM System Domain. Change its password immediately after deployment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VAMI (https://vra-prod-01.corp.local:5480) → Services → Change Admin Password
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Password
 </code></pre></div>
 <p>Or via VIDM console:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VIDM → Users &amp; Groups → Users → admin (System Domain) → Edit → Change Password
@@ -592,7 +592,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>LCM → Locker → import certificate → LCM → Lifecycle Operations → Aria Automation → Replace Certificate
 </code></pre></div>
 <p><strong>Via vracli (standalone deployments):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@vra-prod-01.corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Import certificate</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
@@ -601,7 +601,7 @@
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--ca<span class="w"> </span>/tmp/chain.pem
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Verify the certificate is active</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-prod-01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
 </code></pre></div>
 <hr />
@@ -758,11 +758,11 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Access audit events via API</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.corp.local/audit/api/events?size=100&amp;sort=timestamp,desc&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/audit/api/events?size=100&amp;sort=timestamp,desc&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {type: .type, user: .principal, resource: .resource, time: .timestamp}&#39;</span>
 </code></pre></div>
 <p>Forward syslog to Aria Ops for Logs or SIEM for centralised audit trail:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.corp.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vra-audit.conf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@vrli-prod-01.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vra-audit.conf
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <hr />

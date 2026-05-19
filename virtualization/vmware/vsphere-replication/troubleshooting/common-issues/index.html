@@ -583,7 +583,7 @@
 </li>
 <li>
 <p><strong>VRA disk full at target site</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>admin@vra-amsterdam.corp.local
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>admin@vra-amsterdam.example.local
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>df<span class="w"> </span>-h<span class="w">  </span><span class="c1"># Check /opt and /tmp</span>
 </code></pre></div></p>
 </li>
@@ -612,7 +612,7 @@
 <h2 id="replication-fails-with-connection-refused-connection-timeout">Replication Fails with "Connection Refused" / "Connection Timeout"<a class="headerlink" href="#replication-fails-with-connection-refused-connection-timeout" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> Replication status error: network connectivity to target VRA</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From source ESXi host shell:</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-amsterdam.corp.local<span class="w"> </span><span class="m">31031</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-amsterdam.example.local<span class="w"> </span><span class="m">31031</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># If connection refused → firewall blocking TCP 31031</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># If timeout → no route to target VRA</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
@@ -626,21 +626,21 @@
 <ol>
 <li>
 <p><strong>VRA certificate expired or replaced</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-amsterdam.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-amsterdam.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates<span class="w"> </span>-subject
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># If expired: deploy new VRA OVA with same IP, re-register</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>VRA service stopped</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ssh<span class="w"> </span>admin@vra-amsterdam.corp.local
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ssh<span class="w"> </span>admin@vra-amsterdam.example.local
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>hms<span class="w"> </span>vrms
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>hms<span class="w"> </span>vrms
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Network interruption between VRAs</strong> (TCP 44046):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-amsterdam.corp.local<span class="w"> </span><span class="m">44046</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-amsterdam.example.local<span class="w"> </span><span class="m">44046</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -661,7 +661,7 @@
 <hr />
 <h2 id="vra-running-out-of-disk-space">VRA Running Out of Disk Space<a class="headerlink" href="#vra-running-out-of-disk-space" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> VRA VAMI shows disk warning; replications may start failing</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ssh<span class="w"> </span>admin@vra-london.corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ssh<span class="w"> </span>admin@vra-london.example.local
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>df<span class="w"> </span>-h
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Check /opt partition — VRA appliance partition</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>

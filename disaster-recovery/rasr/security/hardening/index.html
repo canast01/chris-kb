@@ -811,7 +811,7 @@
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Configure email alerts for critical events</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.EmailAlert.1.Enable<span class="w"> </span><span class="m">1</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.EmailAlert.1.Address<span class="w"> </span><span class="s2">&quot;dr-alerts@corp.local&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.RemoteHosts.SMTPServerIPAddress<span class="w"> </span>smtp.corp.local
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.RemoteHosts.SMTPServerIPAddress<span class="w"> </span>smtp.example.local
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Enable alerts for hardware failures and power events</span>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>racadm<span class="w"> </span>alertcfg<span class="w"> </span>-g<span class="w"> </span>system<span class="w"> </span>-s<span class="w"> </span>enabled
@@ -914,19 +914,19 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Forward array management logs to centralised SIEM</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Unity — configure syslog forwarding</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>uemcli<span class="w"> </span>/sys/log/syslog<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-address<span class="w"> </span>siem.corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-address<span class="w"> </span>siem.example.local<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-port<span class="w"> </span><span class="m">514</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>-protocol<span class="w"> </span>UDP<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>-facility<span class="w"> </span>local0
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># iDRAC — configure syslog</span>
 <a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.SysLogEnable<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.Server1<span class="w"> </span>siem.corp.local
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.Server1<span class="w"> </span>siem.example.local
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.Port1<span class="w"> </span><span class="m">514</span>
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Linux management host — forward auditd logs</span>
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># /etc/rsyslog.d/90-rasr-audit.conf</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;audit&quot;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@@siem.corp.local:514
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;audit&quot;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@@siem.example.local:514
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="p">&amp;</span><span class="w"> </span>~
 <a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
 <a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
@@ -1020,7 +1020,7 @@
 </tr>
 <tr>
 <td>Array syslog forwarding</td>
-<td><code>uemcli /sys/log/syslog create -address siem.corp.local</code></td>
+<td><code>uemcli /sys/log/syslog create -address siem.example.local</code></td>
 </tr>
 <tr>
 <td>Disable iDRAC IPMI</td>

@@ -546,8 +546,8 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                       ▼
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>┌─────────────────────────────────────────────────────┐
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Backup Target                                      │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  NFS: nas-01.corp.local:/aria-ops-backups           │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  SFTP: backup-srv.corp.local (port 22)              │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  NFS: nas-01.example.local:/aria-ops-backups           │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  SFTP: backup-srv.example.local (port 22)              │
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                     │
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  What IS backed up:                                 │
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│    alert definitions · dashboards · user accounts   │
@@ -578,7 +578,7 @@
 </code></pre></div>
 <p>Provide:
 - Location type: NFS or SFTP
-- NFS: <code>&lt;nfs-server&gt;:&lt;export-path&gt;</code> (e.g., <code>nas-01.corp.local:/aria-ops-backups</code>)
+- NFS: <code>&lt;nfs-server&gt;:&lt;export-path&gt;</code> (e.g., <code>nas-01.example.local:/aria-ops-backups</code>)
 - SFTP: hostname, port (22), username, password or SSH key
 - Folder path on the target (auto-created if NFS)</p>
 <p><strong>Schedule:</strong></p>
@@ -590,7 +590,7 @@
 - Notification: enable email alert on backup failure (requires SMTP configured under <strong>Administration → SMTP Settings</strong>)</p>
 <hr />
 <h2 id="manual-backup-via-cli">Manual Backup via CLI<a class="headerlink" href="#manual-backup-via-cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Trigger an immediate backup using the vracli tool</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vracli<span class="w"> </span>backup<span class="w"> </span>--location<span class="w"> </span>&lt;backup-id&gt;
@@ -605,18 +605,18 @@
 <hr />
 <h2 id="backup-via-rest-api">Backup via REST API<a class="headerlink" href="#backup-via-rest-api" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;Local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List backup configurations</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/backups&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/backups&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Trigger an immediate backup</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.corp.local/suite-api/api/backups/&lt;backup-config-id&gt;/actions/backup&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/backups/&lt;backup-config-id&gt;/actions/backup&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
 </code></pre></div>
 <hr />
@@ -689,7 +689,7 @@
 </code></pre></div>
 <p>The UI shows a list of available backups by timestamp. Select the desired restore point and confirm. The cluster restarts services during restore — expect 10–20 minutes of unavailability.</p>
 <p><strong>Via CLI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vracli<span class="w"> </span>restore<span class="w"> </span>--backup-id<span class="w"> </span>&lt;backup-timestamp-id&gt;
 </code></pre></div>
 <p><strong>Post-restore validation:</strong></p>
@@ -714,7 +714,7 @@
 <li>Recovery from VM backup restores metric history but may require Cassandra consistency repair:</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># After restoring all nodes from VM backup, run Cassandra repair on the primary node</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.corp.local
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vracli<span class="w"> </span>cluster<span class="w"> </span>cassandra<span class="w"> </span>repair
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># This can take hours on large deployments — monitor progress in /storage/log/cassandra.log</span>
 </code></pre></div>

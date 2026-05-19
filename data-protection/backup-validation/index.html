@@ -772,7 +772,7 @@
 <p>SureBackup boots backed-up VMs in an isolated Virtual Lab and runs verification scripts against them. It proves bootability and application availability without touching production.</p>
 <h3 id="surebackup-job-configuration-powershell">SureBackup Job Configuration (PowerShell)<a class="headerlink" href="#surebackup-job-configuration-powershell" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Create a Virtual Lab (isolated network)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-VBRVirtualLab</span> <span class="n">-Server</span> <span class="s2">&quot;vcenter01.corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-VBRVirtualLab</span> <span class="n">-Server</span> <span class="s2">&quot;vcenter01.example.local&quot;</span> <span class="p">`</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">-Name</span> <span class="s2">&quot;SureBackup-VLab&quot;</span> <span class="p">`</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">-Datastore</span> <span class="s2">&quot;DS-BACKUP-VLAB&quot;</span> <span class="p">`</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">-ProductionNetwork</span> <span class="s2">&quot;VM Network&quot;</span> <span class="p">`</span>
@@ -856,18 +856,18 @@
 <h2 id="netbackup-bpverify-command-reference">NetBackup — <code>bpverify</code> Command Reference<a class="headerlink" href="#netbackup-bpverify-command-reference" title="Permanent link">&para;</a></h2>
 <p><code>bpverify</code> reads backup images from media and verifies data integrity without writing to disk. It is the primary validation tool in NetBackup environments.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify the most recent backup for a client</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.corp.local<span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span>-st<span class="w"> </span>FULL
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span>-st<span class="w"> </span>FULL
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify a specific backup image by backup ID</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>bpverify<span class="w"> </span>-id<span class="w"> </span><span class="m">1716800000</span><span class="w"> </span>-client<span class="w"> </span>sql-prod-01.corp.local
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>bpverify<span class="w"> </span>-id<span class="w"> </span><span class="m">1716800000</span><span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify all backups in a date range</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.corp.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-s<span class="w"> </span><span class="m">05</span>/01/2026<span class="w"> </span><span class="m">00</span>:00:00<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>-e<span class="w"> </span><span class="m">05</span>/08/2026<span class="w"> </span><span class="m">23</span>:59:59
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Verify and output results to a log file</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.corp.local<span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>-st<span class="w"> </span>FULL<span class="w"> </span>-l<span class="w"> </span>/var/log/netbackup/verify_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Check verification status / exit code</span>
@@ -1079,7 +1079,7 @@
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="n">-From</span> <span class="s2">&quot;veeam-noreply@corp.local&quot;</span> <span class="p">`</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        <span class="n">-Subject</span> <span class="s2">&quot;ALERT: Backup Validation Failed — </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="n">-Body</span> <span class="nv">$body</span> <span class="p">`</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="n">-SmtpServer</span> <span class="s2">&quot;smtp.corp.local&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="n">-SmtpServer</span> <span class="s2">&quot;smtp.example.local&quot;</span>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="netbackup-unix-alert-integration">NetBackup — UNIX Alert Integration<a class="headerlink" href="#netbackup-unix-alert-integration" title="Permanent link">&para;</a></h3>

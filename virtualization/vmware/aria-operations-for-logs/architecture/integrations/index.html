@@ -599,10 +599,10 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → Administration → Syslog → Add Syslog Target
 </code></pre></div>
 - Protocol: UDP or TCP
-- Host: <code>vrli-prod-01.corp.local</code>
+- Host: <code>vrli-prod-01.example.local</code>
 - Port: 514 (UDP syslog) or 1514 (TCP syslog via LI Agent protocol)</p>
 <p><strong>Configure ESXi syslog via PowerCLI (bulk):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$target</span> <span class="p">=</span> <span class="s2">&quot;udp://vrli-prod-01.corp.local:514&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$target</span> <span class="p">=</span> <span class="s2">&quot;udp://vrli-prod-01.example.local:514&quot;</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$esxcli</span> <span class="p">=</span> <span class="nb">Get-EsxCli</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="n">-V2</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nv">$esxcli</span><span class="p">.</span><span class="n">system</span><span class="p">.</span><span class="n">syslog</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">set</span><span class="p">.</span><span class="n">Invoke</span><span class="p">(@{</span><span class="n">loghost</span> <span class="p">=</span> <span class="nv">$target</span><span class="p">})</span>
@@ -618,7 +618,7 @@
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
 </code></pre></div></p>
 <p><strong>Configure ESXi syslog via esxcli (single host):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;udp://vrli-prod-01.corp.local:514&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;udp://vrli-prod-01.example.local:514&quot;</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get
 </code></pre></div></p>
@@ -627,10 +627,10 @@
 <p>Forward NSX Manager and Edge node syslog to Aria Ops for Logs:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Via NSX-T API — add syslog exporter on NSX Manager</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://nsx-mgr-01.corp.local/api/v1/node/services/syslog/exporters&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://nsx-mgr-01.example.local/api/v1/node/services/syslog/exporters&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;server&quot;: &quot;vrli-prod-01.corp.local&quot;,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;server&quot;: &quot;vrli-prod-01.example.local&quot;,</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">    &quot;port&quot;: 514,</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    &quot;protocol&quot;: &quot;UDP&quot;,</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">    &quot;exporter_name&quot;: &quot;aria-ops-for-logs&quot;,</span>
@@ -651,7 +651,7 @@
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Configure agent — edit /var/lib/loginsight-agent/liagent.ini</span>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="o">[</span>server<span class="o">]</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nv">hostname</span><span class="o">=</span>vrli-prod-01.corp.local
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nv">hostname</span><span class="o">=</span>vrli-prod-01.example.local
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">port</span><span class="o">=</span><span class="m">9543</span>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">proto</span><span class="o">=</span>cfapi
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nv">ssl</span><span class="o">=</span>yes
@@ -669,7 +669,7 @@
 <hr />
 <h2 id="windows-log-forwarding-agent">Windows Log Forwarding Agent<a class="headerlink" href="#windows-log-forwarding-agent" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Install the agent (MSI)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">msiexec</span> <span class="p">/</span><span class="n">i</span> <span class="s2">&quot;VMware-Log-Insight-Agent-*.msi&quot;</span> <span class="p">/</span><span class="n">quiet</span> <span class="n">SERVERHOST</span><span class="p">=</span><span class="n">vrli-prod</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">msiexec</span> <span class="p">/</span><span class="n">i</span> <span class="s2">&quot;VMware-Log-Insight-Agent-*.msi&quot;</span> <span class="p">/</span><span class="n">quiet</span> <span class="n">SERVERHOST</span><span class="p">=</span><span class="n">vrli-prod</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">SERVERPORT</span><span class="p">=</span><span class="n">9543</span> <span class="n">SERVERPROTOCOL</span><span class="p">=</span><span class="n">cfapi</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Verify agent service is running</span>
@@ -688,7 +688,7 @@
 <li>Version: SNMPv2c or SNMPv3</li>
 <li>Community string or credentials</li>
 </ul>
-<p>Configure network devices to forward traps to <code>vrli-prod-01.corp.local:162</code>.</p>
+<p>Configure network devices to forward traps to <code>vrli-prod-01.example.local:162</code>.</p>
 <hr />
 <h2 id="generic-syslog-tcpudp">Generic Syslog (TCP/UDP)<a class="headerlink" href="#generic-syslog-tcpudp" title="Permanent link">&para;</a></h2>
 <p>Any RFC 5424 or RFC 3164 compliant syslog source can forward to Aria Ops for Logs:</p>
@@ -736,7 +736,7 @@
 <p>Alternatively, use the REST API to query recent alerts for external integration:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Get recent critical alerts</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/alerts?severity=critical&amp;limit=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&amp;limit=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.alerts[] | {name: .name, status: .status, timestamp: .timestamp}&#39;</span>
 </code></pre></div>
 

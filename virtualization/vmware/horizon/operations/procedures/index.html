@@ -647,18 +647,18 @@
 </code></pre></div></p>
 <hr />
 <h2 id="configure-uag-for-external-access">Configure UAG for External Access<a class="headerlink" href="#configure-uag-for-external-access" title="Permanent link">&para;</a></h2>
-<p>UAG Admin UI (https://uag.corp.local:9443):</p>
+<p>UAG Admin UI (https://uag.example.local:9443):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Configure Manually
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Network Settings: set IPs for each NIC (Internet, Management, Backend)
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Edge Service Settings → Horizon → Enable
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    Connection Server URL: https://horizon-cs01.corp.local:443
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    Connection Server URL: https://horizon-cs01.example.local:443
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    Connection Server thumbprint: sha1:&lt;thumbprint&gt;
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    Blast port: 8443
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    PCoIP port: 4172
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    Tunnel: Enabled
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Get Connection Server certificate thumbprint:</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>horizon-cs01.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>horizon-cs01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-fingerprint<span class="w"> </span>-sha1<span class="w"> </span>-noout
 </code></pre></div>
 <hr />
@@ -684,7 +684,7 @@
 <p>The AppStack VMDK will mount at the next user login for members of that group.</p>
 <hr />
 <h2 id="handle-a-stuck-desktop-in-error-state">Handle a Stuck Desktop in Error State<a class="headerlink" href="#handle-a-stuck-desktop-in-error-state" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c"># List desktops in error state</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">Get-HVDesktop</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">BasicState</span> <span class="o">-eq</span> <span class="s2">&quot;ERROR&quot;</span> <span class="p">}</span> <span class="p">|</span>

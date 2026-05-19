@@ -586,7 +586,7 @@
 </code></pre></div>
 <p>Provide:
 - <strong>Domain</strong>: <code>corp.local</code>
-- <strong>Domain controller</strong>: <code>dc01.corp.local</code> (use multiple for HA)
+- <strong>Domain controller</strong>: <code>dc01.example.local</code> (use multiple for HA)
 - <strong>Port</strong>: 636 (LDAPS) — required for production
 - <strong>Bind DN</strong>: <code>CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local</code>
 - <strong>Bind password</strong>: stored in CyberArk or vault; retrieved during configuration</p>
@@ -663,7 +663,7 @@
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Test API authentication</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;svc-vrli-api:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.corp.local/api/v2/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/version&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Expected: {&quot;version&quot;: &quot;8.x.y.zzz&quot;, ...}</span>
 </code></pre></div>
 <p>For service accounts: assign the minimum required role — use the <code>User</code> role for scripts that only query logs; use the <code>Admin</code> role for scripts that create or modify alert definitions.</p>
@@ -679,7 +679,7 @@
 </code></pre></div>
 <p>Forward these logs to a SIEM or dedicated audit log store by configuring the appliance's syslog output:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Forward syslog from the Aria Ops for Logs appliance to an external SIEM</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@siem.corp.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;*.* @@siem.example.local:514&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/vrli-audit.conf
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 
