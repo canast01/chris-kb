@@ -3,14 +3,14 @@
 ```
         TRIAGE: NSLOOKUP FAILS
 ┌──────────────────────────────────────────────────────────────┐
-│  1. nslookup host.corp.local ── no answer ──► continue       │
+│  1. nslookup host.example.local ── no answer ──► continue       │
 │          │                                                   │
 │          ▼                                                   │
 │  2. Check resolver (which server answered?)                  │
-│     nslookup host.corp.local 10.0.0.53 ── ok ──► client conf│
+│     nslookup host.example.local 10.0.0.53 ── ok ──► client conf│
 │          │ still fails                                       │
 │          ▼                                                   │
-│  3. Record exists? dig @10.0.0.53 host.corp.local            │
+│  3. Record exists? dig @10.0.0.53 host.example.local            │
 │          │ NXDOMAIN ──────────────────────────► add record   │
 │          │ answer returned                                   │
 │          ▼                                                   │
@@ -34,14 +34,14 @@ DNS failures manifest as name resolution errors, application connectivity issues
 
 ```bash
 # Step 1: test from the client
-nslookup host.corp.local
+nslookup host.example.local
 # Note which server answered and what was returned
 
 # Step 2: query the authoritative server directly
-nslookup host.corp.local 10.0.0.53
+nslookup host.example.local 10.0.0.53
 
 # Step 3: check if the record exists on the server
-dig @10.0.0.53 host.corp.local +nocmd +noall +answer
+dig @10.0.0.53 host.example.local +nocmd +noall +answer
 
 # Step 4: flush client cache and retry
 ipconfig /flushdns        # Windows
@@ -57,7 +57,7 @@ resolvectl flush-caches   # Linux (systemd-resolved)
 dcdiag /test:dns /v
 
 # Run against a specific DC
-dcdiag /test:dns /s:dc02.corp.local /v
+dcdiag /test:dns /s:dc02.example.local /v
 
 # Test all DCs in the forest
 dcdiag /test:dns /e /v

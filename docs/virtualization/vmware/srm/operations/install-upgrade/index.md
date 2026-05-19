@@ -37,10 +37,10 @@
 VMware-srm-<version>.exe /silent /norestart
 
 # During installation wizard:
-#   vCenter Server: https://vcenter-protected.corp.local
+#   vCenter Server: https://vcenter-protected.example.local
 #   SSO credentials: administrator@vsphere.local
 #   SRM site name: Protected-Site  (or Recovery-Site for second installation)
-#   Local SRM Server: srm-protected.corp.local
+#   Local SRM Server: srm-protected.example.local
 #   Port: 8095 (admin), 9086 (inter-site)
 #   Certificate: import PFX or use auto-generated
 #   Database: embedded PostgreSQL or external SQL Server
@@ -61,16 +61,16 @@ vCenter → Deploy OVF Template → VMware-vSphere-Replication-<version>.ovf
   NTP: configure NTP server
 
 Post-deploy:
-  VRA Web UI (https://vra-protected.corp.local:5480)
-  Configuration → vCenter Server: vcenter-protected.corp.local
+  VRA Web UI (https://vra-protected.example.local:5480)
+  Configuration → vCenter Server: vcenter-protected.example.local
   → Register with vCenter
 ```
 
 Pair VRA appliances:
 ```
 vCenter (Protected) → Site Recovery → New Site Pair
-  Remote vCenter: vcenter-recovery.corp.local
-  Remote VRA: vra-recovery.corp.local
+  Remote vCenter: vcenter-recovery.example.local
+  Remote VRA: vra-recovery.example.local
   Accept certificate thumbprint
 ```
 
@@ -102,8 +102,8 @@ After SRM is installed on both sites and VRA/SRA is deployed:
 
 ```
 vCenter (Protected Site) → Site Recovery → New Site Pair
-  Remote vCenter: vcenter-recovery.corp.local
-  Site Recovery Manager: srm-recovery.corp.local
+  Remote vCenter: vcenter-recovery.example.local
+  Site Recovery Manager: srm-recovery.example.local
   Credentials: administrator@vsphere.local on remote vCenter
   Accept certificate thumbprints from both SRM servers
 ```
@@ -149,7 +149,7 @@ Get-Service "VMware vCenter Site Recovery Manager"
 
 ```powershell
 # Connect to SRM via PowerCLI
-$srm = Connect-SrmServer -SrmServerAddress srm-protected.corp.local
+$srm = Connect-SrmServer -SrmServerAddress srm-protected.example.local
 $plans = $srm.ExtensionData.Recovery.ListPlans()
 Write-Host "Recovery Plans found: $($plans.Count)"
 

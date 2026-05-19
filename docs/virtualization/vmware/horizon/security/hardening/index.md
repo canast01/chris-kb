@@ -144,7 +144,7 @@ For automated monitoring, configure Events Database (SQL Server) and query it wi
 
 | Control | Status Check |
 |---|---|
-| TLS 1.0/1.1 disabled on CS | `nmap --script ssl-enum-ciphers -p 443 horizon-cs01.corp.local` |
+| TLS 1.0/1.1 disabled on CS | `nmap --script ssl-enum-ciphers -p 443 horizon-cs01.example.local` |
 | CA-signed cert on CS | `openssl s_client -connect horizon-cs01:443 \| openssl x509 -issuer` |
 | CA-signed cert on UAG | `openssl s_client -connect uag:443 \| openssl x509 -issuer` |
 | 2FA enabled for external access | Horizon Console → Settings → CS → Authentication |

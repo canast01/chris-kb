@@ -185,7 +185,7 @@ openssl x509 -in /etc/vmware/ssl/rui.crt -noout -dates -subject -issuer -fingerp
 # Example output:
 # notBefore=May  1 00:00:00 2025 GMT
 # notAfter=May  1 00:00:00 2027 GMT
-# subject=/CN=esxi-01.corp.local
+# subject=/CN=esxi-01.example.local
 # issuer=/O=VMware/CN=CA
 ```
 
@@ -210,7 +210,7 @@ vCenter Certificate Authority (VMCA) manages ESXi host certificates automaticall
 # vCenter → Host → Configure → System → Certificate → Renew/Import
 
 # Step 3 — Verify the new certificate is applied
-openssl s_client -connect esxi-01.corp.local:443 2>/dev/null | \
+openssl s_client -connect esxi-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -dates -subject -issuer
 ```
 

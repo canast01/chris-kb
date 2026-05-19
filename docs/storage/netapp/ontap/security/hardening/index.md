@@ -232,7 +232,7 @@ AutoSupport transmits cluster telemetry to NetApp and optionally to internal add
 autosupport modify -node * -transport https
 
 # Configure a proxy if the cluster management LIF cannot reach the internet directly
-autosupport modify -node * -proxy-url http://proxy.corp.local:8080
+autosupport modify -node * -proxy-url http://proxy.example.local:8080
 
 # Set the internal notification address for callhome events
 autosupport modify -node * -noteto ops-storage@corp.local

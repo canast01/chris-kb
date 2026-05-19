@@ -35,7 +35,7 @@
 ```bash
 # Check all cluster nodes via API
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/cluster/nodes" | \
+  "https://vrli-prod-01.example.local/api/v2/cluster/nodes" | \
   jq '.nodes[] | {host: .hostname, state: .state, role: .role, version: .version}'
 
 # Expected: all nodes state = "ACTIVE"
@@ -50,11 +50,11 @@ Via UI: **Administration → Cluster** — all nodes should show a green indicat
 ```bash
 # Cluster ingestion stats
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/cluster/stats" | \
+  "https://vrli-prod-01.example.local/api/v2/cluster/stats" | \
   jq '{eventsPerSecond: .eventsIngested, diskUsedPct: .diskUsagePercent}'
 
 # Per-node disk usage from SSH
-ssh admin@vrli-prod-01.corp.local
+ssh admin@vrli-prod-01.example.local
 df -h /var/log/loginsight
 du -sh /var/log/loginsight/*
 ```
@@ -72,7 +72,7 @@ du -sh /var/log/loginsight/*
 ```bash
 # List all registered agents and their last check-in time
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/agents" | \
+  "https://vrli-prod-01.example.local/api/v2/agents" | \
   jq '.agents[] | {host: .hostname, lastActive: .lastActive, state: .state}' | \
   jq -s 'sort_by(.lastActive)'
 ```
@@ -86,7 +86,7 @@ Via UI: **Administration → Agents** — agents with a last check-in older than
 ```bash
 # Check that all alert definitions are enabled
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/alerts" | \
+  "https://vrli-prod-01.example.local/api/v2/alerts" | \
   jq '.alerts[] | select(.enabled == false) | {name: .name, enabled: .enabled}'
 # Output should be empty — no alerts should be disabled unintentionally
 ```
@@ -108,7 +108,7 @@ Verify that all expected syslog sources are sending data. Open the Aria Ops for 
 # Via API — get unique hosts seen in the last hour
 curl -sk -u 'admin:<password>' \
   -H "Content-Type: application/json" \
-  -X POST "https://vrli-prod-01.corp.local/api/v2/events/ingest" \
+  -X POST "https://vrli-prod-01.example.local/api/v2/events/ingest" \
   -d '{
     "query": "",
     "start-time": "'$(date -d "1 hour ago" +%s000)'",

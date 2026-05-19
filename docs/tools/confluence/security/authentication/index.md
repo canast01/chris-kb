@@ -60,7 +60,7 @@ LDAP integration syncs user accounts and group memberships from Active Directory
 
 | Field | Example Value |
 |---|---|
-| Server | `dc01.corp.local` |
+| Server | `dc01.example.local` |
 | Port | 636 (LDAPS — preferred) or 389 (LDAP) |
 | Use SSL | Yes (LDAPS) |
 | Base DN | `DC=corp,DC=local` |
@@ -121,7 +121,7 @@ Local account policy:
 ```bash
 # Audit local users via Confluence REST API
 curl -u admin:password -H "Content-Type: application/json" \
-  https://confluence.corp.local/rest/api/user?type=known \
+  https://confluence.example.local/rest/api/user?type=known \
   | python3 -m json.tool | grep -E "username|userKey"
 ```
 
@@ -179,7 +179,7 @@ Recommended session settings (General Configuration > Security Configuration):
 
 # Or query via REST API
 curl -u admin:password \
-  "https://confluence.corp.local/rest/api/audit?startDate=$(date -d '-7 days' +%Y-%m-%d)&limit=100" \
+  "https://confluence.example.local/rest/api/audit?startDate=$(date -d '-7 days' +%Y-%m-%d)&limit=100" \
   | python3 -m json.tool | grep -E '"user"|"type"|"description"'
 
 # Check failed login events in Confluence application log

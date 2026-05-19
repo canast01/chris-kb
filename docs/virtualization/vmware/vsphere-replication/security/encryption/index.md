@@ -84,7 +84,7 @@ VRA ships with a self-signed certificate. Replace with a CA-signed certificate:
 ### Replace via VRA VAMI
 
 ```
-https://vra-london.corp.local:5480 → SSL → Upload Certificate
+https://vra-london.example.local:5480 → SSL → Upload Certificate
   Upload: PEM certificate (server cert + chain)
   Upload: PEM private key (no passphrase)
   Save → VRA VAMI restarts
@@ -96,7 +96,7 @@ https://vra-london.corp.local:5480 → SSL → Upload Certificate
 CERT_B64=$(base64 -i vra-london.crt | tr -d '\n')
 KEY_B64=$(base64 -i vra-london.key | tr -d '\n')
 
-curl -sk -X PUT "https://vra-london.corp.local/api/rest/vr/ssl/certificate" \
+curl -sk -X PUT "https://vra-london.example.local/api/rest/vr/ssl/certificate" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d "{\"certificate\": \"$CERT_B64\", \"private_key\": \"$KEY_B64\"}"
@@ -112,10 +112,10 @@ Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 ## TLS Hardening on VRA
 
 ```bash
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 
 # Check current TLS configuration:
-sudo openssl s_client -connect vra-london.corp.local:443 -tls1 2>&1 | grep "Cipher"
+sudo openssl s_client -connect vra-london.example.local:443 -tls1 2>&1 | grep "Cipher"
 # Should show "no peer certificate available" or handshake failure for TLS 1.0/1.1
 
 # VRA's TLS config is managed by the appliance framework — updating nginx config:

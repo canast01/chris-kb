@@ -56,7 +56,7 @@ Access the Appliance Management Interface at `https://<vcenter>:5480` → **Back
 
 1. Navigate to **Backup → Configure**
 2. Set the **backup location** (protocol + destination):
-   - `sftp://backup-server.corp.local/backups/vcenter` (recommended — encrypted in transit)
+   - `sftp://backup-server.example.local/backups/vcenter` (recommended — encrypted in transit)
    - `ftps://`, `https://` also supported
 3. Enter **backup server credentials** (username and password)
 4. Set a **backup encryption password** — this is required for restore; store it in your password vault immediately

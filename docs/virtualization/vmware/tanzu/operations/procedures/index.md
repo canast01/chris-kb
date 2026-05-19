@@ -42,7 +42,7 @@ OR via kubectl:
 ```
 
 ```bash
-kubectl vsphere login --server https://supervisor.corp.local \
+kubectl vsphere login --server https://supervisor.example.local \
   --username administrator@vsphere.local --insecure-skip-tls-verify
 
 # Create namespace (vSphere Namespace via YAML on Supervisor)
@@ -99,7 +99,7 @@ kubectl get tanzukubernetescluster -n team-alpha -w
 
 ```bash
 # Get kubeconfig for the workload cluster
-kubectl vsphere login --server https://supervisor.corp.local \
+kubectl vsphere login --server https://supervisor.example.local \
   --username administrator@vsphere.local \
   --tanzu-kubernetes-cluster-name team-alpha-cluster \
   --tanzu-kubernetes-cluster-namespace team-alpha
@@ -131,7 +131,7 @@ EOF
 
 ```bash
 # Create project via Harbor API
-curl -sk -X POST "https://harbor.corp.local/api/v2.0/projects" \
+curl -sk -X POST "https://harbor.example.local/api/v2.0/projects" \
   -u admin:<password> \
   -H "Content-Type: application/json" \
   -d '{
@@ -145,7 +145,7 @@ curl -sk -X POST "https://harbor.corp.local/api/v2.0/projects" \
   }'
 
 # Create user membership in project
-curl -sk -X POST "https://harbor.corp.local/api/v2.0/projects/team-alpha/members" \
+curl -sk -X POST "https://harbor.example.local/api/v2.0/projects/team-alpha/members" \
   -u admin:<password> \
   -H "Content-Type: application/json" \
   -d '{
@@ -171,7 +171,7 @@ Projects → New Project
   Enable: Pull-through cache → Docker Hub endpoint
 ```
 
-Configure nodes to pull from Harbor instead of Docker Hub directly by setting imagePullPolicy and image names to use `harbor.corp.local/dockerhub-cache/` prefix.
+Configure nodes to pull from Harbor instead of Docker Hub directly by setting imagePullPolicy and image names to use `harbor.example.local/dockerhub-cache/` prefix.
 
 ---
 
@@ -211,7 +211,7 @@ metadata:
   namespace: production
 spec:
   virtualhost:
-    fqdn: myapp.corp.local
+    fqdn: myapp.example.local
     tls:
       secretName: myapp-tls  # cert-manager managed TLS secret
   routes:
@@ -243,7 +243,7 @@ tanzu cluster scale team-alpha-cluster --worker-machine-count 7
 tanzu cluster kubeconfig get my-cluster --admin
 
 # Or for Supervisor-managed cluster:
-kubectl vsphere login --server https://supervisor.corp.local \
+kubectl vsphere login --server https://supervisor.example.local \
   --username user@corp.local \
   --tanzu-kubernetes-cluster-name my-cluster \
   --tanzu-kubernetes-cluster-namespace my-namespace

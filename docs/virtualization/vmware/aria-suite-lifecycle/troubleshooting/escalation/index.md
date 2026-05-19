@@ -70,7 +70,7 @@ Collect all of the following before opening the SR — providing this upfront av
 ```bash
 # LCM version — note output
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/system/details" | jq '.'
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/system/details" | jq '.'
 
 # Or via UI: LCM → Settings → System Details → Version
 ```
@@ -79,7 +79,7 @@ curl -sk -H "x-xenon-auth-token: $TOKEN" \
 
 ```bash
 # Generate support bundle from LCM appliance SSH
-ssh admin@lcm-prod-01.corp.local
+ssh admin@lcm-prod-01.example.local
 vracli support-bundle generate
 
 # Bundle location — typically /data/support-bundles/<timestamp>.tar.gz

@@ -30,7 +30,7 @@ vCenter → Site Recovery → vSphere Replication
 
 ```bash
 # VRA health via API
-curl -sk https://vra-london.corp.local/api/rest/vr/health | python3 -m json.tool
+curl -sk https://vra-london.example.local/api/rest/vr/health | python3 -m json.tool
 # Status should be "OK"
 ```
 
@@ -50,13 +50,13 @@ Any red VM: investigate immediately
 ```bash
 # Via REST API — list replications with lag
 TOKEN=$(curl -sk -X POST \
-  "https://vra-london.corp.local/api/rest/vr/authentication/token" \
+  "https://vra-london.example.local/api/rest/vr/authentication/token" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>"}' | \
   python3 -c "import json,sys; print(json.load(sys.stdin)['token'])")
 
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-london.corp.local/api/rest/vr/replications" | \
+  "https://vra-london.example.local/api/rest/vr/replications" | \
   python3 -c "
 import json, sys
 reps = json.load(sys.stdin)
@@ -73,7 +73,7 @@ for r in reps.get('list', []):
 ## Verify VRA Disk Space
 
 ```bash
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 df -h
 # Monitor /opt and /var partitions
 # VRA appliance disk: should have >20% free
@@ -96,7 +96,7 @@ vCenter → Site Recovery → vSphere Replication → Replication Servers
 ```
 
 ```bash
-ssh admin@vrs-london-01.corp.local
+ssh admin@vrs-london-01.example.local
 systemctl status hms
 ```
 
@@ -122,11 +122,11 @@ ls /vmfs/volumes/<target-datastore>/<VM-folder>/
 
 ```bash
 # Check VRA management certificate
-echo | openssl s_client -connect vra-london.corp.local:443 -servername vra-london.corp.local 2>/dev/null \
+echo | openssl s_client -connect vra-london.example.local:443 -servername vra-london.example.local 2>/dev/null \
   | openssl x509 -noout -dates
 
 # Check VRA-to-VRA port (44046)
-echo | openssl s_client -connect vra-amsterdam.corp.local:44046 2>/dev/null \
+echo | openssl s_client -connect vra-amsterdam.example.local:44046 2>/dev/null \
   | openssl x509 -noout -dates
 ```
 

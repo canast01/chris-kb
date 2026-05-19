@@ -590,7 +590,7 @@ autosupport history show -fields seq-num,status,triggered-time,destination
 autosupport modify -node <node> -state enable
 autosupport modify -node <node> -state disable
 autosupport modify -node <node> -mail-hosts <smtp_server>
-autosupport modify -node <node> -proxy-url http://proxy.corp.local:8080
+autosupport modify -node <node> -proxy-url http://proxy.example.local:8080
 autosupport modify -node <node> -noteto ops@corp.local
 autosupport modify -node <node> -transport https
 

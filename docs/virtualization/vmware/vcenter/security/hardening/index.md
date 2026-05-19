@@ -103,9 +103,9 @@ vCenter 7.0+ enforces TLS 1.2 minimum. Verify after upgrading from older vSphere
 Test TLS from outside the appliance:
 ```bash
 # Verify only TLS 1.2+ is accepted
-openssl s_client -connect vcenter.corp.local:443 -tls1   # should fail
-openssl s_client -connect vcenter.corp.local:443 -tls1_1 # should fail
-openssl s_client -connect vcenter.corp.local:443 -tls1_2 # should succeed
+openssl s_client -connect vcenter.example.local:443 -tls1   # should fail
+openssl s_client -connect vcenter.example.local:443 -tls1_1 # should fail
+openssl s_client -connect vcenter.example.local:443 -tls1_2 # should succeed
 ```
 
 ---

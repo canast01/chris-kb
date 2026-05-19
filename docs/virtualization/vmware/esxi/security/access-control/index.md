@@ -117,7 +117,7 @@ Minimise local accounts. Production ESXi hosts should have at most two local acc
 esxcli system account list
 
 # Via vSphere API (PowerCLI)
-(Get-VMHost "esxi-01.corp.local").ExtensionData.Config.LocalAccountManager.QueryUserList()
+(Get-VMHost "esxi-01.example.local").ExtensionData.Config.LocalAccountManager.QueryUserList()
 ```
 
 ### Add a Local Account
@@ -305,7 +305,7 @@ All access events must be forwarded to a central SIEM. Logs stored only in ESXi 
 
 ```bash
 # Configure syslog forwarding
-esxcli system syslog config set --loghost="tcp://syslog.corp.local:514"
+esxcli system syslog config set --loghost="tcp://syslog.example.local:514"
 esxcli system syslog reload
 
 # Verify

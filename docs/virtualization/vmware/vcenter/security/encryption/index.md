@@ -190,7 +190,7 @@ The simplest replacement — use when VMCA is the CA and no custom CA is require
 After renewal:
 ```bash
 # Verify new certificate dates
-echo | openssl s_client -connect vcenter.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect vcenter.example.local:443 2>/dev/null \
     | openssl x509 -noout -dates
 
 # Confirm services recovered

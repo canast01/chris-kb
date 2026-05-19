@@ -7,7 +7,7 @@ Technical and operational reference for VMware Aria Suite Lifecycle Manager. Cov
 ```
   Aria Suite Lifecycle — Core Architecture
 ┌─────────────────────────────────────────────────────────────────┐
-│  LCM Appliance (lcm-prod-01.corp.local)                         │
+│  LCM Appliance (lcm-prod-01.example.local)                         │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │  Lifecycle Operations    Locker (vault)                  │   │
 │  │  ┌──────────────────┐    ┌───────────────────────────┐   │   │

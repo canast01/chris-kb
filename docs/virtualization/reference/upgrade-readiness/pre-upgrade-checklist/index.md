@@ -70,7 +70,7 @@ Get-Datastore | Where-Object {$_.State -ne "Available"} | Select-Object Name, St
 
 - [ ] DNS: forward and reverse resolution for all component FQDNs confirmed
   ```bash
-  for fqdn in vcenter.corp.local nsx.corp.local esxi01.corp.local; do
+  for fqdn in vcenter.example.local nsx.example.local esxi01.example.local; do
       nslookup $fqdn; nslookup $(nslookup $fqdn | grep Address | tail -1 | awk '{print $2}')
   done
   ```
@@ -87,7 +87,7 @@ Get-Datastore | Where-Object {$_.State -ne "Available"} | Select-Object Name, St
 - [ ] STS (Lookup Service) certificate valid
   ```bash
   # Check vCenter cert expiry
-  openssl s_client -connect vcenter.corp.local:443 -showcerts 2>/dev/null | openssl x509 -noout -dates
+  openssl s_client -connect vcenter.example.local:443 -showcerts 2>/dev/null | openssl x509 -noout -dates
   ```
 
 ## Access and Credentials

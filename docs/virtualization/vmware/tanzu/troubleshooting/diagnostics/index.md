@@ -90,7 +90,7 @@ kubectl describe pod <pod-name> -n production | tail -30
 
 ```bash
 # If Harbor is deployed as OVA (VM-based):
-ssh admin@harbor.corp.local
+ssh admin@harbor.example.local
 docker-compose -f /opt/docker-compose.yml logs --tail=100 core
 docker-compose -f /opt/docker-compose.yml logs --tail=100 registry
 docker-compose -f /opt/docker-compose.yml logs --tail=100 nginx

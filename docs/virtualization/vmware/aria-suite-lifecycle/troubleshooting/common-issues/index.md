@@ -32,7 +32,7 @@
 tail -200 /var/log/vmware/vrlcm/lcm-install.log
 
 # Verify DNS resolution for all product FQDNs from LCM node
-for fqdn in vrops.corp.local vra.corp.local vidm.corp.local vrli.corp.local; do
+for fqdn in vrops.example.local vra.example.local vidm.example.local vrli.example.local; do
   echo -n "$fqdn → "; nslookup "$fqdn" | grep "Address" | tail -1
 done
 
@@ -135,7 +135,7 @@ If the VIDM admin password is changed externally, LCM loses its registration cre
 
 ```bash
 # Verify VIDM health from LCM appliance
-curl -sk https://vidm.corp.local/SAAS/API/1.0/REST/system/health
+curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
 # If health is UP but login fails, re-register VIDM:
 ```
 
@@ -167,17 +167,17 @@ journalctl -u <failing-service> --since "1 hour ago" | tail -100
 All LCM operations are tracked as requests with full audit logs:
 
 ```bash
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
 
 # List last 20 requests
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/requests?size=20" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?size=20" | \
   jq -r '.[] | "\(.state)\t\(.requestType)\t\(.requestId)\t\(.startTime)"'
 
 # Get detail of a failed request
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/requests/<request-id>" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests/<request-id>" | \
   jq '.tasks[] | {name: .taskName, state: .taskState, message: .message}'
 ```

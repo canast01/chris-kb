@@ -48,12 +48,12 @@ Any account showing a warning or error status means Aria Automation cannot provi
 
 ```bash
 # Check cloud account status via API
-TOKEN=$(curl -sk -X POST "https://vra-prod-01.corp.local/csp/gateway/am/api/login" \
+TOKEN=$(curl -sk -X POST "https://vra-prod-01.example.local/csp/gateway/am/api/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>"}' | jq -r '.token')
 
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/iaas/api/cloud-accounts" | \
+  "https://vra-prod-01.example.local/iaas/api/cloud-accounts" | \
   jq '.content[] | {name: .name, type: .cloudAccountType, status: .cloudAccountStatus}'
 ```
 
@@ -62,7 +62,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ### Kubernetes Pod Health
 
 ```bash
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 
 # Check all pods are Running or Completed
 kubectl get pods --all-namespaces | grep -v "Running\|Completed\|Succeeded"
@@ -89,7 +89,7 @@ Failed deployments should be investigated, even if they are not actively blockin
 ```bash
 # API — list recent failed deployments
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/deployment/api/deployments?status=FAILED&size=20" | \
+  "https://vra-prod-01.example.local/deployment/api/deployments?status=FAILED&size=20" | \
   jq '.content[] | {name: .name, status: .status, reason: .reason}'
 ```
 
@@ -135,11 +135,11 @@ Contact deployment owners for renewals or confirm expiry is intended. Expired de
 
 ```bash
 # Check Aria Automation UI certificate expiry
-echo | openssl s_client -connect vra-prod-01.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect vra-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -dates
 
 # Check VAMI certificate expiry
-echo | openssl s_client -connect vra-prod-01.corp.local:5480 2>/dev/null | \
+echo | openssl s_client -connect vra-prod-01.example.local:5480 2>/dev/null | \
   openssl x509 -noout -dates
 ```
 
@@ -161,7 +161,7 @@ Run before any planned change (upgrade, certificate rotation, cloud account re-c
 ## Platform Service Health Commands
 
 ```bash
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 
 # Overall appliance and service health
 vracli status

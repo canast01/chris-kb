@@ -55,7 +55,7 @@ Apply the following controls to every ESXi host before placing it in production.
 | Replace self-signed certificate | Replace with VMCA or CA-signed cert via vCenter | Required for production |
 | Set login banner | `esxcli system settings advanced set -o /Config/Etc/issue -s "..."` | Legal warning banner |
 | Disable unused services | Review running services; disable FTP, telnet, CIM if unused | Minimise attack surface |
-| Enable syslog forwarding | `esxcli system syslog config set --loghost=tcp://syslog.corp.local:514` | All logs off-host before reboot |
+| Enable syslog forwarding | `esxcli system syslog config set --loghost=tcp://syslog.example.local:514` | All logs off-host before reboot |
 | Set password policy | Advanced settings → `Security.AccountLockFailures = 5` | Prevent brute force |
 | Disable BPDU filter | Leave at default (enabled on vDS) | Prevent spanning tree manipulation |
 
@@ -89,7 +89,7 @@ Get-VMHost | Select-Object Name,
     @{N="LockdownMode"; E={$_.ExtensionData.Config.LockdownMode}}
 
 # Disable lockdown (for maintenance — re-enable after)
-Get-VMHost "esxi-01.corp.local" | ForEach-Object {
+Get-VMHost "esxi-01.example.local" | ForEach-Object {
     $_.ExtensionData.ExitLockdownMode()
 }
 ```
@@ -216,11 +216,11 @@ All ESXi security-relevant events must be forwarded off-host. Logs are stored in
 
 ```bash
 # Configure syslog target
-esxcli system syslog config set --loghost="tcp://syslog.corp.local:514"
+esxcli system syslog config set --loghost="tcp://syslog.example.local:514"
 
 # Multiple targets
 esxcli system syslog config set \
-  --loghost="tcp://syslog1.corp.local:514,udp://syslog2.corp.local:514"
+  --loghost="tcp://syslog1.example.local:514,udp://syslog2.example.local:514"
 
 # Apply config
 esxcli system syslog reload
@@ -249,7 +249,7 @@ Security settings captured in a Host Profile:
 ```powershell
 # Create a host profile from the hardened reference host
 New-VMHostProfile -Name "Cluster-Security-Profile" \
-    -ReferenceHost (Get-VMHost "esxi-01.corp.local") \
+    -ReferenceHost (Get-VMHost "esxi-01.example.local") \
     -Description "Production security baseline — v1.2"
 
 # Attach profile to all hosts in cluster

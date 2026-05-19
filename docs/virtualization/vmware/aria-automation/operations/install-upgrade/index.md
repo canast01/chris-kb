@@ -120,10 +120,10 @@ Upload the Aria Automation `.pak` file from Broadcom Support Portal. The VAMI va
 
 ```bash
 # Copy PAK file to the appliance
-scp VMware-vRealize-Automation-*.pak root@vra-prod-01.corp.local:/tmp/
+scp VMware-vRealize-Automation-*.pak root@vra-prod-01.example.local:/tmp/
 
 # SSH to the appliance and trigger upgrade via vracli
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 vracli software-update install --file /tmp/VMware-vRealize-Automation-*.pak
 ```
 
@@ -148,7 +148,7 @@ Run this checklist before initiating any upgrade:
 
 ```bash
 # Pre-upgrade disk and service check on appliance
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 
 # Disk space
 df -h / /var
@@ -171,7 +171,7 @@ Run immediately after the upgrade completes:
 
 ```bash
 # Confirm installed version matches target
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 vracli version
 
 # Confirm all pods are Running

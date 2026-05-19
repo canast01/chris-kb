@@ -57,7 +57,7 @@ The Aria Automation support bundle is required for all support cases.
 
 ```bash
 # SSH to the Aria Automation appliance
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 
 # Generate the support bundle (this takes 5–15 minutes)
 vracli support-bundle
@@ -66,7 +66,7 @@ vracli support-bundle
 ls -lh /tmp/vracli-support-bundle*.tar.gz
 
 # Copy to a local machine for upload
-scp root@vra-prod-01.corp.local:/tmp/vracli-support-bundle*.tar.gz /tmp/
+scp root@vra-prod-01.example.local:/tmp/vracli-support-bundle*.tar.gz /tmp/
 ```
 
 The bundle includes: service logs from all Kubernetes namespaces, cluster configuration, pod descriptions, database diagnostics (no data, structure only), networking information, and Kubernetes events.
@@ -141,7 +141,7 @@ For P1 cases:
 Collect this before opening the SR — support will ask for all of it in the first response if it is not provided upfront:
 
 ```bash
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 
 # System information
 vracli version
@@ -160,11 +160,11 @@ kubectl get pods --all-namespaces | grep -v "Running\|Completed\|Succeeded"
 kubectl get events --all-namespaces --sort-by='.metadata.creationTimestamp' | tail -50
 
 # VIDM connectivity (authentication dependency)
-curl -sk https://vidm.corp.local/SAAS/API/1.0/REST/system/health
+curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
 # Expected: {"status": "UP"}
 
 # Cloud account reachability (vCenter)
-curl -sk -o /dev/null -w "%{http_code}" https://vcenter-prod.corp.local/rest/com/vmware/cis/session
+curl -sk -o /dev/null -w "%{http_code}" https://vcenter-prod.example.local/rest/com/vmware/cis/session
 # Expected: 401 (reachable — authentication challenge)
 ```
 

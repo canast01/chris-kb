@@ -51,11 +51,11 @@ Maintain an inventory of every certificate managed by LCM:
 
 | Product | Certificate Subject | SANs | Issuing CA | Expiry |
 |---|---|---|---|---|
-| LCM Appliance | `lcm-prod-01.corp.local` | `lcm-prod-01`, `lcm.corp.local` | Internal CA | yyyy-mm-dd |
-| VIDM | `vidm-prod-01.corp.local` | `vidm.corp.local` | Internal CA | yyyy-mm-dd |
-| Aria Operations | `vrops-prod-01.corp.local` | All node FQDNs + VIP | Internal CA | yyyy-mm-dd |
-| Aria Automation | `vra-prod.corp.local` | All node FQDNs + VIP | Internal CA | yyyy-mm-dd |
-| Aria Ops for Logs | `vrli-prod-01.corp.local` | All node FQDNs | Internal CA | yyyy-mm-dd |
+| LCM Appliance | `lcm-prod-01.example.local` | `lcm-prod-01`, `lcm.example.local` | Internal CA | yyyy-mm-dd |
+| VIDM | `vidm-prod-01.example.local` | `vidm.example.local` | Internal CA | yyyy-mm-dd |
+| Aria Operations | `vrops-prod-01.example.local` | All node FQDNs + VIP | Internal CA | yyyy-mm-dd |
+| Aria Automation | `vra-prod.example.local` | All node FQDNs + VIP | Internal CA | yyyy-mm-dd |
+| Aria Ops for Logs | `vrli-prod-01.example.local` | All node FQDNs | Internal CA | yyyy-mm-dd |
 
 Review and update this table at every renewal and after each LCM-managed deployment.
 
@@ -80,23 +80,23 @@ Fill in:
 **Via API:**
 
 ```bash
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
 
 curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
   -H "Content-Type: application/json" \
-  "https://lcm-prod-01.corp.local/lcm/locker/api/v2/certificates/csr" \
+  "https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates/csr" \
   -d '{
     "alias": "vrops-prod-2027",
-    "commonName": "vrops-prod.corp.local",
+    "commonName": "vrops-prod.example.local",
     "orgUnit": "IT Platform",
     "org": "Acme Corp",
     "locality": "London",
     "state": "England",
     "country": "GB",
     "keySize": 4096,
-    "sans": ["vrops-prod-01.corp.local","vrops-prod-02.corp.local","vrops-prod.corp.local"]
+    "sans": ["vrops-prod-01.example.local","vrops-prod-02.example.local","vrops-prod.example.local"]
   }' | jq '.'
 ```
 
@@ -129,7 +129,7 @@ CHAIN=$(awk '{printf "%s\\n", $0}' chain.pem)
 
 curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
   -H "Content-Type: application/json" \
-  "https://lcm-prod-01.corp.local/lcm/locker/api/v2/certificates/import" \
+  "https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates/import" \
   -d "{
     \"alias\": \"vrops-prod-2027\",
     \"certificateChain\": \"$CERT\",
@@ -188,7 +188,7 @@ A successful certificate replacement shows the request in `COMPLETED` state. Ver
 
 ```bash
 # Verify the new certificate is active on the product
-openssl s_client -connect vrops-prod-01.corp.local:443 -servername vrops-prod-01.corp.local \
+openssl s_client -connect vrops-prod-01.example.local:443 -servername vrops-prod-01.example.local \
   2>/dev/null | openssl x509 -noout -subject -dates -issuer
 # Confirm: subject matches the new certificate, issuer is your internal CA
 ```
@@ -202,13 +202,13 @@ Passwords stored in the Locker (service account credentials, vCenter passwords, 
 ```bash
 # List stored passwords (alias and username only — not the values)
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/locker/api/v2/passwords" | \
+  "https://lcm-prod-01.example.local/lcm/locker/api/v2/passwords" | \
   jq '.passwords[] | {alias: .alias, username: .userName, description: .description}'
 
 # Update a stored password (when the source password changes)
 curl -sk -X PUT -H "x-xenon-auth-token: $TOKEN" \
   -H "Content-Type: application/json" \
-  "https://lcm-prod-01.corp.local/lcm/locker/api/v2/passwords/<password-id>" \
+  "https://lcm-prod-01.example.local/lcm/locker/api/v2/passwords/<password-id>" \
   -d '{"alias": "<alias>", "userName": "<username>", "password": "<new-password>"}'
 ```
 
@@ -222,15 +222,15 @@ All LCM API and UI endpoints use TLS. Verify the appliance TLS configuration:
 
 ```bash
 # Confirm TLS 1.2 is accepted
-openssl s_client -connect lcm-prod-01.corp.local:443 -tls1_2 2>/dev/null | \
+openssl s_client -connect lcm-prod-01.example.local:443 -tls1_2 2>/dev/null | \
   grep "Protocol"
 
 # Confirm TLS 1.0 is rejected (expected: alert handshake failure)
-openssl s_client -connect lcm-prod-01.corp.local:443 -tls1 2>&1 | \
+openssl s_client -connect lcm-prod-01.example.local:443 -tls1 2>&1 | \
   grep -E "alert|error"
 
 # Check cipher suite negotiated
-openssl s_client -connect lcm-prod-01.corp.local:443 2>/dev/null | \
+openssl s_client -connect lcm-prod-01.example.local:443 2>/dev/null | \
   grep "Cipher is"
 ```
 

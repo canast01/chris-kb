@@ -85,7 +85,7 @@ Get-Service -ComputerName <desktop-vm-ip> -Name "VMware Horizon View Agent"
 
 ```bash
 # SSH to UAG appliance
-ssh root@uag.corp.local
+ssh root@uag.example.local
 
 # Log locations:
 /opt/vmware/gateway/logs/esmanager.log    # Edge Service Manager
@@ -93,7 +93,7 @@ ssh root@uag.corp.local
 /var/log/messages                          # OS syslog
 
 # Collect UAG log bundle via REST API:
-curl -sk -X GET "https://uag.corp.local:9443/rest/v1/config/logs/collect" \
+curl -sk -X GET "https://uag.example.local:9443/rest/v1/config/logs/collect" \
   -u admin:<password> -o uag-logs-$(date +%Y%m%d).zip
 ```
 
@@ -103,16 +103,16 @@ curl -sk -X GET "https://uag.corp.local:9443/rest/v1/config/logs/collect" \
 
 ```bash
 # From a client machine — test Blast port:
-nc -vz uag.corp.local 8443
+nc -vz uag.example.local 8443
 
 # Test PCoIP:
-nc -vz uag.corp.local 4172
+nc -vz uag.example.local 4172
 
 # Test HTTPS tunnel:
-nc -vz uag.corp.local 443
+nc -vz uag.example.local 443
 
 # Trace the path to UAG:
-traceroute uag.corp.local
+traceroute uag.example.local
 ```
 
 ---
@@ -138,18 +138,18 @@ traceroute uag.corp.local
 
 ```bash
 # Authenticate to Horizon REST API
-TOKEN=$(curl -sk -X POST https://horizon-cs01.corp.local/rest/login \
+TOKEN=$(curl -sk -X POST https://horizon-cs01.example.local/rest/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>","domain":"corp"}' \
   | python3 -c "import json,sys; print(json.load(sys.stdin).get('access_token',''))")
 
 # Get Connection Server health
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  https://horizon-cs01.corp.local/rest/monitor/connection-servers | python3 -m json.tool
+  https://horizon-cs01.example.local/rest/monitor/connection-servers | python3 -m json.tool
 
 # Get pool summary
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  https://horizon-cs01.corp.local/rest/inventory/v1/desktop-pools | python3 -m json.tool
+  https://horizon-cs01.example.local/rest/inventory/v1/desktop-pools | python3 -m json.tool
 ```
 
 ---

@@ -31,7 +31,7 @@
 1. Settings → Accounts and Data Sources → Add Source → vCenter Server
 2. Fill in:
    - **Nickname**: descriptive label (e.g., `vCenter-ProdDC`)
-   - **vCenter IP/FQDN**: `vcenter.corp.local`
+   - **vCenter IP/FQDN**: `vcenter.example.local`
    - **Username**: `svc-aon@vsphere.local`
    - **Password**: service account password
    - **Collector**: select the Collector VM associated with this site
@@ -46,7 +46,7 @@ Verify sync within 10–15 minutes:
 
 ```bash
 TOKEN="<your-token>"
-PLATFORM="https://aon.corp.local"
+PLATFORM="https://aon.example.local"
 
 curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
   -H "Authorization: NetworkInsight ${TOKEN}" \
@@ -54,7 +54,7 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
   -d '{
     "nickname": "vCenter-ProdDC",
     "credentials": {
-      "ip": "vcenter.corp.local",
+      "ip": "vcenter.example.local",
       "username": "svc-aon@vsphere.local",
       "password": "PASSWORD"
     },
@@ -68,7 +68,7 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
 1. Settings → Accounts and Data Sources → Add Source → NSX-T Manager
 2. Fill in:
    - **Nickname**: `NSX-T-ProdDC`
-   - **NSX-T Manager IP/FQDN**: `nsxmgr.corp.local`
+   - **NSX-T Manager IP/FQDN**: `nsxmgr.example.local`
    - **Username**: `svc-aon` (Auditor role)
    - **Password**: —
    - **Collector**: same Collector as the associated vCenter
@@ -85,7 +85,7 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/nsxt" \
   -d '{
     "nickname": "NSX-T-ProdDC",
     "credentials": {
-      "ip": "nsxmgr.corp.local",
+      "ip": "nsxmgr.example.local",
       "username": "svc-aon",
       "password": "PASSWORD"
     },
@@ -201,7 +201,7 @@ AON will create:
 
 ```bash
 TOKEN="<your-token>"
-PLATFORM="https://aon.corp.local"
+PLATFORM="https://aon.example.local"
 
 # Get application ID
 APP_ID=$(curl -sk "${PLATFORM}/api/ni/groups/applications" \

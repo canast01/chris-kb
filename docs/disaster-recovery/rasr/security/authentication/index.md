@@ -57,7 +57,7 @@ racadm set iDRAC.Users.2.Password "NewSecurePassword123!"
 
 # Enable AD authentication
 racadm set iDRAC.ActiveDirectory.Enable 1
-racadm set iDRAC.ActiveDirectory.DomainController1 dc01.corp.local
+racadm set iDRAC.ActiveDirectory.DomainController1 dc01.example.local
 racadm set iDRAC.ActiveDirectory.RootDomain corp.local
 
 # Set session timeout (in seconds — 900 = 15 minutes)

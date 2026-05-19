@@ -34,7 +34,7 @@
 **Platform VM** default OS user is `ubuntu`. There is no direct root login via SSH by default.
 
 ```bash
-ssh ubuntu@aon-platform.corp.local
+ssh ubuntu@aon-platform.example.local
 
 # Become root for service management
 sudo -i
@@ -46,7 +46,7 @@ sudo systemctl status vrni-platform
 **Collector VM** also uses `ubuntu` as the default SSH user.
 
 ```bash
-ssh ubuntu@aon-collector.corp.local
+ssh ubuntu@aon-collector.example.local
 sudo -i
 ```
 
@@ -126,8 +126,8 @@ du -sh /var/lib/elasticsearch/*
 nc -zv 10.10.10.51 443
 
 # Test DNS resolution
-nslookup aon-collector.corp.local
-dig aon-collector.corp.local
+nslookup aon-collector.example.local
+dig aon-collector.example.local
 
 # Check listening ports
 ss -tlnp | grep -E '443|8080|9042|2181|9200'
@@ -138,7 +138,7 @@ ss -tlnp | grep -E '443|8080|9042|2181|9200'
 ### Collector Service Status
 
 ```bash
-ssh ubuntu@aon-collector.corp.local
+ssh ubuntu@aon-collector.example.local
 sudo systemctl status ni-collector
 
 # View collector logs
@@ -152,7 +152,7 @@ sudo journalctl -u ni-collector -n 200
 # Trigger re-pairing to Platform VM
 sudo /home/ubuntu/support/pairing.sh
 # Prompts:
-#   Platform FQDN: aon-platform.corp.local
+#   Platform FQDN: aon-platform.example.local
 #   Pairing key:   <paste key from UI>
 ```
 
@@ -171,15 +171,15 @@ sudo tcpdump -i eth0 -n udp port 2055 --immediate-mode -q 2>/dev/null | \
 
 ```bash
 # Test vCenter API
-curl -sk https://vcenter.corp.local/rest/com/vmware/cis/session \
+curl -sk https://vcenter.example.local/rest/com/vmware/cis/session \
   -X POST -u 'svc-aon:PASSWORD' -o /dev/null -w "HTTP %{http_code}\n"
 
 # Test NSX-T Manager API
-curl -sk https://nsxmgr.corp.local/api/v1/cluster \
+curl -sk https://nsxmgr.example.local/api/v1/cluster \
   -u 'svc-aon:PASSWORD' -o /dev/null -w "HTTP %{http_code}\n"
 
 # Test TCP reachability to Platform
-nc -zv aon-platform.corp.local 443
+nc -zv aon-platform.example.local 443
 ```
 
 ## REST API Usage
@@ -187,7 +187,7 @@ nc -zv aon-platform.corp.local 443
 ### Authentication — Obtain Token
 
 ```bash
-PLATFORM="https://aon.corp.local"
+PLATFORM="https://aon.example.local"
 
 TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
   -H "Content-Type: application/json" \
@@ -202,7 +202,7 @@ Save token for subsequent calls:
 
 ```bash
 export AON_TOKEN="$TOKEN"
-export AON_URL="https://aon.corp.local"
+export AON_URL="https://aon.example.local"
 ```
 
 ### List Data Sources

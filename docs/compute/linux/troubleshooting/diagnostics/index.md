@@ -148,7 +148,7 @@ ls -la /var/log/*.1 /var/log/*.gz 2>/dev/null | head -20
 ```bash
 # /etc/rsyslog.d/90-remote.conf — forward all logs via TCP to centralised syslog
 *.* action(type="omfwd"
-    target="syslog.corp.local"
+    target="syslog.example.local"
     port="514"
     protocol="tcp")
 

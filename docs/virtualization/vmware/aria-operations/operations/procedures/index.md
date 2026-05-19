@@ -55,7 +55,7 @@ TOKEN=<your-token>
 ALERT_ID="<alert-uuid>"
 curl -sk -X PATCH -H "Authorization: vRealizeOpsToken $TOKEN" \
   -H "Content-Type: application/json" \
-  "https://vrops-prod-01.corp.local/suite-api/api/alerts/$ALERT_ID" \
+  "https://vrops-prod-01.example.local/suite-api/api/alerts/$ALERT_ID" \
   -d '{"status":"ACKNOWLEDGED","cancelTimeUTC":0}'
 ```
 
@@ -92,7 +92,7 @@ Aria Operations identifies idle and oversized VMs through its capacity analytics
 ```bash
 # Query idle VMs via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/resources/query" \
+  "https://vrops-prod-01.example.local/suite-api/api/resources/query" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
@@ -179,7 +179,7 @@ Test the notification rule by manually triggering a test alert:
 ```bash
 # Trigger a test notification
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/notifications/test" \
+  "https://vrops-prod-01.example.local/suite-api/api/notifications/test" \
   -H "Content-Type: application/json" \
   -d '{"notificationRuleId":"<rule-id>"}'
 ```
@@ -193,13 +193,13 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
 # Bundle is downloaded directly from the UI
 
 # Via CLI
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 vracli support bundle generate
 
 # The bundle is placed at:
 ls -lh /storage/log/support-bundle/
 # Download to local machine
-scp admin@vrops-prod-01.corp.local:/storage/log/support-bundle/*.zip .
+scp admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip .
 ```
 
 The support bundle includes: cluster configuration, application logs, adapter logs, alert history, and system diagnostics. Required when opening a Broadcom SR.

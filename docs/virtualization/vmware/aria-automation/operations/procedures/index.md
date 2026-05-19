@@ -47,13 +47,13 @@ Review **Deployments → All Deployments** and address deployments that are orph
 # List expired deployments via API
 TOKEN=<your-token>
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/deployment/api/deployments?status=CREATE_FAILED&size=50" | \
+  "https://vra-prod-01.example.local/deployment/api/deployments?status=CREATE_FAILED&size=50" | \
   jq '.content[] | {id: .id, name: .name, owner: .ownedBy, status: .status}'
 
 # Delete a specific deployment (Day-2 action — fires the destroy workflow)
 DEPLOYMENT_ID="<id>"
 curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/deployment/api/deployments/$DEPLOYMENT_ID"
+  "https://vra-prod-01.example.local/deployment/api/deployments/$DEPLOYMENT_ID"
 ```
 
 In the UI: select the deployment → **Actions → Delete** (or **Force Delete** if the deployment is stuck).
@@ -90,8 +90,8 @@ shared-k8s-namespace-standard
 1. Verify network connectivity from the Aria Automation appliance to the target system:
 
 ```bash
-ssh root@vra-prod-01.corp.local
-curl -sk -o /dev/null -w "%{http_code}" https://vcenter-prod.corp.local/rest/com/vmware/cis/session
+ssh root@vra-prod-01.example.local
+curl -sk -o /dev/null -w "%{http_code}" https://vcenter-prod.example.local/rest/com/vmware/cis/session
 # Expected: 401 (Unauthorised — server is reachable)
 # Any other output (000, curl error) indicates network or DNS issue
 ```

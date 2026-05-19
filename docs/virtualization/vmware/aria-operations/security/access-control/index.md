@@ -101,7 +101,7 @@ For API calls, authenticate as the service account:
 
 ```bash
 TOKEN=$(curl -sk -X POST \
-  "https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire" \
+  "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d '{"username":"svc-vrops-api","password":"<password>","authSource":"Local"}' | \
   jq -r '.token')
@@ -115,12 +115,12 @@ TOKEN=$(curl -sk -X POST \
 # List all user accounts and their roles via API
 TOKEN=<your-token>
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/auth/userquery" | \
+  "https://vrops-prod-01.example.local/suite-api/api/auth/userquery" | \
   jq '.users[] | {username: .username, role: .role[].name, source: .authSourceName}'
 
 # List all imported user groups
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/auth/usergroups" | \
+  "https://vrops-prod-01.example.local/suite-api/api/auth/usergroups" | \
   jq '.[] | {group: .name, role: .role[].name, source: .authSourceName}'
 ```
 

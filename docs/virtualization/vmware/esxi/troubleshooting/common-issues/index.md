@@ -342,13 +342,13 @@ date
 
 ```bash
 # Set NTP servers (replace with your NTP infrastructure)
-esxcli system ntp set --server=ntp1.corp.local --server=ntp2.corp.local --enabled=true
+esxcli system ntp set --server=ntp1.example.local --server=ntp2.example.local --enabled=true
 
 # Restart NTP daemon
 /etc/init.d/ntpd restart
 
 # Force time synchronisation immediately
-ntpdate ntp1.corp.local
+ntpdate ntp1.example.local
 
 # Verify
 ntpq -p

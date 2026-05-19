@@ -43,7 +43,7 @@ vCenter → Workload Management → Supervisor Clusters
 ```bash
 # Test Supervisor API reachability
 kubectl vsphere login \
-  --server https://supervisor.corp.local \
+  --server https://supervisor.example.local \
   --username administrator@vsphere.local \
   --insecure-skip-tls-verify
 
@@ -139,7 +139,7 @@ kubectl get svc -A | grep LoadBalancer
 
 ```bash
 # Harbor health API (no auth required)
-curl -sk https://harbor.corp.local/api/v2.0/health | python3 -m json.tool
+curl -sk https://harbor.example.local/api/v2.0/health | python3 -m json.tool
 # All components should show status: "healthy"
 
 # Check Harbor pods if deployed on Kubernetes
@@ -147,10 +147,10 @@ kubectl get pods -n harbor
 # All pods should be Running
 
 # Test image push/pull
-docker login harbor.corp.local -u admin -p <password>
-docker pull busybox && docker tag busybox harbor.corp.local/library/busybox:test
-docker push harbor.corp.local/library/busybox:test
-docker pull harbor.corp.local/library/busybox:test
+docker login harbor.example.local -u admin -p <password>
+docker pull busybox && docker tag busybox harbor.example.local/library/busybox:test
+docker push harbor.example.local/library/busybox:test
+docker pull harbor.example.local/library/busybox:test
 ```
 
 ---
@@ -159,11 +159,11 @@ docker pull harbor.corp.local/library/busybox:test
 
 ```bash
 # Check Supervisor API server cert
-echo | openssl s_client -connect supervisor.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect supervisor.example.local:443 2>/dev/null \
   | openssl x509 -noout -dates
 
 # Check Harbor cert
-echo | openssl s_client -connect harbor.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect harbor.example.local:443 2>/dev/null \
   | openssl x509 -noout -dates
 
 # Check workload cluster API cert

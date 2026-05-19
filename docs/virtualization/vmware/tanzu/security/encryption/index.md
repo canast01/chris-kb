@@ -87,7 +87,7 @@ spec:
     name: corp-ca-issuer
     kind: ClusterIssuer
   dnsNames:
-  - myapp.corp.local
+  - myapp.example.local
 EOF
 ```
 
@@ -124,10 +124,10 @@ Sign container images in Harbor using Cosign:
 
 ```bash
 # Sign an image
-cosign sign --key cosign.key harbor.corp.local/team-alpha/myapp:v1.0
+cosign sign --key cosign.key harbor.example.local/team-alpha/myapp:v1.0
 
 # Verify a signature
-cosign verify --key cosign.pub harbor.corp.local/team-alpha/myapp:v1.0
+cosign verify --key cosign.pub harbor.example.local/team-alpha/myapp:v1.0
 
 # Policy: require signed images (OPA Gatekeeper or Kyverno)
 ```
@@ -146,7 +146,7 @@ spec:
       resources:
         kinds: [Pod]
     verifyImages:
-    - imageReferences: ["harbor.corp.local/*"]
+    - imageReferences: ["harbor.example.local/*"]
       attestors:
       - entries:
         - keys:

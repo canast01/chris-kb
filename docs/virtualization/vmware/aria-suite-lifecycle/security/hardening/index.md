@@ -75,12 +75,12 @@ Ensure LCM does not expose weak TLS versions or cipher suites:
 
 ```bash
 # Verify TLS version from an external client
-openssl s_client -connect lcm-prod-01.corp.local:443 -tls1_2 2>/dev/null | grep "Protocol"
-openssl s_client -connect lcm-prod-01.corp.local:443 -tls1   2>/dev/null | grep "alert"
+openssl s_client -connect lcm-prod-01.example.local:443 -tls1_2 2>/dev/null | grep "Protocol"
+openssl s_client -connect lcm-prod-01.example.local:443 -tls1   2>/dev/null | grep "alert"
 # TLS 1.0 and 1.1 should return an alert — not supported in hardened deployments
 
 # Check the cipher suite negotiated
-openssl s_client -connect lcm-prod-01.corp.local:443 -tls1_3 2>/dev/null | grep "Cipher"
+openssl s_client -connect lcm-prod-01.example.local:443 -tls1_3 2>/dev/null | grep "Cipher"
 ```
 
 LCM 8.x ships with TLS 1.2+ enabled by default. Verify no legacy cipher suites are active using an external scanner such as `testssl.sh` or Qualys SSL Labs.

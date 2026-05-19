@@ -15,18 +15,18 @@ Management Access Check Flow
 
   Endpoints to verify:
   ┌─────────────────────────────────────────────────────┐
-  │  vCenter         https://vcenter.corp.local         │
+  │  vCenter         https://vcenter.example.local         │
   │  ├─ SSO login    administrator@vsphere.local        │
-  │  └─ VAMI         https://vcenter.corp.local:5480    │
+  │  └─ VAMI         https://vcenter.example.local:5480    │
   │                                                     │
-  │  NSX Manager     https://nsx.corp.local             │
+  │  NSX Manager     https://nsx.example.local             │
   │  ├─ Cluster      get cluster status → STABLE        │
   │  └─ Services     get services → running             │
   │                                                     │
-  │  Aria Operations https://aria-ops.corp.local        │
+  │  Aria Operations https://aria-ops.example.local        │
   │  └─ Collection   State: OK (< 5 min lag)            │
   │                                                     │
-  │  VxRail Manager  https://vxrail.corp.local          │
+  │  VxRail Manager  https://vxrail.example.local          │
   │  └─ Node health  All nodes: Healthy                 │
   │                                                     │
   │  iDRAC nodes     https://idrac-esx-<site>-<##>     │
@@ -37,13 +37,13 @@ Management Access Check Flow
 
 ```bash
 # Verify DNS resolution for management FQDNs
-for fqdn in vcenter.corp.local nsx.corp.local sddc-manager.corp.local aria-ops.corp.local; do
+for fqdn in vcenter.example.local nsx.example.local sddc-manager.example.local aria-ops.example.local; do
     result=$(nslookup $fqdn 2>/dev/null | grep "Address:" | tail -1)
     echo "$fqdn → $result"
 done
 
 # Verify HTTPS reachability
-for url in https://vcenter.corp.local https://nsx.corp.local; do
+for url in https://vcenter.example.local https://nsx.example.local; do
     code=$(curl -sk -o /dev/null -w "%{http_code}" "$url")
     echo "$url → HTTP $code"
 done
@@ -53,12 +53,12 @@ done
 
 ```powershell
 # Verify vCenter login (PowerCLI)
-Connect-VIServer -Server vcenter.corp.local -Credential $cred
+Connect-VIServer -Server vcenter.example.local -Credential $cred
 if ($?) { Write-Host "vCenter: OK" } else { Write-Host "vCenter: FAIL" }
 
 # Check vCenter certificate validity
 $cert = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
-$expiry = (Invoke-WebRequest -Uri "https://vcenter.corp.local" -UseBasicParsing).Headers
+$expiry = (Invoke-WebRequest -Uri "https://vcenter.example.local" -UseBasicParsing).Headers
 ```
 
 Checks to perform in vCenter UI:
@@ -78,13 +78,13 @@ get services         # All critical services should show: running
 
 ```bash
 # SDDC Manager API health check
-curl -k -u admin@local:password https://sddc-manager.corp.local/v1/health-summary | python3 -m json.tool
+curl -k -u admin@local:password https://sddc-manager.example.local/v1/health-summary | python3 -m json.tool
 ```
 
 ## Aria Operations Access
 
 Confirm Aria Ops is receiving telemetry:
-1. Log in to `https://aria-ops.corp.local`
+1. Log in to `https://aria-ops.example.local`
 2. Environment → Object Browser → confirm vCenter adapter shows `Collection State: OK`
 3. Check last collection time — should be within the last 5 minutes
 
@@ -92,7 +92,7 @@ Confirm Aria Ops is receiving telemetry:
 
 ```bash
 # Test LDAP connectivity (run from a Linux admin host)
-ldapsearch -H ldaps://dc1.corp.local:636 -D "cn=svc_vcenter,ou=service_accounts,dc=corp,dc=local" \
+ldapsearch -H ldaps://dc1.example.local:636 -D "cn=svc_vcenter,ou=service_accounts,dc=corp,dc=local" \
     -w '<password>' -b "dc=corp,dc=local" "(sAMAccountName=admin)" sAMAccountName
 # Should return at least one result
 ```

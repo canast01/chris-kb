@@ -59,13 +59,13 @@ Create a dedicated local account for automation scripts — do not use `admin@lo
 
 ```bash
 # Create a local API service account via LCM API (as admin)
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
 
 curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
   -H "Content-Type: application/json" \
-  "https://lcm-prod-01.corp.local/lcm/authz/api/v2/users" \
+  "https://lcm-prod-01.example.local/lcm/authz/api/v2/users" \
   -d '{
     "username": "svc-lcm-api@local",
     "password": "<strong-password>",
@@ -115,6 +115,6 @@ For formal audit trails, forward the LCM syslog to Aria Operations for Logs or a
 ```bash
 # Configure syslog forwarding from LCM appliance
 # Edit /etc/rsyslog.d/lcm-remote.conf (create if not present)
-echo '*.* @@vrli-prod-01.corp.local:514' > /etc/rsyslog.d/lcm-remote.conf
+echo '*.* @@vrli-prod-01.example.local:514' > /etc/rsyslog.d/lcm-remote.conf
 systemctl restart rsyslog
 ```

@@ -93,13 +93,13 @@ Horizon Console → Settings → Servers → Connection Servers
 
 ## Configure UAG for External Access
 
-UAG Admin UI (https://uag.corp.local:9443):
+UAG Admin UI (https://uag.example.local:9443):
 
 ```
 Configure Manually
   Network Settings: set IPs for each NIC (Internet, Management, Backend)
   Edge Service Settings → Horizon → Enable
-    Connection Server URL: https://horizon-cs01.corp.local:443
+    Connection Server URL: https://horizon-cs01.example.local:443
     Connection Server thumbprint: sha1:<thumbprint>
     Blast port: 8443
     PCoIP port: 4172
@@ -108,7 +108,7 @@ Configure Manually
 
 ```bash
 # Get Connection Server certificate thumbprint:
-echo | openssl s_client -connect horizon-cs01.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect horizon-cs01.example.local:443 2>/dev/null \
   | openssl x509 -fingerprint -sha1 -noout
 ```
 
@@ -148,7 +148,7 @@ The AppStack VMDK will mount at the next user login for members of that group.
 ## Handle a Stuck Desktop in Error State
 
 ```powershell
-Connect-HVServer -Server horizon-cs01.corp.local -Credential (Get-Credential)
+Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
 
 # List desktops in error state
 Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } |

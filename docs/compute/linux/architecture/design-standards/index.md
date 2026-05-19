@@ -79,8 +79,8 @@ Sudo access granted via AD group membership:
 
 ```bash
 # /etc/chrony.conf (RHEL)
-server ntp1.corp.local iburst
-server ntp2.corp.local iburst
+server ntp1.example.local iburst
+server ntp2.example.local iburst
 makestep 1.0 3
 rtcsync
 ```
@@ -91,9 +91,9 @@ Verify: `chronyc tracking` — `System time` offset should be < 1ms.
 
 ```bash
 # /etc/rsyslog.d/00-forward.conf
-*.info @siem.corp.local:514
+*.info @siem.example.local:514
 # Or TLS:
-*.info @@siem.corp.local:6514
+*.info @@siem.example.local:6514
 ```
 
 ## Package Repository Policy
@@ -104,7 +104,7 @@ Production servers point only to approved internal mirrors:
 subscription-manager repos --disable="*" --enable=rhel-9-for-x86_64-baseos-rpms --enable=rhel-9-for-x86_64-appstream-rpms
 
 # Ubuntu: /etc/apt/sources.list — point to internal mirror
-deb http://mirror.corp.local/ubuntu jammy main restricted universe
+deb http://mirror.example.local/ubuntu jammy main restricted universe
 ```
 
 No direct internet access from production servers — all package traffic via mirror.

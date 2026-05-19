@@ -54,18 +54,18 @@ In the LCM UI:
 
 ```bash
 # Authenticate and get a session token
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
 
 # List all environments and their health
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments" | \
   jq '.[] | {name: .environmentName, health: .environmentHealth}'
 
 # Get all running requests (watch for stuck workflows)
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/requests?state=RUNNING" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?state=RUNNING" | \
   jq '.[] | {id: .requestId, type: .requestType, startTime: .startTime}'
 ```
 
@@ -77,18 +77,18 @@ The Locker stores certificates, passwords, and licences. Run these checks weekly
 
 ```bash
 # List all certificates and days-to-expiry
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
 
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/locker/api/v2/certificates" | \
+  "https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates" | \
   jq '.certificates[] | {alias: .alias, expiry: .expirationDate, days: .daysToExpiry}' | \
   jq -s 'sort_by(.days)'
 
 # List all passwords stored in Locker
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/locker/api/v2/passwords" | \
+  "https://lcm-prod-01.example.local/lcm/locker/api/v2/passwords" | \
   jq '.passwords[] | {alias: .alias, username: .userName}'
 ```
 
@@ -125,12 +125,12 @@ Run this checklist before initiating any LCM-orchestrated upgrade:
 # Get health status for a specific environment
 ENV_ID="<your-env-id>"
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments/$ENV_ID/health" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments/$ENV_ID/health" | \
   jq '.'
 
 # Get product details within an environment
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments/$ENV_ID/products" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments/$ENV_ID/products" | \
   jq '.[] | {product: .productId, version: .version, health: .productHealth}'
 ```
 

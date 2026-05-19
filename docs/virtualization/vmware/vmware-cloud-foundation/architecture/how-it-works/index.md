@@ -159,11 +159,11 @@ curl -sk -u 'admin@local:password' \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{"credentialType": "SSH", "resourceType": "ESXI"}' \
-  "https://sddc-manager.corp.local/v1/credentials/rotate"
+  "https://sddc-manager.example.local/v1/credentials/rotate"
 
 # Check credential rotation status
 curl -sk -u 'admin@local:password' \
-  "https://sddc-manager.corp.local/v1/credentials" | python3 -m json.tool
+  "https://sddc-manager.example.local/v1/credentials" | python3 -m json.tool
 ```
 
 ---
@@ -186,7 +186,7 @@ SDDC Manager → Security → Certificate Management
 ```bash
 # Check certificate expiry across all components (API)
 curl -sk -u 'admin@local:password' \
-  "https://sddc-manager.corp.local/v1/certificates" | \
+  "https://sddc-manager.example.local/v1/certificates" | \
   python3 -m json.tool | grep -E "expirationDate|resourceFqdn"
 ```
 

@@ -13,8 +13,8 @@ Aria Operations — Backup Architecture
                        ▼
 ┌─────────────────────────────────────────────────────┐
 │  Backup Target                                      │
-│  NFS: nas-01.corp.local:/aria-ops-backups           │
-│  SFTP: backup-srv.corp.local (port 22)              │
+│  NFS: nas-01.example.local:/aria-ops-backups           │
+│  SFTP: backup-srv.example.local (port 22)              │
 │                                                     │
 │  What IS backed up:                                 │
 │    alert definitions · dashboards · user accounts   │
@@ -52,7 +52,7 @@ Administration → Backup/Restore → External Location → Add Location
 
 Provide:
 - Location type: NFS or SFTP
-- NFS: `<nfs-server>:<export-path>` (e.g., `nas-01.corp.local:/aria-ops-backups`)
+- NFS: `<nfs-server>:<export-path>` (e.g., `nas-01.example.local:/aria-ops-backups`)
 - SFTP: hostname, port (22), username, password or SSH key
 - Folder path on the target (auto-created if NFS)
 
@@ -72,7 +72,7 @@ Recommended settings:
 ## Manual Backup via CLI
 
 ```bash
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 
 # Trigger an immediate backup using the vracli tool
 vracli backup --location <backup-id>
@@ -91,18 +91,18 @@ vracli backup status
 
 ```bash
 # Authenticate
-TOKEN=$(curl -sk -X POST "https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire" \
+TOKEN=$(curl -sk -X POST "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>","authSource":"Local"}' | \
   jq -r '.token')
 
 # List backup configurations
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/backups" | jq '.'
+  "https://vrops-prod-01.example.local/suite-api/api/backups" | jq '.'
 
 # Trigger an immediate backup
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/backups/<backup-config-id>/actions/backup" | \
+  "https://vrops-prod-01.example.local/suite-api/api/backups/<backup-config-id>/actions/backup" | \
   jq '.'
 ```
 
@@ -144,7 +144,7 @@ The UI shows a list of available backups by timestamp. Select the desired restor
 **Via CLI:**
 
 ```bash
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 vracli restore --backup-id <backup-timestamp-id>
 ```
 
@@ -174,7 +174,7 @@ For full disaster recovery (including metric data), use a VM-level backup of all
 
 ```bash
 # After restoring all nodes from VM backup, run Cassandra repair on the primary node
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 vracli cluster cassandra repair
 # This can take hours on large deployments — monitor progress in /storage/log/cassandra.log
 ```

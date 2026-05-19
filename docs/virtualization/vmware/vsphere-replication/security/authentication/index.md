@@ -30,7 +30,7 @@ VRA authenticates to vCenter using vCenter SSO credentials provided during initi
 
 ```
 VRA VAMI → Configuration → vCenter Server
-  vCenter: vcenter-london.corp.local
+  vCenter: vcenter-london.example.local
   Username: administrator@vsphere.local
   Password: <password>
   → Register
@@ -64,7 +64,7 @@ Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 The VRA VAMI admin account is local to the appliance, separate from vCenter SSO:
 
 ```
-VRA VAMI (https://vra-london.corp.local:5480)
+VRA VAMI (https://vra-london.example.local:5480)
   Username: admin
   Password: set during OVA deployment
 
@@ -79,14 +79,14 @@ Change password:
 ```bash
 # Get session token
 curl -sk -X POST \
-  "https://vra-london.corp.local/api/rest/vr/authentication/token" \
+  "https://vra-london.example.local/api/rest/vr/authentication/token" \
   -H "Content-Type: application/json" \
   -d '{"username": "admin", "password": "<password>"}' | \
   python3 -c "import json,sys; print(json.load(sys.stdin)['token'])"
 
 # Token usage
 curl -sk -H "Authorization: Bearer <token>" \
-  "https://vra-london.corp.local/api/rest/vr/replications"
+  "https://vra-london.example.local/api/rest/vr/replications"
 ```
 
 Token TTL: default 300 seconds — request a new token for longer-running scripts.

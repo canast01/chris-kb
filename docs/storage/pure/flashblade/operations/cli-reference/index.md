@@ -525,7 +525,7 @@ purefb directory-service show
 
 purefb directory-service update \
     --enabled true \
-    --uri "ldap://ldap.corp.local" \
+    --uri "ldap://ldap.example.local" \
     --base-dn "DC=corp,DC=local" \
     --bind-user "CN=svcldap,OU=ServiceAccounts,DC=corp,DC=local" \
     --bind-password <password>

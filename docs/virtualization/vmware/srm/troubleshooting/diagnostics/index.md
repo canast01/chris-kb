@@ -35,7 +35,7 @@ C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\
 
 **SRM Appliance (Linux):**
 ```bash
-ssh admin@srm-protected.corp.local
+ssh admin@srm-protected.example.local
 /var/log/vmware/srm/
   vmware-dr.log
 ```
@@ -53,7 +53,7 @@ Site Recovery → Summary → Download SRM Support Bundle
 Manual collection if UI unavailable:
 ```bash
 # SRM Appliance:
-ssh admin@srm-protected.corp.local
+ssh admin@srm-protected.example.local
 /opt/vmware/srm/bin/support-bundle.sh
 # Bundle location: /tmp/srm-support-<timestamp>.tar.gz
 ```
@@ -64,7 +64,7 @@ ssh admin@srm-protected.corp.local
 
 ```bash
 # SSH to VRA appliance
-ssh admin@vra-protected.corp.local
+ssh admin@vra-protected.example.local
 
 # Log locations:
 /var/log/vmware/hms/      # Replication management
@@ -72,7 +72,7 @@ ssh admin@vra-protected.corp.local
 /var/log/vmware/vcd/      # Cloud director integration (if applicable)
 
 # Download support bundle via VRA VAMI:
-# https://vra-protected.corp.local:5480 → Support → Download Support Bundle
+# https://vra-protected.example.local:5480 → Support → Download Support Bundle
 ```
 
 ---
@@ -98,15 +98,15 @@ Get-Content "C:\ProgramData\Pure Storage\SRA\Logs\pure-sra.log" -Tail 50
 
 ```powershell
 # Protected site
-Get-Service -ComputerName srm-protected.corp.local `
+Get-Service -ComputerName srm-protected.example.local `
   -Name "VMware vCenter Site Recovery Manager" | Select-Object Status, StartType
 
 # Recovery site
-Get-Service -ComputerName srm-recovery.corp.local `
+Get-Service -ComputerName srm-recovery.example.local `
   -Name "VMware vCenter Site Recovery Manager" | Select-Object Status, StartType
 
 # If stopped, start:
-Start-Service -ComputerName srm-protected.corp.local `
+Start-Service -ComputerName srm-protected.example.local `
   -Name "VMware vCenter Site Recovery Manager"
 ```
 
@@ -116,11 +116,11 @@ Start-Service -ComputerName srm-protected.corp.local `
 
 ```bash
 # Test TLS connection between SRM Servers (inter-site port)
-echo | openssl s_client -connect srm-recovery.corp.local:9086 2>/dev/null \
+echo | openssl s_client -connect srm-recovery.example.local:9086 2>/dev/null \
   | openssl x509 -noout -dates -subject -issuer
 
 # Test admin HTTPS
-echo | openssl s_client -connect srm-protected.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect srm-protected.example.local:443 2>/dev/null \
   | openssl x509 -noout -dates -subject
 ```
 

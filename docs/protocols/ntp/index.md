@@ -19,7 +19,7 @@ Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a
 │                            │ UDP 123                        │
 │  Stratum 2  ┌──────────────▼───────────────────┐           │
 │             │ Enterprise NTP server (internal)  │           │
-│             │ ntp1.corp.local, ntp2.corp.local  │           │
+│             │ ntp1.example.local, ntp2.example.local  │           │
 │             └──────────────┬───────────────────┘           │
 │                            │ UDP 123                        │
 │  Stratum 3  ┌──────────────▼───────────────────┐           │

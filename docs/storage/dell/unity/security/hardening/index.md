@@ -186,7 +186,7 @@ uemcli -d <ip> -u admin /sys/email show
 
 # Create an email notification
 uemcli -d <ip> -u admin /sys/email create \
-    -smtpServer mail.corp.local \
+    -smtpServer mail.example.local \
     -smtpPort 25 \
     -toList storage-alerts@corp.local \
     -fromAddress unity-alerts@corp.local

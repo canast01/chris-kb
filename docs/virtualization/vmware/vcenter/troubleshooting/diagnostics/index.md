@@ -179,14 +179,14 @@ DNS and NTP failures cascade into certificate, SSO, and agent failures. Validate
 
 ```bash
 # Forward DNS — vCenter must resolve its own FQDN
-nslookup vcenter.corp.local
-dig vcenter.corp.local
+nslookup vcenter.example.local
+dig vcenter.example.local
 
 # Reverse DNS — must resolve back to the FQDN
 nslookup <vcenter-ip>
 
 # Test ESXi host resolution from vCenter
-nslookup esxi-01.corp.local
+nslookup esxi-01.example.local
 
 # NTP status on the appliance
 timedatectl
@@ -205,12 +205,12 @@ NTP drift over 5 minutes breaks Kerberos authentication, causing SSO login failu
 
 ```bash
 # Check Machine SSL certificate expiry from outside the VCSA
-echo | openssl s_client -connect vcenter.corp.local:443 \
-    -servername vcenter.corp.local 2>/dev/null \
+echo | openssl s_client -connect vcenter.example.local:443 \
+    -servername vcenter.example.local 2>/dev/null \
     | openssl x509 -noout -dates
 
 # Check VAMI certificate
-echo | openssl s_client -connect vcenter.corp.local:5480 2>/dev/null \
+echo | openssl s_client -connect vcenter.example.local:5480 2>/dev/null \
     | openssl x509 -noout -dates
 
 # List all certificate stores on VCSA
@@ -248,7 +248,7 @@ service-control --status vmware-sts-idmd
 
 # Test LDAP connectivity to AD domain controller from VCSA
 ldapsearch -x \
-    -H ldaps://dc01.corp.local:636 \
+    -H ldaps://dc01.example.local:636 \
     -b "DC=corp,DC=local" \
     -D "svc-vcenter-ldap@corp.local" \
     -W \
@@ -265,23 +265,23 @@ ldapsearch -x \
 ```bash
 # Authenticate and get a session token
 TOKEN=$(curl -sk -u 'administrator@vsphere.local:<password>' \
-    -X POST https://vcenter.corp.local/api/session | tr -d '"')
+    -X POST https://vcenter.example.local/api/session | tr -d '"')
 
 # Get system health
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    https://vcenter.corp.local/api/vcenter/health/system
+    https://vcenter.example.local/api/vcenter/health/system
 
 # List all hosts via API
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    https://vcenter.corp.local/api/vcenter/host | python3 -m json.tool
+    https://vcenter.example.local/api/vcenter/host | python3 -m json.tool
 
 # List all VMs via API
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    https://vcenter.corp.local/api/vcenter/vm | python3 -m json.tool
+    https://vcenter.example.local/api/vcenter/vm | python3 -m json.tool
 
 # Delete the session when done
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    -X DELETE https://vcenter.corp.local/api/session
+    -X DELETE https://vcenter.example.local/api/session
 ```
 
 ---
@@ -290,7 +290,7 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
 
 ```powershell
 # Connect
-Connect-VIServer -Server vcenter.corp.local
+Connect-VIServer -Server vcenter.example.local
 
 # Host connection states — result should be empty in a healthy environment
 Get-VMHost | Where-Object { $_.ConnectionState -ne "Connected" } |
@@ -343,7 +343,7 @@ Wait for the bundle to generate (5–20 minutes depending on environment size), 
 
 ```bash
 # Generate vm-support bundle
-/usr/bin/vm-support -n vcenter.corp.local
+/usr/bin/vm-support -n vcenter.example.local
 
 # Output is in /var/core/ — copy to a transfer location
 ls -lh /var/core/esx-*.tgz

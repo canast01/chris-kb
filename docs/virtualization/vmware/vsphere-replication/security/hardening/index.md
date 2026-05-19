@@ -43,7 +43,7 @@
 
 ```bash
 # SSH to VRA
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 
 sudo vim /etc/ssh/sshd_config
 # Set:
@@ -132,7 +132,7 @@ Document: test date, VMs tested, RPO at time of recovery, pass/fail.
 
 ```bash
 # Check VRA cert expiry
-echo | openssl s_client -connect vra-london.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect vra-london.example.local:443 2>/dev/null \
   | openssl x509 -noout -enddate
 
 # Renew 30 days before expiry:

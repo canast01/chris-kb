@@ -30,7 +30,7 @@ Requires: VMware.Hv.Helper PowerShell module (`Install-Module VMware.Hv.Helper`)
 
 ```powershell
 Import-Module VMware.Hv.Helper
-$cs = Connect-HVServer -Server horizon-cs01.corp.local -Credential (Get-Credential)
+$cs = Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
 ```
 
 ---
@@ -163,7 +163,7 @@ foreach ($group in $groups) {
 
 ```powershell
 # Requires App Volumes Manager REST API
-$avmBase = "https://appvol-mgr.corp.local"
+$avmBase = "https://appvol-mgr.example.local"
 $headers = @{ "Authorization" = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("admin:<password>")) }
 
 $assignments = Invoke-RestMethod -Uri "$avmBase/cv_api/assignments" -Headers $headers

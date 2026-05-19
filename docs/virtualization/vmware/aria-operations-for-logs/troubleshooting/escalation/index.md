@@ -61,11 +61,11 @@ Support portal: [https://support.broadcom.com](https://support.broadcom.com)
 ```bash
 # Generate via API
 curl -sk -u 'admin:<password>' -X POST \
-  "https://vrli-prod-01.corp.local/api/v2/support/bundle"
+  "https://vrli-prod-01.example.local/api/v2/support/bundle"
 
 # Wait for completion, then download
 curl -sk -u 'admin:<password>' -o vrli-support-bundle.zip \
-  "https://vrli-prod-01.corp.local/api/v2/support/bundle/download"
+  "https://vrli-prod-01.example.local/api/v2/support/bundle/download"
 ```
 
 Via UI: **Administration → Cluster → Support Bundle → Generate and Download**.

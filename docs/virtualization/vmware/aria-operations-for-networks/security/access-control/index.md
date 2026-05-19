@@ -44,7 +44,7 @@
 ```
 Settings → Authentication → LDAP → Configure
 
-  Server URL:     ldaps://dc01.corp.local:636
+  Server URL:     ldaps://dc01.example.local:636
   Base DN:        DC=corp,DC=local
   Bind DN:        CN=svc-vrni,OU=ServiceAccounts,DC=corp,DC=local
   Bind Password:  <service account password>
@@ -101,7 +101,7 @@ Settings → API Tokens → [token] → Revoke
 API usage:
 ```bash
 curl -sk -H "Authorization: NetworkInsight <token>" \
-  "https://vrni.corp.local/api/ni/data-sources/vcenters"
+  "https://vrni.example.local/api/ni/data-sources/vcenters"
 ```
 
 ---

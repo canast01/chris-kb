@@ -142,7 +142,7 @@
 1. **Certificate mismatch:** Connection Server cert thumbprint in UAG config doesn't match the current CS cert
    ```bash
    # Get current CS cert thumbprint:
-   echo | openssl s_client -connect horizon-cs01.corp.local:443 2>/dev/null \
+   echo | openssl s_client -connect horizon-cs01.example.local:443 2>/dev/null \
      | openssl x509 -fingerprint -sha1 -noout
    # Compare to thumbprint in UAG:
    UAG Admin UI → Edge Service Settings → Horizon → Thumbprint
@@ -160,7 +160,7 @@
 1. **App Volumes Manager unreachable from desktop VM:**
    ```
    # From desktop VM:
-   Test-NetConnection appvol-mgr.corp.local -Port 443
+   Test-NetConnection appvol-mgr.example.local -Port 443
    # Must succeed — if failed, firewall or DNS issue
    ```
 

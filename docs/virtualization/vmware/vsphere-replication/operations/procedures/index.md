@@ -33,7 +33,7 @@ vCenter → [VM] → right-click → vSphere Replication → Configure
     Select: amsterdam (recovery site)
 
   Step 2: Target location
-    vCenter: vcenter-amsterdam.corp.local
+    vCenter: vcenter-amsterdam.example.local
     Datastore: target-datastore-01
 
   Step 3: Replication settings

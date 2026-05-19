@@ -4,7 +4,7 @@
         TRIAGE: LDAP BIND FAILS
 ┌──────────────────────────────────────────────────────────────┐
 │  1. Resolve DC name                                          │
-│     nslookup dc01.corp.local ─── fail ──► fix DNS           │
+│     nslookup dc01.example.local ─── fail ──► fix DNS           │
 │          │ ok                                                │
 │          ▼                                                   │
 │  2. Port reachable?                                          │

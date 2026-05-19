@@ -86,7 +86,7 @@ Use the API to search for log events programmatically (useful for automation and
 ```bash
 #!/usr/bin/env bash
 # Search for authentication failures in the last hour
-VRLI="vrli-prod-01.corp.local"
+VRLI="vrli-prod-01.example.local"
 START=$(date -d "1 hour ago" +%s)000  # milliseconds
 END=$(date +%s)000
 
@@ -169,7 +169,7 @@ curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/notification" | \
 
 ```powershell
 # Configure all ESXi hosts to forward syslog to Aria Ops for Logs
-$vrliTarget = "udp://vrli-prod-01.corp.local:514"
+$vrliTarget = "udp://vrli-prod-01.example.local:514"
 
 Get-VMHost | ForEach-Object {
     $esxcli = Get-EsxCli -VMHost $_ -V2

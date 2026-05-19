@@ -44,11 +44,11 @@ Use VADP-compatible backup (Veeam, Commvault, Veritas) for all Aria Ops for Logs
 **Pre-backup check:**
 
 ```bash
-ssh admin@vrli-prod-01.corp.local
+ssh admin@vrli-prod-01.example.local
 
 # Confirm cluster health before backup window
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/cluster/nodes" | \
+  "https://vrli-prod-01.example.local/api/v2/cluster/nodes" | \
   jq '.nodes[] | {host: .hostname, state: .state}'
 # All nodes should show state: "ACTIVE"
 
@@ -89,7 +89,7 @@ Get-VM | Where-Object { $_.Name -like "vrli-*" } | Get-Snapshot |
 Export key configuration elements to documentation files for rebuild reference. This does not replace a full backup but enables faster manual reconstruction if needed.
 
 ```bash
-BASE="https://vrli-prod-01.corp.local"
+BASE="https://vrli-prod-01.example.local"
 AUTH="admin:<password>"
 
 # Export alert definitions
@@ -118,7 +118,7 @@ Administration → Archiving → Configure → enable NFS archive
 ```
 
 Provide:
-- NFS server: `nas-01.corp.local`
+- NFS server: `nas-01.example.local`
 - NFS export path: `/exports/vrli-archive`
 - Mount options: `nfsvers=3,rw`
 
@@ -126,8 +126,8 @@ Verify archive connectivity:
 
 ```bash
 # From master node SSH
-showmount -e nas-01.corp.local
-mount -t nfs nas-01.corp.local:/exports/vrli-archive /mnt/test-archive
+showmount -e nas-01.example.local
+mount -t nfs nas-01.example.local:/exports/vrli-archive /mnt/test-archive
 touch /mnt/test-archive/.write-test && echo "OK" && rm /mnt/test-archive/.write-test
 umount /mnt/test-archive
 ```
@@ -144,7 +144,7 @@ umount /mnt/test-archive
 4. Verify cluster health:
 
 ```bash
-ssh admin@vrli-prod-01.corp.local
+ssh admin@vrli-prod-01.example.local
 curl -sk -u 'admin:<password>' \
   "https://localhost/api/v2/cluster/nodes" | \
   jq '.nodes[] | {host: .hostname, state: .state}'
@@ -160,7 +160,7 @@ Administration → Cluster → each node should show state Active and ingestion 
 
 ```bash
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/alerts" | jq '. | length'
+  "https://vrli-prod-01.example.local/api/v2/alerts" | jq '. | length'
 ```
 
 7. Re-validate syslog sources are forwarding (check from ESXi hosts, vCenter, and agents)

@@ -128,7 +128,7 @@ Stop-Service -Name "RemoteRegistry" -ErrorAction SilentlyContinue
 Set-Service -Name "RemoteRegistry" -StartupType Disabled
 
 # Configure NTP
-w32tm /config /manualpeerlist:"ntp.corp.local" /syncfromflags:manual /reliable:yes
+w32tm /config /manualpeerlist:"ntp.example.local" /syncfromflags:manual /reliable:yes
 w32tm /config /update
 
 # Enable Windows Defender or your corporate AV (with exclusions):

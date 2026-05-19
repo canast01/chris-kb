@@ -44,7 +44,7 @@ Administration → Authentication → Active Directory → Configure
 
 Provide:
 - **Domain**: `corp.local`
-- **Domain controller**: `dc01.corp.local` (use multiple for HA)
+- **Domain controller**: `dc01.example.local` (use multiple for HA)
 - **Port**: 636 (LDAPS) — required for production
 - **Bind DN**: `CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local`
 - **Bind password**: stored in CyberArk or vault; retrieved during configuration
@@ -103,7 +103,7 @@ Password requirements for local accounts:
 
 # Test API authentication
 curl -sk -u 'svc-vrli-api:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/version" | jq '.'
+  "https://vrli-prod-01.example.local/api/v2/version" | jq '.'
 # Expected: {"version": "8.x.y.zzz", ...}
 ```
 
@@ -128,6 +128,6 @@ Forward these logs to a SIEM or dedicated audit log store by configuring the app
 
 ```bash
 # Forward syslog from the Aria Ops for Logs appliance to an external SIEM
-echo '*.* @@siem.corp.local:514' > /etc/rsyslog.d/vrli-audit.conf
+echo '*.* @@siem.example.local:514' > /etc/rsyslog.d/vrli-audit.conf
 systemctl restart rsyslog
 ```

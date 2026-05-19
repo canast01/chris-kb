@@ -78,7 +78,7 @@ CERT_B64=$(base64 -i server.crt | tr -d '\n')
 KEY_B64=$(base64 -i server.key | tr -d '\n')
 
 curl -sk -X PUT \
-  "https://vrni.corp.local/api/ni/system/ssl/certificate" \
+  "https://vrni.example.local/api/ni/system/ssl/certificate" \
   -H "Authorization: NetworkInsight $TOKEN" \
   -H "Content-Type: application/json" \
   -d "{\"certificate\": \"$CERT_B64\", \"private_key\": \"$KEY_B64\"}"
@@ -87,7 +87,7 @@ curl -sk -X PUT \
 ### Verify Certificate Expiry
 
 ```bash
-echo | openssl s_client -connect vrni.corp.local:443 -servername vrni.corp.local 2>/dev/null \
+echo | openssl s_client -connect vrni.example.local:443 -servername vrni.example.local 2>/dev/null \
   | openssl x509 -noout -dates
 # notBefore= and notAfter= lines show validity window
 ```
@@ -99,7 +99,7 @@ echo | openssl s_client -connect vrni.corp.local:443 -servername vrni.corp.local
 Restrict to strong ciphers by editing the Nginx config on the Platform VM:
 
 ```bash
-ssh ubuntu@vrni.corp.local
+ssh ubuntu@vrni.example.local
 sudo vim /etc/nginx/nginx.conf
 
 # Find and update ssl_* directives:
@@ -112,7 +112,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 Verify:
 ```bash
-nmap --script ssl-enum-ciphers -p 443 vrni.corp.local
+nmap --script ssl-enum-ciphers -p 443 vrni.example.local
 # Confirm: no TLS 1.0/1.1, no RC4/DES/3DES
 ```
 

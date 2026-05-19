@@ -70,7 +70,7 @@ cat > mgmt-cluster-config.yaml <<EOF
 CLUSTER_NAME: mgmt-cluster
 CLUSTER_PLAN: prod
 INFRASTRUCTURE_PROVIDER: vsphere
-VSPHERE_SERVER: vcenter.corp.local
+VSPHERE_SERVER: vcenter.example.local
 VSPHERE_USERNAME: administrator@vsphere.local
 VSPHERE_PASSWORD: <password>
 VSPHERE_DATACENTER: /DC01
@@ -96,7 +96,7 @@ cat > workload-cluster.yaml <<EOF
 CLUSTER_NAME: prod-workload-01
 CLUSTER_PLAN: prod
 NAMESPACE: production
-VSPHERE_SERVER: vcenter.corp.local
+VSPHERE_SERVER: vcenter.example.local
 VSPHERE_USERNAME: administrator@vsphere.local
 VSPHERE_PASSWORD: <password>
 VSPHERE_DATACENTER: /DC01

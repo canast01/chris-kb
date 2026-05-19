@@ -47,7 +47,7 @@
 ## SSH Hardening
 
 ```bash
-ssh ubuntu@vrni.corp.local
+ssh ubuntu@vrni.example.local
 
 sudo vim /etc/ssh/sshd_config
 # Apply:
@@ -114,7 +114,7 @@ sudo nginx -t && sudo systemctl reload nginx
 ```
 Settings → Notifications → Syslog
   Protocol: TCP
-  Host: siem.corp.local
+  Host: siem.example.local
   Port: 514
   Format: RFC 5424
 Enable: Audit events, Alert notifications
@@ -143,7 +143,7 @@ Key events to alert on:
 
 ```bash
 # Check current expiry
-echo | openssl s_client -connect vrni.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect vrni.example.local:443 2>/dev/null \
   | openssl x509 -noout -enddate
 
 # Renew 30 days before expiry via Settings → SSL Certificate → Upload

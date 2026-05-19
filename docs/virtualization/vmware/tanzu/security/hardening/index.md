@@ -13,7 +13,7 @@
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  No privileged containers       (NoPrivilegedContainers constraint)      │  │
 │  │  Resource limits required        (LimitRange / RequiredResourceLimits)   │  │
-│  │  Images from harbor.corp.local only (AllowedRegistries constraint)       │  │
+│  │  Images from harbor.example.local only (AllowedRegistries constraint)       │  │
 │  │  Signed images only (Cosign verify via Kyverno verifyImages)             │  │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
@@ -155,7 +155,7 @@ Images with Critical or High CVEs will return a 403 when clients try to pull the
 ## Restrict Registry to Harbor Only
 
 ```yaml
-# OPA Gatekeeper: allow only images from harbor.corp.local
+# OPA Gatekeeper: allow only images from harbor.example.local
 apiVersion: templates.gatekeeper.sh/v1
 kind: ConstraintTemplate
 metadata:
@@ -178,7 +178,7 @@ spec:
       package allowedregistries
       violation[{"msg": msg}] {
         container := input.review.object.spec.containers[_]
-        not startswith(container.image, "harbor.corp.local/")
+        not startswith(container.image, "harbor.example.local/")
         msg := sprintf("Image '%v' not from allowed registry", [container.image])
       }
 ---
@@ -188,7 +188,7 @@ metadata:
   name: harbor-only
 spec:
   parameters:
-    allowedRegistries: ["harbor.corp.local/"]
+    allowedRegistries: ["harbor.example.local/"]
   match:
     kinds:
     - apiGroups: [""]
@@ -246,5 +246,5 @@ tanzu cluster kubeconfig get my-cluster --admin
 # This generates a new kubeconfig — distribute to new admins and revoke old tokens
 
 # For OIDC users — tokens expire automatically; re-login to refresh:
-kubectl vsphere login --server https://supervisor.corp.local --username user@corp.local
+kubectl vsphere login --server https://supervisor.example.local --username user@corp.local
 ```

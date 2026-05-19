@@ -31,7 +31,7 @@
 
 ```bash
 # SSH to VRA appliance (admin user)
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 # Or: admin user → use appliance shell
 
 # Check VRA service status
@@ -51,7 +51,7 @@ systemctl restart vrms
 ```bash
 # Authenticate to VRA REST API
 TOKEN=$(curl -sk -X POST \
-  "https://vra-london.corp.local/api/rest/vr/authentication/token" \
+  "https://vra-london.example.local/api/rest/vr/authentication/token" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>"}' | \
   python3 -c "import json,sys; print(json.load(sys.stdin).get('token',''))")
@@ -66,12 +66,12 @@ HEADERS="-H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json'"
 ```bash
 # List all replications on this VRA
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-london.corp.local/api/rest/vr/replications" | python3 -m json.tool
+  "https://vra-london.example.local/api/rest/vr/replications" | python3 -m json.tool
 
 # Get replication status for a specific VM (by replication ID)
 REPL_ID="<replication-id>"
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-london.corp.local/api/rest/vr/replications/$REPL_ID" | python3 -m json.tool
+  "https://vra-london.example.local/api/rest/vr/replications/$REPL_ID" | python3 -m json.tool
 ```
 
 ---
@@ -80,7 +80,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 ```powershell
 # Connect to vCenter
-Connect-VIServer -Server vcenter.corp.local
+Connect-VIServer -Server vcenter.example.local
 
 # Get all VMs with replication configured
 $replicatedVMs = Get-VM | Where-Object {
@@ -92,7 +92,7 @@ $replicatedVMs = Get-VM | Where-Object {
 
 # Using SRM module for VR-managed replications:
 Import-Module VMware.VimAutomation.Srm
-$srm = Connect-SrmServer -SrmServerAddress srm-london.corp.local
+$srm = Connect-SrmServer -SrmServerAddress srm-london.example.local
 
 # List protection groups with VR replications
 $pgs = $srm.ExtensionData.Protection.ListProtectionGroups()
@@ -110,10 +110,10 @@ foreach ($pg in $pgs) {
 
 ```bash
 # Check VRA health (no auth required for health endpoint)
-curl -sk https://vra-london.corp.local/api/rest/vr/health | python3 -m json.tool
+curl -sk https://vra-london.example.local/api/rest/vr/health | python3 -m json.tool
 
 # Check VRA API version
-curl -sk https://vra-london.corp.local/api/rest/vr/deployment | python3 -m json.tool
+curl -sk https://vra-london.example.local/api/rest/vr/deployment | python3 -m json.tool
 ```
 
 ---
@@ -122,14 +122,14 @@ curl -sk https://vra-london.corp.local/api/rest/vr/deployment | python3 -m json.
 
 ```bash
 # From ESXi host shell (SSH to ESXi host)
-nc -vz vra-amsterdam.corp.local 31031
+nc -vz vra-amsterdam.example.local 31031
 # Must succeed for replication data transfer
 
-nc -vz vra-amsterdam.corp.local 44046
+nc -vz vra-amsterdam.example.local 44046
 # VRA management port
 
 # Or using vmkping from ESXi:
-vmkping -I vmk1 vra-amsterdam.corp.local
+vmkping -I vmk1 vra-amsterdam.example.local
 ```
 
 ---
@@ -146,5 +146,5 @@ There is no CLI for immediate sync — use the vCenter UI or the VRA REST API:
 
 ```bash
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
-  "https://vra-london.corp.local/api/rest/vr/replications/$REPL_ID/sync"
+  "https://vra-london.example.local/api/rest/vr/replications/$REPL_ID/sync"
 ```

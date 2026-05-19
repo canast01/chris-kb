@@ -396,9 +396,9 @@ vm-support -n -w /tmp/
 
 # Remote syslog
 esxcli system syslog config get
-esxcli system syslog config set --loghost=udp://syslog.corp.local:514
+esxcli system syslog config set --loghost=udp://syslog.example.local:514
 esxcli system syslog reload
-esxcli system syslog config set --loghost="udp://syslog1.corp.local:514,tcp://syslog2.corp.local:514"
+esxcli system syslog config set --loghost="udp://syslog1.example.local:514,tcp://syslog2.example.local:514"
 
 # Log rotation and persistence
 esxcli system syslog config get | grep -E "rotate\|size"

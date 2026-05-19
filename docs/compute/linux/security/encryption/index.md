@@ -147,7 +147,7 @@ dnf install -y clevis clevis-luks clevis-dracut
 
 # Bind the LUKS device to a Tang server
 # Replace with your Tang server IP and thumbprint
-clevis luks bind -d /dev/sdb tang '{"url":"http://tang.corp.local","thp":"<thumbprint>"}'
+clevis luks bind -d /dev/sdb tang '{"url":"http://tang.example.local","thp":"<thumbprint>"}'
 
 # Verify binding
 clevis luks list -d /dev/sdb
@@ -160,7 +160,7 @@ dracut -f
 
 ```bash
 # Bind to two Tang servers — unlock if either is reachable (threshold: 1 of 2)
-clevis luks bind -d /dev/sdb sss '{"t":1,"pins":{"tang":[{"url":"http://tang1.corp.local","thp":"<thp1>"},{"url":"http://tang2.corp.local","thp":"<thp2>"}]}}'
+clevis luks bind -d /dev/sdb sss '{"t":1,"pins":{"tang":[{"url":"http://tang1.example.local","thp":"<thp1>"},{"url":"http://tang2.example.local","thp":"<thp2>"}]}}'
 ```
 
 ### Test NBDE Unlock
@@ -170,7 +170,7 @@ clevis luks bind -d /dev/sdb sss '{"t":1,"pins":{"tang":[{"url":"http://tang1.co
 clevis luks unlock -d /dev/sdb
 
 # Check that Tang is reachable
-curl http://tang.corp.local/adv
+curl http://tang.example.local/adv
 ```
 
 ## TLS for System Services
@@ -185,14 +185,14 @@ chmod 600 /etc/pki/tls/private/server.key
 # Generate a CSR
 openssl req -new -key /etc/pki/tls/private/server.key \
   -out /etc/pki/tls/misc/server.csr \
-  -subj "/CN=server01.corp.local/O=Corp/C=GB"
+  -subj "/CN=server01.example.local/O=Corp/C=GB"
 
 # Self-signed certificate (for testing only)
 openssl req -x509 -newkey rsa:4096 -nodes \
   -keyout /etc/pki/tls/private/server.key \
   -out /etc/pki/tls/certs/server.crt \
   -days 365 \
-  -subj "/CN=server01.corp.local"
+  -subj "/CN=server01.example.local"
 
 # Verify a certificate
 openssl x509 -in /etc/pki/tls/certs/server.crt -text -noout | grep -E "Subject:|Issuer:|Not After"
@@ -202,13 +202,13 @@ openssl x509 -in /etc/pki/tls/certs/server.crt -text -noout | grep -E "Subject:|
 
 ```bash
 # Check certificate presented by a service
-openssl s_client -connect server01.corp.local:443 -servername server01.corp.local </dev/null 2>/dev/null | openssl x509 -noout -text | grep -E "Subject:|Not After"
+openssl s_client -connect server01.example.local:443 -servername server01.example.local </dev/null 2>/dev/null | openssl x509 -noout -text | grep -E "Subject:|Not After"
 
 # Test with specific TLS version
-openssl s_client -connect server01.corp.local:443 -tls1_3
+openssl s_client -connect server01.example.local:443 -tls1_3
 
 # Check expiry date
-echo | openssl s_client -connect server01.corp.local:443 2>/dev/null | openssl x509 -noout -dates
+echo | openssl s_client -connect server01.example.local:443 2>/dev/null | openssl x509 -noout -dates
 ```
 
 ### Nginx TLS Hardening
@@ -217,7 +217,7 @@ echo | openssl s_client -connect server01.corp.local:443 2>/dev/null | openssl x
 # /etc/nginx/conf.d/ssl.conf
 server {
     listen 443 ssl;
-    server_name server01.corp.local;
+    server_name server01.example.local;
 
     ssl_certificate     /etc/pki/tls/certs/server.crt;
     ssl_certificate_key /etc/pki/tls/private/server.key;

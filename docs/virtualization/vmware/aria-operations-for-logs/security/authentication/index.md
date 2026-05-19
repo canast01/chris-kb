@@ -10,7 +10,7 @@
 │       ├── Local account → admin (System Domain, break-glass)│
 │       │                                                     │
 │       ├── AD (LDAPS) → Administration → Authentication      │
-│       │   dc01.corp.local:636  ·  svc-vrli-ldap bind        │
+│       │   dc01.example.local:636  ·  svc-vrli-ldap bind        │
 │       │   group membership → role at login time             │
 │       │                                                     │
 │       └── VIDM (SSO) → redirect to VIDM login page          │
@@ -51,8 +51,8 @@ Administration → Authentication → Active Directory → Configure
 
 Settings:
 - Domain: `corp.local`
-- Primary domain controller: `dc01.corp.local:636`
-- Secondary domain controller: `dc02.corp.local:636` (optional, for HA)
+- Primary domain controller: `dc01.example.local:636`
+- Secondary domain controller: `dc02.example.local:636` (optional, for HA)
 - Use SSL: **Yes**
 - Bind DN: `CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local`
 - Bind password: service account password
@@ -69,7 +69,7 @@ When deployed via LCM, VIDM is available as an SSO provider. For standalone depl
 Administration → Authentication → VMware Identity Manager
 ```
 
-- VMware Identity Manager FQDN: `vidm.corp.local`
+- VMware Identity Manager FQDN: `vidm.example.local`
 - Enable redirect to VIDM login page
 
 After configuration, the Aria Ops for Logs login page shows a "VMware Identity Manager" button. Users authenticate via VIDM and are assigned roles based on their AD group membership (mapped in the AD group configuration).
@@ -80,7 +80,7 @@ After configuration, the Aria Ops for Logs login page shows a "VMware Identity M
 
 ```bash
 # Test LDAP bind from the Aria Ops for Logs appliance
-ldapsearch -H ldaps://dc01.corp.local:636 \
+ldapsearch -H ldaps://dc01.example.local:636 \
   -D "CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local" \
   -w '<password>' \
   -b "DC=corp,DC=local" \
@@ -88,7 +88,7 @@ ldapsearch -H ldaps://dc01.corp.local:636 \
   sAMAccountName mail memberOf
 
 # Test SSL connection to domain controller
-openssl s_client -connect dc01.corp.local:636 -CAfile /tmp/corp-ca.pem 2>&1 | \
+openssl s_client -connect dc01.example.local:636 -CAfile /tmp/corp-ca.pem 2>&1 | \
   grep -E "Verify return code|subject="
 # Expected: Verify return code: 0 (ok)
 ```
@@ -111,8 +111,8 @@ openssl s_client -connect dc01.corp.local:636 -CAfile /tmp/corp-ca.pem 2>&1 | \
 Aria Ops for Logs listens on port 80 (HTTP) and 443 (HTTPS). HTTP automatically redirects to HTTPS — this is the default behaviour and should not be changed. Verify:
 
 ```bash
-curl -sI http://vrli-prod-01.corp.local/ | grep "Location:"
-# Expected: Location: https://vrli-prod-01.corp.local/
+curl -sI http://vrli-prod-01.example.local/ | grep "Location:"
+# Expected: Location: https://vrli-prod-01.example.local/
 ```
 
 Ensure the firewall permits inbound TCP 443 and TCP 80 from admin workstations. Block all other inbound ports except those required for log ingestion (514, 1514, 9543).

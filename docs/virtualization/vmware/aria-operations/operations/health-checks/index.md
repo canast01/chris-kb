@@ -67,14 +67,14 @@ vracli adapter list
 ```bash
 # Authenticate
 TOKEN=$(curl -sk -X POST \
-  "https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire" \
+  "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>","authSource":"Local"}' | \
   jq -r '.token')
 
 # List all cluster nodes and their status
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/cluster/nodes" | \
+  "https://vrops-prod-01.example.local/suite-api/api/cluster/nodes" | \
   jq '.nodes[] | {name: .name, role: .role, status: .nodeStatus}'
 
 # Expected: all nodes show nodeStatus = "ONLINE"
@@ -100,7 +100,7 @@ tail -200 /data/vcops/log/collector.log | grep -i "error\|exception\|fail"
 # UI: Administration → Solutions → select adapter → Restart Instance
 # Or via API:
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/adapters/<adapter-id>/monitoringstatedescriptor" \
+  "https://vrops-prod-01.example.local/suite-api/api/adapters/<adapter-id>/monitoringstatedescriptor" \
   -H "Content-Type: application/json" \
   -d '{"collectorId": "<collector-id>", "resourceKindKey": "ADAPTER", "adapterKindKey": "VMWARE"}'
 ```
@@ -110,7 +110,7 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
 ## Disk and Storage Health
 
 ```bash
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 
 # Check disk usage on primary node
 df -h /storage/db /storage/log /storage/core
@@ -161,8 +161,8 @@ Time drift causes SSO token validation failures and certificate errors across al
 ```bash
 # Check NTP sync on each cluster node
 for node in vrops-prod-01 vrops-prod-02 vrops-prod-03; do
-  echo -n "$node.corp.local: "
-  ssh admin@"$node.corp.local" "chronyc tracking 2>/dev/null | grep 'System time'"
+  echo -n "$node.example.local: "
+  ssh admin@"$node.example.local" "chronyc tracking 2>/dev/null | grep 'System time'"
 done
 
 # Force sync if drift is detected
@@ -183,12 +183,12 @@ Regularly review the alert landscape to identify noise and catch real problems:
 ```bash
 # Get all active alerts grouped by criticality via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/alerts?activeOnly=true" | \
+  "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true" | \
   jq '[.alerts[] | .criticality] | group_by(.) | map({criticality: .[0], count: length})'
 
 # Get all CRITICAL alerts with their object and alert name
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/alerts?activeOnly=true&criticality=CRITICAL" | \
+  "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&criticality=CRITICAL" | \
   jq '.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}'
 ```
 
@@ -217,7 +217,7 @@ Run before any upgrade (via LCM or in-product):
 ```bash
 # Check cluster-level capacity summary via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/resources?resourceKind=ClusterComputeResource" | \
+  "https://vrops-prod-01.example.local/suite-api/api/resources?resourceKind=ClusterComputeResource" | \
   jq '.resourceList[] | {name: .resourceKey.name}'
 ```
 

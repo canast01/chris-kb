@@ -64,7 +64,7 @@ vCenter → Deploy OVF Template
     Subnet Mask: 255.255.255.0
     Gateway: 10.10.10.1
     DNS: 10.10.10.10
-    NTP: ntp.corp.local
+    NTP: ntp.example.local
     Admin password: <set strong password>
     Root password: <set strong password>
 
@@ -78,9 +78,9 @@ vCenter → Deploy OVF Template
 After deployment, register VRA with vCenter:
 
 ```
-VRA VAMI UI: https://vra-london.corp.local:5480
+VRA VAMI UI: https://vra-london.example.local:5480
   Configuration → vCenter Server
-    vCenter Address: vcenter-london.corp.local
+    vCenter Address: vcenter-london.example.local
     Username: administrator@vsphere.local
     Password: <password>
     Accept certificate
@@ -109,9 +109,9 @@ vCenter → Site Recovery → vSphere Replication → Replication Servers → De
 
 ```
 vCenter (Protected Site) → Site Recovery → New Site Pair
-  Remote vCenter: vcenter-amsterdam.corp.local
+  Remote vCenter: vcenter-amsterdam.example.local
   SSO credentials for remote vCenter: administrator@vsphere.local
-  Remote VRA: vra-amsterdam.corp.local
+  Remote VRA: vra-amsterdam.example.local
   Accept certificate thumbprints for both VRA appliances
   → Pair
 ```
@@ -136,7 +136,7 @@ Upgrade VRA by redeploying from new OVA (not in-place):
 
 ```bash
 # After redeployment, verify service is up:
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 systemctl status hms
 ```
 
@@ -157,7 +157,7 @@ Check the Interoperability Matrix before upgrading:
 
 ```bash
 # Verify VRA health
-curl -sk https://vra-london.corp.local/api/rest/vr/health
+curl -sk https://vra-london.example.local/api/rest/vr/health
 
 # Configure a test VM replication:
 # vCenter → [any test VM] → Configure Replication

@@ -43,11 +43,11 @@ VIDM is registered with Aria Automation during deployment (automatic when deploy
 **For standalone deployments:**
 
 ```
-VAMI (https://vra-prod-01.corp.local:5480) → Identity Provider → Configure VIDM
+VAMI (https://vra-prod-01.example.local:5480) → Identity Provider → Configure VIDM
 ```
 
 Provide:
-- VIDM hostname: `vidm.corp.local`
+- VIDM hostname: `vidm.example.local`
 - Admin credentials for VIDM
 - Accept the VIDM certificate (or ensure it is trusted by the Aria Automation appliance)
 
@@ -63,7 +63,7 @@ AD integration is configured in VIDM, not in Aria Automation directly:
 2. Select **Active Directory over LDAP/LDAPS**
 3. Provide:
    - Domain: `corp.local`
-   - Domain controllers: `dc01.corp.local:636`, `dc02.corp.local:636`
+   - Domain controllers: `dc01.example.local:636`, `dc02.example.local:636`
    - Bind DN: `CN=svc-vidm,OU=Service Accounts,DC=corp,DC=local`
    - Bind password
    - Base DN for user search: `DC=corp,DC=local`
@@ -82,21 +82,21 @@ All Aria Automation REST API calls require a Bearer token obtained from VIDM.
 
 ```bash
 TOKEN=$(curl -sk -X POST \
-  "https://vra-prod-01.corp.local/csp/gateway/am/api/login" \
+  "https://vra-prod-01.example.local/csp/gateway/am/api/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>","domain":"System Domain"}' | \
   jq -r '.token')
 
 # Use in subsequent requests
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/iaas/api/zones" | jq '.'
+  "https://vra-prod-01.example.local/iaas/api/zones" | jq '.'
 ```
 
 **Acquire a token (AD user):**
 
 ```bash
 TOKEN=$(curl -sk -X POST \
-  "https://vra-prod-01.corp.local/csp/gateway/am/api/login" \
+  "https://vra-prod-01.example.local/csp/gateway/am/api/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"svc.vra@corp.local","password":"<password>","domain":"corp.local"}' | \
   jq -r '.token')
@@ -107,7 +107,7 @@ TOKEN=$(curl -sk -X POST \
 ```bash
 # Refresh token before expiry (every 7 hours)
 TOKEN=$(curl -sk -X POST \
-  "https://vra-prod-01.corp.local/csp/gateway/am/api/login" \
+  "https://vra-prod-01.example.local/csp/gateway/am/api/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"svc-vra-api","password":"<password>","domain":"System Domain"}' | \
   jq -r '.token')
@@ -150,7 +150,7 @@ update-ca-certificates   # Debian/Ubuntu
 
 # Python clients
 import requests
-requests.get("https://vra-prod-01.corp.local/iaas/api/zones",
+requests.get("https://vra-prod-01.example.local/iaas/api/zones",
              headers={"Authorization": f"Bearer {token}"},
              verify="/etc/ssl/certs/ca-certificates.crt")
 ```

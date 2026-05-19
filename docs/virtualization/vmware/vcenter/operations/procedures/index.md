@@ -180,7 +180,7 @@ $dc = Get-Datacenter -Name "DC-LON"
 $cluster = Get-Cluster -Name "CL-LON-PROD"
 $cred = Get-Credential   # ESXi root credentials
 
-Add-VMHost -Name "esxi-05.corp.local" -Location $cluster -User root -Password $cred.GetNetworkCredential().Password -Force
+Add-VMHost -Name "esxi-05.example.local" -Location $cluster -User root -Password $cred.GetNetworkCredential().Password -Force
 ```
 
 Via UI: **vCenter → Datacenter or Cluster → Actions → Add Host**. Enter FQDN, root credentials, and accept the host thumbprint.
@@ -197,13 +197,13 @@ Post-add checks:
 
 ```powershell
 # PowerCLI — maintenance mode with vMotion evacuation
-$vmhost = Get-VMHost -Name "esxi-01.corp.local"
+$vmhost = Get-VMHost -Name "esxi-01.example.local"
 Set-VMHost -VMHost $vmhost -State Maintenance -Evacuate
 
 # Wait for maintenance mode to be accepted
 do {
     Start-Sleep -Seconds 10
-    $vmhost = Get-VMHost -Name "esxi-01.corp.local"
+    $vmhost = Get-VMHost -Name "esxi-01.example.local"
     Write-Host "State: $($vmhost.State)"
 } until ($vmhost.State -eq "Maintenance")
 ```
@@ -216,7 +216,7 @@ esxcli system maintenanceMode get
 
 Exit maintenance mode:
 ```powershell
-Set-VMHost -VMHost (Get-VMHost "esxi-01.corp.local") -State Connected
+Set-VMHost -VMHost (Get-VMHost "esxi-01.example.local") -State Connected
 ```
 
 ---
@@ -225,19 +225,19 @@ Set-VMHost -VMHost (Get-VMHost "esxi-01.corp.local") -State Connected
 
 ```powershell
 # Live vMotion (compute only — same storage)
-Move-VM -VM "app-server-01" -Destination (Get-VMHost "esxi-02.corp.local")
+Move-VM -VM "app-server-01" -Destination (Get-VMHost "esxi-02.example.local")
 
 # Storage vMotion (same host, different datastore)
 Move-VM -VM "app-server-01" -Datastore (Get-Datastore "DS-VMFS-PURE01-02")
 
 # Full migration (compute + storage)
 Move-VM -VM "app-server-01" `
-    -Destination (Get-VMHost "esxi-02.corp.local") `
+    -Destination (Get-VMHost "esxi-02.example.local") `
     -Datastore (Get-Datastore "DS-VMFS-PURE01-02")
 
 # Bulk evacuate all VMs from a host
-$sourceHost = Get-VMHost "esxi-01.corp.local"
-$targetHost = Get-VMHost "esxi-02.corp.local"
+$sourceHost = Get-VMHost "esxi-01.example.local"
+$targetHost = Get-VMHost "esxi-02.example.local"
 Get-VM -Location $sourceHost | Move-VM -Destination $targetHost
 ```
 
@@ -317,7 +317,7 @@ grep "<esxi-hostname>" /var/log/vmware/vpxd/vpxd.log | tail -50
 
 ```powershell
 # PowerCLI — attempt reconnect
-(Get-VMHost "esxi-01.corp.local").ExtensionData.ReconnectHost_Task($null)
+(Get-VMHost "esxi-01.example.local").ExtensionData.ReconnectHost_Task($null)
 ```
 
 ```bash
@@ -400,7 +400,7 @@ Get-ContentLibrary -Name "Templates-LON" | Get-ContentLibraryItem
 # Deploy a VM from a template in the content library
 $template = Get-ContentLibraryItem -Name "RHEL9-Gold" -ContentLibrary "Templates-LON"
 New-VM -Name "new-vm-01" -ContentLibraryItem $template `
-    -VMHost (Get-VMHost "esxi-01.corp.local") `
+    -VMHost (Get-VMHost "esxi-01.example.local") `
     -Datastore (Get-Datastore "DS-VMFS-PURE01-01") `
     -ResourcePool (Get-ResourcePool "RP-PROD-STANDARD")
 ```

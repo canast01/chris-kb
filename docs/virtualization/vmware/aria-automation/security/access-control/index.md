@@ -128,12 +128,12 @@ Configuration:
 ```bash
 # List approval policies via API
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/policy/api/policies?type=com.vmware.policy.approval" | \
+  "https://vra-prod-01.example.local/policy/api/policies?type=com.vmware.policy.approval" | \
   jq '.content[] | {name: .name, scope: .scope, approvers: .definition.approvers}'
 
 # List pending approvals
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/approval/api/requests?status=PENDING" | \
+  "https://vra-prod-01.example.local/approval/api/requests?status=PENDING" | \
   jq '.content[] | {id: .id, requester: .requestedBy, item: .catalogItemName}'
 ```
 
@@ -144,12 +144,12 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```bash
 # List all organisation-level role assignments
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/csp/gateway/am/api/orgs/<org-id>/role-assignments" | \
+  "https://vra-prod-01.example.local/csp/gateway/am/api/orgs/<org-id>/role-assignments" | \
   jq '.items[] | {principal: .principal, role: .role}'
 
 # List project membership
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/project-service/api/projects/<project-id>/members" | \
+  "https://vra-prod-01.example.local/project-service/api/projects/<project-id>/members" | \
   jq '.members[] | {email: .email, role: .role}'
 ```
 

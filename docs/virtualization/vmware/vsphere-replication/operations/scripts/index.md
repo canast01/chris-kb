@@ -28,8 +28,8 @@
 #!/usr/bin/env pwsh
 # Requires VMware.VimAutomation.Srm module
 
-Connect-VIServer -Server vcenter-london.corp.local
-$srm = Connect-SrmServer -SrmServerAddress srm-london.corp.local -Credential (Get-Credential)
+Connect-VIServer -Server vcenter-london.example.local
+$srm = Connect-SrmServer -SrmServerAddress srm-london.example.local -Credential (Get-Credential)
 
 $pgs = $srm.ExtensionData.Protection.ListProtectionGroups()
 $results = @()
@@ -116,7 +116,7 @@ $notReplicated | Export-Csv "vms-not-replicated.csv" -NoTypeInformation
 #!/usr/bin/env python3
 import requests
 
-VRA_HOST = "vra-london.corp.local"
+VRA_HOST = "vra-london.example.local"
 USER = "admin"
 PASS = "changeme"
 
@@ -149,8 +149,8 @@ param(
     [int]$MaxLagMinutes = 90  # Alert if lag > 90 minutes (for 1-hour RPO VMs)
 )
 
-Connect-VIServer -Server vcenter-london.corp.local
-$srm = Connect-SrmServer -SrmServerAddress srm-london.corp.local -Credential (Get-Credential)
+Connect-VIServer -Server vcenter-london.example.local
+$srm = Connect-SrmServer -SrmServerAddress srm-london.example.local -Credential (Get-Credential)
 
 $alerts = @()
 foreach ($pg in $srm.ExtensionData.Protection.ListProtectionGroups()) {

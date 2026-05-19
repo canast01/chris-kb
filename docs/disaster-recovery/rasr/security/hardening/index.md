@@ -124,7 +124,7 @@ racadm set iDRAC.SNMP.AgentEnable 1
 # Configure email alerts for critical events
 racadm set iDRAC.EmailAlert.1.Enable 1
 racadm set iDRAC.EmailAlert.1.Address "dr-alerts@corp.local"
-racadm set iDRAC.RemoteHosts.SMTPServerIPAddress smtp.corp.local
+racadm set iDRAC.RemoteHosts.SMTPServerIPAddress smtp.example.local
 
 # Enable alerts for hardware failures and power events
 racadm alertcfg -g system -s enabled
@@ -251,19 +251,19 @@ All RASR-related operations must generate immutable audit logs.
 # Forward array management logs to centralised SIEM
 # Unity — configure syslog forwarding
 uemcli /sys/log/syslog create \
-  -address siem.corp.local \
+  -address siem.example.local \
   -port 514 \
   -protocol UDP \
   -facility local0
 
 # iDRAC — configure syslog
 racadm set iDRAC.SysLog.SysLogEnable 1
-racadm set iDRAC.SysLog.Server1 siem.corp.local
+racadm set iDRAC.SysLog.Server1 siem.example.local
 racadm set iDRAC.SysLog.Port1 514
 
 # Linux management host — forward auditd logs
 # /etc/rsyslog.d/90-rasr-audit.conf
-if $programname == "audit" then @@siem.corp.local:514
+if $programname == "audit" then @@siem.example.local:514
 & ~
 
 systemctl restart rsyslog
@@ -316,7 +316,7 @@ uemcli /sys/security/encryption show | grep "Encryption status"
 | Topic | Command / Setting |
 |---|---|
 | Array session timeout | `uemcli /sys/setting set -sessionTimeout 900` |
-| Array syslog forwarding | `uemcli /sys/log/syslog create -address siem.corp.local` |
+| Array syslog forwarding | `uemcli /sys/log/syslog create -address siem.example.local` |
 | Disable iDRAC IPMI | `racadm set iDRAC.IPMILan.Enable 0` |
 | iDRAC TLS minimum | `racadm set iDRAC.WebServer.TLSProtocol TLS1_2` |
 | iDRAC lockdown mode | `racadm set iDRAC.Lockdown.SystemLockdown Enabled` |

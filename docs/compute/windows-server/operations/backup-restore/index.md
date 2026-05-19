@@ -273,7 +273,7 @@ if ($summary.LastBackupResultHR -ne 0 -or
     Send-MailMessage -To "alerts@corp.local" -From "monitor@corp.local" `
       -Subject "Backup Alert: SERVER01" `
       -Body "Last successful backup: $($summary.LastSuccessfulBackupTime)" `
-      -SmtpServer "smtp.corp.local"
+      -SmtpServer "smtp.example.local"
 }
 ```
 

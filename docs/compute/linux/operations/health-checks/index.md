@@ -231,7 +231,7 @@ flowchart LR
     journal["journald\n/var/log/journal/"]
     rsyslog["rsyslog\n/var/log/messages"]
     auditd["auditd\n/var/log/audit/"]
-    siem["SIEM\nsyslog.corp.local:514"]
+    siem["SIEM\nsyslog.example.local:514"]
 
     kernel --> journal
     systemd --> journal
@@ -329,7 +329,7 @@ aureport --login --failed
 ```bash
 # /etc/rsyslog.d/90-remote.conf — forward all logs via TCP to centralised syslog
 *.* action(type="omfwd"
-    target="syslog.corp.local"
+    target="syslog.example.local"
     port="514"
     protocol="tcp")
 

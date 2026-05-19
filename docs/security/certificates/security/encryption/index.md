@@ -36,7 +36,7 @@ CRL Distribution Points must remain highly available — unavailability can caus
 
 ```bash
 # Test CRL download
-curl -I http://crl.corp.local/IssuingCA.crl
+curl -I http://crl.example.local/IssuingCA.crl
 # Verify: HTTP 200, Content-Type: application/pkix-crl
 
 # Check CRL freshness (nextUpdate)

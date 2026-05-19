@@ -29,8 +29,8 @@ vCenter (Protected Site) → Site Recovery → Summary
 If site pairing shows error:
 ```powershell
 # Check SRM service health
-Get-Service -ComputerName srm-protected.corp.local -Name "VMware vCenter Site Recovery Manager"
-Get-Service -ComputerName srm-recovery.corp.local -Name "VMware vCenter Site Recovery Manager"
+Get-Service -ComputerName srm-protected.example.local -Name "VMware vCenter Site Recovery Manager"
+Get-Service -ComputerName srm-recovery.example.local -Name "VMware vCenter Site Recovery Manager"
 ```
 
 ---
@@ -131,14 +131,14 @@ Site Recovery → Recovery Plans → [plan] → Test or Recover
 
 ```bash
 # Check SRM Server certificate
-echo | openssl s_client -connect srm-protected.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect srm-protected.example.local:443 2>/dev/null \
   | openssl x509 -noout -dates
 
-echo | openssl s_client -connect srm-recovery.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect srm-recovery.example.local:443 2>/dev/null \
   | openssl x509 -noout -dates
 
 # Check vSphere Replication appliance cert
-echo | openssl s_client -connect vra-protected.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect vra-protected.example.local:443 2>/dev/null \
   | openssl x509 -noout -dates
 ```
 

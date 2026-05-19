@@ -111,7 +111,7 @@ set cluster virtual-ip <vip-ip>
 get cluster virtual-ip
 ```
 
-DNS for the NSX Manager FQDN (e.g., `nsx-manager.corp.local`) must point to this VIP.
+DNS for the NSX Manager FQDN (e.g., `nsx-manager.example.local`) must point to this VIP.
 
 ### Register vCenter Compute Manager
 
@@ -126,7 +126,7 @@ Provide vCenter FQDN, username, and password. Verify the SSL thumbprint when pro
 | Field | Recommended Value |
 |---|---|
 | Protocol | SFTP |
-| Host | backup-server.corp.local |
+| Host | backup-server.example.local |
 | Port | 22 |
 | Directory | /backups/nsx/ |
 | Username | nsx-backup |

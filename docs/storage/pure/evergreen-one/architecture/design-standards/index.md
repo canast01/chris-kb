@@ -86,7 +86,7 @@ Phonehome is mandatory for all Evergreen//One installations. Without it, Pure ca
 # Configure HTTP proxy on FlashArray (if required by corporate policy)
 # Pure1 portal → Administration → Phonehome → Proxy Settings
 # Or via CLI:
-puresetting set --proxy http://proxy.corp.local:8080
+puresetting set --proxy http://proxy.example.local:8080
 ```
 
 ### Host Data Network (iSCSI / NVMe-TCP)

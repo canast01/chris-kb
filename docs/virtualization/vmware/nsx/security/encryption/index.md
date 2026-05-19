@@ -39,13 +39,13 @@ Verify TLS configuration:
 
 ```bash
 # From a client machine — test TLS negotiation
-openssl s_client -connect nsx-manager.corp.local:443 -tls1   # Should fail (TLS 1.0 rejected)
-openssl s_client -connect nsx-manager.corp.local:443 -tls1_1 # Should fail (TLS 1.1 rejected)
-openssl s_client -connect nsx-manager.corp.local:443 -tls1_2 # Should succeed
-openssl s_client -connect nsx-manager.corp.local:443 -tls1_3 # Should succeed if TLS 1.3 enabled
+openssl s_client -connect nsx-manager.example.local:443 -tls1   # Should fail (TLS 1.0 rejected)
+openssl s_client -connect nsx-manager.example.local:443 -tls1_1 # Should fail (TLS 1.1 rejected)
+openssl s_client -connect nsx-manager.example.local:443 -tls1_2 # Should succeed
+openssl s_client -connect nsx-manager.example.local:443 -tls1_3 # Should succeed if TLS 1.3 enabled
 
 # Check the presented certificate
-openssl s_client -connect nsx-manager.corp.local:443 -tls1_2 2>/dev/null | \
+openssl s_client -connect nsx-manager.example.local:443 -tls1_2 2>/dev/null | \
   openssl x509 -noout -dates -subject -issuer
 ```
 
@@ -134,7 +134,7 @@ curl -sk -u 'admin:password' \
     "display_name": "nsx-api-cert",
     "subject": {
       "attributes": [
-        {"key": "CN", "value": "nsx-manager.corp.local"},
+        {"key": "CN", "value": "nsx-manager.example.local"},
         {"key": "O",  "value": "Corp Inc"},
         {"key": "C",  "value": "GB"}
       ]
@@ -142,7 +142,7 @@ curl -sk -u 'admin:password' \
     "key_size": "2048",
     "algorithm": "RSA",
     "extensions": {
-      "dns_names": ["nsx-manager.corp.local"],
+      "dns_names": ["nsx-manager.example.local"],
       "ip_addresses": ["10.0.0.50"]
     }
   }' \

@@ -42,7 +42,7 @@ Pre-Change Baseline Sequence
 
 ```powershell
 # Confirm vCenter is reachable and you can authenticate
-Connect-VIServer -Server vcenter.corp.local
+Connect-VIServer -Server vcenter.example.local
 
 # vCenter version and build
 $global:DefaultVIServer | Select-Object Name, Version, Build, IsConnected
@@ -118,7 +118,7 @@ esxcli system ntp get
 
 # Forward and reverse DNS resolves correctly
 nslookup $(hostname)
-nslookup vcenter.corp.local
+nslookup vcenter.example.local
 ```
 
 ## 9. Cluster HA and DRS

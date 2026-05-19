@@ -53,7 +53,7 @@
 
 4. **VRA disk full at target site**:
    ```bash
-   ssh admin@vra-amsterdam.corp.local
+   ssh admin@vra-amsterdam.example.local
    df -h  # Check /opt and /tmp
    ```
 
@@ -86,7 +86,7 @@ Initial sync is a full copy of all VM disks — large VMs (1+ TB) naturally take
 
 ```bash
 # From source ESXi host shell:
-nc -vz vra-amsterdam.corp.local 31031
+nc -vz vra-amsterdam.example.local 31031
 # If connection refused → firewall blocking TCP 31031
 # If timeout → no route to target VRA
 
@@ -104,21 +104,21 @@ Fix: open TCP 31031 from source ESXi management IPs to target VRA IP in firewall
 
 1. **VRA certificate expired or replaced**:
    ```bash
-   echo | openssl s_client -connect vra-amsterdam.corp.local:443 2>/dev/null \
+   echo | openssl s_client -connect vra-amsterdam.example.local:443 2>/dev/null \
      | openssl x509 -noout -dates -subject
    # If expired: deploy new VRA OVA with same IP, re-register
    ```
 
 2. **VRA service stopped**:
    ```bash
-   ssh admin@vra-amsterdam.corp.local
+   ssh admin@vra-amsterdam.example.local
    systemctl status hms vrms
    systemctl start hms vrms
    ```
 
 3. **Network interruption between VRAs** (TCP 44046):
    ```bash
-   nc -vz vra-amsterdam.corp.local 44046
+   nc -vz vra-amsterdam.example.local 44046
    ```
 
 4. **Site pair thumbprint mismatch** (cert was replaced):
@@ -145,7 +145,7 @@ Fix: verify target datastore is mounted and accessible at target vCenter, and ha
 **Symptoms:** VRA VAMI shows disk warning; replications may start failing
 
 ```bash
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 df -h
 # Check /opt partition — VRA appliance partition
 

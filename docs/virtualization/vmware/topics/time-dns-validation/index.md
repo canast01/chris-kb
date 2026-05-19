@@ -7,7 +7,7 @@
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Stratum 0: GPS/atomic reference clock                                   │  │
 │  │       │                                                                  │  │
-│  │  Stratum 1: NTP server (ntp.corp.local) ◄── all hosts must point here  │    │
+│  │  Stratum 1: NTP server (ntp.example.local) ◄── all hosts must point here  │    │
 │  │       │                                                                  │  │
 │  │  ┌────▼──────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐        │     │
 │  │  │  vCenter  │  │   ESXi-01  │  │   ESXi-02  │  │  NSX Mgr  │        │      │
@@ -18,9 +18,9 @@
 │                                                                                 │
 │  DNS validation (per host)                                                      │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │  Forward:  nslookup esxi-01.corp.local  ──► resolves to correct IP      │   │
+│  │  Forward:  nslookup esxi-01.example.local  ──► resolves to correct IP      │   │
 │  │  Reverse:  nslookup 10.x.x.x            ──► resolves to correct FQDN   │    │
-│  │  vCenter:  nslookup vcenter.corp.local  ──► resolves (required for SSO) │   │
+│  │  vCenter:  nslookup vcenter.example.local  ──► resolves (required for SSO) │   │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                 │
 │  Time drift > 5 min ──► Kerberos fails ──► hosts disconnect from vCenter        │
@@ -58,7 +58,7 @@ date
 ntpq -p
 
 # Configure NTP server
-esxcli system ntp set --server=ntp.corp.local
+esxcli system ntp set --server=ntp.example.local
 esxcli system ntp set --enabled=true
 ```
 
@@ -84,7 +84,7 @@ esxcli network ip dns server list
 
 # Forward lookup
 nslookup <hostname>
-nslookup vcenter.corp.local
+nslookup vcenter.example.local
 
 # Reverse lookup (PTR record)
 nslookup <ip_address>
@@ -110,7 +110,7 @@ Get-VMHost | ForEach-Object {
 }
 
 # Validate hostname resolves correctly
-Resolve-DnsName vcenter.corp.local
+Resolve-DnsName vcenter.example.local
 Resolve-DnsName 10.0.0.10   # reverse lookup
 ```
 
@@ -144,7 +144,7 @@ nslookup $(hostname)
 nslookup $(esxcfg-nics -l | grep vmnic0 | awk '{print $5}')
 
 # 5. vCenter hostname resolves
-nslookup vcenter.corp.local
+nslookup vcenter.example.local
 ```
 
 ## Common Issues and Fixes

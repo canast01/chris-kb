@@ -46,7 +46,7 @@ Horizon Console → Settings → Servers → Domains
 Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
   2-Factor Authentication: RADIUS
   Authentication Module: RadiusAuthModule
-  Hostname: radius.corp.local
+  Hostname: radius.example.local
   Port: 1812
   Shared Secret: <radius secret>
   Username Hint: Use UPN (user@corp.local) or sAMAccountName
@@ -67,7 +67,7 @@ SAML enables IdP-initiated SSO — users authenticate to Workspace ONE/vIDM and 
 ```
 Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
   Delegation of Authentication to VMware Identity Manager: Allowed or Required
-  vIDM URL: https://vidm.corp.local
+  vIDM URL: https://vidm.example.local
   Token TTL: 300 seconds
 ```
 
@@ -84,7 +84,7 @@ SAML is required for:
 Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
   Smart Card Authentication: Required or Optional
   Certificate Revocation: Use CRL / OCSP (recommended)
-  Certificate Revocation URL: http://pki.corp.local/crl/corp-ca.crl
+  Certificate Revocation URL: http://pki.example.local/crl/corp-ca.crl
 ```
 
 Smart card authentication works with CAC, PIV, and software certificates. The client OS must have the certificate in the user's personal certificate store.

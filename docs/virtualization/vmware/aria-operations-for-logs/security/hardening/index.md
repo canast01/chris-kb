@@ -51,7 +51,7 @@ Upload: private key (no passphrase), leaf certificate (PEM), CA chain (intermedi
 Verify after replacement:
 
 ```bash
-echo | openssl s_client -connect vrli-prod-01.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect vrli-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -issuer -subject -dates
 # Issuer should be your internal CA, not "VMware" or "self-signed"
 ```
@@ -114,7 +114,7 @@ Forward the Aria Ops for Logs appliance's own system logs to a SIEM or separate 
 ```bash
 cat > /etc/rsyslog.d/vrli-audit.conf << 'EOF'
 # Forward all syslog to SIEM
-*.* @@siem.corp.local:514
+*.* @@siem.example.local:514
 EOF
 systemctl restart rsyslog
 ```

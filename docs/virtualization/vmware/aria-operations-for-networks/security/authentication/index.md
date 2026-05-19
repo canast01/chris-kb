@@ -60,7 +60,7 @@ Settings → My Account → Change Password
 ```
 Settings → Authentication → LDAP → Configure
 
-  Server URL:     ldaps://dc01.corp.local:636
+  Server URL:     ldaps://dc01.example.local:636
   Base DN:        DC=corp,DC=local
   Bind DN:        CN=svc-vrni,OU=ServiceAccounts,DC=corp,DC=local
   Bind Password:  <password>
@@ -80,8 +80,8 @@ After LDAP is configured, add Role Mappings (Settings → Authentication → Rol
 ```
 Settings → Authentication → SAML
 
-  IdP Metadata URL: https://vidm.corp.local/SAAS/API/1.0/GET/metadata/idp.xml
-  SP Entity ID:     https://vrni.corp.local  (auto-populated)
+  IdP Metadata URL: https://vidm.example.local/SAAS/API/1.0/GET/metadata/idp.xml
+  SP Entity ID:     https://vrni.example.local  (auto-populated)
   NameID Format:    urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
 
   Download SP Metadata → import into vIDM as Service Provider
@@ -100,14 +100,14 @@ Create long-lived tokens in UI (Settings → API Tokens → Generate Token). Sto
 ```bash
 # Session token (short-lived — for interactive scripting)
 TOKEN=$(curl -sk -X POST \
-  https://vrni.corp.local/api/ni/auth/token \
+  https://vrni.example.local/api/ni/auth/token \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<pass>","domain":{"domain_type":"LOCAL"}}' \
   | python3 -c "import json,sys; print(json.load(sys.stdin)['token'])")
 
 # Use token
 curl -sk -H "Authorization: NetworkInsight $TOKEN" \
-  "https://vrni.corp.local/api/ni/data-sources/vcenters"
+  "https://vrni.example.local/api/ni/data-sources/vcenters"
 ```
 
 ---
@@ -130,7 +130,7 @@ If using LDAPS (port 636), the LDAP CA certificate must be trusted by the Platfo
 
 ```bash
 # SSH to Platform VM
-ssh ubuntu@vrni.corp.local
+ssh ubuntu@vrni.example.local
 
 # Install CA certificate
 sudo cp /tmp/corp-root-ca.crt /usr/local/share/ca-certificates/corp-root-ca.crt

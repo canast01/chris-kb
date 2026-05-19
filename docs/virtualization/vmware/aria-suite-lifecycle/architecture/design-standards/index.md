@@ -33,11 +33,11 @@ All LCM-managed appliances follow:
 
 | Product | Short Name | Example |
 |---|---|---|
-| Aria Suite Lifecycle | lcm | `lcm-prod-01.corp.local` |
-| Workspace ONE Access | vidm | `vidm-prod-01.corp.local` |
-| Aria Operations | vrops | `vrops-prod-01.corp.local` |
-| Aria Automation | vra | `vra-prod-01.corp.local` |
-| Aria Log Insight | vrli | `vrli-prod-01.corp.local` |
+| Aria Suite Lifecycle | lcm | `lcm-prod-01.example.local` |
+| Workspace ONE Access | vidm | `vidm-prod-01.example.local` |
+| Aria Operations | vrops | `vrops-prod-01.example.local` |
+| Aria Automation | vra | `vra-prod-01.example.local` |
+| Aria Log Insight | vrli | `vrli-prod-01.example.local` |
 
 Node numbering: `-01`, `-02`, `-03` for clustered deployments.
 
@@ -50,7 +50,7 @@ Before running Easy Installer or deploying any managed product:
 - [ ] NTP reachable from appliance subnet; time delta < 5 seconds — verify: `chronyc tracking`
 - [ ] NFS export accessible with read/write from LCM appliance IP
 - [ ] NFS export size: minimum 200 GB per major product version to be stored
-- [ ] Proxy configured with bypass for all management FQDNs (`*.corp.local`, vCenter, NSX)
+- [ ] Proxy configured with bypass for all management FQDNs (`*.example.local`, vCenter, NSX)
 - [ ] CA certificate chain (root + intermediates) ready for upload to Locker
 - [ ] Static IP addresses reserved and documented in IPAM
 - [ ] vCenter cluster has sufficient resources for target deployment size

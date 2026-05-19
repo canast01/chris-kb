@@ -31,7 +31,7 @@
 #!/usr/bin/env python3
 import requests, json, csv
 
-VRNI_HOST = "vrni.corp.local"
+VRNI_HOST = "vrni.example.local"
 USERNAME = "admin@local"
 PASSWORD = "changeme"
 VERIFY_SSL = False
@@ -207,7 +207,7 @@ Cron: 0 7 * * * /opt/scripts/vrni-daily-health.py >> /var/log/vrni-health.log 2>
 """
 import requests, datetime, sys
 
-VRNI_HOST = "vrni.corp.local"
+VRNI_HOST = "vrni.example.local"
 USERNAME = "admin@local"
 PASSWORD = "changeme"
 

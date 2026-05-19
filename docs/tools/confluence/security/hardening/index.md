@@ -21,12 +21,12 @@ Administrator account policy:
 ```bash
 # List System Administrators via REST API
 curl -u admin:password \
-  "https://confluence.corp.local/rest/api/group/confluence-administrators/member?limit=50" \
+  "https://confluence.example.local/rest/api/group/confluence-administrators/member?limit=50" \
   | python3 -m json.tool | grep "username"
 
 # List all users with System Admin flag
 curl -u admin:password \
-  "https://confluence.corp.local/rest/admin/user?limit=100&filter=admin" \
+  "https://confluence.example.local/rest/admin/user?limit=100&filter=admin" \
   | python3 -m json.tool
 ```
 
@@ -57,7 +57,7 @@ Navigate to **General Configuration** > **Security Configuration**.
 ```bash
 # Verify user registration is disabled via REST
 curl -u admin:password \
-  "https://confluence.corp.local/rest/api/settings/lookandfeel" \
+  "https://confluence.example.local/rest/api/settings/lookandfeel" \
   | python3 -m json.tool | grep "registrationEnabled"
 ```
 
@@ -89,7 +89,7 @@ Plugin policy:
 
 # Check installed and enabled plugins via REST
 curl -u admin:password \
-  "https://confluence.corp.local/rest/plugins/1.0/?os_authType=basic" \
+  "https://confluence.example.local/rest/plugins/1.0/?os_authType=basic" \
   | python3 -m json.tool | grep -E "\"key\"|\"enabled\"|\"version\""
 ```
 
@@ -104,7 +104,7 @@ curl -u admin:password \
 
 # Scan for outdated plugins
 curl -u admin:password \
-  "https://confluence.corp.local/rest/plugins/1.0/?os_authType=basic" \
+  "https://confluence.example.local/rest/plugins/1.0/?os_authType=basic" \
   | python3 -m json.tool | grep -E "\"key\"|\"latestVersion\"|\"version\""
 ```
 
@@ -140,7 +140,7 @@ Audit log settings:
 ```bash
 # Export audit log via REST API (paginated)
 curl -u admin:password \
-  "https://confluence.corp.local/rest/api/audit?limit=1000&startDate=$(date -d '-1 day' +%Y-%m-%dT00:00:00.000+0000)" \
+  "https://confluence.example.local/rest/api/audit?limit=1000&startDate=$(date -d '-1 day' +%Y-%m-%dT00:00:00.000+0000)" \
   -H "Content-Type: application/json" \
   | python3 -m json.tool >> /var/log/confluence-audit-export.json
 
@@ -153,7 +153,7 @@ input(type="imfile"
   Severity="info"
   Facility="local6")
 
-local6.*  @@siem.corp.local:514
+local6.*  @@siem.example.local:514
 ```
 
 ## Webwork / Request Filtering
@@ -230,7 +230,7 @@ iptables -A INPUT -p tcp --dport 8090 -j DROP
 
 | Control | Status Check |
 |---|---|
-| HTTPS enforced | `curl -I http://confluence.corp.local` redirects to HTTPS |
+| HTTPS enforced | `curl -I http://confluence.example.local` redirects to HTTPS |
 | Anonymous access disabled | General Config > Global Permissions |
 | User self-registration disabled | General Config > Security Configuration |
 | Admin accounts < 5 | Count members of `confluence-administrators` |

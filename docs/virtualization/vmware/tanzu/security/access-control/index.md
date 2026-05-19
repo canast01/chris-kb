@@ -114,7 +114,7 @@ Harbor project roles:
 
 ```bash
 # Add LDAP group to Harbor project
-curl -sk -X POST "https://harbor.corp.local/api/v2.0/projects/team-alpha/members" \
+curl -sk -X POST "https://harbor.example.local/api/v2.0/projects/team-alpha/members" \
   -u admin:<password> \
   -H "Content-Type: application/json" \
   -d '{

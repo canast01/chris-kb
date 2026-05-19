@@ -58,7 +58,7 @@ Collect the following before contacting VMware Support:
 If the UI is unavailable:
 
 ```bash
-ssh ubuntu@vrni.corp.local
+ssh ubuntu@vrni.example.local
 
 # Generate support bundle from CLI
 sudo /etc/init.d/support-bundle.sh
@@ -66,7 +66,7 @@ sudo /etc/init.d/support-bundle.sh
 # Bundle is placed in:
 ls /data/support-bundles/
 # Transfer via SCP:
-scp ubuntu@vrni.corp.local:/data/support-bundles/<bundle>.tar.gz /local/path/
+scp ubuntu@vrni.example.local:/data/support-bundles/<bundle>.tar.gz /local/path/
 ```
 
 ---

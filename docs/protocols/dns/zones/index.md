@@ -5,21 +5,21 @@
 ┌──────────────────────────────────────────────────────────────┐
 │  Forward zone: corp.local  (primary / AD-integrated)         │
 │  ┌──────────────────────────────────────────────────────┐    │
-│  │  SOA   dc01.corp.local (serial 2026051801)           │    │
-│  │  NS    dc01.corp.local                               │    │
-│  │  NS    dc02.corp.local                               │    │
+│  │  SOA   dc01.example.local (serial 2026051801)           │    │
+│  │  NS    dc01.example.local                               │    │
+│  │  NS    dc02.example.local                               │    │
 │  │  A     dc01  →  10.0.0.53                            │    │
 │  │  A     web01 →  192.168.10.100                       │    │
 │  │  ...   (all forward records)                         │    │
 │  └──────────────────────────────────────────────────────┘    │
 │                         │ zone transfer (AXFR/IXFR)          │
 │                         ▼                                    │
-│  Secondary zone: dc02.corp.local  (read-only replica)        │
+│  Secondary zone: dc02.example.local  (read-only replica)        │
 │                                                              │
 │  Reverse zone: 10.168.192.in-addr.arpa  (primary)            │
 │  ┌──────────────────────────────────────────────────────┐    │
-│  │  PTR   100  →  web01.corp.local                      │    │
-│  │  PTR   101  →  web02.corp.local                      │    │
+│  │  PTR   100  →  web01.example.local                      │    │
+│  │  PTR   101  →  web02.example.local                      │    │
 │  └──────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -85,15 +85,15 @@ Get-DnsServerZone -Name "corp.local" | Select-Object ZoneName, LastZoneTransferA
 ## Zone Delegation
 
 ```powershell
-# Delegate child.corp.local to a child DNS server
+# Delegate child.example.local to a child DNS server
 Add-DnsServerZoneDelegation `
   -Name "corp.local" `
   -ChildZoneName "child" `
-  -NameServer "ns1.child.corp.local" `
+  -NameServer "ns1.child.example.local" `
   -IPAddress 10.1.0.53
 
 # Verify delegation NS record exists
-Resolve-DnsName -Name "child.corp.local" -Type NS -Server 10.0.0.53
+Resolve-DnsName -Name "child.example.local" -Type NS -Server 10.0.0.53
 ```
 
 ## AD-Integrated Zone Replication Scopes

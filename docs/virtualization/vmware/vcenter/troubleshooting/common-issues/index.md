@@ -399,7 +399,7 @@ $vm.ExtensionData.TriggeredAlarmState | ForEach-Object {
 }
 
 # Acknowledge all alarms on a specific host
-$host = Get-VMHost "esxi-01.corp.local"
+$host = Get-VMHost "esxi-01.example.local"
 $host.ExtensionData.TriggeredAlarmState | ForEach-Object {
     $alarmMgr = Get-View AlarmManager
     $alarmMgr.AcknowledgeAlarm($_.Alarm, $host.ExtensionData.MoRef)

@@ -37,7 +37,7 @@
 1. **Certificate thumbprint mismatch** (cert replaced without updating pairing):
    ```bash
    # Get current remote SRM cert thumbprint:
-   echo | openssl s_client -connect srm-recovery.corp.local:9086 2>/dev/null \
+   echo | openssl s_client -connect srm-recovery.example.local:9086 2>/dev/null \
      | openssl x509 -fingerprint -sha1 -noout
    # Compare to thumbprint stored in site pair
    # Site Recovery → Site Pair → Edit → update thumbprint
@@ -45,14 +45,14 @@
 
 2. **Network / firewall**: TCP 9086 blocked between SRM Servers
    ```bash
-   nc -vz srm-recovery.corp.local 9086
+   nc -vz srm-recovery.example.local 9086
    # If connection refused or timeout: firewall rule missing
    ```
 
 3. **SRM service stopped on remote site**:
    ```powershell
-   Get-Service -ComputerName srm-recovery.corp.local -Name "VMware vCenter Site Recovery Manager"
-   Start-Service -ComputerName srm-recovery.corp.local -Name "VMware vCenter Site Recovery Manager"
+   Get-Service -ComputerName srm-recovery.example.local -Name "VMware vCenter Site Recovery Manager"
+   Start-Service -ComputerName srm-recovery.example.local -Name "VMware vCenter Site Recovery Manager"
    ```
 
 ---
@@ -63,7 +63,7 @@
 
 1. **SRA service stopped on SRM Server**:
    ```powershell
-   Get-Service -ComputerName srm-protected.corp.local -Name "*SRA*"
+   Get-Service -ComputerName srm-protected.example.local -Name "*SRA*"
    # Restart if stopped
    ```
 
@@ -125,8 +125,8 @@
 
 3. **vSphere Replication appliance unreachable**:
    ```bash
-   nc -vz vra-protected.corp.local 31031
-   nc -vz vra-protected.corp.local 44046
+   nc -vz vra-protected.example.local 31031
+   nc -vz vra-protected.example.local 44046
    # Both should be open
    ```
 

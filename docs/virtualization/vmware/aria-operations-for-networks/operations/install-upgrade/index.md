@@ -77,8 +77,8 @@ OVAs are downloaded from [Broadcom Customer Connect](https://customerconnect.bro
 | Default Gateway | `10.10.10.1` |
 | DNS Server 1 | `10.10.0.1` |
 | DNS Server 2 | `10.10.0.2` |
-| Hostname (FQDN) | `aon-platform.corp.local` |
-| NTP Server | `ntp.corp.local` |
+| Hostname (FQDN) | `aon-platform.example.local` |
+| NTP Server | `ntp.example.local` |
 | Admin Password | (set initial password) |
 
 7. Power on the VM. First boot takes 10–15 minutes for service initialization.
@@ -87,17 +87,17 @@ OVAs are downloaded from [Broadcom Customer Connect](https://customerconnect.bro
 
 ```bash
 # Check HTTPS is reachable
-curl -sk https://aon-platform.corp.local -o /dev/null -w "HTTP %{http_code}\n"
+curl -sk https://aon-platform.example.local -o /dev/null -w "HTTP %{http_code}\n"
 # Expected: HTTP 200 (redirect to login page)
 
 # SSH to platform to verify services
-ssh ubuntu@aon-platform.corp.local
+ssh ubuntu@aon-platform.example.local
 sudo systemctl status vrni-platform nginx cassandra
 ```
 
 ### Initial Setup Wizard
 
-Navigate to `https://aon-platform.corp.local` in a browser.
+Navigate to `https://aon-platform.example.local` in a browser.
 
 1. **Login**: admin@local / (password set during OVA deployment)
 2. **License key**: Enter the AON license key obtained from Broadcom
@@ -127,9 +127,9 @@ Copy the pairing key — it is a long random string. It expires after 24 hours i
 | Subnet Mask | `255.255.255.0` |
 | Default Gateway | `10.10.10.1` |
 | DNS Server | `10.10.0.1` |
-| Hostname (FQDN) | `aon-collector-dc1.corp.local` |
-| NTP Server | `ntp.corp.local` |
-| Platform IP/FQDN | `aon-platform.corp.local` |
+| Hostname (FQDN) | `aon-collector-dc1.example.local` |
+| NTP Server | `ntp.example.local` |
+| Platform IP/FQDN | `aon-platform.example.local` |
 | Pairing Key | (paste from UI) |
 
 4. Power on the Collector VM. First boot takes 5–10 minutes.
@@ -138,7 +138,7 @@ Copy the pairing key — it is a long random string. It expires after 24 hours i
 
 ```bash
 # SSH to Collector and check pairing status
-ssh ubuntu@aon-collector-dc1.corp.local
+ssh ubuntu@aon-collector-dc1.example.local
 sudo systemctl status ni-collector
 sudo journalctl -u ni-collector -n 50
 
@@ -158,7 +158,7 @@ Settings → Accounts and Data Sources → Add Source → vCenter Server
 
 | Field | Value |
 |---|---|
-| vCenter IP/FQDN | `vcenter.corp.local` |
+| vCenter IP/FQDN | `vcenter.example.local` |
 | Username | `svc-aon@vsphere.local` |
 | Password | — |
 | Collector | Select the paired Collector |
@@ -172,7 +172,7 @@ Settings → Accounts and Data Sources → Add Source → NSX-T Manager
 
 | Field | Value |
 |---|---|
-| NSX-T Manager IP/FQDN | `nsxmgr.corp.local` |
+| NSX-T Manager IP/FQDN | `nsxmgr.example.local` |
 | Username | `svc-aon` |
 | Password | — |
 | Collector | Select the paired Collector |
@@ -201,12 +201,12 @@ Correct order:
 
 ```bash
 # 1. Take config backup
-TOKEN=$(curl -sk -X POST "https://aon.corp.local/api/ni/auth/token" \
+TOKEN=$(curl -sk -X POST "https://aon.example.local/api/ni/auth/token" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"PASSWORD"}' \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
 
-curl -sk "https://aon.corp.local/api/ni/settings/backup" \
+curl -sk "https://aon.example.local/api/ni/settings/backup" \
   -H "Authorization: NetworkInsight ${TOKEN}" \
   --output "aon-backup-pre-upgrade-$(date +%Y%m%d).tar.gz"
 
@@ -215,7 +215,7 @@ curl -sk "https://aon.corp.local/api/ni/settings/backup" \
 Get-VM "aon-platform-01" | New-Snapshot -Name "Pre-Upgrade-6.14.0" -Description "Before AON upgrade to 6.14.0"
 
 # 3. Note current version
-curl -sk "https://aon.corp.local/api/ni/system/version" \
+curl -sk "https://aon.example.local/api/ni/system/version" \
   -H "Authorization: NetworkInsight ${TOKEN}" | python3 -m json.tool
 ```
 
@@ -230,10 +230,10 @@ The upgrade bundle file is a `.pak` file downloaded from Broadcom.
 **CLI method (if UI upgrade fails):**
 
 ```bash
-ssh ubuntu@aon-platform.corp.local
+ssh ubuntu@aon-platform.example.local
 
 # Upload the upgrade bundle to the platform
-scp VMware-Aria-Operations-for-Networks-6.14.0-upgrade.pak ubuntu@aon-platform.corp.local:/tmp/
+scp VMware-Aria-Operations-for-Networks-6.14.0-upgrade.pak ubuntu@aon-platform.example.local:/tmp/
 
 # On Platform VM
 sudo /opt/vmware/bin/upgrade.sh /tmp/VMware-Aria-Operations-for-Networks-6.14.0-upgrade.pak
@@ -248,15 +248,15 @@ Platform will restart services during upgrade. Expect 15–30 minutes of downtim
 
 ```bash
 # Check version
-curl -sk "https://aon.corp.local/api/ni/system/version" \
+curl -sk "https://aon.example.local/api/ni/system/version" \
   -H "Authorization: NetworkInsight ${TOKEN}" | python3 -m json.tool
 
 # Check all services are running
-ssh ubuntu@aon-platform.corp.local
+ssh ubuntu@aon-platform.example.local
 sudo systemctl status vrni-platform nginx cassandra kafka elasticsearch postgres
 
 # Check Collectors re-connected (they should reconnect automatically)
-curl -sk "https://aon.corp.local/api/ni/collectors" \
+curl -sk "https://aon.example.local/api/ni/collectors" \
   -H "Authorization: NetworkInsight ${TOKEN}" \
   | python3 -c "
 import sys,json
@@ -285,7 +285,7 @@ Get-VM "aon-platform-01" | Get-Snapshot -Name "Pre-Upgrade-6.14.0" | Set-VM -Sna
 
 # After revert, Collectors should auto-reconnect to the older Platform
 # If not, re-pair manually:
-ssh ubuntu@aon-collector-dc1.corp.local
+ssh ubuntu@aon-collector-dc1.example.local
 sudo /home/ubuntu/support/pairing.sh
 ```
 

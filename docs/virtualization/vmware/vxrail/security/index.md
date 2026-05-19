@@ -69,7 +69,7 @@ Configure AD authentication for VxRail Manager:
 
 | Field | Example |
 |---|---|
-| LDAP URL | `ldaps://ldap.corp.local:636` |
+| LDAP URL | `ldaps://ldap.example.local:636` |
 | Base DN | `DC=corp,DC=local` |
 | Bind DN | `CN=vxrailbind,OU=ServiceAccounts,DC=corp,DC=local` |
 | Admin Group | `CN=VxRail-Admins,OU=Groups,DC=corp,DC=local` |
@@ -113,7 +113,7 @@ racadm set iDRAC.Users.2.Password "NewStr0ngP@ss!!"
 
 # Or configure LDAP/AD on iDRAC for centralised auth:
 racadm set iDRAC.LDAP.Enable Enabled
-racadm set iDRAC.LDAP.Server "ldap.corp.local"
+racadm set iDRAC.LDAP.Server "ldap.example.local"
 racadm set iDRAC.LDAP.BaseDN "DC=corp,DC=local"
 ```
 

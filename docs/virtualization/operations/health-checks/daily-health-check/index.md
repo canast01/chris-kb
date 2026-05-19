@@ -48,7 +48,7 @@ Morning Check Sequence
 
 ```powershell
 # Connect and verify vCenter services
-Connect-VIServer -Server vcenter.corp.local
+Connect-VIServer -Server vcenter.example.local
 Get-View -ViewType ServiceInstance | Select-Object -ExpandProperty ServerClock
 
 # Check vCenter services from appliance shell

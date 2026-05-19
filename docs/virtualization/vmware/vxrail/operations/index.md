@@ -382,7 +382,7 @@ Before any LCM upgrade: take a snapshot of the VxRail Manager VM (not a long-ter
 
 ```bash
 # Export ESXi host configuration bundle for each VxRail node
-Get-VMHostFirmware -VMHost "vxrail-node-01.corp.local" \
+Get-VMHostFirmware -VMHost "vxrail-node-01.example.local" \
   -BackupConfiguration -DestinationPath C:\backups\vxrail\
 ```
 

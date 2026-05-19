@@ -29,8 +29,8 @@ SRM authenticates all users through vCenter Single Sign-On. There are no SRM-loc
 
 ```powershell
 # Authenticate to SRM through vCenter
-Connect-VIServer -Server vcenter-protected.corp.local -User "administrator@vsphere.local" -Password "<password>"
-$srm = Connect-SrmServer -SrmServerAddress srm-protected.corp.local
+Connect-VIServer -Server vcenter-protected.example.local -User "administrator@vsphere.local" -Password "<password>"
+$srm = Connect-SrmServer -SrmServerAddress srm-protected.example.local
 # SRM session is derived from the vCenter session — no separate SRM login
 ```
 
@@ -84,13 +84,13 @@ SRM REST API uses vCenter session tokens:
 ```bash
 # Step 1: Get vCenter session token
 TOKEN=$(curl -sk -X POST \
-  "https://vcenter-protected.corp.local/rest/com/vmware/cis/session" \
+  "https://vcenter-protected.example.local/rest/com/vmware/cis/session" \
   -u "administrator@vsphere.local:<password>" | \
   python3 -c "import json,sys; print(json.load(sys.stdin)['value'])")
 
 # Step 2: Use token for SRM API calls
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.corp.local/api/vcenter/dr/recovery/plans"
+  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans"
 ```
 
 ---
@@ -101,7 +101,7 @@ VRA appliances authenticate to each other and to vCenter using certificates. The
 
 If vCenter certificate is replaced, re-register VRA:
 ```
-VRA VAMI (https://vra-protected.corp.local:5480)
+VRA VAMI (https://vra-protected.example.local:5480)
   Configuration → vCenter Server → Reconfigure
   Re-enter vCenter credentials
 ```

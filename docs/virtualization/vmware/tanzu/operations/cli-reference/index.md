@@ -81,7 +81,7 @@ tanzu cluster delete my-workload-cluster --yes
 ```bash
 # Login to Supervisor cluster
 kubectl vsphere login \
-  --server https://supervisor.corp.local \
+  --server https://supervisor.example.local \
   --username administrator@vsphere.local \
   --vsphere-username administrator@vsphere.local \
   --insecure-skip-tls-verify
@@ -141,8 +141,8 @@ kapp delete -a my-app --yes
 ytt -f values.yaml -f config/ > rendered.yaml
 
 # imgpkg — package and relocate container images
-imgpkg push -b harbor.corp.local/tanzu/my-bundle:v1.0 -f ./bundle/
-imgpkg pull -b harbor.corp.local/tanzu/my-bundle:v1.0 -o ./output/
+imgpkg push -b harbor.example.local/tanzu/my-bundle:v1.0 -f ./bundle/
+imgpkg pull -b harbor.example.local/tanzu/my-bundle:v1.0 -o ./output/
 
 # vendir — sync external content
 vendir sync
@@ -154,20 +154,20 @@ vendir sync
 
 ```bash
 # Push an image to Harbor
-docker login harbor.corp.local -u admin -p <password>
-docker tag myapp:v1.0 harbor.corp.local/myproject/myapp:v1.0
-docker push harbor.corp.local/myproject/myapp:v1.0
+docker login harbor.example.local -u admin -p <password>
+docker tag myapp:v1.0 harbor.example.local/myproject/myapp:v1.0
+docker push harbor.example.local/myproject/myapp:v1.0
 
 # Pull an image
-docker pull harbor.corp.local/myproject/myapp:v1.0
+docker pull harbor.example.local/myproject/myapp:v1.0
 
 # Harbor API — list projects
 curl -sk -u admin:<password> \
-  "https://harbor.corp.local/api/v2.0/projects" | python3 -m json.tool
+  "https://harbor.example.local/api/v2.0/projects" | python3 -m json.tool
 
 # Harbor API — list repositories in a project
 curl -sk -u admin:<password> \
-  "https://harbor.corp.local/api/v2.0/projects/myproject/repositories" | python3 -m json.tool
+  "https://harbor.example.local/api/v2.0/projects/myproject/repositories" | python3 -m json.tool
 ```
 
 ---

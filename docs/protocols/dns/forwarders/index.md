@@ -9,7 +9,7 @@
 │  │ (authoritative)  │         │  (for unknown names)     │   │
 │  └────────┬─────────┘         └──────────────────────────┘   │
 │           │                                                  │
-│  Query: web01.corp.local  ──► answered from local zone       │
+│  Query: web01.example.local  ──► answered from local zone       │
 │  Query: google.com        ──► forwarded to 8.8.8.8 ─► answer │
 │                                                              │
 │  CONDITIONAL FORWARDER:                                      │

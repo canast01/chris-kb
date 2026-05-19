@@ -56,7 +56,7 @@ Acceptable ratio: Available desktops should be ≥ 10% of pool size to handle bu
 
 ```powershell
 # Using VMware.Hv.Helper PowerShell module
-Connect-HVServer -Server horizon-cs01.corp.local -Credential (Get-Credential)
+Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
 
 # Get current active session count
 $sessions = Get-HVLocalSession
@@ -72,16 +72,16 @@ Write-Host "Active sessions: $($sessions.Count)"
 
 ```bash
 # UAG exposes a health API endpoint
-curl -sk https://uag.corp.local/favicon.ico  # should return 200
-curl -sk https://uag.corp.local:9443/rest/v1/monitor/health \
+curl -sk https://uag.example.local/favicon.ico  # should return 200
+curl -sk https://uag.example.local:9443/rest/v1/monitor/health \
   -u admin:<password> | python3 -m json.tool
 # Look for "RUNNING" status on all services
 
 # Test Blast gateway reachability from external network
 # Blast: TCP 8443 (HTTPS)
 # PCoIP: TCP/UDP 4172
-nc -vz uag.corp.local 8443
-nc -vz uag.corp.local 4172
+nc -vz uag.example.local 8443
+nc -vz uag.example.local 4172
 ```
 
 ---
@@ -97,7 +97,7 @@ App Volumes Manager UI → Infrastructure → Managers
 
 ```bash
 # Test App Volumes Manager API
-curl -sk https://appvol-mgr.corp.local/cv_api/status
+curl -sk https://appvol-mgr.example.local/cv_api/status
 ```
 
 ---
@@ -108,7 +108,7 @@ Dynamic Environment Manager reads GPO config from a UNC share. Verify accessibil
 
 ```powershell
 # On a desktop VM or Connection Server:
-Test-Path "\\fileserver.corp.local\DEM-Config\General"
+Test-Path "\\fileserver.example.local\DEM-Config\General"
 # Should return True
 
 # Check DEM Agent service in a desktop VM
@@ -121,15 +121,15 @@ Get-Service -ComputerName <desktop-vm> -Name "User Environment Manager Agent"
 
 ```bash
 # Check Connection Server SSL certificate
-echo | openssl s_client -connect horizon-cs01.corp.local:443 -servername horizon-cs01.corp.local 2>/dev/null \
+echo | openssl s_client -connect horizon-cs01.example.local:443 -servername horizon-cs01.example.local 2>/dev/null \
   | openssl x509 -noout -dates
 
 # Check UAG certificate
-echo | openssl s_client -connect uag.corp.local:443 -servername uag.corp.local 2>/dev/null \
+echo | openssl s_client -connect uag.example.local:443 -servername uag.example.local 2>/dev/null \
   | openssl x509 -noout -dates
 
 # Check UAG Blast gateway cert (port 8443)
-echo | openssl s_client -connect uag.corp.local:8443 2>/dev/null \
+echo | openssl s_client -connect uag.example.local:8443 2>/dev/null \
   | openssl x509 -noout -dates
 ```
 
@@ -138,7 +138,7 @@ echo | openssl s_client -connect uag.corp.local:8443 2>/dev/null \
 ## Check for Provisioning Errors
 
 ```powershell
-Connect-HVServer -Server horizon-cs01.corp.local -Credential (Get-Credential)
+Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
 
 # Get desktops in error state
 Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } | 

@@ -85,7 +85,7 @@ klist -li 0x3e7   # SYSTEM account tickets
 nltest /sc_verify:CORP.LOCAL
 
 # Check KDC connectivity
-Test-NetConnection -ComputerName dc01.corp.local -Port 88
+Test-NetConnection -ComputerName dc01.example.local -Port 88
 
 # View Kerberos event log errors (Event ID 4769, 4771)
 Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4771} -MaxEvents 20 |
@@ -255,7 +255,7 @@ msinfo32  # System Summary > look for "Virtualization-based security Services Ru
 
 # Create the gMSA (run on DC)
 New-ADServiceAccount -Name "svc-webapp" `
-  -DNSHostName "svc-webapp.corp.local" `
+  -DNSHostName "svc-webapp.example.local" `
   -PrincipalsAllowedToRetrieveManagedPassword "WebServers"   # AD computer group
 
 # Install gMSA on the target server

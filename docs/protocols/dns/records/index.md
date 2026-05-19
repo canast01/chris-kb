@@ -7,16 +7,16 @@
 │  ┌────┬─────────────────────────────────────────────────┐   │
 │  │ A  │ web01  →  192.168.10.100  (IPv4 address)        │   │
 │  │AAAA│ web01  →  2001:db8::1     (IPv6 address)        │   │
-│  │CNAME│www   →  web01.corp.local (alias)               │   │
-│  │ MX │ @     →  10 mail.corp.local (mail exchanger)    │   │
-│  │ NS │ @     →  dc01.corp.local  (nameserver)          │   │
+│  │CNAME│www   →  web01.example.local (alias)               │   │
+│  │ MX │ @     →  10 mail.example.local (mail exchanger)    │   │
+│  │ NS │ @     →  dc01.example.local  (nameserver)          │   │
 │  │TXT │ @     →  "v=spf1 ..."    (SPF/DKIM/verify)      │   │
 │  │SRV │_ldap._tcp → dc01:389     (service locator)      │   │
 │  └────┴─────────────────────────────────────────────────┘   │
 │                                                              │
 │  Reverse zone: 10.168.192.in-addr.arpa                       │
 │  ┌─────┬────────────────────────────────────────────────┐   │
-│  │ PTR │ 100  →  web01.corp.local  (reverse lookup)     │   │
+│  │ PTR │ 100  →  web01.example.local  (reverse lookup)     │   │
 │  └─────┴────────────────────────────────────────────────┘   │
 │                                                              │
 │  SOA record: serial + refresh + retry + expire + min-TTL    │
@@ -33,12 +33,12 @@ DNS records define how names map to resources. Each record type serves a distinc
 |------|---------|---------|
 | A | IPv4 address | `web01 A 192.168.10.100` |
 | AAAA | IPv6 address | `web01 AAAA 2001:db8::1` |
-| CNAME | Alias to another name | `www CNAME web01.corp.local` |
-| MX | Mail exchange | `@ MX 10 mail.corp.local` |
-| PTR | Reverse lookup | `100 PTR web01.corp.local` |
-| SRV | Service location | `_ldap._tcp SRV 0 100 389 dc01.corp.local` |
+| CNAME | Alias to another name | `www CNAME web01.example.local` |
+| MX | Mail exchange | `@ MX 10 mail.example.local` |
+| PTR | Reverse lookup | `100 PTR web01.example.local` |
+| SRV | Service location | `_ldap._tcp SRV 0 100 389 dc01.example.local` |
 | TXT | Arbitrary text (SPF, DKIM) | `@ TXT "v=spf1 ip4:203.0.113.10 -all"` |
-| NS | Name server | `@ NS dc01.corp.local` |
+| NS | Name server | `@ NS dc01.example.local` |
 
 ## Managing Records with PowerShell
 
@@ -54,19 +54,19 @@ Add-DnsServerResourceRecordA `
 Add-DnsServerResourceRecordCName `
   -ZoneName "corp.local" `
   -Name "www" `
-  -HostNameAlias "web01.corp.local"
+  -HostNameAlias "web01.example.local"
 
 # Add a PTR record
 Add-DnsServerResourceRecordPtr `
   -ZoneName "10.168.192.in-addr.arpa" `
   -Name "100" `
-  -PtrDomainName "web01.corp.local"
+  -PtrDomainName "web01.example.local"
 
 # Add an MX record
 Add-DnsServerResourceRecord -MX `
   -ZoneName "corp.local" `
   -Name "@" `
-  -MailExchange "mail.corp.local" `
+  -MailExchange "mail.example.local" `
   -Preference 10
 
 # Remove a record

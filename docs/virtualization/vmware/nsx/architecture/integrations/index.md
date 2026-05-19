@@ -40,7 +40,7 @@ From the NSX Manager UI: **System → Fabric → Compute Managers → Add**
 | Field | Value |
 |---|---|
 | Name | vcenter-prod |
-| FQDN / IP | vcenter.corp.local |
+| FQDN / IP | vcenter.example.local |
 | Username | administrator@vsphere.local |
 | Trust Method | Thumbprint or Certificate |
 
@@ -185,7 +185,7 @@ NSX-T supports LDAP (Active Directory or OpenLDAP) for user authentication. LDAP
 |---|---|
 | Name | corp-ad |
 | LDAP Protocol | LDAPS (port 636) — recommended |
-| Hostname | ldap.corp.local |
+| Hostname | ldap.example.local |
 | Base DN | DC=corp,DC=local |
 | Bind DN | CN=nsxbind,OU=ServiceAccounts,DC=corp,DC=local |
 | Bind Password | (service account password) |

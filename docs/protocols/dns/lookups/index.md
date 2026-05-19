@@ -4,12 +4,12 @@
         FORWARD vs REVERSE LOOKUPS
 ┌──────────────────────────────────────────────────────────────┐
 │  FORWARD LOOKUP (name → IP)                                  │
-│  dig A web01.corp.local @10.0.0.53                           │
-│  → ANSWER: web01.corp.local. 3600 IN A 192.168.10.100        │
+│  dig A web01.example.local @10.0.0.53                           │
+│  → ANSWER: web01.example.local. 3600 IN A 192.168.10.100        │
 │                                                              │
 │  REVERSE LOOKUP (IP → name)                                  │
 │  dig -x 192.168.10.100 @10.0.0.53                            │
-│  → ANSWER: 100.10.168.192.in-addr.arpa. PTR web01.corp.local.│
+│  → ANSWER: 100.10.168.192.in-addr.arpa. PTR web01.example.local.│
 │                                                              │
 │  ITERATIVE (resolver asks each level):                       │
 │  client ─► root (.) ─► TLD (.com) ─► authoritative ─► answer│
@@ -19,7 +19,7 @@
 │            (resolver iterates internally, returns final IP)  │
 │                                                              │
 │  TTL: time-to-live in seconds; cached until expired          │
-│  dig output: web01.corp.local.  3600  IN  A  192.168.10.100  │
+│  dig output: web01.example.local.  3600  IN  A  192.168.10.100  │
 │              name               TTL  class type  value       │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -42,13 +42,13 @@ nslookup 192.168.10.55
 
 # Query a specific record type
 nslookup -type=MX example.com 10.0.0.53
-nslookup -type=SRV _ldap._tcp.corp.local 10.0.0.53
+nslookup -type=SRV _ldap._tcp.example.local 10.0.0.53
 
 # Interactive mode — query multiple records
 nslookup
 > server 10.0.0.53
 > set type=A
-> host.corp.local
+> host.example.local
 > exit
 ```
 
@@ -59,7 +59,7 @@ nslookup
 dig www.example.com
 
 # Lookup against specific server
-dig @10.0.0.53 www.corp.local
+dig @10.0.0.53 www.example.local
 
 # Reverse lookup
 dig -x 192.168.10.55
@@ -68,7 +68,7 @@ dig -x 192.168.10.55
 dig @10.0.0.53 MX example.com +short
 
 # Check TTL remaining in a response
-dig @10.0.0.53 www.corp.local | grep -A1 "ANSWER SECTION"
+dig @10.0.0.53 www.example.local | grep -A1 "ANSWER SECTION"
 
 # Trace full resolution path
 dig +trace www.example.com
@@ -78,20 +78,20 @@ dig +trace www.example.com
 
 ```powershell
 # Basic forward lookup
-Resolve-DnsName www.corp.local
+Resolve-DnsName www.example.local
 
 # Query a specific DNS server
-Resolve-DnsName www.corp.local -Server 10.0.0.53
+Resolve-DnsName www.example.local -Server 10.0.0.53
 
 # Reverse lookup
 Resolve-DnsName 192.168.10.55
 
 # Query specific record type
 Resolve-DnsName corp.local -Type MX -Server 10.0.0.53
-Resolve-DnsName _ldap._tcp.corp.local -Type SRV
+Resolve-DnsName _ldap._tcp.example.local -Type SRV
 
 # Bypass cache (go direct to server)
-Resolve-DnsName www.corp.local -Server 10.0.0.53 -DnsOnly
+Resolve-DnsName www.example.local -Server 10.0.0.53 -DnsOnly
 ```
 
 ## TTL Debugging

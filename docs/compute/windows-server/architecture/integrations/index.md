@@ -135,8 +135,8 @@ Verify correct DNS registration after domain join:
 ipconfig /registerdns
 
 # Verify A and PTR records
-Resolve-DnsName -Name $env:COMPUTERNAME -Server dc1.corp.local
-Resolve-DnsName -Type PTR -Name "10.10.10.50" -Server dc1.corp.local
+Resolve-DnsName -Name $env:COMPUTERNAME -Server dc1.example.local
+Resolve-DnsName -Type PTR -Name "10.10.10.50" -Server dc1.example.local
 ```
 
 ## FC HBA Configuration

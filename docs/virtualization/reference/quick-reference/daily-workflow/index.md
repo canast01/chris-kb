@@ -37,7 +37,7 @@ A repeatable morning workflow to confirm the environment is healthy before the b
 
 ```powershell
 # Connect and get all triggered alarms
-Connect-VIServer -Server vcenter.corp.local
+Connect-VIServer -Server vcenter.example.local
 Get-AlarmDefinition | Where-Object {$_.Enabled} | ForEach-Object {
     Get-Alarm -Entity (Get-Datacenter) | Where-Object {$_.Status -ne "Green"}
 } | Select-Object Entity, AlarmDefinition, Status | Format-Table -AutoSize

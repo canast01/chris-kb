@@ -90,7 +90,7 @@ LCM is unavailable during its own upgrade — plan during a maintenance window.
 ```bash
 # From LCM UI: Settings → System Details → Backup and Restore
 # Or via API:
-curl -k -u admin:password -X POST https://lcm.corp.local/lcm/lcops/api/v2/system/backup
+curl -k -u admin:password -X POST https://lcm.example.local/lcm/lcops/api/v2/system/backup
 ```
 
 Store backup archives off the LCM appliance (NFS, S3, or external storage).

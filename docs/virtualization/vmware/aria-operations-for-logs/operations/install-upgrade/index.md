@@ -46,15 +46,15 @@ Aria Operations for Logs is deployed as a Linux-based virtual appliance (OVA). F
 4. Select target: datacenter, cluster, datastore
 5. Select the VM network (management network port group)
 6. Customise the template:
-   - **Hostname**: `vrli-prod-01.corp.local`
+   - **Hostname**: `vrli-prod-01.example.local`
    - **IP address**: `10.0.1.30`
    - **Netmask**: `255.255.255.0`
    - **Gateway**: `10.0.1.1`
    - **DNS**: `10.0.1.5`
-   - **NTP**: `ntp.corp.local`
+   - **NTP**: `ntp.example.local`
    - **Root password**: set a strong password
 7. Power on the VM — first-boot configuration takes 5–10 minutes
-8. Navigate to `https://vrli-prod-01.corp.local` and complete the setup wizard
+8. Navigate to `https://vrli-prod-01.example.local` and complete the setup wizard
 
 ### Setup Wizard Steps
 
@@ -76,7 +76,7 @@ Aria Operations for Logs is deployed as a Linux-based virtual appliance (OVA). F
 ```bash
 # From master node — confirm all cluster members
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/cluster/nodes" | \
+  "https://vrli-prod-01.example.local/api/v2/cluster/nodes" | \
   jq '.nodes[] | {host: .hostname, state: .state, role: .role}'
 ```
 
@@ -120,16 +120,16 @@ Upload the PAK file. Aria Ops for Logs validates the file and presents a pre-upg
 
 ```bash
 # Upload PAK file to master node
-scp VMware-vRealize-Log-Insight-*.pak admin@vrli-prod-01.corp.local:/tmp/
+scp VMware-vRealize-Log-Insight-*.pak admin@vrli-prod-01.example.local:/tmp/
 
 # Initiate upgrade via API
 curl -sk -u 'admin:<password>' -X POST \
-  "https://vrli-prod-01.corp.local/api/v2/upgrade/upload" \
+  "https://vrli-prod-01.example.local/api/v2/upgrade/upload" \
   -F "pakFile=@/tmp/VMware-vRealize-Log-Insight-*.pak"
 
 # Monitor upgrade status
 watch -n 30 'curl -sk -u "admin:<password>" \
-  "https://vrli-prod-01.corp.local/api/v2/upgrade/status" | jq .'
+  "https://vrli-prod-01.example.local/api/v2/upgrade/status" | jq .'
 ```
 
 ---
@@ -139,16 +139,16 @@ watch -n 30 'curl -sk -u "admin:<password>" \
 ```bash
 # Confirm version
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/version" | jq '.version'
+  "https://vrli-prod-01.example.local/api/v2/version" | jq '.version'
 
 # Confirm cluster health
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/cluster/nodes" | \
+  "https://vrli-prod-01.example.local/api/v2/cluster/nodes" | \
   jq '.nodes[] | {host: .hostname, state: .state, version: .version}'
 
 # Confirm ingestion is running
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/cluster/stats" | \
+  "https://vrli-prod-01.example.local/api/v2/cluster/stats" | \
   jq '.eventsIngested'
 ```
 

@@ -46,14 +46,14 @@
 ```bash
 # VCSA file-based backup via VAMI API
 curl -sk -X POST \
-  "https://vcenter.corp.local/api/appliance/recovery/backup/job" \
+  "https://vcenter.example.local/api/appliance/recovery/backup/job" \
   -u "administrator@vsphere.local:<password>" \
   -H "Content-Type: application/json" \
   -d '{
     "parts": ["seat", "common"],
     "backup_password": "<backup-password>",
     "location_type": "SFTP",
-    "location": "sftp://backup.corp.local/vcsa-backups/",
+    "location": "sftp://backup.example.local/vcsa-backups/",
     "location_user": "backupuser",
     "location_password": "<sftp-password>",
     "comment": "Scheduled backup"
@@ -73,7 +73,7 @@ velero install \
   --plugins velero/velero-plugin-for-aws:v1.8.0 \
   --bucket velero-backups \
   --backup-location-config \
-    region=minio,s3ForcePathStyle=true,s3Url=http://minio.corp.local:9000 \
+    region=minio,s3ForcePathStyle=true,s3Url=http://minio.example.local:9000 \
   --secret-file ./credentials-velero \
   --use-volume-snapshots=true \
   --use-node-agent

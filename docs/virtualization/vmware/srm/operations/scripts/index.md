@@ -25,8 +25,8 @@ Requires: VMware.VimAutomation.Srm PowerShell module (installed with PowerCLI)
 
 ```powershell
 Import-Module VMware.VimAutomation.Srm
-Connect-VIServer -Server vcenter-protected.corp.local
-$srm = Connect-SrmServer -SrmServerAddress srm-protected.corp.local `
+Connect-VIServer -Server vcenter-protected.example.local
+$srm = Connect-SrmServer -SrmServerAddress srm-protected.example.local `
   -Credential (Get-Credential)
 ```
 
@@ -114,7 +114,7 @@ foreach ($plan in $plans) {
 
 ```powershell
 # Connect to recovery site vCenter
-$recoveryVC = Connect-VIServer -Server vcenter-recovery.corp.local
+$recoveryVC = Connect-VIServer -Server vcenter-recovery.example.local
 
 $pgs = $srm.ExtensionData.Protection.ListProtectionGroups()
 $missingPlaceholders = @()

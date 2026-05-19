@@ -44,7 +44,7 @@ Settings → Support → Download Support Bundle
 ## Platform VM Log Locations
 
 ```bash
-ssh ubuntu@vrni.corp.local
+ssh ubuntu@vrni.example.local
 
 # Main application logs
 /var/log/vmware/hms/           # Home Management Server — core platform service
@@ -116,14 +116,14 @@ sudo tcpdump -i eth0 -n udp port 2055 -c 20
 ## Check Data Source Last-Sync via API
 
 ```bash
-TOKEN=$(curl -sk -X POST https://vrni.corp.local/api/ni/auth/token \
+TOKEN=$(curl -sk -X POST https://vrni.example.local/api/ni/auth/token \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<pass>","domain":{"domain_type":"LOCAL"}}' \
   | python3 -c "import json,sys; print(json.load(sys.stdin)['token'])")
 
 # List vCenter data sources with status
 curl -sk -H "Authorization: NetworkInsight $TOKEN" \
-  "https://vrni.corp.local/api/ni/data-sources/vcenters" \
+  "https://vrni.example.local/api/ni/data-sources/vcenters" \
   | python3 -c "
 import json,sys
 for ds in json.load(sys.stdin).get('results', []):
@@ -137,11 +137,11 @@ for ds in json.load(sys.stdin).get('results', []):
 
 ```bash
 # Check Platform API health (no auth required)
-curl -sk https://vrni.corp.local/api/ni/health
+curl -sk https://vrni.example.local/api/ni/health
 # Response should be {"status":"OK"} or similar
 
 # Check API version
-curl -sk https://vrni.corp.local/api/ni/info
+curl -sk https://vrni.example.local/api/ni/info
 ```
 
 ---
@@ -167,10 +167,10 @@ sudo rm -rf /data/backup/<old-backup-date>/
 
 ```bash
 # Check current Platform VM certificate
-echo | openssl s_client -connect vrni.corp.local:443 -servername vrni.corp.local 2>/dev/null \
+echo | openssl s_client -connect vrni.example.local:443 -servername vrni.example.local 2>/dev/null \
   | openssl x509 -noout -dates -subject -issuer
 
 # Check if cert is from expected CA
-echo | openssl s_client -connect vrni.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect vrni.example.local:443 2>/dev/null \
   | openssl x509 -noout -issuer
 ```

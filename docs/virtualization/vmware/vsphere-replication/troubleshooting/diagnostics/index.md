@@ -28,7 +28,7 @@
 ## VRA Log Locations
 
 ```bash
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 
 # Main VRA application logs:
 /opt/vmware/logs/hms/          # Home Management Server logs
@@ -46,7 +46,7 @@ journalctl -u nginx -f         # Follow nginx (API gateway) log
 ## Collect VRA Support Bundle
 
 ```
-VRA VAMI (https://vra-london.corp.local:5480)
+VRA VAMI (https://vra-london.example.local:5480)
   → Support → Generate Support Bundle → Download
 
 The bundle includes: all VRA logs, configuration, service state
@@ -54,10 +54,10 @@ The bundle includes: all VRA logs, configuration, service state
 
 Manual collection if VAMI is unreachable:
 ```bash
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 /opt/vmware/support/support-bundle.sh
 # Bundle location: /tmp/vr-support-<timestamp>.tar.gz
-scp admin@vra-london.corp.local:/tmp/vr-support-*.tar.gz /local/path/
+scp admin@vra-london.example.local:/tmp/vr-support-*.tar.gz /local/path/
 ```
 
 ---
@@ -65,7 +65,7 @@ scp admin@vra-london.corp.local:/tmp/vr-support-*.tar.gz /local/path/
 ## Check VRA Service Status
 
 ```bash
-ssh admin@vra-london.corp.local
+ssh admin@vra-london.example.local
 
 # Core services:
 systemctl status hms        # Should be: active (running)
@@ -125,11 +125,11 @@ esxcli vm process list | grep -i replication
 
 ```bash
 # Check VRA management interface cert:
-echo | openssl s_client -connect vra-london.corp.local:443 -servername vra-london.corp.local 2>/dev/null \
+echo | openssl s_client -connect vra-london.example.local:443 -servername vra-london.example.local 2>/dev/null \
   | openssl x509 -noout -dates -subject -issuer
 
 # Check VRA inter-site port cert:
-echo | openssl s_client -connect vra-amsterdam.corp.local:44046 2>/dev/null \
+echo | openssl s_client -connect vra-amsterdam.example.local:44046 2>/dev/null \
   | openssl x509 -noout -dates -subject
 ```
 
@@ -149,17 +149,17 @@ vCenter → Monitor → Recent Tasks
 
 ```bash
 # Quick health check (no auth required):
-curl -sk https://vra-london.corp.local/api/rest/vr/health
+curl -sk https://vra-london.example.local/api/rest/vr/health
 
 # Detailed status with auth:
 TOKEN=$(curl -sk -X POST \
-  https://vra-london.corp.local/api/rest/vr/authentication/token \
+  https://vra-london.example.local/api/rest/vr/authentication/token \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<pass>"}' | \
   python3 -c "import json,sys; print(json.load(sys.stdin)['token'])")
 
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-london.corp.local/api/rest/vr/replications" | \
+  "https://vra-london.example.local/api/rest/vr/replications" | \
   python3 -m json.tool
 ```
 

@@ -69,7 +69,7 @@ Infrastructure → Connections → Integrations → Add Integration → HashiCor
 ```
 
 Provide:
-- Vault URL: `https://vault.corp.local:8200`
+- Vault URL: `https://vault.example.local:8200`
 - Authentication method: AppRole or Kubernetes JWT
 - AppRole Role ID and Secret ID
 
@@ -117,7 +117,7 @@ def handler(context, inputs):
 **Via vracli (standalone deployments):**
 
 ```bash
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 
 # Import certificate files
 vracli certificate import \
@@ -126,7 +126,7 @@ vracli certificate import \
   --ca /tmp/chain.pem
 
 # Verify the certificate is active
-echo | openssl s_client -connect vra-prod-01.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect vra-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -subject -dates -issuer
 ```
 
@@ -146,8 +146,8 @@ echo | openssl s_client -connect vra-prod-01.corp.local:443 2>/dev/null | \
 ```bash
 # Check expiry for all cluster nodes
 for node in vra-prod-01 vra-prod-02 vra-prod-03; do
-  echo -n "$node.corp.local: "
-  echo | openssl s_client -connect "$node.corp.local:443" 2>/dev/null | \
+  echo -n "$node.example.local: "
+  echo | openssl s_client -connect "$node.example.local:443" 2>/dev/null | \
     openssl x509 -noout -enddate 2>/dev/null
 done
 ```

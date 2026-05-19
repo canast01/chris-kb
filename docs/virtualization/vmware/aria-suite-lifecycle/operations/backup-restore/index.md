@@ -101,24 +101,24 @@ The LCM API can export environment inventory, which documents deployed product c
 
 ```bash
 # Authenticate
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
 
 # List all environments
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments" | \
   jq '.' > lcm-environments-$(date +%Y%m%d).json
 
 # Export a specific environment (replace <env-id> with actual ID)
 ENV_ID="<env-id>"
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments/$ENV_ID" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments/$ENV_ID" | \
   jq '.' > lcm-env-${ENV_ID}-$(date +%Y%m%d).json
 
 # Export Locker certificate inventory (metadata only — not private keys)
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/locker/api/v2/certificates" | \
+  "https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates" | \
   jq '.' > lcm-locker-certs-$(date +%Y%m%d).json
 ```
 
@@ -136,7 +136,7 @@ Store these JSON exports alongside the backup job output in a version-controlled
 4. Verify LCM services are running:
 
 ```bash
-ssh admin@lcm-prod-01.corp.local
+ssh admin@lcm-prod-01.example.local
 sudo systemctl status lcm
 sudo systemctl status nginx
 vracli status

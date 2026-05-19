@@ -8,7 +8,7 @@ Day-to-day operational reference for VMware Cloud Foundation. Covers CLI command
 VCF Operations — Day-to-Day Workflow
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager UI / API                              │
-│  https://sddc-manager.corp.local                    │
+│  https://sddc-manager.example.local                    │
 └──────┬──────────┬────────────┬──────────────────────┘
        │          │            │
        ▼          ▼            ▼

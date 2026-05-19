@@ -36,9 +36,9 @@ vrli-<env>-<node#>.<domain>
 
 | Environment | Master Node | Worker Nodes |
 |---|---|---|
-| Production | `vrli-prod-01.corp.local` | `vrli-prod-02.corp.local`, `vrli-prod-03.corp.local` |
-| DR/Standby | `vrli-dr-01.corp.local` | `vrli-dr-02.corp.local` |
-| Development | `vrli-dev-01.corp.local` | — |
+| Production | `vrli-prod-01.example.local` | `vrli-prod-02.example.local`, `vrli-prod-03.example.local` |
+| DR/Standby | `vrli-dr-01.example.local` | `vrli-dr-02.example.local` |
+| Development | `vrli-dev-01.example.local` | — |
 
 ---
 
@@ -59,7 +59,7 @@ Add worker nodes to scale horizontally — ingestion capacity scales linearly wi
 
 ## Pre-Deployment Checklist
 
-- [ ] DNS A record created for each node FQDN — verify: `nslookup vrli-prod-01.corp.local`
+- [ ] DNS A record created for each node FQDN — verify: `nslookup vrli-prod-01.example.local`
 - [ ] DNS PTR record for each node IP — verify: `nslookup <ip>`
 - [ ] NTP reachable; time delta < 1 second — verify: `chronyc tracking`
 - [ ] Static IPs reserved in IPAM for all nodes

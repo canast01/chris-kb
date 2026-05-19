@@ -62,7 +62,7 @@ Backup frequency recommendation:
 Obtain an authentication token first:
 
 ```bash
-PLATFORM="https://aon.corp.local"
+PLATFORM="https://aon.example.local"
 TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"PASSWORD"}' \
@@ -88,7 +88,7 @@ Automate with a cron job on a management host:
 # /usr/local/bin/aon-backup.sh
 set -euo pipefail
 
-PLATFORM="https://aon.corp.local"
+PLATFORM="https://aon.example.local"
 USERNAME="svc-aon-backup@local"
 PASSWORD="PASSWORD"
 BACKUP_DIR="/opt/backups/aon"
@@ -144,7 +144,7 @@ Select the `.tar.gz` file and click Restore. The platform will:
 Restore via REST API:
 
 ```bash
-PLATFORM="https://aon-new.corp.local"
+PLATFORM="https://aon-new.example.local"
 TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"NEWPASSWORD"}' \
@@ -206,7 +206,7 @@ vSphere snapshots of the Platform VM **can** be used as a recovery point, but wi
 - On revert from snapshot, run:
 
 ```bash
-ssh ubuntu@aon-platform.corp.local
+ssh ubuntu@aon-platform.example.local
 
 # Check Cassandra status
 sudo systemctl status cassandra

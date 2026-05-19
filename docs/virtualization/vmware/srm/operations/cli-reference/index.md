@@ -30,12 +30,12 @@
 # SRM REST API uses vCenter SSO session tokens
 # Authenticate against vCenter SSO first:
 TOKEN=$(curl -sk -X POST \
-  "https://vcenter-protected.corp.local/rest/com/vmware/cis/session" \
+  "https://vcenter-protected.example.local/rest/com/vmware/cis/session" \
   -u "administrator@vsphere.local:<password>" \
   -H "Content-Type: application/json" | \
   python3 -c "import json,sys; print(json.load(sys.stdin)['value'])")
 
-# SRM REST API base: https://srm-server.corp.local/api/vcenter/dr/recovery
+# SRM REST API base: https://srm-server.example.local/api/vcenter/dr/recovery
 ```
 
 ---
@@ -45,30 +45,30 @@ TOKEN=$(curl -sk -X POST \
 ```bash
 # List all Recovery Plans
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.corp.local/api/vcenter/dr/recovery/plans" | \
+  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans" | \
   python3 -m json.tool
 
 # Get Recovery Plan status
 PLAN_ID="<recovery-plan-moref>"
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.corp.local/api/vcenter/dr/recovery/plans/$PLAN_ID" | \
+  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans/$PLAN_ID" | \
   python3 -m json.tool
 
 # Start a test recovery
 curl -sk -X POST -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.corp.local/api/vcenter/dr/recovery/plans/$PLAN_ID/start" \
+  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans/$PLAN_ID/start" \
   -H "Content-Type: application/json" \
   -d '{"recovery_type": "TEST"}'
 
 # Start a real recovery (DR failover)
 curl -sk -X POST -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.corp.local/api/vcenter/dr/recovery/plans/$PLAN_ID/start" \
+  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans/$PLAN_ID/start" \
   -H "Content-Type: application/json" \
   -d '{"recovery_type": "FAILOVER"}'
 
 # Cancel a running recovery
 curl -sk -X POST -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.corp.local/api/vcenter/dr/recovery/plans/$PLAN_ID/cancel"
+  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans/$PLAN_ID/cancel"
 ```
 
 ---
@@ -77,8 +77,8 @@ curl -sk -X POST -H "vmware-api-session-id: $TOKEN" \
 
 ```powershell
 # Connect to vCenter (SRM operations run through vCenter)
-Connect-VIServer -Server vcenter-protected.corp.local
-$srm = Connect-SrmServer -SrmServerAddress srm-protected.corp.local `
+Connect-VIServer -Server vcenter-protected.example.local
+$srm = Connect-SrmServer -SrmServerAddress srm-protected.example.local `
   -Credential (Get-Credential)
 
 # List all Recovery Plans

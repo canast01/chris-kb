@@ -52,8 +52,8 @@ Provide:
 Verify VIDM connectivity from LCM:
 
 ```bash
-ssh admin@lcm-prod-01.corp.local
-curl -sk https://vidm.corp.local/SAAS/API/1.0/REST/system/health
+ssh admin@lcm-prod-01.example.local
+curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
 # Expected: {"status": "UP"}
 ```
 
@@ -98,13 +98,13 @@ Service accounts and automation scripts use the LCM REST API with token-based au
 
 ```bash
 # Obtain a session token (token is valid for 30 minutes by default)
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"svc-lcm-api@local","password":"<password>"}' | jq -r '.token')
 
 # Use the token in subsequent calls
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments"
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments"
 ```
 
 For automation pipelines, store the service account password in a secrets manager (HashiCorp Vault, CyberArk) and retrieve it at runtime rather than hardcoding in scripts.
@@ -130,7 +130,7 @@ For automation pipelines, store the service account password in a secrets manage
 # Change local admin password via API
 curl -sk -X PATCH -H "x-xenon-auth-token: $TOKEN" \
   -H "Content-Type: application/json" \
-  "https://lcm-prod-01.corp.local/lcm/authz/api/v2/user/password" \
+  "https://lcm-prod-01.example.local/lcm/authz/api/v2/user/password" \
   -d '{"oldPassword":"<old>","newPassword":"<new>"}'
 ```
 

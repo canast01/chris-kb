@@ -36,7 +36,7 @@ Workspace ONE Access is the SSO identity provider for all Aria products — it i
 Verify VIDM integration health:
 ```bash
 # On LCM appliance (SSH)
-curl -k https://vidm.corp.local/SAAS/API/1.0/REST/system/health
+curl -k https://vidm.example.local/SAAS/API/1.0/REST/system/health
 # Expected: {"status": "UP"}
 ```
 

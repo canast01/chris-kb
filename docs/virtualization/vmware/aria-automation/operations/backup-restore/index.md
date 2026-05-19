@@ -67,7 +67,7 @@ Lifecycle Management → Backup → Add Backup Location
 | Parameter | Value |
 |---|---|
 | Location type | NFS or SFTP |
-| NFS server | `nas-01.corp.local` |
+| NFS server | `nas-01.example.local` |
 | NFS export path | `/exports/vra-backup` |
 | Passphrase | Strong passphrase — required to encrypt backup and to restore |
 
@@ -82,7 +82,7 @@ Lifecycle Management → Backup → Add Backup Location
 # Backup status is shown inline and via notification email
 
 # Via vracli on the appliance
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 vracli backup list    # list configured backup targets
 vracli backup start   # trigger an immediate backup
 vracli backup status  # show status of the latest backup
@@ -130,7 +130,7 @@ Expect 20–40 minutes for a restore depending on database size.
 **Via CLI:**
 
 ```bash
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 vracli restore list                         # list available backups
 vracli restore start --backup-id <id>       # start restore from a specific backup
 vracli restore status                       # monitor progress

@@ -43,7 +43,7 @@ After upload, Aria Ops for Logs restarts its web services — expect 1–3 minut
 **Via CLI:**
 
 ```bash
-ssh admin@vrli-prod-01.corp.local
+ssh admin@vrli-prod-01.example.local
 
 # Copy certificate files to the appliance
 # Then replace via the loginsight configuration tool
@@ -56,7 +56,7 @@ ssh admin@vrli-prod-01.corp.local
 systemctl restart loginsight
 
 # Verify the new certificate
-echo | openssl s_client -connect vrli-prod-01.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect vrli-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -subject -dates -issuer
 ```
 
@@ -66,13 +66,13 @@ echo | openssl s_client -connect vrli-prod-01.corp.local:443 2>/dev/null | \
 
 ```bash
 # Check certificate expiry from an external client
-echo | openssl s_client -connect vrli-prod-01.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect vrli-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -dates
 
 # Check across all cluster nodes
 for node in vrli-prod-01 vrli-prod-02 vrli-prod-03; do
-  echo -n "$node.corp.local: "
-  echo | openssl s_client -connect "$node.corp.local:443" 2>/dev/null | \
+  echo -n "$node.example.local: "
+  echo | openssl s_client -connect "$node.example.local:443" 2>/dev/null | \
     openssl x509 -noout -enddate 2>/dev/null | sed 's/notAfter=//'
 done
 ```
@@ -97,7 +97,7 @@ Configure the LI Agent to use TLS:
 ```ini
 # /var/lib/loginsight-agent/liagent.ini
 [server]
-hostname=vrli-prod-01.corp.local
+hostname=vrli-prod-01.example.local
 port=9543
 proto=cfapi
 ssl=yes
@@ -131,12 +131,12 @@ Verify from an external scanner:
 
 ```bash
 # Test that TLS 1.0 is rejected
-openssl s_client -connect vrli-prod-01.corp.local:443 -tls1 2>&1 | \
+openssl s_client -connect vrli-prod-01.example.local:443 -tls1 2>&1 | \
   grep -E "alert|error|CONNECTED"
 # Expected: alert handshake failure (not CONNECTED)
 
 # Confirm TLS 1.2 is accepted
-openssl s_client -connect vrli-prod-01.corp.local:443 -tls1_2 2>/dev/null | \
+openssl s_client -connect vrli-prod-01.example.local:443 -tls1_2 2>/dev/null | \
   grep "Protocol"
 # Expected: Protocol : TLSv1.2
 ```
@@ -144,5 +144,5 @@ openssl s_client -connect vrli-prod-01.corp.local:443 -tls1_2 2>/dev/null | \
 Use `testssl.sh` for a comprehensive scan before exposing the UI to any external network:
 
 ```bash
-testssl.sh --severity HIGH vrli-prod-01.corp.local:443
+testssl.sh --severity HIGH vrli-prod-01.example.local:443
 ```

@@ -280,7 +280,7 @@ Restricts which users or groups can log in from which origins. Processed by `pam
 - : root : ALL
 
 # Allow domain admin group from anywhere on the corporate network
-+ : @linuxadmins : 10.0.0.0/8 .corp.local
++ : @linuxadmins : 10.0.0.0/8 .example.local
 + : @linuxadmins : LOCAL
 
 # Allow all users from internal networks

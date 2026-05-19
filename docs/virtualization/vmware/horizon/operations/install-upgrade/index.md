@@ -41,7 +41,7 @@
 
 # Silent install (for automation):
 VMware-Horizon-Connection-Server-x86_64-<version>.exe /silent /norestart `
-  /v"VDM_SERVER_INSTANCE_TYPE=1 VDM_FQDN=horizon-cs01.corp.local `
+  /v"VDM_SERVER_INSTANCE_TYPE=1 VDM_FQDN=horizon-cs01.example.local `
   VDM_INITIAL_ADMIN_SID=<domain-admin-SID>"
 ```
 
@@ -87,14 +87,14 @@ UAG is deployed from OVA. Use PowerShell for repeatable deployment:
 # Edit uag.ini config file:
 [General]
 source=VMware-Unified-Access-Gateway-<version>.ova
-target=vi://administrator@vsphere.local:password@vcenter.corp.local/...
+target=vi://administrator@vsphere.local:password@vcenter.example.local/...
 deploymentOption=onenic  # or twonic, threenic for DMZ placement
 netInternet=VM Network
 netManagementNetwork=VM Network
 netBackendNetwork=VM Network
 
 [Horizon]
-proxyDestinationUrl=https://horizon-cs01.corp.local:443
+proxyDestinationUrl=https://horizon-cs01.example.local:443
 proxyDestinationUrlThumbprints=sha1:<cs01-thumbprint>
 
 # Deploy

@@ -64,12 +64,12 @@ Each Collector should show:
 Via REST API:
 
 ```bash
-TOKEN=$(curl -sk -X POST "https://aon.corp.local/api/ni/auth/token" \
+TOKEN=$(curl -sk -X POST "https://aon.example.local/api/ni/auth/token" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"PASSWORD"}' \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
 
-curl -sk "https://aon.corp.local/api/ni/collectors" \
+curl -sk "https://aon.example.local/api/ni/collectors" \
   -H "Authorization: NetworkInsight ${TOKEN}" \
   | python3 -c "
 import sys, json
@@ -94,7 +94,7 @@ Check:
 Via REST API:
 
 ```bash
-curl -sk "https://aon.corp.local/api/ni/datasources" \
+curl -sk "https://aon.example.local/api/ni/datasources" \
   -H "Authorization: NetworkInsight ${TOKEN}" \
   | python3 -c "
 import sys, json
@@ -134,7 +134,7 @@ flows where time_range = "last 1 hour" order by bytes desc
 **Check flow ingestion via tcpdump on Collector VM:**
 
 ```bash
-ssh ubuntu@aon-collector.corp.local
+ssh ubuntu@aon-collector.example.local
 
 # Confirm UDP 2055 packets are arriving
 sudo tcpdump -i eth0 udp port 2055 -n -c 20
@@ -147,7 +147,7 @@ sudo tcpdump -i eth0 udp port 2055 -n 2>/dev/null | \
 ## Check Disk Usage on Platform VM
 
 ```bash
-ssh ubuntu@aon-platform.corp.local
+ssh ubuntu@aon-platform.example.local
 
 # Overall disk layout
 df -hT
@@ -179,7 +179,7 @@ Via the Platform VM CLI:
 
 ```bash
 # Check the currently installed certificate expiry
-echo | openssl s_client -connect aon.corp.local:443 -servername aon.corp.local 2>/dev/null \
+echo | openssl s_client -connect aon.example.local:443 -servername aon.example.local 2>/dev/null \
   | openssl x509 -noout -dates
 
 # Output example:
@@ -187,7 +187,7 @@ echo | openssl s_client -connect aon.corp.local:443 -servername aon.corp.local 2
 # notAfter=Sep 15 23:59:59 2025 GMT
 
 # Days until expiry
-echo | openssl s_client -connect aon.corp.local:443 2>/dev/null \
+echo | openssl s_client -connect aon.example.local:443 2>/dev/null \
   | openssl x509 -noout -enddate \
   | awk -F= '{print $2}' \
   | xargs -I{} sh -c 'echo "$(( ( $(date -d "{}" +%s) - $(date +%s) ) / 86400 )) days remaining"'
@@ -232,7 +232,7 @@ Configure external monitoring (Nagios, Zabbix, Prometheus with blackbox exporter
 
 | Metric | Check Method | Alert Threshold |
 |---|---|---|
-| HTTPS reachability | HTTP GET to `https://aon.corp.local` | Non-200 response |
+| HTTPS reachability | HTTP GET to `https://aon.example.local` | Non-200 response |
 | API token auth | POST `/api/ni/auth/token` | Non-200 response |
 | Collector status | GET `/api/ni/collectors` → status != CONNECTED | Any collector disconnected |
 | Data source sync lag | GET `/api/ni/datasources` → last_sync > 30 min ago | > 30 minutes |
@@ -247,7 +247,7 @@ Configure external monitoring (Nagios, Zabbix, Prometheus with blackbox exporter
 #!/bin/bash
 # aon-health-check.sh
 
-PLATFORM="https://aon.corp.local"
+PLATFORM="https://aon.example.local"
 USER="svc-monitor@local"
 PASS="PASSWORD"
 
@@ -282,7 +282,7 @@ exit 0
 ## Check Platform VM Resource Utilization
 
 ```bash
-ssh ubuntu@aon-platform.corp.local
+ssh ubuntu@aon-platform.example.local
 
 # CPU load
 uptime

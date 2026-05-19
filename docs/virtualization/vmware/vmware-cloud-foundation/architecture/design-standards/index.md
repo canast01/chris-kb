@@ -67,10 +67,10 @@ All VCF components must have resolvable DNS names before deployment:
 
 | Component | Format | Example |
 |---|---|---|
-| SDDC Manager | `sddc-mgr-<env>.<domain>` | `sddc-mgr-prod.corp.local` |
-| vCenter | `vc-<domain>-<env>.<domain>` | `vc-mgmt-prod.corp.local` |
-| NSX Manager | `nsx-<env>-<node#>.<domain>` | `nsx-prod-01.corp.local` |
-| ESXi hosts | `esxi-<rack>-<unit>.<domain>` | `esxi-r01-u01.corp.local` |
+| SDDC Manager | `sddc-mgr-<env>.<domain>` | `sddc-mgr-prod.example.local` |
+| vCenter | `vc-<domain>-<env>.<domain>` | `vc-mgmt-prod.example.local` |
+| NSX Manager | `nsx-<env>-<node#>.<domain>` | `nsx-prod-01.example.local` |
+| ESXi hosts | `esxi-<rack>-<unit>.<domain>` | `esxi-r01-u01.example.local` |
 | Network pools | `<dc>-<env>-pool-<purpose>` | `dc1-prod-pool-workload` |
 
 ## Network Requirements

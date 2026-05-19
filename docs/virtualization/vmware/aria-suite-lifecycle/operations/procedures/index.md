@@ -67,14 +67,14 @@ Use this procedure when renewing a CA-signed certificate for any LCM-managed pro
 
 ```bash
 # Via API
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
 
 # Import certificate (PEM-encoded leaf + intermediates + root, and private key)
 curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
   -H "Content-Type: application/json" \
-  "https://lcm-prod-01.corp.local/lcm/locker/api/v2/certificates/import" \
+  "https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates/import" \
   -d '{
     "alias": "vrops-prod-cert-2026",
     "certificateChain": "<PEM chain as single escaped string>",

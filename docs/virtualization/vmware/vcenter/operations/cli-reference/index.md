@@ -47,10 +47,10 @@ Set-PowerCLIConfiguration -ParticipateInCeip $false -Confirm:$false
 
 # Connect to vCenter
 Connect-VIServer -Server <vcenter_fqdn>
-Connect-VIServer -Server vcenter.corp.local -User administrator@vsphere.local -Password <password>
+Connect-VIServer -Server vcenter.example.local -User administrator@vsphere.local -Password <password>
 $cred = Get-Credential
-Connect-VIServer -Server vcenter.corp.local -Credential $cred
-Connect-VIServer -Server vcenter1.corp.local, vcenter2.corp.local   # multiple vCenters
+Connect-VIServer -Server vcenter.example.local -Credential $cred
+Connect-VIServer -Server vcenter1.example.local, vcenter2.example.local   # multiple vCenters
 
 # Session info
 $global:DefaultVIServer

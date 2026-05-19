@@ -47,7 +47,7 @@ uemcli /sys/security/keymanage show
 
 # External Key Management (KMIP) — connect to an external KMS
 uemcli /sys/security/keymanage/kmip create \
-  -serverAddr kms.corp.local \
+  -serverAddr kms.example.local \
   -port 5696 \
   -cert /tmp/kms-cert.pem
 ```
@@ -134,7 +134,7 @@ When RASR snapshots are replicated off-site (for DR at a secondary site), replic
 # Unity — configure replication connection with encryption
 uemcli /remote/sys create \
   -name "DR-Site-Array" \
-  -mgmtAddr dr-array.corp.local \
+  -mgmtAddr dr-array.example.local \
   -connection synchronized \
   -port 443
 
@@ -198,8 +198,8 @@ racadm racreset   # Restart iDRAC to apply
 ```bash
 # Unity — verify TLS configuration
 # Unisphere web UI enforces TLS; verify via:
-openssl s_client -connect unisphere.corp.local:443 -tls1_2 </dev/null 2>&1 | grep "Protocol:"
-openssl s_client -connect unisphere.corp.local:443 -tls1 </dev/null 2>&1 | grep "Protocol:\|handshake failure"
+openssl s_client -connect unisphere.example.local:443 -tls1_2 </dev/null 2>&1 | grep "Protocol:"
+openssl s_client -connect unisphere.example.local:443 -tls1 </dev/null 2>&1 | grep "Protocol:\|handshake failure"
 # TLS 1.0 connection should fail
 ```
 
@@ -221,7 +221,7 @@ lsblk -o NAME,TYPE,FSTYPE,MOUNTPOINT | grep crypt
 clevis luks list -d /dev/sda3
 
 # If Tang server was also recovered or moved, rebind
-clevis luks bind -d /dev/sda3 tang '{"url":"http://tang.corp.local","thp":"<thumbprint>"}'
+clevis luks bind -d /dev/sda3 tang '{"url":"http://tang.example.local","thp":"<thumbprint>"}'
 ```
 
 ### Windows — BitLocker Verification Post-Recovery
@@ -271,7 +271,7 @@ cryptsetup isLuks /dev/sdX2 && echo "LUKS encrypted" || echo "NOT encrypted"
 # Or for Windows: check BitLocker status via Manage-bde -status E:
 
 # Management plane TLS 1.0/1.1 disabled
-openssl s_client -connect unisphere.corp.local:443 -tls1 2>&1 | grep "handshake failure"
+openssl s_client -connect unisphere.example.local:443 -tls1 2>&1 | grep "handshake failure"
 
 # Replication traffic encrypted (check IPsec tunnel status)
 ipsec status | grep "prod-to-dr-replication"

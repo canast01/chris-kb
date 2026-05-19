@@ -143,7 +143,7 @@ AON supports LDAP and AD for user authentication and group-to-role mapping.
 
 | Field | Example |
 |---|---|
-| Server | `ldap://ad.corp.local` or `ldaps://ad.corp.local:636` |
+| Server | `ldap://ad.example.local` or `ldaps://ad.example.local:636` |
 | Bind DN | `CN=svc-aon,OU=Service Accounts,DC=corp,DC=local` |
 | Bind Password | — |
 | Search Base | `OU=Users,DC=corp,DC=local` |

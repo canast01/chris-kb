@@ -146,12 +146,12 @@ After LCM deploys products, verify NTP sync on all appliances to prevent certifi
 # Usage: ./ntp-check.sh
 # Edit NODES to match your environment
 NODES=(
-  "lcm-prod-01.corp.local"
-  "vidm-prod-01.corp.local"
-  "vrops-prod-01.corp.local"
-  "vrops-prod-02.corp.local"
-  "vra-prod-01.corp.local"
-  "vrli-prod-01.corp.local"
+  "lcm-prod-01.example.local"
+  "vidm-prod-01.example.local"
+  "vrops-prod-01.example.local"
+  "vrops-prod-02.example.local"
+  "vra-prod-01.example.local"
+  "vrli-prod-01.example.local"
 )
 
 for node in "${NODES[@]}"; do

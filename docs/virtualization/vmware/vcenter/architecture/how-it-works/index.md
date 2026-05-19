@@ -265,23 +265,23 @@ Do not modify the vCenter database directly unless directed by VMware Support.
 ```bash
 # Authenticate
 TOKEN=$(curl -sk -u 'administrator@vsphere.local:<password>' \
-    -X POST https://vcenter.corp.local/api/session | tr -d '"')
+    -X POST https://vcenter.example.local/api/session | tr -d '"')
 
 # Host inventory
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    "https://vcenter.corp.local/api/vcenter/host" | python3 -m json.tool
+    "https://vcenter.example.local/api/vcenter/host" | python3 -m json.tool
 
 # VM inventory
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    "https://vcenter.corp.local/api/vcenter/vm" | python3 -m json.tool
+    "https://vcenter.example.local/api/vcenter/vm" | python3 -m json.tool
 
 # System health
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    "https://vcenter.corp.local/api/vcenter/health/system"
+    "https://vcenter.example.local/api/vcenter/health/system"
 
 # Delete session
 curl -sk -H "vmware-api-session-id: $TOKEN" \
-    -X DELETE https://vcenter.corp.local/api/session
+    -X DELETE https://vcenter.example.local/api/session
 ```
 
 Swagger UI: `https://<vcenter>/apiexplorer`

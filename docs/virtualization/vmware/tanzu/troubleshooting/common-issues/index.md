@@ -36,7 +36,7 @@
 1. **DNS resolution failure**: Supervisor control plane VMs cannot resolve their own FQDN
    ```bash
    # From vCenter shell or ESXi host, test DNS:
-   nslookup supervisor.corp.local <dns-server>
+   nslookup supervisor.example.local <dns-server>
    # Must resolve to the Supervisor API VIP IP
    ```
    Fix: add A record for Supervisor API VIP in DNS
@@ -76,7 +76,7 @@
    ```bash
    # Check cluster config credentials by testing vCenter API:
    curl -sk -u "svc-tanzu@corp.local:<password>" \
-     "https://vcenter.corp.local/rest/com/vmware/cis/session" -X POST
+     "https://vcenter.example.local/rest/com/vmware/cis/session" -X POST
    ```
 
 3. **Insufficient resource quota in Supervisor namespace**:
@@ -125,7 +125,7 @@
    # On node: check if harbor cert is in system trust store
    kubectl debug node/<node-name> -it --image=busybox
    # From node shell:
-   curl https://harbor.corp.local/v2/ -v  # Check TLS error
+   curl https://harbor.example.local/v2/ -v  # Check TLS error
    ```
    Fix: add Harbor CA cert to cluster trust (cluster config: `TKG_CUSTOM_IMAGE_REPOSITORY_CA_CERTIFICATE`)
 
@@ -133,7 +133,7 @@
    ```bash
    kubectl get secret harbor-pull-secret -n production -o yaml | base64 -d
    # Verify credentials are current
-   docker login harbor.corp.local -u <user> -p <password>  # Test credentials
+   docker login harbor.example.local -u <user> -p <password>  # Test credentials
    ```
 
 ---
@@ -173,5 +173,5 @@ kubectl get pods -n projectcontour -l app=envoy
 
 # Test: curl the Envoy service directly
 kubectl get svc -n projectcontour
-curl -k https://<envoy-LB-IP>/ -H "Host: myapp.corp.local"
+curl -k https://<envoy-LB-IP>/ -H "Host: myapp.example.local"
 ```

@@ -34,7 +34,7 @@ DHCP failover on Windows Server allows two DHCP servers to share responsibility 
 # Create a failover relationship (load balance, 50/50)
 Add-DhcpServerv4Failover `
   -Name "DHCP-Failover-LAN" `
-  -PartnerServer "dhcp02.corp.local" `
+  -PartnerServer "dhcp02.example.local" `
   -ScopeId 192.168.10.0 `
   -LoadBalancePercent 50 `
   -SharedSecret "S3cur3Sh@red" `
@@ -44,7 +44,7 @@ Add-DhcpServerv4Failover `
 # Create hot standby failover
 Add-DhcpServerv4Failover `
   -Name "DHCP-Failover-HS" `
-  -PartnerServer "dhcp02.corp.local" `
+  -PartnerServer "dhcp02.example.local" `
   -ScopeId 192.168.20.0 `
   -Mode HotStandby `
   -ServerRole Active `

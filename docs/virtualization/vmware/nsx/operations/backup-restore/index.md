@@ -55,7 +55,7 @@ After a restore, NSX reconnects to vCenter and re-pushes configuration to transp
 | Setting | Recommended Value | Notes |
 |---|---|---|
 | Protocol | SFTP | More secure than FTP |
-| SFTP Host | backup.corp.local | Must be reachable from all Manager nodes |
+| SFTP Host | backup.example.local | Must be reachable from all Manager nodes |
 | Port | 22 | |
 | Directory | /backups/nsx/ | Pre-create on SFTP server |
 | Username | nsx-backup | Dedicated service account, read/write to directory |
@@ -77,7 +77,7 @@ curl -sk -u 'admin:password' \
     "backup_config": {
       "backup_enabled": true,
       "remote_file_server": {
-        "server": "backup.corp.local",
+        "server": "backup.example.local",
         "port": 22,
         "protocol": {
           "protocol_name": "SFTP",

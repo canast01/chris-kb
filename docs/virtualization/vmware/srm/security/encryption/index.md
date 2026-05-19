@@ -76,7 +76,7 @@ $cert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Subject -match "
 $cert.Thumbprint
 
 # Configure SRM to use new cert via SRM admin interface:
-# https://srm-protected.corp.local:9086/admin → Certificate → Replace
+# https://srm-protected.example.local:9086/admin → Certificate → Replace
 # Or re-run SRM installer → Modify → update certificate
 ```
 

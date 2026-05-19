@@ -31,7 +31,7 @@
 #!/bin/bash
 # List all clusters across all Supervisor namespaces
 
-SUPERVISOR="https://supervisor.corp.local"
+SUPERVISOR="https://supervisor.example.local"
 kubectl vsphere login --server $SUPERVISOR \
   --username administrator@vsphere.local --insecure-skip-tls-verify 2>/dev/null
 
@@ -102,7 +102,7 @@ echo "Export complete: $EXPORT_DIR"
 """Check all Harbor repositories have vulnerability scanning enabled."""
 import requests, sys
 
-HARBOR_URL = "https://harbor.corp.local"
+HARBOR_URL = "https://harbor.example.local"
 USER = "admin"
 PASS = "Harbor12345"
 
@@ -160,7 +160,7 @@ done
 #!/usr/bin/env python3
 import requests
 
-HARBOR_URL = "https://harbor.corp.local"
+HARBOR_URL = "https://harbor.example.local"
 USER = "admin"
 PASS = "Harbor12345"
 

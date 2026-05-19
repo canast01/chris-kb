@@ -35,7 +35,7 @@
 TOKEN=<your-token>
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  "https://vra-prod-01.corp.local/blueprint/api/blueprints/validate" \
+  "https://vra-prod-01.example.local/blueprint/api/blueprints/validate" \
   -d @./blueprint-payload.json | jq '.'
 
 # Check YAML syntax locally before submitting
@@ -61,9 +61,9 @@ Symptoms: cloud account shows a red/warning indicator; new deployments fail at t
 
 ```bash
 # Test vCenter reachability from Aria Automation appliance
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 curl -sk -o /dev/null -w "%{http_code}" \
-  https://vcenter-prod.corp.local/rest/com/vmware/cis/session
+  https://vcenter-prod.example.local/rest/com/vmware/cis/session
 # 401 = reachable but auth needed (expected)
 # 000 = unreachable (DNS, firewall, or vCenter down)
 
@@ -73,7 +73,7 @@ kubectl logs -n prelude -l app=iaas-gateway --tail=200 | \
 
 # Test NSX connectivity
 curl -sk -o /dev/null -w "%{http_code}" \
-  https://nsx-mgr-01.corp.local/api/v1/transport-nodes
+  https://nsx-mgr-01.example.local/api/v1/transport-nodes
 ```
 
 Resolution:
@@ -112,7 +112,7 @@ If the VM was created in vCenter but the deployment is stuck:
 
 # Via API
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/abx/api/resources/action-runs?limit=10" | \
+  "https://vra-prod-01.example.local/abx/api/resources/action-runs?limit=10" | \
   jq '.content[] | {id: .id, status: .status, error: .errorMessage}'
 ```
 
@@ -133,11 +133,11 @@ When users cannot log into Aria Automation:
 
 ```bash
 # Verify VIDM health from Aria Automation appliance
-curl -sk https://vidm.corp.local/SAAS/API/1.0/REST/system/health
+curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
 # Expected: {"status": "UP"}
 
 # Check VIDM integration in VAMI
-# VAMI (https://vra-prod-01.corp.local:5480) → Services → Identity Provider
+# VAMI (https://vra-prod-01.example.local:5480) → Services → Identity Provider
 ```
 
 Common causes:

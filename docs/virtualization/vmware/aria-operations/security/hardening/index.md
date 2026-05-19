@@ -47,7 +47,7 @@ Aria Operations ships with a self-signed certificate. Replace it before exposing
 
 ```bash
 # Verify current certificate subject and expiry
-echo | openssl s_client -connect vrops-prod-01.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect vrops-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -subject -dates -issuer
 
 # Confirm it is self-signed (Issuer == Subject)
@@ -71,7 +71,7 @@ Then configure the AD source with port 636 and SSL enabled.
 
 ```bash
 # Verify LDAPS connectivity from the Aria Operations appliance
-openssl s_client -connect dc01.corp.local:636 -CAfile /tmp/corp-ca.pem 2>&1 | \
+openssl s_client -connect dc01.example.local:636 -CAfile /tmp/corp-ca.pem 2>&1 | \
   grep -E "Verify return code|subject="
 # Expected: Verify return code: 0 (ok)
 ```
@@ -121,7 +121,7 @@ Enable syslog forwarding to Aria Operations for Logs (or SIEM) for all audit eve
 ```bash
 # Configure syslog forwarding from Aria Operations appliance
 cat >> /etc/rsyslog.d/vrops-remote.conf << 'EOF'
-*.* @@vrli-prod-01.corp.local:514
+*.* @@vrli-prod-01.example.local:514
 EOF
 systemctl restart rsyslog
 ```

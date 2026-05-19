@@ -124,28 +124,28 @@ The Aria Operations REST API supports two authentication methods:
 ```bash
 # Acquire a token — valid for 30 minutes
 TOKEN=$(curl -sk -X POST \
-  "https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire" \
+  "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>","authSource":"Local"}' | \
   jq -r '.token')
 
 # Use token in subsequent API calls
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/adapterkinds"
+  "https://vrops-prod-01.example.local/suite-api/api/adapterkinds"
 ```
 
 **Basic authentication (scripts and monitoring):**
 
 ```bash
 curl -sk -u 'admin:<password>' \
-  "https://vrops-prod-01.corp.local/suite-api/api/alertdefinitions" | jq '.'
+  "https://vrops-prod-01.example.local/suite-api/api/alertdefinitions" | jq '.'
 ```
 
 For AD-authenticated API calls, include `authSource`:
 
 ```bash
 TOKEN=$(curl -sk -X POST \
-  "https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire" \
+  "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d '{"username":"svc.vrops@corp.local","password":"<password>","authSource":"corp.local"}' | \
   jq -r '.token')
@@ -161,7 +161,7 @@ Tokens expire after 30 minutes. Scripts that run longer must re-authenticate or 
 #!/usr/bin/env bash
 # Re-authenticate function for long-running scripts
 get_token() {
-  curl -sk -X POST "https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire" \
+  curl -sk -X POST "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
     -H "Content-Type: application/json" \
     -d "{\"username\":\"$VROPS_USER\",\"password\":\"$VROPS_PASS\",\"authSource\":\"Local\"}" | \
     jq -r '.token'

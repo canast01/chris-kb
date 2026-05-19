@@ -259,7 +259,7 @@ Key captured settings:
 ```powershell
 # Extract a host profile from a reference host
 New-VMHostProfile -Name "HP-Cluster-Profile" `
-    -ReferenceHost (Get-VMHost "esxi-01.corp.local") `
+    -ReferenceHost (Get-VMHost "esxi-01.example.local") `
     -Description "Cluster hardened baseline"
 
 # Check compliance for all hosts

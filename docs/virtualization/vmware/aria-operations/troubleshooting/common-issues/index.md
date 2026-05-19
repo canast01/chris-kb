@@ -35,7 +35,7 @@ Symptoms: adapter shows **Not Collecting** in Administration → Solutions; metr
 
 ```bash
 # SSH to primary node and inspect adapter state
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 vracli adapter list --verbose
 
 # Check the collector log for adapter-specific errors
@@ -92,16 +92,16 @@ Symptoms: one or more nodes show OFFLINE or DEGRADED in Administration → Clust
 ```bash
 # Confirm node status via API
 TOKEN=$(curl -sk -X POST \
-  "https://vrops-prod-01.corp.local/suite-api/api/auth/token/acquire" \
+  "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>","authSource":"Local"}' | jq -r '.token')
 
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/cluster/nodes" | \
+  "https://vrops-prod-01.example.local/suite-api/api/cluster/nodes" | \
   jq '.nodes[] | {name: .name, role: .role, status: .nodeStatus}'
 
 # SSH to the degraded node and check services
-ssh admin@vrops-prod-02.corp.local
+ssh admin@vrops-prod-02.example.local
 vracli status
 systemctl list-units 'vmware-*' --state=failed
 ```
@@ -127,7 +127,7 @@ tail -100 /data/vcops/log/gemfire/vcopssuite_gemfire.log | grep -i "warn\|error"
 
 # Confirm the adapter is actually collecting (not just in a Collecting state with zero data)
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/adapterkinds/VMWARE/resourcekinds/VirtualMachine/resources?pageSize=5" | \
+  "https://vrops-prod-01.example.local/suite-api/api/adapterkinds/VMWARE/resourcekinds/VirtualMachine/resources?pageSize=5" | \
   jq '.resourceList[] | {name: .resourceKey.name, lastCollected: .identifier}'
 ```
 
@@ -147,13 +147,13 @@ Capacity analytics runs as a background job. By default it recalculates every 5 
 ```bash
 # Force a capacity recalculation
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/analytics/run" \
+  "https://vrops-prod-01.example.local/suite-api/api/analytics/run" \
   -H "Content-Type: application/json" \
   -d '{"analyticsJobName": "CapacityAnalytics"}'
 
 # Check analytics job status
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/analytics" | \
+  "https://vrops-prod-01.example.local/suite-api/api/analytics" | \
   jq '.[] | select(.name == "CapacityAnalytics") | {status: .status, lastRun: .lastRunTime}'
 ```
 
@@ -165,11 +165,11 @@ Symptoms: AD users cannot log in; the login page returns "authentication failed"
 
 ```bash
 # Test LDAP connectivity from the Aria Operations appliance
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 vracli auth test --source <ldap-source-name>
 
 # Manually test LDAP bind
-ldapsearch -H ldaps://dc01.corp.local:636 \
+ldapsearch -H ldaps://dc01.example.local:636 \
   -D "CN=svc-vrops-ldap,OU=Service Accounts,DC=corp,DC=local" \
   -w '<password>' \
   -b "DC=corp,DC=local" \
@@ -191,16 +191,16 @@ Symptoms: an alert fires in Aria Operations but no email or webhook notification
 ```bash
 # Verify SMTP configuration
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/notifications" | \
+  "https://vrops-prod-01.example.local/suite-api/api/notifications" | \
   jq '.notificationList[] | {name: .name, plugin: .pluginTypeId, enabled: .active}'
 
 # Send a test notification via API
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.corp.local/suite-api/api/notifications/<notification-id>/actions/test"
+  "https://vrops-prod-01.example.local/suite-api/api/notifications/<notification-id>/actions/test"
 
 # Check outbound SMTP from the appliance
-ssh admin@vrops-prod-01.corp.local
-curl -v smtp://smtp.corp.local:25 --mail-from aria-ops@corp.local \
+ssh admin@vrops-prod-01.example.local
+curl -v smtp://smtp.example.local:25 --mail-from aria-ops@corp.local \
   --mail-rcpt test@corp.local 2>&1 | head -30
 ```
 
@@ -219,14 +219,14 @@ Symptoms: the Aria Operations web UI is slow to load; dashboard queries time out
 
 ```bash
 # Check CPU and memory pressure on the primary node
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 top -bn1 | head -20
 
 # Check GemFire heap usage (in-memory cache)
 tail -20 /data/vcops/log/gemfire/vcopssuite_gemfire.log | grep -i "heap\|memory"
 
 # Check Cassandra compaction — heavy compaction causes query slowness
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 nodetool compactionstats
 
 # Check for very large queries — long-running queries appear in the analytics log

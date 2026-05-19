@@ -217,7 +217,7 @@ Enhanced Linked Mode connects multiple vCenter instances to a shared SSO domain,
 
 ```powershell
 # Connect to multiple vCenters simultaneously
-Connect-VIServer -Server vcenter-lon.corp.local, vcenter-ams.corp.local
+Connect-VIServer -Server vcenter-lon.example.local, vcenter-ams.example.local
 
 # List all VMs across both vCenters
 Get-VM | Select-Object Name, @{N="vCenter";E={$_.Uid.Split(':')[0]}}, PowerState

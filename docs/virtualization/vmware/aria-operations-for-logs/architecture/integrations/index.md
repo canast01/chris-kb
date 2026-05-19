@@ -55,12 +55,12 @@ Configure vCenter to forward its own syslog and ESXi host syslog to Aria Ops for
 vCenter → Administration → Syslog → Add Syslog Target
 ```
 - Protocol: UDP or TCP
-- Host: `vrli-prod-01.corp.local`
+- Host: `vrli-prod-01.example.local`
 - Port: 514 (UDP syslog) or 1514 (TCP syslog via LI Agent protocol)
 
 **Configure ESXi syslog via PowerCLI (bulk):**
 ```powershell
-$target = "udp://vrli-prod-01.corp.local:514"
+$target = "udp://vrli-prod-01.example.local:514"
 Get-VMHost | ForEach-Object {
     $esxcli = Get-EsxCli -VMHost $_ -V2
     $esxcli.system.syslog.config.set.Invoke(@{loghost = $target})
@@ -78,7 +78,7 @@ Get-VMHost | ForEach-Object {
 
 **Configure ESXi syslog via esxcli (single host):**
 ```bash
-esxcli system syslog config set --loghost="udp://vrli-prod-01.corp.local:514"
+esxcli system syslog config set --loghost="udp://vrli-prod-01.example.local:514"
 esxcli system syslog reload
 esxcli system syslog config get
 ```
@@ -92,10 +92,10 @@ Forward NSX Manager and Edge node syslog to Aria Ops for Logs:
 ```bash
 # Via NSX-T API — add syslog exporter on NSX Manager
 curl -sk -u 'admin:<password>' -X POST \
-  "https://nsx-mgr-01.corp.local/api/v1/node/services/syslog/exporters" \
+  "https://nsx-mgr-01.example.local/api/v1/node/services/syslog/exporters" \
   -H "Content-Type: application/json" \
   -d '{
-    "server": "vrli-prod-01.corp.local",
+    "server": "vrli-prod-01.example.local",
     "port": 514,
     "protocol": "UDP",
     "exporter_name": "aria-ops-for-logs",
@@ -123,7 +123,7 @@ sudo ./VMware-Log-Insight-Agent-*.bin
 
 # Configure agent — edit /var/lib/loginsight-agent/liagent.ini
 [server]
-hostname=vrli-prod-01.corp.local
+hostname=vrli-prod-01.example.local
 port=9543
 proto=cfapi
 ssl=yes
@@ -145,7 +145,7 @@ sudo /usr/lib/loginsight-agent/bin/liagent-binary verify
 
 ```powershell
 # Install the agent (MSI)
-msiexec /i "VMware-Log-Insight-Agent-*.msi" /quiet SERVERHOST=vrli-prod-01.corp.local `
+msiexec /i "VMware-Log-Insight-Agent-*.msi" /quiet SERVERHOST=vrli-prod-01.example.local `
   SERVERPORT=9543 SERVERPROTOCOL=cfapi
 
 # Verify agent service is running
@@ -169,7 +169,7 @@ Administration → General → SNMP Traps → Enable SNMP Trap Receiver
 - Version: SNMPv2c or SNMPv3
 - Community string or credentials
 
-Configure network devices to forward traps to `vrli-prod-01.corp.local:162`.
+Configure network devices to forward traps to `vrli-prod-01.example.local:162`.
 
 ---
 
@@ -206,6 +206,6 @@ Alternatively, use the REST API to query recent alerts for external integration:
 ```bash
 # Get recent critical alerts
 curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.corp.local/api/v2/alerts?severity=critical&limit=20" | \
+  "https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&limit=20" | \
   jq '.alerts[] | {name: .name, status: .status, timestamp: .timestamp}'
 ```

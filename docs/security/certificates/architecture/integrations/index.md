@@ -75,7 +75,7 @@ metadata:
   name: vault-issuer
 spec:
   vault:
-    server: https://vault.corp.local:8200
+    server: https://vault.example.local:8200
     path: pki/sign/internal-services
     auth:
       kubernetes:
@@ -122,12 +122,12 @@ Venafi TPP can trigger a ServiceNow workflow for certificates that require busin
 
 ```bash
 # Check certificate expiry on a remote host
-echo | openssl s_client -connect host.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect host.example.local:443 2>/dev/null | \
   openssl x509 -noout -dates
 
 # Bulk expiry scan (Bash loop)
 for host in vcenter nsxmgr aria-ops aria-auto; do
-  expiry=$(echo | openssl s_client -connect ${host}.corp.local:443 2>/dev/null | \
+  expiry=$(echo | openssl s_client -connect ${host}.example.local:443 2>/dev/null | \
     openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
   echo "${host}: ${expiry}"
 done

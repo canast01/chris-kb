@@ -53,7 +53,7 @@ SureBackup boots backed-up VMs in an isolated Virtual Lab and runs verification 
 
 ```powershell
 # Create a Virtual Lab (isolated network)
-Add-VBRVirtualLab -Server "vcenter01.corp.local" `
+Add-VBRVirtualLab -Server "vcenter01.example.local" `
     -Name "SureBackup-VLab" `
     -Datastore "DS-BACKUP-VLAB" `
     -ProductionNetwork "VM Network" `
@@ -130,18 +130,18 @@ Verification checks:
 
 ```bash
 # Verify the most recent backup for a client
-bpverify -client sql-prod-01.corp.local -back_id 0 -st FULL
+bpverify -client sql-prod-01.example.local -back_id 0 -st FULL
 
 # Verify a specific backup image by backup ID
-bpverify -id 1716800000 -client sql-prod-01.corp.local
+bpverify -id 1716800000 -client sql-prod-01.example.local
 
 # Verify all backups in a date range
-bpverify -client sql-prod-01.corp.local \
+bpverify -client sql-prod-01.example.local \
   -s 05/01/2026 00:00:00 \
   -e 05/08/2026 23:59:59
 
 # Verify and output results to a log file
-bpverify -client sql-prod-01.corp.local -back_id 0 \
+bpverify -client sql-prod-01.example.local -back_id 0 \
   -st FULL -l /var/log/netbackup/verify_$(date +%F).log
 
 # Check verification status / exit code
@@ -245,7 +245,7 @@ foreach ($s in $sessions) {
         -From "veeam-noreply@corp.local" `
         -Subject "ALERT: Backup Validation Failed — $($s.Name)" `
         -Body $body `
-        -SmtpServer "smtp.corp.local"
+        -SmtpServer "smtp.example.local"
 }
 ```
 

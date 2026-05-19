@@ -61,7 +61,7 @@ UAG serves the HTTPS termination point for external connections. Replace the sel
 # Upload PKCS12 (.pfx) or PEM (cert + key)
 
 # Option 2: Via UAG REST API
-curl -sk -X PUT "https://uag.corp.local:9443/rest/v1/config/certs/ssl" \
+curl -sk -X PUT "https://uag.example.local:9443/rest/v1/config/certs/ssl" \
   -u admin:<password> \
   -F "file=@/path/to/uag.pfx" \
   -F "password=pfxpassword"

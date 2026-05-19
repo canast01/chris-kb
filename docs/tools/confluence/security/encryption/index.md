@@ -14,13 +14,13 @@ Running TLS termination at a reverse proxy is the preferred approach. It simplif
 # /etc/nginx/conf.d/confluence.conf
 server {
     listen 80;
-    server_name confluence.corp.local;
+    server_name confluence.example.local;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name confluence.corp.local;
+    server_name confluence.example.local;
 
     ssl_certificate     /etc/pki/tls/certs/confluence.crt;
     ssl_certificate_key /etc/pki/tls/private/confluence.key;
@@ -48,12 +48,12 @@ server {
 
 ```bash
 # Verify TLS configuration
-openssl s_client -connect confluence.corp.local:443 -tls1_3 </dev/null 2>/dev/null | \
+openssl s_client -connect confluence.example.local:443 -tls1_3 </dev/null 2>/dev/null | \
   openssl x509 -noout -subject -dates
 
 # Check for weak protocol support (should fail)
-openssl s_client -connect confluence.corp.local:443 -tls1 </dev/null 2>&1 | grep "handshake failure"
-openssl s_client -connect confluence.corp.local:443 -tls1_1 </dev/null 2>&1 | grep "handshake failure"
+openssl s_client -connect confluence.example.local:443 -tls1 </dev/null 2>&1 | grep "handshake failure"
+openssl s_client -connect confluence.example.local:443 -tls1_1 </dev/null 2>&1 | grep "handshake failure"
 ```
 
 ### TLS at Tomcat (Direct Confluence)
@@ -67,7 +67,7 @@ keytool -genkeypair -alias confluence \
   -validity 365 \
   -keystore /opt/atlassian/confluence/conf/keystore.jks \
   -storepass changeit \
-  -dname "CN=confluence.corp.local,O=Corp,C=GB"
+  -dname "CN=confluence.example.local,O=Corp,C=GB"
 
 # Import a CA-signed certificate
 keytool -importcert -alias corp-ca \
@@ -104,10 +104,10 @@ Confluence stores all content (pages, comments, attachments metadata) in its dat
 ```
 # /var/atlassian/application-data/confluence/confluence.cfg.xml
 # Ensure the JDBC URL includes SSL parameters:
-jdbc:postgresql://dbserver.corp.local:5432/confluence?ssl=true&sslmode=require
+jdbc:postgresql://dbserver.example.local:5432/confluence?ssl=true&sslmode=require
 
 # For MySQL:
-jdbc:mysql://dbserver.corp.local:3306/confluence?useSSL=true&requireSSL=true
+jdbc:mysql://dbserver.example.local:3306/confluence?useSSL=true&requireSSL=true
 ```
 
 ### Database Password Encryption
@@ -217,14 +217,14 @@ add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
 ```bash
 # Verify HTTPS enforced (HTTP redirects to HTTPS)
-curl -I http://confluence.corp.local/ 2>/dev/null | grep "Location:"
+curl -I http://confluence.example.local/ 2>/dev/null | grep "Location:"
 # Should redirect to https://
 
 # Verify TLS version
-nmap --script ssl-enum-ciphers -p 443 confluence.corp.local | grep -E "TLS|SSLv"
+nmap --script ssl-enum-ciphers -p 443 confluence.example.local | grep -E "TLS|SSLv"
 
 # Verify certificate is valid and not self-signed
-openssl s_client -connect confluence.corp.local:443 </dev/null 2>/dev/null | \
+openssl s_client -connect confluence.example.local:443 </dev/null 2>/dev/null | \
   openssl x509 -noout -issuer -subject -dates
 
 # Verify database connection uses SSL

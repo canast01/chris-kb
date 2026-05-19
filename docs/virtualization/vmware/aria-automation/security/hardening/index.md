@@ -28,7 +28,7 @@
 The `admin` account is a local system account in the VIDM System Domain. Change its password immediately after deployment:
 
 ```
-VAMI (https://vra-prod-01.corp.local:5480) → Services → Change Admin Password
+VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Password
 ```
 
 Or via VIDM console:
@@ -53,7 +53,7 @@ LCM → Locker → import certificate → LCM → Lifecycle Operations → Aria 
 **Via vracli (standalone deployments):**
 
 ```bash
-ssh root@vra-prod-01.corp.local
+ssh root@vra-prod-01.example.local
 
 # Import certificate
 vracli certificate import \
@@ -62,7 +62,7 @@ vracli certificate import \
   --ca /tmp/chain.pem
 
 # Verify the certificate is active
-echo | openssl s_client -connect vra-prod-01.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect vra-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -subject -issuer -dates
 ```
 
@@ -144,14 +144,14 @@ Aria Automation logs all deployment requests, approval decisions, and administra
 # Access audit events via API
 TOKEN=<your-token>
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.corp.local/audit/api/events?size=100&sort=timestamp,desc" | \
+  "https://vra-prod-01.example.local/audit/api/events?size=100&sort=timestamp,desc" | \
   jq '.content[] | {type: .type, user: .principal, resource: .resource, time: .timestamp}'
 ```
 
 Forward syslog to Aria Ops for Logs or SIEM for centralised audit trail:
 
 ```bash
-echo '*.* @@vrli-prod-01.corp.local:514' > /etc/rsyslog.d/vra-audit.conf
+echo '*.* @@vrli-prod-01.example.local:514' > /etc/rsyslog.d/vra-audit.conf
 systemctl restart rsyslog
 ```
 

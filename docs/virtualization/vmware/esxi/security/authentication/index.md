@@ -145,10 +145,10 @@ Or via Host Profile: **Policies and Profiles → Host Profile → Security → S
 
 ```bash
 # Via ESXi Shell (or ESXCLI from vCenter)
-esxcfg-auth --enablead --addomain=corp.local --addc=dc01.corp.local
+esxcfg-auth --enablead --addomain=corp.local --addc=dc01.example.local
 
 # Or via ESXCLI
-esxcli system module parameters set -m lsass -p "ad_domain=corp.local ad_server=dc01.corp.local"
+esxcli system module parameters set -m lsass -p "ad_domain=corp.local ad_server=dc01.example.local"
 
 # Verify join status
 esxcli system module parameters get -m lsass

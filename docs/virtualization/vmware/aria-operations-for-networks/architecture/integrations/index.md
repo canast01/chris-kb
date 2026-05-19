@@ -59,13 +59,13 @@ Required fields:
 ```bash
 # Verify NSX-T API connectivity from Collector VM
 curl -k -u 'svc-aon:PASSWORD' \
-  https://nsxmgr.corp.local/api/v1/cluster \
+  https://nsxmgr.example.local/api/v1/cluster \
   -o /dev/null -w "HTTP %{http_code}\n"
 # Expected: HTTP 200
 
 # Verify Policy API access (NSX-T 3.2+)
 curl -k -u 'svc-aon:PASSWORD' \
-  https://nsxmgr.corp.local/policy/api/v1/infra/tier-0s \
+  https://nsxmgr.example.local/policy/api/v1/infra/tier-0s \
   -o /dev/null -w "HTTP %{http_code}\n"
 ```
 
@@ -110,7 +110,7 @@ The built-in **Read-Only** role at the vCenter root object covers most of these.
 
 ```bash
 # Test vCenter API access from Collector
-curl -k https://vcenter.corp.local/rest/com/vmware/cis/session \
+curl -k https://vcenter.example.local/rest/com/vmware/cis/session \
   -X POST -u 'svc-aon@vsphere.local:PASSWORD' \
   -o /dev/null -w "HTTP %{http_code}\n"
 # Expected: HTTP 200 with session token in response body
@@ -304,7 +304,7 @@ Or via NSX-T API:
 
 ```bash
 curl -k -u 'admin:PASSWORD' -X POST \
-  https://nsxmgr.corp.local/policy/api/v1/infra/ipfix-l2-collector-profiles/AON-COLLECTOR \
+  https://nsxmgr.example.local/policy/api/v1/infra/ipfix-l2-collector-profiles/AON-COLLECTOR \
   -H 'Content-Type: application/json' \
   -d '{
     "display_name": "AON-Collector",
@@ -317,7 +317,7 @@ curl -k -u 'admin:PASSWORD' -X POST \
 
 # Create IPFIX L2 profile
 curl -k -u 'admin:PASSWORD' -X POST \
-  https://nsxmgr.corp.local/policy/api/v1/infra/ipfix-l2-profiles/AON-PROFILE \
+  https://nsxmgr.example.local/policy/api/v1/infra/ipfix-l2-profiles/AON-PROFILE \
   -H 'Content-Type: application/json' \
   -d '{
     "display_name": "AON-IPFIX-Profile",

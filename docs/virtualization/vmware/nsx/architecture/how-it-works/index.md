@@ -83,7 +83,7 @@ get services               # Services on this node
 # Authenticate and query cluster status
 curl -sk -u 'admin:Password123!' \
   -H "Accept: application/json" \
-  "https://nsx-manager.corp.local/api/v1/cluster/status"
+  "https://nsx-manager.example.local/api/v1/cluster/status"
 ```
 
 ---

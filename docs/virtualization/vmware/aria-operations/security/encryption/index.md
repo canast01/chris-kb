@@ -51,7 +51,7 @@ After upload, Aria Operations restarts the web services. Expect 2–5 minutes of
 Use LCM Locker to manage certificates. For standalone deployments:
 
 ```bash
-ssh admin@vrops-prod-01.corp.local
+ssh admin@vrops-prod-01.example.local
 
 # Import certificate via vracli
 vracli certificate import \
@@ -60,7 +60,7 @@ vracli certificate import \
   --ca /tmp/chain.pem
 
 # Verify the certificate was applied
-openssl s_client -connect vrops-prod-01.corp.local:443 -servername vrops-prod-01.corp.local 2>/dev/null | \
+openssl s_client -connect vrops-prod-01.example.local:443 -servername vrops-prod-01.example.local 2>/dev/null | \
   openssl x509 -noout -subject -dates
 ```
 
@@ -112,13 +112,13 @@ Check certificate expiry from the command line or via API:
 
 ```bash
 # Check expiry of the current UI certificate
-echo | openssl s_client -connect vrops-prod-01.corp.local:443 2>/dev/null | \
+echo | openssl s_client -connect vrops-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -dates
 
 # Check expiry of each cluster node's certificate
 for node in vrops-prod-01 vrops-prod-02 vrops-prod-03; do
-  echo -n "$node.corp.local: "
-  echo | openssl s_client -connect "$node.corp.local:443" 2>/dev/null | \
+  echo -n "$node.example.local: "
+  echo | openssl s_client -connect "$node.example.local:443" 2>/dev/null | \
     openssl x509 -noout -enddate 2>/dev/null
 done
 ```

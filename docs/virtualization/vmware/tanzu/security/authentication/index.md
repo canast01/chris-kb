@@ -4,7 +4,7 @@
 ┌──────────────── Tanzu Authentication Flow ─────────────────────────────────────┐
 │                                                                                 │
 │  User / CI/CD pipeline                                                          │
-│      │  kubectl vsphere login --server https://supervisor.corp.local            │
+│      │  kubectl vsphere login --server https://supervisor.example.local            │
 │      ▼                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │  Pinniped Supervisor (management cluster)                                │  │
@@ -31,7 +31,7 @@ Users authenticate to the Supervisor cluster using vCenter SSO credentials:
 
 ```bash
 kubectl vsphere login \
-  --server https://supervisor.corp.local \
+  --server https://supervisor.example.local \
   --username user@corp.local \
   --insecure-skip-tls-verify
 # Prompts for password
@@ -49,7 +49,7 @@ TKG uses Pinniped as the Kubernetes authentication proxy, which federates OIDC/L
 ```bash
 # Login to a TKG workload cluster (triggers OIDC flow through Pinniped)
 kubectl vsphere login \
-  --server https://supervisor.corp.local \
+  --server https://supervisor.example.local \
   --username user@corp.local \
   --tanzu-kubernetes-cluster-name my-cluster \
   --tanzu-kubernetes-cluster-namespace my-namespace
@@ -65,7 +65,7 @@ metadata:
   name: corp-ldap
   namespace: pinniped-supervisor
 spec:
-  host: ldaps://dc01.corp.local:636
+  host: ldaps://dc01.example.local:636
   tls:
     certificateAuthorityData: <base64-encoded-CA-cert>
   bind:
@@ -89,12 +89,12 @@ spec:
 
 ```bash
 # Harbor local admin
-docker login harbor.corp.local -u admin -p <password>
+docker login harbor.example.local -u admin -p <password>
 
 # Harbor with LDAP: configure in Harbor UI
 # Administration → Configuration → Authentication
 #   Auth Mode: LDAP
-#   LDAP URL: ldap://dc01.corp.local:389
+#   LDAP URL: ldap://dc01.example.local:389
 #   LDAP Search DN: CN=svc-harbor,OU=ServiceAccounts,DC=corp,DC=local
 #   LDAP Base DN: DC=corp,DC=local
 #   LDAP Filter: objectClass=person
@@ -126,7 +126,7 @@ kubectl create rolebinding ci-runner-edit \
 ```bash
 # Create a Docker registry pull secret for Harbor
 kubectl create secret docker-registry harbor-pull-secret \
-  --docker-server=harbor.corp.local \
+  --docker-server=harbor.example.local \
   --docker-username=robot$ci-runner \
   --docker-password=<robot-account-secret> \
   --namespace=production
@@ -149,7 +149,7 @@ kubectl patch serviceaccount default -n production \
 Harbor UI → Administration → Configuration → Authentication
   Auth Mode: OIDC
   OIDC Provider Name: Workspace ONE
-  OIDC Endpoint: https://vidm.corp.local/SAAS/auth/oauthtoken
+  OIDC Endpoint: https://vidm.example.local/SAAS/auth/oauthtoken
   OIDC Client ID: harbor-oidc-client
   OIDC Client Secret: <client-secret>
   Group Claim Name: groups

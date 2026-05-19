@@ -197,7 +197,7 @@ NSX-T REST API supports multiple authentication methods:
 
 ```bash
 curl -sk -u 'admin:Password123!' \
-  "https://nsx-manager.corp.local/api/v1/cluster/status"
+  "https://nsx-manager.example.local/api/v1/cluster/status"
 ```
 
 Acceptable for scripts running from a secured automation host. Use a dedicated service account, not the shared admin.
@@ -209,18 +209,18 @@ Acceptable for scripts running from a secured automation host. Use a dedicated s
 curl -sk -u 'admin:Password123!' \
   -X POST \
   -c /tmp/nsx-session.txt \
-  "https://nsx-manager.corp.local/api/v1/aaa/session"
+  "https://nsx-manager.example.local/api/v1/aaa/session"
 
 # Use session cookie for subsequent requests
 curl -sk \
   -b /tmp/nsx-session.txt \
-  "https://nsx-manager.corp.local/api/v1/cluster/status"
+  "https://nsx-manager.example.local/api/v1/cluster/status"
 
 # Invalidate session when done
 curl -sk -u 'admin:Password123!' \
   -X DELETE \
   -b /tmp/nsx-session.txt \
-  "https://nsx-manager.corp.local/api/v1/aaa/session"
+  "https://nsx-manager.example.local/api/v1/aaa/session"
 ```
 
 ### Client Certificate Authentication (Most Secure)
@@ -243,7 +243,7 @@ curl -sk -u 'admin:Password123!' \
   -d "{
     \"pem_encoded\": \"$(cat nsx-automation.crt | awk '{printf \"%s\\\\n\", $0}')\"
   }" \
-  "https://nsx-manager.corp.local/api/v1/trust-management/certificates?action=import"
+  "https://nsx-manager.example.local/api/v1/trust-management/certificates?action=import"
 
 # Bind the certificate to a principal identity (service account)
 curl -sk -u 'admin:Password123!' \
@@ -256,13 +256,13 @@ curl -sk -u 'admin:Password123!' \
     "certificate_id": "<cert-id-from-above>",
     "is_protected": true
   }' \
-  "https://nsx-manager.corp.local/api/v1/aaa/principal-identities"
+  "https://nsx-manager.example.local/api/v1/aaa/principal-identities"
 
 # Use certificate for API calls (no password needed)
 curl -sk \
   --cert nsx-automation.crt \
   --key nsx-automation.key \
-  "https://nsx-manager.corp.local/api/v1/cluster/status"
+  "https://nsx-manager.example.local/api/v1/cluster/status"
 ```
 
 ---

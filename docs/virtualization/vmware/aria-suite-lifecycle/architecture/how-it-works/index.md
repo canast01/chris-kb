@@ -62,7 +62,7 @@ Always upgrade in this order to avoid dependency conflicts:
 | NFS share at `/data` | Stores `.pak` binary files | `df -h /data && touch /data/.test` |
 | vCenter service account | LCM deploys OVAs via vCenter API | Test in LCM → Settings → vCenter |
 | CA-signed certificate with full chain | Locker imports require full chain | `openssl verify -CAfile chain.pem leaf.pem` |
-| VIDM registered or deployed | All Aria products use VIDM for SSO | `curl -sk https://vidm.corp.local/SAAS/API/1.0/REST/system/health` |
+| VIDM registered or deployed | All Aria products use VIDM for SSO | `curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health` |
 
 ## Product Version Matrix
 
@@ -78,18 +78,18 @@ Always upgrade in this order to avoid dependency conflicts:
 
 ```bash
 # Authenticate
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.corp.local/lcm/authz/api/v2/login" \
+TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
 
 # List all environments
 curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments" | \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments" | \
   jq '.[] | {name: .environmentName, health: .environmentHealth}'
 
 # Trigger upgrade
 curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.corp.local/lcm/lcmservice/api/v2/environments/<env-id>/products/<product-id>/upgrade" \
+  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments/<env-id>/products/<product-id>/upgrade" \
   -H "Content-Type: application/json" \
   -d '{"targetVersion":"8.17.0","snapshotBeforeUpgrade":true}'
 ```
