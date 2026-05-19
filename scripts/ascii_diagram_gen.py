@@ -194,8 +194,8 @@ def layout(inner_widths, margin=3, gap=2):
 #   VS  : 3–80   (vSphere cluster outer box)
 #   ESXi: (6,19) (22,35) (38,51) (54,67)
 #   VM  : eL+3 .. eL+9  inside each ESXi (┴ tees at both ends)
-#   COMP: (3,17) (20,34) (37,51) (54,68)
-#   TZ  : 3–34   VF: 38–79
+#   COMP: (3,17) (20,34) (37,51) (54,80)  ← COMP[3] and VF extend to VS_R so right edges align
+#   TZ  : 3–34   VF: 38–80
 
 def vmware_platform_landscape():
     VC_L, VC_R   = 3, 17
@@ -208,9 +208,9 @@ def vmware_platform_landscape():
     ESXI     = [(6, 19), (22, 35), (38, 51), (54, 67)]
     VM_BOXES = [(eL + 3, eL + 9) for (eL, eR) in ESXI]
 
-    COMP = [(3, 17), (20, 34), (37, 51), (54, 68)]
+    COMP = [(3, 17), (20, 34), (37, 51), (54, 80)]  # COMP[3] extends to VS_R
     TZ_L, TZ_R = 3, 34
-    VF_L, VF_R = 38, 79
+    VF_L, VF_R = 38, 80  # extends to VS_R so right edge aligns throughout
 
     VC_MID = (VC_L + VC_R) // 2   # 10
     VX_MID = (VX_L + VX_R) // 2   # 27
