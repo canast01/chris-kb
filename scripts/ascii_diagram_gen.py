@@ -618,6 +618,185 @@ def virtualization_platform_stack():
     return lines
 
 
+def enterprise_storage_landscape():
+    """Enterprise Storage Landscape — W=103."""
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+
+    # Three equal-width boxes (inner=29, margin=3, gap=2)
+    PURE_L, PURE_R =  3, 33   # inner=29, MID=18
+    DELL_L, DELL_R = 36, 66   # inner=29, MID=51
+    NTAP_L, NTAP_R = 69, 99   # inner=29, MID=84
+
+    PURE_MID = (PURE_L + PURE_R) // 2   # 18
+    DELL_MID = (DELL_L + DELL_R) // 2   # 51
+    NTAP_MID = (NTAP_L + NTAP_R) // 2   # 84
+
+    # Full-width protocol layer
+    PROT_L, PROT_R = 3, 99
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+
+    lines = []
+
+    # ── Title ────────────────────────────────────────────────────────────────
+    lines.append(title_border(W2, 'Enterprise Storage Landscape'))
+    lines.append(txt_row())
+
+    # ── Management tier ──────────────────────────────────────────────────────
+    lines.append(R(merge(bTop(PURE_L, PURE_R), bTop(DELL_L, DELL_R), bTop(NTAP_L, NTAP_R))))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Pure1'),
+        bMid(DELL_L, DELL_R, 'Unisphere / CloudIQ'),
+        bMid(NTAP_L, NTAP_R, 'ONTAP System Manager'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Cloud mgmt portal'),
+        bMid(DELL_L, DELL_R, 'Unisphere: array admin UI'),
+        bMid(NTAP_L, NTAP_R, 'Browser-based admin UI'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'FlashArray & FlashBlade'),
+        bMid(DELL_L, DELL_R, 'CloudIQ: cloud analytics'),
+        bMid(NTAP_L, NTAP_R, 'Volume, LUN & quota mgmt'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Capacity & performance'),
+        bMid(DELL_L, DELL_R, 'Health scoring & forecast'),
+        bMid(NTAP_L, NTAP_R, 'ActiveIQ: cloud analytics'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Proactive support alerts'),
+        bMid(DELL_L, DELL_R, 'REST API & automation'),
+        bMid(NTAP_L, NTAP_R, 'Proactive health alerting'),
+    )))
+    lines.append(R(merge(bBot(PURE_L, PURE_R), bBot(DELL_L, DELL_R), bBot(NTAP_L, NTAP_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Management planes connect to arrays via HTTPS / REST APIs'))
+    lines.append(txt_row())
+    lines.append(R(arrow([PURE_MID, DELL_MID, NTAP_MID])))
+    lines.append(txt_row())
+
+    # ── Primary Storage Arrays ───────────────────────────────────────────────
+    lines.append(R(merge(bTop(PURE_L, PURE_R), bTop(DELL_L, DELL_R), bTop(NTAP_L, NTAP_R))))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Pure FlashArray'),
+        bMid(DELL_L, DELL_R, 'Dell PowerMax / VMAX'),
+        bMid(NTAP_L, NTAP_R, 'NetApp ONTAP'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'All-flash block storage'),
+        bMid(DELL_L, DELL_R, 'Mission-critical block'),
+        bMid(NTAP_L, NTAP_R, 'Unified block + file'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'FC · iSCSI · NVMe-oF'),
+        bMid(DELL_L, DELL_R, 'FC · iSCSI · NVMe/FC'),
+        bMid(NTAP_L, NTAP_R, 'FC · iSCSI · NFS · SMB'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Always-on dedup + comp'),
+        bMid(DELL_L, DELL_R, 'SRDF: sync replication'),
+        bMid(NTAP_L, NTAP_R, 'SnapMirror: replication'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'ActiveCluster: active-active'),
+        bMid(DELL_L, DELL_R, 'Dynamic tiering + cache'),
+        bMid(NTAP_L, NTAP_R, 'SnapCenter: backup mgmt'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'SafeMode: immutable snaps'),
+        bMid(DELL_L, DELL_R, 'PowerPath: multipathing'),
+        bMid(NTAP_L, NTAP_R, 'FabricPool: cloud tiering'),
+    )))
+    lines.append(R(merge(bBot(PURE_L, PURE_R), bBot(DELL_L, DELL_R), bBot(NTAP_L, NTAP_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Arrays expose LUNs (block) or volumes (file) to hosts and VMs via storage protocols'))
+    lines.append(txt_row())
+    lines.append(R(arrow([PURE_MID, DELL_MID, NTAP_MID])))
+    lines.append(txt_row())
+
+    # ── Specialty / Extended Storage ─────────────────────────────────────────
+    lines.append(R(merge(bTop(PURE_L, PURE_R), bTop(DELL_L, DELL_R), bTop(NTAP_L, NTAP_R))))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Pure FlashBlade'),
+        bMid(DELL_L, DELL_R, 'PowerScale / Data Domain'),
+        bMid(NTAP_L, NTAP_R, 'Keystone / StorageGRID'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Scale-out file + object'),
+        bMid(DELL_L, DELL_R, 'PowerScale: scale-out NAS'),
+        bMid(NTAP_L, NTAP_R, 'Keystone: STaaS model'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'NFS · SMB · S3 protocols'),
+        bMid(DELL_L, DELL_R, 'Data Domain: dedup backup'),
+        bMid(NTAP_L, NTAP_R, 'StorageGRID: object store'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Unstructured data at scale'),
+        bMid(DELL_L, DELL_R, 'NFS · SMB · DD Boost'),
+        bMid(NTAP_L, NTAP_R, 'Cloud Volumes ONTAP'),
+    )))
+    lines.append(R(merge(
+        bMid(PURE_L, PURE_R, 'Rapid Restore: backup'),
+        bMid(DELL_L, DELL_R, 'Multi-PB capacity scaling'),
+        bMid(NTAP_L, NTAP_R, 'Snap replication + backup'),
+    )))
+    lines.append(R(merge(bBot(PURE_L, PURE_R), bBot(DELL_L, DELL_R), bBot(NTAP_L, NTAP_R))))
+
+    lines.append(txt_row())
+    lines.append(txt_row('  Specialty platforms handle unstructured data, backup, and cloud-connected workloads'))
+    lines.append(txt_row())
+    lines.append(R(arrow([PURE_MID, DELL_MID, NTAP_MID])))
+    lines.append(txt_row())
+
+    # ── Protocol Layer ───────────────────────────────────────────────────────
+    lines.append(R(bTop(PROT_L, PROT_R)))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['Fibre Channel', 'iSCSI', 'NFS', 'SMB / CIFS', 'S3 / Object'])))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['SAN block access', 'IP block access', 'Unix file mounts', 'Windows shares', 'REST object store'])))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['16G · 32G · 64G', 'TCP/IP · iSNS', 'NFS v3 · v4.1', 'CIFS · DFS-N', 'HTTP · REST · SDK'])))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['HBA → SAN switch', 'iSCSI initiator', 'Mount via IP', 'SMB sessions', 'Buckets + prefixes'])))
+    lines.append(R(sections(PROT_L, PROT_R, [PD1, PD2, PD3, PD4],
+        ['Zoning + masking', 'CHAP auth + iSNS', 'Export policies', 'Share perms+ACL', 'Policies + IAM'])))
+    lines.append(R(bBot(PROT_L, PROT_R)))
+
+    # ── Physical Infrastructure ──────────────────────────────────────────────
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('NVMe/SSD drives · FC HBAs (16G/32G) · 10/25/100 GbE NICs · SAN switches · Power & Cooling'))
+    lines.append(txt_row())
+
+    # ── Glossary ─────────────────────────────────────────────────────────────
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('LUN          = Logical Unit Number; a block device exposed by a storage array via FC or iSCSI'))
+    lines.append(txt_row('SAN          = Storage Area Network; dedicated high-speed network carrying block storage traffic'))
+    lines.append(txt_row('NAS          = Network Attached Storage; file-level storage served over IP via NFS or SMB'))
+    lines.append(txt_row('FC           = Fibre Channel; high-speed block protocol using HBAs, SAN switches, and WWPN zoning'))
+    lines.append(txt_row('iSCSI        = Internet SCSI; block storage over standard TCP/IP — no specialised hardware required'))
+    lines.append(txt_row('NFS          = Network File System; Unix/Linux file protocol; mounts remote directories over IP'))
+    lines.append(txt_row('SMB          = Server Message Block; Windows file-sharing protocol, also known as CIFS'))
+    lines.append(txt_row('SRDF         = Symmetrix Remote Data Facility; Dell EMC sync replication between PowerMax arrays'))
+    lines.append(txt_row('SnapMirror   = NetApp replication engine; copies volumes between ONTAP systems or to cloud'))
+    lines.append(txt_row('SafeMode     = Pure Storage immutable snapshot feature; protects data against ransomware deletion'))
+    lines.append(txt_row('ActiveCluster= Pure active-active stretch cluster; I/O served from both sites simultaneously'))
+    lines.append(txt_row('Dedup        = Deduplication; eliminates duplicate data blocks to reduce raw capacity consumption'))
+    lines.append(txt_row('FabricPool   = NetApp tiering; auto-moves cold blocks to S3-compatible object storage'))
+    lines.append(txt_row('ONTAP        = NetApp unified storage OS running on FAS, AFF, Cloud Volumes, and StorageGRID'))
+    lines.append(txt_row('DD Boost     = Data Domain client-side dedup; reduces backup data transferred over the network'))
+    lines.append(txt_row('Keystone     = NetApp STaaS subscription; on-prem arrays billed like cloud consumption'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
 # ── Diagram registry ──────────────────────────────────────────────────────────
 # 'file' is relative to the repo root (the directory containing mkdocs.yml).
 # Add an entry here whenever you add a new diagram function above.
@@ -632,6 +811,11 @@ DIAGRAMS = {
         'fn': virtualization_platform_stack,
         'file': 'docs/virtualization/index.md',
         'description': 'VMware Platform Stack — VCF → vCenter/NSX-T/VxRail → ESXi → vSAN',
+    },
+    'storage': {
+        'fn': enterprise_storage_landscape,
+        'file': 'docs/storage/index.md',
+        'description': 'Enterprise Storage Landscape — Pure, Dell, NetApp arrays + protocol layer',
     },
 }
 
