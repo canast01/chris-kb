@@ -327,12 +327,16 @@ def vmware_platform_landscape():
 
 def vmware_platform_landscape_v2():
     """
-    Expanded VMware diagram (W=103):
-    - VC/VX inner=20 (wider boxes, better spacing)
-    - Aria three equal 15-char sections (cols 51–99, divs at 67/83)
-    - vSphere: fact box (cols 70–97) alongside ESXi hosts instead of inline clips
-    - Components widened: (3,24)(27,48)(51,72)(75,99); Tanzu 3–48, VCF 51–99
-    - Physical infra footer + glossary
+    Full VMware Platform Landscape (W=103) — comprehensive learning diagram:
+    - VC inner=20: adds SSO · Roles · LDAP and vLCM · Licensing rows
+    - VX inner=20: Turnkey HCI / Dell + VMware detail
+    - Aria 3×15 sections; last row "↓ monitors & manages all layers below"
+    - Arrow row shows VC/VX controlling vSphere AND Aria reaching all layers
+    - vSphere: adds Cluster features (HA · DRS · vMotion · FT) header row
+    - Integrated tier: vSAN(3-48) + NSX(51-99) — "part of vSphere, not appliances"
+    - Add-on tier: Horizon(3-33) + SRM(36-66) + vSphere Replication(69-99)
+    - VCF outer box(3-99): SDDC Manager(6-50) + Tanzu(53-97) nested inside
+    - Expanded glossary: VM, ESXi, HA, DRS, vMotion, SSO, vLCM, VDI, SRM, vSR, HCI, SDDC
     """
     W2 = 103
 
@@ -389,33 +393,39 @@ def vmware_platform_landscape_v2():
         return out
 
     # ── Layout ───────────────────────────────────────────────────────────────────
-    VC_L, VC_R   =  3, 24   # inner=20  (expanded from 13)
-    VX_L, VX_R   = 27, 48   # inner=20  (expanded from 13)
+    VC_L, VC_R   =  3, 24   # inner=20
+    VX_L, VX_R   = 27, 48   # inner=20
     AR_L, AR_R   = 51, 99   # inner=47; 3 equal sections of 15
-    AR_D1, AR_D2 = 67, 83   # 51+16=67, 67+16=83, 83+16=99
+    AR_D1, AR_D2 = 67, 83
 
     VS_L, VS_R   =  3, 99
-
     ESXI     = [(6, 19), (22, 35), (38, 51), (54, 67)]
     VM_BOXES = [(eL + 3, eL + 9) for (eL, eR) in ESXI]
+    FB_L, FB_R   = 70, 97   # fact box inside vSphere, inner=26
 
-    FB_L, FB_R   = 70, 97   # fact box inside vSphere, inner=26; gap of 2 from ESXi[3]
+    VSAN_L, VSAN_R =  3, 48   # integrated tier: inner=44
+    NSX_L,  NSX_R  = 51, 99   # integrated tier: inner=47
 
-    COMP = [(3, 24), (27, 48), (51, 72), (75, 99)]  # align with VC/VX/AR edges
-    TZ_L, TZ_R  =  3, 48   # inner=44; spans VC+gap+VX
-    VF_L, VF_R  = 51, 99   # inner=47; same as AR, fills to edge
+    HZ_L,  HZ_R   =  3, 33   # add-on tier: inner=29
+    SRM_L, SRM_R  = 36, 66   # add-on tier: inner=29
+    REP_L, REP_R  = 69, 99   # add-on tier: inner=29
+
+    VCF_L, VCF_R   =  3, 99  # VCF outer box: inner=95
+    SDDC_L, SDDC_R =  6, 50  # SDDC Manager inside VCF: inner=43
+    TZ_L,   TZ_R   = 53, 97  # Tanzu inside VCF: inner=43
 
     VC_MID = (VC_L + VC_R) // 2   # 13
     VX_MID = (VX_L + VX_R) // 2   # 37
-    COMP_MIDS = [(cL + cR) // 2 for (cL, cR) in COMP]
+    AR_MID = (AR_L + AR_R) // 2   # 75
 
     lines = []
 
-    # Title
+    # ── Title ────────────────────────────────────────────────────────────────────
     lines.append(title_border(W2, 'VMware Platform Landscape'))
     lines.append(txt_row())
 
-    # Management tier
+    # ── Management tier ──────────────────────────────────────────────────────────
+    # 5 content rows: VC adds SSO + vLCM; Aria adds "↓ monitors all layers" row
     lines.append(R(G(T(VC_L, VC_R), T(VX_L, VX_R), T(AR_L, AR_R))))
     lines.append(R(G(
         M(VC_L, VC_R, 'vCenter'),
@@ -433,9 +443,14 @@ def vmware_platform_landscape_v2():
         S(AR_L, AR_R, [AR_D1, AR_D2], ['Monitor/Alert', 'IaC / Deploy', 'Patch/Upgrade']),
     )))
     lines.append(R(G(
-        M(VC_L, VC_R, 'Hosts/VMs/Net'),
+        M(VC_L, VC_R, 'SSO · Roles · LDAP'),
         M(VX_L, VX_R, 'Dell + VMware'),
         S(AR_L, AR_R, [AR_D1, AR_D2], ['Operations', 'Blueprints', 'Certificates']),
+    )))
+    lines.append(R(G(
+        M(VC_L, VC_R, 'vLCM · Licensing'),
+        M(VX_L, VX_R, 'All-in-one HCI'),
+        M(AR_L, AR_R, '↓ monitors & manages all layers below'),
     )))
     lines.append(R(G(
         B(VC_L, VC_R),
@@ -443,20 +458,22 @@ def vmware_platform_landscape_v2():
         B(AR_L, AR_R, tees=[AR_D1, AR_D2]),
     )))
 
-    # Arrow + control-plane annotation
+    # ── Arrow row: VC/VX control vSphere; Aria reaches all tiers ─────────────────
     lines.append(txt_row())
-    d = {VC_MID: '▼', VX_MID: '▼'}
-    note = '← control plane: manages all hosts, VMs, networks & policies'
+    d = {VC_MID: '▼', VX_MID: '▼', AR_MID: '▼'}
+    note = '← Aria monitors all layers'
     for i, c in enumerate(note):
-        pos = VX_MID + 2 + i
+        pos = AR_MID + 2 + i
         if pos < W2: d[pos] = c
     lines.append(R(d))
+    lines.append(txt_row('             vCenter/VxRail: control plane for vSphere', indent=0))
     lines.append(txt_row())
 
-    # vSphere cluster
+    # ── vSphere cluster ───────────────────────────────────────────────────────────
     lines.append(R(T(VS_L, VS_R)))
     lines.append(R(M(VS_L, VS_R, 'vSphere Cluster (ESXi Hosts)')))
     lines.append(R(M(VS_L, VS_R, 'Type-1 hypervisor: runs directly on hardware — no host OS required')))
+    lines.append(R(M(VS_L, VS_R, 'Cluster features: HA · DRS · vMotion · Fault Tolerance')))
     lines.append(R({VS_L: '│', VS_R: '│'}))
 
     # ESXi tops + fact box top
@@ -485,7 +502,7 @@ def vmware_platform_landscape_v2():
     for (eL, eR), (vmL, vmR) in zip(ESXI, VM_BOXES):
         d[eL] = '│'; d[eR] = '│'
         d.update(T(vmL, vmR))
-    d.update(M(FB_L, FB_R, 'vMotion: move VMs live'))
+    d.update(M(FB_L, FB_R, 'vMotion: live migration'))
     lines.append(R(d))
 
     # VM labels + fact row 4
@@ -493,14 +510,13 @@ def vmware_platform_landscape_v2():
     for (eL, eR), (vmL, vmR) in zip(ESXI, VM_BOXES):
         d[eL] = '│'; d[eR] = '│'
         d.update(M(vmL, vmR, 'VMs'))
-    d.update(M(FB_L, FB_R, 'HA: auto-restart on fail'))
+    d.update(M(FB_L, FB_R, 'HA: restart on failure'))
     lines.append(R(d))
 
     # ESXi bottoms (VM → ┴ tees) + fact box bottom
     d = {VS_L: '│', VS_R: '│'}
     for (eL, eR), (vmL, vmR) in zip(ESXI, VM_BOXES):
-        dd = B(eL, eR)
-        dd[vmL] = '┴'; dd[vmR] = '┴'
+        dd = B(eL, eR); dd[vmL] = '┴'; dd[vmR] = '┴'
         d.update(dd)
     d.update(B(FB_L, FB_R))
     lines.append(R(d))
@@ -509,54 +525,104 @@ def vmware_platform_landscape_v2():
     lines.append(R(B(VS_L, VS_R)))
     lines.append(txt_row())
 
-    # Component arrows
-    d = {}
-    for m in COMP_MIDS: d[m] = '▼'
+    # ── Integrated tier ───────────────────────────────────────────────────────────
+    lines.append(txt_row('  Integrated into vSphere — part of the hypervisor, not separate appliances:'))
+    lines.append(txt_row())
+    d = {(VSAN_L + VSAN_R) // 2: '▼', (NSX_L + NSX_R) // 2: '▼'}
     lines.append(R(d))
     lines.append(txt_row())
 
-    # Component boxes
-    lines.append(R(G(*[T(cL, cR) for cL, cR in COMP])))
-    lines.append(R(G(*[M(cL, cR, lbl) for (cL, cR), lbl in zip(COMP, [
-        'vSAN', 'NSX', 'Horizon', 'Site Recovery',
-    ])])))
-    lines.append(R(G(*[M(cL, cR, lbl) for (cL, cR), lbl in zip(COMP, [
-        '(Storage)', '(Networking)', '(Desktops)', '(DR Platform)',
-    ])])))
-    lines.append(R(G(*[M(cL, cR, lbl) for (cL, cR), lbl in zip(COMP, [
-        'Shared Disks', 'Virt. Network', 'VDI Platform', 'Failover + Replication',
-    ])])))
-    lines.append(R(G(*[B(cL, cR) for cL, cR in COMP])))
-    lines.append(txt_row())
-
-    # Tanzu + VCF
-    lines.append(R(G(T(TZ_L, TZ_R), T(VF_L, VF_R))))
+    lines.append(R(G(T(VSAN_L, VSAN_R), T(NSX_L, NSX_R))))
     lines.append(R(G(
-        M(TZ_L, TZ_R, 'Tanzu (Kubernetes Platform)'),
-        M(VF_L, VF_R, 'VMware Cloud Foundation (VCF/SDDC)'),
+        M(VSAN_L, VSAN_R, 'vSAN (Software-Defined Storage)'),
+        M(NSX_L,  NSX_R,  'NSX (Software-Defined Networking)'),
     )))
     lines.append(R(G(
-        M(TZ_L, TZ_R, 'Container Orchestration'),
-        M(VF_L, VF_R, 'vSphere + vSAN + NSX + Lifecycle Mgmt'),
+        M(VSAN_L, VSAN_R, 'Pooled from ESXi local disks'),
+        M(NSX_L,  NSX_R,  'Virtual switches + distributed firewall'),
     )))
-    lines.append(R(G(B(TZ_L, TZ_R), B(VF_L, VF_R))))
+    lines.append(R(G(
+        M(VSAN_L, VSAN_R, 'Policy-based; no external array'),
+        M(NSX_L,  NSX_R,  'Micro-segmentation & east-west routing'),
+    )))
+    lines.append(R(G(B(VSAN_L, VSAN_R), B(NSX_L, NSX_R))))
     lines.append(txt_row())
 
-    # Physical infrastructure footer
+    # ── Add-on products tier ──────────────────────────────────────────────────────
+    lines.append(txt_row('  Add-on products — licensed separately, deployed on top of vSphere:'))
+    lines.append(txt_row())
+    d = {(HZ_L + HZ_R) // 2: '▼', (SRM_L + SRM_R) // 2: '▼', (REP_L + REP_R) // 2: '▼'}
+    lines.append(R(d))
+    lines.append(txt_row())
+
+    lines.append(R(G(T(HZ_L, HZ_R), T(SRM_L, SRM_R), T(REP_L, REP_R))))
+    lines.append(R(G(
+        M(HZ_L,  HZ_R,  'Horizon (VDI)'),
+        M(SRM_L, SRM_R, 'Site Recovery Manager'),
+        M(REP_L, REP_R, 'vSphere Replication'),
+    )))
+    lines.append(R(G(
+        M(HZ_L,  HZ_R,  '(Desktops)'),
+        M(SRM_L, SRM_R, '(DR Orchestration)'),
+        M(REP_L, REP_R, '(VM Replication)'),
+    )))
+    lines.append(R(G(
+        M(HZ_L,  HZ_R,  'VDI + app publishing'),
+        M(SRM_L, SRM_R, 'Failover + Failback'),
+        M(REP_L, REP_R, 'RPO-based replication'),
+    )))
+    lines.append(R(G(B(HZ_L, HZ_R), B(SRM_L, SRM_R), B(REP_L, REP_R))))
+    lines.append(txt_row())
+
+    # ── VCF outer box with SDDC Manager + Tanzu nested inside ────────────────────
+    lines.append(R(T(VCF_L, VCF_R)))
+    lines.append(R(M(VCF_L, VCF_R, 'VMware Cloud Foundation (VCF/SDDC)')))
+    lines.append(R(M(VCF_L, VCF_R, 'Packages & delivers the full SDDC: vSphere + vSAN + NSX + Lifecycle')))
+    lines.append(R({VCF_L: '│', VCF_R: '│'}))
+
+    lines.append(R(G({VCF_L: '│', VCF_R: '│'}, T(SDDC_L, SDDC_R), T(TZ_L, TZ_R))))
+    lines.append(R(G(
+        {VCF_L: '│', VCF_R: '│'},
+        M(SDDC_L, SDDC_R, 'SDDC Manager'),
+        M(TZ_L,   TZ_R,   'Tanzu (Kubernetes Platform)'),
+    )))
+    lines.append(R(G(
+        {VCF_L: '│', VCF_R: '│'},
+        M(SDDC_L, SDDC_R, 'Lifecycle orchestrator for VCF'),
+        M(TZ_L,   TZ_R,   'Container Orchestration'),
+    )))
+    lines.append(R(G(
+        {VCF_L: '│', VCF_R: '│'},
+        M(SDDC_L, SDDC_R, 'Bringup · Upgrades · Compliance'),
+        M(TZ_L,   TZ_R,   'Workload domain within VCF'),
+    )))
+    lines.append(R(G({VCF_L: '│', VCF_R: '│'}, B(SDDC_L, SDDC_R), B(TZ_L, TZ_R))))
+    lines.append(R({VCF_L: '│', VCF_R: '│'}))
+    lines.append(R(B(VCF_L, VCF_R)))
+    lines.append(txt_row())
+
+    # ── Physical infrastructure ───────────────────────────────────────────────────
     lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
     lines.append(txt_row('CPU cores · RAM (GBs to TBs per host) · NIC (10/25/100 GbE) · NVMe/SSD/HDD · Power & Cooling'))
     lines.append(txt_row())
 
-    # Glossary
+    # ── Glossary ──────────────────────────────────────────────────────────────────
     lines.append(txt_row('Key terms:'))
     lines.append(txt_row())
-    lines.append(txt_row('VM   = a software-emulated computer; runs a full OS + apps inside a physical host'))
-    lines.append(txt_row('ESXi = Type-1 hypervisor; installed directly on bare metal — no host OS needed'))
-    lines.append(txt_row('vSAN = pools local server disks into shared storage — no separate SAN appliance needed'))
-    lines.append(txt_row('NSX  = software-defined networking; creates virtual switches, routers & firewalls'))
-    lines.append(txt_row('VDI  = your desktop OS runs in the data centre; you stream it to any device remotely'))
-    lines.append(txt_row('DR   = Disaster Recovery; automated failover keeps the business running after a failure'))
-    lines.append(txt_row('HCI  = Hyper-Converged Infrastructure; compute + storage + networking in one appliance'))
+    lines.append(txt_row('VM      = a software-emulated computer; runs a full OS + apps inside a physical host'))
+    lines.append(txt_row('ESXi    = Type-1 hypervisor; installed directly on bare metal — no host OS needed'))
+    lines.append(txt_row('vSAN    = pools local server disks into shared storage — no separate SAN array needed'))
+    lines.append(txt_row('NSX     = software-defined networking; virtual switches, routers & distributed firewall'))
+    lines.append(txt_row('HA      = High Availability; vSphere auto-restarts VMs on another host if one fails'))
+    lines.append(txt_row('DRS     = Distributed Resource Scheduler; auto-balances VM workload across ESXi hosts'))
+    lines.append(txt_row('vMotion = live migration of a running VM between ESXi hosts with zero downtime'))
+    lines.append(txt_row('SSO     = Single Sign-On; central identity used by all vCenter/vSphere authentication'))
+    lines.append(txt_row('vLCM    = vSphere Lifecycle Manager; patches ESXi hosts and manages firmware baselines'))
+    lines.append(txt_row('VDI     = your desktop OS runs in the data centre; you stream it to any device remotely'))
+    lines.append(txt_row('SRM     = Site Recovery Manager; orchestrates DR failover using pre-defined recovery plans'))
+    lines.append(txt_row('vSR     = vSphere Replication; replicates VMs to a remote site; provides recovery point for SRM'))
+    lines.append(txt_row('HCI     = Hyper-Converged Infrastructure; compute + storage + networking in one appliance'))
+    lines.append(txt_row('SDDC Mgr= VCF lifecycle orchestrator; automates bringup, upgrades & compliance checks'))
     lines.append(txt_row())
 
     # Bottom border
