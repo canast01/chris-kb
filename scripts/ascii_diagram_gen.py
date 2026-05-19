@@ -63,9 +63,9 @@ HELPER REFERENCE
   make_helpers(w)               — returns (R, txt_row) bound to inner width w
   layout(inner_widths, m, gap)  — print (L, R) positions for a box row
   row(d, w)                     — render one line; outer │ walls added
-  bTop(l, r, tees)              — ┌────┐ with optional ┬ at tees
+  bTop(l, r, tees)              — ┌────┐ with optional ┴ at tees (stem up, toward incoming)
   bMid(l, r, text)              — │ text │  (text centred, truncated)
-  bBot(l, r, tees)              — └────┘ with optional ┴ at tees
+  bBot(l, r, tees)              — └────┘ with optional ┴ at tees (stem up, exit downward)
   sections(l, r, divs, texts)   — │ sec1 │ sec2 │ sec3 │ with dividers
   connector(cols)               — row of │ stems
   arrow(cols)                   — row of ▼ arrows
@@ -97,11 +97,13 @@ def _hspan(d, l, r, fill='─', lc=None, rc=None):
         d[r] = rc
 
 def bTop(l, r, tees=()):
-    """Top border of a box. tees: column positions to replace ─ with ┬."""
+    """Top border of a box. tees: column positions to replace ─ with ┴.
+    ┴ is correct here: the horizontal bar is the top border, and the stem
+    points UP toward the incoming connector above the box."""
     d = {}
     _hspan(d, l, r, '─', '┌', '┐')
     for t in tees:
-        d[t] = '┬'
+        d[t] = '┴'
     return d
 
 def bMid(l, r, text=''):
@@ -166,6 +168,9 @@ def title_border(w, title, top=True):
     lc, rc = ('┌', '┐') if top else ('└', '┘')
     if title:
         padded = f' {title} '
+        if len(padded) > w:
+            print(f'  WARN title_border: title too long ({len(padded)} > {w}): {title!r}', file=sys.stderr)
+            padded = padded[:w]
         left_dashes = (w - len(padded)) // 2
         right_dashes = w - len(padded) - left_dashes
         inner = '─' * left_dashes + padded + '─' * right_dashes
