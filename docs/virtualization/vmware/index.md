@@ -14,6 +14,7 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 │   │ SSO · Roles · LDAP │  │   Dell + VMware    │  │   Operations  │   Blueprints  │  Certificates │   │
 │   │  vLCM · Licensing  │  │   All-in-one HCI   │  │     ↓ monitors & manages all layers below     │   │
 │   └────────────────────┘  └────────────────────┘  └───────────────┴───────────────┴───────────────┘   │
+│                                                                                                       │
 │    vCenter/VxRail: control plane for vSphere  ·  Aria Suite: monitors all layers                      │
 │                                                                                                       │
 │             ▼                       ▼                                     ▼                           │

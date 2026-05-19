@@ -304,6 +304,7 @@ def vmware_platform_landscape():
     )))
 
     # ── Arrow row ────────────────────────────────────────────────────────────
+    lines.append(txt_row())
     lines.append(txt_row('  vCenter/VxRail: control plane for vSphere  ·  Aria Suite: monitors all layers'))
     lines.append(txt_row())
     lines.append(R(arrow([VC_MID, VX_MID, AR_MID])))
