@@ -1,5 +1,9 @@
 # Storage
 
+<div class="kb-summary">
+Block, file, and object storage platforms used across enterprise infrastructure — Dell PowerMax, PowerScale, PowerStore, Unity, VPLEX, Data Domain, and ECS; Pure Storage FlashArray and FlashBlade; and NetApp ONTAP. Coverage includes architecture, configuration, performance tuning, multipathing, and troubleshooting.
+</div>
+
 ```
 ┌──────────────────────────────────── Enterprise Storage Landscape ─────────────────────────────────────┐
 │                                                                                                       │
@@ -72,10 +76,6 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-<div class="kb-summary">
-Block, file, and object storage platforms used across enterprise infrastructure — Dell PowerMax, PowerScale, PowerStore, Unity, VPLEX, Data Domain, and ECS; Pure Storage FlashArray and FlashBlade; and NetApp ONTAP. Coverage includes architecture, configuration, performance tuning, multipathing, and troubleshooting.
-</div>
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="dell/">
