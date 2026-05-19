@@ -462,6 +462,108 @@ def vmware_platform_landscape():
     return lines
 
 
+def virtualization_platform_stack():
+    """VMware Platform Stack — W=75. VCF → vCenter/NSX-T/VxRail → ESXi → vSAN."""
+    W2 = 75
+    R, txt_row = make_helpers(W2)
+
+    # ── Layout ───────────────────────────────────────────────────────────────
+    VCF_L, VCF_R   =  3, 72   # inner=68, MID=37
+    VC_L,  VC_R    =  3, 24   # inner=20, MID=13
+    NSX_L, NSX_R   = 27, 48   # inner=20, MID=37
+    VX_L,  VX_R    = 51, 72   # inner=20, MID=61
+    ESXI_L, ESXI_R =  3, 72   # inner=68, MID=37
+    VSAN_L, VSAN_R =  3, 72   # inner=68, MID=37
+
+    VCF_MID  = (VCF_L  + VCF_R)  // 2   # 37
+    VC_MID   = (VC_L   + VC_R)   // 2   # 13
+    NSX_MID  = (NSX_L  + NSX_R)  // 2   # 37  (= VCF_MID)
+    VX_MID   = (VX_L   + VX_R)   // 2   # 61
+    ESXI_MID = (ESXI_L + ESXI_R) // 2   # 37
+
+    lines = []
+
+    # ── Title ────────────────────────────────────────────────────────────────
+    lines.append(title_border(W2, 'VMware Platform Stack'))
+    lines.append(txt_row())
+
+    # ── VCF box ──────────────────────────────────────────────────────────────
+    lines.append(R(bTop(VCF_L, VCF_R)))
+    lines.append(R(bMid(VCF_L, VCF_R, 'VCF (VMware Cloud Foundation)')))
+    lines.append(R(bMid(VCF_L, VCF_R, 'Lifecycle Management · SDDC Manager')))
+    lines.append(R(bBot(VCF_L, VCF_R, tees=[VCF_MID])))
+
+    # ── VCF → branching connector ─────────────────────────────────────────────
+    lines.append(R(connector([VCF_MID])))
+    lines.append(txt_row('orchestrates', indent=VCF_MID - 6))
+    lines.append(txt_row())
+    d = {i: '─' for i in range(VC_MID, VX_MID + 1)}
+    d[VC_MID] = '┌'; d[NSX_MID] = '┼'; d[VX_MID] = '┐'
+    lines.append(R(d))
+    lines.append(R(arrow([VC_MID, NSX_MID, VX_MID])))
+
+    # ── vCenter · NSX-T · VxRail ──────────────────────────────────────────────
+    lines.append(R(merge(bTop(VC_L, VC_R), bTop(NSX_L, NSX_R), bTop(VX_L, VX_R))))
+    lines.append(R(merge(
+        bMid(VC_L,  VC_R,  'vCenter'),
+        bMid(NSX_L, NSX_R, 'NSX-T'),
+        bMid(VX_L,  VX_R,  'VxRail'),
+    )))
+    lines.append(R(merge(
+        bMid(VC_L,  VC_R,  'Inventory · HA · DRS'),
+        bMid(NSX_L, NSX_R, 'Virtual Networking'),
+        bMid(VX_L,  VX_R,  'HCI Node · Manager'),
+    )))
+    lines.append(R(merge(
+        bMid(VC_L,  VC_R,  'Roles · vLCM · SSO'),
+        bMid(NSX_L, NSX_R, 'Segments · Firewall'),
+        bMid(VX_L,  VX_R,  'Dell + VMware HCI'),
+    )))
+    lines.append(R(merge(
+        bBot(VC_L,  VC_R,  tees=[VC_MID]),
+        bBot(NSX_L, NSX_R, tees=[NSX_MID]),
+        bBot(VX_L,  VX_R),
+    )))
+
+    # ── vCenter + NSX-T → ESXi ────────────────────────────────────────────────
+    lines.append(txt_row())
+    lines.append(txt_row('  vCenter + NSX-T control the ESXi hypervisor layer'))
+    lines.append(txt_row())
+    lines.append(R(arrow([VC_MID, NSX_MID])))
+    lines.append(txt_row())
+
+    # ── ESXi box ──────────────────────────────────────────────────────────────
+    lines.append(R(bTop(ESXI_L, ESXI_R)))
+    lines.append(R(bMid(ESXI_L, ESXI_R, 'ESXi Hosts')))
+    lines.append(R(bMid(ESXI_L, ESXI_R, 'Compute · Hypervisor · HA · DRS · vMotion · Fault Tolerance')))
+    lines.append(R(bMid(ESXI_L, ESXI_R, 'vmk0(mgmt) · vmk1(vMotion) · vmk2(vSAN) · vmk3')))
+    lines.append(R(bBot(ESXI_L, ESXI_R, tees=[ESXI_MID])))
+
+    # ── ESXi → vSAN ───────────────────────────────────────────────────────────
+    lines.append(txt_row())
+    lines.append(txt_row('  ESXi local disks pooled into vSAN distributed storage'))
+    lines.append(txt_row())
+    lines.append(R(arrow([ESXI_MID])))
+    lines.append(txt_row())
+
+    # ── vSAN box ──────────────────────────────────────────────────────────────
+    lines.append(R(bTop(VSAN_L, VSAN_R)))
+    lines.append(R(bMid(VSAN_L, VSAN_R, 'vSAN')))
+    lines.append(R(bMid(VSAN_L, VSAN_R, 'Distributed Storage · Policy-Driven')))
+    lines.append(R(bMid(VSAN_L, VSAN_R, 'RAID-1/5/6 · Dedup · Compression · Encryption')))
+    lines.append(R(bBot(VSAN_L, VSAN_R)))
+    lines.append(txt_row())
+
+    # ── Planes legend ─────────────────────────────────────────────────────────
+    lines.append(txt_row('Management Plane:  vCenter → NSX → Aria Ops → Aria Logs'))
+    lines.append(txt_row('Data Plane:        ESXi hypervisor → vSAN storage fabric'))
+    lines.append(txt_row('Control Plane:     SDDC Manager (VCF) lifecycle control'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
 # ── Diagram registry ──────────────────────────────────────────────────────────
 # 'file' is relative to the repo root (the directory containing mkdocs.yml).
 # Add an entry here whenever you add a new diagram function above.
@@ -471,6 +573,11 @@ DIAGRAMS = {
         'fn': vmware_platform_landscape,
         'file': 'docs/virtualization/vmware/index.md',
         'description': 'VMware Platform Landscape — full stack: vSphere, vSAN, NSX, VCF, Aria',
+    },
+    'virtualization': {
+        'fn': virtualization_platform_stack,
+        'file': 'docs/virtualization/index.md',
+        'description': 'VMware Platform Stack — VCF → vCenter/NSX-T/VxRail → ESXi → vSAN',
     },
 }
 
