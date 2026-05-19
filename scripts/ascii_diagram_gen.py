@@ -25,6 +25,13 @@ HOW TO ADD A NEW DIAGRAM
            lines.append('└' + '─' * W2 + '┘')
            return lines
 
+   Arrow sections between tiers always follow this four-line pattern:
+       lines.append(txt_row('  <explanation of what the arrows mean>'))
+       lines.append(txt_row())
+       lines.append(R(arrow([MID1, MID2, ...])))
+       lines.append(txt_row())
+   Never put annotations inline on the arrow line — put them in the label above.
+
 2. Register it in DIAGRAMS at the bottom of this file.
 3. Run:  python3 scripts/ascii_diagram_gen.py my_name --write
 
